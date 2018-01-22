@@ -5,7 +5,7 @@ http://www.andrewhazelden.com
 
 ## Overview ##
 
-Welcome to Atomizer: The Reactor Atom Package Editor. 
+Welcome to Atomizer: The Atom Package Editor.
 
 Atomizer is an editing tool that simplifies the process of creating a Reactor "Atom" package:
 https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229
@@ -1708,7 +1708,7 @@ function StartupWin()
 			ui:Label{
 				ID = "Title",
 				Weight = 0.5,
-				Text = [[<p>Welcome to Atomizer:<br> The Reactor <a href="https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229">Atom Package</a> Editor</p>]],
+				Text = [[<p>Welcome to Atomizer:<br> The <a href="https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229">Atom Package</a> Editor</p>]],
 				Alignment = {
 					AlignHCenter = true,
 					AlignVCenter = true,
