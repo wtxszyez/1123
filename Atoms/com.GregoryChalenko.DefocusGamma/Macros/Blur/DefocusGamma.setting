@@ -1,0 +1,225 @@
+{
+	Tools = ordered() {
+		DefocusGamma = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Correct Defocus for gamma-corrected images (i.e. sRGB)\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+				},
+				LockXY = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "LockXY",
+					Default = 1,
+				},
+				XDefocusSize = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "XDefocusSize",
+					Default = 5,
+				},
+				YDefocusSize = InstanceInput {
+					Disabled = true,
+					SourceOp = "Defocus",
+					Source = "YDefocusSize",
+					Default = 5,
+				},
+				LensType = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "LensType",
+					Default = 3,
+				},
+				LensAngle = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "LensAngle",
+					Default = 0,
+				},
+				LensSides = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "LensSides",
+					Default = 5,
+				},
+				LensShape = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "LensShape",
+					Default = 0,
+				},
+				Gamma = InstanceInput {
+					SourceOp = "BC_Regamma",
+					Source = "Gamma",
+					Name = "Image Gamma",
+					Default = 2.2,
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Depth",
+					Name = "Set Depth",
+					Default = 5,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "Blend",
+					Page = "Common Controls",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "MaskHigh",
+					ControlGroup = 12,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "MaskLow",
+					ControlGroup = 12,
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Defocus",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BC_Regamma",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 740, 143, },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true,
+				},
+				Size = { 538.75, 307.794, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -97, 0, },
+			},
+			Tools = ordered() {
+				BC_Degamma = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Expression = "1/BC_Regamma.Gamma",
+						},
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 33.625, 124.15, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Defocus = Defocus {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input {
+							Value = 1,
+						},
+						YDefocusSize = Input {
+							Disabled = true,
+						},
+						BloomLevel = Input {
+							Value = 0,
+						},
+						BloomThreshold = Input {
+							Value = 0,
+						},
+						LensType = Input {
+							Value = 3,
+						},
+						Input = Input {
+							SourceOp = "BC_Degamma",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 141.625, 124.644, },
+					},
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.533333333333333, B = 0.364705882352941, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				BC_Regamma = BrightnessContrast {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Value = 2.2,
+						},
+						Input = Input {
+							SourceOp = "Defocus",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 265.625, 124.644, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				ChangeDepth = ChangeDepth {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input {
+							Value = 4,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -92.375, 125.15, },
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.537254901960784, B = 0.368627450980392, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}

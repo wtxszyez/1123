@@ -1,0 +1,722 @@
+--[[--
+
+KAK Core Functionality - version 0.3 for KAK 3.1 and Reactor
+
+-------------------------------------------------------------------
+Copyright (c) 2014,  Pieter Van Houte
+<pieter[at]secondman[dot]com>
+-------------------------------------------------------------------
+
+--]]--
+
+FuRegisterClass("KAKr", CT_Tool, {
+	REGS_Name          = "KAK Core",
+	REGS_Category 		= "Matte",
+	REGS_OpIconString 	= "KAKr",
+	REGS_OpDescription 	= "Kick Ass Keyer Core",
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.secondman.com",
+	REGS_HelpTopic		= "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=16&t=43",
+	REG_Fuse_NoEdit		= true,
+	REG_Fuse_NoReload	= true,
+	REG_Version			= 030,
+	})
+
+function Create()
+
+	InMode = self:AddInput("Mode", "Mode", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0,
+		INP_Integer = true,
+		INP_DoNotifyChanged  = true,
+		{ CCS_AddString = "Screen Select", },
+		{ CCS_AddString = "Key", },
+		{ CCS_AddString = "Transparant Detail", },
+		{ CCS_AddString = "Despill", },
+		{ CCS_AddString = "Colour", },
+		})
+		
+	InScreenType = self:AddInput("Screen Type", "ScreenType", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0,
+		INP_Integer = true,
+		{ CCS_AddString = "Auto", },
+		{ CCS_AddString = "Red", },
+		{ CCS_AddString = "Green", },
+		{ CCS_AddString = "Blue", },
+		})
+
+	InR = self:AddInput("Red", "Red", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		ICS_Name = "Screen Color",
+		IC_ControlGroup = 1,
+		IC_ControlID = 0,
+		})
+		
+	InG = self:AddInput("Green", "Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 1,
+		})
+		
+	InB = self:AddInput("Blue", "Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 2,
+		})	
+
+------------------------------------------------------------------- KEY
+
+	InRGWght = self:AddInput("Red/Green Weight", "RGWght", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0.5,
+		})
+	
+	InGBWght = self:AddInput("Green/Blue Weight", "GBWght", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0.5,
+		})
+
+------------------------------------------------------------------- SCREEN SELECT
+
+	InFinetune = self:AddInput("Finetune", "Finetune", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.0,
+		IC_Visible = false,
+		})
+		
+	DoSSBoost = self:AddInput("", "DoSSBoost", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Default = 1,
+		IC_Visible = false,
+		})
+
+------------------------------------------------------------------- TRANSPARENT DETAIL
+
+	InTDGain = self:AddInput("TD Gain", "TDGain", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1,
+		IC_Visible = false,
+		})
+		
+	InTDSaturation = self:AddInput("TD Saturation", "TDSaturation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1,
+		IC_Visible = false,
+		})
+
+	DoTDClip = self:AddInput("", "DoTDClip", {
+		ICD_Width = 0.08,
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Default = 0,
+		IC_Visible = false,
+		})
+		
+	InTDClip = self:AddInput("TD Clip", "TDClip", {
+		ICD_Width = 0.92,
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0,
+		INP_MinScale = -0.5,
+		INP_MaxScale = 0,
+		IC_Visible = false,
+		})
+
+------------------------------------------------------------------- DESPILL
+
+	InDespillType = self:AddInput("Despill Type", "DespillType", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0,
+		INP_Integer = true,
+		IC_Visible = false,
+		{ CCS_AddString = "Limit By Average", },
+		{ CCS_AddString = "Limit By Max", },
+		{ CCS_AddString = "Limit By Red/Green", },
+		{ CCS_AddString = "Limit By Blue/Green", },
+		})
+		
+	InSpillReplace = self:AddInput("Spill Replace", "SpillReplace", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0,
+		INP_Integer = true,
+		IC_Visible = false,
+		{ CCS_AddString = "Auto Adjust R/G/B", },
+		{ CCS_AddString = "Use Spill Replace Color", },
+		{ CCS_AddString = "Use Background", },
+		})
+		
+	InDespillThreshold = self:AddInput("Threshold", "DespillThreshold", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1,
+		IC_Visible = false,
+		})
+
+	InDespillAmount = self:AddInput("Amount", "DespillAmount", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1,
+		IC_Visible = false,
+		})
+		
+	InDespillLimit = self:AddInput("Limit", "DespillLimit", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 2,
+		INP_Default = 1,
+		IC_Visible = false,
+		})		
+		
+	InRSp = self:AddInput("Spill Red", "SpillRed", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		ICS_Name = "Spill Replace Color",
+		IC_ControlGroup = 2,
+		IC_ControlID = 0,
+		IC_Visible = false,
+		})
+		
+	InGSp = self:AddInput("Spill Green", "SpillGreen", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 2,
+		IC_ControlID = 1,
+		IC_Visible = false,
+		})
+		
+	InBSp = self:AddInput("Spill Blue", "SpillBlue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 2,
+		IC_ControlID = 2,
+		IC_Visible = false,
+		})
+		
+------------------------------------------------------------------- EXTERNAL INPUTS
+
+	InImage = self:AddInput("Plate", "Plate", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	InCleanPlate = self:AddInput("Clean Plate", "CleanPlate", {
+		LINKID_DataType = "Image",
+		LINK_Main = 2,
+		INP_Required = false,
+		})
+		
+	InBGImage = self:AddInput("Background", "Background", {
+		LINKID_DataType = "Image",
+		LINK_Main = 3,
+		INP_Required = false,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+end
+
+------------------------------------------------------------------- DYNAMIC GUI
+
+function NotifyChanged(inp, param, time)
+	if inp ~= nil and param ~= nil then
+		if inp == InMode then
+			if param.Value == 0 then
+				InFinetune:SetAttrs({IC_Visible = true})
+				DoSSBoost:SetAttrs({IC_Visible = true})
+				InRGWght:SetAttrs({IC_Visible = false})
+				InGBWght:SetAttrs({IC_Visible = false})
+				InR:SetAttrs({IC_Visible = true})
+				InG:SetAttrs({IC_Visible = true})
+				InB:SetAttrs({IC_Visible = true})
+				InScreenType:SetAttrs({IC_Visible = true})
+				InTDGain:SetAttrs({IC_Visible = false})
+				InTDSaturation:SetAttrs({IC_Visible = false})
+				DoTDClip:SetAttrs({IC_Visible = false})
+				InTDClip:SetAttrs({IC_Visible = false})
+				InDespillType:SetAttrs({IC_Visible = false})
+				InSpillReplace:SetAttrs({IC_Visible = false})
+				InDespillThreshold:SetAttrs({IC_Visible = false})
+				InDespillAmount:SetAttrs({IC_Visible = false})
+				InDespillLimit:SetAttrs({IC_Visible = false})
+				InRSp:SetAttrs({IC_Visible = false})
+				InGSp:SetAttrs({IC_Visible = false})
+				InBSp:SetAttrs({IC_Visible = false})
+			elseif param.Value == 1 then
+				InFinetune:SetAttrs({IC_Visible = false})
+				DoSSBoost:SetAttrs({IC_Visible = false})
+				InRGWght:SetAttrs({IC_Visible = true})
+				InGBWght:SetAttrs({IC_Visible = true})
+				InR:SetAttrs({IC_Visible = false})
+				InG:SetAttrs({IC_Visible = false})
+				InB:SetAttrs({IC_Visible = false})
+				InScreenType:SetAttrs({IC_Visible = true})
+				InTDGain:SetAttrs({IC_Visible = false})
+				InTDSaturation:SetAttrs({IC_Visible = false})
+				DoTDClip:SetAttrs({IC_Visible = false})
+				InTDClip:SetAttrs({IC_Visible = false})
+				InDespillType:SetAttrs({IC_Visible = false})
+				InSpillReplace:SetAttrs({IC_Visible = false})
+				InDespillThreshold:SetAttrs({IC_Visible = false})
+				InDespillAmount:SetAttrs({IC_Visible = false})
+				InDespillLimit:SetAttrs({IC_Visible = false})
+				InRSp:SetAttrs({IC_Visible = false})
+				InGSp:SetAttrs({IC_Visible = false})
+				InBSp:SetAttrs({IC_Visible = false})
+			elseif param.Value == 2 then 
+				InFinetune:SetAttrs({IC_Visible = false})
+				DoSSBoost:SetAttrs({IC_Visible = false})
+				InRGWght:SetAttrs({IC_Visible = false})
+				InGBWght:SetAttrs({IC_Visible = false})
+				InR:SetAttrs({IC_Visible = false})
+				InG:SetAttrs({IC_Visible = false})
+				InB:SetAttrs({IC_Visible = false})
+				InScreenType:SetAttrs({IC_Visible = false})
+				InTDGain:SetAttrs({IC_Visible = true})
+				InTDSaturation:SetAttrs({IC_Visible = true})
+				DoTDClip:SetAttrs({IC_Visible = true})
+				InTDClip:SetAttrs({IC_Visible = true})
+				InDespillType:SetAttrs({IC_Visible = false})
+				InSpillReplace:SetAttrs({IC_Visible = false})
+				InDespillThreshold:SetAttrs({IC_Visible = false})
+				InDespillAmount:SetAttrs({IC_Visible = false})
+				InDespillLimit:SetAttrs({IC_Visible = false})
+				InRSp:SetAttrs({IC_Visible = false})
+				InGSp:SetAttrs({IC_Visible = false})
+				InBSp:SetAttrs({IC_Visible = false})
+			elseif param.Value == 3 then
+				InFinetune:SetAttrs({IC_Visible = false})
+				DoSSBoost:SetAttrs({IC_Visible = false})
+				InRGWght:SetAttrs({IC_Visible = false})
+				InGBWght:SetAttrs({IC_Visible = false})
+				InR:SetAttrs({IC_Visible = false})
+				InG:SetAttrs({IC_Visible = false})
+				InB:SetAttrs({IC_Visible = false})
+				InScreenType:SetAttrs({IC_Visible = true})
+				InTDGain:SetAttrs({IC_Visible = false})
+				InTDSaturation:SetAttrs({IC_Visible = false})
+				DoTDClip:SetAttrs({IC_Visible = false})
+				InTDClip:SetAttrs({IC_Visible = false})
+				InDespillType:SetAttrs({IC_Visible = true})
+				InSpillReplace:SetAttrs({IC_Visible = true})
+				InDespillThreshold:SetAttrs({IC_Visible = true})
+				InDespillAmount:SetAttrs({IC_Visible = true})
+				InDespillLimit:SetAttrs({IC_Visible = true})
+				InRSp:SetAttrs({IC_Visible = true})
+				InGSp:SetAttrs({IC_Visible = true})
+				InBSp:SetAttrs({IC_Visible = true})
+			elseif param.Value == 4 then
+				InFinetune:SetAttrs({IC_Visible = false})
+				DoSSBoost:SetAttrs({IC_Visible = false})
+				InRGWght:SetAttrs({IC_Visible = false})
+				InGBWght:SetAttrs({IC_Visible = false})
+				InR:SetAttrs({IC_Visible = true})
+				InG:SetAttrs({IC_Visible = true})
+				InB:SetAttrs({IC_Visible = true})
+				InScreenType:SetAttrs({IC_Visible = false})
+				InTDGain:SetAttrs({IC_Visible = false})
+				InTDSaturation:SetAttrs({IC_Visible = false})
+				DoTDClip:SetAttrs({IC_Visible = false})
+				InTDClip:SetAttrs({IC_Visible = false})
+				InDespillType:SetAttrs({IC_Visible = false})
+				InSpillReplace:SetAttrs({IC_Visible = false})
+				InDespillThreshold:SetAttrs({IC_Visible = false})
+				InDespillAmount:SetAttrs({IC_Visible = false})
+				InDespillLimit:SetAttrs({IC_Visible = false})
+				InRSp:SetAttrs({IC_Visible = false})
+				InGSp:SetAttrs({IC_Visible = false})
+				InBSp:SetAttrs({IC_Visible = false})
+			end
+		end
+	end
+end
+
+------------------------------------------------------------------- KAK KEYER
+
+function kak_func_R(x,y, pla,cpla)
+
+	pla.A = math.max(0,(pla.R-(pla.G*RGWght+pla.B*GBWght))/(cpla.R-(cpla.G*RGWght+cpla.B*GBWght)))
+	pla.R = cpla.R
+	pla.G = cpla.G
+	pla.B = cpla.B
+	
+	return pla
+end
+
+function kak_func_G(x,y, pla,cpla)
+
+	pla.A = math.max(0,(pla.G-(pla.R*RGWght+pla.B*GBWght))/(cpla.G-(cpla.R*RGWght+cpla.B*GBWght)))
+	pla.R = cpla.R
+	pla.G = cpla.G
+	pla.B = cpla.B
+	
+	return pla
+end
+
+function kak_func_B(x,y, pla,cpla)
+
+	pla.A = math.max(0,(pla.B-(pla.R*RGWght+pla.G*GBWght))/(cpla.B-(cpla.R*RGWght+cpla.G*GBWght)))
+	pla.R = cpla.R
+	pla.G = cpla.G
+	pla.B = cpla.B
+	
+	return pla
+end
+
+------------------------------------------------------------------- KAK SCREEN SELECT
+
+function ss_func_R(x,y, pla)
+
+	pla.A = math.max( 0, math.min ( (1+9999*Boost) *
+	(pla.R - (math.min(pla.G,pla.B) * 1/math.min(Green,Blue) * math.max(Green,Blue) * ( (Red - math.max(Blue,Green) ) / (Red - math.min(Blue,Green) ) ) * Finetune + math.max(pla.G,pla.B) ) ) /
+	(Red-(math.min(Green,Blue) * ( ( Red - math.max(Blue,Green) ) / (Red - math.min(Blue,Green) ) ) * Finetune + math.max(Green,Blue) ))
+	, 1) )
+	
+	return pla
+end
+
+function ss_func_G(x,y, pla)
+	
+	pla.A = math.max( 0, math.min ( (1+9999*Boost) *
+	(pla.G - (math.min(pla.R,pla.B) * 1/math.min(Red,Blue) * math.max(Red,Blue) * ( (Green - math.max(Blue,Red) ) / (Green - math.min(Blue,Red) ) ) * Finetune + math.max(pla.R,pla.B) ) ) /
+	(Green-(math.min(Red,Blue) * ( ( Green - math.max(Blue,Red) ) / (Green - math.min(Blue,Red) ) ) * Finetune + math.max(Red,Blue) ))
+	, 1) )
+	
+	return pla
+end
+
+function ss_func_B(x,y, pla)
+
+	pla.A = math.max( 0, math.min ( (1+9999*Boost) *
+	(pla.B - (math.min(pla.R,pla.G) * 1/math.min(Red,Green) * math.max(Red,Green) * ( (Blue - math.max(Green,Red) ) / (Blue - math.min(Green,Red) ) ) * Finetune + math.max(pla.R,pla.G) ) ) /
+	(Blue-(math.min(Red,Green) * ( ( Blue - math.max(Green,Red) ) / (Blue - math.min(Green,Red) ) ) * Finetune + math.max(Red,Green) ))
+	, 1) )
+	
+	return pla
+end
+
+------------------------------------------------------------------- TRANSPARENT DETAIL
+
+--function td_func(x,y, pla, cpla, bgi)
+function td_func(x,y, pla, cpla)
+
+	pla.R = Gain * (pla.R - cpla.R)
+	pla.G = Gain * (pla.G - cpla.G)
+	pla.B = Gain * (pla.B - cpla.B)
+	pla.A = 0
+	
+	local desat = 0.299*pla.R+0.587*pla.G+0.114*pla.B
+	
+	if DoClip == 1 then 
+--		pla.R = math.max ( math.max (-bgi.R, Clip) , Sat * pla.R + (1-Sat) * desat )
+--		pla.G = math.max ( math.max (-bgi.G, Clip) , Sat * pla.G + (1-Sat) * desat )
+--		pla.B = math.max ( math.max (-bgi.B, Clip) , Sat * pla.B + (1-Sat) * desat )
+		pla.R = math.max ( Clip , Sat * pla.R + (1-Sat) * desat )
+		pla.G = math.max ( Clip , Sat * pla.G + (1-Sat) * desat )
+		pla.B = math.max ( Clip , Sat * pla.B + (1-Sat) * desat )
+	else
+		pla.R = Sat * pla.R + (1-Sat) * desat
+		pla.G = Sat * pla.G + (1-Sat) * desat
+		pla.B = Sat * pla.B + (1-Sat) * desat
+	end
+
+	return pla
+end
+
+------------------------------------------------------------------- DESPILL
+
+function despill_func_R(x,y, pla, bgi)
+
+	if DespillColor == 0 then
+
+		pla.A = pla.R
+		
+		if DespillType == 0 then
+			pla.R = pla.R <= Limit and ( Amount * math.min( ( (pla.G+pla.B)/2 ) * Threshold, pla.R ) ) + (1-Amount) * pla.R or pla.R
+		elseif DespillType == 1 then 
+			pla.R = pla.R <= Limit and ( Amount * math.min ( ( math.max (pla.G,pla.B) ) * Threshold, pla.R ) ) + (1-Amount) * pla.R or pla.R
+		elseif DespillType == 2 then
+			pla.R = pla.R <= Limit and ( Amount * math.min ( pla.G * Threshold, pla.R ) ) + (1-Amount) * pla.R or pla.R
+		elseif DespillType == 3 then
+			pla.R = pla.R <= Limit and ( Amount * math.min ( pla.B * Threshold, pla.R ) ) + (1-Amount) * pla.R or pla.R
+		end
+		
+		pla.A = math.min ( 1, pla.A - pla.R )
+		
+	elseif DespillColor == 1 then
+	
+		if DespillType == 0 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min( ( (pla.G+pla.B)/2 ) * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( ( math.max (pla.G,pla.B) ) * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( pla.G * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( pla.B * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		end
+		
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + RedSp * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + GreenSp * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + BlueSp * pla.A or pla.B
+
+	elseif DespillColor == 2 then
+	
+		if DespillType == 0 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min( ( (pla.G+pla.B)/2 ) * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( ( math.max (pla.G,pla.B) ) * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( pla.G * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.R <= Limit and math.min ( 1, pla.R - ( ( Amount * math.min ( pla.B * Threshold, pla.R ) ) + (1-Amount) * pla.R ) ) or 0
+		end
+		
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + bgi.R * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + bgi.G * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + bgi.B * pla.A or pla.B
+
+	end
+	
+	return pla
+end
+
+function despill_func_G(x,y, pla, bgi)
+
+	if DespillColor == 0 then
+
+		pla.A = pla.G
+		
+		if DespillType == 0 then
+			pla.G = pla.G <= Limit and ( Amount * math.min( ( (pla.R+pla.B)/2 ) * Threshold, pla.G ) ) + (1-Amount) * pla.G or pla.G
+		elseif DespillType == 1 then 
+			pla.G = pla.G <= Limit and ( Amount * math.min ( ( math.max (pla.R,pla.B) ) * Threshold, pla.G ) ) + (1-Amount) * pla.G or pla.G
+		elseif DespillType == 2 then
+			pla.G = pla.G <= Limit and ( Amount * math.min ( pla.R * Threshold, pla.G ) ) + (1-Amount) * pla.G or pla.G
+		elseif DespillType == 3 then
+			pla.G = pla.G <= Limit and ( Amount * math.min ( pla.B * Threshold, pla.G ) ) + (1-Amount) * pla.G or pla.G
+		end
+		
+		pla.A = math.min ( 1, pla.A - pla.G )
+		
+	elseif DespillColor == 1 then
+	
+		if DespillType == 0 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min( ( (pla.R+pla.B)/2 ) * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( ( math.max (pla.R,pla.B) ) * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( pla.R * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( pla.B * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		end
+
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + RedSp * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + GreenSp * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + BlueSp * pla.A or pla.B
+		
+	elseif DespillColor == 2 then
+	
+		if DespillType == 0 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min( ( (pla.R+pla.B)/2 ) * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( ( math.max (pla.R,pla.B) ) * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( pla.R * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.G <= Limit and math.min ( 1, pla.G - ( ( Amount * math.min ( pla.B * Threshold, pla.G ) ) + (1-Amount) * pla.G ) ) or 0
+		end
+
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + bgi.R * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + bgi.G * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + bgi.B * pla.A or pla.B	
+		
+	end
+	
+	return pla
+end
+
+function despill_func_B(x,y, pla, bgi)
+
+	if DespillColor == 0 then
+
+		pla.A = pla.B
+		
+		if DespillType == 0 then
+			pla.B = pla.B <= Limit and ( Amount * math.min( ( (pla.G+pla.R)/2 ) * Threshold, pla.B ) ) + (1-Amount) * pla.B or pla.B
+		elseif DespillType == 1 then 
+			pla.B = pla.B <= Limit and ( Amount * math.min ( ( math.max (pla.G,pla.R) ) * Threshold, pla.B ) ) + (1-Amount) * pla.B or pla.B
+		elseif DespillType == 2 then
+			pla.B = pla.B <= Limit and ( Amount * math.min ( pla.G * Threshold, pla.B ) ) + (1-Amount) * pla.B or pla.B
+		elseif DespillType == 3 then
+			pla.B = pla.B <= Limit and ( Amount * math.min ( pla.R * Threshold, pla.B ) ) + (1-Amount) * pla.B or pla.B
+		end
+		
+		pla.A = math.min ( 1, pla.A - pla.B )
+		
+	elseif DespillColor == 1 then
+	
+		if DespillType == 0 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min( ( (pla.G+pla.R)/2 ) * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( ( math.max (pla.G,pla.R) ) * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( pla.G * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( pla.R * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		end
+		
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + RedSp * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + GreenSp * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + BlueSp * pla.A or pla.B
+
+	elseif DespillColor == 2 then
+	
+		if DespillType == 0 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min( ( (pla.G+pla.R)/2 ) * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 1 then 
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( ( math.max (pla.G,pla.R) ) * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 2 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( pla.G * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		elseif DespillType == 3 then
+			pla.A = pla.B <= Limit and math.min ( 1, pla.B - ( ( Amount * math.min ( pla.R * Threshold, pla.B ) ) + (1-Amount) * pla.B ) ) or 0
+		end
+		
+		pla.R = pla.R <= Limit and pla.R * (1-pla.A) + bgi.R * pla.A or pla.R
+		pla.G = pla.G <= Limit and pla.G * (1-pla.A) + bgi.G * pla.A or pla.G
+		pla.B = pla.B <= Limit and pla.B * (1-pla.A) + bgi.B * pla.A or pla.B
+
+	end
+	
+	return pla
+end
+
+------------------------------------------------------------------- COLOUR MODE
+
+function colour_func(x,y, pla)
+
+	pla.R = Red
+	pla.G = Green
+	pla.B = Blue
+	
+	return pla
+end
+
+------------------------------------------------------------------- PROCESS
+
+function Process(req)
+
+	local mode = InMode:GetValue(req).Value
+
+	local screentype = InScreenType:GetValue(req).Value
+	local red = InR:GetValue(req).Value
+	local green = InG:GetValue(req).Value
+	local blue = InB:GetValue(req).Value
+	
+	if screentype == 0 then
+		if green >= math.max(red,blue) then
+			screentype = 2
+		elseif blue >= math.max(red,green) then
+			screentype = 3
+		else
+			screentype = 1
+		end
+	end
+	
+	local pla = InImage:GetValue(req)
+	local cpla = InCleanPlate:GetValue(req)
+	local bgi = InBGImage:GetValue(req)
+	local n1 = InRGWght:GetValue(req).Value
+	local n2 = InGBWght:GetValue(req).Value
+	
+	local n3 = InFinetune:GetValue(req).Value
+	
+	local n4 = InTDGain:GetValue(req).Value
+	local n5 = InTDSaturation:GetValue(req).Value
+	local n6 = DoTDClip:GetValue(req).Value
+	local n7 = InTDClip:GetValue(req).Value
+	
+	local n8 = InDespillType:GetValue(req).Value
+	local n9 = InDespillThreshold:GetValue(req).Value
+	local n10 = InDespillAmount:GetValue(req).Value
+	local n11 = InSpillReplace:GetValue(req).Value
+	local n12 = InDespillLimit:GetValue(req).Value
+	
+	local n13 = DoSSBoost:GetValue(req).Value
+	
+	local rsp = InRSp:GetValue(req).Value
+	local gsp = InGSp:GetValue(req).Value
+	local bsp = InBSp:GetValue(req).Value
+
+	local out
+	
+	out = Image({IMG_Like = pla})
+	
+	if mode == 1 then	
+		if screentype == 2 then
+			out:MultiProcessPixels(nil, { RGWght = n1 , GBWght = n2 }, 0,0, pla.Width, pla.Height, pla, cpla, kak_func_G)
+		elseif screentype ==3 then
+			out:MultiProcessPixels(nil, { RGWght = n1 , GBWght = n2 }, 0,0, pla.Width, pla.Height, pla, cpla, kak_func_B)
+		else
+			out:MultiProcessPixels(nil, { RGWght = n1 , GBWght = n2 }, 0,0, pla.Width, pla.Height, pla, cpla, kak_func_R)
+		end
+	elseif mode == 0 then
+		if screentype == 2 then
+			out:MultiProcessPixels(nil, { Red = red, Green = green, Blue = blue, Finetune = n3, Boost = n13 }, 0,0, pla.Width, pla.Height, pla, ss_func_G)
+		elseif screentype ==3 then
+			out:MultiProcessPixels(nil, { Red = red, Green = green, Blue = blue, Finetune = n3, Boost = n13 }, 0,0, pla.Width, pla.Height, pla, ss_func_B)
+		else
+			out:MultiProcessPixels(nil, { Red = red, Green = green, Blue = blue, Finetune = n3, Boost = n13 }, 0,0, pla.Width, pla.Height, pla, ss_func_R)
+		end
+	elseif mode == 2 then
+--		out:MultiProcessPixels(nil, { Gain = n4, Sat = n5, DoClip = n6, Clip = n7 }, 0,0, pla.Width, pla.Height, pla, cpla, bgi, td_func)
+		out:MultiProcessPixels(nil, { Gain = n4, Sat = n5, DoClip = n6, Clip = n7 }, 0,0, pla.Width, pla.Height, pla, cpla, td_func)
+		local p = Pixel()
+		p:Clear()
+		out:SetCanvasColor(p)
+	elseif mode == 3 then
+		if screentype == 2 then
+			out:MultiProcessPixels(nil, { DespillType = n8, Threshold = n9, Amount = n10, RedSp = rsp, GreenSp = gsp, BlueSp = bsp, DespillColor = n11, Limit = n12 }, 0,0, pla.Width, pla.Height, pla, bgi, despill_func_G)
+		elseif screentype ==3 then
+			out:MultiProcessPixels(nil, { DespillType = n8, Threshold = n9, Amount = n10, RedSp = rsp, GreenSp = gsp, BlueSp = bsp, DespillColor = n11, Limit = n12 }, 0,0, pla.Width, pla.Height, pla, bgi, despill_func_B)
+		else
+			out:MultiProcessPixels(nil, { DespillType = n8, Threshold = n9, Amount = n10, RedSp = rsp, GreenSp = gsp, BlueSp = bsp, DespillColor = n11, Limit = n12 }, 0,0, pla.Width, pla.Height, pla, bgi, despill_func_R)
+		end
+	elseif mode == 4 then
+		out:MultiProcessPixels(nil, { Red = red, Green = green, Blue = blue }, 0,0, pla.Width, pla.Height, pla, colour_func)
+	end
+	
+	OutImage:Set(req, out)
+end

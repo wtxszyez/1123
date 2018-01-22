@@ -1,0 +1,605 @@
+{
+	Tools = ordered() {
+		DepthDefocus = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Depth Defocus for Fusion 5.3 or above\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "CT_ChannelSelector",
+					Source = "Image1",
+					Name = "Depth Map",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "EffectMask",
+				},
+				DepthMapChannel = InstanceInput {
+					SourceOp = "CT_ChannelSelector",
+					Source = "BlurChannel",
+					Name = "Depth Map Channel",
+				},
+				FocalPoint = InstanceInput {
+					SourceOp = "CT_FocalPointSelector",
+					Source = "FocalPoint",
+					Name = "Focal Point",
+					ControlGroup = 4,
+					Default = 0,
+				},
+				LockXY = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "LockXY",
+					Default = 1,
+				},
+				XBlurSize = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "XBlurSize",
+					Default = 5,
+				},
+				YBlurSize = InstanceInput {
+					Disabled = true,
+					SourceOp = "VariBlur",
+					Source = "YBlurSize",
+					Default = 5,
+				},
+				DepthPowerCurvature = InstanceInput {
+					SourceOp = "CT_FocalPointSelector",
+					Source = "DepthPowerCurvatureSlider",
+					Name = "Depth Power Curvature",
+					Default = 2,
+				},
+				FGPower = InstanceInput {
+					SourceOp = "CT_FocalPointSelector",
+					Source = "FGPowerSlider",
+					Name = "FG Power",
+					Default = 2,
+				},
+				Quality = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "Quality",
+					Default = 4,
+				},
+				PreGammaPostGamma = InstanceInput {
+					SourceOp = "BC_Degamma",
+					Source = "PreGammaPostGamma",
+				},
+				ImageGamma = InstanceInput {
+					SourceOp = "BC_Regamma",
+					Source = "Gamma",
+					Name = "Image Gamma",
+					Default = 2.2,
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Depth",
+					Name = "Set Depth",
+				},
+				ShowDefocusPowerMap = InstanceInput {
+					SourceOp = "Bol_DOFPowerOutput",
+					Source = "ShowDefocusPowerMap",
+					Name = "Show Defocus Power Map",
+				},
+				ConnectZBufferToTheOutput = InstanceInput {
+					SourceOp = "Bol_ZConnection",
+					Source = "ConnectZBuffer",
+					Name = "Connect Z Buffer to the Output",
+				},
+				Blend = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "BlendClone",
+					Page = "Common Controls",
+					Name = "Blend",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ProcessRed",
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ProcessGreen",
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ProcessBlue",
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ProcessAlpha",
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "MaskHigh",
+					ControlGroup = 12,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "VariBlur",
+					Source = "MaskLow",
+					ControlGroup = 12,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Bol_DOFPowerOutput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1040, 180, },
+				Flags = {
+					AllowPan = false,
+					ForceSource = true,
+					FullIndicator = true,
+					RemoveRouters = true,
+				},
+				Size = { 262.748, 276.837, },
+				Direction = "Vertical",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 3.45933, 54.2347, },
+			},
+			Tools = ordered() {
+				ChangeDepth = ChangeDepth {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input {
+							Value = 4,
+						},
+						Input = Input {
+							SourceOp = "Transform1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -107.002, 142.67, },
+					},
+				},
+				BC_Regamma = BrightnessContrast {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Value = 2.2,
+						},
+						Blend = Input {
+							Expression = "BC_Degamma.Blend",
+						},
+						Input = Input {
+							SourceOp = "VariBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 56.274, 75.2956, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				VariBlur = VariBlur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Expression = "(1-Bol_DOFPowerOutput.ShowDefocusPowerMap)*BlendClone",
+						},
+						Method = Input {
+							Value = 2,
+						},
+						XBlurSize = Input {
+							Value = 5,
+						},
+						YBlurSize = Input {
+							Value = 5,
+							Disabled = true,
+						},
+						Input = Input {
+							SourceOp = "BC_Degamma",
+							Source = "Output",
+						},
+						BlurImage = Input {
+							SourceOp = "CT_FocalPointSelector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 53.754, 38.0696, },
+					},
+					UserControls = ordered() {
+						BlendClone = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INPS_Name = "Blend",
+							INP_Default = 1,
+						},
+					},
+				},
+				BC_Degamma = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Value = 0.454545454545455,
+							Expression = "1/BC_Regamma.Gamma",
+						},
+						Blend = Input {
+							Expression = "iif(VariBlur.Blend==0,0,BC_Degamma.PreGammaPostGamma)",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 68.374, -16.9554, },
+					},
+					UserControls = ordered() {
+						PreGammaPostGamma = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Pre-Gamma / Post-Gamma",
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 1,
+						},
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				CT_ChannelSelector = Custom {
+					CtrlWShown = false,
+					Inputs = {
+						FocalPoint = Input {
+							SourceOp = "Publish1_1",
+							Source = "Value",
+						},
+						NumberIn1 = Input {
+							Value = 5,
+							Expression = "BlurChannel",
+						},
+						NumberIn2 = Input {
+							Value = 1,
+						},
+						NumberIn3 = Input {
+							Value = 2,
+						},
+						NumberIn4 = Input {
+							Value = 5,
+							Expression = "BlurChannel",
+						},
+						Intermediate1 = Input {
+							Value = "r1*0.299+g1*0.587+b1*0.114",
+						},
+						RedExpression = Input {
+							Value = "if(n1=1,g1,if(n1=2,b1,if(n1=3,a1,if(n1=4,i1,if(n1=5,z1,r1)))))",
+						},
+						NumberControls = Input {
+							Value = 1,
+						},
+						NameforNumber1 = Input {
+							Value = "Blur Channel",
+						},
+						ShowNumber2 = Input {
+							Value = 0,
+						},
+						ShowNumber3 = Input {
+							Value = 0,
+						},
+						ShowNumber4 = Input {
+							Value = 0,
+						},
+						ShowNumber5 = Input {
+							Value = 0,
+						},
+						ShowNumber6 = Input {
+							Value = 0,
+						},
+						ShowNumber7 = Input {
+							Value = 0,
+						},
+						ShowNumber8 = Input {
+							Value = 0,
+						},
+						ShowPoint1 = Input {
+							Value = 0,
+						},
+						ShowPoint2 = Input {
+							Value = 0,
+						},
+						ShowPoint3 = Input {
+							Value = 0,
+						},
+						ShowPoint4 = Input {
+							Value = 0,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -68.374, -26.0064, },
+					},
+					UserControls = ordered() {
+						BlurChannel = {
+							{ MBTNC_AddButton = "Red", },
+							{ MBTNC_AddButton = "Green", },
+							{ MBTNC_AddButton = "Blue", },
+							{ MBTNC_AddButton = "Alpha", },
+							{ MBTNC_AddButton = "Luma", },
+							{ MBTNC_AddButton = "Z", },
+							LINKID_DataType = "Number",
+							INPID_InputControl = "MultiButtonControl",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							INPS_Name = "Blur Channel",
+							INP_Default = 5,
+						},
+					},
+				},
+				Publish1_1 = PublishNumber {
+					Inputs = {
+						Value = Input {
+							Value = -5,
+						},
+					},
+				},
+				Bol_DOFPowerOutput = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "ShowDefocusPowerMap",
+						},
+						ToGreen = Input {
+							Value = 0,
+						},
+						ToBlue = Input {
+							Value = 0,
+						},
+						ToAlpha = Input {
+							Value = 4,
+						},
+						Background = Input {
+							SourceOp = "Bol_ZConnection",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CT_FocalPointSelector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 56.274, 150.296, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						ShowDefocusPowerMap = {
+							INPID_InputControl = "CheckboxControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 2,
+							INPS_Name = "Show Defocus Power Map",
+							INP_Default = 0,
+						},
+					},
+				},
+				Bol_ZConnection = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Expression = "ConnectZBuffer",
+						},
+						ToRed = Input {
+							Value = 4,
+						},
+						ToGreen = Input {
+							Value = 4,
+						},
+						ToBlue = Input {
+							Value = 4,
+						},
+						ToAlpha = Input {
+							Value = 4,
+						},
+						EnableExtraChannels = Input {
+							Value = 1,
+						},
+						ToZBuffer = Input {
+							Value = 0,
+						},
+						Background = Input {
+							SourceOp = "BC_Regamma",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CT_ChannelSelector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 56.274, 108.296, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						ConnectZBuffer = {
+							INPID_InputControl = "CheckboxControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 2,
+							INPS_Name = "Connect Z Buffer",
+							INP_Default = 1,
+						},
+					},
+				},
+				CT_FocalPointSelector = Custom {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						BlurChannel = Input {
+							Value = 3,
+						},
+						NumberIn1 = Input {
+							Value = 0.5,
+							Expression = "FocalPoint",
+						},
+						NumberIn2 = Input {
+							Value = 2,
+							Expression = "DepthPowerCurvatureSlider",
+						},
+						NumberIn3 = Input {
+							Value = 2,
+							Expression = "FGPowerSlider",
+						},
+						NumberIn4 = Input {
+							Value = 3,
+							Expression = "BlurChannel",
+						},
+						Intermediate1 = Input {
+							Value = "if(a1=0,0,if(r1>n1,r1-n1,n1-r1))",
+						},
+						RedExpression = Input {
+							Value = "if(r1>n1,(i1*n3)^n2,i1^(1/n2))",
+						},
+						GreenExpression = Input {
+							Value = "",
+						},
+						BlueExpression = Input {
+							Value = "",
+						},
+						AlphaExpression = Input {
+							Value = "",
+						},
+						AuxChannelNest = Input {
+							Value = 1,
+						},
+						NumberControls = Input {
+							Value = 1,
+						},
+						NameforNumber1 = Input {
+							Value = "Focal Point",
+						},
+						NameforNumber2 = Input {
+							Value = "Depth Power Curvature",
+						},
+						NameforNumber3 = Input {
+							Value = "FG Power",
+						},
+						ShowNumber4 = Input {
+							Value = 0,
+						},
+						ShowNumber5 = Input {
+							Value = 0,
+						},
+						ShowNumber6 = Input {
+							Value = 0,
+						},
+						ShowNumber7 = Input {
+							Value = 0,
+						},
+						ShowNumber8 = Input {
+							Value = 0,
+						},
+						ShowPoint1 = Input {
+							Value = 0,
+						},
+						ShowPoint2 = Input {
+							Value = 0,
+						},
+						ShowPoint3 = Input {
+							Value = 0,
+						},
+						ShowPoint4 = Input {
+							Value = 0,
+						},
+						Image1 = Input {
+							SourceOp = "CT_ChannelSelector",
+							Source = "Output",
+						},
+						FocalPoint = Input {
+							Value = 0.5,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -72.8964, 44.9096, },
+					},
+					UserControls = ordered() {
+						FocalPoint = {
+							IC_ControlGroup = 1,
+							LINKID_DataType = "Number",
+							IC_ControlID = 12,
+							INPID_InputControl = "ColorControl",
+							CLRC_ColorSpace = 0,
+							IC_ControlPage = 0,
+							INPS_Name = "Focal Point",
+							INP_Default = 0,
+						},
+						DepthPowerCurvatureSlider = {
+							INP_MaxScale = 5,
+							ICD_Center = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INPS_Name = "Depth Power Curvature Slider",
+							INP_Default = 2,
+						},
+						FGPowerSlider = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MaxScale = 100,
+							IC_ControlPage = 0,
+							INPS_Name = "FG Power Slider",
+							INP_Default = 2,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.505882352941176, B = 0.337254901960784, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}

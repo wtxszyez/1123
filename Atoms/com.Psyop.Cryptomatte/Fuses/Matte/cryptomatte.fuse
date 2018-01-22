@@ -1,0 +1,549 @@
+--[[
+Requires   : Fusion 9.0.1+
+Optional   : cjson
+Created by : Cédric Duriau         [duriau.cedric@live.be]
+             Kristof Indeherberge  [xmnr0x23@gmail.com]
+             Andrew Hazelden       [andrew@andrewhazelden.com]
+Version    : 1.2.0
+--]]
+
+-- ===========================================================================
+-- modules
+-- ===========================================================================
+local cryptoutils = require("cryptomatte_utilities")
+
+-- ===========================================================================
+-- constants
+-- ===========================================================================
+FUSE_NAME = "Cryptomatte"
+SEPARATOR = string.rep("_", 9999)
+SEPARATOR_INDEX = 0
+SHOW_CALLBACKS = false
+VIEW_MODE_EDGES = "Edges"
+VIEW_MODE_COLORS = "Colors"
+VIEW_MODE_NONE = "None"
+VIEW_MODES = {VIEW_MODE_EDGES, VIEW_MODE_COLORS, VIEW_MODE_NONE}
+
+-- ===========================================================================
+-- fuse
+-- ===========================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGS_Name = FUSE_NAME,
+    REGS_Category = FUSE_NAME,
+    REGS_OpIconString = FUSE_NAME,
+    REGS_OpDescription = FUSE_NAME,
+    REG_NoMotionBlurCtrls = true,
+    REG_NoBlendCtrls = true,
+    REG_OpNoMask = true
+})
+
+function Create()
+    -- input
+    InImage = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Image",
+        LINK_Main = 1
+    })
+    -- output
+    OutImage = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Image",
+        LINK_Main = 1
+    })
+
+    -- locator & picking
+    Locator = self:AddInput("Locator", "Locator", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        INPID_PreviewControl = "CrosshairControl",
+        ICS_Name = "Matte Locator"
+    })
+    BtnAdd = self:AddInput("Add", "Add", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_External = false,
+        INP_DoNotifyChanged = true,
+        ICD_Width = 1 / 3
+    })
+    BtnRemove = self:AddInput("Remove", "Remove", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_External = false,
+        INP_DoNotifyChanged = true,
+        ICD_Width = 1 / 3
+    })
+    BtnToggle= self:AddInput("Toggle", "Toggle", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_External = false,
+        INP_DoNotifyChanged = true,
+        ICD_Width = 1 / 3
+    })
+
+    create_separator()
+
+    -- view modes
+    CbPreview = self:AddInput("Keyable Surface", "KeyableSurface", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        ICD_Width = 0.5
+    })
+    ComboViewMode = self:AddInput("", "ViewMode", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ComboControl",
+        INP_Default = 0.0,
+        INP_Integer = true,
+        ICD_Width = 0.5,
+        { CCS_AddString = VIEW_MODES[1] },
+        { CCS_AddString = VIEW_MODES[2] },
+        { CCS_AddString = VIEW_MODES[3] },
+        CC_LabelPosition = "Vertical"
+    })
+    CbMatteOnly = self:AddInput("Matte Only", "MatteOnly", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        ICD_Width = 1 / 3
+    })
+
+    create_separator()
+
+    -- matte list
+    TextMatteList = self:AddInput("Matte List", "MatteList", {
+        LINKS_Name = "Matte List",
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        TEC_Wrap = false,
+        TEC_DeferSetInputs = true
+    })
+    BtnClear = self:AddInput("Clear", "Clear", {
+        LINKS_Name = "Clear",
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_Integer = false,
+        ICD_Width = 0.5,
+        INP_DoNotifyChanged = true
+    })
+
+    create_separator()
+
+    -- layer selection
+    SliderCryptoLayer = self:AddInput("Crypto Layer Selection", "CryptoLayerSlider", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        IC_Steps = 1,
+        INP_Integer = true,
+        INP_MinAllowed = 1,
+        INP_MaxAllowed = 100
+    })
+    TextCryptoLayer = self:AddInput("Crypto Layer", "CryptoLayer", {
+        LINKS_Name = "",
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        TEC_ReadOnly = true
+    })
+
+    -- advanced tab
+    -- name checker
+    LocatorNameChecker = self:AddInput("Locator Name Checker", "LocatorNameChecker", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        INPID_PreviewControl = "CrosshairControl",
+        ICS_Name = "Name Checker Locator",
+        ICS_ControlPage = "Advanced",
+        PC_Visible = false
+    })
+    BtnShow = self:AddInput("Show", "Show", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_External = false,
+        INP_DoNotifyChanged = true,
+        ICD_Width = 0.5
+    })
+    BtnHide = self:AddInput("Hide", "Hide", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "ButtonControl",
+        INP_External = false,
+        INP_DoNotifyChanged = true,
+        ICD_Width = 0.5
+    })
+    TextKeyedName = self:AddInput("Keyed Name", "KeyedName", {
+        LINKS_Name = "Keyed Name",
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        TEC_Wrap = false,
+        TEC_ReadOnly = true
+    })
+
+    -- GUI callbacks
+    SeparatorCallbacks = create_separator()
+    SeparatorCallbacks:SetAttrs({IC_Visible = SHOW_CALLBACKS})
+
+    -- callback connect
+    CallbackConnect = self:AddInput("Connect Callback", "ConnectCallback", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        IC_Visible = SHOW_CALLBACKS
+    })
+    -- callback add
+    CallbackBtnAdd = self:AddInput("Add Callback", "AddCallback", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        IC_Visible = SHOW_CALLBACKS
+    })
+    -- callback remove
+    CallbackBtnRemove = self:AddInput("Remove Callback", "RemoveCallback", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        IC_Visible = SHOW_CALLBACKS
+    })
+    -- callback toggle
+    CallbackBtnToggle = self:AddInput("Toggle Callback", "ToggleCallback", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        IC_Visible = SHOW_CALLBACKS
+    })
+end
+
+-- ===========================================================================
+-- utils
+-- ===========================================================================
+function create_separator()
+    -- creates a separator GUI object
+    SEPARATOR_INDEX = SEPARATOR_INDEX + 1
+    return self:AddInput(SEPARATOR, string.format("Separator%s", SEPARATOR_INDEX), {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "LabelControl",
+        INP_External = false,
+        INP_Passive = true
+    })
+end
+
+function get_selected_layer()
+    -- returns the text inside the crypto layer line edir
+    local selected_layer = TextCryptoLayer:GetSource(0).Value
+    return selected_layer
+end
+
+function get_matte_list_input()
+    -- returns the text inside the matte list line edit
+    local matte_selection_str = TextMatteList:GetSource(0).Value
+    if matte_selection_str == nil then
+        return ""
+    end
+    return matte_selection_str
+end
+
+function set_layer_selection_slider(cInfo, default_layer)
+    -- sets the correct range of the crypto layer slider and assigns the index of the
+    -- default layer as value
+    set_slider_attributes(SliderCryptoLayer, 1, cInfo.nr_of_metadata_layers)
+    local index = cInfo.layer_name_to_index[default_layer]
+    SliderCryptoLayer.SetSource(Number(index), 0, 0)
+end
+
+function set_layer_selection_display(cInfo)
+    -- sets the text inside the crypto layer line edit based on the current index
+    -- of the crypto layer slider
+    local slider_index = SliderCryptoLayer:GetSource(0).Value
+    local layer_name = cInfo.index_to_layer_name[slider_index]
+    local current_layer = get_selected_layer()
+    if current_layer ~= layer_name then
+        TextCryptoLayer:SetSource(Text(layer_name), 0, 0)
+    end
+end
+
+function set_slider_attributes(slider, min, max)
+    -- sets the attributes of the given slider with given min and max to be able to
+    -- dynamically change the slider's range correctly
+    slider:SetAttrs({ INP_MinAllowed = min,
+                      INP_MaxAllowed = max,
+                      INP_MinScale = min,
+                      INP_MaxScale = max})
+end
+
+function update_matte_list(cInfo, matte_name, remove, toggle, matte_selection_str)
+    -- updates the matte list line edit text with given data
+    -- get valid matte names cross matches from manifest
+    local matte_set = cryptoutils:get_mattes_from_string(cInfo, matte_selection_str)
+
+    -- check if the matte to add/remove is present in the set
+    local matte_present = matte_set[matte_name]
+
+    if toggle then
+      -- toggle (add or remove) the matte from the set
+      if not matte_present then
+          matte_set[matte_name] = true
+      else
+          matte_set[matte_name] = nil
+      end
+    elseif remove then
+        -- remove matte from set
+        if matte_present then
+            matte_set[matte_name] = nil
+        else
+            return
+        end
+    else
+        -- add matte to set
+        if not matte_present then
+            matte_set[matte_name] = true
+        else
+            return
+        end
+    end
+
+    -- wrap matte names inside set with double string quotes
+    local new_content = {}
+    for matte_name, _ in pairs(matte_set) do
+        matte_name = "\"" .. matte_name .. "\""
+        table.insert(new_content, matte_name)
+    end
+
+    -- concatenate the set into a string
+    -- string concat .. operator allocates more memory than table.concat
+    local new_content_str = table.concat(new_content, ", ")
+    return new_content_str
+end
+
+function toggle_matte(cInfo, id_float_value, matte_selection_str)
+    -- gets the matte name for given id float value and toggles it to add/remove the matte selection string if necessary
+    
+    -- get matte name of id float value
+    local matte_name = cInfo.cryptomattes[cInfo.selection]["id_to_name"][id_float_value]
+    if not matte_name then 
+        return 
+    end
+
+    -- create an updated version of the matte list str
+    local new_matte_list = update_matte_list(cInfo, matte_name, false, true, matte_selection_str)
+    if new_matte_list ~= nil then
+        TextMatteList:SetSource(Text(new_matte_list), 0, 0)
+    end
+end
+
+function add_matte(cInfo, id_float_value, matte_selection_str)
+    -- gets the matte name for given id float value and adds it to the matte selection string if necessary
+    
+    -- get matte name of id float value
+    local matte_name = cInfo.cryptomattes[cInfo.selection]["id_to_name"][id_float_value]
+    if not matte_name then 
+        return 
+    end
+
+    -- create an updated version of the matte list str
+    local new_matte_list = update_matte_list(cInfo, matte_name, false, false, matte_selection_str)
+    if new_matte_list ~= nil then
+        TextMatteList:SetSource(Text(new_matte_list), 0, 0)
+    end
+end
+
+function remove_matte(cInfo, id_float_value, matte_selection_str)
+    -- gets the matte name for given id float value and removes it from the matte selection string if necessary
+
+    -- get matte name of id float value
+    local matte_name = cInfo.cryptomattes[cInfo.selection]["id_to_name"][id_float_value]
+    if not matte_name then 
+        return 
+    end
+
+    -- create an updated version of the matte list str
+    local new_matte_list = update_matte_list(cInfo, matte_name, true, false, matte_selection_str)
+    if new_matte_list ~= nil then
+        TextMatteList:SetSource(Text(new_matte_list), 0, 0)
+    end
+end
+
+function set_name_checker(cInfo, crypto_images, input_image)
+    -- activates the name checker if the locator control is visible
+    local text_to_set = ""
+    
+    -- only run code when locator is visible
+    local locator_visible = LocatorNameChecker:GetAttr("PC_Visible")
+    if locator_visible then
+        -- get screen pixel at locator position
+        local screen_pos = LocatorNameChecker:GetSource(0)
+        local id_float_value = cryptoutils:get_id_float_value(cInfo, screen_pos, crypto_images, input_image)
+
+        -- get matte name matching id float value
+        if id_float_value == 0.0 then
+            text_to_set = "Background (Value is 0.0)"
+        else
+            text_to_set = cInfo.cryptomattes[cInfo.selection]["id_to_name"][id_float_value]
+            if not text_to_set then
+                return
+            end
+            text_to_set = "\"" .. text_to_set .. "\""
+        end
+    end
+    
+    -- set the keyed name if different then before
+    local keyed_name = TextKeyedName:GetSource(0).Value
+    if text_to_set ~= keyed_name then
+        TextKeyedName:SetSource(Text(text_to_set), 0, 0)
+    end
+end
+
+function get_view_mode()
+    -- returns the selected view mode if the preview checbkbox is checked
+    -- else return default view mode "None"
+    local view_mode = VIEW_MODES[3]
+    local preview_checked = CbPreview:GetSource(0).Value
+    
+    if preview_checked == 1  then
+        local selected_view_mode_index = ComboViewMode:GetSource(0).Value
+        view_mode = VIEW_MODES[selected_view_mode_index + 1]
+    end
+    
+    return view_mode
+end
+
+function apply_view_mode(mode, input_image, crypto_images)
+    -- apply the given view mode to generate an output image
+    local output_image
+    
+    if mode == VIEW_MODE_EDGES then
+        -- edge mode
+        -- output.R + rank_00.A * 2 
+        -- output.G + rank_00.A * 2
+        local coverage = crypto_images["0"]:CopyOf()
+        coverage:Gain(1.0, 1.0, 1.0, 2.0)
+        output_image = input_image:ChannelOpOf("Add", coverage, { G = "fg.A", B = "fg.A" })
+    elseif mode == VIEW_MODE_COLORS then
+        -- colors mode generates an "ID" colored image based on an algorithm using the first two ranks
+        output_image = cryptoutils:create_preview_image(input_image, crypto_images["0"], crypto_images["1"])
+    elseif mode == VIEW_MODE_NONE then
+        -- pass input copy as output
+        output_image = input_image:CopyOf()
+    end
+    
+    return output_image
+end
+
+-- ===========================================================================
+-- main
+-- ===========================================================================
+function Process(req)
+    -- get input image
+    local input_image = InImage:GetValue(req)
+    local metadata = input_image.Metadata
+
+    -- get current selected layer
+    local layer_name = get_selected_layer()
+
+    -- create cryptomatte information object
+    local cInfo = cryptoutils:create_cryptomatte_info(metadata, layer_name)
+
+    -- refresh the manifest
+    cInfo:parse_manifest()
+
+    -- populate layer selection
+    set_layer_selection_slider(cInfo)
+    set_layer_selection_display(cInfo)
+
+    -- get updated selected layer
+    layer_name = get_selected_layer()
+
+    -- get all crypto images
+    local crypto_images = cryptoutils:get_all_rank_images(cInfo, layer_name, input_image)
+
+    -- set the name checker
+    set_name_checker(cInfo, crypto_images, input_image)
+
+    -- add matte callback
+    -- remove matte callback
+    -- toggle matte callback
+    local add_triggered = CallbackBtnAdd:GetValue(req).Value
+    local remove_triggered = CallbackBtnRemove:GetValue(req).Value
+    local toggle_triggered = CallbackBtnToggle:GetValue(req).Value
+    local matte_selection_str = get_matte_list_input()
+    if add_triggered == 1 or remove_triggered == 1 or toggle_triggered == 1 then
+        -- get the id float value from the pixel at locator coordinates
+        local screen_pos = Locator:GetSource(0)
+        local id_float_value = cryptoutils:get_id_float_value(cInfo, screen_pos, crypto_images, input_image)
+
+        if toggle_triggered == 1 then
+            toggle_matte(cInfo, id_float_value, matte_selection_str)
+            -- reset the callback
+            CallbackBtnToggle:SetSource(Number(0), 0, 0)
+        end
+        if add_triggered == 1 then
+            add_matte(cInfo, id_float_value, matte_selection_str)
+            -- reset the callback
+            CallbackBtnAdd:SetSource(Number(0), 0, 0)
+        end
+        if remove_triggered == 1 then
+            remove_matte(cInfo, id_float_value, matte_selection_str)
+            -- reset the callback
+            CallbackBtnRemove:SetSource(Number(0), 0, 0)
+        end
+    end
+
+    -- create output image depending on view mode
+    local view_mode = get_view_mode()
+    local output_image = apply_view_mode(view_mode, input_image, crypto_images)
+
+    -- create matte
+    local matte_names = cryptoutils:get_mattes_from_string(cInfo, matte_selection_str)
+    local matte = cryptoutils:create_matte_image(cInfo, matte_names, crypto_images, output_image)
+
+    -- apply matte to output image
+    if matte ~= nil then
+        output_image = output_image:ChannelOpOf("Add", matte, { R = "fg.A", G = "fg.A"})
+        output_image = output_image:ChannelOpOf("Copy", matte, { A = "fg.A"})
+    end
+
+    -- matte only callback
+    local matte_only = CbMatteOnly:GetValue(req).Value
+    if matte_only == 1 then
+        -- enable preview feature
+        CbPreview:SetAttrs({ INP_Disabled = true })
+        ComboViewMode:SetAttrs({ INP_Disabled = true })
+
+        -- output mono channel alpha image
+        OutImage:Set(req, matte)
+    else
+        -- disable preview feature
+        CbPreview:SetAttrs({ INP_Disabled = false })
+        ComboViewMode:SetAttrs({ INP_Disabled = false })
+        
+        -- output preview mode with matte applied
+        OutImage:Set(req, output_image)
+    end
+end
+
+function NotifyChanged(inp, param, time)
+    -- trigger callbacks
+    if param and param.Value == 1 then
+        if inp == BtnAdd then
+            CallbackBtnAdd:SetSource(Number(1), 0, 0)
+        elseif inp == BtnRemove then
+            CallbackBtnRemove:SetSource(Number(1), 0, 0)
+        elseif inp == BtnToggle then
+            CallbackBtnToggle:SetSource(Number(1), 0, 0)
+        elseif inp == BtnClear then
+            -- clear matte list input
+            TextMatteList:SetSource(Text(""), 0, 0)
+            -- uncheck matte only
+            CbMatteOnly:SetSource(Number(0), 0, 0)
+            -- uncheck preview
+            CbPreview:SetSource(Number(0), 0, 0)
+        elseif inp == BtnShow then
+            LocatorNameChecker:SetAttrs({ PC_Visible = true })
+        elseif inp == BtnHide then
+            LocatorNameChecker:SetAttrs({ PC_Visible = false })
+        end
+    end
+end

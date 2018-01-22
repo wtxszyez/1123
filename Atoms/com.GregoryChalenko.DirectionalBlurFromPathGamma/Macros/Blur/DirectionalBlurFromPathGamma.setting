@@ -1,0 +1,241 @@
+{
+	Tools = ordered() {
+		DirectionalBlurFromPathGamma = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Correct Directional Blur for gamma-corrected images (i.e. sRGB) that calculates its power and direction from a path animation\r\n\r\nby Gregory Chalenko\r\nwww.compositing.ru", },
+				MainInput1 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+				},
+				AnimatedOffset = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Center",
+					Name = "Animated Offset",
+				},
+				ShutterAngle = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ShutterAngle",
+				},
+				PreGammaPostGamma = InstanceInput {
+					SourceOp = "BC_Degamma",
+					Source = "PreGammaPostGamma",
+				},
+				Gamma = InstanceInput {
+					SourceOp = "BC_Regamma",
+					Source = "Gamma",
+					Name = "Image Gamma",
+					Default = 2.2,
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Depth",
+					Name = "Set Depth",
+					Default = 4,
+				},
+				Blend = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Blend",
+					Page = "Common Controls",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ProcessRed",
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ProcessGreen",
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ProcessBlue",
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ProcessAlpha",
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "MaskHigh",
+					ControlGroup = 12,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "MaskLow",
+					ControlGroup = 12,
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BC_Regamma",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 165, 17.05, }, },
+			Tools = ordered() {
+				ChangeDepth = ChangeDepth {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -175.5, 10.3, }, },
+				},
+				BC_Degamma = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "BC_Degamma.PreGammaPostGamma", },
+						Alpha = Input { Value = 1, },
+						Gamma = Input {
+							Value = 0.454545454545455,
+							Expression = "1/BC_Regamma.Gamma",
+						},
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -56.5, 10.3, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						PreGammaPostGamma = {
+							LINKID_DataType = "Number",
+							INP_Default = 1,
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							LINKS_Name = "Pre-Gamma / Post-Gamma",
+						},
+					},
+				},
+				BC_Regamma = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "BC_Degamma.PreGammaPostGamma", },
+						Alpha = Input { Value = 1, },
+						Gamma = Input { Value = 2.2, },
+						Input = Input {
+							SourceOp = "DirectionalBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 175.5, 10.794, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				DirectionalBlur = DirectionalBlur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Power = Input { Value = 180, },
+						Type = Input { Value = 2, },
+						Length = Input { Expression = "(math.abs(XDifference)^2+math.abs(YDifference)^2)^0.5*ShutterAngle/720", },
+						Angle = Input {
+							Value = 90,
+							Expression = "90-math.atan2(XDifference, YDifference/ImageAspect)/math.pi*180",
+						},
+						Input = Input {
+							SourceOp = "BC_Degamma",
+							Source = "Output",
+						},
+						ShutterAngle = Input { Value = 180, },
+						XDifference = Input {
+							Value = 0,
+							Expression = "DirectionalBlur:GetValue(\"Center\", time+1).X-DirectionalBlur:GetValue(\"Center\", time-1).X",
+						},
+						YDifference = Input {
+							Value = 0,
+							Expression = "DirectionalBlur:GetValue(\"Center\", time+1).Y-DirectionalBlur:GetValue(\"Center\", time-1).Y",
+						},
+						ImageAspect = Input {
+							Value = 1.33333333333334,
+							Expression = "ChangeDepth.Output.Width*ChangeDepth.Output.XScale/ChangeDepth.Output.Height*ChangeDepth.Output.YScale",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 56.88, 10.15, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.498039215686275, B = 0.298039215686275, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						ShutterAngle = {
+							INP_Default = 10,
+							INP_MinAllowed = 0,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 20,
+							LINKS_Name = "Shutter Angle",
+						},
+						XDifference = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 20,
+							INP_Default = 10,
+						},
+						YDifference = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 20,
+							INP_Default = 10,
+						},
+						ImageAspect = {
+							INP_MinAllowed = 0,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 20,
+							INP_Default = 10,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.498039215686275, B = 0.298039215686275, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+	ActiveTool = "DirectionalBlurFromPathGamma",
+}

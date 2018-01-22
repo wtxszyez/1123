@@ -1,0 +1,134 @@
+#!lua
+
+--[[
+Conditional Modifier WIP (2016-09-08)
+
+--]]
+
+FuRegisterClass("Conditional", CT_Modifier, {
+  REGS_Name = "Conditional",
+  REGS_Category = "Fuses",
+  REGS_OpIconString = "Cndl",
+  REGS_OpDescription = "Outputs a value based on a specified condition",
+  REGID_DataType = "Number",
+  REGID_InputDataType = "Number",
+  REG_NoMotionBlurCtrls = true,
+  REG_NoBlendCtrls = true,
+  REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+  REGS_Company = "Pieter Van Houte",
+  REGS_URL = "http://www.steakunderwater.com",
+  REGS_HelpTopic = "https://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&p=9916",
+  REG_Version = 002,
+  })
+  
+function Create()
+
+  InMode = self:AddInput("Mode", "Mode", {
+    LINKID_DataType = "FuID",
+    INPID_InputControl = "MultiButtonIDControl",
+    INPID_DefaultID = "Metadata",
+    INP_DoNotifyChanged  = true,
+    MBTNC_StretchToFit = true,
+    { MBTNC_AddButton = "Metadata", MBTNCID_AddID = "Metadata", },
+    { MBTNC_AddButton = "OS Env", MBTNCID_AddID = "OSEnv", },
+    })
+    
+ InImage = self:AddInput("Metadata Source", "Input", {
+    LINKID_DataType = "Image",
+    INPID_InputControl = "ImageControl",
+    LINK_Visible = false,
+    })
+    
+  InFieldName = self:AddInput("If Metadata Field", "InFieldName", {
+    LINKID_DataType = "Text",
+    INPID_InputControl = "TextEditControl",
+    TEC_Lines = 1,
+  })
+    
+  InFieldValue = self:AddInput("Equals", "InFieldValue", {
+    LINKID_DataType = "Text",
+    INPID_InputControl = "TextEditControl",
+    TEC_Lines = 1,
+  })
+  
+  ThenOutput = self:AddInput("Then Output", "ThenOutput", {
+    LINKID_DataType = "Number",
+    INPID_InputControl = "ScrewControl",
+    })
+    
+  ElseOutput = self:AddInput("Else Output", "ElseOutput", {
+    LINKID_DataType = "Number",
+    INPID_InputControl = "ScrewControl",
+    })
+    
+  OutValue = self:AddOutput("Output", "Output", {
+    LINKID_DataType = "Number",
+    LINK_Main = 1,
+    })
+    
+end
+
+function NotifyChanged(inp, param, time)
+  if inp ~= nil and param ~= nil then
+    if inp == InMode then
+      if param.Value == "OSEnv" then
+        InImage:SetAttrs({IC_Visible = false})
+        InFieldName:SetAttrs({LINKS_Name = "If OS Environment Variable"})
+      elseif param.Value == "Metadata" then
+        InImage:SetAttrs({IC_Visible = true})
+        InFieldName:SetAttrs({LINKS_Name = "If Matadata Field"})
+      end
+    end
+  end
+end
+
+function Process(req) 
+  local mode = InMode:GetValue(req).Value
+  local fieldname = InFieldName:GetValue(req).Value
+  local fieldvalue = InFieldValue:GetValue(req).Value
+  local img = InImage:GetValue(req)
+  
+  local thenoutput = ThenOutput:GetValue(req).Value
+  local elseoutput = ElseOutput:GetValue(req).Value
+
+  if mode == "Metadata" then
+    local metadata = img.Metadata or {}
+    
+    for i,v in pairs(metadata) do
+      if type(v) == "table" then
+        local string = ""
+        for j,w in ipairs(v) do
+          string = string..w..","
+        end
+        metadata[i] = string:sub(1, -2)
+      end
+    end
+    
+    --dump(metadata)
+    --print (metadata[fieldname])
+    --print (type(fieldvalue))
+    --print (type(metadata[fieldname]))
+    
+    if tostring(metadata[fieldname]) == fieldvalue then
+      --print("yes "..thenoutput)
+      outvalue = thenoutput
+    else
+      --print("no "..elseoutput)
+      outvalue = elseoutput
+    end
+  elseif mode == "OSEnv" then
+    --print (fieldname)
+    --print ("var="..os.getenv(fieldname))
+    if tostring(os.getenv(fieldname)) == fieldvalue then
+      --print("yes "..thenoutput)
+      outvalue = thenoutput
+    else
+      --print("no "..elseoutput)
+      outvalue = elseoutput
+    end
+  end
+    
+    
+  OutValue:Set(req, Number(outvalue))
+end

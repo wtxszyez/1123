@@ -1,0 +1,590 @@
+--[[--
+This Fuse clones the functionality of the standard Transform tool Fusion as closely as possible.
+
+Added Tweening functions using the Flux lib :https://github.com/rxi/flux
+
+
+----------------------------------------------------------------------
+ Written by Dunn Lewis <dunn[dot]lewis[dot]work[at]gmail[dot]com>
+
+
+--]]--
+
+version = "v1.02 - 16 JAN 2018"
+
+FuRegisterClass("Flux_Transform", CT_Tool, {
+	REGS_Name = "Flux Transform",
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "FXT",
+	REGS_OpDescription = "Flux Transform Fuse",
+	--REGS_HelpTopic      = "",
+	--REG_Fuse_NoEdit     = true,
+	--REG_Fuse_NoReload   = true,
+	REG_TimeVariant = true,
+	REG_Version = 102,
+	})
+
+
+function Create()
+
+	
+	InEdges = self:AddInput("Edges", "Edges", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		{ CCS_AddString = "Black", },
+		{ CCS_AddString = "Wrap", },
+		{ CCS_AddString = "Duplicate", },
+		})
+		
+
+      InLabel = self:AddInput("Flux Transform "..version, "version", {
+		LINKID_DataType    = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External       = false,
+		INP_Passive        = true,
+		})
+		
+	-------------------------------------------------------------------ANIMATION	
+	self:AddControlPage("ANIMATION")	
+	-------------------------------------------------------------------
+
+		InAnimationState = self:AddInput("AnimationState", "AnimationState", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0.0,
+		{ MBTNC_AddButton = "NO ANIMATION", MBTNCD_ButtonWidth = 1/2, },
+		{ MBTNC_AddButton = "ANIMATION", MBTNCD_ButtonWidth = 1/2, },
+		INP_Integer = true,
+		INP_DoNotifyChanged = true,
+		})
+		
+		InDelayTime= self:AddInput("START AT FRAME", "DelayTime", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"ScrewControl",
+		INP_Default =			0,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			2500,
+		INP_Integer        = true,
+
+		})
+
+		InEaseFunction = self:AddInput("Ease Function", "Operator", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_DoNotifyChanged = true,
+		INP_Default = 15,
+		INP_Integer = true,
+
+						{ CCS_AddString = "linear", },
+						{ CCS_AddString = "QuadIn", }, 
+						{ CCS_AddString = "QuadOut", }, 
+						{ CCS_AddString = "QuadInOut", }, 
+						{ CCS_AddString = "CubicIn", }, 
+						{ CCS_AddString = "CubicOut", }, 
+						{ CCS_AddString = "CubicInOut", }, 
+						{ CCS_AddString = "QuartIn", }, 
+						{ CCS_AddString = "QuartOut", }, 
+						{ CCS_AddString = "QuartInOut", }, 
+						{ CCS_AddString = "QuintIn", }, 
+						{ CCS_AddString = "QuintOut", }, 
+						{ CCS_AddString = "QuintInOut", }, 
+						{ CCS_AddString = "ExpoIn", }, 
+						{ CCS_AddString = "ExpoOut", }, 
+						{ CCS_AddString = "ExpoInOut", }, 
+						{ CCS_AddString = "SineIn", }, 
+						{ CCS_AddString = "SineOut", }, 
+						{ CCS_AddString = "SineInOut", }, 
+						{ CCS_AddString = "CircIn", }, 
+						{ CCS_AddString = "CircOut", }, 
+						{ CCS_AddString = "CircInOut", }, 
+						{ CCS_AddString = "BackIn", }, 
+						{ CCS_AddString = "BackOut", },
+						{ CCS_AddString = "BackInOut", },
+						{ CCS_AddString = "Custom BackOut", },						
+						{ CCS_AddString = "ElasticIn", }, 
+						{ CCS_AddString = "ElasticOut", }, 
+						{ CCS_AddString = "ElasticInOut", },
+						{ CCS_AddString = "Jitter" , },
+						
+						
+		
+		CC_LabelPosition = "Horizontal",
+			
+		})
+		
+	
+		InCustom_backout= self:AddInput("Custom BackOut Strength", "custom_backout_strength", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			1,
+		INP_MinAllowed =		0.1,
+		INP_MaxScale =			10,
+		INP_DoNotifyChanged = true,
+	
+		})
+		InDuration= self:AddInput("DURATION", "Duration", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			50,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			300,
+		INP_Integer        = true,
+	
+		})
+
+	InSpeed= self:AddInput("SPEED", "speed", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			1,
+		INP_MinAllowed =		0.1,
+		INP_MaxScale =			2,
+	
+		})
+				
+	
+		
+	InS_Start=self:BeginControlNest("---------------> START FROM", "START_FROM", false, {	INP_DoNotifyChanged = true,})	
+		
+	InS_CenterX = self:AddInput("Center X", "s_CenterX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		})			
+
+	InS_CenterY = self:AddInput("Center Y", "s_CenterY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		})
+		
+		
+
+		
+	InS_Pivot = self:AddInput("Pivot", "s_Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+		})
+
+	InS_SizeX = self:AddInput("Size X", "s_SizeX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+		})			
+
+	InS_SizeY = self:AddInput("Size Y", "s_SizeY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl ="ScrewControl",
+		INP_Default = 1.0,
+		})
+	
+	InS_Angle = self:AddInput("Angle", "s_Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		--INPID_PreviewControl = "AngleControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+		})
+		
+	self:EndControlNest()
+			
+		-------------------------------------------------------------------END AT
+	
+		-------------------------------------------------------------------	
+	InE_End=self:BeginControlNest("---------------> END AT", "END_AT", false, {	INP_DoNotifyChanged = true,})	
+		-------------------------------------------------------------------	
+	InE_CenterX = self:AddInput("Center X", "e_CenterX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl ="ScrewControl",
+		INP_Default = 0.5,
+		})			
+
+	InE_CenterY = self:AddInput("Center Y", "e_CenterY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		})
+		
+
+		
+	InE_Pivot = self:AddInput("Pivot", "e_Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+		})
+
+	InE_SizeX = self:AddInput("Size X", "e_SizeX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+		})			
+
+	InE_SizeY = self:AddInput("Size Y", "e_SizeY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+		})
+	
+	InE_Angle = self:AddInput("Angle", "e_Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		--INPID_PreviewControl = "AngleControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+		})
+		
+		
+		self:EndControlNest()
+		
+		-------------------------------------------------------------------BACK TO
+	
+		-------------------------------------------------------------------	
+	InB_Back=self:BeginControlNest("---------------> BACK TO", "BACK_TO", false, {	INP_DoNotifyChanged = true,})	
+		-------------------------------------------------------------------	
+	InActivate_BackTO = self:AddInput("Activate BACK TO", "activate_back_to", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0.0,
+		--ICD_Width = 0.5,
+		INP_DoNotifyChanged = true,
+		})
+		
+	InB_CenterX = self:AddInput("Center X", "b_CenterX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		INP_DoNotifyChanged = true,
+		})			
+
+	InB_CenterY = self:AddInput("Center Y", "b_CenterY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		INP_DoNotifyChanged = true,
+		})
+		
+
+		
+	InB_Pivot = self:AddInput("Pivot", "b_Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+			INP_DoNotifyChanged = true,
+		})
+
+	InB_SizeX = self:AddInput("Size X", "b_SizeX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+			INP_DoNotifyChanged = true,
+		})			
+
+	InB_SizeY = self:AddInput("Size Y", "b_SizeY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+			INP_DoNotifyChanged = true,
+		})
+	
+	InB_Angle = self:AddInput("Angle", "b_Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+			INP_DoNotifyChanged = true,
+		})
+		
+	InB_Delay_Hold= self:AddInput("BACK TO DELAY TIME", "Back_To_DelayTime", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			20,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			300,
+		INP_Integer        = true,
+		INP_DoNotifyChanged = true,
+
+		})
+		
+		self:EndControlNest()
+
+
+
+	-----------------------------------------------------------END	
+	-----------------------------------------------------------END
+	
+		
+	InImage1 = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+		
+end
+
+function NotifyChanged(inp, param, time)
+
+	if inp == InEaseFunction then
+			if (param.Value == 25) then
+			InCustom_backout:SetAttrs({IC_Visible = true})
+			else
+			InCustom_backout:SetAttrs({IC_Visible = false})
+			end
+			end
+
+
+		if inp == InAnimationState then
+			if (param.Value < 0.5) then
+
+		
+			InS_Start:SetAttrs({IC_Visible = false})
+			InS_CenterX:SetAttrs({IC_Visible = false})
+			InS_CenterY:SetAttrs({IC_Visible = false})
+
+			InS_Pivot:SetAttrs({IC_Visible = false})
+			InS_SizeX:SetAttrs({IC_Visible = false})
+			InS_SizeY:SetAttrs({IC_Visible = false})
+			InS_Angle:SetAttrs({IC_Visible = false})
+			
+			
+			InActivate_BackTO:SetAttrs({IC_Visible = false,INP_Default = 0.0})
+						
+			InB_Back:SetAttrs({IC_Visible = false})
+			InB_CenterX:SetAttrs({IC_Visible = false})
+			InB_CenterY:SetAttrs({IC_Visible = false})
+
+			InB_Pivot:SetAttrs({IC_Visible = false})
+			InB_SizeX:SetAttrs({IC_Visible = false})
+			InB_SizeY:SetAttrs({IC_Visible = false})
+			InB_Angle:SetAttrs({IC_Visible = false})
+			InB_Delay_Hold:SetAttrs({IC_Visible = false})
+		
+		
+
+else
+		
+			InS_Start:SetAttrs({IC_Visible = true})
+			InS_CenterX:SetAttrs({IC_Visible = true})
+			InS_CenterY:SetAttrs({IC_Visible = true})
+
+			InS_Pivot:SetAttrs({IC_Visible = true})
+			InS_SizeX:SetAttrs({IC_Visible = true})
+			InS_SizeY:SetAttrs({IC_Visible = true})
+			InS_Angle:SetAttrs({IC_Visible = true})
+		
+			
+			InActivate_BackTO:SetAttrs({IC_Visible = true,INP_Default = 0.0})
+			InB_Back:SetAttrs({IC_Visible = true})
+	
+			
+		if inp == InActivate_BackTO and param.Value > 0.5 then
+		
+			InB_CenterX:SetAttrs({IC_Visible = true})
+			InB_CenterY:SetAttrs({IC_Visible = true})
+
+			InB_Pivot:SetAttrs({IC_Visible = true})
+			InB_SizeX:SetAttrs({IC_Visible = true})
+			InB_SizeY:SetAttrs({IC_Visible = true})
+			InB_Angle:SetAttrs({IC_Visible = true})
+			InB_Delay_Hold:SetAttrs({IC_Visible = true})
+			
+			end
+				
+
+	end
+		end
+
+if inp == InActivate_BackTO then
+			if (param.Value < 0.5) then
+			
+			InB_CenterX:SetAttrs({IC_Visible = false})
+			InB_CenterY:SetAttrs({IC_Visible = false})
+
+			InB_Pivot:SetAttrs({IC_Visible = false})
+			InB_SizeX:SetAttrs({IC_Visible = false})
+			InB_SizeY:SetAttrs({IC_Visible = false})
+			InB_Angle:SetAttrs({IC_Visible = false})
+			InB_Delay_Hold:SetAttrs({IC_Visible = false})
+				
+			else
+			
+			InB_CenterX:SetAttrs({IC_Visible = true})
+			InB_CenterY:SetAttrs({IC_Visible = true})
+
+			InB_Pivot:SetAttrs({IC_Visible = true})
+			InB_SizeX:SetAttrs({IC_Visible = true})
+			InB_SizeY:SetAttrs({IC_Visible = true})
+			InB_Angle:SetAttrs({IC_Visible = true})
+			InB_Delay_Hold:SetAttrs({IC_Visible = true})
+				
+			end
+		end
+
+
+
+	
+end
+
+
+edge_modes = {"Black", "Wrap", "Duplicate"}
+
+function Process(req) 
+	local img1     = InImage1:GetValue(req)
+	local edges   = InEdges:GetValue(req).Value
+	
+	
+	
+	-----------START----------------------------------
+	local s_centerx   = InS_CenterX:GetValue(req).Value
+	local s_centery   = InS_CenterY:GetValue(req).Value
+
+	local s_pivot   = InS_Pivot:GetValue(req)
+	local s_sizex   = InS_SizeX:GetValue(req).Value
+	local s_sizey   = InS_SizeY:GetValue(req).Value
+	local s_angle   = InS_Angle:GetValue(req).Value
+	
+	
+	-----------END------------------------------------
+	local e_centerx   = InE_CenterX:GetValue(req).Value
+	local e_centery   = InE_CenterY:GetValue(req).Value
+
+	local e_pivot   = InE_Pivot:GetValue(req)
+	local e_sizex   = InE_SizeX:GetValue(req).Value
+	local e_sizey   = InE_SizeY:GetValue(req).Value
+	local e_angle   = InE_Angle:GetValue(req).Value
+	
+	-----------BACK------------------------------------
+	local b_centerx   = InB_CenterX:GetValue(req).Value
+	local b_centery   = InB_CenterY:GetValue(req).Value
+
+	local b_pivot   = InB_Pivot:GetValue(req)
+	local b_sizex   = InB_SizeX:GetValue(req).Value
+	local b_sizey   = InB_SizeY:GetValue(req).Value
+	local b_angle   = InB_Angle:GetValue(req).Value
+	
+
+	
+	----------------- EASE ANIMATION-------------------------
+	---------------------------------------------------------
+
+	local transform_type = InAnimationState:GetValue(req).Value
+
+
+	local Duration	=			InDuration:GetValue(req).Value
+	local Duration_hold	=		InB_Delay_Hold:GetValue(req).Value
+	
+
+	local speed	=InSpeed:GetValue(req).Value
+	local Delay_Time = InDelayTime:GetValue(req).Value
+
+	local EaseStyle={"linear","quadin","quadout","quadinout","cubicin","cubicout","cubicinout","quartin","quartout","quartinout","quintin","quintout","quintinout","expoin","expoout","expoinout","sinein","sineout","sineinout","circin","circout","circinout","backin","backout","backinout","custom backout","elasticin","elasticout","elasticinout","jitter" }
+	local easeBase=EaseStyle[InEaseFunction:GetValue(req).Value+1]
+
+	
+ ----------------------------ANIMATION-----------------------------------------------------FLUX
+	local t = req.Time
+
+	local flux = require "flux"
+	
+	
+	------------------------------------------------------------------CUSTOM EASE FUNCTIONS
+	
+	 flux.easing["jitter"] = function(p)
+    return p + (1 - math.random() * 2) * 0.04
+	end
+	
+	
+	
+	 local amount = InCustom_backout:GetValue(req).Value
+  flux.easing["custom backout"] = function(p)
+    p = 1 - p
+    return 1 - (p * p * ((2 + amount) * p - (1 + amount)))
+  end
+  
+  
+  
+  -----------------------------------------------------------------------
+	
+	
+	local main_delay=InDelayTime:GetValue(req).Value
+
+	local main_A_Ani= {}
+
+	if transform_type == 1 then	
+
+	main_A_Ani= { sx=s_sizex ,  sy=s_sizey , rz=s_angle ,px=s_pivot.X, py=s_pivot.Y , cx=s_centerx , cy=s_centery }
+	
+	if InActivate_BackTO:GetValue(req).Value > 0.5 then
+	
+	local tw_Main_A = flux.to(main_A_Ani, Duration, { sx=e_sizex ,  sy=e_sizey , rz=e_angle , px=e_pivot.X, py=e_pivot.Y , cx=e_centerx, cy=e_centery })
+						:ease(easeBase)
+						:delay(main_delay)
+									
+						:after(Duration_hold,{sx=e_sizex ,  sy=e_sizey , rz=e_angle , px=e_pivot.X, py=e_pivot.Y , cx=e_centerx, cy=e_centery})
+						:after(Duration,{ sx=b_sizex ,  sy=b_sizey , rz=b_angle , px=b_pivot.X, py=b_pivot.Y , cx=b_centerx, cy=b_centery})
+						:ease(easeBase)
+						else
+						
+	local tw_Main_A = flux.to(main_A_Ani, Duration, { sx=e_sizex ,  sy=e_sizey , rz=e_angle , px=e_pivot.X, py=e_pivot.Y , cx=e_centerx, cy=e_centery })
+						:ease(easeBase)
+						:delay(main_delay)
+				
+						end
+	
+	-------------------------------------------
+	for i = 0, t do flux.update(speed) end	
+	-------------------------------------------
+	elseif transform_type == 0 then
+
+	main_A_Ani= { sx=e_sizex ,  sy=e_sizey , rz=e_angle , px=e_pivot.X , py=e_pivot.Y , cx=e_centerx, cy=e_centery }
+	
+end
+
+	
+ ----------------------------END ANIMATION-----------------------------------------------------
+
+
+	if locked then
+		s_sizey = s_sizex
+	end
+	
+	out = img1:Transform(nil, { 
+		XF_XOffset = main_A_Ani.cx, 
+		XF_YOffset = main_A_Ani.cy, 
+		XF_XAxis =	 main_A_Ani.px,
+		XF_YAxis =	 main_A_Ani.py,
+		XF_XSize = 	 main_A_Ani.sx, 
+		XF_YSize = 	 main_A_Ani.sy, 
+		XF_Angle = 	 main_A_Ani.rz, 
+		XF_EdgeMode = edge_modes[edges+1],
+		})
+	
+	OutImage:Set(req, out)
+end
+
+

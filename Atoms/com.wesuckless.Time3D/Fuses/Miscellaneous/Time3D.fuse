@@ -1,0 +1,52 @@
+--[[--
+Time3D.Fuse 
+
+A Time Stretcher tool, but for 3D scene data. 
+
+version 1.0
+August 21st, 2007
+updated as v1.0 for Reactor - January 2018
+--]]--
+
+
+FuRegisterClass("Time3D", CT_Tool, {
+	REGS_Name = "Time3D",
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "T3D",
+	REGS_OpDescription = "Time 3D",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_NoPreCalcProcess = true,
+	REG_Version		= 100,
+	})
+
+function Create()
+	InTime = self:AddInput("Time", "Time", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 10000.0,
+		INP_Default = 0,
+		})
+
+	MainIn = self:AddInput("Input", "Input", {
+		LINKID_DataType = "DataType3D",
+		LINK_Main = 1,
+		INP_SendRequest = false,
+		INP_Required = false,
+		})
+
+	MainOut = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "DataType3D",
+		LINK_Main = 1,
+		})				
+end
+ 
+function Process(req)
+	local time = InTime:GetValue(req).Value
+	
+	local img = MainIn:GetSource(time, req:GetFlags())
+	MainOut:Set(req, img)
+end

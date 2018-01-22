@@ -1,0 +1,102 @@
+{
+	Tools = ordered() {
+		MotionVectorsCorrection = GroupOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "This tool lets you modify motion vectors in case your 3D-object and its motion vectors had been rendered out with a static camera and a tracking or other kind of animated 2D-translation were added later in compositing so that you don't get a double blurring in different directions.\nConnect the Center parameter to the animation you apply to the 3D-object. Set the Magnitude to adjust the power of the correction.\n\nby Gregory Chalenko\nwww.compositing.ru",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "CustomTool",
+					Source = "Image1",
+					Name = "Vector Data (Red and Green)",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CustomTool",
+					Source = "PointIn1",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "CustomTool",
+					Source = "NumberIn3",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CustomTool",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				CustomTool = Custom {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input {
+							Expression = "CustomTool:GetValue(\"PointIn1\", time+1).X-PointIn1.X",
+						},
+						NumberIn2 = Input {
+							Expression = "CustomTool:GetValue(\"PointIn1\", time+1).Y-PointIn1.Y",
+						},
+						NumberIn3 = Input {
+							Value = 1,
+						},
+						RedExpression = Input {
+							Value = "r1+n1*n3",
+						},
+						GreenExpression = Input {
+							Value = "g1+n2*n3*h/w",
+						},
+						NumberControls = Input {
+							Value = 1,
+						},
+						NameforNumber1 = Input {
+							Value = "X Velocity",
+						},
+						NameforNumber2 = Input {
+							Value = "Y Velocity",
+						},
+						NameforNumber3 = Input {
+							Value = "Magnitude",
+						},
+						ShowNumber4 = Input {
+							Value = 0,
+						},
+						ShowNumber5 = Input {
+							Value = 0,
+						},
+						ShowNumber6 = Input {
+							Value = 0,
+						},
+						ShowNumber7 = Input {
+							Value = 0,
+						},
+						ShowNumber8 = Input {
+							Value = 0,
+						},
+						PointControls = Input {
+							Value = 1,
+						},
+						NameforPoint1 = Input {
+							Value = "Center",
+						},
+						ShowPoint2 = Input {
+							Value = 0,
+						},
+						ShowPoint3 = Input {
+							Value = 0,
+						},
+						ShowPoint4 = Input {
+							Value = 0,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 592, 116, },
+					},
+				},
+			},
+		},
+	},
+	ActiveTool = "MotionVectorsCorrection",
+}

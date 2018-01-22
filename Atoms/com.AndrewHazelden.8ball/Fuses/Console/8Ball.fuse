@@ -1,0 +1,91 @@
+FuRegisterClass('EightBall', CT_ConsoleUtility, {
+	REGS_Name = 'EightBall',
+	REGS_Category = 'Console',
+	REGS_OpDescription = 'Type in 8ball followed by your question to run a detailed quantum probability simulation of a Magic 8 Ball. Each time you enter 8ball in the Console you get a new and truly random fortune told.',
+	REGS_Company = "Andrew Hazelden",
+	REGS_URL = "http://www.andrewhazelden.com",
+	REG_Version = 100,
+	})
+
+--[[
+8ball v1.0 - 2018-01-17
+by Andrew Hazelden
+Email: andrew@andrewhazelden.com
+Web: www.andrewhazelden.com
+
+## Overview ##
+
+The 'Magic 8 Ball' Console Fuse works in the Fusion Console tab. It is compatible with Fusion 9.0.1+.
+
+Type in '8ball' followed by your question to run a detailed quantum probability simulation of a Magic 8 Ball. Each time you enter '8ball' in the Console you get a new and truly random fortune told.
+
+This was inspired by the classic Fusion 6.4 era easter egg "8ball".
+
+## Installation ##
+
+Step 1. Copy the "8Ball.fuse" file to your Fusion user prefs "Fuses:/" folder. 
+
+Step 2. Restart Fusion to activate the 8Ball.fuse in the Console.
+
+## Example ##
+
+Type "8ball" and your question into the Console tab to get a new magic 8 ball style prediction.
+
+8ball: Will Fuzionmonger X be released today?
+
+or
+
+8ball Will Fuzionmonger X be released today?
+]]
+
+function Create()
+	return true
+end
+
+function Attach(view)
+	return true
+end
+
+function Detach()
+	return true
+end
+
+function Select()
+	return true
+end
+
+
+BallAnswers ={
+	'It is certain',
+	'It is decidedly so',
+	'Without a doubt',
+	'Yes definitely',
+	'You may rely on it',
+	'As I see it, yes',
+	'Most likely',
+	'Outlook good',
+	'Yes',
+	'Signs point to yes',
+	'Reply hazy try again',
+	'Ask again later',
+	'Better not tell you now',
+	'Cannot predict now',
+	'Concentrate and ask again',
+	'Don\'t count on it',
+	'My reply is no',
+	'My sources say no',
+	'Outlook not so good',
+	'Very doubtful',
+}
+
+function HandleInput(str, active)
+	-- Scan the user input
+	if string.match(str:lower(), '^8ball') then
+		self:Print('> ' .. str .. '\n')
+		self:Print(str .. ' - ' .. BallAnswers[math.random(1, #BallAnswers)] .. '\n')
+
+		return true
+	end
+
+	return false
+end

@@ -1,0 +1,284 @@
+{
+	Tools = ordered() {
+		ColorBars = GroupOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Generates NTSC and PAL color bars\nby Gregory Chalenko\nwww.compositing.ru",
+				},
+				UseFrameFormatSettings = InstanceInput {
+					SourceOp = "PALBars",
+					Source = "UseFrameFormatSettings",
+					Default = 1,
+				},
+				Width = InstanceInput {
+					SourceOp = "PALBars",
+					Source = "Width",
+				},
+				Height = InstanceInput {
+					SourceOp = "PALBars",
+					Source = "Height",
+				},
+				PixelAspect = InstanceInput {
+					SourceOp = "PALBars",
+					Source = "PixelAspect",
+				},
+				BarsType = InstanceInput {
+					SourceOp = "Mrg_NTSC",
+					Source = "BarsType",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Mrg_NTSC",
+					Source = "Output",
+				},
+			},
+			Tools = ordered() {
+				NTSCBars1 = Background {
+					ExtentSet = false,
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 1,
+						},
+						Width = Input {
+							Value = 720,
+							Expression = "PALBars.Width",
+						},
+						Height = Input {
+							Value = 576,
+							Expression = "PALBars.Height",
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+							Expression = "PALBars.PixelAspect",
+						},
+						Type = Input {
+							Value = FuID { "Gradient", },
+						},
+						TopLeftAlpha = Input {
+							Value = 0,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0.142] = { 0, 0, 0.752941131591797, 1, },
+									[0.143] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.285] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.286] = { 0.752941131591797, 0, 0.752941131591797, 1, },
+									[0.428] = { 0.752941131591797, 0, 0.752941131591797, 1, },
+									[0.429] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.571] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.572] = { 0, 0.752941131591797, 0.752941131591797, 1, },
+									[0.714] = { 0, 0.752941131591797, 0.752941131591797, 1, },
+									[0.715] = { 0.0745097994804, 0.0745097994804, 0.0745097994804, 1, },
+									[0.857] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.858] = { 0.752941131591797, 0.752941131591797, 0.752941131591797, 1, },
+								},
+							},
+						},
+					},
+				},
+				Mrg_NTSC2 = Merge {
+					CtrlWShown = false,
+					Inputs = {
+						PerformDepthMerge = Input {
+							Value = 0,
+						},
+						Background = Input {
+							SourceOp = "NTSCBars1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "NTSCBars2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Rct_NTSC2",
+							Source = "Mask",
+						},
+					},
+				},
+				PALBars = Background {
+					ExtentSet = false,
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 1,
+						},
+						UseFrameFormatSettings = Input {
+							Value = 1,
+						},
+						Width = Input {
+							Value = 720,
+						},
+						Height = Input {
+							Value = 576,
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+						},
+						Type = Input {
+							Value = FuID { "Gradient", },
+						},
+						TopLeftAlpha = Input {
+							Value = 0,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0.142] = { 0.752941131591797, 0.752941131591797, 0.752941131591797, 1, },
+									[0.143] = { 0.752941131591797, 0.752941131591797, 0, 1, },
+									[0.285] = { 0.752941131591797, 0.752941131591797, 0, 1, },
+									[0.286] = { 0, 0.752941131591797, 0.752941131591797, 1, },
+									[0.428] = { 0, 0.752941131591797, 0.752941131591797, 1, },
+									[0.429] = { 0, 0.752941131591797, 0, 1, },
+									[0.571] = { 0, 0.752941131591797, 0, 1, },
+									[0.572] = { 0.752941131591797, 0, 0.752941131591797, 1, },
+									[0.714] = { 0.752941131591797, 0, 0.752941131591797, 1, },
+									[0.715] = { 0.752941131591797, 0, 0, 1, },
+									[0.857] = { 0.752941131591797, 0, 0, 1, },
+									[0.858] = { 0, 0, 0.752941131591797, 1, },
+								},
+							},
+						},
+					},
+				},
+				Mrg_NTSC = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Expression = "BarsType",
+						},
+						BlendClone = Input {
+							Expression = "BarsType",
+						},
+						PerformDepthMerge = Input {
+							Value = 0,
+						},
+						Background = Input {
+							SourceOp = "PALBars",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Mrg_NTSC2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Rct_NTSC",
+							Source = "Mask",
+						},
+					},
+					UserControls = ordered() {
+						BarsType = {
+							{ MBTNC_AddButton = "PAL", },
+							{ MBTNC_AddButton = "NTSC", },
+							LINKS_Name = "Bars Type",
+							INPID_InputControl = "MultiButtonControl",
+							MBTNC_StretchToFit = true,
+							IC_ControlPage = 0,
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+						},
+					},
+				},
+				NTSCBars2 = Background {
+					ExtentSet = false,
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 1,
+						},
+						Width = Input {
+							Value = 720,
+							Expression = "PALBars.Width",
+						},
+						Height = Input {
+							Value = 576,
+							Expression = "PALBars.Height",
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+							Expression = "PALBars.PixelAspect",
+						},
+						Type = Input {
+							Value = FuID { "Gradient", },
+						},
+						TopLeftAlpha = Input {
+							Value = 0,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0.178] = { 0, 0.12941175699234, 0.298039197921753, 1, },
+									[0.179] = { 1, 1, 1, 1, },
+									[0.357] = { 1, 1, 1, 1, },
+									[0.358] = { 0.196078419685364, 0, 0.415686249732971, 1, },
+									[0.535] = { 0.196078419685364, 0, 0.415686249732971, 1, },
+									[0.536] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.714] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.715] = { 0.0352941155433655, 0.0352941155433655, 0.0352941155433655, 1, },
+									[0.7615] = { 0.0352941155433655, 0.0352941155433655, 0.0352941155433655, 1, },
+									[0.7625] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.809] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+									[0.81] = { 0.113725483417511, 0.113725483417511, 0.113725483417511, 1, },
+									[0.857] = { 0.113725483417511, 0.113725483417511, 0.113725483417511, 1, },
+									[0.858] = { 0.0745097994804382, 0.0745097994804382, 0.0745097994804382, 1, },
+								},
+							},
+						},
+					},
+				},
+				Rct_NTSC = RectangleMask {
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input {
+							Value = 720,
+						},
+						MaskHeight = Input {
+							Value = 576,
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+						},
+						Center = Input {
+							Value = { 0.5, 0.1166666666667, },
+						},
+						Width = Input {
+							Value = 1.5,
+						},
+						Height = Input {
+							Value = 0.4333333333333,
+						},
+					},
+				},
+				Rct_NTSC2 = RectangleMask {
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input {
+							Value = 720,
+						},
+						MaskHeight = Input {
+							Value = 576,
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+						},
+						Center = Input {
+							Value = { 0.5, 0, },
+						},
+						Width = Input {
+							Value = 1.5,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.674809803921568, G = 0.823829411764705, B = 0.674809803921568, },
+				TextColor = { R = 0, G = 0, B = 0, },
+			},
+		},
+	},
+}

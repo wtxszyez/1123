@@ -1,0 +1,50 @@
+{
+	Tools = ordered() {
+		pSpeedLimit = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Muse Tools Library\r\nby Bryan Ray\r\nwww.musevfx.com", },
+				Input = InstanceInput {
+					SourceOp = "pCustom1_3",
+					Source = "Input",
+				},
+				Limit = InstanceInput {
+					SourceOp = "pCustom1_3",
+					Source = "NumberIn1",
+					Name = "Speed Limit",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "pCustom1_3",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 990, 148.5 } },
+			Tools = ordered() {
+				pCustom1_3 = pCustom {
+					ID = 51,
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						NumberIn1 = Input { Value = 1, },
+						NumberIn2 = Input {
+							Value = 0.2304,
+							Expression = "NumberIn1*NumberIn1",
+						},
+						Intermediate1 = Input { Value = "vx*vx+vy*vy+vz*vz", },
+						Intermediate2 = Input { Value = "(vx*vx)/i1", },
+						Intermediate3 = Input { Value = "(vy*vy)/i1", },
+						Intermediate4 = Input { Value = "(vz*vz)/i1", },
+						VelocityXExpression = Input { Value = "if((abs(vx)*abs(vx))+(abs(vy)*abs(vy))+(abs(vz)*abs(vz)) > n2, if(vx>0, sqrt(i2*n2), -1.0 * sqrt(i2*n2)), vx)", },
+						VelocityYExpression = Input { Value = "if((abs(vx)*abs(vx))+(abs(vy)*abs(vy))+(abs(vz)*abs(vz)) > n2, if(vy>0, sqrt(i3*n2), -1.0 * sqrt(i3*n2)), vy)", },
+						VelocityZExpression = Input { Value = "if((abs(vx)*abs(vx))+(abs(vy)*abs(vy))+(abs(vz)*abs(vz)) > n2, if(vz>0, sqrt(i4*n2), -1.0 * sqrt(i4*n2)), vz)", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.1499 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "MT_pSpeedLimit"
+}

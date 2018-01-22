@@ -1,0 +1,1264 @@
+{
+	Tools = ordered() {
+		MT_Glitch_TimeStutter = MacroOperator {
+			Inputs = ordered() {
+			Comments = Input {
+					Value = "Erratically retimes a clip and shuffles in random frames. \r\n\r\nMuse Tools, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com",
+				},
+				ShuffleFrames = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "ShuffleFrames",
+					Default = 1,
+				},
+				PerturbFrames = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "PerturbFrames",
+					Default = 0,
+				},
+				MinShuffle = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MinShuffleDuration",
+					ControlGroup = 3,
+					Default = 3,
+				},
+				MaxShuffle = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MaxShuffleDuration",
+					ControlGroup = 3,
+					Default = 15,
+				},
+				MinPerturb = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MinPerturbDuration",
+					ControlGroup = 6,
+					Default = 3,
+				},
+				MaxPerturb = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MaxPerturbDuration",
+					ControlGroup = 6,
+					Default = 15,
+				},
+				MinOff = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MinOffTime",
+					ControlGroup = 5,
+					Default = 3,
+				},
+				MaxOff = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "MaxOffTime",
+					ControlGroup = 5,
+					Default = 15,
+				},
+				ShuffleInPoint = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "ShuffleFrameRange",
+					ControlGroup = 4,
+					Default = 0,
+				},
+				ShuffleOutPoint = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "Out",
+					ControlGroup = 4,
+					Default = 300,
+				},
+				Offset = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "PerturbOffset",
+					Default = 0,
+				},
+				Strength = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "PerturbStrength",
+					Default = 10,
+				},
+				Wobble = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "PerturbWobble",
+					Default = 5,
+				},
+				Speed = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "PerturbSpeed",
+					Default = 4,
+				},
+				RandomSeed = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "RandomSeed",
+					Default = 0,
+				},
+				RelativeToFrame = InstanceInput {
+					SourceOp = "controlPanel_timeStutter",
+					Source = "ShuffleRelativetoFrame",
+					Default = 0,
+				},
+				Input = InstanceInput {
+					SourceOp = "TimeStretcher1_1",
+					Source = "Input",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "TimeStretcher1_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				RandomSwitch_2 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = ":t0=0; randomseed(RandomSeed); while t0<=time do off=random(MinimumOffTime,MaximumOffTime); on=random(MinimumOnTime,MaximumOnTime); t=time-t0; t0=t0+on+off; end; n=t0-on; if t>off then return 1; else return 0; end",
+						},
+						Comments = Input { Value = "Randomly switches the Mix control between 0 and 1. Adjust the frequency of switching using the Max and Min sliders. \r\n\r\nMuse Effects Elements Library, Glitch Tools Collection\r\nby Bryan Ray.\r\nwww.musevfx.com", },
+						MinimumOffTime = Input { Expression = "controlPanel_timeStutter.MinOffTime", },
+						MaximumOffTime = Input { Expression = "controlPanel_timeStutter.MaxOffTime", },
+						MinimumOnTime = Input { Expression = "controlPanel_timeStutter.MinShuffleDuration", },
+						MaximumOnTime = Input { Expression = "controlPanel_timeStutter.MaxShuffleDuration", },
+						RandomSeed = Input {
+							Value = 67,
+							Expression = "controlPanel_timeStutter.RandomSeed+250",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1320, -214.5, }, },
+					UserControls = ordered() {
+						MinimumOffTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Minimum Off Time",
+						},
+						MaximumOffTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 10,
+							INP_MinScale = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Maximum Off Time",
+						},
+						MinimumOnTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Minimum On Time",
+						},
+						MaximumOnTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 10,
+							INP_MinScale = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Maximum On Time",
+						},
+						RandomSeed = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Random Seed",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0,
+						},
+					},
+				},
+				controlPanel_timeStutter = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+						ProcessRed = Input { Value = 0, },
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						ProcessAlpha = Input { Value = 0, },
+						Red = Input { Value = 1, },
+						Green = Input { Value = 1, },
+						Blue = Input { Value = 1, },
+						Gain = Input { Value = 1, },
+						Gamma = Input { Value = 1, },
+						Saturation = Input { Value = 1, },
+						High = Input { Value = 1, },
+						PerturbFrames = Input { Value = 0, },
+						ShuffleFrameRange = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1320, -247.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						Red = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Green = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Blue = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Alpha = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Gain = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Lift = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Gamma = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Contrast = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Brightness = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Saturation = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Low = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						High = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Direction = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						ClipBlack = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						ClipWhite = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						PreDividePostMultiply = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						ShuffleFrames = {
+							INP_MaxAllowed = 1,
+							INP_Integer = true,
+							INPID_InputControl = "CheckboxControl",
+							IC_ControlPage = 0,
+							INP_Default = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							ICD_Width = 0.5,
+							LINKS_Name = "Shuffle Frames",
+						},
+						PerturbFrames = {
+							INP_MaxAllowed = 1,
+							INP_Integer = true,
+							INPID_InputControl = "CheckboxControl",
+							IC_ControlPage = 0,
+							INP_Default = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							ICD_Width = 0.5,
+							LINKS_Name = "Perturb Frames",
+						},
+						MinShuffleDuration = {
+							INP_MaxAllowed = 1000,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							IC_ControlGroup = 2,
+							LINKS_Name = "Min Shuffle Duration",
+						},
+						MaxShuffleDuration = {
+							INP_MaxAllowed = 1000,
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 15,
+							INP_MinScale = 0,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							IC_ControlGroup = 2,
+							LINKS_Name = "Max",
+						},
+						ShuffleFrameRange = {
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 300,
+							IC_ControlGroup = 3,
+							INP_MinScale = 1,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							INP_Default = 1,
+							LINKS_Name = "Shuffle Frame Range",
+						},
+						Out = {
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 1000,
+							IC_ControlGroup = 3,
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							INP_Default = 300,
+						},
+						MinOffTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							IC_ControlGroup = 4,
+							LINKS_Name = "Min Off Time",
+						},
+						MaxOffTime = {
+							INP_MaxAllowed = 1000,
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 15,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							IC_ControlGroup = 4,
+							LINKS_Name = "Max",
+						},
+						MinPerturbDuration = {
+							INP_MaxAllowed = 1000,
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 15,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							IC_ControlGroup = 5,
+							LINKS_Name = "Min Perturb Duration",
+						},
+						MaxPerturbDuration = {
+							INP_MaxAllowed = 1000,
+							INP_Integer = true,
+							INPID_InputControl = "RangeControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 15,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							IC_ControlGroup = 5,
+							LINKS_Name = "Max",
+						},
+						PerturbOffset = {
+							INP_Integer = true,
+							INPID_InputControl = "ScrewControl",
+							LINKID_DataType = "Number",
+							LINKS_Name = "Perturb Offset",
+							IC_ControlPage = 0,
+							INP_MaxScale = 100,
+							INP_Default = 0,
+						},
+						PerturbStrength = {
+							INP_Default = 10,
+							INP_Integer = true,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							LINKS_Name = "Perturb Strength",
+						},
+						PerturbWobble = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_Default = 5,
+							IC_ControlPage = 0,
+							INP_MaxScale = 10,
+							LINKS_Name = "Perturb Wobble",
+						},
+						PerturbSpeed = {
+							LINKS_Name = "Perturb Speed",
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 10,
+							INP_Default = 4,
+						},
+						RandomSeed = {
+							INPID_InputControl = "ScrewControl",
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INP_MaxScale = 10000,
+							LINKS_Name = "Random Seed",
+						},
+						ShuffleRelativetoFrame = {
+							INP_MaxAllowed = 1,
+							INP_Integer = true,
+							INPID_InputControl = "CheckboxControl",
+							IC_ControlPage = 0,
+							INP_Default = 0,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							ICD_Width = 0.333,
+							LINKS_Name = "Shuffle Relative to Frame",
+						},
+					},
+				},
+				perturbValues_2 = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										Name = "CustomTool2",
+										CtrlWZoom = false,
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+										},
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										Name = "CustomTool2LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										Name = "CustomTool2LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										Name = "CustomTool2LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										Name = "CustomTool2LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+									},
+								},
+							},
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											BlueExpression = Input { Value = "b1-b2", },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											RedExpression = Input { Value = "r1-r2", },
+											GreenExpression = Input { Value = "g1-g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											BlueExpression = Input { Value = "b1+b2", },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											RedExpression = Input { Value = "r1+r2", },
+											GreenExpression = Input { Value = "g1+g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+						},
+					},
+					Inputs = {
+						NumberIn1 = Input { Value = 1, },
+						NumberIn2 = Input {
+							Value = 65,
+							Expression = "NumberIn7 *controlPanel_timeStutter.PerturbFrames+time",
+						},
+						NumberIn3 = Input { Value = 0.2443268178791, },
+						NumberIn4 = Input { Value = -1.221544, },
+						NumberIn6 = Input { Value = 1, },
+						NumberIn7 = Input {
+							SourceOp = "Perturb1_13",
+							Source = "Value",
+						},
+						LUTIn1 = Input {
+							SourceOp = "perturbValuesLUTIn1_2",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "perturbValuesLUTIn2_2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "perturbValuesLUTIn3_2",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "perturbValuesLUTIn4_2",
+							Source = "Value",
+						},
+						RandomSeed = Input { Value = 533, },
+						NumberControls = Input { Value = 1, },
+						ShowNumber1 = Input { Value = 0, },
+						NameforNumber1 = Input { Value = "flickerswitch", },
+						NameforNumber2 = Input { Value = "Perturb Out N2", },
+						ShowNumber3 = Input { Value = 0, },
+						NameforNumber3 = Input { Value = "Random Value", },
+						ShowNumber4 = Input { Value = 0, },
+						NameforNumber4 = Input { Value = "Perturb Flicker", },
+						ShowNumber5 = Input { Value = 0, },
+						NameforNumber5 = Input { Value = "Random Min", },
+						ShowNumber6 = Input { Value = 0, },
+						NameforNumber6 = Input { Value = "Random Max", },
+						NameforNumber7 = Input { Value = "Perturb N7", },
+						ShowNumber8 = Input { Value = 0, },
+						NameforNumber8 = Input { Value = "Random Default Value", },
+						PointControls = Input { Value = 1, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1375, -181.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				Perturb1_13 = PerturbNumber {
+					CtrlWZoom = false,
+					Inputs = {
+						Value = Input { Expression = "controlPanel_timeStutter.PerturbOffset", },
+						RandomSeed = Input { Expression = "controlPanel_timeStutter.RandomSeed", },
+						Strength = Input {
+							Value = 30,
+							Expression = "controlPanel_timeStutter.PerturbStrength",
+						},
+						Wobble = Input {
+							Value = 5,
+							Expression = "controlPanel_timeStutter.PerturbWobble",
+						},
+						Speed = Input {
+							Value = 4,
+							Expression = "controlPanel_timeStutter.PerturbSpeed",
+						},
+					},
+				},
+				perturbValuesLUTIn1_2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+				},
+				perturbValuesLUTIn2_2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+				},
+				perturbValuesLUTIn3_2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+				},
+				perturbValuesLUTIn4_2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+				},
+				shuffleValues = Custom {
+					NameSet = true,
+					EnabledRegion = TimeRegion { { Start = 1, End = 166.9999, FrameLength = 1, }, },
+					CustomData = {
+						Settings = {
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										Name = "CustomTool2",
+										CtrlWZoom = false,
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+										},
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										Name = "CustomTool2LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										Name = "CustomTool2LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										Name = "CustomTool2LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										Name = "CustomTool2LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+									},
+								},
+							},
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											BlueExpression = Input { Value = "b1-b2", },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											RedExpression = Input { Value = "r1-r2", },
+											GreenExpression = Input { Value = "g1-g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							{
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											BlueExpression = Input { Value = "b1+b2", },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											RedExpression = Input { Value = "r1+r2", },
+											GreenExpression = Input { Value = "g1+g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												{ 1, Flags = { Linear = true, }, LH = { 0.666666666666667, 0.666666666666667, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+						},
+					},
+					Inputs = {
+						NumberIn2 = Input {
+							Value = 293,
+							Expression = "iif((RandomSwitch_2.Mix * controlPanel_timeStutter.ShuffleFrames) > 0, NumberIn3, NumberIn8)",
+						},
+						NumberIn3 = Input {
+							Value = 288.584985757049,
+							Expression = ":math.randomseed(controlPanel_timeStutter.RandomSeed+time); return math.random() * (NumberIn6 - NumberIn5) + NumberIn5 * (1-controlPanel_timeStutter.ShuffleRelativetoFrame) + (time - (NumberIn6-NumberIn5)/2)*controlPanel_timeStutter.ShuffleRelativetoFrame",
+						},
+						NumberIn4 = Input {
+							Value = 293,
+							Expression = "iif(NumberIn1 > 0, NumberIn3, time)",
+						},
+						NumberIn5 = Input {
+							Value = 75,
+							Expression = "controlPanel_timeStutter.ShuffleFrameRange",
+						},
+						NumberIn6 = Input {
+							Value = 85,
+							Expression = "controlPanel_timeStutter.Out",
+						},
+						NumberIn7 = Input {
+							Value = 288,
+							Expression = " (time-(NumberIn6-NumberIn5)/2)*controlPanel_timeStutter.ShuffleRelativetoFrame",
+						},
+						NumberIn8 = Input {
+							Value = 293,
+							Expression = "perturbValues_2.NumberIn2",
+						},
+						LUTIn1 = Input {
+							SourceOp = "shuffleValuesLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "shuffleValuesLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "shuffleValuesLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "shuffleValuesLUTIn4",
+							Source = "Value",
+						},
+						RandomSeed = Input { Value = 533, },
+						NumberControls = Input { Value = 1, },
+						ShowNumber1 = Input { Value = 0, },
+						NameforNumber1 = Input { Value = "flickerswitch", },
+						NameforNumber2 = Input { Value = "ShuffleOut N2", },
+						NameforNumber3 = Input { Value = "Random Value", },
+						NameforNumber4 = Input { Value = "Perturb Flicker", },
+						NameforNumber5 = Input { Value = "Random Min", },
+						NameforNumber6 = Input { Value = "Random Max", },
+						NameforNumber7 = Input { Value = "Perturb", },
+						NameforNumber8 = Input { Value = "PerturbIn N8", },
+						PointControls = Input { Value = 1, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1265, -181.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				shuffleValuesLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+				},
+				shuffleValuesLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+				},
+				shuffleValuesLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+				},
+				shuffleValuesLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+				},
+				RandomSwitch_master_TStutter = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Expression = ":t0=0; randomseed(RandomSeed); while t0<=time do off=random(MinimumOffTime,MaximumOffTime); on=random(MinimumOnTime,MaximumOnTime); t=time-t0; t0=t0+on+off; end; n=t0-on; if t>off then return 1; else return 0; end", },
+						Comments = Input { Value = "Randomly switches the Mix control between 0 and 1. Adjust the frequency of switching using the Max and Min sliders. \r\n\r\nMuse Effects Elements Library, Glitch Tools Collection\r\nby Bryan Ray.\r\nwww.musevfx.com", },
+						MinimumOffTime = Input { Expression = "controlPanel_timeStutter.MinOffTime", },
+						MaximumOffTime = Input {
+							Value = 15,
+							Expression = "controlPanel_timeStutter.MaxOffTime",
+						},
+						MinimumOnTime = Input { Expression = "controlPanel_timeStutter.MinPerturbDuration", },
+						MaximumOnTime = Input {
+							Value = 15,
+							Expression = "controlPanel_timeStutter.MaxPerturbDuration",
+						},
+						RandomSeed = Input { Expression = "controlPanel_timeStutter.RandomSeed", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1320, -148.5, }, },
+					UserControls = ordered() {
+						MinimumOffTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Minimum Off Time",
+						},
+						MaximumOffTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 10,
+							INP_MinScale = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Maximum Off Time",
+						},
+						MinimumOnTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 3,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Minimum On Time",
+						},
+						MaximumOnTime = {
+							INP_MaxAllowed = 10000,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 10,
+							INP_MinScale = 1,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Maximum On Time",
+						},
+						RandomSeed = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Random Seed",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0,
+						},
+					},
+				},
+				TimeStretcher1_1 = TimeStretcher {
+					CtrlWZoom = false,
+					Inputs = {
+						SourceTime = Input {
+							Value = 345,
+							Expression = "iif(RandomSwitch_master_TStutter.Mix > 0, shuffleValues.NumberIn2 , time)",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1320, -115.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_Glitch_TimeStutter",
+}

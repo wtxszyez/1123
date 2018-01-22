@@ -1,0 +1,328 @@
+--[[--
+Merges up to 64 Inputs. Incorporates code from the Switch Fuse by Stefan Ihringer and FuseMerge 
+by Isaac Guenard.
+
+This tool currently lacks the Transform controls and Depth Merge options found in the default 
+Fusion Merge tool. 
+
+Portions of this Fuse Copyright (c) 2010, Stefan Ihringer <stefan@bildfehler.de>
+The remainder Copyright (c) 2018, Bryan Ray <xa_bryan@sbcglobal.net> and 
+MuseVFX <http://www.musevfx.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+----------------------------------------------------------------------
+
+Known Issues:
+	Control panel does not automatically update when a new Input is added. Deselecting and reselecting
+	the node causes the new controls to appear.
+	
+	Held Out mode throws an error. This appears to be a bug in the API.
+	
+Development Roadmap:
+	Add Apply Mode/Operator control per layer.
+	Add Transform controls per layer.
+	Implement DoZ.
+
+Changelog:
+
+version 1.1, 2018-09-19: Added a control panel link field and independent Blend sliders
+	for each input. Removed the CloneInput() line, so the tool now works identically across
+	Fusion 7, 8 and 9. 
+
+version 1.0, 2018-09-18: Initial release
+--]]--
+
+version = "version 1.1, 2018-09-19"
+
+FuRegisterClass("MultiMerge", CT_Tool, {
+	REGS_Name = "Multi Merge",
+	REGS_Category = "Composite",
+	REGS_OpIconString = "MMg",
+	REGS_OpDescription = "Merges multiple Inputs.",
+	REGS_Company = "Muse VFX",
+	REGS_URL = "http://www.musevfx.com",
+	REGS_HelpTopic = "http://www.bryanray.name/wordpress/multi-merge-fuse-for-blackmagic-fusion",
+	REG_NoMotionBlurCtrls = true,
+	
+	
+}) -- End of RegisterClass
+
+function Create()
+
+	
+	InWhich = self:AddInput("Which", "Which", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed = 1,
+		INP_MaxAllowed = 64, 	-- This input is leftover from the Switch Fuse upon which parts of this
+		INP_MaxScale = 1,		-- Fuse are based. It is necessary for OnConnected() to work properly.
+		INP_Integer = true,
+		IC_Steps = 1.0,
+		IC_Visible = false,
+	})
+
+	InApply = self:AddInput("Apply Mode", "ApplyMode", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		ICD_Width = 0.5,
+		CC_LabelPosition = "Vertical",
+		INP_DoNotifyChanged = true,
+		{ CCS_AddString = "Normal", },
+		{ CCS_AddString = "Screen", },
+		{ CCS_AddString = "Dissolve", },
+		{ CCS_AddString = "Multiply", },
+		{ CCS_AddString = "Overlay", },
+		{ CCS_AddString = "Soft Light", },
+		{ CCS_AddString = "Hard Light", },
+		{ CCS_AddString = "Color Dodge", },
+		{ CCS_AddString = "Color Burn", },
+		{ CCS_AddString = "Darken", },
+		{ CCS_AddString = "Lighten", },
+		{ CCS_AddString = "Difference", },
+		{ CCS_AddString = "Exclusion", },
+		{ CCS_AddString = "Hue", },
+		{ CCS_AddString = "Saturation", },
+		{ CCS_AddString = "Color", },
+		{ CCS_AddString = "Luminosity",  },
+		})
+		
+	InOperation = self:AddInput("Operator", "Operator", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		ICD_Width = 0.5,
+		{ CCS_AddString = "Over", },
+		{ CCS_AddString = "In", },
+		{ CCS_AddString = "Held Out", },
+		{ CCS_AddString = "Atop", },
+		{ CCS_AddString = "XOr", },
+		CC_LabelPosition = "Vertical",
+		})
+		
+	InAdditive = self:AddInput("Subtractive - Additive", "SubtractiveAdditive", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		SLCS_LowName = "Subtractive",
+		SLCS_HighName = "Additive",
+		})
+
+	InAlpha = self:AddInput("Alpha Gain", "AlphaGain", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})
+		
+	InBurn = self:AddInput("Burn In", "BurnIn", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0.0,
+		})
+
+	InBackground = self:AddInput("Background", "Background", {
+		LINKID_DataType = "Image",
+		INPID_InputControl = "ImageControl",
+		ICS_ControlPage = "Controls",
+		LINK_Main = 1,
+		})
+
+	self:AddInput("Input1", "Input1", {
+		LINKID_DataType = "Image",
+		INPID_InputControl = "ImageControl",
+		ICD_Width = 0.5,
+		ICS_ControlPage = "Controls",
+		LINK_Main = 2,
+		INP_Required = false,
+		INP_SendRequest = false, -- don't send a request for this branch before we actually need it.
+	})
+	
+	self:AddInput("Blend1", "Blend1", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		ICD_Width = 0.5,
+		ICS_ControlPage = "Controls",
+		INP_Default = 1.0,
+	})
+
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+	
+end  -- end of Create()
+
+
+-- OnConnected gets called whenever a connection is made to the inputs. A new
+-- input is created if something has been connected to the highest input.
+function OnConnected(inp, old, new)
+	local inpNr = tonumber(string.match(inp:GetAttr("LINKS_Name"), "Input(%d+)"))
+	local maxNr = tonumber(InWhich:GetAttr("INP_MaxAllowed"))
+	if inpNr then
+		if inpNr >= maxNr and maxNr < 64 and new ~= nil then
+			InWhich:SetAttrs({INP_MaxScale = inpNr, INP_MaxAllowed = inpNr})
+			self:AddInput("Input"..(inpNr + 1), "Input"..(inpNr + 1), {
+				LINKID_DataType = "Image",
+				INPID_InputControl = "ImageControl",
+				ICD_Width = 0.5,
+				ICS_ControlPage = "Controls",
+				LINK_Main = (inpNr + 1),
+				INP_Required = false,
+				INP_SendRequest = false,
+				INP_DoNotifyChanged = true,
+			})
+			self:AddInput("Blend"..(inpNr+1), "Blend"..(inpNr + 1), {
+				LINKID_DataType = "Number",
+				INPID_InputControl = "SliderControl",
+				ICS_ControlPage = "Controls",
+				ICD_Width = 0.5,
+				INP_Default = 1.0,				
+				INP_DoNotifyChanged = true,
+			})
+		end
+	end
+end
+
+function OnAddToFlow()
+--	print("OnAddToFlow:")
+--	print("   INP_MaxAllowed = ", InWhich:GetAttr("INP_MaxAllowed"))
+	-- If a comp is reopened, we need to recreate all inputs that might have
+	-- been saved. The weird thing is, that FindInput tells us that an input
+	-- exists while it's not visible in the GUI. So we just call AddInput
+	-- again, which will make the triangle show up in the GUI.
+	-- A problem arises if, for example, inputs 1 and 3 are connected, but 2
+	-- isn't. Since Input2 won't be saved in the comp we first need to look
+	-- for the highest input we need. Afterwards, OnConnected() will be called
+	-- for each of the saved inputs. The additional input needed to connect
+	-- further images will be created there.
+	local highestInput = 1
+	for i = 2, 64 do
+		if self:FindInput("Input"..tostring(i)) ~= nil then
+			highestInput = i
+		end
+	end
+
+	for i = 2, highestInput do
+		self:AddInput("Input"..i, "Input"..i, {
+			LINKID_DataType = "Image",
+			INPID_InputControl = "ImageControl",
+			LINK_Main = i,
+			INP_Required = false,
+			INP_SendRequest = false,
+			})
+		self:AddInput("Blend"..i, "Blend"..i, {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "SliderControl",
+			INP_Default = 1.0,
+		})
+--		print("Input"..i.." recreated")
+	end
+	InWhich:SetAttrs({INP_MaxScale = highestInput, INP_MaxAllowed = highestInput})
+end
+
+function NotifyChanged(inp, param, time)
+
+	if inp == InApply then
+		InOperation:SetAttrs({IC_Visible = (param.Value == 0)})
+	end	
+end
+
+
+function Process(req)
+	
+	-- Import control panel inputs
+	local bg = InBackground:GetValue(req)
+	local additive = InAdditive:GetValue(req).Value
+	local gain_alpha = InAlpha:GetValue(req).Value
+	local burn = InBurn:GetValue(req).Value
+	local apply_mode = InApply:GetValue(req).Value + 1
+	local apply_operator = InOperation:GetValue(req).Value + 1
+	
+	local apply_modes = { 
+		"Merge", 
+		"Screen", 
+		"Dissolve",
+		"Multiply",
+		"Overlay",
+		"SoftLight",
+		"HardLight",
+		"ColorDodge",
+		"ColorBurn",
+		"Darken",
+		"Lighten",
+		"Difference",
+		"Exclusion",
+		"Hue",
+		"Saturation",
+		"Color",
+		"Luminosity", 
+		}
+
+	local apply_operators = { "Over", "In", "Held Out", "Atop", "XOr", }
+
+	-- Create output image
+	local out = bg:Copy()
+	
+	-- Get dynamically generated inputs
+	local img = {}
+	local blend = {}
+	local layers = 1
+	local temp = self:FindInput("Input"..layers)
+	local tempblend = self:FindInput("Blend"..layers)
+		
+	while temp do
+		img[layers] = temp:GetSource(req.Time, req:GetFlags())
+		blend[layers] = tempblend:GetValue(req).Value
+		if img[layers] == nil then
+		end
+		layers = layers+1
+		temp = self:FindInput("Input"..layers)
+		tempblend = self:FindInput("Blend"..layers)
+	end
+	
+	for i = 1, layers-1 do
+		if img[i] then
+			local m = ColorMatrixFull()
+			m:Scale(blend[i],blend[i],blend[i],blend[i])
+			img[i] = img[i]:ApplyMatrixOf(m, {})
+			out:Merge(img[i], {
+			MO_ApplyMode = apply_modes[apply_mode],
+			MO_ApplyOperator = apply_operators[apply_operator],
+			MO_XOffset = 0.5,
+			MO_YOffset = 0.5,
+			MO_XSize = 1.0,
+			MO_YSize = 1.0,
+			MO_Angle = 0.0,
+			MO_FgAddSub = additive,
+			MO_BgAddSub = bg_additive,
+			MO_BurnIn = burn,
+			MO_FgAlphaGain = gain_alpha,
+			MO_Invert = 1,
+			MO_DoZ = false,
+			})
+		end
+	end
+		
+	OutImage:Set(req, out)
+	
+end -- end Process()

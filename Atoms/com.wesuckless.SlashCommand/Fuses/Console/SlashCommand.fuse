@@ -1,0 +1,77 @@
+--[[--
+Allows custom script-based console commands to be executed simply by prefixing them with a slash (/)
+
+## Usage ##
+
+SlashCommand based scripts are installed in the Fusion user prefs "Scripts:/SlashCommand/" folder.
+
+If your custom SlashCommand script was called "foo.lua" or "foo.py", then you would run it in the console using:
+/foo <options>
+
+SlashCommand .lua scripts work by reading the args[] value that is passed to the script from the Console view. This allows the script to decode each of the parameters that are passed to it.
+--]]--
+
+
+FuRegisterClass("SlashCommand", CT_ConsoleUtility, {
+	REGS_Name = "SlashCommand",
+	REGS_Category = "Console",
+	REGS_OpDescription = "Allows custom script-based console commands to be executed simply by prefixing them with a slash (/)",
+	REG_Version = 100,
+	})
+
+function Create()
+	return true
+end
+
+function Attach(view)
+	return true
+end
+
+function Detach()
+	return true
+end
+
+function Select()
+	return true
+end
+
+local script = _Lua [=[
+	local P, S, C, Ct = lpeg.P, lpeg.S, lpeg.C, lpeg.Ct
+
+	local function token(patt) return C(patt) end
+	local doubleq = P '"' * ((1 - S '"\r\n\f\\') + (P '\\' * 1)) ^ 0 * '"'
+	local white = S('\r\n\f\t ')^1
+	local word = token((1 - S("' \r\n\f\t\""))^1)
+	local str = token(doubleq)
+
+	local arg_parser = Ct((str + white + word) ^ 0)
+
+	local args = {}
+
+	args[0] = text
+
+	for i,arg in ipairs(arg_parser:match(text)) do
+		args[i] = arg
+	end
+
+	local luaname = comp:MapPath("Scripts:SlashCommand".. args[1] .. ".lua")
+	local pyname = comp:MapPath("Scripts:SlashCommand".. args[1] .. ".py")
+
+	if bmd.fileexists(luaname) then
+		comp:RunScript(luaname, { args = args })
+	elseif bmd.fileexists(pyname) then
+		comp:RunScript(pyname, { args = args })
+	else
+		print("Unknown command: " .. args[1])
+	end
+]=]
+
+function HandleInput(str, active)
+	if str and (active or str:sub(1,1) == "/") then
+		self:Print("> " .. str .. "\n")
+		self.Comp:Execute("local text = [=[" .. str .. "]=]\n" .. script)
+		return true
+	end
+
+	return false
+end

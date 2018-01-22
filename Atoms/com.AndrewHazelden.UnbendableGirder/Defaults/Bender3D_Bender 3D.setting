@@ -1,0 +1,76 @@
+{
+	Tools = ordered() {
+		Bender3D = Bender3D {
+			CtrlWZoom = false,
+			NameSet = true,
+			ViewInfo = OperatorInfo { Pos = { 355, 87 } },
+			UserControls = ordered() {
+				UIManagerButton = {
+					INP_Integer = false,
+					LINKID_DataType = "Number",
+					BTNCS_Execute = [[
+local ui = fu.UIManager
+local disp = bmd.UIDispatcher(ui)
+local width,height = 300,100
+local x = fu:GetMousePos()[1]
+local y = fu:GetMousePos()[2]
+
+win = disp:AddWindow({
+  ID = 'ButtonControlWin',
+  TargetID = 'ButtonControlWin',
+  WindowTitle = 'Bender Bending Rodríguez',
+  Geometry = {x-(width/2), y+8, width, height},
+  Spacing = 10,
+
+  ui:VGroup{
+    ID = 'root',
+    
+    ui:HGroup{
+      ui:Button{
+        Weight = 0,
+        ID = 'AlertButton', 
+        Flat = true,
+        IconSize = {48,48},
+        Icon = ui:Icon{File = 'Defaults:/Bender3D_alert.png'},
+      },
+      ui:Label{
+        Weight = 1,
+        ID = 'BenderLabel',
+        Text = 'Bite my shiny metal ass!',
+      },
+    },
+    
+    ui:HGroup{
+      -- Add a spacer
+      ui:HGap(0, 1.0),
+      
+      ui:Button{
+        Weight = 0,
+        ID = 'OKButton',
+        Text = 'OK',
+      },
+    },
+  },
+})
+
+function win.On.ButtonControlWin.Close(ev)
+  disp:ExitLoop()
+end
+
+function win.On.OKButton.Clicked(ev)
+  disp:ExitLoop()
+end
+
+itm = win:GetItems()
+win:Show()
+disp:RunLoop()
+win:Hide()
+]],
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Unbendable Girder"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,203 @@
+
+--[[
+
+ This is an extended version of the Wave Modifier
+ So all credit to goes the great eyeon Team for this modifier
+
+ Added : Delay Start Time
+ Added : Reverse 
+ Written by Dunn Lewis <dunn[dot]lewis[dot]work[at]gmail[dot]com>
+
+]]--
+
+version = "v1.01 - 16 JAN 2018"
+
+
+FuRegisterClass("ExtendedWave", CT_Modifier, {
+	REGS_Name = "Extended Wave",
+	REGS_Category = "Modifiers",
+	REGS_OpIconString = "ExW",
+	REGS_OpDescription = "Extended Wave Modifier",
+	REGS_Company 		= "Dunn Lewis - dunn.lewis.work@gmail.com",
+	REGS_URL 			= "http://www.native-newmedia.com",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_TimeVariant = true,
+	REGID_DataType = "Number",
+	REGID_InputDataType = "Number",
+	REG_Version = 101,
+	})
+
+
+WVM_Line = "Line"
+WVM_Saw = "Saw"
+WVM_Tri = "Tri"
+WVM_Square = "Square"
+WVM_Sine = "Sine"
+WVM_Noise = "Noise"
+
+
+
+	
+function Create()
+
+	InWave = self:AddInput("Wave", "Wave", {
+		LINKID_DataType =		"FuID",
+		INPID_InputControl =	"MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		{ MBTNC_AddButton =		WVM_Line },
+		{ MBTNC_AddButton =		WVM_Saw },
+		{ MBTNC_AddButton =		WVM_Tri },
+		{ MBTNC_AddButton =		WVM_Square },
+		{ MBTNC_AddButton =		WVM_Sine }, 
+		{ MBTNC_AddButton =		WVM_Noise },
+		})	
+
+	InDelayTime= self:AddInput("START AT FRAME", "DelayTime", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			0,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			2500,
+		INP_Integer        = true,
+				})
+
+	InPeriod = self:AddInput("Period", "Period", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			5.0,
+		INP_MinAllowed =		0.0,
+		INP_MaxScale =			50.0,
+		})	
+
+	InStrength = self:AddInput("Strength", "Strength", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			1.0,
+		INP_MaxScale = 			10.0,
+		ICD_Center =             1.0,
+		})	
+		
+	InOffset = self:AddInput("Offset", "Offset", {
+		LINKID_DataType =		"Number",
+		LINKID_Main =			1,
+		INPID_InputControl =	"ScrewControl",
+		})	
+
+	InLimit = self:AddInput("Limit", "Limit", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"CheckboxControl",
+		INP_Default = 			0.0,
+		ICD_Width =           	0.25,
+		
+		})	
+	
+	InRepeat = self:AddInput("Repeat", "Repeat", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default = 			1.0,
+		INP_MinAllowed =        0.0,
+		INP_MaxScale =          10.0,
+		ICD_Width =           	0.75,
+		})	
+	InReverse = self:AddInput("Reverse", "Reverse", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"CheckboxControl",
+		INP_Default = 			0.0,
+		ICD_Width =           	0.25,
+		})
+
+
+
+	---------------------------------------------------------	
+		
+	---------------------------------------------------------	
+	InLabel = self:AddInput("Extended Wave "..version, "version", {
+		LINKID_DataType    = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External       = false,
+		INP_Passive        = true,
+		})			
+
+	OutResult = self:AddOutput("Result", "Result", {
+		LINKID_DataType = "Number",
+		LINK_Main = 1,
+		})				
+end
+
+
+--//----------------------------------------------
+
+function Process(req) 
+
+	local t = req.Time
+	local wave = InWave:GetValue(req).Value
+	local period = InPeriod:GetValue(req).Value
+	local strength = InStrength:GetValue(req).Value
+	local offset = InOffset:GetValue(req).Value
+	local freq = 1.0 / period
+	local limit = InLimit:GetValue(req).Value
+	local times = InRepeat:GetValue(req).Value
+
+	
+	local sin = math.sin
+	local cos = math.cos
+	local exp = math.exp
+	local pi = math.pi
+	local abs = math.abs
+	local sqrt= math.sqrt
+	
+	
+	
+
+	local reverseNum = InReverse:GetValue(req).Value
+	local Delay_Time = InDelayTime:GetValue(req).Value
+
+	
+	if (t > Delay_Time) then
+
+	if limit == 1 then
+		t = math.min(t, period * times)
+		t = math.max(t, 0)
+	end
+
+--//----------------------------------------------	
+	
+	if wave == WVM_Line then
+		r = (t-Delay_Time) * freq
+		r = r * strength + offset
+
+	elseif wave == WVM_Saw then
+
+  		r = (t-Delay_Time) * freq % 1.0
+  		r = r * strength + offset
+
+	elseif wave == WVM_Tri then
+		r = 1 - math.abs(((t-Delay_Time) * freq % 1.0) - 0.5) * 2
+		r = r * strength + offset
+
+	elseif wave == WVM_Square then
+		r = ((t-Delay_Time) * freq % 1.0 < 0.5) and 1 or 0
+		r = r * strength + offset
+
+	elseif wave == WVM_Sine then
+		r = math.sin((t-Delay_Time) * freq * 2 * math.pi) * 0.5 + 0.5
+		r = r * strength + offset
+
+	elseif wave == WVM_Noise then
+		r = eyeon.noise((t-Delay_Time) * freq * 2) * 2 + .5
+		r = r * strength + offset
+
+	end
+	
+	if reverseNum == 1 then
+	r = -(r * strength + offset)
+	else
+	r = r * strength + offset
+	end
+	
+	end
+	OutResult:Set(req, Number(r))
+end

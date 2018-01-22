@@ -1,0 +1,253 @@
+{
+	Tools = ordered() {
+		EdgeBlur = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = ordered() {
+				Comments = Input { Value = "Muse Tools Library\r\nby Bryan Ray\r\nwww.musevfx.com", },
+				Input = InstanceInput {
+					SourceOp = "edgeBlurInput",
+					Source = "Input",
+				},
+				Matte = InstanceInput {
+					SourceOp = "MatteIn",
+					Source = "Image",
+					Name = "Matte In",
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "Blend",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1320, 346.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					ConnectedSnap = true,
+					PipesAlways = true,
+					AutoSnap = true,
+					FullIndicator = true
+				},
+				Size = { 959.144, 392.422, 479.572, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -704.862, -47.6783 }
+			},
+			Tools = ordered() {
+				EdgeLoc = ErodeDilate {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XAmount = Input { Expression = "EdgeBlur.EdgePosition", },
+						Input = Input {
+							SourceOp = "MatteIn",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 247.5 } },
+				},
+				edgeBlurInput = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 115.5 } },
+				},
+				Blend = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Expression = "EdgeBlur.Blend", },
+						Background = Input {
+							SourceOp = "edgeBlurInput",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Switch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 181.5 } },
+				},
+				MatteIn = BitmapMask {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 247.5 } },
+				},
+				edgeDetect = Filter {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterType = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "EdgeLoc",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 247.5 } },
+				},
+				DilateMask = ErodeDilate {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XAmount = Input { Expression = "EdgeBlur.EdgeWidth", },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Input = Input {
+							SourceOp = "edgeDetect",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 247.5 } },
+				},
+				BlurComp = Blur {
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "EdgeBlur.Blur",
+						},
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Input = Input {
+							SourceOp = "edgeBlurInput",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "BlurMask",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 181.5 } },
+				},
+				BlurMask = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "EdgeBlur.EdgeMaskBlur",
+						},
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Input = Input {
+							SourceOp = "DilateMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 247.5 } },
+				},
+				Switch = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "EdgeBlur.MaskView",
+						},
+						Background = Input {
+							SourceOp = "BlurComp",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BlurMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 181.5 } },
+				}
+			},
+			UserControls = ordered() {
+				Blur = {
+					INP_MaxAllowed = 10000,
+					INP_Integer = false,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Blur"
+				},
+				EdgeWidth = {
+					INP_MaxAllowed = 10,
+					INP_Integer = false,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 0.01,
+					INP_Default = 0,
+					INP_MinScale = -0.01,
+					INP_MinAllowed = -10,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Edge Mask Erode/Dilate"
+				},
+				EdgePosition = {
+					INP_MaxAllowed = 1,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 0.01,
+					INP_Default = 0,
+					INP_MinScale = -0.01,
+					INP_MinAllowed = -1,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Edge Position"
+				},
+				EdgeMaskBlur = {
+					INP_MaxAllowed = 10000,
+					INP_Integer = false,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Edge Mask Blur"
+				},
+				Blend = {
+					INP_MaxAllowed = 10,
+					INP_Integer = false,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 1,
+					INP_Default = 1,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Blend"
+				},
+				MaskView = {
+					INP_MaxAllowed = 1,
+					INP_Integer = true,
+					INPID_InputControl = "CheckboxControl",
+					INP_MaxScale = 1,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					CBC_TriState = false,
+					LINKS_Name = "Mask View"
+				}
+			}
+		}
+	},
+	ActiveTool = "EdgeBlur"
+}

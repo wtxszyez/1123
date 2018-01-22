@@ -1,0 +1,44 @@
+FuRegisterClass("reactor.Brightness", CT_Tool, {
+	REGS_Name = "Brightness",
+	REGS_Category = "Color",
+	REGS_OpIconString = "Bri",
+	REGS_OpDescription = "Brightness",
+	})
+
+function Create()
+	InBright = self:AddInput("Brightness", "Brightness", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 1.0,
+		INP_MinScale = -1.0,
+		INP_Default = 0.0,
+		})
+
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+end
+
+function Process(req)
+	local img = InImage:GetValue(req)
+
+	local bright = InBright:GetValue(req).Value
+
+	if bright == 0 then
+		OutImage:Set(req, img)
+	else
+		local m = ColorMatrixFull()
+		m:Offset(bright, bright, bright, bright)
+
+		out = img:ApplyMatrixOf(m, {})
+
+		OutImage:Set(req, out)
+	end
+end

@@ -1,0 +1,412 @@
+--[[
+
+Suck Less Audio Fuse
+
+-------------------------------------------------------------------
+Copyright (c) 2015-2017,  Pieter Van Houte
+<pieter[at]secondman[dot]com>
+-------------------------------------------------------------------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-------------------------------------------------------------------
+
+--]]
+
+version = "Suck Less Audio v1.3 - 9 Jun 2017"
+
+-------------------------------------------------------------------
+
+FuRegisterClass("SuckLessAudio", CT_Modifier, {
+	REGS_Category       = "Modifiers",
+	REGS_OpIconString   = "SLA",
+	REGS_OpDescription  = "Audio (WAV) File Modifier Fuse",
+	REGS_Name           = "Audio (WAV)",
+	REGID_DataType      = "Number",
+	REGID_InputDataType = "Number",
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.steakunderwater.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 130,
+	})
+
+-------------------------------------------------------------------
+	
+function Create()
+
+	InFile = self:AddInput("Wave File", "WaveFile", {
+		LINKID_DataType = "Text",
+		INPID_InputControl =  "FileControl",
+		FC_ClipBrowse = true,
+		INP_DoNotifyChanged  = true,
+		})
+		
+	Reload = self:AddInput("Reload Sample", "ReloadSample", {
+		INPID_InputControl =  "ButtonControl",
+		INP_DoNotifyChanged  = true,
+		INP_External = false,
+		BTNCS_Execute = "tool.ScriptReload[fu.TIME_UNDEFINED] = 1",
+		})
+		
+	InChannels = self:AddInput("Select Channel(s)", "SelectChannels", {
+		{ MBTNC_AddButton = "Left", MBTNCID_AddID = "Left", },
+		{ MBTNC_AddButton = "Right", MBTNCID_AddID = "Right", },
+		{ MBTNC_AddButton = "Both", MBTNCID_AddID = "Both", },
+		INPID_DefaultID = "Both",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		IC_Visible = false
+		})
+
+	InSampleStartFrame = self:AddInput("Sample Start Frame", "SampleStartFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		})
+		
+	InMode = self:AddInput("Mode", "Mode", {
+		{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Max", MBTNCID_AddID = "Max", },
+		{ MBTNC_AddButton = "Unsigned Max", MBTNCID_AddID = "UnsignedMax", },
+		{ MBTNC_AddButton = "Min", MBTNCID_AddID = "Min", },
+		{ MBTNC_AddButton = "Unsigned Min", MBTNCID_AddID = "UnsignedMin", },
+		{ MBTNC_AddButton = "Average", MBTNCID_AddID = "Average", },
+		{ MBTNC_AddButton = "Unsigned Average", MBTNCID_AddID = "UnsignedAverage", },
+		{ MBTNC_AddButton = "Median", MBTNCID_AddID = "Median", },
+		{ MBTNC_AddButton = "Unsigned Median", MBTNCID_AddID = "UnsignedMedian", },
+		INPID_DefaultID = "Max",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		})
+		
+	InProxy = self:AddInput("Proxy (for sampling)", "Proxy", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 1,
+		INP_MinAllowed = 1,
+		INP_MaxScale = 100,
+		INP_Default = 25,
+		INP_Integer = true,
+		})
+		
+	InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		INP_MaxScale = 5,
+		--ICS_ControlPage = "Wave Shaping",
+		})
+		
+	InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0,
+		INP_MaxScale = 5,
+		--ICS_ControlPage = "Wave Shaping",
+		})
+		
+	InTimeScale = self:AddInput("Time Scale", "TimeScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		--ICS_ControlPage = "Wave Shaping",
+		})
+		
+	InLabel = self:AddInput(version, "version", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External = false,
+		INP_Passive = true,
+		--ICS_ControlPage = "Controls",
+		})
+		
+	OutValue = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Number",
+		LINK_Main = 1,
+		})
+end
+
+-------------------------------------------------------------------
+
+-- function for reading in a binary file
+function readAll(file)
+	local f = io.open(file, "rb")
+	if not f then
+		return
+	end
+    local content = f:read("*all")
+    f:close()
+    return content
+end
+
+-- function for creating the header table, returns a table
+function getHeader(data, length)
+	local header = {}
+	for pos = 1, length do
+		b = string.byte(data, pos) -- create a string one byte long
+		table.insert(header, string.format("%i", b))
+	end
+	return header
+end
+
+-- function for converting integers to binary, returns a string
+function toBits(num,bits)
+    -- returns a table of bits, most significant first.
+    bits = bits or select(2,math.frexp(num))
+    local t={} -- will contain the bits        
+    for b=bits,1,-1 do
+        t[b]=math.fmod(num,2)
+        num=(num-t[b])/2
+    end
+    return t
+end
+
+--function to invert binary (two's complement), returns a string
+function invertBin(binary)
+	-- invert 0s and 1s to get the magnitude of the number. 
+	binary = string.gsub(binary, "1","2")
+	binary = string.gsub(binary, "0","1")
+	binary = string.gsub(binary, "2","0")
+	-- change sign, convert to decimal and add 1
+	binary = -(tonumber(binary,2)+1)
+	return binary
+end
+
+--function to read a pair of bytes and put them together to form a 16 bit two's complement sample, then return the result converted to decimal numbers
+function sampleRead(data, first, second, complement)
+	b = string.byte(data, first) -- create two strings one byte long
+	b2 = string.byte(data, second)
+		if not b then
+			return 0
+		end
+	bb = toBits(b, 8) -- create tables containing the bytes in binary
+	bb2 = toBits(b2, 8)
+	bbs = table.concat(bb) -- concatenate the bb tables into a string
+	bbs2 = table.concat(bb2)
+	sample = string.format("%08i", bbs)..string.format("%08i", bbs2)
+	if complement == 1 then
+		if tonumber(sample,2) > 32767	 then -- basically, if the bytelong binary starts with 1
+			sample = invertBin(sample)
+		else
+			sample = tonumber(sample,2)
+		end
+	else 
+		sample = tonumber(sample,2)
+	end
+	return sample
+end
+
+-- function for returning the signed maximum of a table
+function getMax(data)
+	local max = 0
+	for i,v in ipairs(data) do
+		if math.abs(v) > math.abs(max) then
+			max = v
+		end
+	end
+	return max
+end
+
+-- function for returning the unsigned maximum of a table
+function getUnsignedMax(data)
+	local max = 0
+	for i,v in ipairs(data) do
+		max = math.max(max,v)
+	end
+	return max
+end
+
+-- function for returning the signed minimum of a table
+function getMin(data)
+	local min = 32767
+	for i,v in ipairs(data) do
+		if math.abs(v) < math.abs(min) then
+			min = v
+		end
+	end
+	return min
+end
+
+-- function for returning the unsigned minimum of a table
+function getUnsignedMin(data)
+	local min = 32767
+	for i,v in ipairs(data) do
+		min = math.min(min,v)
+	end
+	return min
+end
+
+-- function for returning the average of a table
+function getAverage(data)
+	local sum = 0
+	local indices = 0
+	for i,v in ipairs(data) do
+		sum = sum + v
+		indices = indices + 1
+	end
+	return sum/indices
+end
+
+-- function for returning the unsigned average of a table
+function getUnsignedAverage(data)
+	local sum = 0
+	local indices = 0
+	for i,v in ipairs(data) do
+		sum = sum + math.abs(v)
+		indices = indices + 1
+	end
+	return sum/indices
+end
+
+-- function for returning the median of a table
+function getMedian(data)
+    table.sort(data)
+    if #data %2 == 0 then return (data[#data/2] + data[#data/2+1]) / 2 end
+    return data[math.ceil(#data/2)]
+end
+
+-- function for returning the unsigned median of a table
+function getUnsignedMedian(data)
+	local unsdata = {}
+	for i,v in ipairs(data) do
+		unsdata[i] = math.abs(data[i])
+	end
+    table.sort(unsdata)
+    if #unsdata %2 == 0 then return (unsdata[#unsdata/2] + unsdata[#unsdata/2+1]) / 2 end
+    return unsdata[math.ceil(#unsdata/2)]
+end
+
+-------------------------------------------------------------------
+
+function NotifyChanged(inp, param, time)
+	if inp ~= nil and param ~= nil then
+		if inp == InFile then	
+			local filedata = readAll(param.Value)
+			if not filedata then
+				return
+			else
+				local header = getHeader(filedata, 44)
+				if header[23] == "2" then
+					InChannels:SetAttrs({IC_Visible = true})
+				else
+					InChannels:SetAttrs({IC_Visible = false})
+				end
+			end
+		end
+	end
+end
+
+-------------------------------------------------------------------
+
+function Process(req)
+	
+	local infile = InFile:GetValue(req).Value
+	local startframe = InSampleStartFrame:GetValue(req).Value
+	local timescale = InTimeScale:GetValue(req).Value
+	local proxy = InProxy:GetValue(req).Value
+	local mode = InMode:GetValue(req).Value
+	local scale = InAmplitudeScale:GetValue(req).Value
+	local offset = InAmplitudeOffset:GetValue(req).Value
+	local currenttime = req.Time
+	local format
+	local sampleoffset
+	local samplestep
+	local sampleunit
+	local channelchoice = InChannels:GetValue(req).Value
+		if channelchoice == "Right" then
+			sampleoffset = 2
+			samplestep = 4
+			sampleunit = 1
+		elseif channelchoice == "Left" then
+			sampleoffset = 0
+			samplestep = 4
+			sampleunit = 1
+		else
+			sampleoffset = 0
+			samplestep = 2 -- samplestep is never smaller than 2 (2 times 8 bit is 16 bit)
+			sampleunit = 2
+		end		
+	
+	local framerate = self.Comp:GetPrefs("Comp.FrameFormat.Rate") -- get the frame rate of the comp set in the preferences
+	
+	if not filedata or infiledup ~= infile then
+--		print ("loading")
+		filedata = readAll(infile)
+		infiledup = infile
+		if not filedata then
+			print("Please load an audio file.")
+			return
+		end
+	end
+		
+	-- Initialize tables needed for WAVE data.
+	local wavedata = {} -- will be deprecated in favour of sampledata
+	local sampledata = {}
+	
+	-- create a table containing the header of the file. This will then be used to get file type, sample rate etc. In wave file the header is stored in the first 44 bytes of the file.
+	local header = getHeader(filedata, 44)
+	
+	--get some vital information out of the header, to do some form of file format checking
+	if header[3] == header[4] and header[17] == "16" then
+		format = "WAV"
+	else
+		print ("Unsupported file type.\nPlease only load of type WAV (Microsoft) signed 16-bit PCM.")
+		return
+	end
+	
+	local bitrate = sampleRead(filedata, 26, 25, 0)
+	local channels = header[23]
+		if channels == "1" then
+			sampleoffset = 0
+			samplestep = 2
+			sampleunit = 1
+		end
+	
+	local spf = math.floor(bitrate/framerate/timescale*sampleunit) -- calculate the amount of samples per frame
+
+	-- create sampledata table for MS WAV (little endian)
+	if format == "WAV" then
+		for pos = (45+sampleoffset)+((currenttime-startframe)*spf*samplestep), ((45+sampleoffset)+((currenttime-startframe)+1)*spf*samplestep)-samplestep, samplestep*proxy do 
+			if pos > 44 then
+				--print (pos)
+				for i = 0, sampleunit, samplestep do -- make sure to read from all channels per step 
+					table.insert(sampledata, sampleRead(filedata, pos+i+1, pos+i, 1))
+					i = i+1
+				end
+			else
+				table.insert(sampledata, 0)
+			end
+		end
+	end
+	
+	if mode == "Max" then
+		amp = offset + getMax(sampledata)/32767*scale
+	elseif mode == "UnsignedMax" then
+		amp = offset + getUnsignedMax(sampledata)/32767*scale
+	elseif mode == "Min" then
+		amp = offset + getMin(sampledata)/32767*scale
+	elseif mode == "UnsignedMin" then
+		amp = offset + getUnsignedMin(sampledata)/32767*scale
+	elseif mode == "Average" then
+		amp = offset + getAverage(sampledata)/32767*scale
+	elseif mode == "UnsignedAverage" then
+		amp = offset + getUnsignedAverage(sampledata)/32767*scale
+	elseif mode == "Median" then
+		amp = offset + getMedian(sampledata)/32767*scale
+	elseif mode == "UnsignedMedian" then
+		amp = offset + getUnsignedMedian(sampledata)/32767*scale
+	end
+		
+	OutValue:Set(req, Number(amp))
+	
+end

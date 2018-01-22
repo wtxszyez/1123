@@ -1,0 +1,1100 @@
+{
+	Tools = ordered() {
+		MT_Glitch_HumBar = MacroOperator {
+			Inputs = ordered() {
+			Comments = Input {
+					Value = "Creates a white, translucent bar, as from a ground loop hum. Bar Only mode is useful as a source for 2d displacement. \r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray.\r\nwww.musevfx.com", 
+				},
+				Input = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "Input",
+				},
+				SoftEdge = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "SoftEdge",
+					Default = 0.008,
+				},
+				Height = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "Height",
+					Default = 0.18,
+				},
+				WaveType = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "PulseWaveType",
+				},
+				Period = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "PulsePeriod",
+					Default = 8,
+				},
+				Strength = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "PulseStrength",
+					Default = 0.6,
+				},
+				BlipLength = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "BlipLength",
+					Default = 2,
+				},
+				Speed = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "Speed",
+					Default = 0.5,
+				},
+				BarOnly = InstanceInput {
+					SourceOp = "input_humBar",
+					Source = "BarOnly",
+					Default = 0,
+					Page = "Merge",
+				},
+				ApplyMode = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ApplyMode",
+				},
+				Operator = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "Operator",
+				},
+				SubtractiveAdditive = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "SubtractiveAdditive",
+					Name = "Subtractive",
+					Default = 1,
+				},
+				Gain = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "Gain",
+					Default = 1,
+				},
+				BurnIn = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "BurnIn",
+					Default = 0,
+				},
+				BlendClone = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "BlendClone",
+					Default = 0.3154078,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "Blend",
+					Default = 0.3154078,
+					Page = "Common Controls",
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				Red = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+				},
+				Green = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+				},
+				Blue = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+				},
+				Alpha = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ProcessAlpha",
+					Name = "Alpha",
+					Default = 1,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaskHigh",
+					ControlGroup = 27,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaskLow",
+					ControlGroup = 27,
+					Default = 0,
+				},
+				MaskClipBlack = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaskClipBlack",
+					Default = 1,
+				},
+				MaskClipWhite = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaskClipWhite",
+					Default = 1,
+				},
+				UseObject = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "UseObject",
+					Default = 0,
+				},
+				UseMaterial = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "UseMaterial",
+					Default = 0,
+				},
+				CorrectEdges = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "CorrectEdges",
+				},
+				ObjectID = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "ObjectID",
+					Name = "Object / Material",
+					ControlGroup = 33,
+					Default = 0,
+				},
+				MaterialID = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "MaterialID",
+					Name = "Object / Material",
+					ControlGroup = 33,
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Merge6",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "output_humBar",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				input_humBar = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+						ProcessRed = Input { Value = 0, },
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						ProcessAlpha = Input { Value = 0, },
+						Red = Input { Value = 1, },
+						Green = Input { Value = 1, },
+						Blue = Input { Value = 1, },
+						Gain = Input { Value = 1, },
+						Gamma = Input { Value = 1, },
+						Saturation = Input { Value = 1, },
+						High = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2915, -973.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						Red = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Green = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Blue = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Alpha = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Gain = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Lift = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Gamma = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Contrast = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Brightness = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Saturation = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Low = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						High = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						Direction = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						ClipBlack = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						ClipWhite = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						PreDividePostMultiply = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+						SoftEdge = {
+							IC_ControlPage = 0,
+							INP_Default = 0.008,
+							LINKS_Name = "Soft Edge",
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 0.1,
+							LINKID_DataType = "Number",
+						},
+						Height = {
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0.18,
+							IC_ControlPage = 0,
+						},
+						PulseWaveType = {
+							{ CCS_AddString = "Sine", },
+							{ CCS_AddString = "Triangle", },
+							{ CCS_AddString = "Square", },
+							{ CCS_AddString = "Sawtooth", },
+							{ CCS_AddString = "Parabolic", },
+							{ CCS_AddString = "Exponential", },
+							{ CCS_AddString = "Rev Parabolic", },
+							{ CCS_AddString = "Bounce", },
+							{ CCS_AddString = "Blip", },
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ComboControl",
+							LINKS_Name = "Pulse Wave Type",
+							IC_ControlPage = 0,
+						},
+						PulsePeriod = {
+							LINKID_DataType = "Number",
+							INP_Default = 8,
+							LINKS_Name = "Pulse Period",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 60,
+							INP_MinAllowed = 0,
+						},
+						PulseStrength = {
+							LINKID_DataType = "Number",
+							INP_Default = 0.6,
+							INP_MinScale = 0.5,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Pulse Strength",
+							IC_ControlPage = 0,
+						},
+						BlipLength = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Blip Length",
+							INP_Default = 2,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 8,
+							INP_MinAllowed = 0,
+						},
+						Speed = {
+							IC_ControlPage = 0,
+							INP_Default = 0.5,
+							INPID_InputControl = "ScrewControl",
+							INP_MaxScale = 1,
+							LINKID_DataType = "Number",
+						},
+						BarOnly = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							INPID_InputControl = "CheckboxControl",
+							IC_ControlPage = 0,
+							LINKS_Name = "Bar Only",
+						},
+					},
+				},
+				Merge6 = Merge {
+					Inputs = {
+						Blend = Input { Value = 0.3154078, },
+						Background = Input {
+							SourceOp = "input_humBar",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform4",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2860, -940.5, }, },
+				},
+				output_humBar = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.BarOnly",
+						},
+						Background = Input {
+							SourceOp = "Merge6",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2805, -907.5, }, },
+				},
+				Transform4 = Transform {
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 3.85471097, },
+							Expression = "Point(0.5,0.5+time*input_humBar.Speed/20)",
+						},
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Dissolve4_16",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2750, -841.5, }, },
+				},
+				rect_sin = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.514644660940674,
+							Expression = "waves_humBar.SineWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -841.5, }, },
+				},
+				rect_tri = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.525000000000001,
+							Expression = "waves_humBar.TriangleWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -808.5, }, },
+				},
+				rect_square = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.5,
+							Expression = "waves_humBar.SquareWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -775.5, }, },
+				},
+				waves_humBar = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+						ProcessRed = Input { Value = 0, },
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						ProcessAlpha = Input { Value = 0, },
+						Red = Input { Value = 1, },
+						Green = Input { Value = 1, },
+						Blue = Input { Value = 1, },
+						Gain = Input { Value = 1, },
+						Gamma = Input { Value = 1, },
+						Saturation = Input { Value = 1, },
+						High = Input { Value = 1, },
+						SineWave = Input {
+							Value = 0.926776695296637,
+							Expression = "(sin(2*pi*time/Period) + 1) / 2 * (Maximum-Minimum) + Minimum",
+						},
+						TriangleWave = Input {
+							Value = 0.875,
+							Expression = "(asin(sin(2*pi*time/Period))/pi+0.5) * (Maximum-Minimum) + Minimum",
+						},
+						SquareWave = Input {
+							Value = 1,
+							Expression = "floor((sin(2*pi*time/Period) + 1) / 2 + 0.5) * (Maximum-Minimum) + Minimum",
+						},
+						SawtoothWave = Input {
+							Value = 0.5625,
+							Expression = "(time%Period)/Period *  (Maximum-Minimum) + Minimum",
+						},
+						ParabolicSawtoothWave = Input {
+							Value = 0.597545161008066,
+							Expression = "sin(( (pi*time) / (2*Period) ) % (pi/2)) *  (Maximum-Minimum) + Minimum",
+						},
+						ReversedParabolicSawtoothWave = Input {
+							Value = 0.990392640201615,
+							Expression = "cos(( (pi*time) / (2*Period) ) % (pi/2)) * (Maximum-Minimum) + Minimum",
+						},
+						ExponentialSawtoothWave = Input {
+							Value = 0.00222838215764285,
+							Expression = "((exp((2*pi*(time % Period))/Period) - 1)/exp(2*pi)) * (Maximum-Minimum) + Minimum",
+						},
+						BounceWave = Input {
+							Value = 0.691341716182545,
+							Expression = "abs(sin(pi*time/Period)) *  (Maximum-Minimum) + Minimum",
+						},
+						Blip = Input {
+							Value = 0.5,
+							Expression = "iif( (((time+Period) % (Period+BlipLength) / Period) * (Period/BlipLength) - (Period/BlipLength)) >= 0,Maximum,Minimum)",
+						},
+						Minimum = Input { Value = 0.5, },
+						Maximum = Input { Expression = "input_humBar.PulseStrength", },
+						Period = Input {
+							Value = 8,
+							Expression = "input_humBar.PulsePeriod",
+						},
+						BlipLength = Input { Expression = "input_humBar.BlipLength", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2750, -742.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						Red = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Green = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Blue = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Alpha = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Gain = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Lift = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Gamma = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Contrast = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Brightness = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Saturation = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Low = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						High = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						Direction = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						ClipBlack = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						ClipWhite = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						PreDividePostMultiply = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						SineWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Sine Wave",
+						},
+						TriangleWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Triangle Wave",
+						},
+						SquareWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Square Wave",
+						},
+						SawtoothWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Sawtooth Wave",
+						},
+						ParabolicSawtoothWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Parabolic Sawtooth Wave",
+						},
+						ReversedParabolicSawtoothWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Reversed Parabolic Sawtooth Wave",
+						},
+						ExponentialSawtoothWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Exponential Sawtooth Wave",
+						},
+						BounceWave = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Bounce Wave",
+						},
+						Blip = {
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						SineBlip = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Sine Blip",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0,
+						},
+						Minimum = {
+							INP_Default = 0,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						Maximum = {
+							INP_Default = 1,
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						Period = {
+							INP_MinScale = 2,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 120,
+							INP_Default = 24,
+						},
+						BlipLength = {
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							LINKS_Name = "Blip Length",
+							IC_ControlPage = 0,
+							INP_MaxScale = 60,
+							INP_Default = 2,
+						},
+					},
+				},
+				rect_saw = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.5625,
+							Expression = "waves_humBar.SawtoothWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -742.5, }, },
+				},
+				Dissolve4_11 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-2",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_10",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_saw",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -742.5, }, },
+				},
+				Dissolve4_10 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-1",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_square",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -775.5, }, },
+				},
+				Dissolve4 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					CtrlWZoom = false,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType",
+						},
+						Background = Input {
+							SourceOp = "rect_sin",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "rect_tri",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -808.5, }, },
+				},
+				rect_para = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.583146961230255,
+							Expression = "waves_humBar.ParabolicSawtoothWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -709.5, }, },
+				},
+				Dissolve4_12 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-3",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_11",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_para",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -709.5, }, },
+				},
+				Dissolve4_13 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-4",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_12",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_exp",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -676.5, }, },
+				},
+				rect_exp = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.509291278211045,
+							Expression = "waves_humBar.ExponentialSawtoothWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -676.5, }, },
+				},
+				rect_revPara = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.55555702330196,
+							Expression = "waves_humBar.ReversedParabolicSawtoothWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -643.5, }, },
+				},
+				Dissolve4_14 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-5",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_13",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_revPara",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -643.5, }, },
+				},
+				Dissolve4_15 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-6",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_14",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_bounce",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -610.5, }, },
+				},
+				rect_bounce = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.592387953251129,
+							Expression = "waves_humBar.BounceWave",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -610.5, }, },
+				},
+				Dissolve4_16 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "input_humBar.PulseWaveType-7",
+						},
+						Background = Input {
+							SourceOp = "Dissolve4_15",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "rect_blip",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2475, -577.5, }, },
+				},
+				rect_blip = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0.5,
+							Expression = "waves_humBar.Blip",
+						},
+						SoftEdge = Input {
+							Value = 0.008,
+							Expression = "input_humBar.SoftEdge",
+						},
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 991,
+							Expression = "input_humBar.Input.Width",
+						},
+						MaskHeight = Input {
+							Value = 728,
+							Expression = "input_humBar.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1.280967, },
+						Height = Input {
+							Value = 0.18,
+							Expression = "input_humBar.Height",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -577.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_Glitch_HumBar",
+}

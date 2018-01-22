@@ -1,0 +1,284 @@
+{
+	Tools = ordered() {
+		MT_FastLightWrap = MacroOperator {
+			Inputs = ordered() {
+				Comments = Input { Value = "Muse Tools Library\r\nby Stefan Bredereck\r\nwww.musevfx.com", },
+				Blend = InstanceInput {
+					SourceOp = "GlobalBlend",
+					Source = "Blend",
+					Name = "Global Effect Blend",
+					Default = 1,
+				},
+				Input = InstanceInput {
+					SourceOp = "ChangeInputDepth",
+					Source = "Input",
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeInputDepth",
+					Source = "Depth",
+					Name = "Change Input Depth",
+					Default = 0,
+				},
+				Mask = InstanceInput {
+					SourceOp = "MatteInput",
+					Source = "Image",
+					Name = "Mask",
+				},
+				Threshold = InstanceInput {
+					SourceOp = "LightWrap",
+					Source = "Threshold",
+					Default = 0.5,
+				},
+				Gain = InstanceInput {
+					SourceOp = "LightWrap",
+					Source = "Gain",
+					MaxScale = 1,
+					Default = 1,
+				},
+				LockXY = InstanceInput {
+					SourceOp = "LightWrap",
+					Source = "LockXY",
+					Default = 1,
+				},
+				XGlowSize = InstanceInput {
+					SourceOp = "LightWrap",
+					Source = "XGlowSize",
+					Default = 7.734807,
+				},
+				YGlowSize = InstanceInput {
+					Disabled = true,
+					SourceOp = "LightWrap",
+					Source = "YGlowSize",
+					Default = 10,
+				},
+				ClippingMode = InstanceInput {
+					SourceOp = "LightWrap",
+					Source = "ClippingMode",
+				},
+				SoftClip = InstanceInput {
+					SourceOp = "SoftClip",
+					Source = "Blend",
+					Name = "Soft Clip Amount",
+					Default = 0,
+				},
+				OutputDepth = InstanceInput {
+					SourceOp = "OutputDepth",
+					Source = "Depth",
+					Name = "Output Depth",
+					Default = 0,
+				},
+				OutputDither = InstanceInput {
+					SourceOp = "OutputDepth",
+					Source = "Dither",
+					Name = "Dither - If changing the Output Depth",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OutputDepth",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				GlobalBlend = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "ChangeInputDepth",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "SoftClip",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 550, 346.5, },
+					},
+				},
+				ChangeInputDepth = ChangeDepth {
+					NameSet = true,
+					ViewInfo = OperatorInfo {
+						Pos = { 660, 379.5, },
+					},
+				},
+				MatteInput = BitmapMask {
+					NameSet = true,
+					Inputs = {
+						Invert = Input {
+							Value = 1,
+						},
+						MaskWidth = Input {
+							Value = 1920,
+						},
+						MaskHeight = Input {
+							Value = 1080,
+						},
+						PixelAspect = Input {
+							Value = { 1, 1, },
+						},
+						ClippingMode = Input {
+							Value = FuID { "None", },
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 770, 412.5, },
+					},
+				},
+				LightWrap = SoftGlow {
+					NameSet = true,
+					Inputs = {
+						ApplyMaskInverted = Input {
+							Value = 1,
+						},
+						Threshold = Input {
+							Value = 0.5,
+						},
+						Gain = Input {
+							Value = 1,
+						},
+						XGlowSize = Input {
+							Value = 7.734807,
+						},
+						YGlowSize = Input {
+							Disabled = true,
+						},
+						Input = Input {
+							SourceOp = "ChangeInputDepth",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "MatteInput",
+							Source = "Mask",
+						},
+						GlowMask = Input {
+							SourceOp = "MatteInput",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 880, 445.5, },
+					},
+				},
+				SoftClip = ColorCurves {
+					PickColor = true,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+						},
+						ProcessAlpha = Input {
+							Value = 0,
+						},
+						ApplyMaskInverted = Input {
+							Value = 1,
+						},
+						EditAlpha = Input {
+							Value = 0,
+						},
+						Red = Input {
+							SourceOp = "SoftClipRed",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "SoftClipGreen",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "SoftClipBlue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "SoftClipAlpha",
+							Source = "Value",
+						},
+						Input = Input {
+							SourceOp = "LightWrap",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "MatteInput",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 990, 478.5, },
+					},
+					Tools = {
+						SoftClipRed = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.25, 0.25, }, Flags = { Linear = true, }, },
+									[0.75] = { 0.75, LH = { 0.5, 0.5, }, RH = { 1, 1, }, Flags = { Linear = true, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 255, Green = 0, Blue = 0, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SoftClipGreen = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.25, 0.25, }, Flags = { Linear = true, }, },
+									[0.75] = { 0.75, LH = { 0.5, 0.5, }, RH = { 1, 1, }, Flags = { Linear = true, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SoftClipAlpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204, },
+							CtrlWShown = false,
+						},
+						SoftClipBlue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.25, 0.25, }, Flags = { Linear = true, }, },
+									[0.75] = { 0.75, LH = { 0.5, 0.5, }, RH = { 1, 1, }, Flags = { Linear = true, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 0, Green = 0, Blue = 255, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+					},
+				},
+				OutputDepth = ChangeDepth {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Dither = Input {
+							Value = 1,
+						},
+						Input = Input {
+							SourceOp = "GlobalBlend",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 1100, 511.5, },
+					},
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_FastLightWrap",
+}

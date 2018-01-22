@@ -1,0 +1,535 @@
+--[[--
+Grade Fuse
+by Joe Laude, MuseVFX
+jlaude@musevfx.com
+www.musevfx.com
+
+A tool to emulate Nuke's grade node.
+
+----------------------------------------
+Credit where credit is due:
+Thanks to Stefan Ihringer for his ELinBC
+tool, which I looked at in learning how
+to make this (and learn Lua in general)
+----------------------------------------
+
+History
+
+v0.00 - 01-07-2015
+(started coding)
+
+v0.01 - 01-12-2015
+(alpha version - works for the most part,
+missing reverse and clamp feature, needs
+efficiency tweaks)
+
+v0.02 - 01-13-2015
+(refinements)
+
+v1.00 - 01-16-2015
+(reworked how the grade math works,
+first published version)
+
+v1.01 - 02-23-2015
+(minor updates for public release)
+
+----------------------------------------
+
+Copyright (c) 2015, MuseVFX
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer. 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+----------------------------------------
+
+--]]--
+
+version = "Grade v1.01 - MuseVFX www.musevfx.com"
+
+FuRegisterClass("Grade", CT_Tool, {
+	REGS_Name          = "Grade",
+	REGS_Category      = "Color",
+	REGS_OpIconString  = "Grade",
+	REGS_OpDescription = "Better",
+	REGS_Company       = "Joe Laude",
+	REGS_URL           = "http://www.joelaude.com",
+	REG_NoMotionBlurCtrls = true,
+	REG_Fuse_NoEdit    = true,
+	REG_Fuse_NoReload  = true,
+	REG_SupportsDoD    = true,
+	})
+
+function Create()
+	InBP_R = self:AddInput("Red", "BP_Red", {
+		ICS_Name = "Black Point",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 0,
+		})
+	InBP_G = self:AddInput("Green", "BP_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 1,
+		})
+	InBP_B = self:AddInput("Blue", "BP_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 2,
+		})
+		
+	InWP_R = self:AddInput("Red", "WP_Red", {
+		ICS_Name = "White Point",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 2,
+		IC_ControlID = 0,
+		})
+	InWP_G = self:AddInput("Green", "WP_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 2,
+		IC_ControlID = 1,
+		})
+	InWP_B = self:AddInput("Blue", "WP_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 2,
+		IC_ControlID = 2,
+		})
+
+	InLift_R = self:AddInput("Red", "Lift_Red", {
+		ICS_Name = "Lift",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 3,
+		IC_ControlID = 0,
+		})
+	InLift_G = self:AddInput("Green", "Lift_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 3,
+		IC_ControlID = 1,
+		})
+	InLift_B = self:AddInput("Blue", "Lift_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 3,
+		IC_ControlID = 2,
+		})
+		
+	InGain_R = self:AddInput("Red", "Gain_Red", {
+		ICS_Name = "Gain",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 4,
+		IC_ControlID = 0,
+		})
+	InGain_G = self:AddInput("Green", "Gain_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 4,
+		IC_ControlID = 1,
+		})
+	InGain_B = self:AddInput("Blue", "Gain_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 4,
+		IC_ControlID = 2,
+		})
+
+	InMult_R = self:AddInput("Red", "Mult_Red", {
+		ICS_Name = "Multiply",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 5,
+		IC_ControlID = 0,
+		})
+	InMult_G = self:AddInput("Green", "Mult_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 5,
+		IC_ControlID = 1,
+		})
+	InMult_B = self:AddInput("Blue", "Mult_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.0,
+		INP_MaxScale = 4.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 5,
+		IC_ControlID = 2,
+		})
+
+	InOffset_R = self:AddInput("Red", "Offset_Red", {
+		ICS_Name = "Offset",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 6,
+		IC_ControlID = 0,
+		})
+	InOffset_G = self:AddInput("Green", "Offset_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 6,
+		IC_ControlID = 1,
+		})
+	InOffset_B = self:AddInput("Blue", "Offset_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 0.0,
+		INP_MinScale = -1.0,
+		INP_MaxScale = 1.0,
+		ICD_Center = 0.0,
+		IC_ControlGroup = 6,
+		IC_ControlID = 2,
+		})
+
+	InGamma_R = self:AddInput("Red", "Gamma_Red", {
+		ICS_Name = "Gamma",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		CLRC_ShowWheel = false,
+		INP_Default  = 1.0,
+		INP_MinScale = 0.2,
+		INP_MaxScale = 5.0,
+		INP_MinAllowed = 0.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 7,
+		IC_ControlID = 0,
+		})
+	InGamma_G = self:AddInput("Green", "Gamma_Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.2,
+		INP_MaxScale = 5.0,
+		INP_MinAllowed = 0.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 7,
+		IC_ControlID = 1,
+		})
+	InGamma_B = self:AddInput("Blue", "Gamma_Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_Default  = 1.0,
+		INP_MinScale = 0.2,
+		INP_MaxScale = 5.0,
+		INP_MinAllowed = 0.0,
+		ICD_Center = 1.0,
+		IC_ControlGroup = 7,
+		IC_ControlID = 2,
+		})
+
+	InReverse = self:AddInput("Reverse", "ReverseGrade", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.3,
+		INP_External = false,
+		INP_DoNotifyChanged = true,
+		})
+	InBlackClamp = self:AddInput("Black Clamp", "BlackClamp", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 0.35,
+		INP_External = false,
+		INP_DoNotifyChanged = true,
+		})
+	InWhiteClamp = self:AddInput("White Clamp", "WhiteClamp", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.35,
+		INP_External = false,
+		INP_DoNotifyChanged = true,
+		})
+
+	InPreDivPostMult = self:AddInput("Pre-Divide / Post-Multiply", "PreDivPostMult", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+
+	InLabel = self:AddInput(version, "version", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External = false,
+		INP_Passive = true,
+		})
+
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+end
+
+function PrecalcProcess(req)
+	local img		= InImage:GetValue(req)
+
+	local dod		= req:GetInputDoD(InImage)
+	local datawnd	= dod:Intersect(img.DataWindow)
+
+	local out		= Image({IMG_Like = img,
+	                   IMG_NoData = true,
+	                   IMG_DataWindow = datawnd,
+		               IMG_Depth = 8,
+		               IMG_CopyChannels = true } )
+
+	OutImage:Set(req, out)
+end
+
+function clipfunc(x,y, p)
+
+	if Bclamp == true then
+	p.R = math.max(p.R, 0)
+	p.G = math.max(p.G, 0)
+	p.B = math.max(p.B, 0)
+	end
+	if Wclamp == true then
+	p.R = math.min(p.R, 1)
+	p.G = math.min(p.G, 1)
+	p.B = math.min(p.B, 1)
+	end
+	
+	return p
+end
+
+function Process(req)
+	local img		= InImage:GetValue(req) -- Image input
+
+	-- Black Point
+	local bp_r		= InBP_R:GetValue(req).Value
+	local bp_g		= InBP_G:GetValue(req).Value
+	local bp_b		= InBP_B:GetValue(req).Value
+	-- White Point
+	local wp_r		= InWP_R:GetValue(req).Value
+	local wp_g		= InWP_G:GetValue(req).Value
+	local wp_b		= InWP_B:GetValue(req).Value
+	-- Lift
+	local lift_r	= InLift_R:GetValue(req).Value
+	local lift_g	= InLift_G:GetValue(req).Value
+	local lift_b	= InLift_B:GetValue(req).Value
+	-- Gain
+	local gain_r	= InGain_R:GetValue(req).Value
+	local gain_g	= InGain_G:GetValue(req).Value
+	local gain_b	= InGain_B:GetValue(req).Value
+	-- Multiply
+	local mult_r	= InMult_R:GetValue(req).Value
+	local mult_g	= InMult_G:GetValue(req).Value
+	local mult_b	= InMult_B:GetValue(req).Value
+	-- Offset
+	local offset_r	= InOffset_R:GetValue(req).Value
+	local offset_g	= InOffset_G:GetValue(req).Value
+	local offset_b	= InOffset_B:GetValue(req).Value
+	-- Gamma
+	local gamma_r	= InGamma_R:GetValue(req).Value
+	if gamma_r ~= 0 then
+	local inv_gamma_r = 1/gamma_r
+	else inv_gamma_r = 1 end
+	local gamma_g	= InGamma_G:GetValue(req).Value
+	if gamma_g ~= 0 then
+	local inv_gamma_g = 1/gamma_g
+	else inv_gamma_g = 1 end
+	local gamma_b	= InGamma_B:GetValue(req).Value
+	if gamma_b ~= 0 then
+	local inv_gamma_b = 1/gamma_b
+	else inv_gamma_b = 1 end
+	-- Reverse
+	local rev		= ( InReverse:GetValue(req).Value > 0.5 )
+	-- Black clamp
+	local bclamp	= ( InBlackClamp:GetValue(req).Value > 0.5 )
+	-- White clamp
+	local wclamp	= ( InWhiteClamp:GetValue(req).Value > 0.5 )
+	-- Unmult/Premult
+	local prediv	= ( InPreDivPostMult:GetValue(req).Value > 0.5 )
+
+	-- Black Point / White Point differences
+	local wbdiff_r	= wp_r - bp_r
+	if wbdiff_r <= 0 then wbdiff_r = 0.0001 end
+	local wbdiff_g	= wp_g - bp_g
+	if wbdiff_g <= 0 then wbdiff_g = 0.0001 end
+	local wbdiff_b	= wp_b - bp_b
+	if wbdiff_b <= 0 then wbdiff_b = 0.0001 end
+	-- Lift / Gain differences
+	local gldiff_r	= gain_r - lift_r
+	local gldiff_g	= gain_g - lift_g
+	local gldiff_b	= gain_b - lift_b
+	-- Do A (slope/gain) component
+	local A_r = mult_r * ( gldiff_r/wbdiff_r )
+	local A_g = mult_g * ( gldiff_g/wbdiff_g )
+	local A_b = mult_b * ( gldiff_b/wbdiff_b )
+	-- Do B (intersect/offset) component
+	local B_r = offset_r + lift_r - (A_r * bp_r)
+	local B_g = offset_g + lift_g - (A_g * bp_g)
+	local B_b = offset_b + lift_b - (A_b * bp_b)
+
+	local dod, roi = req:GetInputDoD(InImage), req:GetRoI()
+	local datawnd = dod:Intersect(img.DataWindow)
+	if roi then
+		datawnd = roi:Intersect(datawnd)
+	end
+
+	local img_temp = Image({ IMG_Like = img,
+							IMG_DataWindow = datawnd,
+							IMG_ValidWindow = roi and roi.ValidWindow,
+							IMG_Depth = 8,
+							IMG_CopyChannels = true } )
+	img:Crop(img_temp, {})
+
+	local DWleft = img_temp.DataWindow.left
+	local DWbottom = img_temp.DataWindow.bottom
+	local DWwidth = img_temp.DataWindow.right - DWleft
+	local DWheight = img_temp.DataWindow.top - DWbottom
+
+	-- Do pre-divide
+	if prediv then
+		img_temp:AlphaDivide()
+	end
+
+	if not rev then
+	
+	-- Do gain
+	img_temp:Gain(A_r,A_g,A_b,1)
+	-- Do offset
+	local m = ColorMatrixFull()
+	m:Offset(B_r, B_g, B_b, 0)
+	img_temp = img_temp:ApplyMatrixOf(m, {})
+	
+	-- Do gamma
+	img_temp:Gamma(gamma_r,gamma_g,gamma_b,1)
+	
+	
+	else
+	
+	-- UNDO gamma
+	img_temp:Gamma(1/gamma_r,1/gamma_g,1/gamma_b,1)
+	-- UNDO offset
+	local m = ColorMatrixFull()
+	m:Offset(-B_r, -B_g, -B_b, 0)
+	img_temp = img_temp:ApplyMatrixOf(m, {})
+	-- UNDO gain
+	img_temp:Gain(1/A_r,1/A_g,1/A_b,1)
+
+	end
+	
+	if prediv then
+		img_temp:AlphaMultiply()
+	end
+	
+	if wclamp or bclamp then
+	img_temp:MultiProcessPixels(nil, { Bclamp = bclamp , Wclamp = wclamp }, DWleft, DWbottom, DWwidth, DWheight, img_temp, clipfunc)
+	end
+
+	local out = Image( {IMG_Like = img_temp,
+	                    IMG_DataWindow = datawnd,
+	                    IMG_ValidWindow = roi and roi.ValidWindow,
+	                    IMG_Depth = 8,
+	                    IMG_CopyChannels = true } )
+	img:Crop(out, {})
+
+	out = out:ChannelOpOf("Copy", img_temp, {R = "fg.R", G = "fg.G", B = "fg.B", A = "fg.A"})
+	
+	OutImage:Set(req, out)
+end

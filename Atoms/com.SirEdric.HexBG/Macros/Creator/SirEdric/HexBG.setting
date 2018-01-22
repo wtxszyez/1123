@@ -1,0 +1,56 @@
+{
+	Tools = ordered() {
+		bgHex = Background {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Width = Input { Value = 1920, },
+				Height = Input { Value = 1080, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftRed = Input { Value = 1, },
+				TopLeftGreen = Input { Value = 1, },
+				TopLeftBlue = Input { Value = 1, },
+				TopLeftAlpha = Input { Value = 0, },
+				myHex = Input { Value = "ffffff", },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+			UserControls = ordered() {
+				myHex = {
+					LINKS_Name = "Hex Value",
+					LINKID_DataType = "Text",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 1,
+					TEC_Wrap = false,
+					TEC_ReadOnly = false,
+					ICS_ControlPage = "Color",
+					INP_External = false
+				},
+				calcHex = {
+					INP_MaxAllowed = 1000000,
+					INP_Integer = false,
+					INPID_InputControl = "ButtonControl",
+					BTNCS_Execute = "mtool=comp.ActiveTool();rgb = {mtool.TopLeftRed[1]*255,mtool.TopLeftGreen[1]*255,mtool.TopLeftBlue[1]*255};local hexadecimal = '0x';for key, value in pairs(rgb) do;local hex = '';while(value > 0)do;	local index = math.fmod(value, 16) + 1;value = math.floor(value / 16);hex = string.sub('0123456789abcdef', index, index) .. hex;end;if(string.len(hex) == 0)then;hex = '00';elseif(string.len(hex) == 1)then;hex = '0' .. hex;end;hexadecimal = hexadecimal .. hex;end;mtool.myHex = hexadecimal; return hexadecimal",
+					INP_MaxScale = 1,
+					INP_MinScale = 0,
+					INP_MinAllowed = -1000000,
+					LINKID_DataType = "Number",
+					INP_External = false,
+					ICS_ControlPage = "Color",
+					LINKS_Name = "Hex from RGB"
+				},
+				RGBfromHex = {
+					INP_MaxAllowed = 1000000,
+					INP_Integer = false,
+					INPID_InputControl = "ButtonControl",
+					BTNCS_Execute = "mtool=comp.ActiveTool();hex = mtool.myHex[1];hex = hex:gsub(\"0x\",\"\");print(tonumber(\"0x\"..hex:sub(1,2))/255, tonumber(\"0x\"..hex:sub(3,4))/255, tonumber(\"0x\"..hex:sub(5,6))/255);mtool.TopLeftRed[1]=tonumber(\"0x\"..hex:sub(1,2))/255;mtool.TopLeftGreen[1]=tonumber(\"0x\"..hex:sub(3,4))/255;mtool.TopLeftBlue[1]=tonumber(\"0x\"..hex:sub(5,6))/255;return",
+					INP_MaxScale = 1,
+					INP_MinScale = 0,
+					INP_MinAllowed = -1000000,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Color",
+					LINKS_Name = "RGB from Hex"
+				}
+			}
+		}
+	}
+}

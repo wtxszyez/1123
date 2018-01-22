@@ -1,0 +1,1653 @@
+{
+	Tools = ordered() {
+		MT_Glitch_ColorNoise = MacroOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Creates colorful digital block noise artifacts over footage. \r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com",
+				},
+				Input = InstanceInput {
+					SourceOp = "input_colorNoise",
+					Source = "Input",
+				},
+				RandomSeed = InstanceInput {
+					SourceOp = "RandomSwitch_colorNoise",
+					Source = "RandomSeed",
+					Name = "Seethe Random Seed",
+					Default = 0,
+				},
+				MinSeethe = InstanceInput {
+					SourceOp = "RandomSwitch_colorNoise",
+					Source = "MinimumSeethe",
+					Default = 0,
+				},
+				MaxSeethe = InstanceInput {
+					SourceOp = "RandomSwitch_colorNoise",
+					Source = "MaximumSeethe",
+					Default = 100,
+				},
+				MinSeg = InstanceInput {
+					SourceOp = "TimeSegmenter_colorNoise",
+					Source = "MinimumSegmentLength",
+					Default = 3,
+				},
+				MaxSeg = InstanceInput {
+					SourceOp = "TimeSegmenter_colorNoise",
+					Source = "MaximumSegmentLength",
+					Default = 15,
+				},
+				SegRandSeed = InstanceInput {
+					SourceOp = "TimeSegmenter_colorNoise",
+					Source = "RandomSeed",
+					Name = "Segment Random Seed",
+					Default = 0,
+				},
+				HueShift = InstanceInput {
+					SourceOp = "colorama",
+					Source = "NumberIn1",
+					Default = 20.75784,
+				},
+				Frequency = InstanceInput {
+					SourceOp = "colorama",
+					Source = "NumberIn2",
+					Default = 5,
+				},
+				Amplitude = InstanceInput {
+					SourceOp = "colorama",
+					Source = "NumberIn3",
+					Default = 0.7752688,
+				},
+				FractalBrightness = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "Brightness",
+					Name = "Fractal Brightness",
+					Page = "Fractal",
+					Default = 0.3088235,
+				},
+				FractalContrast = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "Contrast",
+					Name = "Fractal Contrast",
+					Default = 2.343284,
+				},
+				FractalComplexity = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "Complexity",
+					Name = "Fractal Complexity",
+					Default = 5,
+				},
+				FractalSubInfluence = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "SubInfluence",
+					Default = 1.352941,
+				},
+				FractalSubScaling = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "SubScaling",
+					Default = 0.6176474,
+				},
+				FractalSubAngle = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "SubRotation",
+				},
+				FractalSubOffset = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "SubOffset",
+					DefaultX = 0.67797783933518,
+				},
+				FractalScale = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "Size",
+					Name = "Fractal Scale",
+					Default = 100,
+				},
+				FractalClipMode = InstanceInput {
+					SourceOp = "FastNoise1_colorNoise",
+					Source = "ClipMode",
+					Name = "Fractal Clip Mode",
+					Default = 2,
+				},
+				ErodeX = InstanceInput {
+					SourceOp = "ErodeDilate1",
+					Source = "XAmount",
+					Name = "Erode/Dilate X",
+					Default = 0,
+				},
+				ErodeY = InstanceInput {
+					SourceOp = "ErodeDilate1",
+					Source = "YAmount",
+					Name = "Erode/Dilate Y",
+					Default = 0,
+				},
+				ErodeReverse = InstanceInput {
+					SourceOp = "ErodeDilate1",
+					Source = "ReverseErodeDilate",
+					Default = 0,
+				},
+				NoiseOnly = InstanceInput {
+					SourceOp = "ErodeDilate1",
+					Source = "NoiseOnly",
+					Default = 0,
+					Page = "Merge",
+				},
+				ThesholdHigh = InstanceInput {
+					SourceOp = "threshold",
+					Source = "High",
+					ControlGroup = 24,
+					Default = 1,
+				},
+				ThresholdLow = InstanceInput {
+					SourceOp = "threshold",
+					Source = "Low",
+					ControlGroup = 24,
+					Default = 0.7107623,
+				},
+				Invert = InstanceInput {
+					SourceOp = "threshold",
+					Source = "Invert",
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "MatteControl1",
+					Source = "Foreground",
+					Name = "Effect Mask",
+				},
+				MatteBlur = InstanceInput {
+					SourceOp = "MatteControl1",
+					Source = "MatteBlur",
+					Default = 0,
+				},
+				ApplyMode = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "ApplyMode",
+				},
+				Operator = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "Operator",
+				},
+				SubtractiveAdditive = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "SubtractiveAdditive",
+					Name = "Subtractive",
+					Default = 1,
+				},
+				Gain = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "Gain",
+					Default = 1,
+				},
+				BurnIn = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "BurnIn",
+					Default = 0,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge3",
+					Source = "BlendClone",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "output_colornoise",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				input_colorNoise = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+						MinimumOffTime = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 82.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						MinimumOffTime = {
+							INPID_PreviewControl = "",
+							INPID_InputControl = "",
+							IC_ControlPage = 0,
+						},
+					},
+				},
+				RandomSwitch_colorNoise = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = ":t0=0; randomseed(RandomSeed); while t0<=time do off=random(MinimumOffTime,MaximumOffTime); on=random(MinimumOnTime,MaximumOnTime); t=time-t0; t0=t0+on+off; end; n=t0-on; if t>off then return 1; else return 0; end",
+						},
+						Comments = Input { Value = "Randomly switches the Mix control between 0 and 1. Adjust the frequency of switching using the Max and Min sliders. \r\n\r\nMuse Effects Elements Library, Glitch Tools Collection\r\nby Bryan Ray.\r\nwww.musevfx.com", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -4345, 115.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						MinimumOffTime = {
+							LINKS_Name = "Minimum Off Time",
+							INP_MaxAllowed = 10000,
+							INP_MaxScale = 30,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 3,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						MaximumOffTime = {
+							LINKS_Name = "Maximum Off Time",
+							INP_MaxAllowed = 10000,
+							INP_MaxScale = 60,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 10,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 1,
+						},
+						MinimumOnTime = {
+							LINKS_Name = "Minimum On Time",
+							INP_MaxAllowed = 10000,
+							INP_MaxScale = 30,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 3,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						MaximumOnTime = {
+							LINKS_Name = "Maximum On Time",
+							INP_MaxAllowed = 10000,
+							INP_MaxScale = 60,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 10,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 1,
+						},
+						RandomSeed = {
+							IC_ControlPage = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Random Seed",
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 10000,
+						},
+						MinimumSeethe = {
+							IC_ControlPage = 0,
+							INP_Default = 0,
+							LINKS_Name = "Minimum Seethe",
+							INPID_InputControl = "ScrewControl",
+							INP_MaxScale = 1000,
+							LINKID_DataType = "Number",
+						},
+						MaximumSeethe = {
+							IC_ControlPage = 0,
+							INP_Default = 100,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ScrewControl",
+							INP_MaxScale = 1000,
+							LINKS_Name = "Maximum Seethe",
+						},
+					},
+				},
+				TimeSegmenter_colorNoise = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+						Gain = Input {
+							Value = 0,
+							Expression = ":i=0; seg=-1; randomseed(RandomSeed); while i<=time do seg=seg+1; i=i+random(MinimumSegmentLength,MaximumSegmentLength); end; return seg",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4290, 148.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						MinimumSegmentLength = {
+							LINKS_Name = "Minimum Segment Length",
+							INP_MaxAllowed = 1000,
+							INP_MaxScale = 30,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 3,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+						},
+						MaximumSegmentLength = {
+							LINKS_Name = "Maximum Segment Length",
+							INP_MaxAllowed = 10000,
+							INP_MaxScale = 60,
+							INP_MinAllowed = 0,
+							IC_ControlPage = 0,
+							INP_Default = 15,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 1,
+						},
+						RandomSeed = {
+							IC_ControlPage = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Random Seed",
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 10000,
+						},
+					},
+				},
+				colorama = Custom {
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Value = 20.75784, },
+						NumberIn2 = Input { Value = 5, },
+						NumberIn3 = Input { Value = 0.7752688, },
+						LUTControlsNest = Input { Value = 1, },
+						LUTIn1 = Input {
+							SourceOp = "coloramaLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "coloramaLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "coloramaLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "coloramaLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "min(1,max(0,(cos(c1*(360*n2)+(n1*360)))*n3+0.5))", },
+						GreenExpression = Input { Value = "min(1,max(0,(cos(c1*(360*n2)+120+(n1*360)))*n3+0.5))", },
+						BlueExpression = Input { Value = "min(1,max(0,(cos(c1*(360*n2)+240+(n1*360)))*n3+0.5))", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "HueShift", },
+						NameforNumber2 = Input { Value = "Frequency", },
+						NameforNumber3 = Input { Value = "Amplitude", },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "reformat_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 181.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				coloramaLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+				},
+				coloramaLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+				},
+				coloramaLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+				},
+				coloramaLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+				},
+				FastNoise1_colorNoise = FastNoise {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 10,
+							Expression = "formatControl_colorNoise.Width/Size",
+						},
+						Height = Input {
+							Value = 7,
+							Expression = "formatControl_colorNoise.Height/Size",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Detail = Input { Value = 1, },
+						Brightness = Input { Value = 0.3088235, },
+						Contrast = Input { Value = 2.343284, },
+						XScale = Input { Value = 30, },
+						Seethe = Input {
+							Value = 50.827539156303,
+							Expression = ":if RandomSwitch_colorNoise.Mix > 0.5 then randomseed(time); else randomseed(RandomSwitch_colorNoise.RandomSeed+TimeSegmenter_colorNoise.Gain); end; min=RandomSwitch_colorNoise.MinimumSeethe; max=RandomSwitch_colorNoise.MaximumSeethe; myval = random(); myval=(max-min)*myval+min; return myval",
+						},
+						Color2Alpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+						Complexity = Input { Value = 5, },
+						SubInfluence = Input { Value = 1.352941, },
+						SubScaling = Input { Value = 0.6176474, },
+						SubOffset = Input { Value = { 0.67797783933518, 0.509852216748768, }, },
+						ClipMode = Input { Value = 2, },
+						SubStrength = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -4180, 214.5, }, },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0.713725490196078, }, },
+					UserControls = ordered() {
+						Complexity = {
+							INP_MaxAllowed = 5,
+							INP_Integer = true,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 1,
+							INP_MaxScale = 5,
+							INP_Default = 4,
+						},
+						SubInfluence = {
+							INP_Default = 1,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 1,
+							INP_MaxScale = 2,
+							LINKS_Name = "Sub Influence",
+						},
+						SubScaling = {
+							INP_MinScale = 1e-006,
+							INP_MinAllowed = 1e-006,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Sub Scaling",
+							IC_ControlPage = 1,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0.5,
+						},
+						SubRotation = {
+							INPID_PreviewControl = "AngleControl",
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ScrewControl",
+							IC_ControlPage = 1,
+							INP_MaxScale = 360,
+							LINKS_Name = "Sub Rotation",
+						},
+						SubOffset = {
+							INP_DefaultX = 0.75,
+							INPID_PreviewControl = "CrosshairControl",
+							INPID_InputControl = "OffsetControl",
+							LINKID_DataType = "Point",
+							IC_ControlPage = 1,
+							CHC_Style = 2,
+							LINKS_Name = "Sub Offset",
+						},
+						Size = {
+							INP_MinScale = 1e-006,
+							INP_MinAllowed = 1e-006,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 1,
+							INP_MaxScale = 400,
+							INP_Default = 100,
+						},
+						ClipMode = {
+							{ CCS_AddString = "HDR Mode", },
+							{ CCS_AddString = "Soft Clip", },
+							{ CCS_AddString = "Clamp", },
+							{ CCS_AddString = "Wrap Back Colors", },
+							INP_MaxAllowed = 3,
+							INP_Integer = true,
+							INPID_InputControl = "ComboControl",
+							IC_ControlPage = 1,
+							INP_MaxScale = 3,
+							INP_Default = 0,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Clip Mode",
+						},
+						Invert = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+						SubStrength = {
+							INPID_PreviewControl = "",
+							IC_ControlPage = 0,
+							INPID_InputControl = "",
+						},
+					},
+				},
+				ErodeDilate1 = ErodeDilate {
+					CtrlWZoom = false,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "colorama",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 247.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						ReverseErodeDilate = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							INPID_InputControl = "CheckboxControl",
+							IC_ControlPage = 0,
+							LINKS_Name = "Reverse Erode/Dilate",
+						},
+						NoiseOnly = {
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+							INPID_InputControl = "CheckboxControl",
+							LINKS_Name = "Noise Only",
+							IC_ControlPage = 0,
+						},
+					},
+				},
+				threshold = LumaKeyer {
+					NameSet = true,
+					Inputs = {
+						Low = Input { Value = 0.7107623, },
+						Input = Input {
+							SourceOp = "Gamut2_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4070, 280.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				MatteControl1 = MatteControl {
+					Inputs = {
+						MatteCombine = Input { Value = 4, },
+						CombineOp = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "threshold",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4015, 313.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				Resize2_colorNoise = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 991,
+							Expression = "formatControl_colorNoise.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "formatControl_colorNoise.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "BrightnessContrast1_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 544.5, }, },
+				},
+				BrightnessContrast1_colorNoise = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "FastNoise1_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 544.5, }, },
+				},
+				Merge3 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "input_colorNoise",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "reformat_1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "MatteControl1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3960, 346.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				output_colornoise = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ErodeDilate1.NoiseOnly",
+						},
+						Background = Input {
+							SourceOp = "Merge3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "reformat_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3905, 379.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				Gamut2_2 = GamutConvert {
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Gamut2 = GamutConvert {
+										Inputs = {
+											OutputSpace = Input { Value = FuID { "sRGB", }, },
+										},
+										Name = "Gamut2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { -1485, -577.5, }, },
+										CustomData = {
+										},
+									},
+								},
+							},
+							[2] = {
+								Tools = ordered() {
+									Gamut2 = GamutConvert {
+										Inputs = {
+											SourceSpace = Input { Value = FuID { "sRGB", }, },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { -1485, -577.5, }, },
+										CustomData = {
+										},
+									},
+								},
+							},
+						},
+					},
+					Inputs = {
+						OutputSpace = Input { Value = FuID { "sRGB", }, },
+						Input = Input {
+							SourceOp = "input_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3905, 445.5, }, },
+				},
+				Transform4_32 = Transform {
+					Inputs = {
+						Center = Input { Expression = "Point(0.4250+(FastNoise1_colorNoise.SubOffset.X*.1), 0.45+(FastNoise1_colorNoise.SubOffset.Y*.1))", },
+						Aspect = Input { Expression = "Transform1_colorNoise.Aspect", },
+						Angle = Input { Expression = "FastNoise1_colorNoise.SubRotation", },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Resize2_26",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 610.5, }, },
+				},
+				Resize2_26 = BetterResize {
+					Inputs = {
+						Width = Input {
+							Value = 991,
+							Expression = "formatControl_colorNoise.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "formatControl_colorNoise.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "Octave2_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 610.5, }, },
+				},
+				Octave2_colorNoise = FastNoise {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 16,
+							Expression = "formatControl_colorNoise.Width/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling",
+						},
+						Height = Input {
+							Value = 12,
+							Expression = "formatControl_colorNoise.Height/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Discontinuous = Input { Expression = "FastNoise1_colorNoise.Discontinuous", },
+						Center = Input { Value = { 0, 0, }, },
+						Detail = Input { Value = 1, },
+						Brightness = Input {
+							Value = 0.3088235,
+							Expression = "FastNoise1_colorNoise.Brightness",
+						},
+						Contrast = Input {
+							Value = 2.343284,
+							Expression = "FastNoise1_colorNoise.Contrast",
+						},
+						XScale = Input {
+							Value = 60,
+							Expression = "FastNoise1_colorNoise.XScale*2",
+						},
+						Seethe = Input {
+							Value = 140.827539156303,
+							Expression = "FastNoise1_colorNoise.Seethe+90",
+						},
+						SeetheRate = Input { Expression = "FastNoise1_colorNoise.SeetheRate", },
+						Color2Alpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 610.5, }, },
+				},
+				BrightnessContrast4_15 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.5, },
+						Input = Input {
+							SourceOp = "Transform4_32",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3960, 610.5, }, },
+				},
+				Transform1_colorNoise = Transform {
+					NameSet = true,
+					Inputs = {
+						Aspect = Input { Value = 2.352941, },
+						YSize = Input { Value = 2.352941, },
+						Input = Input {
+							SourceOp = "Resize2_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 544.5, }, },
+				},
+				BrightnessContrast4_16 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.5, },
+						Contrast = Input { Value = 0.3714286, },
+						Brightness = Input { Value = 0.0932836, },
+						Input = Input {
+							SourceOp = "Transform1_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 577.5, }, },
+				},
+				ChannelBooleans1_7 = ChannelBoolean {
+					Inputs = {
+						Blend = Input {
+							Value = 1.3529412,
+							Expression = "FastNoise1_colorNoise.SubInfluence",
+						},
+						Operation = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "BrightnessContrast4_16",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BrightnessContrast4_15",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 610.5, }, },
+				},
+				BrightnessContrast5_44 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.75, },
+						Contrast = Input { Value = 0.152381, },
+						Brightness = Input { Value = 0.0228571, },
+						Input = Input {
+							SourceOp = "ChannelBooleans1_7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 643.5, }, },
+				},
+				ChannelBooleans2_21 = ChannelBoolean {
+					Inputs = {
+						Blend = Input {
+							Value = 1.3529412,
+							Expression = "FastNoise1_colorNoise.SubInfluence",
+						},
+						Operation = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "BrightnessContrast5_44",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BrightnessContrast5_42",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 676.5, }, },
+				},
+				Transform4_33 = Transform {
+					Inputs = {
+						Center = Input { Expression = "Point(0.35+(FastNoise1_colorNoise.SubOffset.X*.2), 0.4+(FastNoise1_colorNoise.SubOffset.Y*.2))", },
+						Aspect = Input { Expression = "Transform1_colorNoise.Aspect", },
+						Angle = Input { Expression = "FastNoise1_colorNoise.SubRotation*2", },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Resize2_27",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 676.5, }, },
+				},
+				Resize2_27 = BetterResize {
+					Inputs = {
+						Width = Input {
+							Value = 991,
+							Expression = "formatControl_colorNoise.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "formatControl_colorNoise.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "Octave3_colorNoise",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 676.5, }, },
+				},
+				Octave3_colorNoise = FastNoise {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 32,
+							Expression = "formatControl_colorNoise.Width/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*2",
+						},
+						Height = Input {
+							Value = 24,
+							Expression = "formatControl_colorNoise.Height/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*2",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Discontinuous = Input { Expression = "FastNoise1_colorNoise.Discontinuous", },
+						Center = Input { Value = { 0.106796, 0, }, },
+						Detail = Input { Value = 1, },
+						Brightness = Input {
+							Value = 0.3088235,
+							Expression = "FastNoise1_colorNoise.Brightness",
+						},
+						Contrast = Input {
+							Value = 2.343284,
+							Expression = "FastNoise1_colorNoise.Contrast",
+						},
+						XScale = Input {
+							Value = 120,
+							Expression = "FastNoise1_colorNoise.XScale*4",
+						},
+						Seethe = Input {
+							Value = 230.827539156303,
+							Expression = "FastNoise1_colorNoise.Seethe+180",
+						},
+						SeetheRate = Input { Expression = "FastNoise1_colorNoise.SeetheRate", },
+						Color2Alpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 676.5, }, },
+				},
+				BrightnessContrast5_42 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.25, },
+						Input = Input {
+							SourceOp = "Transform4_33",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3960, 676.5, }, },
+				},
+				reformat_1 = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "formatControl_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve5",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -3795, 445.5, }, },
+				},
+				formatControl_1 = Background {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 991,
+							Expression = "input_colorNoise.Input.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "input_colorNoise.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3795, 478.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0.694117647058824, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				BrightnessContrast5_43 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.825, },
+						Contrast = Input { Value = 0.1714286, },
+						Brightness = Input { Value = 0.0514286, },
+						Input = Input {
+							SourceOp = "ChannelBooleans2_21",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 709.5, }, },
+				},
+				ChannelBooleans2_22 = ChannelBoolean {
+					Inputs = {
+						Blend = Input {
+							Value = 1.3529412,
+							Expression = "FastNoise1_colorNoise.SubInfluence",
+						},
+						Operation = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "BrightnessContrast5_43",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BrightnessContrast5_45",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 742.5, }, },
+				},
+				BrightnessContrast5_45 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.125, },
+						Input = Input {
+							SourceOp = "Transform4_34",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3960, 742.5, }, },
+				},
+				Transform4_34 = Transform {
+					Inputs = {
+						Center = Input { Expression = "Point(0.2+(FastNoise1_colorNoise.SubOffset.X*.4), 0.3+(FastNoise1_colorNoise.SubOffset.Y*.4))", },
+						Aspect = Input { Expression = "Transform1_colorNoise.Aspect", },
+						Angle = Input { Expression = "FastNoise1_colorNoise.SubRotation*4", },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Resize2_28",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 742.5, }, },
+				},
+				Resize2_28 = BetterResize {
+					Inputs = {
+						Width = Input {
+							Value = 991,
+							Expression = "formatControl_colorNoise.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "formatControl_colorNoise.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "Octave4_5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 742.5, }, },
+				},
+				Octave4_5 = FastNoise {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 64,
+							Expression = "formatControl_colorNoise.Width/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*4",
+						},
+						Height = Input {
+							Value = 47,
+							Expression = "formatControl_colorNoise.Height/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*4",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Discontinuous = Input { Expression = "FastNoise1_colorNoise.Discontinuous", },
+						Center = Input { Value = { 0.160194, 0, }, },
+						Detail = Input { Value = 1, },
+						Brightness = Input {
+							Value = 0.3088235,
+							Expression = "FastNoise1_colorNoise.Brightness",
+						},
+						Contrast = Input {
+							Value = 2.343284,
+							Expression = "FastNoise1_colorNoise.Contrast",
+						},
+						XScale = Input {
+							Value = 240,
+							Expression = "FastNoise1_colorNoise.XScale*8",
+						},
+						Seethe = Input {
+							Value = 320.827539156303,
+							Expression = "FastNoise1_colorNoise.Seethe+270",
+						},
+						SeetheRate = Input { Expression = "FastNoise1_colorNoise.SeetheRate", },
+						Color2Alpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 742.5, }, },
+				},
+				Dissolve4_9 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.Complexity-2", },
+						Background = Input {
+							SourceOp = "ChannelBooleans1_7",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve3_10",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3685, 610.5, }, },
+				},
+				Dissolve1_9 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.Complexity-1", },
+						Background = Input {
+							SourceOp = "Transform1_colorNoise",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve4_9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3685, 544.5, }, },
+				},
+				BrightnessContrast5_46 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.93725, },
+						Contrast = Input { Value = 0.0397143, },
+						Brightness = Input { Value = -0.001619, },
+						Input = Input {
+							SourceOp = "ChannelBooleans2_22",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 775.5, }, },
+				},
+				Dissolve2_9 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.Complexity-4", },
+						Background = Input {
+							SourceOp = "ChannelBooleans2_22",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChannelBooleans2_23",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3685, 742.5, }, },
+				},
+				Dissolve3_10 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.Complexity-3", },
+						Background = Input {
+							SourceOp = "ChannelBooleans2_21",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve2_9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3685, 676.5, }, },
+				},
+				Transform4_35 = Transform {
+					Inputs = {
+						Center = Input { Expression = "Point(-0.1+(FastNoise1_colorNoise.SubOffset.X*.8), 0.1+(FastNoise1_colorNoise.SubOffset.Y*.8))", },
+						Aspect = Input { Expression = "Transform1_colorNoise.Aspect", },
+						Angle = Input { Expression = "FastNoise1_colorNoise.SubRotation*8", },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Resize2_29",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4125, 808.5, }, },
+				},
+				Resize2_29 = BetterResize {
+					Inputs = {
+						Width = Input {
+							Value = 991,
+							Expression = "formatControl_colorNoise.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "formatControl_colorNoise.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "Octave5_5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4235, 808.5, }, },
+				},
+				Octave5_5 = FastNoise {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 128,
+							Expression = "formatControl_colorNoise.Width/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*8",
+						},
+						Height = Input {
+							Value = 94,
+							Expression = "formatControl_colorNoise.Height/FastNoise1_colorNoise.Size*1/FastNoise1_colorNoise.SubScaling*8",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Discontinuous = Input { Expression = "FastNoise1_colorNoise.Discontinuous", },
+						Center = Input { Value = { 0, 0, }, },
+						Detail = Input { Value = 1, },
+						Brightness = Input {
+							Value = 0.3088235,
+							Expression = "FastNoise1_colorNoise.Brightness",
+						},
+						Contrast = Input {
+							Value = 2.343284,
+							Expression = "FastNoise1_colorNoise.Contrast",
+						},
+						XScale = Input {
+							Value = 480,
+							Expression = "FastNoise1_colorNoise.XScale*16",
+						},
+						Seethe = Input {
+							Value = 410.827539156303,
+							Expression = "FastNoise1_colorNoise.Seethe+360",
+						},
+						SeetheRate = Input { Expression = "FastNoise1_colorNoise.SeetheRate", },
+						Color2Alpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 808.5, }, },
+				},
+				ChannelBooleans2_23 = ChannelBoolean {
+					Inputs = {
+						Blend = Input {
+							Value = 1.3529412,
+							Expression = "FastNoise1_colorNoise.SubInfluence",
+						},
+						Operation = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "BrightnessContrast5_46",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BrightnessContrast5_47",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3850, 808.5, }, },
+				},
+				BrightnessContrast5_47 = BrightnessContrast {
+					Inputs = {
+						Gain = Input { Value = 0.0625, },
+						Input = Input {
+							SourceOp = "Transform4_35",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3960, 808.5, }, },
+				},
+				Dissolve5 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ErodeDilate1.ReverseErodeDilate",
+						},
+						Background = Input {
+							SourceOp = "ErodeDilate1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ErodeDilate2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3630, 445.5, }, },
+				},
+				formatControl_colorNoise = Background {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 991,
+							Expression = "input_colorNoise.Input.Width",
+						},
+						Height = Input {
+							Value = 728,
+							Expression = "input_colorNoise.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -4400, 874.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0.713725490196078, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				Clip_7 = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Dissolve1_9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 577.5, }, },
+				},
+				softClipSelect_5 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.ClipMode", },
+						Background = Input {
+							SourceOp = "Dissolve1_9",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "SoftClip_6",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 544.5, }, },
+				},
+				SoftClip_6 = ColorCurves {
+					PickColor = true,
+					NameSet = true,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						EditAlpha = Input { Value = 0, },
+						Red = Input {
+							SourceOp = "SoftClip_6Red",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "SoftClip_6Green",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "SoftClip_6Blue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "SoftClip_6Alpha",
+							Source = "Value",
+						},
+						Input = Input {
+							SourceOp = "Dissolve1_9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 511.5, }, },
+					Tools = {
+						SoftClip_6Blue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 0, RH = { -0.584190999412163, -0.000140203459437516, }, Flags = { Linear = true, }, },
+									[0.247551777643066] = { 0.247551777643066, LH = { 0.00112750973207207, 0.000711765760621987, }, RH = { 0.401478710493143, 0.401738401614161, }, },
+									[0.75] = { 0.75, LH = { 0.592960976018983, 0.589291958235083, }, RH = { 0.999591539906171, 1.00542292993532, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SoftClip_6Green = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 0, RH = { -0.584190999412163, -0.000140203459437516, }, Flags = { Linear = true, }, },
+									[0.247551777643066] = { 0.247551777643066, LH = { 0.00112750973207207, 0.000711765760621987, }, RH = { 0.401478710493143, 0.401738401614161, }, },
+									[0.75] = { 0.75, LH = { 0.592960976018983, 0.589291958235083, }, RH = { 0.999591539906171, 1.00542292993532, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SoftClip_6Red = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 0, RH = { -0.584190999412163, -0.000140203459437516, }, Flags = { Linear = true, }, },
+									[0.247551777643066] = { 0.247551777643066, LH = { 0.00112750973207207, 0.000711765760621987, }, RH = { 0.401478710493143, 0.401738401614161, }, },
+									[0.75] = { 0.75, LH = { 0.592960976018983, 0.589291958235083, }, RH = { 0.999591539906171, 1.00542292993532, }, },
+									[2] = { 1, LH = { 1.5, 1, }, },
+								},
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SoftClip_6Alpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+					},
+				},
+				ErodeDilate2 = ErodeDilate {
+					Inputs = {
+						Alpha = Input { Value = 0, },
+						LockXY = Input { Value = 0, },
+						XAmount = Input { Expression = "ErodeDilate1.XAmount*-1", },
+						YAmount = Input { Expression = "ErodeDilate1.YAmount*-1", },
+						Input = Input {
+							SourceOp = "ErodeDilate1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 445.5, }, },
+				},
+				ClipSelect_5 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Expression = "FastNoise1_colorNoise.ClipMode-1", },
+						Background = Input {
+							SourceOp = "softClipSelect_5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Clip_7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 610.5, }, },
+				},
+				wrapBackColor_5 = ColorCurves {
+					PickColor = true,
+					NameSet = true,
+					Inputs = {
+						Red = Input {
+							SourceOp = "wrapBackColor_5Red",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "wrapBackColor_5Green",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "wrapBackColor_5Blue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "wrapBackColor_5Alpha",
+							Source = "Value",
+						},
+						NumberOfSamplesOnMatchCurve = Input { Value = 64, },
+						IgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Dissolve1_9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 643.5, }, },
+					Tools = {
+						wrapBackColor_5Blue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 1, RH = { -0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[0] = { 0, LH = { -0.333333333333333, 0.333333333333333, }, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, RH = { 1.33333333333333, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[2] = { 0, LH = { 1.66666666666667, 0.333333333333333, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						wrapBackColor_5Alpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 1, RH = { -0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[0] = { 0, LH = { -0.333333333333333, 0.333333333333333, }, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, RH = { 1.33333333333333, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[2] = { 0, LH = { 1.66666666666667, 0.333333333333333, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						wrapBackColor_5Green = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 1, RH = { -0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[0] = { 0, LH = { -0.333333333333333, 0.333333333333333, }, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, RH = { 1.33333333333333, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[2] = { 0, LH = { 1.66666666666667, 0.333333333333333, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						wrapBackColor_5Red = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-1] = { 1, RH = { -0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[0] = { 0, LH = { -0.333333333333333, 0.333333333333333, }, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, RH = { 1.33333333333333, 0.666666666666667, }, Flags = { Linear = true, }, },
+									[2] = { 0, LH = { 1.66666666666667, 0.333333333333333, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+					},
+				},
+				wrapBackSelect_5 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "FastNoise1_colorNoise.ClipMode-2",
+						},
+						Background = Input {
+							SourceOp = "ClipSelect_5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "wrapBackColor_5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 676.5, }, },
+				},
+				reformat_colorNoise = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "formatControl_colorNoise",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "wrapBackSelect_5",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -3520, 874.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_Glitch_ColorNoise",
+}

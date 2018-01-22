@@ -1,0 +1,473 @@
+Composition {
+	CurrentTime = 1,
+	RenderRange = { 0, 143 },
+	GlobalRange = { 0, 288 },
+	CurrentID = 15,
+	HiQ = true,
+	MotionBlur = false,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 1,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Previews:/Fusion/Tiles.0000.jpg"
+	},
+	Tools = {
+		RGBBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 288, },
+				Width = Input {
+					Value = 180,
+					Expression = "Height",
+				},
+				Height = Input { Value = 180, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				FrameRenderScript = Input { Value = "_VERSION = [[v1.0 2018-01-12]]\n--[[\nRandom Color\nby Andrew Hazelden\n\nCreate a unique RGB color per frame and apply it to the background node.\n]]\n\n\n-- Generate a random value from 0-1 that fits within a threshold zone\n-- This is used to limit the color palette possibilites and reduce the contrast\n-- Example: ColorRange(0.5)\nfunction ColorRange(threshold)\n	-- val = (math.random() * tonumber(threshold)) + (1-tonumber(threshold))\n	val = (math.random() * tonumber(threshold))\n	return val\nend\n\n\n-- Randomize the RGB colors using a see value and a contrast range input value\n-- Example: RandomColor(seed, 0.5)\nfunction RandomColor(seed, range)\n	math.randomseed(seed)\n	firstRandom = math.random()\n	return {R=ColorRange(range), G=ColorRange(range), B=ColorRange(range)}\nend\n\n-- Generate a custom color\nseedValue = comp.RenderStart + time\ncolor = RandomColor(seedValue, 0.5)\n\n-- Push this new RGB color value into the Background node's RGB color sliders\nself.TopLeftRed = color.R\nself.TopLeftGreen = color.G\nself.TopLeftBlue = color.B\n\n-- print(\"[Color] \" .. string.format(\"{R=%.04f, G=%.04f, B=%.04f}\", color.R, color.G, color.B))\n\n\n\n", },
+				StartEndRenderScripts = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -275, 16.5 } },
+		},
+		Rectangle1 = RectangleMask {
+			Inputs = {
+				Invert = Input { Value = 1, },
+				OutputSize = Input { Value = FuID { "Custom" }, },
+				MaskWidth = Input {
+					Value = 180,
+					Expression = "RGBBackground.Width",
+				},
+				MaskHeight = Input {
+					Value = 180,
+					Expression = "RGBBackground.Height",
+				},
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Width = Input { Value = 0.98, },
+				Height = Input { Value = 0.986, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -275, -16.5 } },
+		},
+		Bitmap1 = BitmapMask {
+			Inputs = {
+				MaskWidth = Input { Value = 3840, },
+				MaskHeight = Input { Value = 2160, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Image = Input {
+					SourceOp = "Rectangle1",
+					Source = "Mask",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { -55, -16.5 } },
+		},
+		BGMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "RGBBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Bitmap1",
+					Source = "Mask",
+				},
+				ApplyMode = Input { Value = FuID { "Screen" }, },
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -55, 16.5 } },
+		},
+		FrameText = TextPlus {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 288, },
+				Width = Input {
+					Value = 180,
+					Expression = "RGBBackground.Width",
+				},
+				Height = Input {
+					Value = 180,
+					Expression = "RGBBackground.Height",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Center = Input { Value = { 0.5, 0.45 }, },
+				Size = Input { Value = 0.5, },
+				Font = Input { Value = "Open Sans", },
+				StyledText = Input {
+					Value = "144",
+					Expression = "Text(time) ",
+				},
+				Style = Input { Value = "Bold", },
+				ManualFontKerningPlacement = Input {
+					Value = StyledText {
+						Array = {
+						},
+						Value = ""
+					},
+				},
+				StartEndRenderScripts = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -275, -47.5 } },
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "FrameText",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 55, -49.5 } },
+		},
+		TextMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "BGMerge",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 55, 16.5 } },
+		},
+		GridBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 288, },
+				Width = Input {
+					Value = 2160,
+					Expression = "RGBBackground.Height*12",
+				},
+				Height = Input {
+					Value = 2160,
+					Expression = "RGBBackground.Width*12",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 330, -49.5 } },
+		},
+		Tiler1 = Fuse.hos_Tiler {
+			Inputs = {
+				Frames = Input { Value = 144, },
+				Background = Input {
+					SourceOp = "GridBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "TextMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 331, 17.5 } },
+			Version = 110
+		},
+		Saver1 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Previews:/Fusion/Tiles.0000.jpg",
+						FormatID = "JpegFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "JpegFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "Tiler1",
+					Source = "Output",
+				},
+				["JpegFormat.Quality"] = Input { Value = 97, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 599, 19.5 } },
+		},
+		Note1 = Note {
+			PassThrough = true,
+			Inputs = {
+				Comments = Input { Value = "hos_Tiler Example by Andrew Hazelden <andrew@andrewhazelden.com>\n- This composite renders out a grid view with 144 colored squares\n- Each frame of the sequence has a unique tile background color that is generated for each grid cell using an intool script on the \"RGBBackground\" node.\n- The current grid cell frame number is written into a text+ node named \"FrameText\" using the expression \"Text(time)\"\n\n\nGrid View Display Step\n- After the colored image grid  cells are created in the TextMerge node, a new tiled 12x12 grid view is assembled in the \"Tiler1\" node. This is done using the hos_Tiler fuse. You have to install the included \"hos_Tiler.fuse\" file to see this image grid view.\n\nNote\n- Proxy mode is not supported in the hos_Tiler fuse! You need to add a resize node to scale the image before hand if you want to speed things up.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -87, -356 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 988.069, 263.73 }
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 2203,
+			Height = 1026,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1,
+						Offset = { 607, 402 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 350 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 238,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = 19.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.458267716535433,
+					RatioY = 0.0104602510460251,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.438559322033898,
+						{ ID = "Left", RatioX = 1, RatioY = 103.5, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.438559322033898, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 342,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.501052631578947, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.498947368421053, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Paths = {
+				EnableReverseMapping = true,
+				Map = {
+				}
+			},
+			LastFile = "",
+			Interactive = {
+				Proxy = {
+					Scale = 2,
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			Unsorted = {
+				GlobalEnd = 288,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							Quality = true,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "local",
+							ShowSlaves = false
+						},
+						Preview = {
+							Quality = false,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "local",
+							ShowSlaves = false
+						}
+					},
+					CurrentConfig = "Final",
+					PreviewConfig = "Preview"
+				}
+			},
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					PrevCtrlActiveColor = 0
+				},
+				Left = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					Viewer = {
+						ScaleMode = 0,
+					},
+					SubView = {
+						Navigator = false,
+						Magnifier = false,
+						ID = "GLImageInfo",
+						Enabled = true,
+						GLImageInfo = {
+							AutoBounds = true
+						}
+					}
+				},
+			},
+			QuickTime = {
+				Compressor = "Apple ProRes 422 HQ_apch",
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			}
+		}
+	}
+}
+
+ 

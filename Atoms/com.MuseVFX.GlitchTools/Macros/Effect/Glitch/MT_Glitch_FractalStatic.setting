@@ -1,0 +1,917 @@
+{
+	Tools = ordered() {
+		MT_Glitch_FractalStatic = MacroOperator {
+			Inputs = ordered() {
+				Comments = Input { Value = "Creates analog signal noise. \r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com", },
+				Input = InstanceInput {
+					SourceOp = "input_fractalStatic",
+					Source = "Input",
+				},
+				Center = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "Center",
+				},
+				Detail = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "Detail",
+					MinScale = 1,
+					Default = 5.619335,
+				},
+				Contrast = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "Contrast",
+					MinScale = 6,
+					MaxScale = 70,
+					Default = 37.24096,
+				},
+				XScale = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "XScale",
+					Default = 3.806647,
+				},
+				YScale = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "YScale",
+					MaxScale = 400,
+					Default = 330,
+				},
+				Seethe = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "Seethe",
+					Default = 0,
+				},
+				SeetheRate = InstanceInput {
+					SourceOp = "FastNoise3",
+					Source = "SeetheRate",
+					Default = 1,
+				},
+				GlowSize = InstanceInput {
+					SourceOp = "Glow1",
+					Source = "XGlowSize",
+					MaxScale = 6,
+					Default = 0.060423,
+				},
+				Glow = InstanceInput {
+					SourceOp = "Glow1",
+					Source = "Glow",
+					Default = 0.8247734,
+				},
+				ColorNoise = InstanceInput {
+					SourceOp = "Dissolve6",
+					Source = "Mix",
+					Name = "Color Noise",
+					Default = 0,
+				},
+				StaticOnly = InstanceInput {
+					SourceOp = "BrightnessContrast4",
+					Source = "Red",
+					Name = "Static Only",
+					Default = 0,
+				},
+				ApplyMode = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "ApplyMode",
+				},
+				SubtractiveAdditive = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "SubtractiveAdditive",
+					Name = "Subtractive",
+					Default = 1,
+				},
+				Gain = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "Gain",
+					Default = 1,
+				},
+				BurnIn = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "BurnIn",
+					Default = 0,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "BlendClone",
+					Default = 1,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Merge4",
+					Source = "EffectMask",
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "output_fractalStatic",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 990, 115.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					ConnectedSnap = true,
+					PipesAlways = true,
+					AutoSnap = true,
+					FullIndicator = true
+				},
+				Size = { 951, 328.3, 475.5, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				input_fractalStatic = BrightnessContrast {
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { -330, 16.5 } },
+				},
+				FastNoise3 = FastNoise {
+					Inputs = {
+						Quality = Input { Value = 10, },
+						ShutterAngle = Input { Value = 3.26284, },
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 4096,
+							Expression = "input_fractalStatic.Input.Width",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "input_fractalStatic.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Discontinuous = Input { Value = 1, },
+						Detail = Input { Value = 5.619335, },
+						Contrast = Input { Value = 37.24096, },
+						Brightness = Input { Value = -3.612121, },
+						LockXY = Input { Value = 0, },
+						XScale = Input { Value = 3.806647, },
+						YScale = Input { Value = 330, },
+						SeetheRate = Input { Value = 1, },
+						Color1Red = Input { Value = 0.6666666666667, },
+						Color1Green = Input { Value = 0.6666666666667, },
+						Color1Blue = Input { Value = 0.6666666666667, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 49.5 } },
+				},
+				Glow1 = Glow {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Value = 0.2, },
+						Filter = Input { Value = FuID { "Multi-box" }, },
+						XGlowSize = Input { Value = 0.060423, },
+						Passes = Input { Value = 8, },
+						Glow = Input { Value = 0.8247734, },
+						Input = Input {
+							SourceOp = "Gamut3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -192.5, 76.15 } },
+				},
+				Dissolve6 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "BrightnessContrast3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Gamut2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -137.5, 109.15 } },
+				},
+				BrightnessContrast4 = BrightnessContrast {
+					Inputs = {
+						Red = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 148.5 } },
+				},
+				Merge4 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "input_fractalStatic",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve6",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 181.5 } },
+				},
+				output_fractalStatic = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "BrightnessContrast4.Red",
+						},
+						Background = Input {
+							SourceOp = "Merge4",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve6",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 214.5 } },
+				},
+				Gamut2 = GamutConvert {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Gamut2_4 = GamutConvert {
+										Inputs = {
+											OutputSpace = Input { Value = FuID { "sRGB" } },
+											Input = Input {
+												SourceOp = "Glow1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 165, -214.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									Gamut2 = GamutConvert {
+										Inputs = {
+											SourceSpace = Input { Value = FuID { "sRGB" } }
+										},
+										Name = "Gamut2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { -1485, -577.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									Gamut2_4 = GamutConvert {
+										Inputs = {
+											OutputSpace = Input { Value = FuID { "sRGB" } },
+											Input = Input {
+												SourceOp = "Glow1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 165, -214.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						SourceSpace = Input { Value = FuID { "sRGB" }, },
+						Input = Input {
+							SourceOp = "Glow1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 280.5 } },
+				},
+				ErodeDilate3 = ErodeDilate {
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "BrightnessContrast2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 274.15 } },
+				},
+				invert = Custom {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output"
+											}
+										},
+										Name = "CustomTool2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										Name = "CustomTool2LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										Name = "CustomTool2LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										Name = "CustomTool2LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										Name = "CustomTool2LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "b1-b2" },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value"
+											},
+											RedExpression = Input { Value = "r1-r2" },
+											GreenExpression = Input { Value = "g1-g2" }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "b1+b2" },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value"
+											},
+											RedExpression = Input { Value = "r1+r2" },
+											GreenExpression = Input { Value = "g1+g2" }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "CustomTool2_2LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool2_2LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool2_2LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool2_2LUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "1-r1", },
+						GreenExpression = Input { Value = "1-g1", },
+						BlueExpression = Input { Value = "1-b1", },
+						AlphaExpression = Input { Value = "1-a1", },
+						Image1 = Input {
+							SourceOp = "ErodeDilate3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -192.5, 274.15 } },
+				},
+				CustomTool2_2LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool2_2LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool2_2LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				CustomTool2_2LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				BrightnessContrast3 = BrightnessContrast {
+					Inputs = {
+						Alpha = Input { Value = 1, },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "ChannelBooleans3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 302.5, 280.5 } },
+				},
+				Gamut3 = GamutConvert {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Gamut2 = GamutConvert {
+										Inputs = {
+											OutputSpace = Input { Value = FuID { "sRGB" } }
+										},
+										Name = "Gamut2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { -1485, -577.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									Gamut2 = GamutConvert {
+										Inputs = {
+											SourceSpace = Input { Value = FuID { "sRGB" } }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { -1485, -577.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						OutputSpace = Input { Value = FuID { "sRGB" }, },
+						Input = Input {
+							SourceOp = "invert",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 274.15 } },
+				},
+				BrightnessContrast2 = BrightnessContrast {
+					Inputs = {
+						Alpha = Input { Value = 1, },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "FastNoise3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 274.15 } },
+				},
+				Background1 = Background {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 4096,
+							Expression = "input_fractalStatic.Input.Width",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "input_fractalStatic.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftRed = Input { Value = 0.5, },
+						TopLeftGreen = Input { Value = 0.5, },
+						TopLeftBlue = Input { Value = 0.5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 302.5, 82.5 } },
+				},
+				FilmGrain1 = FilmGrain {
+					NameSet = true,
+					Inputs = {
+						Complexity = Input { Value = 12, },
+						LogProcessing = Input { Value = 0, },
+						Monochrome = Input { Value = 0, },
+						MasterXSize = Input { Value = 0.513, },
+						MasterStrength = Input { Value = 0.4957, },
+						MasterRoughness = Input { Value = 0.291, },
+						MasterOffset = Input { Value = 0.1, },
+						Input = Input {
+							SourceOp = "Background1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 302.5, 115.5 } },
+				},
+				ChannelBooleans2 = ChannelBoolean {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									ChannelBooleans1_1 = ChannelBoolean {
+										Inputs = {
+											Background = Input {
+												SourceOp = "RsAmbientOcclusion_090_MonumentValley_Car_BTY_",
+												Source = "Output"
+											}
+										},
+										Name = "ChannelBooleans1_1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 440, -313.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 1 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 2 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[4] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 6 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[5] = {
+								Tools = ordered() {
+									ChannelBooleans1_1 = ChannelBoolean {
+										Inputs = {
+											ToRed = Input { Value = 3 },
+											ToGreen = Input { Value = 3 },
+											Operation = Input { Value = 7 },
+											Background = Input {
+												SourceOp = "RsAmbientOcclusion_090_MonumentValley_Car_BTY_",
+												Source = "Output"
+											},
+											ToBlue = Input { Value = 3 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 440, -313.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 15, },
+						Background = Input {
+							SourceOp = "FilmGrain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 302.5, 181.5 } },
+				},
+				ChannelBooleans3 = ChannelBoolean {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									ChannelBooleans1_1 = ChannelBoolean {
+										Inputs = {
+											Background = Input {
+												SourceOp = "RsAmbientOcclusion_090_MonumentValley_Car_BTY_",
+												Source = "Output"
+											}
+										},
+										Name = "ChannelBooleans1_1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 440, -313.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 1 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 2 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[4] = {
+								Tools = ordered() {
+									ChannelBooleans1 = ChannelBoolean {
+										Inputs = {
+											Operation = Input { Value = 6 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[5] = {
+								Tools = ordered() {
+									ChannelBooleans1_1 = ChannelBoolean {
+										Inputs = {
+											ToRed = Input { Value = 3 },
+											ToGreen = Input { Value = 3 },
+											Operation = Input { Value = 7 },
+											Background = Input {
+												SourceOp = "RsAmbientOcclusion_090_MonumentValley_Car_BTY_",
+												Source = "Output"
+											},
+											ToBlue = Input { Value = 3 },
+											ToAlpha = Input { Value = 4 }
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 440, -313.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						Operation = Input { Value = 2, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "Gamut2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChannelBooleans2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Gamut2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 302.5, 214.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "MT_Glitch_FractalStatic"
+}

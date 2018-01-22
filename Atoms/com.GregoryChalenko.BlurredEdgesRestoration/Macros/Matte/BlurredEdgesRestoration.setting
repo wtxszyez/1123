@@ -1,0 +1,545 @@
+{
+	Tools = ordered() {
+		BlurredEdgesRestoration = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://compositing.tv/Research/Tools/BlurredEdgesRestoration/",
+			},
+			Inputs = ordered() {
+				Comments = Input { Value = "This tool lets you restore the color information lost in defocused or motion blurred areas, especially if the source has parasite edging around the objects.\r\n\r\nv04-5 - Help page updated.\r\n\r\nby Gregory Chalenko\r\nwww.compositing.tv", },
+				PreShrink = InstanceInput {
+					SourceOp = "Blur_ShrinkEdges",
+					Source = "PreShrink",
+				},
+				PreShrinkAmount = InstanceInput {
+					SourceOp = "Blur_ShrinkEdges",
+					Source = "PreShrinkAmount",
+					Default = 0.001,
+				},
+				PreShrinkXMultiplier = InstanceInput {
+					SourceOp = "Blur_ShrinkEdges",
+					Source = "PreShrinkXMultiplier",
+					Default = 1,
+				},
+				PreShrinkYMultiplier = InstanceInput {
+					SourceOp = "Blur_ShrinkEdges",
+					Source = "PreShrinkYMultiplier",
+					Default = 1,
+				},
+				Extend = InstanceInput {
+					SourceOp = "Blur_Extend",
+					Source = "Extend",
+				},
+				ExtendAmount = InstanceInput {
+					SourceOp = "Blur_Extend",
+					Source = "ExtendAmount",
+					Default = 0.003,
+				},
+				ExtendXMultiplier = InstanceInput {
+					SourceOp = "Blur_Extend",
+					Source = "ExtendXMultiplier",
+					Default = 1,
+				},
+				ExtendYMultiplier = InstanceInput {
+					SourceOp = "Blur_Extend",
+					Source = "ExtendYMultiplier",
+					Default = 1,
+				},
+				BorderSoftening = InstanceInput {
+					SourceOp = "Blur_Border",
+					Source = "BorderSoftening",
+				},
+				SoftenBorder = InstanceInput {
+					SourceOp = "Blur_Border",
+					Source = "SoftenBorder",
+					Default = 0.001,
+				},
+				SoftenBorderXMultiplier = InstanceInput {
+					SourceOp = "Blur_Border",
+					Source = "SoftenBorderXMultiplier",
+					Default = 1,
+				},
+				SoftenBorderYMultiplier = InstanceInput {
+					SourceOp = "Blur_Border",
+					Source = "SoftenBorderYMultiplier",
+					Default = 1,
+				},
+				SizeMode = InstanceInput {
+					SourceOp = "Blur_Border",
+					Source = "SizeMode",
+					Default = 1,
+				},
+				Output = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "OutputImage",
+				},
+				KeyedImage = InstanceInput {
+					SourceOp = "PipeRouter1",
+					Source = "Input",
+					Name = "Keyed Image",
+				},
+				Blend = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "Blend",
+					Page = "Common Controls",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ProcessWhenBlendIs00",
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ProcessRed",
+					Default = 1,
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ProcessGreen",
+					Default = 1,
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ProcessBlue",
+					Default = 1,
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ProcessAlpha",
+					Default = 0,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "ApplyMaskInverted",
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "MultiplyByMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "MaskChannel",
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "MaskHigh",
+					ControlGroup = 4,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "MaskLow",
+					ControlGroup = 4,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Mrg_Atop",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OutputExtendedColor",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1272.94, 233, },
+				Flags = {
+					AllowPan = false,
+					ForceSource = true,
+					GridSnap = true,
+					RemoveRouters = true,
+				},
+				Size = { 445.088, 263.373, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -1.18891, 61.5556, },
+			},
+			Tools = ordered() {
+				PipeRouter1 = PipeRouter {
+					CtrlWShown = false,
+					ViewInfo = PipeRouterInfo { Pos = { -110, -49.5, }, },
+				},
+				Mat_ShrinkEdges = MatteControl {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LowMatteThreshold = Input { Value = 0.99, },
+						PostMultiplyImage = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "Blur_ShrinkEdges",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 20.6158, }, },
+					Colors = {
+						TileColor = { R = 0.443137254901961, G = 0.345098039215686, B = 0.517647058823529, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Bol_Extend = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 7, },
+						ToRed = Input { Value = 8, },
+						ToGreen = Input { Value = 8, },
+						ToBlue = Input { Value = 8, },
+						ToAlpha = Input { Value = 8, },
+						Background = Input {
+							SourceOp = "Blur_Extend",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 115.5, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				DX_OutputPreShrink = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif(Mrg_Atop.OutputImage==0,1,0)",
+						},
+						Background = Input {
+							SourceOp = "Bol_MaskToCoverage",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Mat_ShrinkEdges",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165.934, 115.5, }, },
+				},
+				OutputExtendedColor = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif(Mrg_Atop.OutputImage==1,1,0)",
+						},
+						Background = Input {
+							SourceOp = "DX_OutputPreShrink",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Bol_Extend",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 148.5, }, },
+				},
+				Mrg_Atop = Merge {
+					NameSet = true,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						Operator = Input { Value = FuID { "Atop", }, },
+						PerformDepthMerge = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Mat_CutInside",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 49.5, }, },
+					UserControls = ordered() {
+						OutputImage = {
+							{ MBTNC_AddButton = "Pre-Shrunk Image", },
+							{ MBTNC_AddButton = "Extended Color", },
+							{ MBTNC_AddButton = "Final Result", },
+							LINKS_Name = "Output Image",
+							INPID_InputControl = "MultiButtonControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							INP_Default = 2,
+						},
+					},
+				},
+				Mat_CutInside = MatteControl {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MatteCombine = Input { Value = 4, },
+						InvertMatte = Input { Value = 1, },
+						PostMultiplyImage = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "Bol_Extend",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Blur_Border",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 82.5, }, },
+					Colors = {
+						TileColor = { R = 0.443137254901961, G = 0.345098039215686, B = 0.517647058823529, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Blur_ShrinkEdges = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						LockXY = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 0.72,
+							Expression = "PreShrinkAmount*720*PreShrinkXMultiplier/iif(Blur_Border.SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						YBlurSize = Input {
+							Value = 0.72,
+							Expression = "PreShrinkAmount*720*PreShrinkYMultiplier/iif(Blur_Border.SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, -16.5, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.513725490196078, B = 0.345098039215686, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						PreShrink = {
+							LINKS_Name = "Pre-Srink Controls",
+							INPID_InputControl = "LabelControl",
+							LBLC_DropDownButton = true,
+							LINKID_DataType = "Number",
+							LBLC_NumInputs = 3,
+							LBLC_NestLevel = 1,
+							IC_ControlPage = 0,
+							INP_Default = 1,
+						},
+						PreShrinkAmount = {
+							INP_Default = 0.001,
+							INP_MaxScale = 0.1,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							ICD_Center = 0.01,
+							LINKS_Name = "Pre-Srink Amount",
+						},
+						PreShrinkXMultiplier = {
+							LINKS_Name = "Pre-Srink X Multiplier",
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							INP_Default = 1,
+						},
+						PreShrinkYMultiplier = {
+							LINKS_Name = "Pre-Srink Y Multiplier",
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							INP_Default = 1,
+						},
+					},
+				},
+				Blur_Extend = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						LockXY = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 2.16,
+							Expression = "ExtendAmount*720*ExtendXMultiplier/iif(Blur_Border.SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						YBlurSize = Input {
+							Value = 2.16,
+							Expression = "ExtendAmount*720*ExtendYMultiplier/iif(Blur_Border.SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						Input = Input {
+							SourceOp = "Mat_ShrinkEdges",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 82.5, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.513725490196078, B = 0.345098039215686, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						Extend = {
+							LINKS_Name = "Extend Controls",
+							INPID_InputControl = "LabelControl",
+							LBLC_DropDownButton = true,
+							LINKID_DataType = "Number",
+							LBLC_NumInputs = 3,
+							LBLC_NestLevel = 1,
+							IC_ControlPage = 0,
+							INP_Default = 1,
+						},
+						ExtendAmount = {
+							INP_Default = 0.003,
+							ICD_Center = 0.01,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 0.1,
+							LINKS_Name = "Extend Amount",
+						},
+						ExtendXMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							LINKS_Name = "Extend X Multiplier",
+						},
+						ExtendYMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							LINKS_Name = "Extend Y Multiplier",
+						},
+					},
+				},
+				Blur_Border = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						LockXY = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 0.72,
+							Expression = "SoftenBorder*720*SoftenBorderXMultiplier/iif(SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						YBlurSize = Input {
+							Value = 0.72,
+							Expression = "SoftenBorder*720*SoftenBorderYMultiplier/iif(SizeMode==0, 1, Input.OriginalWidth)",
+						},
+						Input = Input {
+							SourceOp = "Mat_ShrinkEdges",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 49.5, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.525490196078431, B = 0.356862745098039, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						BorderSoftening = {
+							LINKS_Name = "Border Softening Controls",
+							INPID_InputControl = "LabelControl",
+							LBLC_DropDownButton = true,
+							LINKID_DataType = "Number",
+							LBLC_NumInputs = 3,
+							LBLC_NestLevel = 1,
+							IC_ControlPage = 0,
+							INP_Default = 1,
+						},
+						SoftenBorder = {
+							INP_Default = 0.001,
+							INP_MaxScale = 0.1,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							ICD_Center = 0.01,
+							LINKS_Name = "Soften Border",
+						},
+						SoftenBorderXMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							LINKS_Name = "Soften Border X Multiplier",
+						},
+						SoftenBorderYMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 5,
+							LINKS_Name = "Soften Border Y Multiplier",
+						},
+						SizeMode = {
+							{ MBTNC_AddButton = "Relative To Image Width", },
+							{ MBTNC_AddButton = "In Pixels", },
+							LINKS_Name = "Size Mode",
+							INPID_InputControl = "MultiButtonControl",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+						},
+					},
+				},
+				Bol_MaskToCoverage = ChannelBoolean {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToZCoverage = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "Mrg_Atop",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Bol_MultiplyMaskWithAlpha",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 82.5, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.501960784313725, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Bol_MultiplyMaskWithAlpha = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "Mat_CutInside",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Mrg_Atop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 82.5, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.501960784313725, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.490196078431373, G = 0.509803921568627, B = 0.298039215686275, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+	ActiveTool = "BlurredEdgesRestoration",
+}

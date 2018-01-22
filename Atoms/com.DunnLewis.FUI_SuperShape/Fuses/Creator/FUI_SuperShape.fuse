@@ -1,0 +1,1558 @@
+--[[
+
+ This Fuse contains code snippets from the SuperShape.Fuse & Annotation.Fuse
+ Thanx to the eyeon team who wrote them.
+
+ ________________________________________________________________________
+ With this Fuse you can design & animate Cicle Shaped UI elements and much more. 
+ Have Fun.
+Based on theSupershapes (Superformula)
+Written by Paul Bourke http://paulbourke.net/geometry/supershape/
+ ________________________________________________________________________
+
+ Written by Dunn Lewis <dunn[dot]lewis[dot]work[at]gmail[dot]com>
+
+
+--]]
+
+version = "v1.00 - 16 JAN 2018"
+
+FuRegisterClass("FUI_SuperShape", CT_Tool, {
+	REGS_Category = "Creator",
+	REGS_Name = "FUI SuperShape",
+	REGS_OpIconString = "FSH",
+	REGS_OpDescription = "FUI SuperShape Fuse",
+	REGS_Company 		= "Dunn Lewis",
+	REGS_URL 			= "http://www.native-newmedia.com",
+	--REGS_HelpTopic      = "",
+	--REG_Fuse_NoEdit     = true,
+	--REG_Fuse_NoReload   = true,
+	REG_TimeVariant = true,
+	REG_Version = 100,
+	})
+
+function Create()
+
+
+	InCenter = self:AddInput("Center", "Center", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		
+		})
+		
+
+	InLabel = self:AddInput("FUI SuperShape "..version, "version", {
+		LINKID_DataType    = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External       = false,
+		INP_Passive        = true,
+		})
+	----------------------------------------------------------------------	SUPER SHAPES
+	self:AddControlPage("1. SUPER SHAPE")
+	-------------------------------------------------------------------
+	
+	InSHOW_GAUGE_LINES= self:AddInput("SHOW_SUPER SHAPE","SHOW_SUPER_LINES",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW SUPER SHAPE",
+		INP_DoNotifyChanged = true,
+		--ICD_Width = 0.5,	
+		})
+
+	self:BeginControlNest("SUPER SHAPE", "SUPER_SHAPE", false, {})	
+		
+	
+	InGA_M = self:AddInput("Number Of Spikes", "GA_M_NumberOfSpikes", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed = 1.0,
+		INP_MinScale =    1.0,
+		INP_MaxScale   = 100.0,
+		INP_Default    = 5.0,
+		INP_Integer    = true,
+		})
+		
+	InGA_N1 = self:AddInput("Radius", "GA_N1_InnerScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =    0.0,
+		INP_MaxScale   =1.0,
+		INP_Default    = 0.50,
+		--INP_Integer    = true,
+		})
+		
+	InGA_N2 = self:AddInput("Spikes Length", "GA_N2_SpikesLength", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =    -1.0,
+		INP_MaxScale   = 1.0,
+		INP_Default    = 0.0,
+		--INP_Integer    = true,
+		})
+		
+	InGA_N3 = self:AddInput("Spikes Scale", "GA_N3_SpikesScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed = 0.001,
+		INP_MinScale =    0.001,
+		INP_MaxScale   = 1.0,
+		INP_Default    = 0.050,
+		--INP_Integer    = true,
+
+		IC_Visible = false, 
+		PC_Visible = false,
+		})
+	
+		
+
+	InGA_OffsetLo = self:AddInput("Low", "GA_OffsetLow", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "RangeControl",
+		RNGCS_MidName      = "Curve Offset Range",
+		INP_MinAllowed = 0.0,
+		INP_MinScale       = 0.0,
+		INP_MaxScale       = 360.0,
+		INP_Default        = 0,
+		IC_ControlGroup    = 338,
+		IC_ControlID       = 0,
+		INP_Integer    = true,
+		})	
+	InGA_OffsetHi = self:AddInput("High", "GA_OffsetHigh", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "RangeControl",
+		INP_MinScale       = 0.0,
+		INP_MaxScale       = 360.0,
+		INP_Default        = 360,
+		IC_ControlGroup    = 338,
+		IC_ControlID       = 1,
+		INP_Integer    = true,
+		})	
+	
+	
+	InGA_OffsetAnimation = self:AddInput("Offset Animation", "GA_OffsetAnimation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed = 1.0,
+		INP_MaxScale   = 1500.0,
+		INP_Default    = 0.0,
+		INP_Integer    = true,
+		})
+	
+	
+	InGA_CLOSE_SHAPE= self:AddInput("Close Shape","Close_Shape",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "CLOSE SHAPE",
+		INP_DoNotifyChanged = true,
+		INP_Default  =   0.0,
+		
+		})
+
+	self:EndControlNest()
+	
+	self:BeginControlNest("SUPER SHAPE STYLE", "SUPER_SHAPE_STYLE", false, {})
+
+	InGA_Thickness = self:AddInput("Thickness", "GA_Thickness", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed =    0.0001,
+		INP_MaxScale =    0.1,
+		INP_Default = 	  0.001,
+		})
+	
+	InGA_LineType = self:AddInput("Type", "GA_Type", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default        = 0.0,
+		MBTNC_ShowName     = false,
+		{MBTNC_AddButton   = "Solid", MBTNCD_ButtonWidth = 0.33, },
+		{MBTNC_AddButton   = "Dash",  MBTNCD_ButtonWidth = 0.34, },
+		{MBTNC_AddButton   = "Dot",   MBTNCD_ButtonWidth = 0.33, },
+		{MBTNC_AddButton   = "Dash Dot",     MBTNCD_ButtonWidth = 0.5, },
+		{MBTNC_AddButton   = "Dash Dot Dot", MBTNCD_ButtonWidth = 0.5, },
+		})
+
+	self:EndControlNest()
+		------------------------------------------------------------------------------------------FINAL TRANSFORMATION
+
+		InGA_Rotation= self:AddInput("GA_Rotation", "GA_rotation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		--INP_MinAllowed =    0.0,
+		INP_MaxScale =   360,
+		INP_Default = 	  0,
+		LINKS_Name = "ROTATION",
+		})
+
+		InGA_Scale= self:AddInput("GA_Scale", "GA_scale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed =    0.0,
+		LINKS_Name = "SCALE",
+		INP_MaxScale =    1.0,
+		INP_Default = 	 1.0,
+		})	
+
+		
+	-------------------------------------------------------------------CENTER SHAPE
+	self:AddControlPage("2. CENTER SHAPE")
+	-------------------------------------------------------------------
+	
+
+InSHOW_CENTER_SHAPES_MASTER= self:AddInput("All_SHOW_CENTER_SHAPES","All_SHOW_CENTER_SHAPES",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW / HIDE CENTER SHAPES",
+		INP_DoNotifyChanged = true,
+			})
+
+self:BeginControlNest("CENTER SHAPE -A-", "CENTER_SHAPE_A", false, {})	
+
+
+	InShow_Center_shape= self:AddInput("Show Center Shape","show_Center_shape",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW CENTER SHAPE -A-",
+		INP_DoNotifyChanged = true,
+			
+		})
+		
+	InSides = self:AddInput("Center Shape Sides", "Sides", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		LINKS_Name = "Shape -A- Sides",
+		INP_MinAllowed = 2.0,
+		INP_MaxScale   = 80.0,
+		INP_Default    = 2.0,
+		INP_Integer    = true,
+		})
+	
+
+	
+
+	InSize = self:AddInput("Center Shape Size", "Size", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		LINKS_Name = "Shape -A- Size",
+		INP_MinScale =    0.1,
+		INP_MaxScale =    1.0,
+		INP_Default = 	  0.5,
+		})
+		
+	InAngle = self:AddInput("Center Shape Angle", "Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		LINKS_Name = "Shape -A- Angle",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =   0.0,
+		})
+		
+	
+
+
+	self:EndControlNest()
+	
+	--==========================================================================---
+	self:BeginControlNest("CENTER SHAPE -B-", "CENTER_SHAPE_B", false, {})	
+
+	InShow_BASE_B= self:AddInput("Show base_b","show_base_b",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW CENTER SHAPE -B-",
+		INP_DoNotifyChanged = true,
+			
+		})	
+		
+	InInner_Size = self:AddInput("Inner Shape Size", "in_Size", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+			LINKS_Name = "Shape -B- Size",
+		INP_MinScale =    0.1,
+		INP_MaxScale =    1.0,
+		INP_Default = 	  0.5,
+			INP_DoNotifyChanged = true,
+		})
+		
+		
+	
+	InInner_Angle = self:AddInput("Inner Shape Angle", "in_Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		LINKS_Name = "Shape -B- Angle",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =   0.0,
+			INP_DoNotifyChanged = true,
+		})
+		
+			
+	InOffsetLo = self:AddInput("Low", "OffsetLow", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "RangeControl",
+		RNGCS_MidName      = "Curve Offset Range",
+		INP_MinAllowed = 1.0,
+		INP_MinScale       = 1.0,
+		INP_MaxScale       = 20.0,
+		INP_Default        = 1,
+		IC_ControlGroup    = 3,
+		IC_ControlID       = 0,
+		INP_Integer    = true,
+		IC_Visible = false, PC_Visible = false,
+		})	
+	InOffsetHi = self:AddInput("High", "OffsetHigh", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "RangeControl",
+		INP_MinAllowed = 1.0,
+		INP_MinScale       = 1.0,
+		INP_MaxScale       = 20.0,
+		INP_Default        = 20,
+		IC_ControlGroup    = 3,
+		IC_ControlID       = 1,
+		INP_Integer    = true,
+		IC_Visible = false, 
+		PC_Visible = false,
+		})	
+	
+	
+	InOffsetAnimation = self:AddInput("Line Connection", "OffsetLines", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed = 1.0,
+		INP_MaxScale   = 100.0,
+		INP_Default    = 1.0,
+		INP_Integer    = true,
+		})
+
+
+self:EndControlNest()
+
+	--==========================================================================---
+	self:BeginControlNest("CENTER NODES", "CENTER_NODES", false, {})	
+
+	InN_SHOW_CENTER_NODES= self:AddInput("Show center nodes","show_center_nodes",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW CENTER NODES",
+		INP_DoNotifyChanged = true,
+		INP_Default  =   0.0,
+			
+		})
+		
+	InCenter_Nodes_Sides = self:AddInput("Center Nodes Sides", "Center_Sides", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		LINKS_Name = "Nodes Sides",
+		INP_MinAllowed = 2.0,
+		INP_MaxScale   = 80.0,
+		INP_Default    = 5.0,
+		INP_Integer    = true,
+		})
+
+	
+	InCenter_Nodes_Size = self:AddInput("Center Nodes Size", "Center_Size", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		LINKS_Name = "Nodes Size",
+		INP_MinAllowed = 0.001,
+		INP_MaxScale =    1.0,
+		INP_Default = 	  0.01,
+		})
+		
+	InCenter_Nodes_Offset = self:AddInput("Center Nodes Offset", "Center_Offset", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl =  "ScrewControl",
+		LINKS_Name = "Nodes Offset",
+		INP_MaxScale   = 2.0,
+		INP_Default    = 1.0,
+	
+		})
+		
+	InCenter_Nodes_Rot = self:AddInput("Center Nodes Rotation", "Center_Rotation", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl =  "ScrewControl",
+		LINKS_Name = "Nodes Rotation",
+		INP_MaxScale   = 360.0,
+		INP_Default    = 0.0,
+	
+		})
+
+	InCenter_Nodes_fill= self:AddInput("Center Nodes fill","center_nodes_fill",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "Nodes Outline Style",
+		INP_DoNotifyChanged = true,
+
+	
+		})	
+
+		
+		self:EndControlNest()
+		
+		-------------------------------------------------------------------
+		-------------------------------------------------------------------CENTER SHAPE FONT
+			--==========================================================================---
+
+	self:BeginControlNest("CENTER NODE TEXT", "CENTER_NODE_TEXT", false, {})	
+
+	InShow_TEXT= self:AddInput("Show text","show_text",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW TEXT",
+		INP_DoNotifyChanged = true,
+	
+		})	
+
+	InFont_Amount = self:AddInput("Font_Amount", "Font_Amount", {
+		LINKID_DataType = "Number",
+		LINKS_Name = "Number Multiply",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0.0,
+		{MBTNC_AddButton   = "x1", MBTNCD_ButtonWidth = 0.33, },
+		{MBTNC_AddButton   = "x100",  MBTNCD_ButtonWidth = 0.34, },
+		{MBTNC_AddButton   = "x1000",   MBTNCD_ButtonWidth = 0.33, },
+		INP_Integer = true,
+		INP_DoNotifyChanged = true,
+		})
+
+	InFontSize = self:AddInput("Font Size", "FSize", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed=    0.0,
+		INP_MaxScale =    1.0,
+		INP_Default = 	  0.01,
+			INP_DoNotifyChanged = true,
+		})
+		
+	InFontPOS_OFFSET = self:AddInput("Font Offset", "FontPOS_offset", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =    0.1,
+		INP_MaxScale =    1.0,
+		INP_Default = 	  1.0,
+		})
+		
+		
+	InFontROTATE = self:AddInput("Font Rotation", "FontRotate", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed     = 0.0,
+		INP_MaxScale =    360.0,
+		INP_Default = 	  0.0,
+		})
+		
+	InFontAlign_Rot= self:AddInput("Align Rot","FontAlign_Rot",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "Align Rotation",
+		INP_DoNotifyChanged = true,
+		INP_Default  =   0.0,		
+		})
+
+
+	InFont = self:AddInput("Font", "Font", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FontFileControl",
+		IC_ControlGroup = 2,
+		IC_ControlID = 0,
+		INP_Level = 1,
+		INP_DoNotifyChanged = true,
+	})
+		
+	InFontStyle = self:AddInput("Style", "Style", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FontFileControl",
+		IC_ControlGroup = 2,
+		IC_ControlID = 1,
+		INP_Level = 1,
+		INP_DoNotifyChanged = true,
+	})
+	
+		InFontStyle_fix= self:AddInput("FontStyle_fix","FontStyle_fix",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "FIX FONT RENDER",
+		INP_DoNotifyChanged = true,
+		--ICD_Width = 0.5,	
+		})
+	
+self:EndControlNest()
+self:BeginControlNest("CENTER SHAPE STYLE", "CENTER_SHAPE_STYLE", false, {})
+	
+		InCenter_Thickness	 = self:AddInput(" Thickness", "Center_Shape_Thickness", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed =    0.0001,
+		INP_MaxScale =    0.1,
+		INP_Default = 	  0.001,
+		})
+
+	InCenter_LineType= self:AddInput("Type", "Center_Type", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default        = 0.0,
+		MBTNC_ShowName     = false,
+		{MBTNC_AddButton   = "Solid", MBTNCD_ButtonWidth = 0.33, },
+		{MBTNC_AddButton   = "Dash",  MBTNCD_ButtonWidth = 0.34, },
+		{MBTNC_AddButton   = "Dot",   MBTNCD_ButtonWidth = 0.33, },
+		{MBTNC_AddButton   = "Dash Dot",     MBTNCD_ButtonWidth = 0.5, },
+		{MBTNC_AddButton   = "Dash Dot Dot", MBTNCD_ButtonWidth = 0.5, },
+		})
+	
+self:EndControlNest()
+	
+			------------------------------------------------------------------------------------------FINAL TRANSFORMATION
+
+	InCenter_Rotation= self:AddInput("Center_Rotation", "Center_rotation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		--INP_MinAllowed =    0.0,
+		INP_MaxScale =   360,
+		INP_Default = 	  0,
+		LINKS_Name = "ROTATION",
+		})
+
+	InCenter_Scale= self:AddInput("Center_Scale", "Center_scale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed =    0.0,
+		LINKS_Name = "SCALE",
+		INP_MaxScale =    1.0,
+		INP_Default = 	 1.0,
+		})	
+
+
+
+		
+	-------------------------------------------------------------------DUPLICATE
+	self:AddControlPage("DUPLICATE")
+	-------------------------------------------------------------------
+
+	InShow_Duplicate= self:AddInput("Show Duplicates","show_Duplicates",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "SHOW / HIDE DUPLICATION",
+		INP_DoNotifyChanged = true,
+		--ICD_Width = 0.5,	
+		})	
+
+	InNumber = self:AddInput("Duplicate Number", "Number", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed = 1.0,
+		INP_MaxScale   = 30.0,
+		INP_Default    = 1.0,
+		INP_Integer    = true,
+		})
+		
+	InScale = self:AddInput("Duplicate Scale", "Scale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =    0.1,
+		INP_MaxScale =    2.0,
+		INP_Default = 	  1.0,
+		})
+		
+	InRotation = self:AddInput("Duplicate Rotation", "Rotation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =  0.0,
+		})
+		
+	InFade = self:AddInput("Fade Color", "Fade", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed =  0.0,
+		INP_MaxAllowed =  1.0,
+		INP_Default = 	  0.1,
+		})
+	
+		
+	-------------------------------------------------------------------LOOK
+		self:AddControlPage("LOOK")
+	-------------------------------------------------------------------	
+	
+		
+	InR = self:AddInput("Red", "Red", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 0,
+		})
+		
+	InG = self:AddInput("Green", "Green", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 1,
+		})
+		
+	InB = self:AddInput("Blue", "Blue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ColorControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 1.0,
+		INP_Default  = 1.0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 2,
+		})
+
+		--------------- GLOW SETTINGS --------------
+
+	InShow_Glow= self:AddInput("Add Glow","add_Glow",{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "ADD GLOW SETTINGS",
+		INP_DoNotifyChanged = true,
+			
+		})	
+
+
+	InSoftness = self:AddInput("Softness", "Softness", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed     = 0.0,
+		INP_MaxScale       = 20,
+		INP_Default        = 0.0,
+		
+		})
+	InGlow = self:AddInput("Glow", "Glow", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed     = 0.0,
+		INP_MaxScale       = 1.0,
+		INP_Default        = 0.0,
+		
+		})
+		
+	InFilter = self:AddInput("Filter", "Filter", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default        = 3.0,
+		{MBTNC_AddButton   = "Box",       MBTNCD_ButtonWidth = 0.25, },
+		{MBTNC_AddButton   = "Bartlett",  MBTNCD_ButtonWidth = 0.25, },
+		{MBTNC_AddButton   = "Multi-box", MBTNCD_ButtonWidth = 0.25, },
+		{MBTNC_AddButton   = "Gaussian",  MBTNCD_ButtonWidth = 0.25, },
+		})
+		
+	InGlowBlend = self:AddInput("Glow Blend", "GlowBlend", {
+		LINKID_DataType    = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed     = 0.0,
+		INP_MaxScale       = 1.0,
+		INP_Default        = 1.0,
+		
+		})
+		
+		-------------DRAW ON TRANSPARENT----THANX TILT:-)---------
+
+	InOnBlack = self:AddInput("Draw on Transparent Background", "OnBlack", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "CheckboxControl",
+		INP_Default         = 0,
+		})
+		
+
+
+
+	
+	-------------------------------------------------------------------3D_TRANSFORMATION	
+	self:AddControlPage("TRANSFORMATION")	
+	-------------------------------------------------------------------
+		
+	InMoveZ = self:AddInput("Distribute in Z", "MoveZ", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 1,
+		--INP_MaxAllowed = 1.0,
+		INP_Default  =  0.0,
+		})
+
+
+	InRotationX = self:AddInput("RotationX", "RotationX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =  0.0,
+		})
+	InRotationY = self:AddInput("RotationY", "RotationY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =  0.0,
+		})
+	InRotationZ = self:AddInput("RotationZ", "RotationZ", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  =  0.0,
+		})
+
+
+	InRadians = self:AddInput("Scale", "radians", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 2.0,
+		INP_Default  =  0.0,
+		})
+
+		
+	Infovy = self:AddInput("Field Of View", "fovy", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 1.0,
+		INP_MaxAllowed = 1.0,
+		INP_Default  =  0.00,
+		IC_Visible = false, 
+		PC_Visible = false,
+
+		})
+
+
+	-------------------------------------------------------------------END
+		
+
+		
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+end
+
+
+
+	-------------------------------------------------------------HIDE-SHOW BUTTONS
+
+function NotifyChanged(inp, param, time)
+
+
+if inp == InShow_Glow then
+		if (param.Value < 0.5) then
+		
+		InSoftness:SetAttrs({IC_Visible = false, PC_Visible = false})
+		InGlow:SetAttrs({IC_Visible = false, PC_Visible = false})
+		InFilter:SetAttrs({IC_Visible = false, PC_Visible = false})
+		InGlowBlend:SetAttrs({IC_Visible = false, PC_Visible = false}) 
+		else
+		
+			
+		InSoftness:SetAttrs({IC_Visible = true, PC_Visible = true})
+		InGlow:SetAttrs({IC_Visible = true, PC_Visible = true})
+		InFilter:SetAttrs({IC_Visible = true, PC_Visible = true})
+		InGlowBlend:SetAttrs({IC_Visible = true, PC_Visible = true})
+		end
+	end
+
+
+-------------------------FONT STYLE
+
+	if inp == InFont then
+		local f = param.Value
+		
+		if f == nil or string.len(f) == 0 then
+			InFont:SetSource(Text("Arial"), time)
+		--	InEaseFunction:SetSource(15, time)
+		end
+	elseif inp == InFontStyle then
+		local f = param.Value
+		
+		if f == nil or string.len(f) == 0 then
+			InFontStyle:SetSource(Text("Regular"), time)
+		end
+	end
+
+	
+
+
+end
+
+
+---TABLE_LENGHT---------------------------------------------
+function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
+-- function convertY ----------------------------------------
+
+function convertY(y, ref_img)
+	return y * (ref_img.Height * ref_img.YScale) / (ref_img.Width * ref_img.XScale)
+end
+
+-------------------------------------------------------------
+
+-- function createPoly Shapes-------------------------------
+
+function createPoly(sides, r, angle,dup, img)
+	
+	local mat = Matrix4()
+	mat:Identity()
+	mat:Move(0, convertY(0,img), 0)
+	
+	local sin = math.sin
+	local cos = math.cos
+
+	local sh = Shape()
+	local x = cos(angle) * r
+	local y = sin(angle) * r
+	
+	sh:MoveTo(x,y)
+	for i = 1, sides - 1 do
+		x = cos(i/sides * math.pi * 2 + angle) * r
+		y = sin(i/sides * math.pi * 2 + angle) * r
+		sh:LineTo(x,y)
+	end
+	sh:Close()
+
+	return sh
+end
+
+
+
+---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+
+----function Create font--------------------------------------------
+
+function drawstring(img, font, style, size, justify, quality, text,sort)
+	
+
+	local font = TextStyleFont(font, style)
+	local tfm = TextStyleFontMetrics(font)
+
+	local line_height = (tfm.TextAscent + tfm.TextDescent + tfm.TextExternalLeading) * 10 * size 
+		
+	local mat = Matrix4()
+		  mat:Scale(1.0/tfm.Scale, 1.0/tfm.Scale, 1.0)
+		  mat:Scale(size, size, 1)
+	
+
+	local  ch, prevch
+
+	local shape = Shape()
+	local sh = Shape()
+	
+	local x_move = 0
+	
+	      mat:Move(0, 0, 0)
+		
+	for line in string.gmatch(text, "%C+") do
+
+		local line_width = 0
+		for i=1,#line do
+			ch = line:sub(i,i):byte()
+	
+			line_width = line_width + tfm:CharacterWidth(ch)*10*size
+			
+		end
+		
+		if justify == 0 then
+		
+		elseif justify == 1 then
+			mat:Move(-line_width/2, 0, 0)
+		elseif justify == 2 then 
+			mat:Move(-line_width, 0, 0)
+		end
+	
+	
+		for i=1,#line do
+			prevch = ch
+				
+			ch = line:sub(i,i):byte()
+
+			local cw = tfm:CharacterWidth(ch)*10*size
+
+			if prevch then
+				x_offset = tfm:CharacterKerning(prevch, ch)*10*size
+			
+			x_move = x_move + x_offset
+			mat:Move(x_offset, 0, 0)
+			
+			end
+			
+			mat:Move(cw/2, (-size/2)/2, 0)
+			x_move = x_move + cw
+						
+			sh = tfm:GetCharacterShape(ch, false)
+			sh =sh:TransformOfShape(mat)
+				
+			shape:AddShape(sh,sort)
+								
+			mat:Move(cw/2, (size/2)/2, 0)
+		
+	end
+	
+	end
+
+
+		return shape
+end
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+
+--------------------------------------------------------------------
+
+function Process(req) 
+
+
+	local img = InImage:GetValue(req)
+	
+	local out = img:CopyOf()
+	
+	
+	local angle     = InAngle:GetValue(req).Value * (math.pi*2) / 360.0
+	local size      = InSize:GetValue(req).Value / 2.0
+	
+	local inner_size  = InInner_Size:GetValue(req).Value / 2.0
+	local inner_angle = InInner_Angle:GetValue(req).Value
+	
+	local sides     = InSides:GetValue(req).Value
+	local center    = InCenter:GetValue(req)
+
+	
+	local cx = center.X
+	local cy = center.Y * (out.Height * out.YScale) / (out.Width * out.XScale)
+	
+
+	------CENTER SHAPE------------------
+	
+	local centerOffset = InCenter_Nodes_Offset:GetValue(req).Value
+	local centerSize   = InCenter_Nodes_Size:GetValue(req).Value
+	local centerSides  = InCenter_Nodes_Sides:GetValue(req).Value
+	local centerRot    = InCenter_Nodes_Rot:GetValue(req).Value * (math.pi*2) / 360.0
+	
+	local centerThickness 	  = InCenter_Thickness:GetValue(req).Value
+	local centerLinetype    = math.floor(InCenter_LineType:GetValue(req).Value	 + 0.5) + 1
+	
+	
+	
+	------OFFSET-----------------------
+	
+	local offsetmin  = InOffsetLo:GetValue(req).Value + InOffsetAnimation:GetValue(req).Value
+	local offsetmax  = InOffsetHi:GetValue(req).Value + InOffsetAnimation:GetValue(req).Value
+	
+	------DUPLICATE-----------------------
+
+	local num       = InNumber:GetValue(req).Value
+	local rotation  = InRotation:GetValue(req).Value
+	local scale     = InScale:GetValue(req).Value
+	----------------------------------------------
+
+
+	------FONTS---------------------------
+	
+	local font  				= InFont:GetValue(req).Value
+	local style 				= InFontStyle:GetValue(req).Value
+	local font_size     		= InFontSize:GetValue(req).Value
+	local font_rot				= InFontROTATE:GetValue(req).Value
+	local font_pos_offset		= InFontPOS_OFFSET:GetValue(req).Value
+	local number_multiply 	= {"1", "100", "1000",}
+
+	local selectedMulti = math.floor(InFont_Amount:GetValue(req).Value + 0.5) + 1
+
+
+	if not next( FontManager:GetFontList() ) then
+		FontManager:ScanDir()
+	end
+	
+
+	local fixfont_render
+	if InFontStyle_fix:GetValue(req).Value > 0.5 then
+		fixfont_render = true
+	else
+	fixfont_render = false
+	end
+
+	------LOOK----------------------------
+
+	--local linetype   	= math.floor(InLineType:GetValue(req).Value + 0.5) + 1
+	local outlinetypes 	= {"OLT_Solid", "OLT_Dash", "OLT_Dot", "OLT_DashDot", "OLT_DashDotDot",}
+--	local thickness 	= InThickness:GetValue(req).Value
+	local fade      	= 1.0 - InFade:GetValue(req).Value
+	local r         	= InR:GetValue(req).Value
+	local g         	= InG:GetValue(req).Value
+	local b         	= InB:GetValue(req).Value
+
+	local blur      	= InSoftness:GetValue(req).Value
+	local glow      	= InGlow:GetValue(req).Value
+	local glowBlend     = InGlowBlend:GetValue(req).Value
+	
+	
+	local blurfilters  	= {"BT_Box", "BT_Bartless", "BT_MultiBox", "BT_Gaussian", }
+	local filter     	= math.floor(InFilter:GetValue(req).Value + 0.5) + 1
+	local onblack    	= (InOnBlack:GetValue(req).Value > 0.5)
+
+	---------------------GAUGES-----------------------------
+
+	
+	local ga_m    	 = InGA_M:GetValue(req).Value
+	local ga_n1     = InGA_N1:GetValue(req).Value
+	local ga_n2     = InGA_N2:GetValue(req).Value
+	local ga_n3     = InGA_N3:GetValue(req).Value
+	
+	
+	
+	
+	
+	local ga_thickness	= InGA_Thickness:GetValue(req).Value
+	local ga_linetype   = math.floor(InGA_LineType:GetValue(req).Value + 0.5) + 1
+	
+
+	
+	
+	local ga_offsetmin  = InGA_OffsetLo:GetValue(req).Value + InGA_OffsetAnimation:GetValue(req).Value
+	local ga_offsetmax  = InGA_OffsetHi:GetValue(req).Value + InGA_OffsetAnimation:GetValue(req).Value
+	
+	
+	
+	--------------------TRANSFORMATION ---------------------
+	
+	local fovy= Infovy:GetValue(req).Value*2.5
+	local rotX= InRotationX:GetValue(req).Value* (math.pi*200) / 360.0
+	local rotY= InRotationY:GetValue(req).Value* (math.pi*200) / 360.0
+	local rotZ= InRotationZ:GetValue(req).Value* (math.pi*200) / 360.0
+	
+	local moveZ= InMoveZ:GetValue(req).Value
+	--local zoom =InZOOM:GetValue(req).Value*0.25
+	
+	local radians= InRadians:GetValue(req).Value
+
+	------------------------------------------
+	
+	local ic = ImageChannel(out, 8)
+	local fs = FillStyle()
+	local cs = ChannelStyle()
+	
+	ic:SetStyleFill(fs)
+
+	local x = math.cos(angle)*size
+	local y = math.sin(angle)*size
+	
+	local sh = Shape()
+	local shapeArray = {}
+
+	local master_Shape=Shape()
+    local point_Shape={}
+	
+ 	local Out_corners_rotate={}
+	local Out_corners={}
+	local In_corners={}
+	
+	
+	Out_corners[1]=Point(x,y)
+
+
+--==============================================================================================--
+
+---------------------------------CENTER SHAPE-A----------------------------------------
+
+
+if InSHOW_CENTER_SHAPES_MASTER:GetValue(req).Value  > 0.5 then
+
+----------------------------CENTER ANIMATION SETUP-------------------------------------
+	
+	
+	local center_A_BuildUp_Ani= {}
+	local center_B_BuildUp_Ani= {}
+	local center_C_BuildUp_Ani= {}
+	local center_D_BuildUp_Ani= {}
+
+	center_A_BuildUp_Ani= {sides=sides,sx=1,  sy=1, rz=0}
+	center_B_BuildUp_Ani= {sides=sides,sx=1,  sy=1, rz=0}
+	center_C_BuildUp_Ani= {sides=sides,sx=1,  sy=1, rz=0}
+	center_D_BuildUp_Ani= {sides=sides,sx=1,  sy=1, rz=0}
+
+	
+
+	
+--==============================================================================================--	
+	
+	local center_sh = Shape()
+	local center_sh_holder = Shape()
+	
+	center_sh:MoveTo(x,y)
+
+	for i=1,center_A_BuildUp_Ani.sides do
+	
+		x = math.cos(i/sides * math.pi*2 + angle)*size
+		y = math.sin(i/sides * math.pi*2 + angle)*size
+	
+		center_sh:LineTo(x,y)
+		
+		Out_corners[i]=Point(x,y)
+		Out_corners_rotate[i] = ( i * 360.0 / centerSides - 90.0)+90
+		
+	end
+
+ 	center_sh = center_sh:OutlineOfShape(centerThickness, outlinetypes[centerLinetype], "OJT_Miter", (req:IsQuick() and 8 or 16))
+
+ --==============================================================================================--SHOW A
+
+if InShow_Center_shape:GetValue(req).Value > 0.5 then
+  
+  local center_matA=Matrix4()
+		center_matA:Identity()
+
+		center_matA:Scale(center_A_BuildUp_Ani.sx, center_A_BuildUp_Ani.sy, 0)
+		center_matA:RotZ (center_A_BuildUp_Ani.rz)
+
+  	 center_sh=center_sh:TransformOfShape(center_matA)
+
+	--****************************************------------
+	--table.insert(shapeArray, center_sh)
+	center_sh_holder:AddShape(center_sh)
+	--****************************************------------
+	
+   end
+
+
+--==============================================================================================--
+
+	
+----------------------------------- CREATE CENTER SHAPE-B-------------------------------------
+ --==============================================================================================--SHOW B
+	
+if InShow_BASE_B:GetValue(req).Value > 0.5 then
+
+	local matBx=Matrix4()
+		  matBx:Scale(inner_size, inner_size, 0)
+		  matBx:RotZ(inner_angle)
+		  		  
+ 	 local inNode_Shape=Shape()
+	
+		   inNode_Shape=center_sh
+
+		   inNode_Shape=inNode_Shape:TransformOfShape(matBx)
+	
+	local center_matB=Matrix4()
+		  center_matB:Identity()
+		  
+		  center_matB:Scale(center_B_BuildUp_Ani.sx, center_B_BuildUp_Ani.sy, 0)
+		  center_matB:RotZ (center_B_BuildUp_Ani.rz)
+
+  	inNode_Shape=inNode_Shape:TransformOfShape(center_matB)
+
+  	--****************************************------------
+  	--table.insert(shapeArray, inNode_Shape)
+	center_sh_holder:AddShape(inNode_Shape)
+	--****************************************------------
+
+
+-------------------------------- ADD CONNECTION LINES --------------------------------------
+	
+	
+	local s_point ={}
+	local e_point ={}
+	local line_shape_base =Shape()
+
+	offsetmax=center_D_BuildUp_Ani.sides
+	
+	for i=offsetmin-1 ,offsetmax do
+	
+	local line_shape =Shape()
+	
+	s_point[i] =Point(Out_corners[i].X, Out_corners[i].Y)
+	e_point[i] =Point(Out_corners[i].X, Out_corners[i].Y)
+	
+	
+	line_shape:MoveTo(s_point[i].X, s_point[i].Y)
+	
+	line_shape=line_shape:TransformOfShape(matBx)
+
+	line_shape:LineTo(e_point[i].X, e_point[i].Y)
+	
+	line_shape_base:AddShape(line_shape)
+	
+	end
+		
+	line_shape_base = line_shape_base:OutlineOfShape(centerThickness, outlinetypes[centerLinetype], "OJT_Miter", (req:IsQuick() and 8 or 16))
+	
+	  local center_matD=Matrix4()
+		center_matD:Identity()
+		center_matD:Scale(center_D_BuildUp_Ani.sx, center_D_BuildUp_Ani.sy, 0)
+		center_matD:RotZ (center_D_BuildUp_Ani.rz)
+
+	line_shape_base=line_shape_base:TransformOfShape(center_matD)
+	
+	
+--****************************************------------
+	--table.insert(shapeArray, line_shape_base)
+	center_sh_holder:AddShape(line_shape_base)	
+--****************************************------------
+
+end	
+
+
+
+--==============================================================================================--
+
+-----------------------------------------SHOW_CENTER_NODES---------------------------------	
+ --==============================================================================================--SHOW C
+	
+if InN_SHOW_CENTER_NODES:GetValue(req).Value > 0.5 then
+
+local point_Shape_base=Shape()
+
+   for i=1,center_C_BuildUp_Ani.sides do
+
+  local matA = Matrix4()
+		matA:Identity()
+		matA:RotZ(centerRot)
+	
+	point_Shape[i] = createPoly(centerSides,centerSize,centerRot,1,img)
+	
+	matA:Move(Out_corners[i].X*centerOffset, Out_corners[i].Y*centerOffset,0)
+
+	point_Shape[i]=point_Shape[i]:TransformOfShape(matA)
+	
+	point_Shape_base:AddShape(point_Shape[i])
+	
+   end
+
+-------------------FILL SYTLE --------------------------------
+   if InCenter_Nodes_fill:GetValue(req).Value > 0.5 then	
+      
+	point_Shape_base=point_Shape_base:OutlineOfShape(centerThickness, outlinetypes[centerLinetype], "OJT_Miter", (req:IsQuick() and 8 or 16))
+ 
+ end
+-------------------------------------------------------------
+   
+  local center_matC=Matrix4()
+		center_matC:Identity()
+		
+		center_matC:Scale(center_C_BuildUp_Ani.sx,center_C_BuildUp_Ani.sy, 0)
+		center_matC:RotZ (center_C_BuildUp_Ani.rz)
+
+  	point_Shape_base=point_Shape_base:TransformOfShape(center_matC)
+
+--****************************************------------
+	--table.insert(shapeArray, point_Shape_base)
+  center_sh_holder:AddShape(point_Shape_base)
+--****************************************------------
+
+end
+
+--==============================================================================================--
+ 
+------------CONSTRUCTOR FOR FONT-------------------------------------------
+
+------------CREATE FONT----------------------------------------------------
+ --==============================================================================================--SHOW D
+	
+
+
+	local quality = 32
+
+	local  justify=1
+
+	local center_matE={}
+	
+	if req:IsQuick() then 
+		quality = 1
+	end
+	
+
+
+  if InShow_TEXT:GetValue(req).Value > 0.5 then
+	
+	local font_Shape = {}
+	local matF={}
+
+   for i=1,center_D_BuildUp_Ani.sides do
+
+	local d_rotation=font_rot
+
+	font_Shape[i]=drawstring(out, font, style, font_size , justify, quality, i*	(number_multiply[selectedMulti]),fixfont_render )
+	
+		matF[i]=Matrix4()
+		matF[i]:Identity()
+		
+		--------------------Align Rotation--------------------------------
+		if InFontAlign_Rot:GetValue(req).Value > 0.5 then	
+		
+	 local	pos_x = math.cos(i/center_D_BuildUp_Ani.sides * math.pi * 2 + angle)*size
+	 local	pos_y = math.sin(i/center_D_BuildUp_Ani.sides * math.pi * 2 + angle)*size
+	 local turnangle = math.atan2( pos_y, pos_x) * 180/ math.pi + 90
+
+		matF[i]:RotZ(turnangle)
+			
+			else
+	
+		matF[i]:RotZ (d_rotation)
+	
+	end
+		
+		matF[i]:Move(font_pos_offset*Out_corners[i].X, font_pos_offset*Out_corners[i].Y, 0)
+			
+		 font_Shape[i]=font_Shape[i]:TransformOfShape(matF[i])
+		
+
+		-------ANIMATION STUFF---------------
+	
+		center_matE[i]=Matrix4()
+		center_matE[i]:Identity()
+		
+		center_matE[i]:Scale(center_D_BuildUp_Ani.sx,center_D_BuildUp_Ani.sy, 0)
+		center_matE[i]:RotZ (center_D_BuildUp_Ani.rz)
+
+		font_Shape[i]=font_Shape[i]:TransformOfShape(center_matE[i])
+
+	--****************************************------------
+	--table.insert(shapeArray, font_Shape[i])
+	center_sh_holder:AddShape(font_Shape[i])
+	--****************************************------------
+	
+   end
+
+  end
+--==============================================================================================--
+
+   ------------------------------------------------------------------------------------FINAL TRANSFORMATION
+  ------------------------------------------------------------------------------------
+ 
+  local Center_mat=Matrix4()
+		Center_mat:Identity()
+		Center_mat:Scale( InCenter_Scale:GetValue(req).Value,  InCenter_Scale:GetValue(req).Value, 1)
+		Center_mat:RotZ( InCenter_Rotation:GetValue(req).Value)
+		
+		center_sh_holder =center_sh_holder:TransformOfShape(Center_mat)
+
+	--****************************************------------
+	table.insert(shapeArray,center_sh_holder)
+	--sh:AddShape(center_sh_holder)
+	--****************************************------------
+end
+
+--==============================================================================================--
+
+------------------------------------SUPER SHAPE-----------------------------------------
+
+if InSHOW_GAUGE_LINES:GetValue(req).Value > 0.5 then
+
+----------------------------SUPERSHAPE ANIMATION SETUP-----------------------------
+
+	
+		
+	local super_shape_BuildUp_Ani= {}
+
+	super_shape_BuildUp_Ani= {sides=ga_offsetmax, sx=1,  sy=1, rz=0}
+
+
+	local   phii = (math.pi*2/360)*ga_offsetmin
+	local	t1x = math.pow(math.abs(math.cos(ga_m * phii / 2) / ga_n3),ga_n2)
+	local	t2x = math.pow(math.abs(math.sin(ga_m * phii / 2) / ga_n3),ga_n2)
+	local	ga_rx = math.pow(t1x+t2x,1/ga_n1)
+	
+		  ga_rx = 1 / ga_rx
+	local ga_x = ga_rx * math.cos(phii)
+	local ga_y = ga_rx * math.sin(phii)
+		
+	local ga_sh = Shape()
+
+		ga_sh = Shape()
+	
+	if InGA_CLOSE_SHAPE:GetValue(req).Value > 0.5 then		ga_sh:MoveTo(0,0)		end
+	
+	for i=ga_offsetmin ,super_shape_BuildUp_Ani.sides do
+				
+		local phi =math.pi*2/360 * i
+					
+		local	t1 = math.pow(math.abs(math.cos(ga_m * phi / 2) / ga_n3),ga_n2)
+		local	t2 = math.pow(math.abs(math.sin(ga_m * phi / 2) /ga_n3),ga_n2)
+		local	ga_r = math.pow(t1+t2,1/ga_n1)
+	
+	if math.abs(ga_r) == 0 then
+				ga_x = 0
+				ga_y = 0
+		 
+			else 
+				ga_r = 1 / ga_r
+				ga_x = ga_r * math.cos(phi)
+				ga_y = ga_r * math.sin(phi)
+
+			end
+			
+			ga_sh:LineTo(ga_x,ga_y)	
+			
+	end
+	
+	if InGA_CLOSE_SHAPE:GetValue(req).Value > 0.5 then		ga_sh:Close()		end
+		
+	ga_sh = ga_sh:OutlineOfShape(ga_thickness, outlinetypes[ga_linetype], "OJT_Miter", (req:IsQuick() and 8 or 16),"False")
+	ga_sh = ga_sh:FlattenOfShape(16);
+	
+   local ga_mat2=Matrix4()
+		ga_mat2:Identity()
+		
+		ga_mat2:Scale(super_shape_BuildUp_Ani.sx, super_shape_BuildUp_Ani.sy, 0)
+		ga_mat2:RotZ (super_shape_BuildUp_Ani.rz)
+
+		ga_sh= ga_sh:TransformOfShape(ga_mat2)
+
+
+--****************************************------------
+  ------------------------------------------------------------------------------------FINAL TRANSFORMATION
+  ------------------------------------------------------------------------------------
+ 
+  local GA_mat=Matrix4()
+		GA_mat:Identity()
+		GA_mat:Scale( InGA_Scale:GetValue(req).Value,  InGA_Scale:GetValue(req).Value, 1)
+		GA_mat:RotZ( InGA_Rotation:GetValue(req).Value)
+		 ga_sh = ga_sh:TransformOfShape(GA_mat)
+    
+		
+		
+table.insert(shapeArray, ga_sh)
+--sh:AddShape(ga_sh,false)
+--****************************************------------
+end
+
+--==============================================================================================--
+
+
+
+
+	--****************************************------------	--****************************************------------
+for i = 1, table.getn(shapeArray) do
+sh:AddShape(shapeArray[i])
+end
+	--****************************************------------	--****************************************------------
+
+
+---------------------------FINAL DUPLICATION ON OBJECT -------------------------------
+if InShow_Duplicate:GetValue(req).Value > 0.5 then 
+
+	else num=1 end
+
+	mat = Matrix4()
+
+	if scale > 1  then
+
+	for i=0,num-1 do
+
+		mat:Identity()
+		
+			
+	------------3D-TRANSFORMATION------------
+	
+		mat:RotZ(i*rotation)
+
+		mat:Scale(scale^i, scale^i, 1)
+		
+		mat:Move(0, 0,moveZ*i)
+
+		mat:RotX(rotX)
+		mat:RotY(rotY)
+		mat:RotZ(rotZ)
+		mat:RotAxis(0,0,0,radians);
+	
+		mat:Move(cx, cy,0)
+
+
+		mat:Project(fovy)
+		
+		cs.Color = Pixel{R=r * fade^i,G=g * fade^i,B=b * fade^i, A = 1}
+
+		
+		if InShow_Glow:GetValue(req).Value > 0.5 then
+		
+		cs.BlurType = blurfilters[filter]
+		cs.SoftnessX = blur
+		cs.SoftnessY = blur
+		cs.SoftnessGlow=glow 
+		
+		cs.SoftnessBlend=glowBlend 
+		
+		end
+
+		--------------ADD IMAGE ---------------------------------------
+
+		
+		ic:ShapeFill(sh:TransformOfShape(mat))
+		ic:PutToImage("CM_Merge", cs)
+		
+	end
+
+
+
+else
+
+		for i=num-1,0,-1 do
+
+		mat:Identity()
+		
+			
+	------------3D-TRANSFORMATION------------
+	
+		mat:RotZ(i*rotation)
+
+		mat:Scale(scale^i, scale^i, 1)
+		
+		mat:Move(0, 0,moveZ*i)
+
+		mat:RotX(rotX)
+		mat:RotY(rotY)
+		mat:RotZ(rotZ)
+		mat:RotAxis(0,0,0,radians);
+	
+		mat:Move(cx, cy,0)
+
+
+		mat:Project(fovy)
+		
+		cs.Color = Pixel{R=r * fade^i,G=g * fade^i,B=b * fade^i, A = 1}
+
+		
+		if InShow_Glow:GetValue(req).Value > 0.5 then
+		
+		cs.BlurType = blurfilters[filter]
+		cs.SoftnessX = blur
+		cs.SoftnessY = blur
+		cs.SoftnessGlow=glow 
+		
+		cs.SoftnessBlend=glowBlend 
+		
+		end
+
+		--------------ADD IMAGE ---------------------------------------
+
+		
+		ic:ShapeFill(sh:TransformOfShape(mat))
+		ic:PutToImage("CM_Merge", cs)
+		
+	end
+
+	
+end
+
+
+
+
+	OutImage:Set(req, out)
+
+
+end

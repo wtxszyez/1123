@@ -1,0 +1,328 @@
+{
+	Tools = ordered() {
+		AdvancedGrid_1 = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://vfxpedia.com/index.php?title=Settings_and_Macros/AdvancedGrid_Description",
+			},
+			Inputs = ordered() {
+				Comments = Input { Value = "Grid texture generator based on a gradient\r\n\r\nby Gregory Chalenko\r\nwww.compositing.ru\r\n\r\nfixed for BMD Fusion 7.7 by Pieter Van Houte www.steakunderwater.com", },
+				PatternType = InstanceInput {
+					SourceOp = "Foreground_1",
+					Source = "Pattern",
+					Name = "Pattern Type",
+				},
+				PatternColors = InstanceInput {
+					SourceOp = "Foreground_1",
+					Source = "Gradient",
+					Name = "Pattern Colors",
+					ControlGroup = 1,
+					Default = 1,
+				},
+				PatternBlend = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "Blend",
+					Name = "Pattern Blend",
+					Default = 1,
+				},
+				BackgroundRed = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "TopLeftRed",
+					Name = "Background Color",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				BackgroundGreen = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "TopLeftGreen",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				BackgroundBlue = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "TopLeftBlue",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				BackgroundAlpha = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "TopLeftAlpha",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Repeats = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "Repeats",
+					Default = 4,
+				},
+				PatternAspect = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "Aspect",
+					Name = "Pattern Aspect",
+					Default = 1,
+				},
+				Center = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "GridCenter",
+					Name = "Center",
+				},
+				Angle = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "Angle",
+					Default = 0,
+				},
+				UseFrameFormatSettings = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "UseFrameFormatSettings",
+					Page = "Image",
+					Default = 1,
+				},
+				Width = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "Width",
+					Name = "Image Width",
+					Default = 720,
+				},
+				Height = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "Height",
+					Name = "Image Height",
+					Default = 576,
+				},
+				PixelAspect = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "PixelAspect",
+					DefaultX = 1.066667,
+					DefaultY = 1,
+				},
+				Depth = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "Depth",
+					Name = "Color Depth",
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "ApplyMaskInverted",
+					Page = "Common Controls",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "MaskHigh",
+					ControlGroup = 12,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "MaskLow",
+					ControlGroup = 12,
+					Default = 0,
+				},
+				MotionBlur = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "MotionBlur",
+				},
+				Quality = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "Quality",
+					Default = 2,
+				},
+				ShutterAngle = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "ShutterAngle",
+					Default = 180,
+				},
+				CenterBias = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "CenterBias",
+					Default = 0,
+				},
+				SampleSpread = InstanceInput {
+					SourceOp = "Transform1_1",
+					Source = "SampleSpread",
+					Default = 1,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Merge1_3",
+					Source = "EffectMask",
+					Name = "Foreground Mask",
+				},
+				BackgroundMask = InstanceInput {
+					SourceOp = "Background_1",
+					Source = "EffectMask",
+					Name = "Background Mask",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "Merge1_3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 567.94, 139.648, },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true,
+				},
+				Size = { 302.201, 303.719, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -26.3326, 0, },
+			},
+			Tools = ordered() {
+				Background_1 = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						UseFrameFormatSettings = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 1556, },
+						TopLeftRed = Input { Value = 0.3, },
+						TopLeftGreen = Input { Value = 0.1, },
+						GradientType = Input { Value = FuID { "Cross", }, },
+						Start = Input { Value = { 0.5, 0.5, }, },
+						End = Input { Value = { 0.6, 0.5, }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -61.768, 164.905, }, },
+				},
+				Foreground_1 = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "(Merge1_3.Background.OriginalWidth*Merge1_3.Background.XScale>Merge1_3.Background.OriginalHeight*Merge1_3.Background.YScale) and Merge1_3.Background.OriginalWidth*Merge1_3.Background.XScale or Merge1_3.Background.OriginalHeight*Merge1_3.Background.YScale",
+						},
+						Type = Input { Value = FuID { "Gradient", }, },
+						TopLeftRed = Input { Value = 1, },
+						TopLeftGreen = Input { Value = 0.182230279762596, },
+						TopLeftAlpha = Input { Value = 0, },
+						GradientType = Input {
+							Value = FuID { "Cross", },
+							Expression = "(Pattern == 0) and \"Reflect\" or (Pattern == 1) and \"Square\" or (Pattern == 2) and \"Cross\" or \"Radial\"",
+						},
+						Start = Input { Value = { 0.5, 0.5, }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0.15] = { 0.9, 0.6, 0.1, 1, },
+									[0.16] = { 0, 0, 0, 0, },
+									[0.3] = { 0, 0, 0, 0, },
+									[0.31] = { 0.7, 0.7, 0.2, 1, },
+									[0.36] = { 0.7, 0.7, 0.2, 1, },
+									[0.37] = { 0, 0, 0, 0, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 60.768, 10.7086, }, },
+					UserControls = ordered() {
+						Pattern = {
+							{ MBTNC_AddButton = "Lines", },
+							{ MBTNC_AddButton = "Squares", },
+							{ MBTNC_AddButton = "Grid", },
+							{ MBTNC_AddButton = "Circles", },
+							LINKID_DataType = "Number",
+							MBTNC_StretchToFit = true,
+							IC_ControlPage = 1,
+							INPID_InputControl = "MultiButtonControl",
+							INP_Default = 2,
+						},
+					},
+				},
+				Merge1_3 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "Background_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform1_1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 62.5472, 164.126, }, },
+				},
+				Transform1_1 = Transform {
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 0.3798828125, },
+							Expression = "Point(GridCenter.X*Merge1_3.Background.OriginalWidth/Foreground_1.Height*Merge1_3.Background.XScale,GridCenter.Y*Merge1_3.Background.OriginalHeight/Foreground_1.Height*Merge1_3.Background.YScale)",
+						},
+						Size = Input {
+							Value = 0.25,
+							Expression = "1/Repeats",
+						},
+						Edges = Input { Value = 1, },
+						FlattenTransform = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Foreground_1",
+							Source = "Output",
+						},
+						PatternAspect = Input { Value = 1, },
+						Repeats = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 60.5472, 114.15, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.298039215686275, B = 0.298039215686275, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						PatternAspect = { INPID_PreviewControl = "", IC_ControlPage = 0, INPID_InputControl = "", },
+						GridCenter = {
+							INPID_PreviewControl = "CrosshairControl",
+							INPID_InputControl = "OffsetControl",
+							INPS_Name = "Grid Center",
+							IC_ControlPage = 0,
+							CHC_Style = 0,
+							LINKID_DataType = "Point",
+						},
+						Repeats = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 8,
+							INP_Default = 0,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.513725490196078, G = 0.643137254901961, B = 0.513725490196078, },
+				TextColor = { R = 0, G = 0, B = 0, },
+			},
+		},
+	},
+	ActiveTool = "AdvancedGrid_1",
+}

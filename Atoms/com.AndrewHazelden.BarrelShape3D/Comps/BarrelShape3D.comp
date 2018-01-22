@@ -1,0 +1,1136 @@
+Composition {
+	CurrentTime = 21,
+	RenderRange = { 0, 1000 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 274,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 4,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		BarrelCookTorrance = MtlCookTorrance {
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							BarrelCookTorrance = MtlCookTorrance {
+								Inputs = {
+									["Specular.Nest"] = Input { Value = 1 },
+									["Diffuse.Color.Red"] = Input { Value = 0.48 },
+									["Diffuse.Color.Green"] = Input { Value = 0.4 },
+									MaterialID = Input { Value = 3 },
+									["Diffuse.Color.Blue"] = Input { Value = 0.27 }
+								},
+								Name = "BarrelCookTorrance",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 771.779, -48.3304 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				["Diffuse.Color.Red"] = Input { Value = 0.48, },
+				["Diffuse.Color.Green"] = Input { Value = 0.4, },
+				["Diffuse.Color.Blue"] = Input { Value = 0.27, },
+				["Specular.Nest"] = Input { Value = 1, },
+				MaterialID = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, -49.5 } },
+		},
+		BandsCookTorrance = MtlCookTorrance {
+			NameSet = true,
+			Inputs = {
+				["Diffuse.Color.Red"] = Input { Value = 0.89, },
+				["Diffuse.Color.Green"] = Input { Value = 0.89, },
+				["Diffuse.Color.Blue"] = Input { Value = 0.89, },
+				["Specular.Nest"] = Input { Value = 1, },
+				MaterialID = Input { Value = 4, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, -82.5 } },
+		},
+		RowBarrelDuplicate3D = Duplicate3D {
+			NameSet = true,
+			Inputs = {
+				LastCopy = Input { Value = 4, },
+				["Translate.Z"] = Input { Value = 4.2, },
+				["Rotate.Y"] = Input { Value = -0.1, },
+				RandomSeed = Input { Value = 640, },
+				["JitterTranslate.X"] = Input { Value = 0.808, },
+				SceneInput = Input {
+					SourceOp = "BarrelTransform3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1045, -82.5 } },
+		},
+		ColumnBarrelDuplicate3D = Duplicate3D {
+			NameSet = true,
+			Inputs = {
+				LastCopy = Input { Value = 4, },
+				["Translate.X"] = Input { Value = 4.712, },
+				["Translate.Y"] = Input { Value = 0.019, },
+				["Rotate.Y"] = Input { Value = -0.1, },
+				RandomSeed = Input { Value = 6640, },
+				["JitterTranslate.X"] = Input { Value = 0.808, },
+				SceneInput = Input {
+					SourceOp = "RowBarrelDuplicate3D",
+					Source = "Data3D",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, -82.5 } },
+		},
+		CenterTransform3D = Transform3D {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "ColumnBarrelDuplicate3D",
+					Source = "Data3D",
+				},
+				["Transform3DOp.Translate.X"] = Input { Value = -7.0873374933658, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -5.99532143980471, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, -82.5 } },
+		},
+		BarrelNote1 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "BarrelShape3D is Fusion macro based remake of the classic Lightwave \"Eagle in a Barrel\" geometry (minus the eagle of course).\n\nCreated by Andrew Hazelden <andrew@andrewhazelden.com>", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 825, -247.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 475.674, 109.71 }
+			},
+		},
+		BarrelShape3D = GroupOperator {
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/",
+			},
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "TopBandShape3D",
+					Source = "MaterialInput",
+					Name = "BandsMaterialInput",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "PlankShape3D1",
+					Source = "MaterialInput",
+					Name = "PlankMaterialInput",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "BandMerge3D",
+					Source = "SceneInput4",
+					Name = "EagleSceneInput",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Translate.X",
+					MinScale = -12,
+					MaxScale = 12,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Translate.Y",
+					MinScale = -12,
+					MaxScale = 12,
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Translate.Z",
+					MinScale = -12,
+					MaxScale = 12,
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Transform3DOp.Scale.X",
+					Name = "Scale",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "BarrelTransform3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 895.947, -82.3623 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 1391, 196.3, 695.5, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -1565.82, 91.7932 }
+			},
+			Tools = ordered() {
+				PlankShape3D1 = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									PlankShape3D1 = Shape3D {
+										Inputs = {
+											["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.4 },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1 },
+											["MtlStdInputs.Specular.Nest"] = Input { Value = 1 },
+											["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.27 },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 90 },
+											["MtlStdInputs.Specular.Intensity"] = Input { Value = 0 },
+											["SurfaceCubeInputs.Height"] = Input { Value = 4.4 },
+											["Transform3DOp.Translate.X"] = Input { Value = -1.2 },
+											["SurfaceCubeInputs.SizeLock"] = Input { Value = 0 },
+											["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.48 },
+											["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 2 },
+											Shape = Input { Value = FuID { "SurfaceCubeInputs" } },
+											["SurfaceCubeInputs.Width"] = Input { Value = 0.75 },
+											["SurfaceCubeInputs.Depth"] = Input { Value = 0.1 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1 },
+											["SurfaceCubeInputs.SubdivisionHeight"] = Input { Value = 8 },
+											["SurfaceCubeInputs.SubdivisionDepth"] = Input { Value = 1 },
+											["SurfaceCubeInputs.SubdivisionWidth"] = Input { Value = 2 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 181.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["Transform3DOp.Translate.X"] = Input { Value = -1.2, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 90, },
+						Shape = Input { Value = FuID { "SurfaceCubeInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "BarrelCookTorrance",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.48, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.4, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.27, },
+						["MtlStdInputs.Specular.Nest"] = Input { Value = 1, },
+						["MtlStdInputs.Specular.Intensity"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+						["SurfaceCubeInputs.SizeLock"] = Input { Value = 0, },
+						["SurfaceCubeInputs.Width"] = Input { Value = 0.85, },
+						["SurfaceCubeInputs.Height"] = Input { Value = 4.5, },
+						["SurfaceCubeInputs.Depth"] = Input { Value = 0.1, },
+						["SurfaceCubeInputs.SubdivisionWidth"] = Input { Value = 2, },
+						["SurfaceCubeInputs.SubdivisionHeight"] = Input { Value = 7, },
+						["SurfaceCubeInputs.SubdivisionDepth"] = Input { Value = 1, },
+						["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 2, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 49.5 } },
+				},
+				TopBender3D = Bender3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "PlankShape3D1",
+							Source = "Output",
+						},
+						Bender = Input { Value = FuID { "Taper" }, },
+						Amount = Input { Value = 1.316, },
+						Center = Input { Value = 0.162, },
+						RangeMin = Input { Value = 0.78, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, 49.5 } },
+				},
+				BottomBender3D = Bender3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "TopBender3D",
+							Source = "Output",
+						},
+						Bender = Input { Value = FuID { "Taper" }, },
+						Amount = Input {
+							Value = -1.316,
+							Expression = "TopBender3D.Amount*-1",
+						},
+						Center = Input {
+							Value = 0.838,
+							Expression = "1-TopBender3D.Center",
+						},
+						RangeMax = Input {
+							Value = 0.22,
+							Expression = "1-TopBender3D.RangeMin",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 49.5 } },
+				},
+				TopCurveBender = Bender3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "BottomBender3D",
+							Source = "Output",
+						},
+						Amount = Input { Value = 0.376, },
+						Angle = Input { Value = 90, },
+						Center = Input { Value = 1.1, },
+						RangeMin = Input { Value = 0.6, },
+						Group = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1375, 49.5 } },
+				},
+				PipeRouter2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "TopBandBender3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, -82.5 } },
+				},
+				TopBandBender3D = Bender3D {
+					Locked = true,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "TopBandShape3D",
+							Source = "Output",
+						},
+						Bender = Input { Value = FuID { "Taper" }, },
+						Amount = Input { Value = 0.025, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, -82.5 } },
+				},
+				TopBandShape3D = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["Transform3DOp.Translate.Y"] = Input { Value = 0.675696312231161, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 17.3, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 5, },
+						Shape = Input { Value = FuID { "SurfaceTorusInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "BandsCookTorrance",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.89, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.89, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.89, },
+						["MtlStdInputs.Specular.Nest"] = Input { Value = 1, },
+						["MtlStdInputs.Specular.Intensity"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+						["SurfaceTorusInputs.Radius"] = Input { Value = 1.75, },
+						["SurfaceTorusInputs.Section"] = Input { Value = 0.04, },
+						["SurfaceTorusInputs.SubdivisionLevelBase"] = Input { Value = 10, },
+						["SurfaceTorusInputs.SubdivisionLevelHeight"] = Input { Value = 8, },
+						["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, -82.5 } },
+				},
+				TopRotateLevelTransform3D = Transform3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "TopCurveBender",
+							Source = "Output",
+						},
+						["Transform3DOp.Translate.X"] = Input { Value = -0.443, },
+						["Transform3DOp.Rotate.Z"] = Input { Value = -58.9, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1485, 49.5 } },
+				},
+				BotomCurveBender3D = Bender3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "TopRotateLevelTransform3D",
+							Source = "Output",
+						},
+						Amount = Input {
+							Value = -0.376,
+							Expression = "TopCurveBender.Amount*-1",
+						},
+						Angle = Input {
+							Value = -90,
+							Expression = "TopCurveBender.Angle*-1",
+						},
+						Center = Input { Value = 1, },
+						RangeMax = Input {
+							Value = 0.4,
+							Expression = "1-TopCurveBender.RangeMin",
+						},
+						Group = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, 49.5 } },
+				},
+				BandDuplicate3D = Duplicate3D {
+					Locked = true,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FirstCopy = Input { Value = 1, },
+						["Translate.Y"] = Input { Value = -1.87, },
+						PivotNest = Input { Value = 1, },
+						SceneInput = Input {
+							SourceOp = "TopBandShape3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, -16.5 } },
+				},
+				ShiftOriginTransform3D = Transform3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "BotomCurveBender3D",
+							Source = "Output",
+						},
+						["Transform3DOp.Translate.X"] = Input { Value = -1.724, },
+						["Transform3DOp.Translate.Y"] = Input { Value = -0.337, },
+						["Transform3DOp.Rotate.Z"] = Input { Value = -1.8, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 49.5 } },
+				},
+				BottomBandBender3D = Bender3D {
+					Locked = true,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "BandDuplicate3D",
+							Source = "Data3D",
+						},
+						Bender = Input { Value = FuID { "Taper" }, },
+						Amount = Input {
+							Value = -0.025,
+							Expression = "TopBandBender3D.Amount*-1",
+						},
+						Center = Input { Value = 1, },
+						RangeMax = Input { Expression = "1-TopBandBender3D.RangeMin", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, -16.5 } },
+				},
+				PipeRouter1 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "BottomBandBender3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1980, -16.5 } },
+				},
+				PlankDuplicate3D = Duplicate3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LastCopy = Input { Value = 10, },
+						["Rotate.Y"] = Input { Value = 36, },
+						PivotNest = Input { Value = 1, },
+						SceneInput = Input {
+							SourceOp = "ShiftOriginTransform3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1870, 49.5 } },
+				},
+				BandMerge3D = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.Y"] = Input { Value = 0.5, },
+						SceneInput1 = Input {
+							SourceOp = "PlankDuplicate3D",
+							Source = "Data3D",
+						},
+						SceneInput2 = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						SceneInput3 = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1980, 49.5 } },
+				},
+				OriginTransform3D = Transform3D {
+					Locked = true,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "BandMerge3D",
+							Source = "Output",
+						},
+						["Transform3DOp.Translate.Y"] = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2090, 49.5 } },
+				},
+				BarrelTransform3D = Transform3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "OriginTransform3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 49.5 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1481,
+			Height = 1127,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.31436,
+						Offset = { -605.311, 338 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.776422764227642,
+					RatioY = 95.5457777777778,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.4781054512958,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00934579439252336, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.470062555853441, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 328,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.738859180035651, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.261140819964349, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						Options = {
+							Lighting = true,
+							Shadows = true
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = -581.200073242188,
+								X = 40.6000022888184,
+								Z = 0
+							},
+							Scale = 0.197282284498215,
+							Position = {
+								Y = 0.105676278471947,
+								X = 0.0439624637365341,
+								Z = 0.0775757506489754
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 0.322342664003372,
+							Position = {
+								Y = -0.479211241006851,
+								X = -2.82431322773391e-09,
+								Z = -0.0646127536892891
+							}
+						},
+						Options = {
+							Lighting = true,
+							Shadows = true,
+							Wireframe = false,
+							Grid = true,
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 0.619138181209564,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = -271.399871826172,
+								X = 22.0000038146973,
+								Z = 0
+							},
+							Scale = 0.0816726759076118,
+							Position = {
+								Y = 1.68626475334167,
+								X = -2.22753095626831,
+								Z = 0.299654453992844
+							}
+						},
+						SortMethod = "ZBuffer",
+						CameraName = "Perspective",
+					},
+					View2 = {
+						Viewer = {
+							ScaleMode = 1
+						},
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 0.375,
+								Position = {
+									Y = 0,
+									X = 1.27993559837341,
+									Z = 0
+								}
+							},
+							Options = {
+								Wireframe = true
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CameraName = "Front"
+						}
+					},
+					View3 = {
+						Viewer = {
+							ScaleMode = 1,
+							Channel = 12
+						},
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 0.375000029802322,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0.0999999940395355
+								}
+							},
+							Options = {
+								Lighting = true,
+								Shadows = false,
+								Wireframe = true
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							SortMethod = "QuickBSP",
+							CameraName = "Right"
+						}
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					View1 = {
+						Viewer = {
+							ScaleMode = 1
+						},
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							Options = {
+								Wireframe = true
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 0.419454038143158,
+								Position = {
+									Y = -6.21258999800034e-09,
+									X = 1.00172817707062,
+									Z = -0.0286387205123901
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CameraName = "Top"
+						}
+					},
+					QuadView = false,
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			},
+			Paths = {
+				EnableReverseMapping = true,
+			},
+			QuickTime = {
+				Compressor = "Apple ProRes 422 HQ_apch",
+			},
+		}
+	}
+}
+
+ 

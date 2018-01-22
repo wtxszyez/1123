@@ -1,0 +1,190 @@
+FuRegisterClass('Commodore64', CT_ConsoleUtility, {
+	REGS_Name = 'Commodore64',
+	REGS_Category = 'Console',
+	REGS_OpDescription = 'A Commodore 64 themed Console Fuse that works in the Fusion Console tab.',
+	REGS_Company = "Andrew Hazelden",
+	REGS_URL = "http://www.andrewhazelden.com",
+	REG_Version = 100,
+	})
+
+--[[
+Commodore64.fuse v1.0 - 2018-01-17
+by Andrew Hazelden
+Email: andrew@andrewhazelden.com
+Web: www.andrewhazelden.com
+
+## Overview ##
+
+This is a Commodore64 themed Console Fuse that works in the Fusion Console tab. It is compatible with Fusion 9.0.1+. Typing in 'LOAD "*",8,1' or 'LOAD "$",8,1' or 'LIST' will run a detailed simulation of a Commodore64.
+
+This was inspired by the classic Eyeon Fusion 6.4 Commodore64 easter egg.
+
+## Installation ##
+
+Step 1. Copy the "Commodore64.fuse" file to your Fusion user prefs "Fuses:/" folder. 
+
+Step 2. Restart Fusion to activate the Commodore64.fuse in the Console.
+
+Each time you open a new Fusion composite and switch to the Console tab you will see the following text printed at the top of the view:
+
+*** EYEON SCRIPTING 9.0 ***
+31743 BYTES FREE
+READY.
+
+Step 3. To experience the full wonders of a Commodore 64 simulation inside of a compositing package, type the following text into the Fusion Console:
+LOAD "*",8,1
+LOAD "$",8,1
+LIST
+
+## Todo ## 
+
+Work out how to compute the disk free value on the local harddisk using lua-fs to accurately display the List command's "Blocks Free." line. If lua-fs is not an option then look at using each OS platform's native terminal call for a disk free utility command.
+
+## Commodore64.fuse Output Preview ##
+
+*** EYEON SCRIPTING 9.0 ***
+31743 BYTES FREE
+READY.
+
+> LOAD "*",8,1
+
+SEARCHING FOR *
+?FILE NOT FOUND	 ERROR
+READY.
+
+> LOAD "$",8,1
+
+SEARCHING FOR $
+LOADING
+READY.
+
+> LIST
+
+0			"System"															00 2A
+0			".com.apple.timemachine.donotpresent"			PRG
+306		".DocumentRevisions-V100"									PRG
+2108	".fseventsd"															PRG
+170		".Spotlight-V100"													PRG
+102		".TemporaryItems"													PRG
+68		".Trashes"																PRG
+68		".vol"																		PRG
+3774	"Applications"														PRG
+1292	"bin"																			PRG
+68		"cores"																		PRG
+4167	"dev"																			PRG
+4250	"etc"																			PRG
+1			"home"																		PRG
+2074	"Library"																	PRG
+1			"net"																			PRG
+68		"Network"																	PRG
+136		"opt"																			PRG
+204		"private"																	PRG
+2142	"sbin"																		PRG
+136		"System"																	PRG
+272		"tmp"																			PRG
+204		"Users"																		PRG
+408		"usr"																			PRG
+918		"var"																			PRG
+238		"Virtual Machines"												PRG
+204		"Volumes"																	PRG
+∞ BLOCKS FREE.
+READY.
+
+]]
+
+function Create()
+
+	return true
+end
+
+function Attach(view)
+	self:Print('*** EYEON SCRIPTING 9.0 ***\n')
+	self:Print('31743 BYTES FREE\n')
+	self:Print('READY.\n')
+	self:Print('\n')
+	
+	return true
+end
+
+function Detach()
+	return true
+end
+
+function Select()
+	return true
+end
+
+function HandleInput(str, active)
+	-- Scan the user input
+	if str:lower() == 'load "*",8,1' then
+		self:Print('> LOAD "*",8,1\n')
+		self:Print('\n')
+		self:Print('SEARCHING FOR *\n')
+		self:Print('?FILE NOT FOUND	 ERROR\n')
+		self:Print('READY.\n')
+		
+		return true
+	elseif str:lower() == 'load "$",8,1' then
+		self:Print('> LOAD "$",8,1\n')
+		self:Print('\n')
+		self:Print('SEARCHING FOR $\n')
+		self:Print('LOADING\n')
+		self:Print('READY.\n')
+		
+		return true
+	elseif str:lower() == 'list' then
+		self:Print('> LIST\n')
+		self:Print('\n')
+		-- List the root hard disk folder contents
+				
+		-- Scan the root folder of the disk
+		local dirlist = bmd.readdir('/*')
+
+		-- Find the longest filename length in chracters
+		maxFileNameLength = 0
+		for i, f in ipairs(dirlist) do
+			filename = tostring('"' .. f.Name .. '"')
+			if string.len(filename) > maxFileNameLength then
+				maxFileNameLength = string.len(filename)
+			end
+		end
+
+		-- Find the longest filesize length in characters
+		maxFileSizeLength = 0
+		for i, f in ipairs(dirlist) do
+			if string.len(tostring(f.Size)) > maxFileSizeLength then
+				maxFileSizeLength = string.len(tostring(f.Size))
+			end
+		end
+
+		-- List the system disk name
+		-- FileSize	 "FileName"	 00 2A
+		filename = tostring('"System"')
+		filesize = 0
+		currentFileNameLength = string.len(filename)+4
+		currentFileSizeLength = string.len(filesize)
+		formattingToken = '%d%' .. maxFileSizeLength-currentFileSizeLength+1 .. 's%s%' .. maxFileNameLength-currentFileNameLength+1 .. 's%s\n'
+		self:Print(string.format(formattingToken, filesize, ' ', filename , ' ', '00 2A'))
+
+		-- List the files and folders
+		for i, f in ipairs(dirlist) do
+			filename = tostring('"' .. f.Name .. '"')
+			filesize = tonumber(f.Size)
+			currentFileNameLength = string.len(filename)
+			currentFileSizeLength = string.len(filesize)
+	
+			-- FileSize	 "FileName"	 PRG
+			formattingToken = '%d%' .. maxFileSizeLength-currentFileSizeLength+1 .. 's%s%' .. maxFileNameLength-currentFileNameLength+1 .. 's%s\n'
+			self:Print(string.format(formattingToken, filesize, ' ', filename , ' ', 'PRG'))
+		end
+		
+		-- List the free disk space
+		--self:Print('0 BLOCKS FREE.\n')
+		self:Print('∞ BLOCKS FREE.\n')
+		self:Print('READY.\n')
+		
+		return true
+	end
+
+	return false
+end

@@ -1,0 +1,72 @@
+{
+	Tools = ordered() {
+		LoaderButtonControl = Loader {
+			Clips = {
+			},
+			CustomData = {
+				HelpPage = "https://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=1411&p=11562#p11562",
+			},
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1489, 117 } },
+			UserControls = ordered() {
+				UIManagerButton = {
+					LINKS_Name = "Show UI Manager Dialog",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "ButtonControl",
+					BTNCS_Execute = [[
+local ui = fu.UIManager
+local disp = bmd.UIDispatcher(ui)
+local width,height = 300,200
+local x = fu:GetMousePos()[1]
+local y = fu:GetMousePos()[2]
+
+win = disp:AddWindow({
+  ID = 'ButtonControlWin',
+  TargetID = 'ButtonControlWin',
+  WindowTitle = 'A ButtonControl Window',
+  Geometry = {x-(width/2), y+8, width, height},
+  Spacing = 10,
+
+  ui:VGroup{
+    ID = 'root',
+
+    ui:Button{
+      ID = 'DoneButton',
+      Text = 'That is all. Thank you.',
+      Font = ui:Font{
+        Family = 'Droid Sans Mono',
+        StyleName = 'Regular',
+        PixelSize = 18,
+        MonoSpaced = true,
+        StyleStrategy = {ForceIntegerMetrics = true},
+      },
+    },
+
+  },
+})
+
+function win.On.ButtonControlWin.Close(ev)
+  disp:ExitLoop()
+end
+
+function win.On.DoneButton.Clicked(ev)
+  disp:ExitLoop()
+end
+
+itm = win:GetItems()
+win:Show()
+disp:RunLoop()
+win:Hide()
+]],
+					INP_Integer = false,
+					ICS_ControlPage = "File"
+				},
+			}
+		}
+	},
+	ActiveTool = "LoaderButtonControl"
+}

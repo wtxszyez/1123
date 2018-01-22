@@ -1,0 +1,165 @@
+{
+	Tools = ordered() {
+		Yankee = MacroOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "SceneInput",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Number5",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Number6",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Number7",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Number8",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Point1.X",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Point1.Y",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Point1.Z",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CustomVertex3D1_5",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				CustomVertex3D1_5 = CustomVertex3D {
+					CtrlWZoom = false,
+					CustomData = {
+						Settings = {
+						},
+					},
+					Inputs = {
+						["Position.X"] = Input { Value = "if ( tu >= n1 & tu <= n2 & tv >= n3 & tv <= n4, px + ( p1x * i1 * i2 ) , px)", },
+						["Position.Y"] = Input { Value = "if ( tu >= n1 & tu <= n2 & tv >= n3 & tv <= n4, py + ( p1y * i1 * i2 ) , py)", },
+						["Position.Z"] = Input { Value = "if ( tu >= n1 & tu <= n2 & tv >= n3 & tv <= n4, pz + ( p1z * i1 * i2 ) , pz)", },
+						["VertexColor.Nest"] = Input { Value = 1, },
+						["TexCoord.Nest"] = Input { Value = 1, },
+						Number1 = Input {
+							Value = -0.31909545,
+							Expression = "Number5-(Number7/2)",
+						},
+						Number2 = Input {
+							Value = 0.42294805,
+							Expression = "Number5+(Number7/2)",
+						},
+						Number3 = Input {
+							Value = 0.58375215,
+							Expression = "Number6-(Number7/2)",
+						},
+						Number4 = Input {
+							Value = 1.32579565,
+							Expression = "Number6+(Number7/2)",
+						},
+						LUT1 = Input {
+							SourceOp = "CustomVertex3D1_5LUT1",
+							Source = "Value",
+						},
+						LUT2 = Input {
+							SourceOp = "CustomVertex3D1_5LUT2",
+							Source = "Value",
+						},
+						LUT3 = Input {
+							SourceOp = "CustomVertex3D1_5LUT3",
+							Source = "Value",
+						},
+						LUT4 = Input {
+							SourceOp = "CustomVertex3D1_5LUT4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "( ( n7 - abs ( tu - n5 ) > 0 ) * ( n7 - n8 * abs ( tu - n5 ) ) ) / n7 ", },
+						Intermediate2 = Input { Value = "( ( n7 - abs ( tv - n6 ) > 0 ) * ( n7 - n8 * abs ( tv - n6 ) ) ) / n7 ", },
+						ShowNumber1 = Input { Value = 0, },
+						NameForNumber1 = Input { Value = "U index low", },
+						ShowNumber2 = Input { Value = 0, },
+						NameForNumber2 = Input { Value = "U index high", },
+						ShowNumber3 = Input { Value = 0, },
+						NameForNumber3 = Input { Value = "V index low", },
+						ShowNumber4 = Input { Value = 0, },
+						NameForNumber4 = Input { Value = "V index high", },
+						NameForNumber5 = Input { Value = "U index", },
+						NameForNumber6 = Input { Value = "V index", },
+						NameForNumber7 = Input { Value = "Range", },
+						NameForNumber8 = Input { Value = "Falloff", },
+						NameForPoint1 = Input { Value = "Transform ", },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowPoint5 = Input { Value = 0, },
+						ShowPoint6 = Input { Value = 0, },
+						ShowPoint7 = Input { Value = 0, },
+						ShowPoint8 = Input { Value = 0, },
+						ShowImage1 = Input { Value = 0, },
+						ShowImage2 = Input { Value = 0, },
+						ShowImage3 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 82.5, }, },
+				},
+				CustomVertex3D1_5LUT1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+				},
+				CustomVertex3D1_5LUT2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+				},
+				CustomVertex3D1_5LUT3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+				},
+				CustomVertex3D1_5LUT4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+				},
+			},
+		},
+	},
+	ActiveTool = "Yankee",
+}

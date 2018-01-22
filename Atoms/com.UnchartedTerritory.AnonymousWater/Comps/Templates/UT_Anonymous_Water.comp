@@ -1,0 +1,2027 @@
+Composition {
+	CurrentTime = 11,
+	RenderRange = { 0, 100 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 447,
+	HiQ = true,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 9.0.1 build 3",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Note10 = Note {
+			Inputs = {
+				Comments = Input { Value = "The camera setup to generate the reflections. Use Y_Offset (it's a multiplier) to adjust the camera position in relation to the Render_CAM.\n\nThis will depend on the position of the water on the Y axis, but casn also be a creative choice. ", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1540, 1336.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		Note9 = Note {
+			Inputs = {
+				Comments = Input { Value = "A couple of random shapes to make up a scene... ", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1045, 1105.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		Note8 = Note {
+			Inputs = {
+				Comments = Input { Value = "The Render Camera. Should always be named Render_CAM for the reflection mapping to work. ", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1870, 1039.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		Note7 = Note {
+			Inputs = {
+				Comments = Input { Value = "Adjust the scale of the water to sit in the scene...", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2640, 1039.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		ImagePlane3D2 = ImagePlane3D {
+			Inputs = {
+				["SurfacePlaneInputs.SizeLock"] = Input { Value = 0, },
+				["SurfacePlaneInputs.SubdivisionWidth"] = Input {
+					Value = 25,
+					Expression = "AutoCrop.XSize*UT_Water_Controls.DImagePlaneResolution/UT_Water_Controls.MapResolution",
+				},
+				["SurfacePlaneInputs.SubdivisionHeight"] = Input {
+					Value = 25,
+					Expression = "AutoCrop.YSize*UT_Water_Controls.DImagePlaneResolution/UT_Water_Controls.MapResolution",
+				},
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+				MaterialInput = Input {
+					SourceOp = "CookTorrance1_3_1",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 9, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 49.5 } },
+		},
+		Displace3D1 = Displace3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "ImagePlane3D2",
+					Source = "Output",
+				},
+				Scale = Input {
+					Value = 0.96,
+					Expression = "UT_Water_Controls.DDisplaceScale*UT_Water_Controls.MapResolution/AutoCrop.XSize",
+				},
+				Input = Input {
+					SourceOp = "AutoCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 82.5 } },
+		},
+		AutoCrop = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input { Value = 144, },
+				YOffset = Input { Value = 664, },
+				XSize = Input { Value = 256, },
+				YSize = Input { Value = 256, },
+				Input = Input {
+					SourceOp = "UT_Water_Controls",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1650, 82.5 } },
+		},
+		CreateBumpMap2_1 = CreateBumpMap {
+			Inputs = {
+				Input = Input {
+					SourceOp = "AutoCrop",
+					Source = "Output",
+				},
+				HeightScale = Input { Value = 13.2597552, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 115.5 } },
+		},
+		BrightnessContrast11_1 = BrightnessContrast {
+			Inputs = {
+				Blue = Input { Value = 0, },
+				Brightness = Input { Value = -0.5, },
+				Input = Input {
+					SourceOp = "CreateBumpMap2_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1870, 115.5 } },
+		},
+		ChannelBooleans5_1 = ChannelBoolean {
+			Inputs = {
+				ToGreen = Input { Value = 15, },
+				ToBlue = Input { Value = 1, },
+				Background = Input {
+					SourceOp = "BrightnessContrast11_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 115.5 } },
+		},
+		BrightnessContrast12_1 = BrightnessContrast {
+			Inputs = {
+				Blue = Input { Value = 0, },
+				Gain = Input { Value = -1, },
+				Input = Input {
+					SourceOp = "ChannelBooleans5_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 115.5 } },
+		},
+		Displace3D2_1 = Displace3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D1",
+					Source = "Output",
+				},
+				Channel = Input { Value = 6, },
+				Scale = Input {
+					Value = 0,
+					Expression = "UT_Water_Controls.WaveSharpness*UT_Water_Controls.MapResolution/AutoCrop.XSize",
+				},
+				Input = Input {
+					SourceOp = "BrightnessContrast12_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 82.5 } },
+		},
+		Instance_Transform3D1_3_1 = Transform3D {
+			SourceOp = "Transform3D1_3_1",
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D2_1",
+					Source = "Output",
+				},
+				["Transform3DOp.Translation"] = Input { },
+				["Transform3DOp.Rotation"] = Input { },
+				["Transform3DOp.PivotNest"] = Input { },
+				["Transform3DOp.ScaleNest"] = Input { },
+				["Transform3DOp.TargetNest"] = Input { },
+				["Transform3DOp.Import"] = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 82.5 } },
+		},
+		Transform3D1 = Transform3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Instance_Transform3D1_3_1",
+					Source = "Output",
+				},
+				["Transform3DOp.Translate.X"] = Input {
+					Value = -0.2352941176471,
+					Expression = "UT_Water_Controls.DoDCenter.X-0.5",
+				},
+				["Transform3DOp.Translate.Z"] = Input {
+					Value = -0.151654411764731,
+					Expression = "-(UT_Water_Controls.DoDCenter.Y-0.5)*comp:GetPrefs(\"Comp.FrameFormat.Height\")/comp:GetPrefs(\"Comp.FrameFormat.Width\")",
+				},
+				["Transform3DOp.Scale.X"] = Input {
+					Value = 0.25,
+					Expression = "AutoCrop.XSize/UT_Water_Controls.MapResolution",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2365, 82.5 } },
+		},
+		Merge3D1 = Merge3D {
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Transform3D1_3_1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Transform3D1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2365, 115.5 } },
+		},
+		Falloff1_1_3_1 = FalloffOperator {
+			Inputs = {
+				["FaceOn.Red"] = Input { Value = 0.0352941176470588, },
+				["FaceOn.Green"] = Input { Value = 0.0352941176470588, },
+				["FaceOn.Blue"] = Input { Value = 0.0470588235294118, },
+				["FaceOn.Opacity"] = Input { Value = 1, },
+				["Glancing.Red"] = Input { Value = 0.568627450980392, },
+				["Glancing.Green"] = Input { Value = 0.650980392156863, },
+				["Glancing.Blue"] = Input { Value = 0.694117647058824, },
+				MaterialID = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1870, 1336.5 } },
+		},
+		Shape3D2 = Shape3D {
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = 2.11739276011634, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 1.1795461708991, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -0.52988324937127, },
+				["Transform3DOp.Rotate.Z"] = Input { Value = -58.7565384828486, },
+				Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+				["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.269, },
+				["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.58, },
+				["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.743, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 7, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+				["SurfaceConeInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+				["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 6, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 1105.5 } },
+		},
+		Render_CAM = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = 1.04653039502617, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 0.395302670199151, },
+				["Transform3DOp.Translate.Z"] = Input { Value = 1.45073630229188, },
+				["Transform3DOp.Rotate.X"] = Input { Value = -7.79999942779541, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = 41.6000030517578, },
+				FLength = Input { Value = 18.2123442718302, },
+				["Stereo.Mode"] = Input { Value = FuID { "OffAxis" }, },
+				FilmGate = Input { Value = FuID { "BMD_URSA_4K_16x9" }, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 3, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 1105.5 } },
+		},
+		Shape3D1 = Shape3D {
+			Inputs = {
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 3, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 1, },
+				Shape = Input { Value = FuID { "SurfaceCubeInputs" }, },
+				["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.451388888888889, },
+				["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 3, },
+				["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 1270.5 } },
+		},
+		Merge3D1_1 = Merge3D {
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Shape3D2",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Render_CAM",
+					Source = "Output",
+				},
+				SceneInput3 = Input {
+					SourceOp = "Shape3D1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 1270.5 } },
+		},
+		Reflect1 = MtlReflect {
+			Inputs = {
+				BackgroundMaterial = Input {
+					SourceOp = "Falloff1_1_3_1",
+					Source = "MaterialOutput",
+				},
+				["Reflection.Color.Material"] = Input {
+					SourceOp = "CUBIC_Map_Out_1",
+					Source = "MaterialOutput",
+				},
+				MaterialID = Input { Value = 4, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1870, 1402.5 } },
+		},
+		CookTorrance1_3_1 = MtlCookTorrance {
+			Inputs = {
+				SpecularNest = Input { Value = 1, },
+				["Diffuse.Color.Green"] = Input { Value = 0.902914815269737, },
+				["Diffuse.Color.Blue"] = Input { Value = 0.825777777777778, },
+				["Diffuse.Color.Material"] = Input {
+					SourceOp = "Reflect1",
+					Source = "MaterialOutput",
+				},
+				["Specular.Nest"] = Input { Value = 1, },
+				["Specular.Color.Green"] = Input { Value = 0.946124557494581, },
+				["Specular.Color.Blue"] = Input { Value = 0.900088888888889, },
+				["Specular.Intensity"] = Input { Value = 0.3440233, },
+				["Specular.Roughness"] = Input { Value = 0.01, },
+				["Specular.RefractiveIndex"] = Input { Value = 2.359116, },
+				MaterialID = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 1402.5 } },
+		},
+		ImagePlane3D1_3_1 = ImagePlane3D {
+			Inputs = {
+				["SurfacePlaneInputs.SubdivisionWidth"] = Input {
+					Value = 100,
+					Expression = "UT_Water_Controls.DImagePlaneResolution",
+				},
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				MaterialInput = Input {
+					SourceOp = "CookTorrance1_3_1",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.393333333333333, },
+				["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.357340437220007, },
+				["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.303688296296296, },
+				["MtlStdInputs.Specular.Nest"] = Input { Value = 1, },
+				["MtlStdInputs.Specular.Color.Green"] = Input { Value = 0.688858811786, },
+				["MtlStdInputs.Specular.Color.Blue"] = Input { Value = 0.539022222222222, },
+				["MtlStdInputs.Specular.Intensity"] = Input { Value = 0.3480663, },
+				["MtlStdInputs.Specular.Exponent"] = Input { Value = 18.8666667, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 181.5 } },
+		},
+		Displace3D1_1_3_1 = Displace3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "ImagePlane3D1_3_1",
+					Source = "Output",
+				},
+				Scale = Input {
+					Value = 0.24,
+					Expression = "UT_Water_Controls.DDisplaceScale",
+				},
+				Input = Input {
+					SourceOp = "SetCanvasColor1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 214.5 } },
+		},
+		HUMONGOUS_WAVES_OPENCL = FastNoise {
+			NameSet = true,
+			Inputs = {
+				Invert = Input { Value = 1, },
+				Width = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Height = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Discontinuous = Input { Value = 1, },
+				Inverted = Input { Value = 1, },
+				Center = Input {
+					Value = { 0.19139264624, 0.4 },
+					Expression = "Point((AbsoluteCenter.X-0.5) * AbsoluteScaleX * 1024/Width + 0.5, (AbsoluteCenter.Y-0.5) * AbsoluteScaleY * 1024/Width + 0.5)",
+				},
+				Detail = Input { Value = 1.623037, },
+				Contrast = Input { Value = 0.0631579, },
+				Brightness = Input { Value = -0.6842105, },
+				LockXY = Input { Value = 0, },
+				XScale = Input {
+					Value = 0.6282723,
+					Expression = "AbsoluteScaleX / 1024 * Width",
+				},
+				YScale = Input {
+					Value = 0.2,
+					Expression = "AbsoluteScaleY / 1024 * Width",
+				},
+				Angle = Input { Expression = "UT_Water_Controls.NoiseAngle", },
+				Seethe = Input { Value = 0.4708995, },
+				SeetheRate = Input {
+					Value = 0.01,
+					Expression = "0.01*UT_Water_Controls.NoiseSeetheRateMultiplier",
+				},
+				Comments = Input { Value = "Increasing the image size will now effectively increase the bounds of the noise map, rather than just its resolution.", },
+				AbsoluteCenter = Input {
+					Value = { 0.0088, 0 },
+					Expression = "Point(math.cos(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/500*time, math.sin(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/500*time)",
+				},
+				AbsoluteScaleX = Input {
+					Value = 0.6282723,
+					Expression = "0.6282723*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+				AbsoluteScaleY = Input {
+					Value = 0.2,
+					Expression = "0.2*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 214.5 } },
+			UserControls = ordered() {
+				AbsoluteCenter = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					INPID_InputControl = "OffsetControl",
+					ICS_ControlPage = "Resolution",
+					CHC_Style = 0,
+					LINKS_Name = "Absolute Center"
+				},
+				AbsoluteScaleX = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "X Scale"
+				},
+				AbsoluteScaleY = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "Y Scale"
+				}
+			}
+		},
+		Blur1_2_3_1 = Blur {
+			Inputs = {
+				XBlurSize = Input {
+					Value = 14,
+					Expression = "UT_Water_Controls.HumongousWavesSmoothness",
+				},
+				Input = Input {
+					SourceOp = "HUMONGOUS_WAVES_OPENCL",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 214.5 } },
+		},
+		ChannelBooleans1 = ChannelBoolean {
+			Inputs = {
+				Blend = Input {
+					Value = 0,
+					Expression = "1-UT_Water_Controls.HumongousWavesInfluence",
+				},
+				Operation = Input { Value = 11, },
+				Background = Input {
+					SourceOp = "Blur1_2_3_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 214.5 } },
+		},
+		BIG_WAVES_OPENCL = FastNoise {
+			NameSet = true,
+			Inputs = {
+				Invert = Input { Value = 1, },
+				Width = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Height = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Discontinuous = Input { Value = 1, },
+				Inverted = Input { Value = 1, },
+				Center = Input {
+					Value = { -0.2265342364, 0.2382199 },
+					Expression = "Point((AbsoluteCenter.X-0.5) * AbsoluteScaleX * 1024/Width + 0.5, (AbsoluteCenter.Y-0.5) * AbsoluteScaleY * 1024/Width + 0.5)",
+				},
+				Detail = Input { Value = 2.879581, },
+				Contrast = Input { Value = 0.4526316, },
+				Brightness = Input { Value = -0.9263158, },
+				LockXY = Input { Value = 0, },
+				XScale = Input {
+					Value = 1.465969,
+					Expression = "AbsoluteScaleX / 1024 * Width",
+				},
+				YScale = Input {
+					Value = 0.5235602,
+					Expression = "AbsoluteScaleY / 1024 * Width",
+				},
+				Angle = Input { Expression = "UT_Water_Controls.NoiseAngle", },
+				Seethe = Input { Value = 0.4708995, },
+				SeetheRate = Input {
+					Value = 0.025,
+					Expression = "0.025*UT_Water_Controls.NoiseSeetheRateMultiplier",
+				},
+				Comments = Input { Value = "Increasing the image size will now effectively increase the bounds of the noise map, rather than just its resolution.", },
+				AbsoluteCenter = Input {
+					Value = { 0.0044, 0 },
+					Expression = "Point(math.cos(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/1000*time, math.sin(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/1000*time)",
+				},
+				AbsoluteScaleX = Input {
+					Value = 1.465969,
+					Expression = "1.465969*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+				AbsoluteScaleY = Input {
+					Value = 0.5235602,
+					Expression = "0.5235602*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+			UserControls = ordered() {
+				AbsoluteCenter = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					INPID_InputControl = "OffsetControl",
+					ICS_ControlPage = "Resolution",
+					CHC_Style = 0,
+					LINKS_Name = "Absolute Center"
+				},
+				AbsoluteScaleX = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "X Scale"
+				},
+				AbsoluteScaleY = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "Y Scale"
+				}
+			}
+		},
+		Blur1_5_1 = Blur {
+			Inputs = {
+				XBlurSize = Input {
+					Value = 12,
+					Expression = "UT_Water_Controls.BigWavesSmoothness",
+				},
+				Input = Input {
+					SourceOp = "BIG_WAVES_OPENCL",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+		},
+		ChannelBooleans2_3_1 = ChannelBoolean {
+			Inputs = {
+				Blend = Input { Expression = "UT_Water_Controls.BigWavesInfluence", },
+				Operation = Input { Value = 6, },
+				Background = Input {
+					SourceOp = "ChannelBooleans1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Blur1_5_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 214.5 } },
+		},
+		MEDIUM_WAVES_OPENCL = FastNoise {
+			NameSet = true,
+			Inputs = {
+				Invert = Input { Value = 1, },
+				Width = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Height = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Discontinuous = Input { Value = 1, },
+				Inverted = Input { Value = 1, },
+				Center = Input {
+					Value = { -0.905319306666666, -0.128272 },
+					Expression = "Point((AbsoluteCenter.X-0.5) * AbsoluteScaleX * 1024/Width + 0.5, (AbsoluteCenter.Y-0.5) * AbsoluteScaleY * 1024/Width + 0.5)",
+				},
+				Detail = Input { Value = 5.235602, },
+				Contrast = Input { Value = 0.1684211, },
+				Brightness = Input { Value = -0.7684211, },
+				LockXY = Input { Value = 0, },
+				XScale = Input {
+					Value = 2.827225,
+					Expression = "AbsoluteScaleX / 1024 * Width",
+				},
+				YScale = Input {
+					Value = 1.256544,
+					Expression = "AbsoluteScaleY / 1024 * Width",
+				},
+				Angle = Input { Expression = "UT_Water_Controls.NoiseAngle", },
+				Seethe = Input { Value = 0.4708995, },
+				SeetheRate = Input {
+					Value = 0.011,
+					Expression = "0.011*UT_Water_Controls.NoiseSeetheRateMultiplier",
+				},
+				Comments = Input { Value = "Increasing the image size will now effectively increase the bounds of the noise map, rather than just its resolution.", },
+				AbsoluteCenter = Input {
+					Value = { 0.00293333333333333, 0 },
+					Expression = "Point(math.cos(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/1500*time, math.sin(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/1500*time)",
+				},
+				AbsoluteScaleX = Input {
+					Value = 2.827225,
+					Expression = "2.827225*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+				AbsoluteScaleY = Input {
+					Value = 1.256544,
+					Expression = "1.256544*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 82.5 } },
+			UserControls = ordered() {
+				AbsoluteCenter = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					INPID_InputControl = "OffsetControl",
+					ICS_ControlPage = "Resolution",
+					CHC_Style = 0,
+					LINKS_Name = "Absolute Center"
+				},
+				AbsoluteScaleX = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "X Scale"
+				},
+				AbsoluteScaleY = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "Y Scale"
+				}
+			}
+		},
+		Blur1_1_3_1 = Blur {
+			Inputs = {
+				XBlurSize = Input {
+					Value = 3.14,
+					Expression = "UT_Water_Controls.MediumWavesSmoothness",
+				},
+				Input = Input {
+					SourceOp = "MEDIUM_WAVES_OPENCL",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 82.5 } },
+		},
+		ChannelBooleans1_4_1 = ChannelBoolean {
+			Inputs = {
+				Blend = Input { Expression = "UT_Water_Controls.MediumWavesInfluence", },
+				Operation = Input { Value = 6, },
+				Background = Input {
+					SourceOp = "ChannelBooleans2_3_1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Blur1_1_3_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 715, 214.5 } },
+		},
+		SMALL_WAVES_OPENCL = FastNoise {
+			NameSet = true,
+			Inputs = {
+				Invert = Input { Value = 1, },
+				Width = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Height = Input {
+					Value = 1024,
+					Expression = "UT_Water_Controls.MapResolution",
+				},
+				Discontinuous = Input { Value = 1, },
+				Inverted = Input { Value = 1, },
+				Center = Input {
+					Value = { -2.73464682304, -1.646597 },
+					Expression = "Point((AbsoluteCenter.X-0.5) * AbsoluteScaleX * 1024/Width + 0.5, (AbsoluteCenter.Y-0.5) * AbsoluteScaleY * 1024/Width + 0.5)",
+				},
+				Detail = Input { Value = 8, },
+				Contrast = Input { Value = 0.3684211, },
+				Brightness = Input { Value = -1, },
+				LockXY = Input { Value = 0, },
+				XScale = Input {
+					Value = 6.492146,
+					Expression = "AbsoluteScaleX / 1024 * Width",
+				},
+				YScale = Input {
+					Value = 4.293194,
+					Expression = "AbsoluteScaleY / 1024 * Width",
+				},
+				Angle = Input { Expression = "UT_Water_Controls.NoiseAngle", },
+				Seethe = Input { Value = 0.4708995, },
+				SeetheRate = Input {
+					Value = 0.018,
+					Expression = "0.018*UT_Water_Controls.NoiseSeetheRateMultiplier",
+				},
+				Comments = Input { Value = "Increasing the image size will now effectively increase the bounds of the noise map, rather than just its resolution.", },
+				AbsoluteCenter = Input {
+					Value = { 0.00176, 0 },
+					Expression = "Point(math.cos(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/2500*time, math.sin(UT_Water_Controls.WaterFlowAngle*math.pi/180)*UT_Water_Controls.NoiseSpeedMultiplier/2500*time)",
+				},
+				AbsoluteScaleX = Input {
+					Value = 6.492146,
+					Expression = "6.492146*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+				AbsoluteScaleY = Input {
+					Value = 4.293194,
+					Expression = "4.293194*UT_Water_Controls.NoiseScaleMultiplier",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 16.5 } },
+			UserControls = ordered() {
+				AbsoluteCenter = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					INPID_InputControl = "OffsetControl",
+					ICS_ControlPage = "Resolution",
+					CHC_Style = 0,
+					LINKS_Name = "Absolute Center"
+				},
+				AbsoluteScaleX = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "X Scale"
+				},
+				AbsoluteScaleY = {
+					INP_Default = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Resolution",
+					INP_MaxScale = 10,
+					LINKS_Name = "Y Scale"
+				}
+			}
+		},
+		Blur2_3_1 = Blur {
+			Inputs = {
+				XBlurSize = Input { Expression = "UT_Water_Controls.SmallWavesSmoothness", },
+				Input = Input {
+					SourceOp = "SMALL_WAVES_OPENCL",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 16.5 } },
+		},
+		ChannelBooleans1_1_3_1 = ChannelBoolean {
+			Inputs = {
+				Blend = Input {
+					Value = 0.23,
+					Expression = "UT_Water_Controls.SmallWavesInfluence",
+				},
+				Operation = Input { Value = 6, },
+				Background = Input {
+					SourceOp = "ChannelBooleans1_4_1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Blur2_3_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 825, 214.5 } },
+		},
+		BrightnessContrast1 = BrightnessContrast {
+			Inputs = {
+				Brightness = Input {
+					Value = -0.119,
+					Expression = "UT_Water_Controls.WaterElevation",
+				},
+				Input = Input {
+					SourceOp = "ChannelBooleans1_1_3_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1045, 214.5 } },
+		},
+		Blur1 = Blur {
+			Inputs = {
+				XBlurSize = Input {
+					Value = 0,
+					Expression = "UT_Water_Controls.OverallSmoothness",
+				},
+				Input = Input {
+					SourceOp = "BrightnessContrast1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 214.5 } },
+		},
+		SetCanvasColor1 = SetCanvasColor {
+			Inputs = {
+				Input = Input {
+					SourceOp = "Blur1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 214.5 } },
+		},
+		UT_Water_Controls = SetDomain {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Mode = Input { Value = FuID { "Set" }, },
+				AdjustLeft = Input { Expression = "0.0", },
+				Left = Input {
+					Value = 0.1397058823529,
+					Expression = "DoDCenter.X-DoDScale/2",
+				},
+				Bottom = Input {
+					Value = 0.6446078431373,
+					Expression = "DoDCenter.Y-DoDScale/2",
+				},
+				Right = Input {
+					Value = 0.3897058823529,
+					Expression = "DoDCenter.X+DoDScale/2",
+				},
+				Top = Input {
+					Value = 0.8946078431373,
+					Expression = "DoDCenter.Y+DoDScale/2",
+				},
+				Input = Input {
+					SourceOp = "SetCanvasColor1",
+					Source = "Output",
+				},
+				Comments = Input { Value = "copyright (c) 2010-2014 Uncharted Territory\r\n\r\n", },
+				DoDScale = Input { Value = 0.25, },
+				DoDCenter = Input { Value = { 0.2647058823529, 0.7696078431373 }, },
+				NoiseSpeedMultiplier = Input { Value = 0.4, },
+				DImagePlaneResolution = Input { Value = 100, },
+				WaterElevation = Input { Value = -0.119, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1375, 247.5 } },
+			UserControls = ordered() {
+				MapResolution = {
+					INP_Integer = true,
+					INPID_InputControl = "SliderControl",
+					IC_ControlPage = 0,
+					INP_MaxScale = 8192,
+					INP_Default = 1024,
+					INP_MinScale = 2,
+					INP_MinAllowed = 2,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Map Resolution",
+				},
+				DoDScale = {
+					INP_MaxAllowed = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "DoD Scale",
+					IC_ControlPage = 0,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+				},
+				DoDCenter = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					INPID_InputControl = "OffsetControl",
+					IC_ControlPage = 0,
+					CHC_Style = 0,
+					LINKS_Name = "DoD Center",
+				},
+				NoiseScaleMultiplier = {
+					LINKS_Name = "Noise Scale Multiplier",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					IC_ControlPage = 0,
+					INP_MaxScale = 10,
+					INP_Default = 1,
+				},
+				NoiseSeetheRateMultiplier = {
+					INP_Default = 1,
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					IC_ControlPage = 0,
+					INP_MaxScale = 10,
+					LINKS_Name = "Noise Seethe Rate Multiplier",
+				},
+				NoiseSpeedMultiplier = {
+					LINKS_Name = "Noise Speed Multiplier",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					IC_ControlPage = 0,
+					INP_MaxScale = 10,
+					INP_Default = 1,
+				},
+				DImagePlaneResolution = {
+					LINKS_Name = "3D Image Plane Resolution",
+					INP_MinScale = 1,
+					INP_MinAllowed = 1,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+					INP_MaxScale = 8192,
+					INP_Default = 512,
+				},
+				DDisplaceScale = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "3D Displace Scale",
+					IC_ControlPage = 0,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 0.24,
+				},
+				WaterElevation = {
+					INP_MinScale = -1,
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "Water Elevation",
+				},
+				OverallSmoothness = {
+					INP_Default = 0,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+					INP_MaxScale = 20,
+					LINKS_Name = "Overall Smoothness",
+				},
+				NoiseAngle = {
+					INP_MinScale = -180,
+					LINKS_Name = "Noise Angle",
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+					INP_MaxScale = 180,
+					INP_Default = 0,
+				},
+				WaterFlowAngle = {
+					INP_Default = 0,
+					INPID_PreviewControl = "AngleControl",
+					INP_MinScale = -180,
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+					INP_MaxScale = 180,
+					LINKS_Name = "Water Flow Angle",
+				},
+				WaveSharpness = {
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					IC_ControlPage = 0,
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "Wave Sharpness",
+				},
+				HumongousWavesInfluence = {
+					INP_MaxAllowed = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Waves",
+					LINKS_Name = "Humongous Waves Influence",
+					LINKID_DataType = "Number",
+					INP_Default = 1
+				},
+				HumongousWavesSmoothness = {
+					ICS_ControlPage = "Waves",
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 14,
+					LINKID_DataType = "Number",
+					INP_MaxScale = 100,
+					LINKS_Name = "Humongous Waves Smoothness"
+				},
+				BigWavesInfluence = {
+					INP_MaxAllowed = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Waves",
+					LINKS_Name = "Big Waves Influence",
+					LINKID_DataType = "Number",
+					INP_Default = 1
+				},
+				BigWavesSmoothness = {
+					INP_MaxAllowed = 100,
+					ICS_ControlPage = "Waves",
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 12,
+					LINKID_DataType = "Number",
+					INP_MaxScale = 100,
+					LINKS_Name = "Big Waves Smoothness"
+				},
+				MediumWavesInfluence = {
+					INP_MaxAllowed = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Waves",
+					LINKS_Name = "Medium Waves Influence",
+					LINKID_DataType = "Number",
+					INP_Default = 1
+				},
+				MediumWavesSmoothness = {
+					ICS_ControlPage = "Waves",
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 3.14,
+					LINKID_DataType = "Number",
+					INP_MaxScale = 100,
+					LINKS_Name = "Medium Waves Smoothness"
+				},
+				SmallWavesInfluence = {
+					INP_MaxAllowed = 1,
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Waves",
+					LINKS_Name = "Small Waves Influence",
+					LINKID_DataType = "Number",
+					INP_Default = 0.23
+				},
+				SmallWavesSmoothness = {
+					ICS_ControlPage = "Waves",
+					INP_MinAllowed = 0,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 1,
+					LINKID_DataType = "Number",
+					INP_MaxScale = 100,
+					LINKS_Name = "Small Waves Smoothness"
+				}
+			}
+		},
+		CreateBumpMap2 = CreateBumpMap {
+			Inputs = {
+				Input = Input {
+					SourceOp = "UT_Water_Controls",
+					Source = "Output",
+				},
+				HeightScale = Input { Value = 13.2597552, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 247.5 } },
+		},
+		BrightnessContrast11 = BrightnessContrast {
+			Inputs = {
+				Blue = Input { Value = 0, },
+				Brightness = Input { Value = -0.5, },
+				Input = Input {
+					SourceOp = "CreateBumpMap2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1650, 247.5 } },
+		},
+		ChannelBooleans5 = ChannelBoolean {
+			Inputs = {
+				ToGreen = Input { Value = 15, },
+				ToBlue = Input { Value = 1, },
+				Background = Input {
+					SourceOp = "BrightnessContrast11",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 247.5 } },
+		},
+		BrightnessContrast12 = BrightnessContrast {
+			Inputs = {
+				Blue = Input { Value = 0, },
+				Gain = Input { Value = -1, },
+				Input = Input {
+					SourceOp = "ChannelBooleans5",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1870, 247.5 } },
+		},
+		Displace3D2 = Displace3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D1_1_3_1",
+					Source = "Output",
+				},
+				Channel = Input { Value = 6, },
+				Scale = Input {
+					Value = 0,
+					Expression = "UT_Water_Controls.WaveSharpness",
+				},
+				Input = Input {
+					SourceOp = "BrightnessContrast12",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1870, 214.5 } },
+		},
+		Transform3D1_3_1 = Transform3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D2",
+					Source = "Output",
+				},
+				["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2530, 214.5 } },
+		},
+		Transform3D3 = Transform3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Transform3D1_3_1",
+					Source = "Output",
+				},
+				["Transform3DOp.Scale.X"] = Input { Value = 10, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2530, 1204.5 } },
+		},
+		Merge3D2 = Merge3D {
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Merge3D1_1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Transform3D3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2530, 1270.5 } },
+		},
+		Renderer3D1_1_1_1_1 = Renderer3D {
+			CustomData = {
+				ToolVersion = 1,
+			},
+			Inputs = {
+				Width = Input { Value = 1920, },
+				Height = Input { Value = 1080, },
+				SceneInput = Input {
+					SourceOp = "Merge3D2",
+					Source = "Output",
+				},
+				RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+				["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+				["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+				["RendererOpenGL.SSRateX"] = Input { Value = 4, },
+				["RendererOpenGL.Texturing"] = Input { Value = 1, },
+				["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 3355, 1270.5 } },
+		},
+		Note5 = Note {
+			Inputs = {
+				Comments = Input { Value = "Test Image Plane. \r\n\r\nDrag into the view to see the DoD portion of the water for fine tuning the motion. ", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2310, -115.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		Note6 = Note {
+			Inputs = {
+				Comments = Input { Value = "Final Imageplane for integration in your scene.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2475, 247.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 196, 179.3 }
+			},
+		},
+		Note4 = Note {
+			Inputs = {
+				Comments = Input { Value = "The UT_Water_Controls  node has a number of extra sliders and controls most of the important parameters. \n\nUsing the Viewer Controls and the DoD Scale, select an area which you would like to work with at a decent feedback speed by setting the DoD and Center. \n\nOnce set, press Auto Crop to create a test image plane which lines up with your DoD.\n\nExtra parameters:\n\nMap Resolution - sets the resolution of the 2D displacement map. Note that this will extend the waves, rather than increase detail. \n\nNoise Scale Multiplier - sets the scale of the waves. A higher value means smaller waves. \n\nNoise Seethe Rate Multiplier - sets the frequency of the waves. \n\nNoise Speed Multiplier - sets the speed of the flow of the water.\n\n3D Image plane resolution - sets the polygon count of the 3D image plane being rendered (also the test plane, relatively to the DoD). If this is equal to the Map Resolution it means that every pixel displaces 1 point in space. \n\n3D Displace Scale - sets the amount with which the noise displaces the 3D Image Plane.\n\nWater Elevation - basically sets the brightness of the displacement map. Some noise setups can cause the water to be higher or lower than the image plane overall. Use this to compensate. \n\nOverall Smoothness - sets the smoothness of the water, by blurring the noise maps before displacing.\n\nNoise Angle - the angle of the individual waves - they don't have a square aspect by default so the look and feel changes when using this slider - might help with repetitions in the overall pattern as well. \n\nWater Flow Angle - changes the direction in which the water flows - has an angle control in the viewer as well. \n\nWave Sharpness - pinches the tips of the waves together - thanks Robert Zeltsch!\n\nUnder the User Tab you can find several controls that will help in setting up a totally different base water setup. \n", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1210, 280.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 446.977, 723.679 }
+			},
+		},
+		Note2 = Note {
+			Inputs = {
+				Comments = Input { Value = "The noises are multiplied together - adjust values for different ratios of detail.\r\n\r\nUpdate - you can now do this in the User Tab of the MySetDomain node.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 605, 247.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 315.741, 179.3 }
+			},
+		},
+		Note3 = Note {
+			Inputs = {
+				Comments = Input { Value = "Press auto crop for line-up of test imageplane fitting the Domain of Definition.\n\nDo this every time you change the DoD in UT_Water_Controls.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1540, -115.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 317.767, 179.3 }
+			},
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "The base noise creators.\r\n\r\nTop to bottom from fine detail to large waves.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 275, -280.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 299.433, 272.642 }
+			},
+		},
+		CubicMap = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "CUBIC_CAM_Transform_1",
+					Source = "Y_Offset",
+					Default = -1,
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "CUBIC_CAM_Scene_Input_1",
+					Source = "SceneInput2",
+					Name = "Input_Reflection_Scene",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "BottomRender_1",
+					Source = "Width",
+					Default = 1024,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "BottomRender_1",
+					Source = "Height",
+					Default = 1024,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "BottomRender_1",
+					Source = "RendererOpenGL.SSRateX",
+					Default = 8,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "BottomRender_1",
+					Source = "RendererOpenGL.ReconstructionFilter",
+				},
+				Input7 = InstanceInput {
+					SourceOp = "BottomRender_1",
+					Source = "RendererOpenGL.TextureDepth",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CUBIC_Map_Out_1",
+					Source = "MaterialOutput",
+					Name = "Cubic_Map_Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1760, 1402.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					PipesAlways = true,
+					AutoSnap = true,
+					FullIndicator = true,
+					RemoveRouters = true
+				},
+				Size = { 1006, 394.3, 503, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				Front_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 49.5 } },
+				},
+				Right_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.Y"] = Input { Value = -90, },
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 49.5 } },
+				},
+				Top_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = 90, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = -180, },
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 49.5 } },
+				},
+				Bottom_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = -180, },
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 115.5 } },
+				},
+				Left_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.Y"] = Input { Value = 90, },
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 115.5 } },
+				},
+				Back_CUBIC = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+						PerspAdaptiveClip = Input { Value = 0, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 8, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 115.5 } },
+				},
+				CUBIC_CAM_Merge_1 = Merge3D {
+					NameSet = true,
+					Inputs = {
+						SceneInput1 = Input {
+							SourceOp = "Front_CUBIC",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Back_CUBIC",
+							Source = "Output",
+						},
+						SceneInput3 = Input {
+							SourceOp = "Right_CUBIC",
+							Source = "Output",
+						},
+						SceneInput5 = Input {
+							SourceOp = "Top_CUBIC",
+							Source = "Output",
+						},
+						SceneInput4 = Input {
+							SourceOp = "Left_CUBIC",
+							Source = "Output",
+						},
+						SceneInput6 = Input {
+							SourceOp = "Bottom_CUBIC",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 214.5 } },
+				},
+				CUBIC_CAM_Transform_1 = Transform3D {
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "CUBIC_CAM_Merge_1",
+							Source = "Output",
+						},
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 1.04653039502617,
+							Expression = "Render_CAM.Transform3DOp.Translate.X",
+						},
+						["Transform3DOp.Translate.Y"] = Input {
+							Value = -0.395302670199151,
+							Expression = "Render_CAM.Transform3DOp.Translate.Y * Y_Offset",
+						},
+						["Transform3DOp.Translate.Z"] = Input {
+							Value = 1.45073630229188,
+							Expression = "Render_CAM.Transform3DOp.Translate.Z",
+						},
+						["Transform3DOp.ScaleNest"] = Input { Value = 0, },
+						Y_Offset = Input { Value = -1, }
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 247.5 } },
+					UserControls = ordered() {
+						YOffset = { INPID_PreviewControl = "", IC_ControlPage = 0, INPID_InputControl = "", },
+						Y_Offset = {
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+						}
+					}
+				},
+				RightRender_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 214.5 } },
+				},
+				FrontRender_1 = Renderer3D {
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1,
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 148.5 } },
+				},
+				BackRender_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 181.5 } },
+				},
+				LeftRender_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 247.5 } },
+				},
+				CUBIC_CAM_Scene_Input_1 = Merge3D {
+					NameSet = true,
+					Inputs = {
+						SceneInput1 = Input {
+							SourceOp = "CUBIC_CAM_Transform_1",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Merge3D1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 280.5 } },
+				},
+				PipeRouter1_1_2_1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "CUBIC_CAM_Scene_Input_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -165, 280.5 } },
+				},
+				TopRender_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 280.5 } },
+				},
+				CUBIC_Map_Out_1 = CubeMap {
+					NameSet = true,
+					Inputs = {
+						Layout = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						PositiveX = Input {
+							SourceOp = "RightRender_1",
+							Source = "Output",
+						},
+						NegativeX = Input {
+							SourceOp = "LeftRender_1",
+							Source = "Output",
+						},
+						PositiveY = Input {
+							SourceOp = "TopRender_1",
+							Source = "Output",
+						},
+						NegativeY = Input {
+							SourceOp = "BottomRender_1",
+							Source = "Output",
+						},
+						PositiveZ = Input {
+							SourceOp = "BackRender_1",
+							Source = "Output",
+						},
+						NegativeZ = Input {
+							SourceOp = "FrontRender_1",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 12, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 247.5 } },
+				},
+				BottomRender_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						Camera = Input { Value = FuID { "Bottom_CUBIC_1" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						Depth = Input { Value = 3, },
+						SceneInput = Input {
+							SourceOp = "PipeRouter1_1_2_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 313.5 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1920,
+			Height = 952,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							GridSnap = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.230846,
+						Offset = { 664.119, 751.398 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = true,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 471 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = 41.2,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.531592689295039,
+					RatioY = 105.555789473684,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.370762711864407,
+						{ ID = "Left", RatioX = 0.765745986962115, RatioY = 82.1995133819951, Pop = true },
+						{ ID = "Right", RatioX = 0.234254013037885, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.567796610169492, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 895,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 8,
+					Auto = false
+				},
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+						CheckerUnderlay = false,
+						Normalise = true,
+					},
+					View3D = {
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							AdaptiveNear = false,
+							Far = 100000,
+							Near = -100000
+						},
+						SortMethod = "ZBuffer",
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							AdaptiveNear = false,
+							Far = 100000,
+							Near = -100000
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							AdaptiveNear = false,
+							Far = 100000,
+							Near = -100000
+						},
+						CamPersp = {
+							FovY = 45,
+							AdaptiveFar = false,
+							Scale = 5.03447437286377,
+							Separation = 0.100000001490116,
+							Near = 0.0500000007450581,
+							Rotation = {
+								Y = 322,
+								X = 17.5999794006348,
+								Z = 0
+							},
+							Position = {
+								Y = -0.0467073433101177,
+								X = 0.22185355424881,
+								Z = 0.14001402258873
+							},
+							AdaptiveNear = false,
+							Convergence = 0,
+							Far = 100000
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							AdaptiveNear = false,
+							Far = 100000,
+							Near = -100000
+						},
+						Options = {
+							Lighting = true,
+							Shadows = false,
+						},
+						CameraName = "Render_CAM",
+					},
+				},
+				Left = {
+					Viewer = {
+						Channel = 4294967295,
+						CheckerUnderlay = false,
+						ShowControls = true,
+						ScaleMode = 1,
+					},
+					View3D = {
+						CameraName = "Render_CAM",
+						CamPersp = {
+							Position = {
+								X = 0.0757779479026794,
+								Y = -0.175262793898582,
+								Z = -0.0271977707743645
+							},
+							Rotation = {
+								X = 5.39999675750732,
+								Y = 327.800109863281,
+								Z = 0
+							},
+							Scale = 5.99751949310303
+						},
+						CamFront = {
+							Position = {
+								X = 0,
+								Y = 0,
+								Z = 0
+							},
+							Rotation = {
+								X = 0,
+								Y = 0,
+								Z = 0
+							},
+							Scale = 1
+						},
+						CamTop = {
+							Position = {
+								X = 0,
+								Y = 0,
+								Z = 0
+							},
+							Rotation = {
+								X = 90,
+								Y = 0,
+								Z = 0
+							},
+							Scale = 1
+						},
+						CamRight = {
+							Position = {
+								X = 0,
+								Y = 0,
+								Z = 0
+							},
+							Rotation = {
+								X = 0,
+								Y = -90,
+								Z = 0
+							},
+							Scale = 1
+						},
+						CamLeft = {
+							Position = {
+								X = 0,
+								Y = 0,
+								Z = 0
+							},
+							Rotation = {
+								X = 0,
+								Y = 90,
+								Z = 0
+							},
+							Scale = 1
+						},
+						Options = {
+							Lighting = true,
+						}
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								X = 96.1999969482422,
+								Y = -56.3999977111816,
+								Z = 0
+							}
+						}
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				Name = "HD 1080",
+				GuideRatio = 1.77777777777778,
+				DepthFull = 3,
+				DepthPreview = 3,
+				DepthInteractive = 3,
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

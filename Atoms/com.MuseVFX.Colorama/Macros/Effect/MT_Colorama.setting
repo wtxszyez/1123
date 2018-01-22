@@ -1,0 +1,126 @@
+{
+	Tools = ordered() {
+		MT_Colorama = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Muse Tools Library\r\nby Dan DeEtremont\r\nwww.musevfx.com", },
+				Input = InstanceInput {
+					SourceOp = "CustomTool2",
+					Source = "Image1",
+				},
+				HueShift = InstanceInput {
+					SourceOp = "CustomTool2",
+					Source = "NumberIn1",
+					Name = "Hue Shift",
+				},
+				Frequency = InstanceInput {
+					SourceOp = "CustomTool2",
+					Source = "NumberIn2",
+					Name = "Frequency",
+				},
+				Amplitude = InstanceInput {
+					SourceOp = "CustomTool2",
+					Source = "NumberIn3",
+					Name = "Amplitude",
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "CustomTool2",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1210, 214.5 } },
+			Tools = ordered() {
+				CustomTool2 = Custom {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						NumberIn1 = Input { Value = 0.132, },
+						NumberIn2 = Input { Value = 3, },
+						NumberIn3 = Input { Value = 0.518, },
+						LUTControlsNest = Input { Value = 1, },
+						LUTIn1 = Input {
+							SourceOp = "CustomTool2LUTIn11",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool2LUTIn21",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool2LUTIn31",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool2LUTIn41",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "min(1,max(0,(cos(c1*(360*1*n2)+(n1*360)))*n3+0.5))", },
+						GreenExpression = Input { Value = "min(1,max(0,cos((c1*(360*1*n2)+120+(n1*360)))*n3+0.5))", },
+						BlueExpression = Input { Value = "min(1,max(0,cos((c1*(360*1*n2)+240+(n1*360)))*n3+0.5))", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "HueShift", },
+						NameforNumber2 = Input { Value = "Frequency", },
+						NameforNumber3 = Input { Value = "Amplitude", },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				},
+				CustomTool2LUTIn11 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool2LUTIn21 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool2LUTIn31 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				CustomTool2LUTIn41 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				}
+			},
+		}
+	},
+	ActiveTool = "MT_Colorama"
+}

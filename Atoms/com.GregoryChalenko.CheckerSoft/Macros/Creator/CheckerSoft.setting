@@ -1,0 +1,232 @@
+{
+	Tools = ordered() {
+		CheckerSoft = GroupOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Checker texture generator with softness parameter\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				Red = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftRed",
+					Name = "Checker Color",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Green = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftGreen",
+					Name = "Checker Green",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Blue = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftBlue",
+					Name = "Checker Blue",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Alpha = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftAlpha",
+					Name = "Checker Alpha",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				SoftnessX = InstanceInput {
+					SourceOp = "Rectangle1",
+					Source = "SoftEdge",
+					Name = "Softness X",
+					MaxScale = 0.5,
+				},
+				SoftnessY = InstanceInput {
+					SourceOp = "Rectangle2",
+					Source = "SoftnessY",
+					MaxScale = 0.5,
+				},
+				Repeats = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Repeats",
+				},
+				PatternAspect = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "PatternAspect",
+					Default = 1,
+				},
+				Center = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Center",
+				},
+				Angle = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Angle",
+					Default = 0,
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "UseFrameFormatSettings",
+					Default = 1,
+					Page = "Common Controls"
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "Width",
+					Name = "Image Width",
+					Default = 720,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "Height",
+					Name = "Image Height",
+					Default = 576,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "PixelAspect",
+					DefaultX = 1.066667,
+					DefaultY = 1,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "Depth",
+					Name = "Color Depth",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Transform1",
+					Source = "Output",
+				},
+			},
+			Tools = ordered() {
+				Background1 = Background {
+					ExtentSet = false,
+					CtrlWShown = false,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 1,
+						},
+						UseFrameFormatSettings = Input {
+							Value = 1,
+						},
+						Depth = Input {
+							Value = 1,
+						},
+						TopLeftRed = Input {
+							Value = 1,
+						},
+						TopLeftGreen = Input {
+							Value = 1,
+						},
+						TopLeftBlue = Input {
+							Value = 1,
+						},
+						EffectMask = Input {
+							SourceOp = "Rectangle2",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 44.5, 43.3721, },
+					},
+				},
+				Rectangle1 = RectangleMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Height = Input {
+							Value = 1.5,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -167.5, 40.9281, },
+					},
+				},
+				Rectangle2 = RectangleMask {
+					CtrlWShown = false,
+					Inputs = {
+						SoftEdge = Input {
+							Expression = "SoftnessY*EffectMask.Height/EffectMask.Width",
+						},
+						PaintMode = Input {
+							Value = FuID { "Invert", },
+						},
+						Width = Input {
+							Value = 1.5,
+						},
+						EffectMask = Input {
+							SourceOp = "Rectangle1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -69.5, 40.9281, },
+					},
+					UserControls = ordered() {
+						SoftnessY = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Softness Y",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0,
+						},
+					},
+				},
+				Transform1 = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Edges = Input {
+							Value = 1,
+						},
+						Size = Input {
+							Value = 0.25,
+							Expression = "1/Repeats",
+						},
+						Aspect = Input {
+							Value = 1.31619537275064,
+							Expression = "Background1.Output.Width/Background1.Output.YScale/Background1.Output.Height*Background1.Output.XScale*PatternAspect",
+						},
+						FlattenTransform = Input {
+							Value = 1,
+						},
+						Input = Input {
+							SourceOp = "Background1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 167.5, 43.3721, },
+					},
+					Colors = {
+						TileColor = { R = 0.517647058823529, G = 0.32156862745098, B = 0.341176470588235, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						PatternAspect = {
+							INP_MinScale = 0.1,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							ICD_Center = 1,
+							IC_ControlPage = 0,
+							INP_MaxScale = 10,
+							INP_Default = 1,
+						},
+						Repeats = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_MaxScale = 8,
+							INP_Default = 4,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.674809803921568, G = 0.823829411764705, B = 0.674809803921568, },
+				TextColor = { R = 0, G = 0, B = 0, },
+			},
+		},
+	},
+}

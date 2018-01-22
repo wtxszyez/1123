@@ -1,0 +1,113 @@
+{
+	Tools = ordered() {
+		FollowerInTime = TextPlus {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=447",
+			},
+			Inputs = {
+				GlobalIn = Input { Value = 1000, },
+				GlobalOut = Input { Value = 1100, },
+				Width = Input { Value = 2048, },
+				Height = Input { Value = 1556, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+				Font = Input { Value = "Arial", },
+				Style = Input { Value = "Bold", },
+				ManualFontKerningPlacement = Input {
+					Value = StyledText {
+						Array = {
+						},
+						Value = "",
+					},
+				},
+				ShadingGradient1 = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1, },
+							[1] = { 1, 1, 1, 1, },
+						},
+					},
+				},
+				RenderToDPTFile = Input { Disabled = true, },
+				DPTType = Input { Disabled = true, },
+				DPTResolution = Input { Disabled = true, },
+				Comments = Input { Value = "Follower In Time v1.0\r\nPieter Van Houte 2015\r\npieter[at]secondman[dot]com\r\nsupport page: ", },
+				StyledTextIntermediate = Input {
+					SourceOp = "TimeConstrainedFollower",
+					Source = "StyledText",
+				},
+				StyledText = Input {
+					Value = StyledText {
+						Array = {
+						},
+						Value = "",
+					},
+					Expression = "FollowerInTime:GetValue(\"StyledTextIntermediate\", TimeConstrainedFollower.ReferenceTime)",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1277.66, 174.173, }, },
+			UserControls = ordered() {
+				StyledTextIntermediate = {
+					LINKID_DataType = "Text",
+					INPID_InputControl = "TextEditControl",
+					LINKS_Name = "Styled Text",
+					IC_ControlPage = 1,
+				},
+				StyledText = {
+					INPID_PreviewControl = "",
+					INPID_InputControl = "",
+					IC_ControlPage = 0,
+				},
+			},
+		},
+		TimeConstrainedFollower = StyledTextFollower {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "FIT (Follower In Time) v1.0\r\nPieter Van Houte 2015\r\npieter[at]secondman[dot]com\r\nsupport page: http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=447", },
+				ReferenceTime = Input {
+					Value = 1006,
+					Expression = "((TimeConstraintMode == 2 or TimeConstraintMode == 3) and string.len(self:GetValue(\"Text\", time).Value) > TimeConstrainingCharacterAmountMax) and (time-comp.GlobalStart)*string.len(self:GetValue(\"Text\", time).Value)/TimeConstrainingCharacterAmountMax+comp.GlobalStart or ((TimeConstraintMode == 1 or TimeConstraintMode == 3) and string.len(self:GetValue(\"Text\", time).Value) < TimeExpandingCharacterAmountMin) and (time-comp.GlobalStart)*string.len(self:GetValue(\"Text\", time).Value)/TimeExpandingCharacterAmountMin+comp.GlobalStart or time",
+				},
+			},
+			UserControls = ordered() {
+				TimeConstraintMode = {
+					{ MBTNC_AddButton = "Off (Edit)", },
+					{ MBTNC_AddButton = "Min", },
+					{ MBTNC_AddButton = "Max", },
+					{ MBTNC_AddButton = "Both", },
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					MBTNC_StretchToFit = true,
+					INPID_InputControl = "MultiButtonControl",
+					LINKS_Name = "Time Constraint Mode",
+					IC_ControlPage = 0,
+				},
+				TimeExpandingCharacterAmountMin = {
+					LINKID_DataType = "Number",
+					INP_Default = 1,
+					INPID_InputControl = "ScrewControl",
+					LINKS_Name = "Time Expanding Character Amount (Min)",
+					IC_ControlPage = 0,
+				},
+				TimeConstrainingCharacterAmountMax = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "Time Constraining Character Amount (Max)",
+					INPID_InputControl = "ScrewControl",
+					INP_Default = 10,
+					IC_ControlPage = 0,
+				},
+				ReferenceTime = {
+					INPID_PreviewControl = "",
+					LINKS_Name = "Reference Time",
+					INP_Default = 0,
+					INPID_InputControl = "",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 0,
+				},
+			},
+		},
+	},
+	ActiveTool = "FollowerInTime",
+}

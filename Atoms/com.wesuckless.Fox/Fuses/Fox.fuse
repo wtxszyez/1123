@@ -1,0 +1,47 @@
+FuRegisterClass("Fox", CT_ConsoleUtility, {
+	REGS_Name = "Fox",
+	REGS_Category = "Console",
+	REGS_OpDescription = "Fox Linguistics is a Console Fuse that works in the Fusion Console tab. Each time you type in 'What does the fox say?' you will be provided a random response.",
+	REG_Version = 100,
+	})
+
+function Create()
+	math.randomseed(os.time())
+
+	return true
+end
+
+function Attach(view)
+	return true
+end
+
+function Detach()
+	return true
+end
+
+function Select()
+	return true
+end
+
+Responses = {
+	"Ring-ding-ding-ding-dingeringeding!",
+	"Wa-pa-pa-pa-pa-pa-pow!",
+	"Hatee-hatee-hatee-ho!",
+	"Joff-tchoff-tchoffo-tchoffo-tchoff!",
+	"Chacha-chacha-chacha-chow!",
+	"Fraka-kaka-kaka-kaka-kow!",
+	"A-hee-ahee ha-hee!",
+	"A-oo-oo-oo-ooo!",
+	"Wa-wa-way-do, wub-wid-bid-dum-way-do, wa-wa-way-do",
+	"Abay-ba-da bum-bum bay-do",
+}
+
+function HandleInput(str, active)
+	if str:lower() == "what does the fox say?" then
+		self:Print("> What does the fox say?\n")
+		self:Print("\t" .. Responses[math.random(1,#Responses)] .. "\n")
+		return true
+	end
+
+	return false
+end

@@ -1,0 +1,161 @@
+{
+	Tools = ordered() {
+		DirectionalBlurGamma = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Correct Directional Blur for gamma-corrected images (i.e. sRGB)\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Type",
+					Default = 3,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Edges",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Center",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Length",
+					Default = 0.2,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "Angle",
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BC_Regamma",
+					Source = "Gamma",
+					Name = "Image Gamma",
+					Default = 2.2,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Depth",
+					Name = "Set Depth",
+					Default = 4,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "DirectionalBlur",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BC_Regamma",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 871.376, 194.01, },
+				Flags = {
+					AllowPan = false,
+					ForceSource = true,
+					FullIndicator = true,
+					RemoveRouters = true,
+				},
+				Size = { 477, 64.944, },
+				Direction = "Vertical",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0, },
+			},
+			Tools = ordered() {
+				ChangeDepth = ChangeDepth {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input {
+							Value = 4,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -175.5, 10.3, },
+					},
+				},
+				BC_Degamma = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Expression = "1/BC_Regamma.Gamma",
+						},
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -56.5, 10.3, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				DirectionalBlur = DirectionalBlur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Type = Input {
+							Value = 2,
+						},
+						Length = Input {
+							Value = 0.1,
+						},
+						Input = Input {
+							SourceOp = "BC_Degamma",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 56.88, 10.15, },
+					},
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.525490196078431, B = 0.356862745098039, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				BC_Regamma = BrightnessContrast {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Alpha = Input {
+							Value = 1,
+						},
+						Gamma = Input {
+							Value = 2.2,
+						},
+						Input = Input {
+							SourceOp = "DirectionalBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 175.5, 10.794, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.537254901960784, B = 0.368627450980392, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}

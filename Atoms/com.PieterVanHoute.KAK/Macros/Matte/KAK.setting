@@ -1,0 +1,3988 @@
+{
+	Tools = ordered() {
+		KAK = MacroOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				Settings = {
+				},
+				HelpPage = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=16&t=43"
+			},
+			Inputs = ordered() {
+				Comments = Input { Value = "Kick Ass Keyer v3.2\r\n\r\n-------------------------------------------------------------------\r\nCopyright (c) 2012-2017,  Pieter Van Houte\r\n<pieter[at]secondman[dot]com>\r\n-------------------------------------------------------------------\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\r\n-------------------------------------------------------------------", },
+				FG = InstanceInput {
+					SourceOp = "INPUT_MAIN",
+					Source = "Background",
+					Name = "Foreground Image",
+				},
+				CP = InstanceInput {
+					SourceOp = "INPUT_EXTERNAL_WEIGHT",
+					Source = "Background",
+					Name = "Clean Plate",
+				},
+				BG = InstanceInput {
+					SourceOp = "INPUT_BACKGROUND",
+					Source = "Background",
+					Name = "Background Image",
+				},
+				Mi = InstanceInput {
+					SourceOp = "MattesInput",
+					Source = "Input",
+					Name = "Mattes Input",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "KickAssKey",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1540, 247.5 },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					ForceSource = true,
+					GridSnap = true,
+					ConnectedSnap = true,
+					ShowGrid = false,
+					AutoSnap = true,
+					FullIndicator = true,
+					RemoveRouters = true
+				},
+				Size = { 3096, 4090.3, 1548, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				OverallCWSoftness = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoOverallSoftenCleanPlate",
+						},
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "KAK.OverallSoftenCleanPlate",
+						},
+						Input = Input {
+							SourceOp = "WEIGHT_RESULT",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 1264.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0 }, }
+				},
+				WEIGHT_RESULT = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "Merge3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "KAK_ERODE_mono",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 1198.15 } },
+				},
+				CLAMP_TO_HIGH = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						High = Input { Value = 1e-06, },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "AlphaDivide1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 973.5 } },
+				},
+				AlphaDivide1 = AlphaDivide {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "SIZE",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 940.5 } },
+				},
+				BLUEorGREENorREDALPHA = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input {
+							Value = 1,
+							Expression = "(KAK.ScreenType==0 and KAK.ScreenColorGreen>=max(KAK.ScreenColorRed,KAK.ScreenColorBlue)) and 1 or\n(KAK.ScreenType==0 and KAK.ScreenColorBlue>=max(KAK.ScreenColorRed,KAK.ScreenColorGreen)) and 2 or\n(KAK.ScreenType==0 and KAK.ScreenColorRed>=max(KAK.ScreenColorGreen,KAK.ScreenColorBlue))  and 0 or\nKAK.ScreenType==1 and 0 or KAK.ScreenType==2 and 1 or 2",
+						},
+						Background = Input {
+							SourceOp = "AlphaDivide1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CLAMP_TO_HIGH",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 1033.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				ChannelBooleans3 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Operation = Input { Value = 6, },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "Scale1_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "KAK_ERODE_mono",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 874.5 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				INPUT_MAIN = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 16, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1155, 10.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0 }, }
+				},
+				EATBLACK = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Box" }, },
+						XBlurSize = Input {
+							Value = 300,
+							Expression = "KAK.HardExpandCleanPlate",
+						},
+						Input = Input {
+							SourceOp = "BLUEorGREENorREDALPHA",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 1066.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				SIZE = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Bartlett" }, },
+						XBlurSize = Input {
+							Value = 10,
+							Expression = "KAK.SoftExpandCleanPlate",
+						},
+						Input = Input {
+							SourceOp = "ChannelBooleans3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 907.5 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				ChangeDepth3 = ChangeDepth {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Depth = Input { Expression = "(INPUT_MAIN.Background.Depth == 8 or INPUT_MAIN.Background.Depth == 7) and 0 or 4", },
+						Input = Input {
+							SourceOp = "INPUT_MAIN",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+				},
+				AlphaDivide1_1 = AlphaDivide {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "EATBLACK",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 1099.15 } },
+				},
+				NEGATIVE_ALPHA_COPY = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 10, },
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "AlphaDivide1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BLUEorGREENorREDALPHA",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 1099.15 } },
+				},
+				CleanUp_Level = ColorCurves {
+					PickColor = true,
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoCleanUp*KAK.CleanUp",
+						},
+						EditAlpha = Input { Value = 0, },
+						Red = Input {
+							SourceOp = "CleanUp_LevelRed",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "CleanUp_LevelGreen",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "CleanUp_LevelBlue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "CleanUp_LevelAlpha",
+							Source = "Value",
+						},
+						NumberOfSamplesOnMatchCurve = Input { Value = 64, },
+						Input = Input {
+							SourceOp = "MatteDetail",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 1957.15 } },
+					Tools = {
+						CleanUp_LevelRed = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-0.1] = { 0, RH = { -0.0666666666666667, 0 }, Flags = { Linear = true } },
+									[0] = { 0, LH = { -0.0333333333333333, 0 }, RH = { 0.044, 0.4 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.614, 0.97 }, RH = { 1.03333333333333, 1.03333333333333 } },
+									[1.1] = { 1.1, LH = { 1.06666666666667, 1.06666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						CleanUp_LevelAlpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-0.1] = { 0, RH = { -0.0666666666666667, 0 }, Flags = { Linear = true } },
+									[0] = { 0, LH = { -0.0333333333333333, 0 }, RH = { 0.044, 0.4 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.614, 0.97 }, RH = { 1.03333333333333, 1.03333333333333 } },
+									[1.1] = { 1.1, LH = { 1.06666666666667, 1.06666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						CleanUp_LevelGreen = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-0.1] = { 0, RH = { -0.0666666666666667, 0 }, Flags = { Linear = true } },
+									[0] = { 0, LH = { -0.0333333333333333, 0 }, RH = { 0.044, 0.4 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.614, 0.97 }, RH = { 1.03333333333333, 1.03333333333333 } },
+									[1.1] = { 1.1, LH = { 1.06666666666667, 1.06666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						CleanUp_LevelBlue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[-0.1] = { 0, RH = { -0.0666666666666667, 0 }, Flags = { Linear = true } },
+									[0] = { 0, LH = { -0.0333333333333333, 0 }, RH = { 0.044, 0.4 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.614, 0.97 }, RH = { 1.03333333333333, 1.03333333333333 } },
+									[1.1] = { 1.1, LH = { 1.06666666666667, 1.06666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255 },
+							CtrlWShown = false,
+							NameSet = true,
+						}
+					},
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0 }, }
+				},
+				EDGE_ERODE = ErodeDilate {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						Filter = Input { Value = 2, },
+						XAmount = Input {
+							Value = 0.01,
+							Expression = "KAK.SoftenExpansionSeams/100",
+						},
+						Input = Input {
+							SourceOp = "NEGATIVE_ALPHA_COPY",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 1165.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				Merge3 = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Background = Input {
+							SourceOp = "AlphaDivide1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "EDGE_ERODE",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 1198.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				CoreMatte = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.CoreMatte == 0 and 0 or 1",
+						},
+						Operation = Input {
+							Value = 9,
+							Expression = "KAK.CoreMatteMode == 0 and 0 or KAK.CoreMatteMode == 1 and  9 or 6",
+						},
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChannelBooleans9",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalCore",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2155.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ScreenSelectView = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ProcessGreen = Input { Value = 0, },
+						ProcessAlpha = Input { Value = 0, },
+						ToRed = Input { Value = 8, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 8, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 1759.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				AlphaMultiply2 = AlphaMultiply {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "CoreMatte",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2254.15 } },
+				},
+				SCREENSUBTRACTION = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "AlphaMultiply2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2287.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				ChannelBooleans6 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ToAlpha = Input { Value = 8, },
+						Background = Input {
+							SourceOp = "ClipBlack_RGBA",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -935, 2617.15 } },
+				},
+				ClipBlack_RGBA = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Alpha = Input { Value = 1, },
+						ClipBlack = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "SCREENSUBTRACTION",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2320.15 } },
+				},
+				SQUEEZEMATTELOW = ColorCurves {
+					PickColor = true,
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.SqueezeMatteBlack*KAK.DoSqueezeMatteBlack",
+						},
+						EditRed = Input { Value = 0, },
+						EditGreen = Input { Value = 0, },
+						EditBlue = Input { Value = 0, },
+						Red = Input {
+							SourceOp = "SQUEEZEMATTELOWRed",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "SQUEEZEMATTELOWGreen",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "SQUEEZEMATTELOWBlue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "SQUEEZEMATTELOWAlpha",
+							Source = "Value",
+						},
+						NumberOfSamplesOnMatchCurve = Input { Value = 64, },
+						Input = Input {
+							SourceOp = "Merge2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 2683.15 } },
+					Tools = {
+						SQUEEZEMATTELOWAlpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.249206349206349, 0.0013440860215053 }, Flags = { Linear = true } },
+									[0.5] = { 0.5, LH = { 0.333333333333333, 0.333333333333333 }, RH = { 0.666666666666667, 0.666666666666667 } },
+									[1] = { 1, LH = { 0.833333333333333, 0.833333333333333 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTELOWGreen = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTELOWBlue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTELOWRed = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52 },
+							CtrlWShown = false,
+							NameSet = true,
+						}
+					},
+				},
+				Screen_Subtract_Switch = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Expression = "KAK.ScreenSubtraction", },
+						Background = Input {
+							SourceOp = "AlphaMultiply1_2_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ClipBlack_RGBA",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -825, 2650.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				AlphaMultiply1_2_1 = AlphaMultiply {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChannelBooleans6",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -935, 2650.15 } },
+				},
+				SQUEEZEMATTEHIGH = ColorCurves {
+					PickColor = true,
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.SqueezeMatteWhite*KAK.DoSqueezeMatteWhite",
+						},
+						ProcessRed = Input { Value = 0, },
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						EditRed = Input { Value = 0, },
+						EditGreen = Input { Value = 0, },
+						EditBlue = Input { Value = 0, },
+						Red = Input {
+							SourceOp = "SQUEEZEMATTEHIGHRed",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "SQUEEZEMATTEHIGHGreen",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "SQUEEZEMATTEHIGHBlue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "SQUEEZEMATTEHIGHAlpha",
+							Source = "Value",
+						},
+						NumberOfSamplesOnMatchCurve = Input { Value = 64, },
+						Input = Input {
+							SourceOp = "SQUEEZEMATTELOW",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 2716.15 } },
+					Tools = {
+						SQUEEZEMATTEHIGHBlue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTEHIGHAlpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.166666666666667, 0.166666666666667 }, Flags = { Linear = true } },
+									[0.5] = { 0.5, LH = { 0.333333333333333, 0.333333333333333 }, RH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.749206349206349, 0.998655913978495 } }
+								}
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTEHIGHRed = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52 },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						SQUEEZEMATTEHIGHGreen = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+								}
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0 },
+							CtrlWShown = false,
+							NameSet = true,
+						}
+					},
+				},
+				ClipBlackAndWhite_RGBA = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						Alpha = Input { Value = 1, },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "SQUEEZEMATTEHIGH",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 2749.15 } },
+				},
+				BRINGBACKEDGEDETAIL_1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "KAK.DoBringBackTransparentDetail",
+						},
+						Background = Input {
+							SourceOp = "ClipBlackAndWhite_RGBA",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Merge1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 2848.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0 }, }
+				},
+				ChannelBooleans2 = ChannelBoolean {
+					CtrlWShown = false,
+					Inputs = {
+						ToRed = Input { Value = 15, },
+						ToGreen = Input { Value = 15, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 16, },
+						Background = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1210, 3046.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				Merge1_1 = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Background = Input {
+							SourceOp = "KAKr_TD",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "IsolateEdgeDetail",
+							Source = "Output",
+						},
+						Operator = Input { Expression = "KAK.KeyerOutput ==5 and \"Atop\" or \"Over\"", },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 2815.15 } },
+				},
+				INPUT_BACKGROUND = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1485, 3079.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0 }, }
+				},
+				Dissolve5 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input { Expression = "KAK.DoWrapBackgroundBrightness == 1 and 1 or KAK.DoWrapBackgroundColor == 1 and 1 or KAK.FGBGCombineOutput == 1 and 1 or KAK.SpillReplace == 2 and 1 or 0", },
+						Background = Input {
+							SourceOp = "ChannelBooleans2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Resize1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1210, 3079.15 } },
+				},
+				Ranges1 = RangesMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						SoftEdge = Input {
+							Value = 0.02227602,
+							Expression = "KAK.DoBackgroundWrapSoftness*KAK.BackgroundWrapSoftness/5",
+						},
+						Invert = Input { Value = 1, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Image = Input {
+							SourceOp = "MatteControl1",
+							Source = "Output",
+						},
+						RangesRange = Input { Value = 2, },
+						RangesChannel = Input { Value = 4, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0, 0 },
+											{ 0, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0, 0 },
+											{ 0.671118530884808, 0.0442477876106194 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3211.15 } },
+				},
+				Dissolve6 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Dissolve5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Resize1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1210, 3112.15 } },
+				},
+				BG_LUMA = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0.5,
+							Expression = "KAK.DoWrapBackgroundBrightness*KAK.WrapBackgroundBrightness*(KAK.DoBackgroundWrapGain==1 and KAK.BackgroundWrapGain or 1)",
+						},
+						ProcessAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "MatteControl1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "WrapGain",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Luminosity" }, },
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "WrapMatte",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 3343.15 } },
+				},
+				BG_CHROMA = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoWrapBackgroundColor*KAK.WrapBackgroundColor*(KAK.DoBackgroundWrapGain==1 and KAK.BackgroundWrapGain or 1)",
+						},
+						ProcessAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "BG_LUMA",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "WrapGain",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Color" }, },
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "WrapMatte",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 3376.15 } },
+				},
+				SetCanvasColor1 = SetCanvasColor {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1100, 3277.15 } },
+				},
+				HOLDFG = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif (KAK.Output==0,1,0)",
+						},
+						Background = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "SetCanvasColor1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1100, 3442.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.396078431372549, B = 0 }, }
+				},
+				KickAssKey = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Gamut1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1485, 4036.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0 }, }
+				},
+				BG_SOLID = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 11, },
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "Dissolve5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -935, 3079.15 } },
+				},
+				ColorSpace1_2 = ColorSpace {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						ColorSpaceConversion = Input { Value = 1, },
+						ColorType = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "CineonLog1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 142.15 } },
+				},
+				CineonLog1 = CineonLog {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						Mode = Input { Value = 1, },
+						RedFilmStockGamma = Input { Value = 1, },
+						SLogVersion = Input { Value = FuID { "SLog2" }, },
+						Input = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 109.15 } },
+				},
+				ColorSpace1_3 = ColorSpace {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						ColorSpaceConversion = Input { Value = 2, },
+						ColorType = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Blur2_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 340.15 } },
+				},
+				CineonLog1_1 = CineonLog {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						RedFilmStockGamma = Input { Value = 1, },
+						SLogVersion = Input { Value = FuID { "SLog2" }, },
+						Input = Input {
+							SourceOp = "ColorSpace1_3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 373.15 } },
+				},
+				BrightnessContrast1_1 = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Gain = Input { Value = 20, },
+						Lift = Input {
+							Value = 1,
+							Expression = "-KAK.NoiseDetail+1",
+						},
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Filter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 208.15 } },
+				},
+				Filter1 = Filter {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						FilterType = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "ColorSpace1_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 175.15 } },
+				},
+				GRAIN = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "KAK.DoDenoiseRenoise == 1 and 1 or KAK.SpillAndNoiseOutput == 3 and 1 or 0", },
+						Operation = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CorrectionForNeg",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 571.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				MERGEKEYonBG = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BrightnessContrast5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "HOLDFG",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -1100, 3574.15 } },
+				},
+				DespilledImage = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "KAK.SpillAndNoiseOutput==1 and 1 or 0",
+						},
+						Background = Input {
+							SourceOp = "REGRAIN_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 2947.15 } },
+				},
+				IsolateEdgeDetail = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "KAK.KeyerOutput ==5 and 1 or 0", },
+						Operation = Input { Value = 12, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ClipBlackAndWhite_RGBA",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 2782.15 } },
+				},
+				WIPE_QC_1 = Dissolve {
+					Transitions = {
+						[0] = "DFTWipe"
+					},
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = FuID { "DFTWipe" }, },
+						Mix = Input {
+							Value = 0.6834862,
+							Expression = "KAK.QCWipe",
+						},
+						Background = Input {
+							SourceOp = "SetCanvasColor1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "QC_SWITCH",
+							Source = "Output",
+						},
+						["DFTWipe.Softness"] = Input { Value = 0, },
+						["DFTWipe.BorderWidth"] = Input { Value = 0.003, },
+						["DFTWipe.Green"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -715, 3937.15 } },
+				},
+				KAKr_Key = Fuse.KAKr {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mode = Input { Value = 1, },
+						ScreenType = Input { Expression = "KAK.ScreenType", },
+						Red = Input {
+							Value = 0.0265350341796875,
+							Expression = "KAK.ScreenColorRed",
+						},
+						Green = Input {
+							Value = 0.3759765625,
+							Expression = "KAK.ScreenColorGreen",
+						},
+						Blue = Input {
+							Value = 0.08489990234375,
+							Expression = "KAK.ScreenColorBlue",
+						},
+						RGWght = Input { Expression = "KAK.RedGreenWeight", },
+						GBWght = Input { Expression = "KAK.GreenBlueWeight", },
+						Plate = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+						CleanPlate = Input {
+							SourceOp = "CleanUp_Level",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2023.15 } },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+					}
+				},
+				KAKr_ScreenSelect = Fuse.KAKr {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "KAK.CleanPlate==0 and 1 or 0", },
+						ScreenType = Input { Expression = "KAK.ScreenSelectType == 0 and KAK.ScreenType or KAK.ScreenSelectType == 1 and 1 or KAK.ScreenSelectType == 2 and 2 or 3", },
+						Red = Input {
+							Value = 0.0265350341796875,
+							Expression = "KAK.ScreenColorRed",
+						},
+						Green = Input {
+							Value = 0.3759765625,
+							Expression = "KAK.ScreenColorGreen",
+						},
+						Blue = Input {
+							Value = 0.08489990234375,
+							Expression = "KAK.ScreenColorBlue",
+						},
+						Finetune = Input {
+							Value = 2.0518418,
+							Expression = "KAK.ScreenSelectFinetune",
+						},
+						Plate = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 406.15 } },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+					}
+				},
+				KAKr_Despill = Fuse.KAKr {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoDespill == 1 and 1 or KAK.SpillAndNoiseOutput == 1 and 1 or KAK.SpillAndNoiseOutput == 2 and 1 or KAK.DoAddSpillAreasToBGWrapRange ==1 and 1 or KAK.Output == 3 and 1 or 0",
+						},
+						Mode = Input { Value = 3, },
+						ScreenType = Input { Expression = "KAK.DespillScreen == 0 and KAK.ScreenType or KAK.DespillScreen == 1 and 1 or KAK.DespillScreen == 2 and 2 or 3", },
+						Red = Input {
+							Value = 0.0265350341796875,
+							Expression = "KAK.ScreenColorRed",
+						},
+						Green = Input {
+							Value = 0.3759765625,
+							Expression = "KAK.ScreenColorGreen",
+						},
+						Blue = Input {
+							Value = 0.08489990234375,
+							Expression = "KAK.ScreenColorBlue",
+						},
+						DespillType = Input {
+							Value = 3,
+							Expression = "KAK.DespillType",
+						},
+						SpillReplace = Input { Expression = "KAK.SpillReplace", },
+						DespillThreshold = Input {
+							Value = 0.4135021,
+							Expression = "KAK.DoDespillThreshold == 1 and KAK.DespillThreshold or 1",
+						},
+						DespillAmount = Input { Expression = "KAK.Despill", },
+						DespillLimit = Input {
+							Value = 0.5696203,
+							Expression = "1000 - KAK.DoDespillClipThreshold * 1000 + KAK.DespillClipThreshold",
+						},
+						SpillRed = Input {
+							Value = 0,
+							Expression = "KAK.SpillReplaceRed",
+						},
+						SpillGreen = Input {
+							Value = 0.305182358576857,
+							Expression = "KAK.SpillReplaceGreen",
+						},
+						SpillBlue = Input { Expression = "KAK.SpillReplaceBlue", },
+						Plate = Input {
+							SourceOp = "DespilledImage",
+							Source = "Output",
+						},
+						Background = Input {
+							SourceOp = "BGBlur_Despill",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 3013.15 } },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+					}
+				},
+				KAKr_TD = Fuse.KAKr {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "KAK.DoBringBackTransparentDetail == 1  and 1 or KAK.KeyerOutput ==5 and 1 or 0", },
+						Mode = Input { Value = 2, },
+						TDGain = Input { Expression = "KAK.BringBackTransparentDetail", },
+						TDSaturation = Input { Expression = "KAK.DoTransparentDetailSaturation == 1 and KAK.TransparentDetailSaturation or 1", },
+						DoTDClip = Input { Expression = "KAK.DoTransparentDetailClipThreshold", },
+						TDClip = Input { Expression = "KAK.TransparentDetailClipThreshold", },
+						Plate = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+						CleanPlate = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+						Background = Input {
+							SourceOp = "WrapGain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 2749.15 } },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+					}
+				},
+				Blur2 = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 4,
+							Expression = "KAK.DenoiseSize",
+						},
+						Input = Input {
+							SourceOp = "ColorSpace1_2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 241.15 } },
+				},
+				Blur2_1 = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 4,
+							Expression = "KAK.DenoiseSize",
+						},
+						Input = Input {
+							SourceOp = "Blur2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap2",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 274.15 } },
+				},
+				Bitmap1 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "BrightnessContrast1_1",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Green" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 241.15 } },
+				},
+				Bitmap2 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "BrightnessContrast1_1",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Blue" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 274.15 } },
+				},
+				KAKr_Colour = Fuse.KAKr {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mode = Input { Value = 4, },
+						Red = Input {
+							Value = 0.0284844040870667,
+							Expression = "KAK.ScreenColorRed",
+						},
+						Green = Input {
+							Value = 0.36613205075264,
+							Expression = "KAK.ScreenColorGreen",
+						},
+						Blue = Input {
+							Value = 0.0816838294267654,
+							Expression = "KAK.ScreenColorBlue",
+						},
+						Plate = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 1561.15 } },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+					}
+				},
+				CorrectionForNeg = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 8, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "CineonLog1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap3",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 439.15 } },
+				},
+				Bitmap3 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "CineonLog1_1",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Luminance" }, },
+						High = Input { Value = 0, },
+						Low = Input { Value = -0.0001, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 406.15 } },
+				},
+				BrightnessContrast5 = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoClampBackgroundWithFGMatte*KAK.ClampBackgroundWithFGMatte",
+						},
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Dissolve6",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap4",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -1210, 3574.15 } },
+				},
+				Bitmap4 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						High = Input {
+							Value = 0.0202429,
+							Expression = "1-KAK.ClampBackgroundWithFGMatte",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1210, 3541.15 } },
+				},
+				BCOInfluence = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0,
+							Expression = "KAK.DoAddSpillAreasToBGWrapRange * KAK.AddSpillAreasToBGWrapRange",
+						},
+						SoftEdge = Input { Expression = "KAK.DoSpillAreasSoftness * KAK.SpillAreasSoftness", },
+						PaintMode = Input { Value = FuID { "Maximum" }, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Image = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+						High = Input { Expression = "max(0.01,1-(KAK.AddSpillAreasToBGWrapRange-1))", },
+						EffectMask = Input {
+							SourceOp = "Bitmap12",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3277.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				BGBlur_Wrap = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoBackgroundBlur",
+						},
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "KAK.BackgroundBlur",
+						},
+						Input = Input {
+							SourceOp = "BG_SOLID",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -825, 3079.15 } },
+				},
+				REGRAIN_2 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoDenoiseRenoise*KAK.DenoiseRenoise",
+						},
+						Operation = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "BRINGBACKEDGEDETAIL_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "GRAIN",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "ExternalNoiseMatteMult",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 2947.15 } },
+				},
+				DESPILL = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoDespill",
+						},
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "REGRAIN_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "ChannelBooleans8",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3112.15 } },
+				},
+				WrapGain = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoBackgroundGain",
+						},
+						Gain = Input {
+							Value = 2,
+							Expression = "KAK.BackgroundGain",
+						},
+						Input = Input {
+							SourceOp = "BGBlur_Wrap",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -715, 3079.15 } },
+				},
+				QC_SWITCH = Fuse.Switch {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Which = Input {
+							Value = 3,
+							Expression = "KAK.QC == 0 and 1 or KAK.QC == 1 and 2 or 3",
+						},
+						Input1 = Input {
+							SourceOp = "MERGEKEYonBG",
+							Source = "Output",
+						},
+						Input2 = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						Input3 = Input {
+							SourceOp = "Gamut1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -990, 3937.15 } },
+				},
+				Bitmap6 = BitmapMask {
+					CtrlWShown = false,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "KAKr_ScreenSelect",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 643.5 } },
+				},
+				KAK_ERODE_mono = ErodeDilate {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XAmount = Input {
+							Value = -0.003987207,
+							Expression = "-KAK.ScreenRangeErode/100",
+						},
+						Input = Input {
+							SourceOp = "Scale1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 874.5 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 1 }, }
+				},
+				MattesInput = PipeRouter {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					ViewInfo = PipeRouterInfo { Pos = { -990, 3244.15 } },
+				},
+				ExternalGarbage = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Invert = Input { Expression = "KAK.GarbageMatteInv", },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input { Expression = "KAK.GarbageMatte == 1 and \"Red\" or KAK.GarbageMatte == 2 and \"Green\" or KAK.GarbageMatte == 3 and \"Blue\" or \"Alpha\"", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 3145.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				GarbageExpand = ErodeDilate {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XAmount = Input { Expression = "-KAK.GarbageMatteShrinkExpand/50", },
+						ClippingMode = Input { Value = FuID { "Domain" }, },
+						Input = Input {
+							SourceOp = "KAK_ERODE_mono",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 3046.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ExternalCore = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input { Expression = "KAK.CoreMatte == 0 and 0 or 1", },
+						Invert = Input {
+							Value = 1,
+							Expression = "-KAK.CoreMatteInv+1",
+						},
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 960,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input { Expression = "KAK.CoreMatte == 1 and \"Red\" or KAK.CoreMatte == 2 and \"Green\" or KAK.CoreMatte == 3 and \"Blue\" or \"Alpha\"", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -605, 2155.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ScreenSelectMatte = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.ScreenSelect == 0 and 0 or 1 ",
+						},
+						Background = Input {
+							SourceOp = "Bitmap6",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalScreenSelect",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 676.5 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ExternalScreenSelect = BitmapMask {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 960,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 540,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input {
+							Value = FuID { "Red" },
+							Expression = "KAK.ScreenSelect == 1 and \"Red\" or KAK.ScreenSelect == 2 and \"Green\" or KAK.ScreenSelect == 3 and \"Blue\" or \"Alpha\"",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 676.5 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				GarbageMatte_1 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Expression = "KAK.GarbageMatteMode == 0 and 0 or KAK.GarbageMatteMode == 1 and 8 or 6", },
+						ToAlpha = Input {
+							Value = 4,
+							Expression = "KAK.GarbageMatte == 0 and 4 or 3",
+						},
+						Background = Input {
+							SourceOp = "GarbageBlur",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalGarbage",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 3112.15 } },
+					Colors = {
+						TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 },
+						TextColor = { R = 0, G = 0, B = 0 },
+					}
+				},
+				GarbageBlur = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Box" }, },
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "abs(GarbageExpand.XAmount)*200",
+						},
+						Input = Input {
+							SourceOp = "GarbageExpand",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 3079.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				CoreViewer = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0,
+							Expression = "KAK.CoreMatte == 0 and 0 or 1",
+						},
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "CoreMatte",
+							Source = "Output",
+						},
+						ClipBlack = Input { Value = 0, },
+						ClipWhite = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -660, 2188.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ViewMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 3508.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				ViewLumaMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "ChannelBooleans7",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Green" }, },
+						High = Input { Value = 0.3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 2089.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				ViewSpillMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+						ClipBlack = Input { Value = 0, },
+						ClipWhite = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 3178.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				INPUT_EXTERNAL_WEIGHT = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 1363.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 0 }, }
+				},
+				PipeRouter7 = PipeRouter {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Denoise_Apply",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -1265, 1363.15 } },
+				},
+				Resize1 = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Width = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input {
+							Value = 0,
+							Expression = "(INPUT_MAIN.Background.OriginalWidth == INPUT_BACKGROUND.Background.OriginalWidth and INPUT_MAIN.Background.OriginalHeight == INPUT_BACKGROUND.Background.OriginalHeight) and 0 or 7",
+						},
+						Input = Input {
+							SourceOp = "INPUT_BACKGROUND",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1375, 3079.15 } },
+				},
+				NoiseMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PaintMode = Input {
+							Value = FuID { "None" },
+							Expression = "KAK.RenoiseKeyedForegroundOnly == 1 and \"None\" or \"Ignore\"",
+						},
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "BRINGBACKEDGEDETAIL_1",
+							Source = "Output",
+						},
+						High = Input { Value = 0.15, },
+						Low = Input { Value = 0.03, },
+						EffectMask = Input {
+							SourceOp = "Rectangle1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 2881.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				OUTPUTSWITCHER = Fuse.Switch {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Which = Input {
+							Value = 11,
+							Expression = "KAK.FGBGCombineOutput == 2 and 1 or KAK.FGBGCombineOutput == 1 and 2 or\nKAK.SpillAndNoiseOutput == 5 and 3 or KAK.SpillAndNoiseOutput == 4 and 4 or KAK.SpillAndNoiseOutput == 3 and 5 or KAK.SpillAndNoiseOutput == 2 and 6 or KAK.SpillAndNoiseOutput == 1 and 7 or\nKAK.KeyerOutput == 5 and 8 or KAK.KeyerOutput == 4 and 9 or KAK.KeyerOutput == 3 and 10 or KAK.KeyerOutput == 2 and 11 or KAK.KeyerOutput == 1 and 12 or\nKAK.CleanPlateOutput == 2 and 13 or KAK.CleanPlateOutput == 1 and 14 or\nKAK.Output == 5 and 15 or KAK.Output == 4 and 16 or KAK.Output == 3 and 17 or KAK.Output == 2 and 18 or KAK.Output == 1 and 19 or 20",
+						},
+						Input1 = Input {
+							SourceOp = "WrapMatte",
+							Source = "Output",
+						},
+						Input2 = Input {
+							SourceOp = "WrapGain",
+							Source = "Output",
+						},
+						Input3 = Input {
+							SourceOp = "ExternalNoiseMatteMult",
+							Source = "Output",
+						},
+						Input4 = Input {
+							SourceOp = "Denoise_Apply",
+							Source = "Output",
+						},
+						Input5 = Input {
+							SourceOp = "GRAIN",
+							Source = "Output",
+						},
+						Input6 = Input {
+							SourceOp = "Bitmap7",
+							Source = "Mask",
+						},
+						Input7 = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+						Input8 = Input {
+							SourceOp = "Merge1_1",
+							Source = "Output",
+						},
+						Input9 = Input {
+							SourceOp = "CoreViewer",
+							Source = "Mask",
+						},
+						Input10 = Input {
+							SourceOp = "GarbageMatte_1",
+							Source = "Output",
+						},
+						Input11 = Input {
+							SourceOp = "ViewLumaMatte",
+							Source = "Mask",
+						},
+						Input12 = Input {
+							SourceOp = "ViewMatte",
+							Source = "Mask",
+						},
+						Input13 = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+						Input14 = Input {
+							SourceOp = "ScreenSelectView",
+							Source = "Output",
+						},
+						Input15 = Input {
+							SourceOp = "WIPE_QC_1",
+							Source = "Output",
+						},
+						Input16 = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+						Input17 = Input {
+							SourceOp = "GARBAGEMATTE_2",
+							Source = "Output",
+						},
+						Input18 = Input {
+							SourceOp = "MERGEKEYonBG",
+							Source = "Output",
+						},
+						Input19 = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						Input20 = Input {
+							SourceOp = "INPUT_MAIN",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 3937.15 } },
+				},
+				MatteDetail = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoMatteDetail",
+						},
+						Gain = Input { Expression = "KAK.MatteDetail", },
+						Input = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 1924.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0 }, }
+				},
+				StaticCleanPlate = TimeStretcher {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 0,
+							Expression = "KAK.DoStaticCleanPlate == 0 and time or KAK.StaticCleanPlate",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+						Input = Input {
+							SourceOp = "OverallCWSoftness",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 1303.5 } },
+				},
+				MatteControl1 = MatteControl {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						MatteBlur = Input { Expression = "KAK.DoMatteBlur * KAK.MatteBlur", },
+						MatteContractExpand = Input { Expression = "KAK.DoMatteContractExpand * KAK.MatteContractExpand", },
+						MatteGamma = Input { Expression = "KAK.DoMatteGamma ==1 and KAK.MatteGamma or 1", },
+						Background = Input {
+							SourceOp = "GARBAGEMATTE",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3178.15 } },
+				},
+				ExternalSpillMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0,
+							Expression = "KAK.SpillMask == 0 and 0 or 1 ",
+						},
+						PaintMode = Input { Value = FuID { "Subtract" }, },
+						Invert = Input {
+							Value = 1,
+							Expression = "-KAK.SpillMaskInv+1",
+						},
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input { Expression = "KAK.SpillMask == 1 and \"Red\" or KAK.SpillMask == 2 and \"Green\" or KAK.SpillMask == 3 and \"Blue\" or \"Alpha\"", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 3046.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				ExternalNoiseMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input {
+							Value = 0,
+							Expression = "KAK.NoiseMask == 0 and 0 or 1 ",
+						},
+						PaintMode = Input {
+							Value = FuID { "Ignore" },
+							Expression = "KAK.NoiseMask == 0 and \"Ignore\" or \"None\"",
+						},
+						Invert = Input { Expression = "KAK.NoiseMaskInv", },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input { Expression = "KAK.NoiseMask == 1 and \"Red\" or KAK.NoiseMask == 2 and \"Green\" or KAK.NoiseMask == 3 and \"Blue\" or \"Alpha\"", },
+						EffectMask = Input {
+							SourceOp = "Rectangle1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 571.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				Denoise_Apply = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoDenoiseRenoise * KAK.DenoiseRenoise",
+						},
+						Background = Input {
+							SourceOp = "ChangeDepth3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CorrectionForNeg",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "ExternalNoiseMatte",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 571.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0 }, }
+				},
+				Weight_Switch = Fuse.Switch {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Which = Input {
+							Value = 1,
+							Expression = "KAK.CleanPlate == 0 and 1 or KAK.CleanPlate == 1 and 2 or 3",
+						},
+						Input1 = Input {
+							SourceOp = "Scale1_1",
+							Source = "Output",
+						},
+						Input2 = Input {
+							SourceOp = "INPUT_EXTERNAL_WEIGHT",
+							Source = "Output",
+						},
+						Input3 = Input {
+							SourceOp = "KAKr_Colour",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 1561.15 } },
+					Colors = { TileColor = { R = 0, G = 0.498039215686275, B = 0.694117647058824 }, }
+				},
+				Rectangle1 = RectangleMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -550, 2815.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				Bitmap7 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						PaintMode = Input { Value = FuID { "Multiply" }, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "ChannelBooleans8",
+							Source = "Output",
+						},
+						ClipBlack = Input { Value = 0, },
+						ClipWhite = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "ViewSpillMatte",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 3211.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				FastLaneKAK = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "(KAK.CleanPlateOutput+KAK.KeyerOutput+KAK.SpillAndNoiseOutput+KAK.FGBGCombineOutput == 0 and KAK.Output == 1) and 0 or 1",
+						},
+						Background = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "OUTPUTSWITCHER",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 4036.15 } },
+				},
+				MATTES = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 15, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "MatteControl1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "KAK_ERODE_mono",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 3805.15 } },
+				},
+				MATTES_1 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "MATTES",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 3838.15 } },
+				},
+				MATTES_2 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 3, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "MATTES_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "WrapMatte",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 3871.15 } },
+				},
+				ChannelBooleans8 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Operation = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "Rectangle1",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalSpillMatte",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 3013.15 } },
+				},
+				ColorSpace6_1 = ColorSpace {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ColorSpaceConversion = Input { Value = 1, },
+						ColorType = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "BrightnessContrast1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 1957.15 } },
+				},
+				ChannelBooleans7 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Operation = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "ColorSpace6",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ColorSpace6_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 1990.15 } },
+				},
+				BrightnessContrast1 = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Gain = Input {
+							Value = 1.5,
+							Expression = "6-(KAK.LumaMatteFill*5)",
+						},
+						Input = Input {
+							SourceOp = "Weight_Switch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -495, 1924.15 } },
+				},
+				ChannelBooleans9 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "KAK.DoLumaMatteFill", },
+						Operation = Input { Value = 9, },
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "KAKr_Key",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "LumaMatte",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -770, 2089.15 } },
+					Colors = { TileColor = { R = 1, G = 0.458823529411765, B = 0.458823529411765 }, }
+				},
+				Bitmap12 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						PaintMode = Input { Value = FuID { "Multiply" }, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Image = Input {
+							SourceOp = "MatteControl1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Ranges1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3244.15 } },
+				},
+				ColorGain1 = ColorGain {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoEdgeColorBias",
+						},
+						GainRed = Input {
+							Value = 0.333155555555556,
+							Expression = "KAK.EdgeColorBiasRed*2*(KAK.DoBackgroundWrapGain==1 and KAK.BackgroundWrapGain or 1)",
+						},
+						GainGreen = Input {
+							Value = 1.81359576323102,
+							Expression = "KAK.EdgeColorBiasGreen*2*(KAK.DoBackgroundWrapGain==1 and KAK.BackgroundWrapGain or 1)",
+						},
+						GainBlue = Input {
+							Value = 2,
+							Expression = "KAK.EdgeColorBiasBlue*2*(KAK.DoBackgroundWrapGain==1 and KAK.BackgroundWrapGain or 1)",
+						},
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.125, 0.75 },
+											{ 0.375, 0.25 },
+											{ 0.5, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0.5, 0 },
+											{ 0.625, 0.25 },
+											{ 0.875, 0.75 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						Input = Input {
+							SourceOp = "BG_CHROMA",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "WrapMatte",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 3409.15 } },
+				},
+				ExternalWrap = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input { Expression = "KAK.WrapMatte == 0 and 0 or 1", },
+						Invert = Input {
+							Value = 1,
+							Expression = "-KAK.WrapMatteInv+1",
+						},
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1280,
+							Expression = "INPUT_MAIN.Background.OriginalWidth",
+						},
+						MaskHeight = Input {
+							Value = 720,
+							Expression = "INPUT_MAIN.Background.OriginalHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "MattesInput",
+							Source = "Output",
+						},
+						Channel = Input {
+							Value = FuID { "Red" },
+							Expression = "KAK.WrapMatte == 1 and \"Red\" or KAK.WrapMatte == 2 and \"Green\" or KAK.WrapMatte == 3 and \"Blue\" or \"Alpha\"",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 3277.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				WrapMatte = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.WrapMatte == 0 and 0 or 1",
+						},
+						Operation = Input { Expression = "KAK.WrapMatteMode == 0 and 0 or KAK.WrapMatteMode == 1 and 8 or 6", },
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "BCOInfluence",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalWrap",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3310.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				Bitmap13 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						SoftEdge = Input {
+							Value = 0.001,
+							Expression = ".002-KAK.LuminanceCompensationRange/500",
+						},
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "Screen_Subtract_Switch",
+							Source = "Output",
+						},
+						Low = Input {
+							Value = 0.5,
+							Expression = "min(0.999,1-KAK.LuminanceCompensationRange)",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -660, 2584.15 } },
+				},
+				Bitmap14 = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						PaintMode = Input { Value = FuID { "Minimum" }, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "Screen_Subtract_Switch",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap13",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -660, 2617.15 } },
+				},
+				ExternalNoiseMatteMult = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 6, },
+						ToAlpha = Input {
+							Value = 4,
+							Expression = "KAK.NoiseMask == 0 and 4 or 3",
+						},
+						Background = Input {
+							SourceOp = "NoiseMatte",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "ExternalNoiseMatte",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 2914.15 } },
+				},
+				Merge1 = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "KAK.DespillLuminanceCompensation", },
+						ProcessAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "KAKr_Despill",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "AlphaMultiply1",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Luminosity" }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 3046.15 } },
+				},
+				Merge2 = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "KAK.LuminanceCompensation", },
+						ProcessAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "Screen_Subtract_Switch",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Luminosity" }, },
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "Bitmap14",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -660, 2683.15 } },
+				},
+				ColorSpace6 = ColorSpace {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ColorSpaceConversion = Input { Value = 1, },
+						ColorType = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -605, 1990.15 } },
+				},
+				AlphaMultiply1 = AlphaMultiply {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "DespilledImage",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 3013.15 } },
+				},
+				Gamut1 = GamutConvert {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "OUTPUTSWITCHER.Which == 1 and 1 or  \nOUTPUTSWITCHER.Which == 3 and 1 or \nOUTPUTSWITCHER.Which == 6 and 1 or \nOUTPUTSWITCHER.Which == 9 and 1 or \nOUTPUTSWITCHER.Which == 10 and 1 or \nOUTPUTSWITCHER.Which == 11 and 1 or \nOUTPUTSWITCHER.Which == 12 and 1 or \nOUTPUTSWITCHER.Which == 17 and 1 or \n0",
+						},
+						SourceSpace = Input {
+							Value = FuID { "sRGB" },
+							Expression = "KAK.ViewerLUT == 0 and \"sRGB\" or KAK.ViewerLUT == 1 and \"Rec709\" or \"NoChange\"",
+						},
+						Input = Input {
+							SourceOp = "FastLaneKAK",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 4036.15 } },
+				},
+				Gamut1_1 = GamutConvert {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "KAK.Output == 5 and 1 or 0", },
+						SourceSpace = Input {
+							Value = FuID { "sRGB" },
+							Expression = "KAK.ViewerLUT == 0 and \"sRGB\" or KAK.ViewerLUT == 1 and \"Rec709\" or \"NoChange\"",
+						},
+						Input = Input {
+							SourceOp = "ChannelBooleans1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -880, 3904.15 } },
+				},
+				ChannelBooleans1 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -880, 3871.15 } },
+				},
+				GARBAGEMATTE_2 = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoGarbageMatteShrinkExpand",
+						},
+						Operation = Input { Value = 6, },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "MATTES_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "InternalGarbage",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 3904.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0, B = 0 }, }
+				},
+				BGBlur_Despill = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "KAK.DoBackgroundColorBlur",
+						},
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "KAK.BackgroundColorBlur",
+						},
+						Input = Input {
+							SourceOp = "Dissolve5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -825, 2980.15 } },
+				},
+				InternalGarbage = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Level = Input { Expression = "KAK.DoGarbageMatteShrinkExpand", },
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "GarbageMatte_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 3145.15 } },
+					Colors = { TileColor = { R = 1, G = 0, B = 1 }, }
+				},
+				GARBAGEMATTE = ChannelBoolean {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "KAK.DoGarbageMatteShrinkExpand", },
+						Operation = Input { Value = 6, },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "DESPILL",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "InternalGarbage",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 3145.15 } },
+					Colors = { TileColor = { R = 0.498039215686275, G = 0, B = 0 }, }
+				},
+				ViewGarbageMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "InternalGarbage",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 3178.15 } },
+					Colors = { TileColor = { R = 0.250980392156863, G = 0.498039215686275, B = 0.498039215686275 }, }
+				},
+				LumaMatte = BitmapMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1280, },
+						MaskHeight = Input { Value = 720, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "ChannelBooleans7",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Green" }, },
+						High = Input { Value = 0.3, },
+						ClipWhite = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -550, 2089.15 } },
+				},
+				Scale1 = Scale {
+					Inputs = {
+						XSize = Input { Expression = "KAK.DoCleanPlateProxy == 1 and 1/KAK.CleanPlateProxy or 1", },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "ScreenSelectMatte",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 775.5 } },
+				},
+				Scale1_1 = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						XSize = Input { Expression = "KAK.DoCleanPlateProxy == 1 and KAK.CleanPlateProxy or 1", },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "StaticCleanPlate",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 1369.5 } },
+				},
+				Scale1_2 = Scale {
+					Inputs = {
+						XSize = Input { Expression = "KAK.DoCleanPlateProxy == 1 and 1/KAK.CleanPlateProxy or 1", },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "Denoise_Apply",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 775.5 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.498039215686275, G = 0.247058823529412, B = 0 },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216 },
+			},
+			UserControls = ordered() {
+				Output = {
+					{ MBTNCD_ButtonWidth = 0.33333, MBTNC_AddButton = "FG Image" },
+					{ MBTNC_AddButton = "Kick Ass Key" },
+					{ MBTNC_AddButton = "Key On BG" },
+					{ MBTNC_AddButton = "Mattes" },
+					{ MBTNC_AddButton = "Clean Plate" },
+					{ MBTNC_AddButton = "QC" },
+					LINKID_DataType = "Number",
+					INPID_InputControl = "MultiButtonControl",
+					INP_Default = 0,
+					ICS_ControlPage = "KAK 3.2"
+				},
+				ViewerLUT = {
+					{ CCS_AddString = "sRGB" },
+					{ CCS_AddString = "rec709" },
+					{ CCS_AddString = "Off" },
+					LINKS_Name = "Viewer LUT",
+					ICS_ControlPage = "KAK 3.2",
+					INPID_InputControl = "ComboControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					INP_Default = 0
+				},
+				ScreenColorRed = {
+					INP_Default = 0,
+					IC_ControlGroup = 1,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 0,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "KAK 3.2",
+					LINKS_Name = "Screen Color"
+				},
+				ScreenColorGreen = {
+					INP_Default = 0,
+					ICS_ControlPage = "KAK 3.2",
+					LINKID_DataType = "Number",
+					CLRC_ColorSpace = 0,
+					INPID_InputControl = "ColorControl",
+					IC_ControlID = 1,
+					IC_ControlGroup = 1
+				},
+				ScreenColorBlue = {
+					IC_ControlGroup = 1,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 2,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "KAK 3.2",
+					INP_Default = 0
+				},
+				CleanPlate = {
+					{ MBTNC_AddButton = "Generate" },
+					{ MBTNC_AddButton = "External" },
+					{ MBTNC_AddButton = "Solid Color" },
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "KAK 3.2",
+					MBTNC_StretchToFit = true,
+					INPID_InputControl = "MultiButtonControl",
+					LINKS_Name = "Clean Plate"
+				},
+				QC = {
+					{ CCS_AddString = "Composite Against FG Image" },
+					{ CCS_AddString = "Key Against FG Image" },
+					{ CCS_AddString = "Matte Against FG Image" },
+					LINKS_Name = "QC/Wipe",
+					ICS_ControlPage = "KAK 3.2",
+					INPID_InputControl = "ComboControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					INP_Default = 0
+				},
+				QCWipe = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "KAK 3.2",
+					INP_Default = 0.5
+				},
+				CleanPlateOutput = {
+					{ MBTNCD_ButtonWidth = 0.33333, MBTNC_AddButton = "<<" },
+					{ MBTNC_AddButton = "Screen Select" },
+					{ MBTNC_AddButton = "Clean Plate" },
+					INP_Default = 0,
+					ICS_ControlPage = "Clean Plate",
+					INPID_InputControl = "MultiButtonControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Output"
+				},
+				ScreenSelect = {
+					{ CCS_AddString = "Generate Internally" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					INP_Default = 0,
+					ICS_ControlPage = "Clean Plate",
+					INPID_InputControl = "ComboControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Screen Select"
+				},
+				ScreenSelectType = {
+					{ CCS_AddString = "Same As Keyer" },
+					{ CCS_AddString = "Red" },
+					{ CCS_AddString = "Green" },
+					{ CCS_AddString = "Blue" },
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Clean Plate",
+					LINKS_Name = "Select Type"
+				},
+				ScreenSelectFinetune = {
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "ScrewControl",
+					ICS_ControlPage = "Clean Plate",
+					LINKS_Name = "Screen Select Finetune"
+				},
+				ScreenRangeErode = {
+					INP_Default = 0.3,
+					INP_MinScale = 0,
+					ICD_Center = 0.3,
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 1,
+					LINKS_Name = "Screen Range Erode"
+				},
+				SoftExpandCleanPlate = {
+					INP_Default = 10,
+					ICD_Center = 10,
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					LINKS_Name = "Soft Expand Clean Plate"
+				},
+				HardExpandCleanPlate = {
+					INP_Default = 300,
+					ICD_Center = 300,
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 400,
+					LINKS_Name = "Hard Expand Clean Plate"
+				},
+				SoftenExpansionSeams = {
+					INP_Default = 1,
+					INP_MinScale = 0,
+					ICD_Center = 1,
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 3,
+					LINKS_Name = "Soften Expansion Seams"
+				},
+				DoOverallSoftenCleanPlate = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Clean Plate",
+					INP_Default = 0
+				},
+				OverallSoftenCleanPlate = {
+					ICD_Width = 0.9,
+					INP_Default = 0,
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					LINKS_Name = "Overall Soften Clean Plate"
+				},
+				DoStaticCleanPlate = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Clean Plate",
+					INP_Default = 0
+				},
+				StaticCleanPlate = {
+					ICD_Width = 0.9,
+					INP_Integer = true,
+					LINKS_Name = "Static Clean Plate (Set Reference Frame)",
+					ICS_ControlPage = "Clean Plate",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "ScrewControl",
+					INP_MaxScale = 100,
+					INP_Default = 0
+				},
+				DoCleanPlateProxy = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					ICS_ControlPage = "Clean Plate",
+					INPID_InputControl = "CheckboxControl",
+					LINKS_Name = ""
+				},
+				CleanPlateProxy = {
+					ICD_Width = 0.9,
+					INP_Integer = true,
+					ICS_ControlPage = "Clean Plate",
+					INP_MaxScale = 8,
+					INP_Default = 4,
+					INP_MinScale = 1,
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "Clean Plate Proxy"
+				},
+				KeyerOutput = {
+					{ MBTNCD_ButtonWidth = 0.33333, MBTNC_AddButton = "<<" },
+					{ MBTNC_AddButton = "Matte" },
+					{ MBTNC_AddButton = "Luma Matte" },
+					{ MBTNC_AddButton = "Garbage Matte" },
+					{ MBTNC_AddButton = "Core Matte" },
+					{ MBTNC_AddButton = "Transparent Detail" },
+					INP_Default = 0,
+					ICS_ControlPage = "Keyer",
+					INPID_InputControl = "MultiButtonControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Output"
+				},
+				Algorithm = {
+					{ CCS_AddString = "KAK" },
+					LINKID_DataType = "Number",
+					INPID_InputControl = "ComboControl",
+					INP_Default = 0,
+					ICS_ControlPage = "Keyer"
+				},
+				ScreenType = {
+					{ CCS_AddString = "Auto" },
+					{ CCS_AddString = "Red" },
+					{ CCS_AddString = "Green" },
+					{ CCS_AddString = "Blue" },
+					LINKID_DataType = "Number",
+					LINKS_Name = "Screen Type",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				ScreenSubtraction = {
+					ICD_Width = 0.5,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Screen Subtraction",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 1
+				},
+				LuminanceCompensation = {
+					ICD_Width = 0.5,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Luminance Compensation",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				RedGreenWeight = {
+					LINKID_DataType = "Number",
+					INP_Default = 0.5,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "Red/Green Weight"
+				},
+				GreenBlueWeight = {
+					LINKID_DataType = "Number",
+					INP_Default = 0.5,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "Green/Blue Weight"
+				},
+				LuminanceCompensationRange = {
+					LINKID_DataType = "Number",
+					INP_Default = 0.5,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "Luminance Compensation Range"
+				},
+				DoBringBackTransparentDetail = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				BringBackTransparentDetail = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Bring Back Transparent Detail",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 1
+				},
+				DoTransparentDetailSaturation = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				TransparentDetailSaturation = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Transparent Detail Saturation",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 1
+				},
+				DoTransparentDetailClipThreshold = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				TransparentDetailClipThreshold = {
+					ICD_Width = 0.9,
+					INP_MinScale = -0.5,
+					LINKS_Name = "Transparent Detail Clip / Threshold (Low)",
+					ICS_ControlPage = "Keyer",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 0,
+					INP_Default = 0
+				},
+				DoMatteDetail = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				MatteDetail = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					INP_Default = 1,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "Matte Detail (Screen Gain)"
+				},
+				DoCleanUp = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				CleanUp = {
+					ICD_Width = 0.9,
+					INP_Default = 0.1,
+					ICS_ControlPage = "Keyer",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					ICD_Center = 0.1,
+					LINKS_Name = "Clean Up (Use Sparingly)"
+				},
+				DoLumaMatteFill = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				LumaMatteFill = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					INP_Default = 0.9,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "Luma Matte Fill"
+				},
+				DoSqueezeMatteBlack = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				SqueezeMatteBlack = {
+					ICD_Width = 0.9,
+					LINKS_Name = "Squeeze Matte Black",
+					ICD_Center = 1,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Keyer",
+					LINKID_DataType = "Number",
+					INP_MaxScale = 4,
+					INP_Default = 1
+				},
+				DoSqueezeMatteWhite = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				SqueezeMatteWhite = {
+					ICD_Width = 0.9,
+					INP_Default = 1,
+					ICD_Center = 1,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Keyer",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 4,
+					LINKS_Name = "Squeeze Matte White"
+				},
+				DoMatteBlur = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				MatteBlur = {
+					ICD_Width = 0.9,
+					INP_MinScale = 0,
+					INP_Default = 0,
+					ICS_ControlPage = "Keyer",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 10,
+					LINKS_Name = "Matte Blur"
+				},
+				DoMatteContractExpand = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				MatteContractExpand = {
+					ICD_Width = 0.9,
+					INP_MinScale = -1,
+					INP_Default = 0,
+					ICS_ControlPage = "Keyer",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 1,
+					LINKS_Name = "Matte Contract/Expand"
+				},
+				DoMatteGamma = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				MatteGamma = {
+					ICD_Width = 0.9,
+					ICS_ControlPage = "Keyer",
+					INP_MaxScale = 3,
+					INP_Default = 1,
+					INP_MinScale = 0,
+					LINKID_DataType = "Number",
+					ICD_Center = 1,
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "Matte Gamma"
+				},
+				DoGarbageMatteShrinkExpand = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = ""
+				},
+				GarbageMatteShrinkExpand = {
+					ICD_Width = 0.9,
+					INP_MinScale = -1,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Keyer",
+					INPID_InputControl = "SliderControl",
+					LINKS_Name = "Garbage Matte / Shrink<>Expand"
+				},
+				GarbageMatte = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					ICD_Width = 0.65,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Garbage Matte",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				GarbageMatteMode = {
+					{ MBTNC_AddButton = "=" },
+					{ MBTNC_AddButton = "+" },
+					{ MBTNC_AddButton = "x" },
+					ICD_Width = 0.2,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "MultiButtonControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 1
+				},
+				GarbageMatteInv = {
+					ICD_Width = 0.15,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "-"
+				},
+				CoreMatte = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					ICD_Width = 0.65,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Core Matte",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 0
+				},
+				CoreMatteMode = {
+					{ MBTNC_AddButton = "=" },
+					{ MBTNC_AddButton = "+" },
+					{ MBTNC_AddButton = "x" },
+					ICD_Width = 0.2,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "MultiButtonControl",
+					ICS_ControlPage = "Keyer",
+					INP_Default = 1
+				},
+				CoreMatteInv = {
+					ICD_Width = 0.15,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Keyer",
+					LINKS_Name = "-"
+				},
+				SpillAndNoiseOutput = {
+					{ MBTNCD_ButtonWidth = 0.33333, MBTNC_AddButton = "<<" },
+					{ MBTNC_AddButton = "Despilled Image" },
+					{ MBTNC_AddButton = "Spill Matte" },
+					{ MBTNC_AddButton = "Noise" },
+					{ MBTNC_AddButton = "Denoised Image" },
+					{ MBTNC_AddButton = "Noise Matte" },
+					INP_Default = 0,
+					ICS_ControlPage = "Spill And Noise",
+					INPID_InputControl = "MultiButtonControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Output"
+				},
+				DespillType = {
+					{ CCS_AddString = "Limit By Average" },
+					{ CCS_AddString = "Limit By Max" },
+					{ CCS_AddString = "Limit By Red (Limit By Green If Screen Is Red)" },
+					{ CCS_AddString = "Limit By Blue (Limit by Green If Screen Is Blue)" },
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Despill Type"
+				},
+				DespillScreen = {
+					{ CCS_AddString = "Same As Keyer" },
+					{ CCS_AddString = "Red" },
+					{ CCS_AddString = "Green" },
+					{ CCS_AddString = "Blue" },
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Despill Screen"
+				},
+				SpillReplace = {
+					{ CCS_AddString = "Auto Adjust R/G/B" },
+					{ CCS_AddString = "Use Spill Replace Color" },
+					{ CCS_AddString = "Use Background Color" },
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Spill Replace"
+				},
+				DoDespill = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = ""
+				},
+				Despill = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Despill",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 1
+				},
+				DoDespillThreshold = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = ""
+				},
+				DespillThreshold = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Despill Threshold",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 1
+				},
+				DoDespillClipThreshold = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = ""
+				},
+				DespillClipThreshold = {
+					ICD_Width = 0.9,
+					LINKS_Name = "Despill Clip / Threshold (High)",
+					INP_MaxScale = 10,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Spill And Noise",
+					INPID_InputControl = "SliderControl",
+					ICD_Center = 1,
+					INP_Default = 1
+				},
+				SpillReplaceRed = {
+					INP_Default = 0.5,
+					IC_ControlGroup = 2,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 0,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Spill Replace Color"
+				},
+				SpillReplaceGreen = {
+					INP_Default = 0.5,
+					ICS_ControlPage = "Spill And Noise",
+					LINKID_DataType = "Number",
+					CLRC_ColorSpace = 0,
+					INPID_InputControl = "ColorControl",
+					IC_ControlID = 1,
+					IC_ControlGroup = 2
+				},
+				SpillReplaceBlue = {
+					IC_ControlGroup = 2,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 2,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 0.5
+				},
+				DoBackgroundColorBlur = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 0
+				},
+				BackgroundColorBlur = {
+					ICD_Width = 0.9,
+					INP_Default = 0,
+					ICS_ControlPage = "Spill And Noise",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					LINKS_Name = "Background Color Blur"
+				},
+				DespillLuminanceCompensation = {
+					LINKID_DataType = "Number",
+					INP_Default = 1,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Despill Luminance Compensation"
+				},
+				Divider0 = {
+					LINKS_Name = "",
+					ICS_ControlPage = "Spill And Noise",
+					INPID_InputControl = "LabelControl",
+					LINKID_DataType = "Number"
+				},
+				DoDenoiseRenoise = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = ""
+				},
+				DenoiseRenoise = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Denoise/Renoise",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 1
+				},
+				DenoiseSize = {
+					LINKS_Name = "Denoise Size",
+					INP_MinScale = 0,
+					INP_MaxScale = 4,
+					ICS_ControlPage = "Spill And Noise",
+					INPID_InputControl = "SliderControl",
+					LINKID_DataType = "Number",
+					ICD_Center = 1,
+					INP_Default = 1
+				},
+				NoiseDetail = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "Noise Detail",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 0.5
+				},
+				RenoiseKeyedForegroundOnly = {
+					LINKID_DataType = "Number",
+					INP_Default = 1,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "Renoise Keyed Foreground Only"
+				},
+				SpillMask = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					ICD_Width = 0.85,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Spill Mask",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 0
+				},
+				SpillMaskInv = {
+					ICD_Width = 0.15,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "-"
+				},
+				NoiseMask = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					ICD_Width = 0.85,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Noise Mask",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "Spill And Noise",
+					INP_Default = 0
+				},
+				NoiseMaskInv = {
+					ICD_Width = 0.15,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Spill And Noise",
+					LINKS_Name = "-"
+				},
+				FGBGCombineOutput = {
+					{ MBTNCD_ButtonWidth = 0.3333, MBTNC_AddButton = "<<" },
+					{ MBTNC_AddButton = "BG Wrap Image" },
+					{ MBTNC_AddButton = "BG Wrap Range" },
+					INP_Default = 0,
+					ICS_ControlPage = "FG/BG Combine",
+					INPID_InputControl = "MultiButtonControl",
+					MBTNC_StretchToFit = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Output"
+				},
+				DoClampBackgroundWithFGMatte = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				ClampBackgroundWithFGMatte = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Clamp Background With FG Matte",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 1
+				},
+				DoWrapBackgroundBrightness = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				WrapBackgroundBrightness = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Wrap Background Brightness",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0.5
+				},
+				DoWrapBackgroundColor = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				WrapBackgroundColor = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					INP_Default = 0.5,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "FG/BG Combine",
+					LINKS_Name = "Wrap Background Color"
+				},
+				DoEdgeColorBias = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				EdgeColorBiasRed = {
+					ICD_Width = 0.9,
+					ICS_ControlPage = "FG/BG Combine",
+					CLRC_ColorSpace = 0,
+					IC_ControlGroup = 3,
+					LINKID_DataType = "Number",
+					IC_ControlID = 0,
+					INP_Default = 0.5,
+					INPID_InputControl = "ColorControl",
+					LINKS_Name = "Edge Color Bias"
+				},
+				EdgeColorBiasGreen = {
+					ICD_Width = 0.9,
+					INP_Default = 0.5,
+					ICS_ControlPage = "FG/BG Combine",
+					LINKID_DataType = "Number",
+					CLRC_ColorSpace = 0,
+					INPID_InputControl = "ColorControl",
+					IC_ControlID = 1,
+					IC_ControlGroup = 3
+				},
+				EdgeColorBiasBlue = {
+					ICD_Width = 0.9,
+					IC_ControlGroup = 3,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 2,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0.5
+				},
+				DoBackgroundWrapGain = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				BackgroundWrapGain = {
+					ICD_Width = 0.9,
+					INP_Default = 1,
+					ICS_ControlPage = "FG/BG Combine",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 2,
+					LINKS_Name = "Background Wrap Gain"
+				},
+				DoBackgroundWrapSoftness = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				BackgroundWrapSoftness = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					INP_Default = 0.5,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "FG/BG Combine",
+					LINKS_Name = "Background Wrap Softness"
+				},
+				DoAddSpillAreasToBGWrapRange = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				AddSpillAreasToBGWrapRange = {
+					ICD_Width = 0.9,
+					LINKID_DataType = "Number",
+					INP_Default = 1,
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "FG/BG Combine",
+					LINKS_Name = "Add Spill Areas To BG Wrap Range"
+				},
+				DoSpillAreasSoftness = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				SpillAreasSoftness = {
+					ICD_Width = 0.9,
+					INP_Default = 0,
+					ICS_ControlPage = "FG/BG Combine",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 0.01,
+					LINKS_Name = "Spill Areas Softness"
+				},
+				DoBackgroundBlur = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				BackgroundBlur = {
+					ICD_Width = 0.9,
+					INP_Default = 0,
+					ICS_ControlPage = "FG/BG Combine",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 100,
+					LINKS_Name = "Background Blur (For Wrap)"
+				},
+				DoBackgroundGain = {
+					ICD_Width = 0.1,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				BackgroundGain = {
+					ICD_Width = 0.9,
+					INP_Default = 1,
+					ICS_ControlPage = "FG/BG Combine",
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 2,
+					LINKS_Name = "Background Gain (For Wrap)"
+				},
+				WrapMatte = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "Mattes Input Red Channel" },
+					{ CCS_AddString = "Mattes Input Green Channel" },
+					{ CCS_AddString = "Mattes Input Blue Channel" },
+					{ CCS_AddString = "Mattes Input Alpha Channel" },
+					ICD_Width = 0.65,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Wrap Matte",
+					INPID_InputControl = "ComboControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 0
+				},
+				WrapMatteMode = {
+					{ MBTNC_AddButton = "=" },
+					{ MBTNC_AddButton = "+" },
+					{ MBTNC_AddButton = "x" },
+					ICD_Width = 0.2,
+					LINKID_DataType = "Number",
+					LINKS_Name = "",
+					INPID_InputControl = "MultiButtonControl",
+					ICS_ControlPage = "FG/BG Combine",
+					INP_Default = 1
+				},
+				WrapMatteInv = {
+					ICD_Width = 0.15,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "FG/BG Combine",
+					LINKS_Name = "-"
+				}
+			}
+		}
+	},
+	ActiveTool = "KAK"
+}

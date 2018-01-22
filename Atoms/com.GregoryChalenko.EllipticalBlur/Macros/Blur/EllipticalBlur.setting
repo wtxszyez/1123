@@ -1,0 +1,488 @@
+{
+	Tools = ordered() {
+		EllipticalBlur = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Radial/Zoom Blur with aspect controls\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "EffectMask",
+				},
+				PowerMap = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "EffectMask",
+					Name = "Power Map",
+				},
+				Type = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "Type",
+					Default = 0,
+				},
+				Speed = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "Speed",
+				},
+				Center = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "PointIn1",
+				},
+				Width = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "Width",
+				},
+				Height = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "Height",
+				},
+				Angle = InstanceInput {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "Angle",
+				},
+				MotCorr = InstanceInput {
+					SourceOp = "CT_MotionCorrection",
+					Source = "MotionCorrection",
+				},
+				MotCorrMagnitude = InstanceInput {
+					SourceOp = "CT_MotionCorrection",
+					Source = "NumberIn3",
+					Name = "Motion Correction Magnitude",
+				},
+				PreGammaPostGamma = InstanceInput {
+					SourceOp = "BC_Degamma",
+					Source = "PreGammaPostGamma",
+				},
+				Gamma = InstanceInput {
+					SourceOp = "BC_Regamma",
+					Source = "Gamma",
+					Name = "Image Gamma",
+					Default = 2.2,
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Depth",
+					Name = "Set Depth",
+				},
+				Blend = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "Blend",
+					Page = "Common Controls",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ProcessRed",
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ProcessGreen",
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ProcessBlue",
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ProcessAlpha",
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "MaskHigh",
+					ControlGroup = 12,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "VectorMotionBlur1",
+					Source = "MaskLow",
+					ControlGroup = 12,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BC_Regamma",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 873.333, 461.637, },
+				Flags = {
+					AllowPan = false,
+					ForceSource = true,
+					FullIndicator = true,
+				},
+				Size = { 351.812, 271.413, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 72.2989, },
+			},
+			Tools = ordered() {
+				Background_2 = Background {
+					ExtentSet = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 1,
+						},
+						Width = Input {
+							Value = 720,
+							Expression = "VectorMotionBlur1.Input.OriginalWidth",
+						},
+						Height = Input {
+							Value = 576,
+							Expression = "VectorMotionBlur1.Input.OriginalHeight",
+						},
+						PixelAspect = Input {
+							Value = { 1.06666666666667, 1, },
+							Expression = "Point(VectorMotionBlur1.Input.XScale, VectorMotionBlur1.Input.YScale)",
+						},
+						Depth = Input {
+							Value = 4,
+						},
+						TopLeftAlpha = Input {
+							Value = 0,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -112.906, 10.15, },
+					},
+				},
+				VectorMotionBlur1 = VectorMotionBlur {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "BC_Degamma",
+							Source = "Output",
+						},
+						Vectors = Input {
+							SourceOp = "CT_MotionCorrection",
+							Source = "Output",
+						},
+						XVectorChannel = Input {
+							Value = 0,
+							Expression = "Type",
+						},
+						YChannel = Input {
+							Value = 1,
+							Expression = "1-Type",
+						},
+						FlipX = Input {
+							Expression = "Type",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 2.90601, 96.664, },
+					},
+					UserControls = ordered() {
+						Type = {
+							{ MBTNC_AddButton = "Elliptical", },
+							{ MBTNC_AddButton = "Zoom", },
+							LINKID_DataType = "Number",
+							MBTNC_StretchToFit = true,
+							IC_ControlPage = 0,
+							INPID_InputControl = "MultiButtonControl",
+							INP_Default = 0,
+						},
+					},
+				},
+				BC_Regamma = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gamma = Input {
+							Value = 2.2,
+						},
+						Blend = Input {
+							Expression = "iif(VectorMotionBlur1.Blend==0,0,BC_Degamma.PreGammaPostGamma)",
+						},
+						Input = Input {
+							SourceOp = "VectorMotionBlur1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 112.906, 96.664, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				BC_Degamma = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gamma = Input {
+							Value = 0.454545454545455,
+							Expression = "1/BC_Regamma.Gamma",
+						},
+						Blend = Input {
+							Expression = "iif(VectorMotionBlur1.Blend==0,0,BC_Degamma.PreGammaPostGamma)",
+						},
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+					},
+					UserControls = ordered() {
+						PreGammaPostGamma = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Pre-Gamma / Post-Gamma",
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 1,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 0.549988, 144.964, },
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				ChangeDepth = ChangeDepth {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input {
+							Value = 4,
+						},
+						Input = Input {
+							SourceOp = "Transform1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -107.002, 142.67, },
+					},
+				},
+				DirectionalVectorBlur = Custom {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input {
+							Expression = "Speed",
+						},
+						NumberIn2 = Input {
+							Expression = "Width",
+						},
+						NumberIn3 = Input {
+							Expression = "Height",
+						},
+						NumberIn4 = Input {
+							Expression = "math.tan(Angle/180*math.pi)",
+						},
+						Intermediate1 = Input {
+							Value = "h1*ay1/w1/ax1",
+						},
+						RedExpression = Input {
+							Value = "(p1y-y-n4*(0.5-x))*i1*n2/n3*n1*w1/15",
+						},
+						GreenExpression = Input {
+							Value = "(x-p1x+n4*(0.5-y))*n1*w1/15",
+						},
+						NumberControls = Input {
+							Value = 1,
+						},
+						NameforNumber1 = Input {
+							Value = "Speed In",
+						},
+						NameforNumber2 = Input {
+							Value = "Width In",
+						},
+						NameforNumber3 = Input {
+							Value = "Height In",
+						},
+						NameforNumber4 = Input {
+							Value = "Angle In",
+						},
+						ShowNumber5 = Input {
+							Value = 0,
+						},
+						ShowNumber6 = Input {
+							Value = 0,
+						},
+						ShowNumber7 = Input {
+							Value = 0,
+						},
+						ShowNumber8 = Input {
+							Value = 0,
+						},
+						PointControls = Input {
+							Value = 1,
+						},
+						NameforPoint1 = Input {
+							Value = "Center",
+						},
+						ShowPoint2 = Input {
+							Value = 0,
+						},
+						ShowPoint3 = Input {
+							Value = 0,
+						},
+						ShowPoint4 = Input {
+							Value = 0,
+						},
+						Image1 = Input {
+							SourceOp = "Background_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { -2.65302, 10.266, },
+					},
+					UserControls = ordered() {
+						Speed = {
+							INPID_PreviewControl = "AngleControl",
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ScrewControl",
+							ACID_Center = "PointIn1",
+							ACID_Radius = 1,
+							IC_ControlPage = 0,
+							INP_MaxScale = 360,
+							INP_Default = 5,
+						},
+						Width = {
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_Default = 0.75,
+							ECID_Center = "PointIn1",
+							LINKID_DataType = "Number",
+							PC_ControlGroup = 1,
+							PC_ControlID = 0,
+							ECID_Angle = "Angle",
+							INPID_PreviewControl = "EllipseControl",
+						},
+						Height = {
+							PC_ControlID = 1,
+							INPID_PreviewControl = "EllipseControl",
+							ECID_Center = "PointIn1",
+							INPID_InputControl = "SliderControl",
+							PC_ControlGroup = 1,
+							IC_ControlPage = 0,
+							LINKID_DataType = "Number",
+							INP_Default = 0.25,
+						},
+						Angle = {
+							ACID_Radius = "Width",
+							INPID_PreviewControl = "AngleControl",
+							INPID_InputControl = "ScrewControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							ACID_Center = "PointIn1",
+							INP_MaxScale = 360,
+							INP_Default = 0,
+						},
+					},
+				},
+		CT_MotionCorrection = Custom {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Blend = Input {
+					Expression = "iif(VectorMotionBlur1.Blend==0,0,MotionCorrection)",
+				},
+				PointIn1 = Input {
+					Expression = "DirectionalVectorBlur.PointIn1",
+				},
+				NumberIn1 = Input {
+					Expression = "CT_MotionCorrection:GetValue(\"PointIn1\", time+1).X-PointIn1.X",
+				},
+				NumberIn2 = Input {
+					Expression = "CT_MotionCorrection:GetValue(\"PointIn1\", time+1).Y-PointIn1.Y",
+				},
+				NumberIn3 = Input {
+					Value = 100,
+				},
+				RedExpression = Input {
+					Value = "r1+n1*n3",
+				},
+				GreenExpression = Input {
+					Value = "g1+n2*n3*h/w",
+				},
+				NumberControls = Input {
+					Value = 1,
+				},
+				NameforNumber1 = Input {
+					Value = "X Velocity",
+				},
+				NameforNumber2 = Input {
+					Value = "Y Velocity",
+				},
+				NameforNumber3 = Input {
+					Value = "Motion Correction Magnitude",
+				},
+				NameforPoint1 = Input {
+					Value = "Center",
+				},
+				Image1 = Input {
+					SourceOp = "DirectionalVectorBlur",
+					Source = "Output",
+				},
+				MotionCorrection = Input {
+					Value = 0,
+				},
+			},
+			ViewInfo = OperatorInfo {
+				Pos = { 22.3917, 23.0728, },
+			},
+			UserControls = ordered() {
+				MotionCorrection = {
+					LINKS_Name = "Motion Correction",
+					LINKID_DataType = "Number",
+					IC_ControlPage = 5,
+					INPID_InputControl = "CheckboxControl",
+					INP_Default = 0,
+				},
+			},
+		},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.52156862745098, B = 0.352941176470588, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}

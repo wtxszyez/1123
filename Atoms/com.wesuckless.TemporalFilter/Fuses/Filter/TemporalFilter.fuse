@@ -1,0 +1,323 @@
+--[[
+   TemporalFilter.Fuse: Temporal Filtering Fuse by TomBstone [Tom Berakis]
+   
+   Version 1.00
+   
+   Updated Category for Reactor - January 2018
+]]
+
+FuRegisterClass("TemporalFilter", CT_Tool, {
+   REGS_Name="Temporal Filter",
+   REGS_Category = "Filter",
+   REGS_OpIconString = "TF",
+   REG_Version = 100,
+   })
+
+function Create()
+   InFrames = self:AddInput("Frames either side", "Frames", {
+      LINKID_DataType = "Number",
+      INPID_InputControl = "SliderControl",
+      INP_MinAllowed = 0.0,
+      INP_MaxScale = 5.0,
+      INP_Default = 0,
+      INP_Integer = true,
+      })
+
+   InMode = self:AddInput("Mode", "Mode", {
+      LINKID_DataType = "FuID",
+      INPID_InputControl = "MultiButtonIDControl",
+      MBTNC_StretchToFit = true,
+      { MBTNC_AddButton = "Min",     MBTNCID_AddID = "Min",     },
+      { MBTNC_AddButton = "Max",     MBTNCID_AddID = "Max",     },
+      { MBTNC_AddButton = "Average", MBTNCID_AddID = "Average", },
+      { MBTNC_AddButton = "Median",  MBTNCID_AddID = "Median",  },
+      { MBTNC_AddButton = "Random",  MBTNCID_AddID = "Random",  },
+      INP_DoNotifyChanged = true,
+      })
+
+   InChan = self:AddInput("Channel", "Channel", {
+      LINKID_DataType = "FuID",
+      INPID_InputControl = "MultiButtonIDControl",
+      INPID_DefaultID = "Luma601",
+      { MBTNC_AddButton = "Red",                 MBTNCID_AddID = "Red",     MBTNCD_ButtonWidth = 0.2, },
+      { MBTNC_AddButton = "Green",               MBTNCID_AddID = "Green",   MBTNCD_ButtonWidth = 0.2, },
+      { MBTNC_AddButton = "Blue",                MBTNCID_AddID = "Blue",    MBTNCD_ButtonWidth = 0.2, },
+      { MBTNC_AddButton = "Alpha",               MBTNCID_AddID = "Alpha",   MBTNCD_ButtonWidth = 0.2, },
+      { MBTNC_AddButton = "Z",                   MBTNCID_AddID = "Z",       MBTNCD_ButtonWidth = 0.2, },
+      { MBTNC_AddButton = "Luma (REC601)",       MBTNCID_AddID = "Luma601", MBTNCD_ButtonWidth = 0.5, },
+      { MBTNC_AddButton = "Average RGB",         MBTNCID_AddID = "Average", MBTNCD_ButtonWidth = 0.5, },
+      })
+   
+   InThreshold = self:AddInput("Threshold", "Threshold", {
+      LINKID_DataType = "Number",
+      INPID_InputControl = "SliderControl",
+      INP_MinAllowed = 0.0,
+      INP_MaxScale = 1.0,
+      INP_Default = 0,
+      })
+      
+   InImage = self:AddInput("Input", "Input", {
+      LINKID_DataType = "Image",
+      LINK_Main = 1,
+      })
+
+   OutImage = self:AddOutput("Output", "Output", {
+      LINKID_DataType = "Image",
+      LINK_Main = 1,
+      })            
+end
+
+function NotifyChanged(inp, param, time)
+   if param and inp == InMode then
+      InThreshold:SetAttrs({IC_Visible = (param.Value ~= "Average")})
+      InChan:SetAttrs({IC_Visible = (param.Value ~= "Average" and param.Value ~= "Random")})
+   end
+end
+
+
+function chan_red(p)
+   return p.R
+end
+
+function chan_green(p)
+   return p.G
+end
+
+function chan_blue(p)
+   return p.B
+end
+
+function chan_alpha(p)
+   return p.A
+end
+
+function chan_z(p)
+   return p.Z
+end
+
+function chan_luma601(p)
+   return p.R*0.299 + p.G*0.587 + p.B*0.114
+end
+
+function chan_average(p)
+   return (p.R + p.G + p.B)/3
+end
+
+
+
+function mode_random(indices, values, pixels, num)
+   return math.floor(math.random()*num)
+end
+
+function mode_average(indices, values, pixels, num)
+   local r,g,b,a = 0,0,0,0
+   
+   for i=0,num-1 do
+      r = r + pixels[i].R
+      g = g + pixels[i].G
+      b = b + pixels[i].B
+      a = a + pixels[i].A
+   end
+   
+   local op = math.floor(num/2)
+   
+   pixels[op].R = r / num
+   pixels[op].G = g / num
+   pixels[op].B = b / num
+   pixels[op].A = a / num
+   
+   return op
+end
+
+function mode_min(indices, values, pixels, num)
+   local cur = 0
+   
+   for i=1,num-1 do
+      if values[i] < values[cur] then
+         cur = i
+      end
+   end
+   
+   return cur
+end
+
+function mode_max(indices, values, pixels, num)
+   local cur = 0
+   
+   for i=1,num-1 do
+      if values[i] > values[cur] then
+         cur = i
+      end
+   end
+   
+   return cur
+end
+
+function mode_median(indices, values, pixels, num)
+   local low, high
+   local median
+   local middle, ll, hh
+
+   low = 0;
+   high = num-1
+   median = math.floor((low+high)/2)
+
+   while high > low+1 do
+      middle = math.floor((low+high)/2)
+      
+      if values[indices[middle]] > values[indices[high]] then
+         indices[middle],indices[high] = indices[high],indices[middle]
+      end
+      
+      if values[indices[low]] > values[indices[high]] then
+         indices[low],indices[high] = indices[high],indices[low]
+      end
+      
+      if values[indices[middle]] > values[indices[low]] then
+         indices[middle],indices[low] = indices[low],indices[middle]
+      end
+      
+      indices[middle],indices[low+1] = indices[low+1],indices[middle]
+
+      ll = low + 1
+      hh = high
+
+      while true do
+         repeat
+            ll = ll + 1
+         until (values[indices[low]] <= values[indices[ll]])
+
+         repeat
+            hh = hh - 1
+         until (values[indices[hh]] <= values[indices[low]])
+         
+         if (hh < ll) then
+            break
+         end
+
+         indices[ll],indices[hh] = indices[hh],indices[ll]
+      end
+
+      indices[low],indices[hh] = indices[hh],indices[low]
+
+      if hh <= median then
+         low = ll
+      end
+
+      if hh >= median then
+         high = hh - 1
+      end
+   end
+
+   if high == low + 1 then
+      if values[indices[low]] > values[indices[high]] then
+         indices[low],indices[high] = indices[high],indices[low]
+      end
+   end
+   
+   return indices[median]
+end
+
+function mp_init()
+   jit.opt.start("loopunroll=50")
+   
+   pixptrs = {}
+   pixels = {}
+   
+   values   = ffi.new("float[?]", window)
+   indices  = ffi.new("int[?]", window)
+   
+   for i=0,window-1 do
+      pixels[i] = FltPixel()
+      pixptrs[i] = PixPtr(imgs[i], pixels[i])
+      indices[i] = i
+   end
+   
+   dp = PixPtr(out, pixels[frames])
+end
+
+function mp_func(y)
+   for i=0,window-1 do
+      pixptrs[i]:GotoXY(0, y)
+   end
+   
+   dp:GotoXY(0, y)
+   
+   for x=0,out.Width-1 do
+      for i=0,window-1 do
+         pixptrs[i]:GetNextPixel(pixels[i])
+         values[i] = chanfunc(pixels[i])
+      end
+      
+      local index = modefunc(indices, values, pixels, window)
+      
+      dp:SetNextPixel(pixels[(math.abs(values[index]-values[frames]) > thresh) and index or frames])
+   end
+end
+
+
+function Process(req)
+   local frames = InFrames:GetValue(req).Value
+   local mode = InMode:GetValue(req).Value
+   local chan = InChan:GetValue(req).Value
+   local orig = InImage:GetValue(req)
+   local thresh = InThreshold:GetValue(req).Value
+   
+   if frames == 0 then
+      OutImage:Set(req, orig)
+   else
+      local imgs = {}
+      
+      local ModeToFunc =
+      {
+         Min     = mode_min,
+         Max     = mode_max,
+         Average = mode_average,
+         Median  = mode_median,
+         Random  = mode_random,
+      }
+      
+      local modefunc = ModeToFunc[mode]
+      
+      local ChanToFunc =
+      {
+         Red       = chan_red,
+         Green     = chan_green,
+         Blue      = chan_blue,
+         Alpha     = chan_alpha,
+         Z         = chan_z,
+         Luma601   = chan_luma601,
+         Average   = chan_average,
+      }
+      
+      local chanfunc = ChanToFunc[chan]
+   
+      local window = frames*2+1
+      
+      imgs[frames] = orig
+      for i=0,window-1 do
+         if i ~= frames then
+            imgs[i] = InImage:GetSource(req.Time+i-frames, bit.bor(req:GetFlags(), REQF_SecondaryTime)) or orig
+            if imgs[i].Width ~= orig.Width or imgs[i].Height ~= orig.Height then
+               print(self.Name .. " error: Image sequence size not consistent!")
+               OutImage:Set(req, out)
+               return
+            end
+         end
+      end
+      
+      local out = Image({IMG_Like = orig})
+      
+      self:DoMultiProcess(mp_init, {
+         imgs = imgs,
+         frames = frames,
+         window = window,
+         out = out,
+         modefunc = modefunc,
+         chanfunc = chanfunc,
+         thresh = thresh,
+         }, out.Height, mp_func)
+         
+      OutImage:Set(req, out)
+   end
+end

@@ -1,0 +1,351 @@
+{
+	Tools = ordered() {
+		GradientMatch = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Creates a procedural gradient based on a gradient in a reference image\r\nDon't adjust anything apart from the Number of Samples before you press Match Reference\r\nAfter that you can disconnect the reference image and use the gradient separately\r\n\r\nby Gregory Chalenko for Parasol Island\r\nwww.compositing.ru", },
+				GlobalIn = InstanceInput {
+					SourceOp = "Background",
+					Source = "GlobalIn",
+					ControlGroup = 2,
+					Default = 1,
+				},
+				ReferenceImage = InstanceInput {
+					SourceOp = "ColorCurves",
+					Source = "ReferenceImage",
+				},
+				GlobalOut = InstanceInput {
+					SourceOp = "Background",
+					Source = "GlobalOut",
+					ControlGroup = 2,
+				},
+				NumberOfSamples = InstanceInput {
+					SourceOp = "ColorCurves",
+					Source = "NumberOfSamplesOnMatchCurve",
+					Name = "Number Of Samples",
+					Default = 16,
+				},
+				MatchReference = InstanceInput {
+					SourceOp = "ColorCurves",
+					Source = "MatchReference",
+				},
+				Start = InstanceInput {
+					SourceOp = "Background",
+					Source = "Start",
+					DefaultX = 0,
+					DefaultY = 0.5,
+				},
+				End = InstanceInput {
+					SourceOp = "Background",
+					Source = "End",
+					DefaultX = 1,
+					DefaultY = 0.5,
+				},
+				Repeat = InstanceInput {
+					SourceOp = "Background",
+					Source = "Repeat",
+				},
+				ReverseDirection = InstanceInput {
+					SourceOp = "ColorSpace",
+					Source = "ReverseDirection",
+					Name = "Reverse Direction",
+				},
+				MidpointOffset = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Gamma",
+					Name = "Midpoint Offset",
+					Default = 1,
+				},
+				CompressExpand = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Contrast",
+					Name = "Compress / Expand",
+					Default = 0,
+				},
+				Offset = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Brightness",
+					Name = "Offset",
+					Default = 0,
+				},
+				StartOffset = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Low",
+					Name = "Start Offset",
+					ControlGroup = 28,
+					Default = 0,
+				},
+				EndOffset = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "High",
+					Name = "End Offset",
+					MinScale = -0.5,
+					MaxScale = 1.5,
+					ControlGroup = 28,
+					Default = 1,
+				},
+				UseFrameFormatSettings = InstanceInput {
+					SourceOp = "Background",
+					Source = "UseFrameFormatSettings",
+					Page = "Image",
+					Default = 1,
+				},
+				Width = InstanceInput {
+					SourceOp = "Background",
+					Source = "Width",
+				},
+				Height = InstanceInput {
+					SourceOp = "Background",
+					Source = "Height",
+				},
+				PixelAspect = InstanceInput {
+					SourceOp = "Background",
+					Source = "PixelAspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Depth = InstanceInput {
+					SourceOp = "Background",
+					Source = "Depth",
+					Default = 0,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Background",
+					Source = "ApplyMaskInverted",
+					Page = "Common Controls",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Background",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "Background",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Background",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Background",
+					Source = "MaskHigh",
+					ControlGroup = 15,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Background",
+					Source = "MaskLow",
+					ControlGroup = 15,
+					Default = 0,
+				},
+				MaskClipBlack = InstanceInput {
+					SourceOp = "Background",
+					Source = "MaskClipBlack",
+					Default = 1,
+				},
+				MaskClipWhite = InstanceInput {
+					SourceOp = "Background",
+					Source = "MaskClipWhite",
+					Default = 1,
+				},
+				MotionBlur = InstanceInput {
+					SourceOp = "Background",
+					Source = "MotionBlur",
+					Default = 0,
+				},
+				Quality = InstanceInput {
+					SourceOp = "Background",
+					Source = "Quality",
+					Default = 2,
+				},
+				ShutterAngle = InstanceInput {
+					SourceOp = "Background",
+					Source = "ShutterAngle",
+					Default = 180,
+				},
+				CenterBias = InstanceInput {
+					SourceOp = "Background",
+					Source = "CenterBias",
+					Default = 0,
+				},
+				SampleSpread = InstanceInput {
+					SourceOp = "Background",
+					Source = "SampleSpread",
+					Default = 1,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Background",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "ColorCurves",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 262, 130, },
+				Flags = {
+					Expanded = false,
+					AllowPan = false,
+					ForceSource = true,
+					FullIndicator = true,
+				},
+				Size = { 481, 127.3, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 67.5, -11, },
+			},
+			Tools = ordered() {
+				Background = Background {
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						UseFrameFormatSettings = Input { Value = 1, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 1556, },
+						Type = Input { Value = FuID { "Gradient", }, },
+						TopLeftAlpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -221, 29.65, }, },
+				},
+				ColorCurves = ColorCurves {
+					PickColor = true,
+					CtrlWShown = false,
+					Inputs = {
+						NumberOfSamplesOnMatchCurve = Input { Value = 16, },
+						Red = Input {
+							SourceOp = "ColorCurvesRed",
+							Source = "Value",
+						},
+						Green = Input {
+							SourceOp = "ColorCurvesGreen",
+							Source = "Value",
+						},
+						Blue = Input {
+							SourceOp = "ColorCurvesBlue",
+							Source = "Value",
+						},
+						Alpha = Input {
+							SourceOp = "ColorCurvesAlpha",
+							Source = "Value",
+						},
+						Input = Input {
+							SourceOp = "BrightnessContrast",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 112, 43.65, }, },
+					Tools = {
+						ColorCurvesRed = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 255, Green = 52, Blue = 52, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						ColorCurvesBlue = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 68, Green = 68, Blue = 255, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						ColorCurvesAlpha = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 204, Green = 204, Blue = 204, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+						ColorCurvesGreen = LUTBezier {
+							KeyColorSplines = {
+								[0] = {
+									[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+									[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+								},
+							},
+							SplineColor = { Red = 0, Green = 255, Blue = 0, },
+							CtrlWShown = false,
+							NameSet = true,
+						},
+					},
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				BrightnessContrast = BrightnessContrast {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorSpace",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 39.65, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				ColorSpace = ColorSpace {
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "ReverseDirection", },
+						ColorSpaceConversion = Input { Value = 1, },
+						ColorType = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Background",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -111, 29.65, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.501960784313725, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						ReverseDirection = {
+							INPID_InputControl = "CheckboxControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 1,
+							INPS_Name = "Reverse Direction",
+							INP_Default = 0,
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.674509803921569, G = 0.823529411764706, B = 0.674509803921569, },
+				TextColor = { R = 0, G = 0, B = 0, },
+			},
+		},
+	},
+	ActiveTool = "GradientMatch",
+}

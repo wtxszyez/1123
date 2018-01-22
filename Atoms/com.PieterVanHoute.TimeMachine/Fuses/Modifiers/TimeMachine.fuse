@@ -1,0 +1,1916 @@
+--[[
+
+Time Machine Modifier Fuse
+
+-------------------------------------------------------------------
+Copyright (c) 2012-2015,  Pieter Van Houte
+<pieter[at]secondman[dot]com>
+-------------------------------------------------------------------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-------------------------------------------------------------------
+
+--]]
+
+version = "Time Machine v1.6 - Pi Day 2015"
+
+FuRegisterClass("TimeMachine", CT_Modifier, {
+	REGS_Category       = "Fuses",
+	REGS_OpIconString   = "TMn",
+	REGS_OpDescription  = "Advanced Retime Modifier",
+	REGS_Name           = "Time Machine",
+	REGID_DataType      = "Number",
+	REGID_InputDataType = "Number",
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.secondman.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 160,
+	})
+
+function Create()
+
+	InMode = self:AddInput("Mode", "Mode", {
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		INPID_DefaultID = "Warp",
+		INP_DoNotifyChanged  = true,
+		{ MBTNCD_ButtonWidth = 0.33333, MBTNC_AddButton = "Warp", MBTNCID_AddID = "Warp", },
+		{ MBTNC_AddButton = "Remap", MBTNCID_AddID = "Remap", },
+		{ MBTNC_AddButton = "Delta", MBTNCID_AddID = "Delta", },
+		{ MBTNC_AddButton = "Lock Start", MBTNCID_AddID = "LockStart"},
+		{ MBTNC_AddButton = "Lock End", MBTNCID_AddID = "LockEnd", },
+		{ MBTNC_AddButton = "Random", MBTNCID_AddID = "Random", },
+		{ MBTNC_AddButton = "Hold", MBTNCID_AddID = "Hold", },
+		{ MBTNC_AddButton = "Skip", MBTNCID_AddID = "Skip", },
+		{ MBTNC_AddButton = "Offset", MBTNCID_AddID = "Offset", },
+		{ MBTNC_AddButton = "Trigger", MBTNCID_AddID = "Trigger", },
+		{ MBTNC_AddButton = "Switch", MBTNCID_AddID = "Switch", },
+--		{ MBTNC_AddButton = "Pattern", MBTNCID_AddID = "Pattern", },
+		{ MBTNC_AddButton = "XSheet", MBTNCID_AddID = "XSheet", },
+		})
+
+	InDeltaMode = self:AddInput("Delta Mode", "DeltaMode", {
+		{ MBTNC_AddButton = "Sum", MBTNCID_AddID = "Sum", },
+		{ MBTNC_AddButton = "Slope", MBTNCID_AddID = "Slope", },
+		INPID_DefaultID = "Sum",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		INP_External = false,
+		})
+
+	InTriggerMode = self:AddInput("Trigger Mode", "TriggerMode", {
+		{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Reset", MBTNCID_AddID = "Reset", },
+		{ MBTNC_AddButton = "Hold", MBTNCID_AddID = "Hold", },
+		{ MBTNC_AddButton = "Hold And Reset", MBTNCID_AddID = "Hold And Reset", },
+		{ MBTNC_AddButton = "Bounce", MBTNCID_AddID = "Bounce", },
+		INPID_DefaultID = "Reset",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		INP_External = false,
+		})
+
+	InSourceStartFrame = self:AddInput("Source Start Frame", "SourceStartFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		})
+
+	InSourceEndFrame = self:AddInput("Source End Frame", "SourceEndFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 50,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		})
+
+	InReverse = self:AddInput("Reverse", "Reverse", {
+		INPID_InputControl  = "CheckboxControl",
+		})
+
+	InTimeWarp = self:AddInput("Time Warp", "TimeWarp", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		})
+
+	InDelta = self:AddInput("Delta", "Delta", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		})
+
+	InDeltaScale = self:AddInput("Delta Scale", "DeltaScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		})
+
+	InDeltaThreshold = self:AddInput("Delta Threshold", "DeltaThreshold", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0,
+		})
+
+	InDeltaDirection = self:AddInput("Delta Direction", "DeltaDirection", {
+		{ MBTNC_AddButton = "Up", MBTNCID_AddID = "Up", },
+		{ MBTNC_AddButton = "Down", MBTNCID_AddID = "Down", },
+		INPID_DefaultID = "Up",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		INP_External = false,
+		})
+
+	InSpeed = self:AddInput("Speed", "Speed", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 24,
+		INP_Default = 1,
+		})
+
+	InStep = self:AddInput("Step", "Step", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 1,
+		INP_MaxScale = 24,
+		INP_Default = 1,
+		INP_Integer = true,
+		})
+
+	InSpeedMode = self:AddInput("Speed Mode", "SpeedMode", {
+		{ MBTNC_AddButton = "Speed", MBTNCID_AddID = "Speed", },
+		{ MBTNC_AddButton = "Step", MBTNCID_AddID = "Step", },
+		INPID_DefaultID = "Speed",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		})
+
+	InRandomSeed = self:AddInput("Random Seed", "Randomseed", {
+		INP_Integer = true,
+		INPID_InputControl = "SliderControl",
+		LINKID_DataType = "Number",
+		INP_MaxScale = 16000,
+		INP_Default = 0,
+		})
+
+	InSkip = self:AddInput("Skip", "Skip", {
+		INP_Integer = true,
+		INP_MinAllowed = 1,
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 24,
+		INP_MinScale = 1,
+		})
+
+	InOffset = self:AddInput("Offset", "Offset", {
+		INP_Integer = true,
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 100,
+		LINKID_DataType = "Number",
+		})
+
+	InHold = self:AddInput("Hold", "Hold", {
+		INP_Integer = true,
+		LINKID_DataType = "Number",
+		INP_MaxScale = 100,
+		INPID_InputControl = "ScrewControl",
+		})
+
+	InXSheetSize = self:AddInput("Xsheet Size", "XSheetSize", {
+		INP_DoNotifyChanged  = true,
+		INP_Integer = true,
+		LINKID_DataType = "Number",
+		INP_MaxScale = 100,
+		INP_MinAllowed = 1,
+		INP_Default = 30,
+		INPID_InputControl = "ScrewControl",
+		})
+
+	InXSheet = self:AddInput("", "XSheet", {
+--		INP_DoNotifyChanged  = true,
+		ICD_Width = 0.7,
+		INP_External = false,
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "",  		-- use instead of INP_Default!
+		TEC_Lines = 30,              	-- height of text entry (default is 8)
+--		TEC_DeferSetInputs = true,   	-- call NotifyChanged when focus is lost (default is false, call on every key stroke)
+		})
+
+	OutXFrameNumbers = self:AddInput("", "XFrameNumbers", {
+		ICD_Width = 0.3,
+		INP_External = false,
+		INP_Disabled = true,
+		INP_Passive = true,
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "",
+		TEC_Lines = 30,
+		})
+
+	InTrigger = self:AddInput("Trigger", "Trigger", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0,
+		})
+
+	InOnTriggerThreshold = self:AddInput("On Trigger Threshold", "OnTriggerThreshold", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0.8,
+		})
+
+	InOffTriggerThreshold = self:AddInput("Off Trigger Threshold", "OffTriggerThreshold", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 0.2,
+		})
+
+	InRunSpeed = self:AddInput("Run Speed", "RunSpeed", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 24,
+		INP_Default = 1,
+		})
+--[[
+	InMinRunLength = self:AddInput("Min Run Length", "MinRunLength", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed = 1,
+		INP_MinScale = 1,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		INP_Default = 1,
+		})
+
+	InMaxRunLength = self:AddInput("Max Run Length (0 For No Max)", "MaxRunLength", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinAllowed = 0,
+		INP_MinScale = 0,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+--]]
+	InTriggerDirection = self:AddInput("Trigger Direction", "TriggerDirection", {
+		{ MBTNC_AddButton = "Up", MBTNCID_AddID = "Up", },
+		{ MBTNC_AddButton = "Down", MBTNCID_AddID = "Down", },
+		INPID_DefaultID = "Up",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		INP_External = false,
+		})
+
+	InSwitchStartFrames = self:AddInput("Switch Start Frames", "SwitchStartFrames", {
+		INP_External = false,
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "",  		-- use instead of INP_Default!
+		TEC_Lines = 10,              	-- height of text entry (default is 8)
+		})
+
+	InSwitch = self:AddInput("Switch", "Switch", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 24,
+		INP_Default = 1,
+		INP_Integer = true,
+		INP_MinAllowed = 1,
+		})
+--[[
+	InPattern = self:AddInput("Pattern", "Pattern", {
+		INP_External = false,
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "",  		-- use instead of INP_Default!
+		TEC_Lines = 10,              	-- height of text entry (default is 8)
+		})
+
+	InPatternOffset = self:AddInput("Pattern Offset", "PatternOffset", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MaxScale = 100,
+		INP_Default = 0,
+		INP_Integer = true,
+		})
+--]]
+	InForceTargetRange = self:AddInput("Force Target Range", "ForceTargetRange", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_DoNotifyChanged  = true,
+		})
+
+	InTargetStartFrame = self:AddInput("Target Start Frame", "TargetStartFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_DoNotifyChanged  = true,		-- this if for XSheet Frame Number Output
+		INP_Default = 0,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		})
+
+	InTargetEndFrame = self:AddInput("Target End Frame", "TargetEndFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 120,
+		INP_MaxScale = 100,
+		INP_Integer = true,
+		})
+
+	InBeforeTime = self:AddInput("Before Time", "BeforeTime", {
+		{ CCS_AddString = "Constant", CCID_AddID = "Constant", },
+		{ CCS_AddString = "Continue", CCID_AddID = "Continue", },
+		{ CCS_AddString = "Loop", CCID_AddID = "Loop", },
+		{ CCS_AddString = "Ping Pong", CCID_AddID = "PingPong", },
+		{ CCS_AddString = "Inclusive Ping Pong", CCID_AddID = "InclusivePingPong", },
+		{ CCS_AddString = "Hold", CCID_AddID = "Hold", },
+		{ CCS_AddString = "Random", CCID_AddID = "Random", },
+		{ CCS_AddString = "Do Nothing", CCID_AddID = "DoNothing", },
+		LINKID_DataType = "FuID",
+		LINKS_Name = "Before Time",
+		INPID_InputControl = "ComboIDControl",
+		})
+
+	InAfterTime = self:AddInput("After Time", "AfterTime", {
+		{ CCS_AddString = "Constant", CCID_AddID = "Constant", },
+		{ CCS_AddString = "Continue", CCID_AddID = "Continue", },
+		{ CCS_AddString = "Loop", CCID_AddID = "Loop", },
+		{ CCS_AddString = "Ping Pong", CCID_AddID = "PingPong", },
+		{ CCS_AddString = "Inclusive Ping Pong", CCID_AddID = "InclusivePingPong", },
+		{ CCS_AddString = "Hold", CCID_AddID = "Hold", },
+		{ CCS_AddString = "Random", CCID_AddID = "Random", },
+		{ CCS_AddString = "Do Nothing", CCID_AddID = "DoNothing", },
+		LINKID_DataType = "FuID",
+		LINKS_Name = "After Time",
+		INPID_InputControl = "ComboIDControl",
+		})
+
+	InRoundOutput = self:AddInput("Round Output Values", "RoundOutputValues", {
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		INPID_DefaultID = "Off",
+		{ MBTNC_AddButton = "Off", MBTNCID_AddID = "Off", },
+		{ MBTNC_AddButton = "Down", MBTNCID_AddID = "Down", },
+		{ MBTNC_AddButton = "Up", MBTNCID_AddID = "Up", },
+		MBTNC_StretchToFit = true,
+		})
+
+	InAllowFloatFrameValues = self:AddInput("Allow Float Frame Values", "AllowFloatFrameValues", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_DoNotifyChanged  = true,
+		})
+
+	InLabel = self:AddInput(version, "version", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External = false,
+		INP_Passive = true,
+		})
+
+	OutValue = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Number",
+		LINK_Main = 1,
+		})
+
+end
+
+------------------------------------------------------------------- DYNAMIC GUI
+
+function NotifyChanged(inp, param, time)
+	if inp ~= nil and param ~= nil then
+		if inp == InMode then
+			if param.Value == "Warp" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = true})
+				InReverse:SetAttrs({IC_Visible = true})
+				InTimeWarp:SetAttrs({IC_Visible = true})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Remap" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = true})
+				InReverse:SetAttrs({IC_Visible = true})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = false})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Delta" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = true})
+				InDelta:SetAttrs({IC_Visible = true})
+				InDeltaScale:SetAttrs({IC_Visible = true})
+				InDeltaThreshold:SetAttrs({IC_Visible = true})
+				InDeltaDirection:SetAttrs({IC_Visible = true})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "LockStart" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = true})
+				InReverse:SetAttrs({IC_Visible = true})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = true})
+				InStep:SetAttrs({IC_Visible = true})
+				InSpeedMode:SetAttrs({IC_Visible = true})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "LockEnd" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = true})
+				InReverse:SetAttrs({IC_Visible = true})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = true})
+				InStep:SetAttrs({IC_Visible = true})
+				InSpeedMode:SetAttrs({IC_Visible = true})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Random" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = true})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = true})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Hold" then
+				InSourceStartFrame:SetAttrs({IC_Visible = false})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = true})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Skip" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = true})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "Offset" then
+				InSourceStartFrame:SetAttrs({IC_Visible = false})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = true})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = true})
+			elseif param.Value == "XSheet" then
+				InSourceStartFrame:SetAttrs({IC_Visible = false})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = true})
+				InXSheetSize:SetAttrs({IC_Visible = true})
+				InXSheet:SetAttrs({IC_Visible = true})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = false})
+--				InMaxRunLength:SetAttrs({IC_Visible = false})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = false})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = false})
+			elseif param.Value == "Trigger" then
+				InSourceStartFrame:SetAttrs({IC_Visible = true})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = true})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = true})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = true})
+				InRunSpeed:SetAttrs({IC_Visible = true})
+--				InMinRunLength:SetAttrs({IC_Visible = true})
+--				InMaxRunLength:SetAttrs({IC_Visible = true})
+				InTriggerMode:SetAttrs({IC_Visible = true})
+				InTriggerDirection:SetAttrs({IC_Visible = true})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = true})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = false})
+			elseif param.Value == "Switch" then
+				InSourceStartFrame:SetAttrs({IC_Visible = false})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = true})
+--				InMaxRunLength:SetAttrs({IC_Visible = true})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = true})
+				InSwitch:SetAttrs({IC_Visible = true})
+--				InPattern:SetAttrs({IC_Visible = false})
+--				InPatternOffset:SetAttrs({IC_Visible = false})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = false})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = false})
+			elseif param.Value == "Pattern" then
+				InSourceStartFrame:SetAttrs({IC_Visible = false})
+				InSourceEndFrame:SetAttrs({IC_Visible = false})
+				InReverse:SetAttrs({IC_Visible = false})
+				InTimeWarp:SetAttrs({IC_Visible = false})
+				InDeltaMode:SetAttrs({IC_Visible = false})
+				InDelta:SetAttrs({IC_Visible = false})
+				InDeltaScale:SetAttrs({IC_Visible = false})
+				InDeltaThreshold:SetAttrs({IC_Visible = false})
+				InDeltaDirection:SetAttrs({IC_Visible = false})
+				InSpeed:SetAttrs({IC_Visible = false})
+				InStep:SetAttrs({IC_Visible = false})
+				InSpeedMode:SetAttrs({IC_Visible = false})
+				InRandomSeed:SetAttrs({IC_Visible = false})
+				InHold:SetAttrs({IC_Visible = false})
+				InSkip:SetAttrs({IC_Visible = false})
+				InOffset:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				InXSheetSize:SetAttrs({IC_Visible = false})
+				InXSheet:SetAttrs({IC_Visible = false})
+				InTrigger:SetAttrs({IC_Visible = false})
+				InOnTriggerThreshold:SetAttrs({IC_Visible = false})
+				InOffTriggerThreshold:SetAttrs({IC_Visible = false})
+				InRunSpeed:SetAttrs({IC_Visible = false})
+--				InMinRunLength:SetAttrs({IC_Visible = true})
+--				InMaxRunLength:SetAttrs({IC_Visible = true})
+				InTriggerMode:SetAttrs({IC_Visible = false})
+				InTriggerDirection:SetAttrs({IC_Visible = false})
+				InSwitchStartFrames:SetAttrs({IC_Visible = false})
+				InSwitch:SetAttrs({IC_Visible = false})
+--				InPattern:SetAttrs({IC_Visible = true})
+--				InPatternOffset:SetAttrs({IC_Visible = true})
+				InForceTargetRange:SetAttrs({IC_Visible = true})
+				InRoundOutput:SetAttrs({IC_Visible = false})
+				InAllowFloatFrameValues:SetAttrs({IC_Visible = false})
+			end
+		end
+
+------------------------------------------------------------------- Force Target Range UI
+
+		if inp == InForceTargetRange or inp == InMode then
+			local m = InMode:GetSource(time, REQF_SecondaryTime).Value
+			local f = InForceTargetRange:GetSource(time, REQF_SecondaryTime).Value
+			if m == "Warp" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Delta" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Remap" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = true })
+				InTargetEndFrame:SetAttrs({ IC_Visible = true })
+				InBeforeTime:SetAttrs({ IC_Visible = true })
+				InAfterTime:SetAttrs({ IC_Visible = true })
+			elseif m == "LockStart" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = true })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = true })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "LockEnd" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = true })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = true })
+			elseif m == "Random" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Hold" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Skip" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Offset" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "XSheet" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = true })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = true })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Trigger" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = true })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = true })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			elseif m == "Switch" then
+				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+--			elseif m == "Pattern" then
+--				InTargetStartFrame:SetAttrs({ IC_Visible = f == 1 })
+--				InTargetEndFrame:SetAttrs({ IC_Visible = f == 1 })
+--				InBeforeTime:SetAttrs({ IC_Visible = f == 1 })
+--				InAfterTime:SetAttrs({ IC_Visible = f == 1 })
+			end
+		end
+
+------------------------------------------------------------------- Allow Float Frame Values in UI
+
+		if inp == InAllowFloatFrameValues then
+			local a = InAllowFloatFrameValues:GetSource(time, REQF_SecondaryTime).Value
+			if a == 1 then
+				InSourceStartFrame:SetAttrs({ INP_Integer = false })
+				InSourceEndFrame:SetAttrs({ INP_Integer = false })
+				InTargetStartFrame:SetAttrs({ INP_Integer = false })
+				InTargetEndFrame:SetAttrs({ INP_Integer = false })
+				InStep:SetAttrs({ INP_Integer = false })
+				InSkip:SetAttrs({ INP_Integer = false })
+				InHold:SetAttrs({ INP_Integer = false })
+				InOffset:SetAttrs({ INP_Integer = false })
+--				InMinRunLength:SetAttrs({ INP_Integer = false })
+--				InMaxRunLength:SetAttrs({ INP_Integer = false })
+			else
+				InSourceStartFrame:SetAttrs({ INP_Integer = true })
+				InSourceEndFrame:SetAttrs({ INP_Integer = true })
+				InTargetStartFrame:SetAttrs({ INP_Integer = true })
+				InTargetEndFrame:SetAttrs({ INP_Integer = true })
+				InStep:SetAttrs({ INP_Integer = true })
+				InSkip:SetAttrs({ INP_Integer = true })
+				InHold:SetAttrs({ INP_Integer = true })
+				InOffset:SetAttrs({ INP_Integer = true })
+--				InMinRunLength:SetAttrs({ INP_Integer = true })
+--				InMaxRunLength:SetAttrs({ INP_Integer = true })
+			end
+		end
+
+------------------------------------------------------------------- XSheet UI Window Length
+
+		if inp == InXSheetSize then			-- hacking UI update
+			local xsl = InXSheetSize:GetSource(time, REQF_SecondaryTime).Value
+			local inm = InMode:GetSource(time, REQF_SecondaryTime).Value
+			if inm == "XSheet" then
+				InXSheet:SetAttrs({TEC_Lines = xsl})
+				InXSheet:SetAttrs({IC_Visible = false})				-- more hacking UI update
+				InXSheet:SetAttrs({IC_Visible = true})
+				OutXFrameNumbers:SetAttrs({TEC_Lines = xsl})
+				OutXFrameNumbers:SetAttrs({IC_Visible = false})
+				OutXFrameNumbers:SetAttrs({IC_Visible = true})
+			end
+		end
+	end
+end
+
+------------------------------------------------------------------- FUNCTIONS:
+
+------------------------------------------------------------------- WARP
+
+function Warp(ssf, sef, wrp, rev)
+
+	if rev == 0 then
+		return ( (sef - ssf) * ( wrp ) ) + ssf
+	elseif rev == 1 then
+		return ( (sef - ssf) * - ( wrp - rev ) ) + ssf
+	end
+end
+
+------------------------------------------------------------------- DELTA
+
+function Delta(ssf, dlt, ddi, dmo, time)
+
+-- first convert ddi from a string to a number
+
+	if ddi == "Up" then ddi = 1 end
+	if ddi == "Down" then ddi = -1 end
+
+-- create a table, containing all the values for Delta from the start up to the frame before the current, then
+-- apply threshold, and then calculate slope if in Slope mode
+
+-- need to adjust this in order to calculate correctly with animated scale, direction, etc
+
+	local dv = {} -- Delta value
+	local ds = {} -- Delta Scale Values
+	local dt = {} -- Delta Threshold Values
+
+	local sv = {} -- Slope values
+
+	local i = 1
+
+	-- optimize the following further by first determining if a value is animated
+
+	while i <= time-ssf+(dmo == "Slope" and 1 or 0) do
+		dv[i] = InDelta:GetSource(ssf+i-1).Value
+		ds[i] = InDeltaScale:GetSource(ssf+i-1).Value
+		dt[i] = InDeltaThreshold:GetSource(ssf+i-1).Value
+			if dv[i] ~= nil then
+				if dt[i] ~= 0 then
+					dv[i] = dv[i] - dt[i]
+				end
+				if dmo == "Slope" then
+					if i > 1 then
+						sv[i] = dv[i] - dv[i-1]
+					else
+						sv[i] = 0
+					end
+				end
+			end
+		i = i + 1
+	end
+
+	if dmo == "Slope" then
+		dv = sv
+	end
+
+-- apply scale, and direction to the numbers in the table, then
+-- sum all those numbers and return the result
+
+	local i = 1
+	sum = dlt
+	while i <= time-ssf+(dmo == "Slope" and 1 or 0) do
+		if dv[i] ~= nil then
+			dv[i] = ddi * dv[i] * ds[i]
+			sum = sum + dv[i]
+			i = i + 1
+		end
+	end
+
+	return sum - dlt + ssf
+end
+
+
+------------------------------------------------------------------- REMAP
+
+function Remap(ssf, sef, tsf, tef, rev, time)
+
+	if rev == 0 then
+		return ( (sef - ssf) * ( ( time - tsf ) / ( tef - tsf ) ) ) + ssf
+	elseif rev == 1 then
+		return ( (sef - ssf) * - ( ( time - tsf ) / ( tef - tsf ) - 1 ) ) + ssf
+	end
+end
+
+------------------------------------------------------------------- LOCK START
+
+function LockStart(ssf, sef, tsf, spd, stp, spm, rev, time)
+
+	if spm == "Speed" then
+		return (1-rev) * ssf + rev * sef + (1- rev*2) * ( time - tsf ) * ( spd )
+	elseif spm == "Step" then
+		return math.floor (1-rev) * ssf + rev * sef + (1- rev*2) * ( time - tsf ) * ( ( 1 / stp )  )
+	end
+end
+
+------------------------------------------------------------------- LOCK END
+
+function LockEnd(ssf, sef, tef, spd, stp, spm, rev, time)
+
+	if spm == "Speed" then
+		return (1-rev) * sef + rev * ssf + (1- rev*2) * ( time - tef ) * ( spd )
+	elseif spm == "Step" then
+		return math.floor (1-rev) * sef + rev * ssf + (1- rev*2) * ( time - tef ) * ( ( 1 / stp )  )
+	end
+end
+
+------------------------------------------------------------------- RANDOM
+
+function Random(ssf, sef, rds, time)
+	math.randomseed(rds+time)
+	return math.random(ssf,sef)
+end
+
+------------------------------------------------------------------- HOLD
+
+function Hold(hld)
+	return hld
+end
+
+------------------------------------------------------------------- SKIP
+
+function Skip(ssf, skp, time)
+	skp = math.max(0,skp)+1
+	return ssf + math.floor( (time - ssf) / skp) * skp
+end
+
+------------------------------------------------------------------- OFFSET
+
+function Offset(ofs, time)
+	return time-ofs
+end
+
+------------------------------------------------------------------- XSHEET
+
+function XSheet(xsh, tsf, time)
+
+	local xsstart = {}		-- intermediate xsheet table for calculations and passing values over for resequencing
+	local xs = {}			-- intermediate xsheet table for storing a line of input
+	local xsout = {}		-- the total xsheet output
+	local nums = {}			-- list of numbers in any xsheet script input line
+	local wrds = {}			-- list of words in any xsheet script input line
+	local loop = 1
+	local hold = 0
+	local step = 1
+	local skip = 0
+	local speed = 1
+
+	xshKAK = string.gsub (xsh, "[\n]", "KAK\n")
+	xshKAK = string.gsub (xshKAK, "reverse", "reverse 0")
+--	print ("xsh:"..xsh)
+--	print ("xshKAK:"..xshKAK)
+	for line in xshKAK:gmatch("[^\n]+") do									-- ***** GO THROUGH EVERY SINGLE LINE FROM HERE...
+
+--		print ("line:"..line)
+
+		for word in line:gmatch("%a+") do
+			table.insert(wrds, (word))												--	put words in a table
+		end
+		for number in line:gmatch("%d+") do
+			table.insert(nums, tonumber(number))									--	put numbers in another table
+		end
+
+		if nums[1] ~= nil and nums[2] == nil and wrds[1] ~= "all" then				-- then determine the starting point and put that in the xsheet already
+			table.insert(xs, nums[1])
+		end
+
+--		print ("nums @ start:")
+--		dump (nums)
+--		print ("wrds @ start:")
+--		dump (wrds)
+--		print ("xs @ start:")
+--		dump (xs)
+
+		if wrds[1] ~= nil then														-- now iterate through the words, which can be one of 6 options
+			local currentword = 1
+			local currentnumber = currentword + 1
+			local morewords = true
+			while morewords == true and nums[currentnumber] ~= nil and wrds[1] ~= "all" do
+				if wrds[currentword] == "to" then																-- TO
+--					print ("currentword:"..wrds[currentword])
+--					print ("currentnumber:"..nums[currentnumber])
+--					print ("xsstart @ to:")
+--					dump (xsstart)
+					local countstart = 1
+					if currentword == 1 then										-- if this is a new sequence, "to" must start from the first number
+						countstart = nums[1]
+					else 															-- else from the end of an existing sequence ("to" does not resequence an existing list, but adds to it)
+						countstart = xsstart[table.getn(xsstart)]
+					end
+					for i = countstart +
+							( ( currentnumber>2 and countstart > nums[currentnumber] ) and -1 or 				-- if starting from existing sequence and going from high to low then go from countstart -1
+							  ( currentnumber>2 and countstart <= nums[currentnumber] ) and 1 or 0 ), 			-- if starting from existing sequence and going from low to high then go from countstart +1 else go from countstart
+							nums[currentnumber], 																-- count to "to" number
+							( countstart > nums[currentnumber] and -1 or 1 ) do		-- count backwards when going from high to low (when countstart > "to" number
+						table.insert(xs,i)
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "step" then															-- STEP
+					for i,v in pairs(xs) do 										-- clear xs
+						xs[i]=nil
+					end
+					step = math.max(nums[currentnumber])
+					if xsstart[1] == nil then										-- make sure there's a starting point
+						xsstart[1] = nums[1]
+					end
+					local xsstartlength = table.getn(xsstart)
+					for i = 1, xsstartlength*step, 1 do
+						table.insert(xs, (xsstart[math.ceil(i/step)]))
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "skip" then															-- SKIP
+					for i,v in pairs(xs) do 										-- clear xs
+						xs[i]=nil
+					end
+					skip = math.max(0,nums[currentnumber]) + 1
+					if xsstart[1] == nil then										-- make sure there's a starting point
+						xsstart[1] = nums[1]
+					end
+					local xsstartlength = table.getn(xsstart)
+					for i = 0, xsstartlength -1 , 1 do
+						table.insert(xs, xsstart[1 + ((math.floor(i/skip)) * skip)])
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "speed" then														-- SPEED
+					for i,v in pairs(xs) do 										-- clear xs
+						xs[i]=nil
+					end
+					speed = math.max(1,nums[currentnumber])
+					if xsstart[1] == nil then										-- make sure there's a starting point
+						xsstart[1] = nums[1]
+					end
+					local xsstartlength = table.getn(xsstart)
+					for i = 1, xsstartlength, speed do
+						table.insert(xs, (xsstart[math.floor(i)]))
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "hold" then															-- HOLD
+--					print("xs @ hold:")
+--					dump (xs)
+--					print("xsstart @ hold:")
+--					dump (xsstart)
+					local holdframe = 1
+					if currentword == 1 then										-- if this is a new sequence, "holdframe" is the previous number in the num list
+						holdframe = nums[1]
+--						print ("holdframe:"..holdframe)
+						hold = nums[currentnumber]
+					else 															-- else from the end of xsstart
+						holdframe = xsstart[table.getn(xsstart)]
+						hold = nums[currentnumber]-1
+					end
+					for i = 1, hold, 1 do
+					table.insert( xs, holdframe )
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "loop" then															-- LOOP
+					loop = nums[currentnumber] - 1
+					if xsstart[1] == nil then
+						xsstart[1] = nums[1]
+					end
+					for i = 1, loop, 1 do
+						for j = 1, table.getn(xsstart), 1 do
+							table.insert (xs, xsstart[j])
+						end
+					end
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+
+
+				elseif wrds[currentword] == "reverse" then														-- REVERSE
+
+					if xsstart[1] ~= nil then
+						local xsstartlength = table.getn(xsstart)
+						for i, v in pairs(xs) do
+						xs[i] = xsstart[xsstartlength - i +1]
+						end
+					else
+					end
+
+					for i,v in pairs(xsstart) do 									-- clear xsstart
+						xsstart[i]=nil
+					end
+					for i,v in pairs(xs) do											-- copy xs to xsstart
+						xsstart[i] = xs[i]
+					end
+				end
+
+
+				if wrds[currentword+1] ~= nil then
+					currentword = currentword + 1
+					currentnumber = currentword + 1
+				else
+					morewords = false
+				end
+
+
+			end
+
+			local endlineword = table.getn(wrds)
+			if wrds[endlineword] == "KAK" then											-- KAK (end of the line is reached...)
+--				print("add to xsheet here")
+				for i,v in pairs(xs) do													-- add xs table (line) to xs output (after newline)
+					table.insert (xsout, xs[i])
+				end
+				for i,v in pairs(xs) do													-- clear xs for next line
+					xs[i] = nil
+				end
+			end
+
+			if wrds[1] == "all" and xsout[1] ~= nil then						--***** GLOBAL operations (add while loop)
+				local xsoutlength = table.getn(xsout)
+				local xsoutcopy = {}
+				for i,v in pairs(xsout) do
+					xsoutcopy[i] = xsout[i]
+				end
+				if wrds[2] == "reverse" then											-- REVERSE
+					for i, v in pairs(xsout) do
+					xsout[i] = xsoutcopy[xsoutlength - i +1]
+					end
+				end
+
+				if wrds[2] == "speed" and nums[1] ~= nil then							-- SPEED
+				local allspeed = math.max(1,nums[1])
+				for i,v in pairs(xsout) do
+					xsout[i] = nil
+				end
+				for i = 1, xsoutlength, allspeed do
+						table.insert(xsout, (xsoutcopy[math.floor(i)]))
+					end
+				end
+
+				if wrds[2] == "step" and nums[1] ~= nil then							-- STEP
+				local allstep = math.max(1, nums[1])
+				for i,v in pairs(xsout) do
+					xsout[i] = nil
+				end
+				for i = 1, xsoutlength*allstep, 1 do
+						table.insert(xsout, (xsoutcopy[math.ceil(i/allstep)]))
+					end
+				end
+
+				if wrds[2] == "skip" and nums[1] ~= nil then							-- SKIP
+				local allskip = math.max(0,nums[1]) + 1
+				for i,v in pairs(xsout) do
+					xsout[i] = nil
+				end
+				for i = 0, xsoutlength -1 , 1 do
+						table.insert(xsout, xsoutcopy[1 + ((math.floor(i/allskip)) * allskip)])
+					end
+				end
+
+				if wrds[2] == "loop" and nums[1] ~= nil then							-- LOOP
+				local allloop = nums[1] - 1
+				for i = 1, allloop, 1 do
+					for j = 1, xsoutlength, 1 do
+						table.insert (xsout, xsoutcopy[j])
+					end
+				end
+				end
+			end																	--***** END GLOBAL operations
+		end
+
+		for i,v in pairs(wrds) do
+			wrds[i]=nil
+		end																				-- clear the tables
+		for j,w in pairs(nums) do
+			nums[j]=nil
+		end
+		for k,x in pairs(xsstart) do
+			xsstart[x] = nil
+		end
+
+		loop = 1																		-- reset all variables
+		hold = 0
+		step = 1
+		skip = 0
+		speed = 1
+		lstart = 1
+		lend = 1
+	end																		-- ***** ...TO HERE
+
+--	print ("xs @ end:")
+--	dump (xs)
+
+	for f,s in pairs(xs) do				-- add xs table (line) to xs output (before newline)
+		table.insert(xsout, xs[f])
+	end
+
+	local xsheetoutput = ""
+	local t = 0
+	for f,s in pairs(xsout) do
+		xsheetoutput = xsheetoutput..(tsf+t).."  --  "..s.."\n"
+		t = t + 1
+	end
+
+	OutXFrameNumbers:SetAttrs({INP_Disabled = false,})
+	OutXFrameNumbers:SetSource(Text(xsheetoutput),0)
+	OutXFrameNumbers:SetAttrs({INP_Disabled = true,})
+
+
+	return xsout[time-tsf+1]
+
+end
+
+------------------------------------------------------------------- TRIGGER
+
+function Trigger(ssf, tsf, trg, tdi, tmo, time)
+
+-- first convert tdi from a string to a number
+
+	local tv = {}	-- table for Trigger Values
+	local nv = {}	-- table for On Trigger Values
+	local fv = {}	-- table for Off Trigger Values
+	local rv = {}	-- table for Run Speed Values
+--	local mv = {}	-- table for Min Run Length Values
+
+	local to = {}	-- table for Trigger Output
+
+	local inrun = 0
+	local direction = 1
+	local hold = 1
+	local i = 1
+	local j = 2 -- first value will be initialized separately
+
+	-- optimize the following further by first determining if a value is animated
+
+	while i <= time-tsf+1 do
+		tv[i] = InTrigger:GetSource(tsf+i-1).Value
+		nv[i] = InOnTriggerThreshold:GetSource(tsf+1-i).Value
+		fv[i] = InOffTriggerThreshold:GetSource(tsf+1-i).Value
+		rv[i] = InRunSpeed:GetSource(tsf+1-i).Value
+--		mv[i] = InMinRunLength:GetSource(tsf+1-i).Value
+		i = i + 1
+	end
+
+--	print ("tv")
+--	dump (tv)
+
+	-- initialize first value of tv{}
+
+	if tv[1] >= nv[1] then
+		to[1] = 1
+	else
+		to[1] = 0
+	end
+
+	-- add minimum non-run length in inputs
+
+	while j <= time-tsf+1 do							-- for the active range
+
+		if tmo == "Reset" then
+			if tv[j] >= nv[j] then
+				inrun = inrun + 1
+			elseif tv[j] <= fv[j] then
+				inrun = 0
+			elseif inrun ~= 0 then
+				inrun = inrun + 1
+			end
+		elseif tmo == "Hold" then
+			if tv[j] >= nv[j] then
+				inrun = inrun + 1
+				hold = 0
+			elseif tv[j] <= fv[j] then
+				hold = 1
+			elseif hold == 0 then
+				inrun = inrun + 1
+			end
+		elseif tmo == "Hold And Reset" then
+			if tv[j] >= nv[j] then
+				if hold == 1 then
+					inrun = 1
+					hold = 0
+				else
+					inrun = inrun + 1
+				end
+			elseif tv[j] <= fv[j] then
+				hold = 1
+			elseif hold == 0 then
+				inrun = inrun + 1
+			end
+		elseif tmo == "Bounce" then
+			if tv[j] >= nv[j] then
+				inrun = inrun + 1
+				direction = 1
+			elseif tv[j] <= fv[j] then
+				inrun = inrun - 1		 	-- advance backwards
+				direction = -1
+			else
+				inrun = inrun + direction
+			end
+		end
+
+		to[j] = inrun * rv[j]
+		j = j + 1
+
+	end
+
+--	print ("to")
+--	dump (to)
+
+	-- apply direction
+
+	if tdi == "Up" then
+		inrun = ssf + to[time+1-tsf]
+	elseif tdi == "Down" then
+		inrun = ssf - to[time+1-tsf]
+	end
+
+	return inrun
+
+end
+
+------------------------------------------------------------------- SWITCH
+
+function Switch(sws, swi, time)
+
+	local ss = {} -- create table for the start frames
+
+	for line in sws:gmatch("[^\n]+") do
+		for number in line:gmatch("%d+") do
+			table.insert(ss, tonumber(number))									--	put numbers in table
+		end
+	end
+
+--	dump (ss)
+
+	-- get all keyframes from the Switch parameter and put those in a table:
+
+	local sk = {} -- create table for the keyframe values
+	local si = {} -- create table for the switch values
+
+	local op = InSwitch.Source and InSwitch.Source.Owner
+
+	if op then
+		local t = op:GetNextKeyTime(TIME_UNDEFINED)
+
+		while t ~= TIME_UNDEFINED do
+			table.insert(sk, t)
+			table.insert(si, InSwitch:GetSource(t, REQF_SecondaryTime).Value)
+			t = op:GetNextKeyTime(t)
+		end
+	end
+
+--	dump (sk)
+--	dump (si)
+
+	count = time
+	countstart = time
+	switch = 1
+
+	if sk[1] then
+		for i,v in pairs(sk) do
+			if v <= time then
+				countstart = v
+				switch = si[i]
+			else
+				break
+			end
+		end
+		if ss[switch] then
+			count = ss[switch] + time - countstart
+		else
+--			print ("switch value out of bounds")
+			count = time
+		end
+	else
+		count = time
+	end
+
+	return count
+
+end
+
+------------------------------------------------------------------- PROCESS
+
+function Process(req)
+
+	local mode = InMode:GetValue(req).Value
+
+	local ssf = InSourceStartFrame:GetValue(req).Value
+	local sef = InSourceEndFrame:GetValue(req).Value
+	local tsf = InTargetStartFrame:GetValue(req).Value
+	local tef = InTargetEndFrame:GetValue(req).Value
+	local rev = InReverse:GetValue(req).Value
+
+	local wrp = InTimeWarp:GetValue(req).Value
+
+	local dlt = InDelta:GetValue(req).Value
+	local dsc = InDeltaScale:GetValue(req).Value
+	local dth = InDeltaThreshold:GetValue(req).Value
+	local ddi = InDeltaDirection:GetValue(req).Value
+	local dmo = InDeltaMode:GetValue(req).Value
+
+	local spd = InSpeed:GetValue(req).Value
+	local stp = InStep:GetValue(req).Value
+	local spm = InSpeedMode:GetValue(req).Value
+
+	local rds = InRandomSeed:GetValue(req).Value
+
+	local hld = InHold:GetValue(req).Value
+
+	local skp = InSkip:GetValue(req).Value
+
+	local ofs = InOffset:GetValue(req).Value
+
+--	local xsl = InXSheetSize:GetValue(req).Value
+	local xsh = InXSheet:GetValue(req).Value
+
+	local trg = InTrigger:GetValue(req).Value
+	local ont = InOnTriggerThreshold:GetValue(req).Value
+	local oft = InOffTriggerThreshold:GetValue(req).Value
+	local rsp = InRunSpeed:GetValue(req).Value
+--	local mnl = InMinRunLength:GetValue(req).Value
+--	local mxl = InMaxRunLength:GetValue(req).Value
+	local tdi = InTriggerDirection:GetValue(req).Value
+	local tmo = InTriggerMode:GetValue(req).Value
+
+	local sws = InSwitchStartFrames:GetValue(req).Value
+	local swi = InSwitch:GetValue(req).Value
+
+	local bftime = InBeforeTime:GetValue(req).Value
+	local aftime = InAfterTime:GetValue(req).Value
+	local ftg = InForceTargetRange:GetValue(req).Value
+	local oiv = InRoundOutput:GetValue(req).Value
+	local time = req.Time
+
+	if time < tsf then									--determine before time behaviour
+		if bftime == "Constant" then					--since in all modes apart from "Continue" we want to retrieve values from within the active time range, we just need to figure out which times we pick them from
+			timebf = tsf
+		elseif bftime == "Continue" then				--since "Continue" generates new values instead of values already available in the retime functions, we need to do separate calculations for all modes
+			if mode == "Warp" then
+				local wrptsf = InTimeWarp:GetSource(tsf).Value					-- get wrp at target start frame
+				local wrptsfp = InTimeWarp:GetSource(tsf+1).Value				-- get wrp at the frame after target start frame
+				retimebf = Warp(ssf, sef, wrptsf, rev) - ( Warp(ssf, sef, wrptsfp, rev) - Warp(ssf, sef, wrptsf, rev) ) * (tsf-time)
+			elseif mode == "Remap" then
+				retimebf = Remap(ssf, sef, tsf, tef, rev, tsf) - ( Remap(ssf, sef, tsf, tef, rev, tsf+1) - Remap(ssf, sef, tsf, tef, rev, tsf) ) * (tsf-time)
+			elseif mode == "Delta" then
+				retimebf = Delta(ssf, dlt, ddi, dmo, tsf) - ( Delta(ssf, dlt, ddi, dmo, tsf+1) - Delta(ssf, dlt, ddi, dmo, tsf) ) * (tsf-time)
+			elseif mode == "LockStart" then
+				retimebf = LockStart(ssf, sef, tsf, spd, stp, spm, rev, tsf) - ( LockStart(ssf, sef, tsf, spd, stp, spm, rev, tsf+1) - LockStart(ssf, sef, tsf, spd, stp, spm, rev, tsf) ) * (tsf-time)
+			elseif mode == "LockEnd" then
+				retimebf = LockEnd(ssf, sef, tef, spd, stp, spm, rev, tsf) - ( LockEnd(ssf, sef, tef, spd, stp, spm, rev, tsf+1) - LockEnd(ssf, sef, tef, spd, stp, spm, rev, tsf) ) * (tsf-time)
+			elseif mode == "Random" then
+				retimebf = Random(ssf, sef, rds, tsf) - ( Random(ssf, sef, rds, tsf+1) - Random(ssf, sef, rds, tsf) ) * (tsf-time)
+			elseif mode =="Hold" then
+				local hldtsf = InHold:GetSource(tsf).Value
+				local hldtsfp = InHold:GetSource(tsf+1).Value
+				retimebf = hldtsf - (hldtsfp-hldtsf) * (tsf-time)
+			elseif mode == "Skip" then
+				retimebf = Skip(ssf, skp, tsf) - ( Skip(ssf, skp, tsf+1) - Skip(ssf, skp, tsf) ) * (tsf-time)
+			elseif mode == "Offset" then
+				retimebf = Offset(ofs, tsf) - ( Offset(ofs, tsf+1) - Offset(ofs, tsf) ) * (tsf-time)
+			elseif mode == "XSheet" then
+				retimebf = XSheet(xsh, tsf, tsf) - ( XSheet(xsh, tsf, tsf+1) - XSheet(xsh, tsf, tsf) ) * (tsf-time)
+			elseif mode == "Trigger" then
+				retimebf = Trigger(ssf, tsf, trg, tdi, tmo, tsf) - ( Trigger(ssf, tsf, trg, tdi, tmo, tsf+1) - Trigger(ssf, tsf, trg, tdi, tmo, tsf) ) * (tsf-time)
+			elseif mode == "Switch" then
+				retimebf = Switch(sws, swi, tsf) - ( Switch(sws, swi, tsf+1) - Switch(sws, swi, tsf) ) * (tsf-time)
+			end
+		elseif bftime == "Loop" then
+			timebf = tef - (tef-time)%(tef-tsf+1)
+		elseif bftime == "PingPong" then
+			if math.floor((tsf-time)/(tef-tsf)+1)%2==1 then
+				timebf = tsf+(tef-time)%(tef-tsf)
+			else
+				timebf = tef-(tef-time)%(tef-tsf)
+			end
+		elseif bftime == "InclusivePingPong" then
+			if math.floor((tsf-time-1)/(tef-tsf+1)+1)%2==1 then
+				timebf = tsf+(tef-time)%(tef-tsf+1)
+			else
+				timebf = tef-(tef-time)%(tef-tsf+1)
+			end
+		elseif bftime == "Hold" then
+			local hldbf = InHold:GetSource(tsf).Value
+			retimebf = Hold(hldbf)
+		elseif bftime == "Random" then
+			retimebf = Random(ssf, sef, rds, time)
+		elseif bftime == "DoNothing" then
+			retimebf = time
+		end
+		if bftime ~= "Continue" and bftime ~= "Hold" and bftime ~= "Random" and bftime ~= "DoNothing" then
+			if mode == "Warp" then
+				local wrpbf = InTimeWarp:GetSource(timebf).Value
+				retimebf = Warp(ssf, sef, wrpbf, rev)
+			elseif mode == "Remap" then
+				retimebf = Remap(ssf, sef, tsf, tef, rev, timebf)
+			elseif mode == "Delta" then
+				retimebf = Delta(ssf, dlt, ddi, dmo, timebf)
+			elseif mode == "LockStart" then
+				retimebf = LockStart(ssf, sef, tsf, spd, stp, spm, rev, timebf)
+			elseif mode == "LockEnd" then
+				retimebf = LockEnd(ssf, sef, tef, spd, stp, spm, rev, timebf)
+			elseif mode == "Random" then
+				retimebf = Random(ssf, sef, rds, timebf)
+			elseif mode == "Hold" then
+				hldbf = InHold:GetSource(timebf).Value
+				retimebf = Hold(hldbf)
+			elseif mode == "Skip" then
+				retimebf = Skip(ssf, skp, timebf)
+			elseif mode == "Offset" then
+				retimebf = Offset(ofs, timebf)
+			elseif mode == "XSheet" then
+				retimebf = XSheet(xsh, tsf, timebf)
+			elseif mode == "Trigger" then
+				retimebf = Trigger(ssf, tsf, trg, tdi, tmo, timebf)
+			elseif mode == "Switch" then
+				retimebf = Switch(sws, swi, timebf)
+			end
+		end
+	end
+
+	if time > tef then									--determine after time behaviour
+		if aftime == "Constant" then					--since in all modes apart from "Continue" we want to retrieve values from within the active time range, we just need to figure out which times we pick them from
+			timeaf = tef
+		elseif aftime == "Continue" then				--since "Continue" generates new values instead of values already available in the retime functions, we need to do separate calculations for all modes
+			if mode == "Warp" then
+				local wrptef = InTimeWarp:GetSource(tef).Value
+				local wrptefm = InTimeWarp:GetSource(tef-1).Value
+				retimeaf = Warp(ssf, sef, wrptef, rev) + ( Warp(ssf, sef, wrptef, rev) - Warp(ssf, sef, wrptefm, rev) ) * (time-tef)			-- get wrp at certain frame
+			elseif mode == "Remap" then
+				retimeaf = Remap(ssf, sef, tsf, tef, rev, tef) + ( Remap(ssf, sef, tsf, tef, rev, tef) - Remap(ssf, sef, tsf, tef, rev, tef-1) ) * (time-tef)
+			elseif mode == "Delta" then
+				retimeaf = Delta(ssf, dlt, ddi, dmo, tef) + ( Delta(ssf, dlt, ddi, dmo, tef) - Delta(ssf, dlt, ddi, dmo, tef-1) ) * (time-tef)
+			elseif mode == "LockStart" then
+				retimeaf = LockStart(ssf, sef, tsf, spd, stp, spm, rev, tef) + ( LockStart(ssf, sef, tsf, spd, stp, spm, rev, tef) - LockStart(ssf, sef, tsf, spd, stp, spm, rev, tef-1) ) * (time-tef)
+			elseif mode == "LockEnd" then
+				retimeaf = LockEnd(ssf, sef, tef, spd, stp, spm, rev, tef) + ( LockEnd(ssf, sef, tef, spd, stp, spm, rev, tef) - LockEnd(ssf, sef, tef, spd, stp, spm, rev, tef-1) ) * (time-tef)
+			elseif mode == "Random" then
+				retimeaf = Random(ssf, sef, rds, tef) + ( Random(ssf, sef, rds, tef) - Random(ssf, sef, rds, tef-1) ) * (time-tef)
+			elseif mode =="Hold" then
+				local hldtef = InHold:GetSource(tef).Value
+				local hldtefm = InHold:GetSource(tef-1).Value
+				retimeaf = hldtef + (hldtef-hldtefm) * (time-tef)
+			elseif mode == "Skip" then
+				retimeaf = Skip(ssf, skp, tef) + ( Skip(ssf, skp, tef) - Skip(ssf, skp, tef-1) ) * (time-tef)
+			elseif mode == "Offset" then
+				retimeaf = Offset(ofs, tef) + ( Offset(ofs, tef) - Offset(ofs, tef-1) ) * (time-tef)
+			elseif mode == "XSheet" then
+				retimeaf = XSheet(xsh, tsf, tef) + ( XSheet(xsh, tsf, tef) - XSheet(xsh, tsf, tef-1) ) * (time-tef)
+			elseif mode == "Trigger" then
+				retimeaf = Trigger(ssf, tsf, trg, tdi, tmo, tef) + ( Trigger(ssf, tsf, trg, tdi, tmo, tef) - Trigger(ssf, tsf, trg, tdi, tmo, tef-1) ) * (time-tef)
+			elseif mode == "Switch" then
+				retimeaf = Switch(sws, swi, tef) + ( Switch(sws, swi, tef) - Switch(sws, swi, tef-1) ) * (time-tef)
+			end
+		elseif aftime == "Loop" then
+			timeaf = tef - (tef-time)%(tef-tsf+1)
+		elseif aftime == "PingPong" then
+			if math.floor((tsf-time)/(tef-tsf)+1)%2==1 then
+				timeaf = tsf+(tef-time)%(tef-tsf)
+			else
+				timeaf = tef-(tef-time)%(tef-tsf)
+			end
+		elseif aftime == "InclusivePingPong" then
+			if math.floor((tsf-time-1)/(tef-tsf+1)+1)%2==1 then
+				timeaf = tsf+(tef-time)%(tef-tsf+1)
+			else
+				timeaf = tef-(tef-time)%(tef-tsf+1)
+			end
+		elseif aftime == "Hold" then
+			local hldaf = InHold:GetSource(tef).Value
+			retimeaf = Hold(hldaf)
+		elseif aftime == "Random" then
+			retimeaf = Random(ssf, sef, rds, time)
+		elseif aftime == "DoNothing" then
+			retimeaf = time
+		end
+		if aftime ~= "Continue" and aftime ~= "Hold" and aftime ~= "Random" and aftime ~= "DoNothing" then
+			if mode == "Warp" then
+				wrpaf = InTimeWarp:GetSource(timeaf).Value
+				retimeaf = Warp(ssf, sef, wrpaf, rev)
+			elseif mode == "Remap" then
+				retimeaf = Remap(ssf, sef, tsf, tef, rev, timeaf)
+			elseif mode == "Delta" then
+				retimeaf = Delta(ssf, dlt, ddi, dmo, timeaf)
+			elseif mode == "LockStart" then
+				retimeaf = LockStart(ssf, sef, tsf, spd, stp, spm, rev, timeaf)
+			elseif mode == "LockEnd" then
+				retimeaf = LockEnd(ssf, sef, tef, spd, stp, spm, rev, timeaf)
+			elseif mode == "Random" then
+				retimeaf = Random(ssf, sef, rds, timeaf)
+			elseif mode =="Hold" then
+				hldaf = InHold:GetSource(timeaf).Value
+				retimeaf = Hold(hldaf)
+			elseif mode == "Skip" then
+				retimeaf = Skip(ssf, skp, timeaf)
+			elseif mode == "Offset" then
+				retimeaf = Offset(ofs, timeaf)
+			elseif mode == "XSheet" then
+				retimeaf = XSheet(xsh, tsf, timeaf)
+			elseif mode == "Trigger" then
+				retimeaf = Trigger(ssf, tsf, trg, tdi, tmo, timeaf)
+			elseif mode == "Switch" then
+				retimeaf = Switch(sws, swi, timeaf)
+			end
+		end
+	end
+
+------------------------------------------------------------------- COLLECT ALL
+
+	if mode == "Warp" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Warp(ssf, sef, wrp, rev)
+		end
+	elseif mode == "Remap" then
+		if time < tsf then
+			retime = retimebf
+		elseif time > tef then
+			retime = retimeaf
+		else
+			retime = Remap(ssf, sef, tsf, tef, rev, time)
+		end
+	elseif mode == "Delta" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Delta(ssf, dlt, ddi, dmo, time)
+		end
+	elseif mode == "LockStart" then
+		if time < tsf then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = LockStart(ssf, sef, tsf, spd, stp, spm, rev, time)
+		end
+	elseif mode == "LockEnd" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef then
+			retime = retimeaf
+		else
+			retime = LockEnd(ssf, sef, tef, spd, stp, spm, rev, time)
+		end
+	elseif mode == "Random" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Random(ssf, sef, rds, time)
+		end
+	elseif mode =="Hold" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Hold(hld)
+		end
+	elseif mode == "Skip" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Skip(ssf, skp, time)
+		end
+	elseif mode == "Offset" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Offset(ofs, time)
+		end
+	elseif mode == "XSheet" then
+		if time < tsf then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = XSheet(xsh, tsf, time)
+		end
+	elseif mode == "Trigger" then
+		if time < tsf then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Trigger(ssf, tsf, trg, tdi, tmo, time)
+		end
+	elseif mode == "Switch" then
+		if time < tsf and ftg == 1 then
+			retime = retimebf
+		elseif time > tef and ftg == 1 then
+			retime = retimeaf
+		else
+			retime = Switch(sws, swi, time)
+		end
+	end
+
+------------------------------------------------------------------- ROUNDING OF OUTPUT VALUES
+
+	if oiv == "Down" then retime = math.floor(retime) end
+	if oiv == "Up" then retime = math.ceil(retime) end
+
+------------------------------------------------------------------- OUTPUT
+
+	OutValue:Set(req, Number(retime))
+end

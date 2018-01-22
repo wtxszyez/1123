@@ -1,0 +1,294 @@
+{
+	Tools = ordered() {
+		MT_Glitch_ChromaticAberration = MacroOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Simulates the inaccurate refraction of a low-quality lens.\r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com",
+				},
+				Input = InstanceInput {
+					SourceOp = "input_chromaticAberration",
+					Source = "Input",
+				},
+				RedOffset = InstanceInput {
+					SourceOp = "RedOffset",
+					Source = "Size",
+					Name = "Red Offset",
+					MinScale = 0.9,
+					MaxScale = 1.1,
+					Default = 1.002,
+				},
+				RedAspect = InstanceInput {
+					SourceOp = "RedOffset",
+					Source = "Aspect",
+					Default = 1,
+				},
+				GreenOffset = InstanceInput {
+					SourceOp = "GreenOffset",
+					Source = "Size",
+					Name = "Green Offset",
+					MinScale = 0.9,
+					MaxScale = 1.1,
+					Default = 1.008,
+				},
+				GreenAspect = InstanceInput {
+					SourceOp = "GreenOffset",
+					Source = "Aspect",
+					Default = 1,
+				},
+				BlueOffset = InstanceInput {
+					SourceOp = "BlueOffset",
+					Source = "Size",
+					Name = "Blue Offset",
+					MinScale = 0.9,
+					MaxScale = 1.1,
+					Default = 1.001,
+				},
+				BlueAspect = InstanceInput {
+					SourceOp = "BlueOffset",
+					Source = "Aspect",
+					Default = 1,
+				},
+				RedBlur = InstanceInput {
+					SourceOp = "RedBlur",
+					Source = "XBlurSize",
+					Name = "Red Blur Size",
+					MaxScale = 3,
+					Default = 0.4,
+				},
+				GreenBlur = InstanceInput {
+					SourceOp = "GreenBlur",
+					Source = "XBlurSize",
+					Name = "Green Blur Size",
+					MaxScale = 3,
+					Default = 0.8,
+				},
+				BlueBlur = InstanceInput {
+					SourceOp = "BlueBlur",
+					Source = "XBlurSize",
+					Name = "Blue Blur Size",
+					MaxScale = 3,
+					Default = 0.8,
+				},
+				ThesholdHigh = InstanceInput {
+					SourceOp = "LumaKeyer1",
+					Source = "High",
+					Name = "Threshold High",
+					ControlGroup = 11,
+					Default = 0.0205128,
+				},
+				ThesholdLow = InstanceInput {
+					SourceOp = "LumaKeyer1",
+					Source = "Low",
+					Name = "Theshold Low",
+					ControlGroup = 11,
+					Default = 0,
+				},
+				CenterFeather = InstanceInput {
+					SourceOp = "Ellipse1",
+					Source = "SoftEdge",
+					Name = "Lens Center Feather",
+					Default = 0.1906383,
+				},
+				CenterSize = InstanceInput {
+					SourceOp = "Ellipse1",
+					Source = "BorderWidth",
+					Name = "Lens Center Size",
+					Default = -0.090359,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "BlendClone",
+					Default = 1,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "Merge1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				input_chromaticAberration = BrightnessContrast {
+					CtrlWZoom = false,
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { -440, -511.5, }, },
+				},
+				RedOffset = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						Size = Input { Value = 1.002, },
+						Input = Input {
+							SourceOp = "input_chromaticAberration",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "LumaKeyer1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, -478.5, }, },
+				},
+				GreenOffset = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ProcessRed = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						Size = Input { Value = 1.008, },
+						Input = Input {
+							SourceOp = "RedBlur",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "LumaKeyer1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, -445.5, }, },
+				},
+				BlueOffset = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ProcessRed = Input { Value = 0, },
+						ProcessGreen = Input { Value = 0, },
+						Size = Input { Value = 1.001, },
+						Input = Input {
+							SourceOp = "GreenBlur",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "LumaKeyer1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, -412.5, }, },
+				},
+				RedBlur = Blur {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input { Value = 0.4, },
+						Input = Input {
+							SourceOp = "RedOffset",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Ellipse1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, -379.5, }, },
+				},
+				GreenBlur = Blur {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						XBlurSize = Input { Value = 0.8, },
+						Input = Input {
+							SourceOp = "GreenOffset",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Ellipse1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, -346.5, }, },
+				},
+				BlueBlur = Blur {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						XBlurSize = Input { Value = 0.8, },
+						Input = Input {
+							SourceOp = "BlueOffset",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Ellipse1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, -313.5, }, },
+				},
+				LumaKeyer1 = LumaKeyer {
+					CtrlWZoom = false,
+					Inputs = {
+						High = Input { Value = 0.0205128, },
+						Input = Input {
+							SourceOp = "input_chromaticAberration",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, -280.5, }, },
+				},
+				Ellipse1 = EllipseMask {
+					CtrlWZoom = false,
+					Inputs = {
+						SoftEdge = Input { Value = 0.1906383, },
+						BorderWidth = Input { Value = -0.090359, },
+						PaintMode = Input { Value = FuID { "Multiply", }, },
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 0.5625, },
+						EffectMask = Input {
+							SourceOp = "Bitmap2",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, -247.5, }, },
+				},
+				Merge1 = Merge {
+					CtrlWZoom = false,
+					Inputs = {
+						Background = Input {
+							SourceOp = "input_chromaticAberration",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BlueBlur",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, -214.5, }, },
+				},
+				Bitmap2 = BitmapMask {
+					CtrlWZoom = false,
+					Inputs = {
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Image = Input {
+							SourceOp = "LumaKeyer1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, -148.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_Glitch_ChromaticAberration",
+}

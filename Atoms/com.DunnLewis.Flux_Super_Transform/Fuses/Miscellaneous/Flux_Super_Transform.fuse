@@ -1,0 +1,962 @@
+--[[
+This Fuse clones the functionality of the standard Transform tool Fusion as closely as possible.
+
+Added Tweening functions using the Flux lib :https://github.com/rxi/flux
+
+TODO:
+
+1. Deactivate tweens and keep the ones selected ( add them to a Luatable )
+
+----------------------------------------------------------------------
+ Written by Dunn Lewis <dunn[dot]lewis[dot]work[at]gmail[dot]com>
+
+]]--
+
+version = "v1.02 - 16 JAN 2018"
+
+FuRegisterClass("Flux_Super_Transform", CT_Tool, {
+	REGS_Name = "Flux Super Transform",
+	REGS_Category = "Miscellaneous",	
+	REGS_OpIconString = "FST",
+	REGS_OpDescription = "Flux Super Transform Fuse",
+	--REGS_HelpTopic      = "",
+	--REG_Fuse_NoEdit     = true,
+	--REG_Fuse_NoReload   = true,
+	REG_TimeVariant = true,
+	REG_Version = 102,
+	})
+
+
+function Create()
+
+
+	InShowTweenInfo= self:BeginControlNest("FLUX SUPER TRANSFORM HELP", "how2tween", false, {})
+
+	self:AddInput("-------------------------------------------------------------", "tx20", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("NO ANIMATION: Stops the animation and uses the Start settings", "tx1", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("ANIMATION: Activates the tween animation.", "tx2", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+	self:AddInput("If Tween 1 is not selected, it uses the Start settings", "tx2_1", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+	
+	self:AddInput("HOLD END FRAME: Delay/Hold animation before next tween", "tx7", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("EASE FUNCTION: The easing function to be used by the tween", "tx3", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("DURATION: The amount of time the tween should take to complete", "tx4", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("SPEED: Speed of tween", "tx5", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("START AT FRAME: Start frame for tween/ animation", "tx6", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	
+	self:AddInput("---------------------BUTTONS--------------------------", "tx23", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("Default Settings: Resets slider values to default state", "tx8", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+	self:AddInput("Copy Prev Settings: Copies previous Tween values to current Tween", "tx9", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("-------------------------------------------------------------", "tx21", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+
+	self:AddInput("To tween from A (Start) to B (Tween 1) to C (Tween 2)...etc", "tx10", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("Activate: Tween 1, Tween 2 .. and enter the values.", "tx11", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+	
+	self:AddInput("Edges: Canvas Edges", "tx12", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:AddInput("-------------------------------------------------------------", "tx22", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+	self:EndControlNest()
+
+	InEdges = self:AddInput("Edges", "Edges", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		{ CCS_AddString = "Black", },
+		{ CCS_AddString = "Wrap", },
+		{ CCS_AddString = "Duplicate", },
+		})
+
+
+		
+	InLabel = self:AddInput("Flux Super Transform "..version, "version", {
+		LINKID_DataType    = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External       = false,
+		INP_Passive        = true,
+		})
+	-------------------------------------------------------------------ANIMATION	
+	self:AddControlPage("ANIMATION")	
+	-------------------------------------------------------------------
+
+		InAnimationState = self:AddInput("AnimationState", "AnimationState", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0.0,
+		{ MBTNC_AddButton = "NO ANIMATION", MBTNCD_ButtonWidth = 1/2, },
+		{ MBTNC_AddButton = "ANIMATION", MBTNCD_ButtonWidth = 1/2, },
+		INP_Integer = true,
+		INP_DoNotifyChanged = true,
+		})
+
+		InDelayTime= self:AddInput("START AT FRAME", "DelayTime", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"ScrewControl",
+		INP_Default =			0,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			2500,
+		INP_Integer        = true,
+
+		})
+		
+		InEaseFunction = self:AddInput("Ease Function", "Operator", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_DoNotifyChanged = true,
+		INP_Default = 15,
+		INP_Integer = true,
+
+						{ CCS_AddString = "linear", },
+						{ CCS_AddString = "QuadIn", }, 
+						{ CCS_AddString = "QuadOut", }, 
+						{ CCS_AddString = "QuadInOut", }, 
+						{ CCS_AddString = "CubicIn", }, 
+						{ CCS_AddString = "CubicOut", }, 
+						{ CCS_AddString = "CubicInOut", }, 
+						{ CCS_AddString = "QuartIn", }, 
+						{ CCS_AddString = "QuartOut", }, 
+						{ CCS_AddString = "QuartInOut", }, 
+						{ CCS_AddString = "QuintIn", }, 
+						{ CCS_AddString = "QuintOut", }, 
+						{ CCS_AddString = "QuintInOut", }, 
+						{ CCS_AddString = "ExpoIn", }, 
+						{ CCS_AddString = "ExpoOut", }, 
+						{ CCS_AddString = "ExpoInOut", }, 
+						{ CCS_AddString = "SineIn", }, 
+						{ CCS_AddString = "SineOut", }, 
+						{ CCS_AddString = "SineInOut", }, 
+						{ CCS_AddString = "CircIn", }, 
+						{ CCS_AddString = "CircOut", }, 
+						{ CCS_AddString = "CircInOut", }, 
+						{ CCS_AddString = "BackIn", }, 
+						{ CCS_AddString = "BackOut", },
+						{ CCS_AddString = "BackInOut", },
+						{ CCS_AddString = "Custom BackOut", },						
+						{ CCS_AddString = "ElasticIn", }, 
+						{ CCS_AddString = "ElasticOut", }, 
+						{ CCS_AddString = "ElasticInOut", },
+						{ CCS_AddString = "Jitter" , },
+						
+						
+		
+		CC_LabelPosition = "Horizontal",
+			
+		})
+		
+	
+	InCustom_backout= self:AddInput("Custom BackOut Strength", "custom_backout_strength", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			1,
+		INP_MinAllowed =		0.1,
+		INP_MaxScale =			10,
+		INP_DoNotifyChanged = true,
+	
+		})
+
+	InDuration= self:AddInput("DURATION", "Duration", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			50,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			300,
+		INP_Integer        = true,
+	
+				})
+
+
+
+	InSpeed= self:AddInput("SPEED", "speed", {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			1,
+		INP_MinAllowed =		0.1,
+		INP_MaxScale =			2,
+	
+		})
+				
+
+
+			
+--------------------STAR FROM-----------------------------------
+self:AddInput("------------------- Start At >", "starthere", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+
+		
+	InS_CenterX = self:AddInput("Start Center X", "s_CenterX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		})			
+
+	InS_CenterY = self:AddInput("Start Center Y", "s_CenterY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		})
+
+		
+	InS_Pivot = self:AddInput("Start Pivot", "s_Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+		})
+
+	InS_SizeX = self:AddInput("Start Size X", "s_SizeX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+		})			
+
+	InS_SizeY = self:AddInput("Start Size Y", "s_SizeY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl ="ScrewControl",
+		INP_Default = 1.0,
+		})
+	
+	InS_Angle = self:AddInput("Start Angle", "s_Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+		})
+
+	InS_Opacity = self:AddInput("Start Opacity", "s_Opacity", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		
+		INP_MinScale =  0.0,
+		INP_MaxScale = 1.0,
+		INP_Default = 0.0,
+		INP_MinAllowed =0.0,
+		INP_MaxAllowed =1.0,
+		IC_Visible = false, PC_Visible = false,
+		})
+	self:AddInput("------------------- Tween To >", "tweento", { INPID_InputControl = "LabelControl", INP_External = false,INP_Passive  = true,})
+
+InTween     ={}
+InT_CenterX ={}
+InT_CenterY ={}
+InT_Pivot   ={}
+InT_SizeX   ={}
+InT_SizeY   ={}
+InT_Angle   ={}
+InT_Opacity   ={}
+InT_DelayTime   ={}
+InShowTween={}
+InCopySettings={}
+InDefaultSettings={}
+
+for i=1, 10 do
+
+	
+InTween[i]= self:AddInput("Active_Tween_"..i,"active_tween_"..i,{
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		LINKS_Name = "Activate Tween  "..i,
+		INP_Default  =   0.0,
+	
+		INP_DoNotifyChanged = true,
+		IC_Visible = false, PC_Visible = false,
+		})
+
+InShowTween[i]= self:BeginControlNest("Tween "..i, "tween"..i, false, {
+
+		INP_DoNotifyChanged = true,
+		IC_Visible = false, PC_Visible = false,
+
+
+	})	
+InDefaultSettings[i] = self:AddInput("Default Settings", "default_settings"..i, {
+		LINKS_Name = "Default Settings",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ButtonControl",
+		INP_Integer = false,
+		INP_MinScale = 0,
+		INP_MaxScale = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		INP_Passive = true,
+
+		INP_DoNotifyChanged = true,
+		})
+
+
+InCopySettings[i] = self:AddInput("Copy Prev Settings", "copyPrev_settings"..i, {
+		LINKS_Name = "Copy Prev Settings",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ButtonControl",
+		INP_Integer = false,
+		INP_MinScale = 0,
+		INP_MaxScale = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		INP_Passive = true,
+
+		INP_DoNotifyChanged = true,
+		})
+
+	InT_CenterX[i] = self:AddInput("Center "..i.." X", "s_CenterX_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		IC_Visible = false, PC_Visible = false,
+		})		
+
+	InT_CenterY[i] = self:AddInput("Center "..i.." Y", "s_CenterY_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0.5,
+		IC_Visible = false, PC_Visible = false,
+		})
+		
+		
+	InT_Pivot[i] = self:AddInput("Pivot "..i, "s_Pivot_"..i, {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+		IC_Visible = false, PC_Visible = false,
+		})
+
+	InT_SizeX[i] = self:AddInput("Size "..i.." X", "s_SizeX_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1.0,
+		IC_Visible = false, PC_Visible = false,
+		})		
+
+	InT_SizeY[i] = self:AddInput("Size "..i.." Y", "s_SizeY_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl ="ScrewControl",
+		INP_Default = 1.0,
+		IC_Visible = false, PC_Visible = false,
+		})
+	
+	InT_Angle[i] = self:AddInput("Angle "..i, "s_Angle_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+		IC_Visible = false, PC_Visible = false,
+		})
+
+	InT_Opacity[i] = self:AddInput("Opacity "..i, "s_Opacity_"..i, {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale =  0.0,
+		INP_MaxScale = 1.0,
+		INP_Default = 0.0,
+		INP_MinAllowed =0.0,
+		INP_MaxAllowed =1.0,
+		IC_Visible = false, PC_Visible = false,
+		})
+
+--- HOLD END TIME
+
+	InT_DelayTime[i]= self:AddInput("HOLD END FRAME "..i, "hold_To_DelayTime_"..i, {
+		LINKID_DataType =		"Number",
+		INPID_InputControl =	"SliderControl",
+		INP_Default =			0,
+		INP_MinAllowed =		0,
+		INP_MaxScale =			300,
+		INP_Integer        = true,
+		INP_DoNotifyChanged = true,
+		IC_Visible = false, PC_Visible = false,
+		})
+self:EndControlNest()
+
+end
+
+-----------------------------------------------------------END
+	
+		
+	InImage1 = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})			
+		
+end
+
+function NotifyChanged(inp, param, time)
+
+ local function show_btns(count_number)
+
+for i=1, count_number-1 do
+
+			InCopySettings[i]:SetAttrs({IC_Visible = true})
+			InDefaultSettings[i]:SetAttrs({IC_Visible = true})
+
+			InT_CenterX[i]:SetAttrs({IC_Visible = true})
+			InT_CenterY[i]:SetAttrs({IC_Visible = true})
+
+			InT_Pivot[i]:SetAttrs({IC_Visible = true})
+			InT_SizeX[i]:SetAttrs({IC_Visible = true})
+			InT_SizeY[i]:SetAttrs({IC_Visible = true})
+			InT_Angle[i]:SetAttrs({IC_Visible = true})
+			InT_Opacity[i]:SetAttrs({IC_Visible = false})
+			InT_DelayTime[i]:SetAttrs({IC_Visible = true})
+
+			InTween[i]:SetAttrs({IC_Visible = true})	
+			InShowTween[i]:SetAttrs({IC_Visible = true})
+
+end
+	
+end
+
+
+  local function hide_btns(count_number)
+
+for i=count_number, 10 do
+
+			InCopySettings[i]:SetAttrs({IC_Visible = false})
+			InDefaultSettings[i]:SetAttrs({IC_Visible = false})
+
+			InT_CenterX[i]:SetAttrs({IC_Visible = false})
+			InT_CenterY[i]:SetAttrs({IC_Visible = false})
+
+			InT_Pivot[i]:SetAttrs({IC_Visible = false})
+			InT_SizeX[i]:SetAttrs({IC_Visible = false})
+			InT_SizeY[i]:SetAttrs({IC_Visible = false})
+			InT_Angle[i]:SetAttrs({IC_Visible = false})
+			InT_Opacity[i]:SetAttrs({IC_Visible = false})
+			InT_DelayTime[i]:SetAttrs({IC_Visible = false})
+
+			InTween[i]:SetAttrs({IC_Visible = false})
+			InTween[i]:SetSource(param, time, 0)
+			InShowTween[i]:SetAttrs({IC_Visible = false})
+
+end
+end
+
+ local function hide_All()
+	
+for i=1, 10 do
+
+			InCopySettings[i]:SetAttrs({IC_Visible = false})
+			InDefaultSettings[i]:SetAttrs({IC_Visible = false})
+			
+			InT_CenterX[i]:SetAttrs({IC_Visible = false})
+			InT_CenterY[i]:SetAttrs({IC_Visible = false})
+
+			InT_Pivot[i]:SetAttrs({IC_Visible = false})
+			InT_SizeX[i]:SetAttrs({IC_Visible = false})
+			InT_SizeY[i]:SetAttrs({IC_Visible = false})
+			InT_Angle[i]:SetAttrs({IC_Visible = false})
+			InT_Opacity[i]:SetAttrs({IC_Visible = false})
+			InT_DelayTime[i]:SetAttrs({IC_Visible = false})
+
+			InTween[i]:SetAttrs({IC_Visible = false})
+			InTween[i]:SetSource(Number(0), time, 0)
+			InShowTween[i]:SetAttrs({IC_Visible = false})
+
+end
+end
+
+
+
+
+local function copy_Prev_values(num)
+
+
+			InT_CenterX[num]:SetSource(InT_CenterX[num-1]:GetSource(time), time, 0)
+			InT_CenterY[num]:SetSource(InT_CenterY[num-1]:GetSource(time), time, 0)
+
+			InT_Pivot[num]:SetSource(InT_Pivot[num-1]:GetSource(time), time, 0)
+			InT_SizeX[num]:SetSource(InT_SizeX[num-1]:GetSource(time), time, 0)
+			InT_SizeY[num]:SetSource(InT_SizeY[num-1]:GetSource(time), time, 0)
+			InT_Angle[num]:SetSource(InT_Angle[num-1]:GetSource(time), time, 0)
+			InT_Opacity[num]:SetSource(InT_Opacity[num-1]:GetSource(time), time, 0)
+			InT_DelayTime[num]:SetSource(InT_DelayTime[num-1]:GetSource(time), time, 0)
+end
+
+local function set_Default_values(num)
+
+			InT_CenterX[num]:SetSource(Number(0.5), time, 0)
+			InT_CenterY[num]:SetSource(Number(0.5), time, 0)
+
+			InT_Pivot[num]:SetSource(Point(0.5, 0.5), time, 0)
+			InT_SizeX[num]:SetSource(Number(1.0), time, 0)
+			InT_SizeY[num]:SetSource(Number(1.0), time, 0)
+			InT_Angle[num]:SetSource(Number(0.0), time, 0)
+			InT_Opacity[num]:SetSource(Number(0.0), time, 0)
+			InT_DelayTime[num]:SetSource(Number(0), time, 0)
+end
+
+
+	if inp ~= nil and param ~= nil then
+-----------------------------------------------------------
+-------------------------------------------------------START COPY&DEFAULT SETTINGS
+if inp == InCopySettings[1] then
+	if (param.Value==1) then
+
+			InT_CenterX[1]:SetSource(InS_CenterX:GetSource(time), time, 0)
+			InT_CenterY[1]:SetSource(InS_CenterY:GetSource(time), time, 0)
+
+			InT_Pivot[1]:SetSource(InS_Pivot:GetSource(time), time, 0)
+			InT_SizeX[1]:SetSource(InS_SizeX:GetSource(time), time, 0)
+			InT_SizeY[1]:SetSource(InS_SizeY:GetSource(time), time, 0)
+			InT_Angle[1]:SetSource(InS_Angle:GetSource(time), time, 0)
+			InT_Opacity[1]:SetSource(InS_Opacity:GetSource(time), time, 0)
+	end
+end
+
+if inp == InDefaultSettings[1] then	if (param.Value==1) then  set_Default_values(1)	end end
+
+-----------------------------------------------------
+if inp == InCopySettings[2] then  if (param.Value==1) then  copy_Prev_values(2)	end end
+--------
+if inp == InDefaultSettings[2] then if (param.Value==1) then  set_Default_values(2)	end end
+-----------------------------------------------------
+if inp == InCopySettings[3] then  if (param.Value==1) then  copy_Prev_values(3)	end end
+--------
+if inp == InDefaultSettings[3] then if (param.Value==1) then  set_Default_values(3)	end end
+-----------------------------------------------------
+if inp == InCopySettings[4] then  if (param.Value==1) then  copy_Prev_values(4)	end end
+--------
+if inp == InDefaultSettings[4] then if (param.Value==1) then  set_Default_values(4)	end end
+-----------------------------------------------------
+if inp == InCopySettings[5] then  if (param.Value==1) then  copy_Prev_values(5)	end end
+--------
+if inp == InDefaultSettings[5] then if (param.Value==1) then  set_Default_values(5)	end end
+-----------------------------------------------------
+if inp == InCopySettings[6] then  if (param.Value==1) then  copy_Prev_values(6)	end end
+--------
+if inp == InDefaultSettings[6] then if (param.Value==1) then  set_Default_values(6)	end end
+-----------------------------------------------------
+if inp == InCopySettings[7] then  if (param.Value==1) then  copy_Prev_values(7)	end end
+--------
+if inp == InDefaultSettings[7] then if (param.Value==1) then  set_Default_values(7)	end end
+-----------------------------------------------------
+if inp == InCopySettings[8] then  if (param.Value==1) then  copy_Prev_values(8)	end end
+--------
+if inp == InDefaultSettings[8] then if (param.Value==1) then  set_Default_values(8)	end end
+-----------------------------------------------------
+if inp == InCopySettings[9] then  if (param.Value==1) then  copy_Prev_values(9)	end end
+--------
+if inp == InDefaultSettings[9] then if (param.Value==1) then  set_Default_values(9)	end end
+-----------------------------------------------------
+if inp == InCopySettings[10] then  if (param.Value==1) then  copy_Prev_values(10)	end end
+--------
+if inp == InDefaultSettings[10] then if (param.Value==1) then  set_Default_values(10)	end end
+-----------------------------------------------------
+
+-------------------------------------------------------END COPY&DEFAULT SETTINGS
+
+
+-- TWEEN ACTIVATE CUSTOM BACKOUT EASE
+if inp == InEaseFunction then
+			if (param.Value == 25) then
+			InCustom_backout:SetAttrs({IC_Visible = true})
+			else
+			InCustom_backout:SetAttrs({IC_Visible = false})
+			end
+			end
+
+
+-- TWEEN ACTIVATE BUTTONS
+
+AnimationState = InAnimationState:GetSource(time, REQF_SecondaryTime).Value 
+
+---------------------------------------------------------
+
+if inp == InAnimationState then
+
+if (param.Value < 0.5) then
+
+--print("AnimationState: OFF" ,AnimationState )
+			else
+--print("AnimationState: ONN", AnimationState)
+
+-- SHOW TWEEN 1--------------------------------------------
+  InTween[1]:SetAttrs({IC_Visible = true, PC_Visible = true})
+-----------------------------------------------------------
+
+end
+end
+
+
+---------------------------------------------------------1
+
+if  inp == InTween[1]  then
+	if InTween[1]:GetSource(time, REQF_SecondaryTime).Value < 1  then
+		
+		hide_btns(1)
+
+	    InTween[1]:SetAttrs({IC_Visible = true, PC_Visible = true})
+	else
+		show_btns(2)
+		
+		InTween[2]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+
+--------------------------------------------------------- 2
+if  inp == InTween[2]   then
+	if InTween[2]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+		
+	hide_btns(2)
+
+	 InTween[2]:SetAttrs({IC_Visible = true})	
+		 
+	else
+	show_btns(3)
+	
+	InTween[3]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+
+---------------------------------------------------------
+--------------------------------------------------------- 3
+if  inp == InTween[3]  then
+	if InTween[3]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	
+	hide_btns(3)
+	InTween[3]:SetAttrs({IC_Visible = true})	
+	else
+
+	show_btns(4)
+	
+	InTween[4]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 4
+if  inp == InTween[4]  then
+	if InTween[4]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(4)
+	 InTween[4]:SetAttrs({IC_Visible = true})		 
+	else
+		show_btns(5)
+	InTween[5]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 5
+if  inp == InTween[5]  then
+	if InTween[5]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(5)
+	  InTween[5]:SetAttrs({IC_Visible = true})	
+	else
+		show_btns(6)
+	InTween[6]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 6
+if  inp == InTween[6]  then
+	if InTween[6]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(6)
+ InTween[6]:SetAttrs({IC_Visible = true})	 
+	else
+		show_btns(7)
+	InTween[7]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 5
+if  inp == InTween[7]  then
+	if InTween[6]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(7)
+ InTween[7]:SetAttrs({IC_Visible = true})	 
+	else
+		show_btns(8)
+	InTween[8]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 5
+if  inp == InTween[8]  then
+	if InTween[8]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(8)
+	InTween[8]:SetAttrs({IC_Visible = true})	 
+	else
+		show_btns(9)
+	InTween[9]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 5
+if  inp == InTween[9]  then
+	if InTween[9]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(9)
+	InTween[9]:SetAttrs({IC_Visible = true})	
+	else
+		show_btns(10)
+	InTween[10]:SetAttrs({IC_Visible = true})	
+	
+	end
+end
+---------------------------------------------------------
+--------------------------------------------------------- 5
+if  inp == InTween[10]  then
+	if InTween[10]:GetSource(time, REQF_SecondaryTime).Value < 1 then
+	hide_btns(10)
+	InTween[10]:SetAttrs({IC_Visible = true})	
+	else
+	show_btns(11)
+	
+	
+	end
+end
+
+---------------------------------------------------------
+---------------------------------------------------------
+
+end
+
+
+----------------- Turn all Buttons off --------------------
+
+if AnimationState > 0   then
+
+else 
+
+hide_All()
+
+end
+end
+-- ----------------------------------------------------------
+-- ----------------------------------------------------------
+
+edge_modes = {"Black", "Wrap", "Duplicate"}
+
+
+-- ----------------------------------------------------------
+--function OnAddToFlow() end
+-- ----------------------------------------------------------
+
+
+function Process(req) 
+	local img1     = InImage1:GetValue(req)
+	local edges   = InEdges:GetValue(req).Value
+	
+	
+	
+	-----------START----------------------------------
+	local s_centerx   = InS_CenterX:GetValue(req).Value
+	local s_centery   = InS_CenterY:GetValue(req).Value
+
+	local s_pivot   = InS_Pivot:GetValue(req)
+	local s_sizex   = InS_SizeX:GetValue(req).Value
+	local s_sizey   = InS_SizeY:GetValue(req).Value
+	local s_angle   = InS_Angle:GetValue(req).Value
+
+	local s_opacity  =InS_Opacity:GetValue(req).Value
+	
+	
+	-----------END------------------------------------
+	
+	----------TWEEN-------------------------------------
+
+	local t_Tween   ={}
+	local t_CenterX ={}
+	local t_CenterY ={}
+	local t_Pivot   ={}
+	local t_SizeX   ={}
+	local t_SizeY   ={}
+	local t_Angle   ={}
+	local t_Opacity ={}
+	local t_DelayTime   ={}
+
+
+
+	for i=1, 10 do
+
+	t_Tween[i]   =		InTween[i]:GetValue(req).Value
+	t_CenterX[i] =		InT_CenterX[i]:GetValue(req).Value
+	t_CenterY[i] =		InT_CenterY[i]:GetValue(req).Value
+	t_Pivot[i]   =		InT_Pivot[i]:GetValue(req)
+	t_SizeX[i]  =		InT_SizeX[i]:GetValue(req).Value
+	t_SizeY[i]  =		InT_SizeY[i]:GetValue(req).Value
+	t_Angle[i]  =		InT_Angle[i]:GetValue(req).Value
+	t_Opacity[i]  = 	InT_Opacity[i]:GetValue(req).Value
+
+	t_DelayTime[i]   = InT_DelayTime[i]:GetValue(req).Value
+	
+
+	end
+
+	----------------- EASE ANIMATION-------------------------
+	---------------------------------------------------------
+
+	local transform_type = InAnimationState:GetValue(req).Value
+	local Duration	=			InDuration:GetValue(req).Value
+
+	local speed	=InSpeed:GetValue(req).Value
+	local Delay_Time = InDelayTime:GetValue(req).Value
+
+	local EaseStyle={"linear","quadin","quadout","quadinout","cubicin","cubicout","cubicinout","quartin","quartout","quartinout","quintin","quintout","quintinout","expoin","expoout","expoinout","sinein","sineout","sineinout","circin","circout","circinout","backin","backout","backinout","custom backout","elasticin","elasticout","elasticinout","jitter" }
+	local easeBase=EaseStyle[InEaseFunction:GetValue(req).Value+1]
+
+	
+ ----------------------------ANIMATION-----------------------------------------------------FLUX
+	local t = req.Time
+
+	local flux = require "flux"
+	
+	------------------------------------------------------------------CUSTOM EASE FUNCTIONS
+	
+	 flux.easing["jitter"] = function(p)
+    return p + (1 - math.random() * 2) * 0.04
+	end
+	
+	
+	
+	 local amount = InCustom_backout:GetValue(req).Value
+  flux.easing["custom backout"] = function(p)
+    p = 1 - p
+    return 1 - (p * p * ((2 + amount) * p - (1 + amount)))
+  end
+  
+  
+  
+  -----------------------------------------------------------------------
+	
+	
+	local main_delay=InDelayTime:GetValue(req).Value
+
+	local main_A_Ani= {}
+	local tw_Main_Tween = {}
+	local f 
+
+	if transform_type == 1 and t_Tween[1] > 0.5 then	
+
+	main_A_Ani= { sx=s_sizex ,  sy=s_sizey , rz=s_angle ,px=s_pivot.X, py=s_pivot.Y , cx=s_centerx , cy=s_centery,op=s_opacity }
+
+
+if t_Tween[1] > 0.5 then 
+						f = flux.to(main_A_Ani, Duration, { sx=t_SizeX[1] ,  sy=t_SizeY[1], rz=t_Angle[1]  , px=t_Pivot[1].X, py=t_Pivot[1].Y , cx=t_CenterX[1], cy=t_CenterY[1] })
+						:ease(easeBase)
+						:delay(main_delay)
+end
+
+if t_Tween[2] > 0.5 then 	
+						f = f:after(t_DelayTime[1],{sx=t_SizeX[1] ,  sy=t_SizeY[1], rz=t_Angle[1]  , px=t_Pivot[1].X, py=t_Pivot[1].Y , cx=t_CenterX[1], cy=t_CenterY[1]})
+						:after(Duration,{ sx=t_SizeX[2] ,  sy=t_SizeY[2], rz=t_Angle[2]  , px=t_Pivot[2].X, py=t_Pivot[2].Y , cx=t_CenterX[2], cy=t_CenterY[2]})
+						:ease(easeBase)
+
+end
+if t_Tween[3] > 0.5 then
+						f = f:after(t_DelayTime[2],{sx=t_SizeX[2] ,  sy=t_SizeY[2], rz=t_Angle[2]  , px=t_Pivot[2].X, py=t_Pivot[2].Y , cx=t_CenterX[2], cy=t_CenterY[2]})
+						:after(Duration,{ sx=t_SizeX[3] ,  sy=t_SizeY[3], rz=t_Angle[3]  , px=t_Pivot[3].X, py=t_Pivot[3].Y , cx=t_CenterX[3], cy=t_CenterY[3]})
+						:ease(easeBase)
+end   
+	
+if t_Tween[4] > 0.5 then
+						f = f:after(t_DelayTime[3],{sx=t_SizeX[3] ,  sy=t_SizeY[3], rz=t_Angle[3]  , px=t_Pivot[3].X, py=t_Pivot[3].Y , cx=t_CenterX[3], cy=t_CenterY[3]})
+						:after(Duration,{ sx=t_SizeX[4] ,  sy=t_SizeY[4], rz=t_Angle[4]  , px=t_Pivot[4].X, py=t_Pivot[4].Y , cx=t_CenterX[4], cy=t_CenterY[4]})
+						:ease(easeBase)
+end						
+
+if t_Tween[5] > 0.5 then
+						f = f:after(t_DelayTime[4],{sx=t_SizeX[4] ,  sy=t_SizeY[4], rz=t_Angle[4]  , px=t_Pivot[4].X, py=t_Pivot[4].Y , cx=t_CenterX[4], cy=t_CenterY[4]})
+						:after(Duration,{ sx=t_SizeX[5] ,  sy=t_SizeY[5], rz=t_Angle[5]  , px=t_Pivot[5].X, py=t_Pivot[5].Y , cx=t_CenterX[5], cy=t_CenterY[5]})
+						:ease(easeBase)
+end						
+
+if t_Tween[6] > 0.5 then
+						f = f:after(t_DelayTime[5],{sx=t_SizeX[5] ,  sy=t_SizeY[5], rz=t_Angle[5]  , px=t_Pivot[5].X, py=t_Pivot[5].Y , cx=t_CenterX[5], cy=t_CenterY[5]})
+						:after(Duration,{ sx=t_SizeX[6] ,  sy=t_SizeY[6], rz=t_Angle[6]  , px=t_Pivot[6].X, py=t_Pivot[6].Y , cx=t_CenterX[6], cy=t_CenterY[6]})
+						:ease(easeBase)
+end
+
+if t_Tween[7] > 0.5 then
+						f = f:after(t_DelayTime[6],{sx=t_SizeX[6] ,  sy=t_SizeY[6], rz=t_Angle[6]  , px=t_Pivot[6].X, py=t_Pivot[6].Y , cx=t_CenterX[6], cy=t_CenterY[6]})
+						:after(Duration,{ sx=t_SizeX[7] ,  sy=t_SizeY[7], rz=t_Angle[7]  , px=t_Pivot[7].X, py=t_Pivot[7].Y , cx=t_CenterX[7], cy=t_CenterY[7]})
+						:ease(easeBase)
+end
+
+if t_Tween[8] > 0.5 then
+						f = f:after(t_DelayTime[7],{sx=t_SizeX[7] ,  sy=t_SizeY[7], rz=t_Angle[7]  , px=t_Pivot[7].X, py=t_Pivot[7].Y , cx=t_CenterX[7], cy=t_CenterY[7]})
+						:after(Duration,{ sx=t_SizeX[8] ,  sy=t_SizeY[8], rz=t_Angle[8]  , px=t_Pivot[8].X, py=t_Pivot[8].Y , cx=t_CenterX[8], cy=t_CenterY[8]})
+						:ease(easeBase)
+end
+
+if t_Tween[9] > 0.5 then
+						f = f:after(t_DelayTime[8],{sx=t_SizeX[8] ,  sy=t_SizeY[8], rz=t_Angle[8]  , px=t_Pivot[8].X, py=t_Pivot[8].Y , cx=t_CenterX[8], cy=t_CenterY[8]})
+						:after(Duration,{ sx=t_SizeX[9] ,  sy=t_SizeY[9], rz=t_Angle[9]  , px=t_Pivot[9].X, py=t_Pivot[9].Y , cx=t_CenterX[9], cy=t_CenterY[9]})
+						:ease(easeBase)
+end
+
+if t_Tween[10] > 0.5 then
+						f = f:after(t_DelayTime[9],{sx=t_SizeX[9] ,  sy=t_SizeY[9], rz=t_Angle[9]  , px=t_Pivot[9].X, py=t_Pivot[9].Y , cx=t_CenterX[9], cy=t_CenterY[9]})
+						:after(Duration,{ sx=t_SizeX[10] ,  sy=t_SizeY[10], rz=t_Angle[10]  , px=t_Pivot[10].X, py=t_Pivot[10].Y , cx=t_CenterX[10], cy=t_CenterY[10]})
+						:ease(easeBase)
+end
+
+
+						
+	
+	-------------------------------------------
+	for i = 0, t do flux.update(speed) end	
+	-------------------------------------------
+	elseif transform_type == 0 then
+
+	main_A_Ani= { sx=s_sizex ,  sy=s_sizey , rz=s_angle , px=s_pivot.X , py=s_pivot.Y , cx=s_centerx, cy=s_centery,op=s_opacity  }
+	
+
+	else 
+
+	main_A_Ani= { sx=s_sizex ,  sy=s_sizey , rz=s_angle , px=s_pivot.X , py=s_pivot.Y , cx=s_centerx, cy=s_centery,op=s_opacity  }
+end
+
+	
+ ----------------------------END ANIMATION-----------------------------------------------------
+
+
+	if locked then
+		s_sizey = s_sizex
+	end
+	
+	out = img1:Transform(nil, { 
+		XF_XOffset = main_A_Ani.cx, 
+		XF_YOffset = main_A_Ani.cy, 
+		XF_XAxis =	 main_A_Ani.px,
+		XF_YAxis =	 main_A_Ani.py,
+		XF_XSize = 	 main_A_Ani.sx, 
+		XF_YSize = 	 main_A_Ani.sy, 
+		XF_Angle = 	 main_A_Ani.rz, 
+		XF_EdgeMode = edge_modes[edges+1],
+		})
+
+	
+	OutImage:Set(req, out)
+end
+
+

@@ -1,0 +1,212 @@
+{
+	Tools = ordered() {
+		Checker = GroupOperator {
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Checker texture generator\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "UseFrameFormatSettings",
+					Default = 1,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "Width",
+					Name = "Image Width",
+					Default = 2048,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "Height",
+					Name = "Image Height",
+					Default = 1556,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "PixelAspect",
+					Name = "Image Pixel Aspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftRed",
+					Name = "Color",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftGreen",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Background1",
+					Source = "TopLeftBlue",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Calculation1",
+					Source = "SecondOperand",
+					Name = "Repeats",
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Center",
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Aspect",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Transform1",
+					Source = "Angle",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Transform1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				Background1 = Background {
+					ExtentSet = true,
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						GlobalIn = Input {
+							Value = 0,
+						},
+						GlobalOut = Input {
+							Value = 500,
+						},
+						UseFrameFormatSettings = Input {
+							Value = 1,
+						},
+						Width = Input {
+							Value = 2048,
+						},
+						Height = Input {
+							Value = 1556,
+						},
+						TopLeftRed = Input {
+							Value = 1,
+						},
+						TopLeftGreen = Input {
+							Value = 1,
+						},
+						TopLeftBlue = Input {
+							Value = 1,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+						EffectMask = Input {
+							SourceOp = "Rectangle2",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 594, 195, },
+					},
+				},
+				Calculation1 = Calculation {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						FirstOperand = Input {
+							Value = 1,
+						},
+						Operator = Input {
+							Value = 3,
+						},
+						SecondOperand = Input {
+							Value = 1,
+						},
+					},
+				},
+				Rectangle1 = RectangleMask {
+					CtrlWShown = false,
+					Inputs = {
+						Center = Input {
+							Value = { 0, 0.5, },
+						},
+						Width = Input {
+							Value = 1,
+						},
+						Height = Input {
+							Value = 1.01,
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 381, 193.556, },
+					},
+				},
+				Rectangle2 = RectangleMask {
+					CtrlWShown = false,
+					Inputs = {
+						PaintMode = Input {
+							Value = FuID { "Invert", },
+						},
+						Center = Input {
+							Value = { 0.5, 0, },
+						},
+						Width = Input {
+							Value = 1,
+						},
+						Height = Input {
+							Value = 1,
+						},
+						EffectMask = Input {
+							SourceOp = "Rectangle1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 483, 193.556, },
+					},
+				},
+				Transform1 = Transform {
+					CtrlWShown = false,
+					Inputs = {
+						Edges = Input {
+							Value = 1,
+						},
+						Size = Input {
+							SourceOp = "Calculation1",
+							Source = "Result",
+						},
+						Input = Input {
+							SourceOp = "Background1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 717, 195, },
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.674809803921568, G = 0.823829411764705, B = 0.674809803921568, },
+				TextColor = { R = 0, G = 0, B = 0, },
+			},
+		},
+	},
+	ActiveTool = "Checker",
+	Name = "Checker",
+	IsMacro = true,
+}

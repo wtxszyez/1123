@@ -1,0 +1,396 @@
+{
+	Tools = ordered() {
+		MT_Glitch_Bars = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Emulates interlacing and other scan-line artifacts.\r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com", },
+				Frequency = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "Frequency",
+					Default = 260.0,
+				},
+				Angle = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "Angle",
+					Default = 0,
+				},
+				SmearX = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "SmearX",
+					Default = -0.02,
+				},
+				SmearY = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "SmearY",
+					Default = 0,
+				},
+				LineIntensity = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "LineIntensity",
+					Default = 0.33,
+				},
+				SmearOpacity = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "SmearOpacity",
+					Default = 0.66,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "MacroBlend",
+					Default = 1,
+				},
+				LinesOnly = InstanceInput {
+					SourceOp = "Glitch_Lines",
+					Source = "LinesOnly",
+					Default = 0,
+				},
+				Input = InstanceInput {
+					SourceOp = "input",
+					Source = "Input",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "output",
+					Source = "EffectMask",
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "output",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 770, 115.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					ConnectedSnap = true,
+					PipesAlways = true,
+					AutoSnap = true,
+					FullIndicator = true
+				},
+				Size = { 401, 328.3, 200.5, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 23, 0 }
+			},
+			Tools = ordered() {
+				Glitch_Lines = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 8.0,
+							Expression = "Image1.Height/Frequency",
+						},
+						LUTIn1 = Input {
+							SourceOp = "CustomTool1_5LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool1_5LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool1_5LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool1_5LUTIn4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "abs( floor((y-p1y)*(h/n1)) )%2", },
+						RedExpression = Input { Value = "i1", },
+						GreenExpression = Input { Value = "i1", },
+						BlueExpression = Input { Value = "i1", },
+						AlphaExpression = Input { Value = "i1", },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Background5",
+							Source = "Output",
+						},
+						Frequency = Input { Value = 260.0, },
+						LineIntensity = Input { Value = 0.33, },
+						SmearOpacity = Input { Value = 0.66, },
+						LinesOnly = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 82.5 } },
+					UserControls = ordered() {
+						Frequency = {
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 1080,
+							INP_Default = 540,
+						},
+						Angle = {
+							INPID_PreviewControl = "AngleControl",
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ScrewControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 360,
+							INP_Default = 0,
+						},
+						SmearX = {
+							INP_MinScale = -1,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Smear X",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = -0.02,
+						},
+						SmearY = {
+							INP_MinScale = -1,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Smear Y",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0,
+						},
+						LineIntensity = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Line Intensity",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0.33,
+						},
+						SmearOpacity = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Smear Opacity",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0.66,
+						},
+						MacroBlend = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Blend",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 1,
+						},
+						LinesOnly = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Lines Only",
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 1,
+						}
+					}
+				},
+				CustomTool1_5LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool1_5LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool1_5LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				CustomTool1_5LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				input = BrightnessContrast {
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { -55, 16.5 } },
+				},
+				Background5 = Background {
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 3840,
+							Expression = "input.Input.Width",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "input.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftRed = Input { Value = 1, },
+						TopLeftGreen = Input { Value = 1, },
+						TopLeftBlue = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 49.5 } },
+				},
+				output = BrightnessContrast {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Dissolve1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 27.5, 76.15 } },
+				},
+				Transform9 = Transform {
+					Inputs = {
+						Angle = Input { Expression = "Glitch_Lines.Angle", },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Glitch_Lines",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 115.5 } },
+				},
+				Dissolve1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "Glitch_Lines.LinesOnly",
+						},
+						Background = Input {
+							SourceOp = "Merge2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Background1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 27.5, 208.15 } },
+				},
+				Background1 = Background {
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						Width = Input {
+							Value = 3840,
+							Expression = "input.Input.Width",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "input.Input.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						EffectMask = Input {
+							SourceOp = "Bitmap1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 181.5 } },
+				},
+				Merge2 = Merge {
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input { Expression = "Glitch_Lines.MacroBlend", },
+						Background = Input {
+							SourceOp = "input",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 137.5, 208.15 } },
+				},
+				Bitmap1 = BitmapMask {
+					Inputs = {
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Image = Input {
+							SourceOp = "Transform9",
+							Source = "Output",
+						},
+						Channel = Input { Value = FuID { "Red" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 148.5 } },
+				},
+				Merge1 = Merge {
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Value = 0.1428571,
+							Expression = "Glitch_Lines.LineIntensity",
+						},
+						Background = Input {
+							SourceOp = "Transform7",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Background1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 137.5, 274.15 } },
+				},
+				Transform7 = Transform {
+					Inputs = {
+						Blend = Input { Expression = "Glitch_Lines.SmearOpacity", },
+						Center = Input {
+							Value = { 0, 0.5 },
+							Expression = "Point(0.5+Glitch_Lines.SmearX, 0.5+Glitch_Lines.SmearY)",
+						},
+						Input = Input {
+							SourceOp = "input",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bitmap1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 274.15 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "MT_Glitch_Bars"
+}

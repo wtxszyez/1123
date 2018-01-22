@@ -1,0 +1,298 @@
+FuRegisterClass('Brainfuck', CT_ConsoleUtility, {
+	REGS_Name = 'Brainfuck',
+	REGS_Category = "Console",
+	REGS_OpDescription = "An interpreter to run the Brainfuck language in the console. For Brainfuck usage tips switch to the Console tab and type in bfq help.",
+	REGS_Company = "Andrew Hazelden",
+	REGS_URL = "http://www.andrewhazelden.com",
+	REG_Version = 100,
+	})
+
+--[[
+Brainfuck Fuse v1.0 - 2018-01-17
+An interpreter to run the Brainfuck language in Fusion 9.0.1 from the console.
+
+## Credits ##
+Fusion Port by Andrew Hazelden
+Email: andrew@andrewhazelden.com
+Web: www.andrewhazelden.com
+
+Brainfuck Interpreter original Lua source code by:
+Greygraphics https://pastebin.com/u/Greygraphics
+
+Original source code downloaded from: https://pastebin.com/1QGq7FZr
+
+## Overview ##
+
+Brainfuck is an esoteric programming language created in 1993 by Urban Mueller, and notable for its extreme minimalism.
+
+The language consists of only eight simple commands and an instruction pointer.
+
+While it is fully Turing-complete, it is not intended for practical use, but to challenge and amuse programmers.
+
+https://en.wikipedia.org/wiki/Brainfuck
+
+There are eight commands:
+	< - Decrease the pointer
+	> - Increase the pointer
+	+ - Increase the current cell value
+	- - Decrease the current cell value
+	[ - Declare a loop
+	] - Declare the end of a loop
+	. - Display the current cell value in ASCII 
+	, - Read the user's input into the cell
+	
+A loop gets executed when the current cell has a value greater than zero. Cells overflow and underflow. The pointer does so too.
+
+Cell range: 0-255
+Pointer range: 1-30001 
+
+For Brainfuck usage details type the following text in the Console:
+bfq help
+
+Brainfuck Example 1 (Hello World):
+bfq ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.
+
+
+Brainfuck Example 2: (If you see this message, the interpreter works!)
+bfq +++++[->+++++<]>+++++++..<++++++[->++++++<]>+++++.<+++++[->+++++<]>++++.<++++++++[->--------<]>------.<+++++++++[->+++++++++<]>++++++++.<+++[->---<]>-.<>++++++.<+++++++++[->---------<]>----.<+++++++++[->+++++++++<]>++.<+++[->---<]>-----.<>.<++++++++[->--------<]>-----.<+++++++++[->+++++++++<]>+++.<+++[->---<]>---.<>+.<+++[->+++<]>+.<+++++++++[->---------<]>--.<++++++++[->++++++++<]>+++++++++++++.<>--------.<+++[->+++<]>+++++.<>.<++++[->----<]>--.<>++++++.<>--.<+++++++[->-------<]>--------.<+++[->---<]>---.<+++++++++[->+++++++++<]>+++.<+++[->---<]>---.<>---.<++++++++[->--------<]>-----.<++++++++[->++++++++<]>+++++++++.<>+++++.<>++++++.<+++[->---<]>------.<+++[->+++<]>++++.<>--.<>++.<+++[->---<]>----.<+++[->+++<]>++++++.<+++[->---<]>------.<+++[->+++<]>++++.<+++++++++[->---------<]>-.<+++++++++[->+++++++++<]>++++++.<>--------.<>+++.<>-------.<>++++++++.<+++++++++[->---------<]>-.<++++[->----<]>-------.<
+
+## Notes: ##
+The variable nSize defines the size of the memory array which has a default size of 30000 (1 - 30001)
+
+## Debugging View ##
+"/Applications/Blackmagic Fusion 9/Fusion.app/Contents/MacOS/Fusion"
+
+]]
+
+function Create()
+	return true
+end
+
+function Attach(view)
+	return true
+end
+
+function Detach()
+	return true
+end
+
+function Select()
+	return true
+end
+
+-- local nSize = 1024
+local nSize = 30000
+local printedText = ''
+
+local nMaxVal = 255
+
+local nVars = {}
+local nPtr = 1
+
+local nChar = 1
+local sScript
+local nEntries = {}
+
+
+-- Clean the variables between bfq runs
+function cleanVars()
+	printedText = ''
+	nMaxVal = 255
+	nPtr = 1
+	nChar = 1
+	sScript = nil
+	
+	-- Clean the tables
+	for k in pairs(nVars) do
+		nVars[k] = nil
+	end
+	
+	for k in pairs(nEntries) do
+		nEntries[k] = nil
+	end	 
+end
+
+-- Print the output to the Fusion console
+function printf(sInput)
+	self:Print(sInput)
+	printedText = printedText .. sInput
+end
+
+function readyAll()
+	for i = 1, nSize do
+		nVars[i] = 0
+	end
+	nPtr = 1
+end
+
+--	The six functions for memory manipulation/output
+--	< > - + ,
+function decPtr()
+	nPtr = nPtr - 1
+	if nPtr < 1 then
+		nPtr = nSize
+	end
+end
+
+function _nncPtr()
+	nPtr = nPtr + 1
+	if nPtr > nSize then
+		nPtr = 1
+	end
+end
+
+function decVal()
+	nVars[nPtr] = nVars[nPtr] - 1
+	if nVars[nPtr] < 0 then
+		nVars[nPtr] = nMaxVal
+	end
+end
+
+function nncVal()
+	nVars[nPtr] = nVars[nPtr] + 1
+	if nVars[nPtr] > nMaxVal then
+		nVars[nPtr] = 0
+	end
+end
+
+function getChar()
+	local sInput = read()
+	if string.len(sInput)	 < 1 then
+		nVars[nPtr] = 0
+	else
+		nVars[nPtr] = (string.byte(string.sub(sInput, 1, 1)) > nMaxVal and 0)or string.byte(string.sub(sInput, 1, 1))
+	end
+end
+
+function putChar()
+	printf(string.char(nVars[nPtr]))
+end
+
+--	The remaining functions for the loop
+--	[ ]
+function jmpLoop()
+	local nCount = 0
+	while nChar < string.len(sScript) do
+		sChar = string.sub(sScript, nChar, nChar)
+		if sChar == '[' then
+			nCount = nCount + 1
+		elseif sChar == ']' then
+			nCount = nCount -1 
+		else
+			
+		end
+		nChar = nChar +1
+	end
+end
+
+--	The interpreter
+function doString(sInput)
+	sScript = sInput
+	readyAll()
+	repeat
+		c = string.sub(sScript, nChar, nChar)
+		if c == nil then
+		elseif c == '<' then
+			decPtr()
+		elseif c == '>' then
+			_nncPtr()
+		elseif c == '-' then
+			decVal()
+		elseif c == '+' then
+			nncVal()
+		elseif c == '.' then
+			putChar()
+		elseif c == ',' then
+			getChar()
+		elseif c == '[' then
+			if nVars[nPtr] > 0 then
+				nEntries[#nEntries + 1] = nChar
+			else
+				jmpLoop()
+			end
+		elseif c == ']' then
+			if nVars[nPtr] > 0 then
+				nChar = nEntries[#nEntries]
+			else
+			end
+		end
+		
+		nChar = nChar + 1
+	until nChar > string.len(sScript)
+	print('')
+end
+
+
+function HandleInput(str, active)
+	-- Clear out the printed text string
+	printedText = ''
+
+	-- Scan the user input
+	if str:lower() == 'bfq' then
+		-- The basic "bfq" command
+		self:Print('bfq\n')
+		self:Print('> Brainfuck Interpreter\n')
+		self:Print('[Usage Details] bfq help\n')
+		return true
+	elseif string.match(str:lower(), '^bfq help') then
+		-- The help command was found
+		self:Print('bfq help\n')
+		self:Print('> Brainfuck Interpreter\n')
+		self:Print([[Brainfuck is an esoteric programming language created in 1993 by Urban Mueller, and notable for its extreme minimalism.
+
+The language consists of only eight simple commands and an instruction pointer.
+
+While it is fully Turing-complete, it is not intended for practical use, but to challenge and amuse programmers.
+
+https://en.wikipedia.org/wiki/Brainfuck
+
+There are eight commands:
+	< - Decrease the pointer
+	> - Increase the pointer
+	+ - Increase the current cell value
+	- - Decrease the current cell value
+	[ - Declare a loop
+	] - Declare the end of a loop
+	. - Display the current cell value in ASCII 
+	, - Read the user's input into the cell
+	
+A loop gets executed when the current cell has a value greater than zero. Cells overflow and underflow. The pointer does so too.
+
+Cell range: 0-255
+Pointer range: 1-30001
+
+For Brainfuck usage details type the following text in the Console:
+bfq help
+
+Brainfuck Example 1 (Hello World):
+bfq ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.
+
+
+Brainfuck Example 2: (If you see this message, the interpreter works!)
+bfq +++++[->+++++<]>+++++++..<++++++[->++++++<]>+++++.<+++++[->+++++<]>++++.<++++++++[->--------<]>------.<+++++++++[->+++++++++<]>++++++++.<+++[->---<]>-.<>++++++.<+++++++++[->---------<]>----.<+++++++++[->+++++++++<]>++.<+++[->---<]>-----.<>.<++++++++[->--------<]>-----.<+++++++++[->+++++++++<]>+++.<+++[->---<]>---.<>+.<+++[->+++<]>+.<+++++++++[->---------<]>--.<++++++++[->++++++++<]>+++++++++++++.<>--------.<+++[->+++<]>+++++.<>.<++++[->----<]>--.<>++++++.<>--.<+++++++[->-------<]>--------.<+++[->---<]>---.<+++++++++[->+++++++++<]>+++.<+++[->---<]>---.<>---.<++++++++[->--------<]>-----.<++++++++[->++++++++<]>+++++++++.<>+++++.<>++++++.<+++[->---<]>------.<+++[->+++<]>++++.<>--.<>++.<+++[->---<]>----.<+++[->+++<]>++++++.<+++[->---<]>------.<+++[->+++<]>++++.<+++++++++[->---------<]>-.<+++++++++[->+++++++++<]>++++++.<>--------.<>+++.<>-------.<>++++++++.<+++++++++[->---------<]>-.<++++[->----<]>-------.<
+
+]])
+		self:Print('\n')
+		return true
+	elseif string.match(str:lower(), '^bfq') then
+		-- Trim "bfq " from the string
+		bfqStr = str:sub(5)
+		
+		self:Print(str)
+		self:Print('\n>')
+		self:Print('> Brainfuck Interpreter\n')
+		
+		-- Run the Brainfuck code
+		doString(bfqStr)
+
+		-- Copy the Brainfuck output result to the clipboard
+		bmd.setclipboard(printedText)
+		
+		-- Clean the variables between bfq runs
+		cleanVars()
+		
+		return true
+	end
+
+	return false
+end

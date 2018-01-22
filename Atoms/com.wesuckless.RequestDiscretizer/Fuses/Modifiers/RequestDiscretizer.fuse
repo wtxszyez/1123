@@ -1,0 +1,70 @@
+--[[
+
+Request Discretizer Fuse
+
+Updated REG_Version and REGS_Category for inclusion with Reactor - 3 Jan 2018
+
+--]]
+
+version = "Request Discretizer dev 1 - 08 Sep 2015"
+
+-------------------------------------------------------------------
+
+FuRegisterClass("Discretizer", CT_Modifier, {
+	REGS_Category       = "Modifiers",
+	REGS_OpIconString   = "Disc",
+	REGS_OpDescription  = "Request Discretizer for Number Fuses",
+	REGS_Name           = "Request Discretizer (Number)",
+	REGID_DataType      = "Number",
+	REGID_InputDataType = "Number",
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte and Chad Capeland",
+	REGS_URL 			= "http://www.steakunderwater.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
+--	REG_Fuse_NoEdit     = true,
+--	REG_Fuse_NoReload   = true,
+	REG_Version = 100,
+	})
+
+-------------------------------------------------------------------
+
+function Create()
+
+	InNumber = self:AddInput("Value Input", "ValueInput", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		LINK_Main = 1,
+		})
+
+	InDiscretize = self:AddInput("Discretize", "Discretize", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		})
+		
+	InLabel = self:AddInput(version, "version", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External = false,
+		INP_Passive = true,
+		})
+		
+	OutNumber = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Number",
+		LINK_Main = 1,
+		})
+end
+
+function Process(req)
+
+	local enabled = (InDiscretize:GetValue(req).Value > 0.5)
+	local input
+
+	if enabled then
+		input = InNumber:GetSource(math.floor(req.Time+0.5), req:GetFlags())
+	else
+		input = InNumber:GetSource(req.Time, req:GetFlags())
+	end
+
+	OutNumber:Set(req, input)
+
+end

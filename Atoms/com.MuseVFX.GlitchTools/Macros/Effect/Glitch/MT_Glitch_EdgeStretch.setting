@@ -1,0 +1,896 @@
+{
+	Tools = ordered() {
+		MT_Glitch_EdgeStretch = MacroOperator {
+			Inputs = ordered() {
+			Comments = Input {
+					Value = "Creates stretched edge artifacts, as from poor head switching on 3\/4\" tape. \r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray\r\nwww.musevfx.com",
+				},
+				Input = InstanceInput {
+					SourceOp = "input_edgeStretch",
+					Source = "Input",
+				},
+				MinOn = InstanceInput {
+					SourceOp = "edgeStretch_flickerCtrl",
+					Source = "minPlayTime",
+					Name = "Minimum On Time",
+					Default = 15,
+				},
+				MaxOn = InstanceInput {
+					SourceOp = "edgeStretch_flickerCtrl",
+					Source = "maxPlayTime",
+					Name = "Maximum On Time",
+					Default = 30,
+				},
+				MinOff = InstanceInput {
+					SourceOp = "edgeStretch_flickerCtrl",
+					Source = "minFreezeTime",
+					Name = "Minimum Off Time",
+					Default = 15,
+				},
+				MaxOff = InstanceInput {
+					SourceOp = "edgeStretch_flickerCtrl",
+					Source = "maxFreezeTime",
+					Name = "Maximum Off Time",
+					Default = 30,
+				},
+				RandomSeed = InstanceInput {
+					SourceOp = "edgeStretch_flickerCtrl",
+					Source = "randomSeed",
+					Name = "On/Off Random Seed",
+					Default = 0,
+				},
+				XRandSeed = InstanceInput {
+					SourceOp = "XPositionFlicker_edgeStretch",
+					Source = "NumberIn4",
+					Default = 1234,
+				},
+				XMin = InstanceInput {
+					SourceOp = "XPositionFlicker_edgeStretch",
+					Source = "NumberIn5",
+					Default = -0.2,
+				},
+				XMax = InstanceInput {
+					SourceOp = "XPositionFlicker_edgeStretch",
+					Source = "NumberIn6",
+				},
+				AdjustX = InstanceInput {
+					SourceOp = "XPositionFlicker_edgeStretch",
+					Source = "NumberIn7",
+					Default = 0.4361702,
+				},
+				YRandSeed = InstanceInput {
+					SourceOp = "YPositionFlicker_edgeStretch",
+					Source = "NumberIn4",
+					Default = 325,
+				},
+				YMin = InstanceInput {
+					SourceOp = "YPositionFlicker_edgeStretch",
+					Source = "NumberIn5",
+					Default = -0.2,
+				},
+				YMax = InstanceInput {
+					SourceOp = "YPositionFlicker_edgeStretch",
+					Source = "NumberIn6",
+				},
+				AdjustY = InstanceInput {
+					SourceOp = "YPositionFlicker_edgeStretch",
+					Source = "NumberIn7",
+					Default = 0.4300912,
+				},
+				Blend = InstanceInput {
+					SourceOp = "output_edgeStretch",
+					Source = "Blend",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "output_edgeStretch",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				input_edgeStretch = BrightnessContrast {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2805, -511.5, }, },
+				},
+				edgeStretch_flickerCtrl = TimeStretcher {
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 1,
+							Expression = ":if time >= 0 then t0=0; randomseed(randomSeed); while t0<=time do play=random(minPlayTime,maxPlayTime); freeze=random(minFreezeTime,maxFreezeTime); t = time-t0; t0=t0+play+freeze; end; n=t0-freeze; if t>play then return 0; else return 1; end; else return 0; end",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2750, -478.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+					UserControls = ordered() {
+						minPlayTime = {
+							INP_Integer = true,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 90,
+							INP_Default = 15,
+						},
+						maxPlayTime = {
+							INP_Integer = true,
+							INP_MinScale = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 120,
+							INP_Default = 30,
+						},
+						minFreezeTime = {
+							INP_MinScale = 1,
+							INP_Integer = true,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 30,
+							INP_Default = 15,
+						},
+						maxFreezeTime = {
+							INP_Integer = true,
+							INP_MinScale = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 120,
+							INP_Default = 30,
+						},
+						randomSeed = {
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							INP_Default = 0,
+							INPID_InputControl = "SliderControl",
+						},
+					},
+				},
+				XPositionFlicker_edgeStretch = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+										},
+										Name = "CustomTool2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										Name = "CustomTool2LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										Name = "CustomTool2LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										Name = "CustomTool2LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										Name = "CustomTool2LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											BlueExpression = Input { Value = "b1-b2", },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											RedExpression = Input { Value = "r1-r2", },
+											GreenExpression = Input { Value = "g1-g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											BlueExpression = Input { Value = "b1+b2", },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											RedExpression = Input { Value = "r1+r2", },
+											GreenExpression = Input { Value = "g1+g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+						},
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 1,
+							Expression = "edgeStretch_flickerCtrl.SourceTime",
+						},
+						NumberIn2 = Input { Expression = "iif(NumberIn1 > 0, NumberIn3, 0.0)", },
+						NumberIn3 = Input {
+							SourceOp = "XRandom_edgeStretch",
+							Source = "Number",
+						},
+						NumberIn4 = Input { Value = 1234, },
+						NumberIn5 = Input { Value = -0.2, },
+						NumberIn7 = Input { Value = 0.4361702, },
+						LUTIn1 = Input {
+							SourceOp = "XPositionFlicker_edgeStretchLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "XPositionFlicker_edgeStretchLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "XPositionFlicker_edgeStretchLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "XPositionFlicker_edgeStretchLUTIn4",
+							Source = "Value",
+						},
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "flickerswitch", },
+						NameforNumber2 = Input { Value = "X Flicker", },
+						NameforNumber3 = Input { Value = "X Random", },
+						NameforNumber4 = Input { Value = "X Seed", },
+						NameforNumber5 = Input { Value = "X Min", },
+						NameforNumber6 = Input { Value = "X Max", },
+						NameforNumber7 = Input { Value = "Adjust X", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2695, -445.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				XRandom_edgeStretch = KomkomDoorn.KD_NumberRandom {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Minimumvalue = Input {
+							Value = -0.2,
+							Expression = "XPositionFlicker_edgeStretch.NumberIn5",
+						},
+						Maximumvalue = Input {
+							Value = 0,
+							Expression = "XPositionFlicker_edgeStretch.NumberIn6",
+						},
+						Seed = Input { Expression = "XPositionFlicker_edgeStretch.NumberIn4", },
+					},
+				},
+				XPositionFlicker_edgeStretchLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+				},
+				XPositionFlicker_edgeStretchLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+				},
+				XPositionFlicker_edgeStretchLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+				},
+				XPositionFlicker_edgeStretchLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+				},
+				YPositionFlicker_edgeStretch = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+										},
+										Name = "CustomTool2",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										Name = "CustomTool2LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										Name = "CustomTool2LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										Name = "CustomTool2LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										Name = "CustomTool2LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											BlueExpression = Input { Value = "b1-b2", },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											RedExpression = Input { Value = "r1-r2", },
+											GreenExpression = Input { Value = "g1-g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool2 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool2LUTIn3",
+												Source = "Value",
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool2LUTIn1",
+												Source = "Value",
+											},
+											Image1 = Input {
+												SourceOp = "CustomTool1",
+												Source = "Output",
+											},
+											BlueExpression = Input { Value = "b1+b2", },
+											LUTIn4 = Input {
+												SourceOp = "CustomTool2LUTIn4",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool2LUTIn2",
+												Source = "Value",
+											},
+											RedExpression = Input { Value = "r1+r2", },
+											GreenExpression = Input { Value = "g1+g2", },
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 1210, 280.5, }, },
+										CustomData = {
+										},
+									},
+									CustomTool2LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+									CustomTool2LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204, },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+											},
+										},
+										NameSet = true,
+									},
+								},
+							},
+						},
+					},
+					Inputs = {
+						NumberIn1 = Input { Expression = "edgeStretch_flickerCtrl.SourceTime", },
+						NumberIn2 = Input { Expression = "iif(NumberIn1 > 0, NumberIn3, 0.0)", },
+						NumberIn3 = Input {
+							SourceOp = "XRandom_edgeStretch_1",
+							Source = "Number",
+						},
+						NumberIn4 = Input { Value = 325, },
+						NumberIn5 = Input { Value = -0.2, },
+						NumberIn7 = Input { Value = 0.4300912, },
+						LUTIn1 = Input {
+							SourceOp = "YPositionFlicker_edgeStretchLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "YPositionFlicker_edgeStretchLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "YPositionFlicker_edgeStretchLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "YPositionFlicker_edgeStretchLUTIn4",
+							Source = "Value",
+						},
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "flickerswitch", },
+						NameforNumber2 = Input { Value = "Y Flicker", },
+						NameforNumber3 = Input { Value = "Y Random", },
+						NameforNumber4 = Input { Value = "Y Seed", },
+						NameforNumber5 = Input { Value = "Y Min", },
+						NameforNumber6 = Input { Value = "Y Max", },
+						NameforNumber7 = Input { Value = "Adjust Y", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2640, -412.5, }, },
+					Colors = {
+						TileColor = { R = 0.498039215686275, G = 0.498039215686275, B = 1, },
+						TextColor = { R = 0, G = 0, B = 0, },
+					},
+				},
+				XRandom_edgeStretch_1 = KomkomDoorn.KD_NumberRandom {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Minimumvalue = Input {
+							Value = -0.2,
+							Expression = "YPositionFlicker_edgeStretch.NumberIn5",
+						},
+						Maximumvalue = Input {
+							Value = 0,
+							Expression = "YPositionFlicker_edgeStretch.NumberIn6",
+						},
+						Seed = Input {
+							Value = 325,
+							Expression = "YPositionFlicker_edgeStretch.NumberIn4",
+						},
+					},
+				},
+				YPositionFlicker_edgeStretchLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+				},
+				YPositionFlicker_edgeStretchLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+				},
+				YPositionFlicker_edgeStretchLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+				},
+				YPositionFlicker_edgeStretchLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+				},
+				output_edgeStretch = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_Transform3",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -379.5, }, },
+				},
+				Crop1 = Crop {
+					CtrlWZoom = false,
+					Inputs = {
+						XSize = Input {
+							Value = 1920,
+							Expression = "input_edgeStretch.Input.Width",
+						},
+						YSize = Input {
+							Value = 1080,
+							Expression = "input_edgeStretch.Input.Height",
+						},
+						Input = Input {
+							SourceOp = "Transform3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2695, -346.5, }, },
+				},
+				Instance_Transform3 = Transform {
+					SourceOp = "Transform3",
+					Inputs = {
+						Center = Input { Expression = "Point(XPositionFlicker_edgeStretch.NumberIn7+XPositionFlicker_edgeStretch.NumberIn2,YPositionFlicker_edgeStretch.NumberIn7+YPositionFlicker_edgeStretch.NumberIn2 )", },
+						InvertTransform = Input { Value = 1, },
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "Crop1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2585, -346.5, }, },
+				},
+				Transform3 = Transform {
+					Inputs = {
+						Center = Input { Expression = "Point(XPositionFlicker_edgeStretch.NumberIn7+XPositionFlicker_edgeStretch.NumberIn2,YPositionFlicker_edgeStretch.NumberIn7+YPositionFlicker_edgeStretch.NumberIn2 )", },
+						Edges = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "input_edgeStretch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2805, -346.5, }, },
+				},
+				PipeRouter2 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -2475, -313.5, }, },
+				},
+				PipeRouter1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "input_edgeStretch",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -2860, -313.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MT_Glitch_EdgeStretch",
+}

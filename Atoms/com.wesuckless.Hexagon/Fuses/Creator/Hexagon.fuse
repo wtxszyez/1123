@@ -1,0 +1,243 @@
+--[[--
+SourceTest.Fuse 
+
+A Creator type tool. This creates a hexagon pattern.
+
+version 1.0
+August 21st, 2007
+updated for Reactor September 22, 2017
+--]]--
+
+FuRegisterClass("Hexagon", CT_SourceTool, {
+	REGS_Category = "Creator",
+	REGS_OpIconString = "Hex",
+	REGS_OpDescription = "Hexagon Pattern Fuse",
+	REGS_Name = "Hexagon",
+	REG_Source_GlobalCtrls = true,
+	REG_Source_SizeCtrls = true,
+	REG_Source_AspectCtrls = true,
+	REG_Source_DepthCtrls = true,
+	
+	REG_TimeVariant = true,
+	REG_Version		= 100,
+	})
+
+
+function Create()
+	InSize = self:AddInput("Size", "Size", {
+		LINKID_DataType      = "Number",
+		INPID_InputControl   = "SliderControl",
+		INP_MinScale         = 1.0,
+		INP_MaxScale         = 20.0,
+		INP_Default          = 5,
+		})
+	
+
+	self:BeginControlNest("Color", "Color", true, {})
+	self:BeginControlNest("Color1", "Color1", true, {})
+	InColor1R= self:AddInput("Red", "Red1", {
+		ICS_Name            = "Color_1",
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_MaxScale        = 1.0,
+		ICD_Center          = 1.0,
+		INP_DoNotifyChanged = true,
+		CLRC_ShowWheel      = False,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 0,
+		IC_Visible          = true,
+		})
+	InColor1G = self:AddInput("Green", "Green1", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 1,
+		})
+	InColor1B = self:AddInput("Blue", "Blue1", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.8,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 2,
+		})
+	self:EndControlNest()	
+	
+	self:BeginControlNest("Color2", "Color2", true, {})
+	InColor2R= self:AddInput("Red", "Red2", {
+		ICS_Name            = "Color_2",
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.8,
+		INP_MaxScale        = 1.0,
+		ICD_Center          = 1.0,
+		INP_DoNotifyChanged = true,
+		CLRC_ShowWheel      = False,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 0,
+		IC_Visible          = true,
+		})
+	InColor2G = self:AddInput("Green", "Green2", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 1,
+		})
+	InColor2B = self:AddInput("Blue", "Blue2", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 2,
+		})
+	self:EndControlNest()	
+	
+	self:BeginControlNest("Color3", "Color3", true, {})
+	InColor3R= self:AddInput("Red", "Red3", {
+		ICS_Name            = "Color3",
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_MaxScale        = 1.0,
+		ICD_Center          = 1.0,
+		INP_DoNotifyChanged = true,
+		CLRC_ShowWheel      = False,
+		IC_ControlGroup     = 3,
+		IC_ControlID        = 0,
+		IC_Visible          = true,
+		})
+	InColor3G = self:AddInput("Green", "Green3", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.8,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 3,
+		IC_ControlID        = 1,
+		})
+	InColor3B = self:AddInput("Blue", "Blue3", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 3,
+		IC_ControlID        = 2,
+		})
+	self:EndControlNest()	
+	self:EndControlNest()
+
+end
+
+function Process(req) 
+	local size = InSize:GetValue(req).Value
+	
+	local color1_r     = InColor1R:GetValue(req).Value
+	local color1_g     = InColor1G:GetValue(req).Value
+	local color1_b     = InColor1B:GetValue(req).Value
+	
+	local color2_r     = InColor2R:GetValue(req).Value
+	local color2_g     = InColor2G:GetValue(req).Value
+	local color2_b     = InColor2B:GetValue(req).Value
+	
+	local color3_r     = InColor3R:GetValue(req).Value
+	local color3_g     = InColor3G:GetValue(req).Value
+	local color3_b     = InColor3B:GetValue(req).Value
+	
+	local realwidth = Width;
+	local realheight = Height;
+	
+	-- We'll handle proxy ourselves
+	Width = Width / Scale
+	Height = Height / Scale
+	Scale = 1
+	
+	local imgattrs = {
+		IMG_Document = self.Comp,
+		{ IMG_Channel = "Red", },
+		{ IMG_Channel = "Green", },
+		{ IMG_Channel = "Blue", },
+		{ IMG_Channel = "Alpha", },
+		IMG_Width = Width,
+		IMG_Height = Height,
+		IMG_XScale = XAspect,
+		IMG_YScale = YAspect,
+		IMAT_OriginalWidth = realwidth,
+		IMAT_OriginalHeight = realheight,
+		IMG_Quality = not req:IsQuick(),
+		IMG_MotionBlurQuality = not req:IsNoMotionBlur(),
+		}
+	
+	if not req:IsStampOnly() then
+		imgattrs.IMG_ProxyScale = 1
+	end
+	
+	if SourceDepth ~= 0 then
+		imgattrs.IMG_Depth = SourceDepth
+	end
+	
+	
+	local img = Image(imgattrs)
+	
+	local random = math.random -- faster in a local
+	
+	local p = Pixel({A=1})
+	
+	local A = 0.86602540378443864676372317075294 
+	local A2 = (2*A)
+	local A4 = (4*A)
+	local SY = (1/A)
+	
+	ind = {1,1,3,3,3,1, 2,2,2,3,3,3, 1,2,2,2,1,1}
+	local Index = 1
+	local new_x = 0
+	local syc
+	local sxc
+	local ix
+	local iy
+	
+	for y=0,Height-1 do
+		if self.Status ~= "OK" then break end
+		
+		for x=0,Width-1 do
+			syc = (y/Height) * SY *size
+			sxc = (x/Width)*size + 0.5 * syc
+			
+			iy = math.floor(syc % 3)
+			ix = math.floor(sxc % 3)
+			
+			
+			if ((sxc % 1) > (syc % 1)) then new_x = 1 end
+			
+			ix = iy * 6 + ix * 2 + new_x
+			
+			local index_number = math.floor(ix)
+			
+			for i=1,index_number do
+				color_number =  ind[i]
+			end
+			
+			if color_number == 1 then
+				p.R = color1_r
+				p.G = color1_g
+				p.B = color1_b
+			elseif color_number == 2 then
+				p.R = color2_r
+				p.G = color2_g
+				p.B = color2_b
+			elseif color_number == 3 then
+				p.R = color3_r
+				p.G = color3_g
+				p.B = color3_b
+			end
+			img:SetPixel(x,y, p)
+		end
+	end
+	
+	OutImage:Set(req, img)
+	
+end

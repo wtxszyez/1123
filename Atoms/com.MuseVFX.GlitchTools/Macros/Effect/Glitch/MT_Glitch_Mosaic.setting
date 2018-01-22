@@ -1,0 +1,117 @@
+{
+	Tools = ordered() {
+		MT_Glitch_Mosaic = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+			
+				Comments = Input {
+					Value = "Reduces apparent spatial resolution without changing actual resolution. \r\n\r\nMuse Tools Library, Glitch Tools Collection\r\nby Bryan Ray.\r\nwww.musevfx.com", 
+				},
+				Input = InstanceInput {
+					SourceOp = "in_mosaic_4",
+					Source = "Input",
+				},
+				Width = InstanceInput {
+					SourceOp = "Resize1_5",
+					Source = "Width",
+					Default = 175,
+				},
+				Height = InstanceInput {
+					SourceOp = "Resize1_5",
+					Source = "Height",
+					Default = 193,
+				}
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "out_mosaic_4",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 770, 49.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					ConnectedSnap = true,
+					PipesAlways = true,
+					AutoSnap = true,
+					FullIndicator = true
+				},
+				Size = { 346, 97.3, 173, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				in_mosaic_4 = BrightnessContrast {
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				},
+				Resize1_5 = BetterResize {
+					Inputs = {
+						Width = Input { Value = 175, },
+						Height = Input { Value = 193, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "in_mosaic_4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				},
+				Resize2_5 = BetterResize {
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "in_mosaic_4.Input.Width",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "in_mosaic_4.Input.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "Resize1_5",
+							Source = "Output",
+						},
+						HorizontalBlocks = Input { Value = 1, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 10.15 } },
+					UserControls = ordered() {
+						HorizontalBlocks = {
+							INP_MaxAllowed = 4096,
+							INP_Integer = true,
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 1920,
+							INP_Default = 0,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Horizontal Blocks",
+						}
+					}
+				},
+				out_mosaic_4 = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "in_mosaic_4",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Resize2_5",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 49.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "MT_Glitch_Mosaic"
+}

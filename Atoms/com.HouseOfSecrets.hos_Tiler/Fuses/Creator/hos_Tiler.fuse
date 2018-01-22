@@ -1,0 +1,138 @@
+version = "1.1 Jan 12 2018"
+--[[
+    hos_Tiler
+    
+    House of Secrets Tiler Fuse.
+    
+    Allows one to create a quilt / patchwork of an image sequence.
+    This was written as an alternative to the cumbersome Trails workflow
+    and the insane memory requirements of other methods.
+    Based on the FrameAverage fuse by eyeon.
+    
+    1.0 Feb 10, 2015 by House of Secrets
+      First release.
+    
+    1.1 Jan 12, 2018 by Andrew Hazelden <andrew@andrewhazelden.com>
+      Updated the GUI control default settings to re-order the X/Y image placement layout.
+      Added a REG_Version tag
+      Changed the REGS_Category to "Creator"
+      Changed the REGS_OpDescription
+      
+    Released under MIT/Expat license:
+
+    Copyright (c) 2016 House of Secrets
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+]]--
+
+FuRegisterClass("hos_Tiler", CT_Tool, {
+	REGS_Name = "Tiler",
+	REGS_Category = "Creator",
+	REGS_OpIconString = "Tlr",
+	REGS_OpDescription = "Converts an image sequence into an image grid layout",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_Version = 110,
+	})
+
+function Create()
+	InFrames = self:AddInput("Frames", "Frames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 256,
+		INP_Default = 1.0,
+		INP_Integer = true,
+		})
+      
+	InReverseX = self:AddInput("ReverseXOrder", "ReverseXOrder", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 0.5,
+		})
+        
+	InReverseY = self:AddInput("ReverseYOrder", "ReverseYOrder", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 1.0,
+		ICD_Width = 0.5,
+		})
+
+	InImage = self:AddInput("Background", "Background", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+        
+	InImage2 = self:AddInput("Foreground", "Foreground", {
+		LINKID_DataType = "Image",
+		LINK_Main = 2,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+end
+ 
+function Process(req)
+--	if frames == 0 then
+        local frames = InFrames:GetValue(req).Value
+        local reversex = InReverseX:GetValue(req).Value < 0.5
+        local reversey = InReverseY:GetValue(req).Value < 0.5
+		local img = InImage:GetValue(req)
+		local img2 = InImage2:GetValue(req)
+        
+        local step = math.floor(img.Width/img2.Width)
+
+        local out = Image({IMG_Like = img})
+        out = img:CopyOf()
+        --out:OMerge(img2)
+
+        s = 0
+        e = frames-1
+
+		for i = s, e do
+			--if not (i == 0) then
+				local sample = InImage2:GetSource(req.Time + i)
+                local sx
+                local sy
+				if sample then
+                    if reversex then
+                        sx = (i%step) * img2.Width
+                    else
+                        sx = img.Width - ((i%step) * img2.Width) - img2.Width
+                    end
+                    
+                    if reversey then
+                        sy = (math.floor(i/step) * img2.Height)
+                    else
+                        sy = img.Height - (math.floor(i/step) * img2.Height) - img2.Height
+                    end
+                    --if reversey then
+                    --    out:OMerge(sample, (i%step) * img2.Width, img.Height - math.floor(i/step) * img2.Height)
+                    --else
+                        out:OMerge(sample, sx, sy )
+                    --end
+					sample = nil
+				elseif missing == 0 then
+                    --out:OMerge(img2, i/10, 0.5)
+				end
+				collectgarbage()
+			--end
+		end
+        
+		OutImage:Set(req, out)
+		out = nil
+	--end
+	collectgarbage()
+end
