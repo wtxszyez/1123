@@ -60,7 +60,7 @@ function ErrorWin(title, text)
 				-- Create the window
 				local win = disp:AddWindow({
 					ID = "errWin",
-					Target = "errWin",
+					TargetID = "errWin",
 					WindowTitle = tostring(title),
 					Geometry = {450, 300, 500, 150},
 

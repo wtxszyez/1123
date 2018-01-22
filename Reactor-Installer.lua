@@ -1,10 +1,10 @@
-_VERSION = [[Version 1.0 - January 21, 2018]]
+_VERSION = [[Version 1.0 - January 22, 2018]]
 --[[
 ==============================================================================
-Reactor Installer - v1.0 2018-01-21
+Reactor Installer - v1.0 2018-01-22
 ==============================================================================
-Fu Required: Fusion 9.0.1+
-Created By : Andrew Hazelden[andrew@andrewhazelden]
+Requires    : Fusion 9.0.1+
+Created By  : Andrew Hazelden[andrew@andrewhazelden]
 
 ==============================================================================
 Overview
@@ -267,11 +267,11 @@ function Install()
 			statusMsg = "[Reactor]\nAll Downloads Completed\n"
 			ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 8, totalSteps, 2)
 
-			statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath) .. "\n"
-			ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 9, totalSteps, 2)
+			-- statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath) .. "\n"
+			-- ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 9, totalSteps, 2)
 
 			-- Open Reactor:/System/ folder in a desktop file browser window
-			bmd.openfileexternal("Open", sysPath)
+			-- bmd.openfileexternal("Open", sysPath)
 
 			-- ==============================================================================
 			-- Restart Fusion
@@ -364,14 +364,23 @@ function InstallReactorWin()
 			ui:HGroup{
 				Weight = 1,
 				
-				-- Add the Reactor Logo
-				ui:TextEdit{
+				ui:VGroup{
 					Weight = 0.25,
-					ID = "Logo",
-					ReadOnly = true,
-					HTML = ReactorLogo(),
+					
+					-- Add the Reactor Logo
+					ui:TextEdit{
+						Weight = 1,
+						ID = "Logo",
+						ReadOnly = true,
+						HTML = ReactorLogo(),
+						MinimumSize = {
+							100,
+							80,
+						},
+					},
+					
+					ui:VGap(40),
 				},
-
 				ui:VGroup{
 					Weight = 1,
 					
@@ -394,7 +403,7 @@ function InstallReactorWin()
 						Weight = 1,
 						ui:Label{
 							ID = "AboutLabel",
-							Text = [[Reactor is a package manager for Fusion (Free) and Fusion Studio created by the < a href="https://www.steakunderwater.com/wesuckless/viewforum.php?f=32">We Suck Less Fusion Community</a>.]],
+							Text = [[Reactor is a package manager for Fusion (Free) and Fusion Studio created by the < a href="https://www.steakunderwater.com/wesuckless/">We Suck Less Fusion Community</a>.]],
 							OpenExternalLinks = true,
 							WordWrap = true,
 							Alignment = {
@@ -472,7 +481,7 @@ function ProgressWinCreate()
 	local win = disp:AddWindow({
 		ID = "MsgWin",
 		WindowTitle = "Fusion Reactor",
-		Target = "MsgWin",
+		TargetID = "MsgWin",
 		Geometry = {450,300,580,250},
 
 		ui:VGroup{
@@ -523,7 +532,7 @@ function ProgressWinUpdate(win, itm, title, text, progressLevel, progressMax, de
 	itm.MsgWin.WindowTitle = "Fusion Reactor - " .. tostring(title)
 
 	-- Update the heading Text
-	itm.Title.Text = title .. "\nStep " ..	tostring(progressLevel) .. " of " .. tostring(progressMax)
+	itm.Title.Text = title .. "\nStep " .. tostring(progressLevel) .. " of " .. tostring(progressMax)
 	
 	itm.Message.Text = text
 
@@ -579,8 +588,8 @@ end
 function ErrorWin(title, text)
 	local win = disp:AddWindow({
 		ID = "errWin",
+		TargetID = "errWin",
 		WindowTitle = "Fusion Reactor - " .. tostring(title),
-		Target = "errWin",
 		Geometry = {510,580,500,150},
 
 		ui:VGroup
@@ -773,9 +782,9 @@ end
 -- Reactor logo encoded as Base64 content
 -- Example: itm.Logo.HTML = ReactorLogo() 
 function ReactorLogo()
-	return [[<img src='data:image/png;base64,
+	return [[<center><img width="68" height="68" src='data:image/png;base64,
 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
-'/>]]
+'/></center>]]
 end
 
 -- ==============================================================================
