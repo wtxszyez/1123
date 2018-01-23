@@ -1,5 +1,5 @@
 --[[
-Atomizer v1.2 - 2018-01-22
+Atomizer v1.2.1 - 2018-01-23
 by Andrew Hazelden <andrew@andrewhazelden.com>
 http://www.andrewhazelden.com
 
@@ -54,6 +54,10 @@ You can close any of the Atomizer windows with the Control+W (Win/Linux) or Comm
 - Changed the Atom Text View windowTurned on word wrapping in
 - Changed the "HTML Code Editor" and "HTML Live Preview" weights
 - Added emoticon support for local images like <img src="Emoticons:/wink.png">
+
+### v1.2.1 2018-01-23 ###
+
+- Added Windows style slash translations to the Unix/Internet URL slash format when writing the Atom file Deploy tags to disk or scanning a directory with the Deploy "Refresh" button.
 
 ## Todos ##
 
@@ -961,10 +965,10 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 
 		-- Break the tables down into single line quoted strings with a trailing comma
 		-- Then force the updated file lists into the Deploy text fields
-		itm.DeployCommonListText.PlainText = TableToText(deployCommonTable.filename)
-		itm.DeployMacListText.PlainText = TableToText(deployMacTable.filename)
-		itm.DeployWindowsListText.PlainText = TableToText(deployWindowsTable.filename)
-		itm.DeployLinuxListText.PlainText = TableToText(deployLinuxTable.filename)
+		itm.DeployCommonListText.PlainText = string.gsub(TableToText(deployCommonTable.filename), [[\]], [[/]])
+		itm.DeployMacListText.PlainText = string.gsub(TableToText(deployMacTable.filename), [[\]], [[/]])
+		itm.DeployWindowsListText.PlainText = string.gsub(TableToText(deployWindowsTable.filename), [[\]], [[/]])
+		itm.DeployLinuxListText.PlainText = string.gsub(TableToText(deployLinuxTable.filename), [[\]], [[/]])
 	end
 
 	-- Refresh the deploy entries
@@ -1143,7 +1147,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 		-- Common (No Architecture)
 		if itm.DeployCommonListText.PlainText ~= nil and string.len(itm.DeployCommonListText.PlainText) >= 1 then
 			-- Format a UI Manager TextEdit string as a comma separated Lua table entry
-			atom = atom .. TextEditToCSV('\t\t', itm.DeployCommonListText.PlainText)
+			atom = atom .. string.gsub(TextEditToCSV('\t\t', itm.DeployCommonListText.PlainText), [[\]], [[/]])
 		end
 
 		-- Windows
@@ -1152,7 +1156,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 			atom = atom .. '\t\tWindows = {\n'
 
 			-- Format a UI Manager TextEdit string as a comma separated Lua table entry
-			atom = atom .. TextEditToCSV('\t\t\t', itm.DeployWindowsListText.PlainText)
+			atom = atom .. string.gsub(TextEditToCSV('\t\t\t', itm.DeployWindowsListText.PlainText), [[\]], [[/]])
 
 			atom = atom .. '\t\t},\n'
 		end
@@ -1163,7 +1167,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 			atom = atom .. '\t\tMac = {\n'
 
 			-- Format a UI Manager TextEdit string as a comma separated Lua table entry
-			atom = atom .. TextEditToCSV('\t\t\t', itm.DeployMacListText.PlainText)
+			atom = atom .. string.gsub(TextEditToCSV('\t\t\t', itm.DeployMacListText.PlainText), [[\]], [[/]])
 
 			atom = atom .. '\t\t},\n'
 		end
@@ -1174,7 +1178,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 			atom = atom .. '\t\tLinux = {\n'
 
 			-- Format a UI Manager TextEdit string as a comma separated Lua table entry
-			atom = atom .. TextEditToCSV('\t\t\t', itm.DeployLinuxListText.PlainText)
+			atom = atom .. string.gsub(TextEditToCSV('\t\t\t', itm.DeployLinuxListText.PlainText), [[\]], [[/]])
 
 			atom = atom .. '\t\t},\n'
 		end
