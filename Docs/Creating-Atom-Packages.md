@@ -162,7 +162,7 @@ The **Date** Fields are where you can specify what the original release date was
 
 The **Deploy** text fields are where the content to be installed by Reactor is listed. The Common (No Architecture) text field is where material like fuses, macros, and scripts are added that work across all of Fusions supported os platforms. If you are deploying a plugin that only works on a specific OS platform you can enter that file in the appropriate heading like "Windows", "Mac", or "Linux".
 
-To the far right of the Deploy section in the editing GUI is a **Refresh** icon that looks like a pair of spinning arrows. You can press that button to instantly refresh the entries in the Deploy fields based upon the content in your Atom package folder. The Refresh" button doesn't automatically save this edit to the atom file so you can close the Atomizer window with the **Close Atom** button if you don't like the changes that have been made to the Deploy list.
+To the far right of the Deploy section in the editing GUI is a **Refresh** icon that looks like a pair of spinning arrows. You can press that button to instantly refresh the entries in the Deploy fields based upon the content in your Atom package folder. The "Refresh" button doesn't automatically save this edit to the atom file so you can close the Atomizer window with the **Close Atom** button if you don't like the changes that have been made to the Deploy list.
 
 The **Dependencies** section lets you list other Reactor atom packages that are required inorder for your atom to function correctly. These items will be installed automatically by Reactor when an end user chooses to add your atom to their system.
 
@@ -171,7 +171,7 @@ After you have edited the atom package you can press the **Save Atom** button to
 The **View Raw Text** button shows a plain text code view window that lets you see the raw atom formated package file.
 
 
-The **Close Atom** button will exit the editing process for your current atom package file. Any unsaved edits in this window will be discarded.  You are also able to close any of the Atomizer windows using the Control+W (Win/Linux) or Command+W (Mac) hotkeys.
+The **Close Atom** button will exit the editing process for your current atom package file. Any unsaved edits in this window will be discarded. You are also able to close any of the Atomizer windows using the Control+W (Win/Linux) or Command+W (Mac) hotkeys.
 
 ## <a name="adding-a-category-to-an-atom-package"></a>Adding a Category to an Atom Package ##
 

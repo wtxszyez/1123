@@ -1,15 +1,27 @@
-_VERSION = [[Version 1.0 - January 22, 2018]]
+_VERSION = [[Version 1.0.1 - January 23, 2018]]
 --[[
 ==============================================================================
-Reactor Installer - v1.0 2018-01-22
+Reactor Installer - v1.0.1 2018-01-23
 ==============================================================================
 Requires    : Fusion 9.0.1+
-Created By  : Andrew Hazelden[andrew@andrewhazelden]
+Created By  : Andrew Hazelden[andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
 ==============================================================================
-The Reactor Installer script can be dragged from a folder on your desktop into the Fusion Console tab and it Reactor will be installed automatically. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
+
+Reactor is a package manager for Fusion (Free) and Fusion Studio. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
+
+The Reactor Installer script can be dragged from a folder on your desktop into the Fusion Console tab and Reactor will be installed automatically. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
+
+Reactor Announcement Page:
+https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13348#p13348
+
+Reactor Support Forum:
+https://www.steakunderwater.com/wesuckless/viewforum.php?f=32
+
+Reactor GitLab Public Repository:
+https://gitlab.com/WeSuckLess/Reactor
 
 ==============================================================================
 Reactor Installer Usage
@@ -19,9 +31,51 @@ Step 1. Drag the Reactor-Installer.lua script from your desktop into the Fusion 
 
 Step 2. Click the "Install and Relaunch" button.
 
-A Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+A Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder. Additionally a "Reactor:/System/Reactor.cfg" file will be written to disk that saves the GitLab address for the repository in a Lua table format.
 
 When the installer finishes, Fusion will restart automatically and the Reactor Package Manager is ready for use. :D
+
+When you open the Reactor Package Manager window in the future using the Reactor > Open Reactor... menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool. This sync information is all stored in the Reactor:/ folder on disk.
+
+==============================================================================
+Reactor Technical Details
+==============================================================================
+
+The Lua based Reactor Installer script uses Fusion's built in cURL library to make a port 80 HTTP connection to the GitLab.com website to download the config Reactor.fu file, and the Reactor.lua lua script file. This script connects to the GitLab Reactor repository page to download the resources.
+
+Your firewall has to allow this network connection to happen if you want to install Reactor.
+
+Reactor saves the downloaded and installed content to the Reactor:/ PathMap location in Fusion which is also known as AllData:/Reactor:/
+
+To install Reactor successfully you have to allow for administrative write permissions to the AllData:/ folder so Fusion will be able to create the initial Reactor folder that the downloaded content is placed inside of.
+
+The AllData:/Reactor:/ folder is located here:
+
+Windows Reactor Path:
+
+C:\ProgramData\Blackmagic Design\Fusion\Reactor\
+
+Mac Reactor Path:
+
+/Library/Application Support/Blackmagic Design/Fusion/Reactor/
+
+Linux Reactor Path:
+
+/var/BlackmagicDesign/Fusion/Reactor/
+
+When the Reactor package manager window is opened up and is running inside of Fusion, the atom packages are downloaded and synced from the same GitLab repository as the original Reactor installation files were downloaded from.
+
+The installed files you select inside of the Reactor Package Manager window are saved to Reactor:/Deploy/
+
+If you are curious about the open source technology behind Reactor and how it works you can check out the Reactor.fu and Lua script files, along with the atom packages on the Reactor GitLab Public Repository page here:
+
+https://gitlab.com/WeSuckLess/Reactor
+
+The Fusion based GUI for Reactor, the Reactor Installer, and Atomizer are all created using Lua scripting and the cross platform UI Manager system that runs inside of Fusion 9. UI Manager is a GUI scripting layer based upon the QT window manager library.
+
+You can learn all you need to know to create your own Fusion 9 based UI Manager GUI's using the Reactor atom package "Scripts > Comp > UI Manager Lua Examples" and the companion tutorial series on the We Suck Less website:
+
+https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10463#p10463
 
 ==============================================================================
 Environment Variables
@@ -36,6 +90,7 @@ Note: If you are using macOS you will need to use an approach like a LaunchAgent
 The `REACTOR_INSTALL_PATHMAP` environment variable can be used to change the Reactor installation location to something other then the default PathMap value of "AllData:"
 
 export REACTOR_INSTALL_PATHMAP=AllData:
+
 ]]--
 
 -- Add the Reactor Public ProjectID to Reactor.cfg
