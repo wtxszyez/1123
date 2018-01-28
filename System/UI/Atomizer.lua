@@ -242,6 +242,7 @@ function AtomWin()
 		{text = 'Testing'},
 		{text = 'Brushes'},
 		{text = 'Bin'},
+		{text = 'Collections'},
 		{text = 'Comps'},
 		{text = 'Comps/Templates'},
 		{text = 'Console'},
@@ -791,11 +792,6 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 			-- Button Controls
 			ui:HGroup{
 				Weight = 0.1,
-
-				-- ui:Button{
-				--	ID = 'ResetDefaultsButton',
-				--	Text = 'Reset to Defaults',
-				-- },
 				ui:Button{
 					ID = 'CloseAtomButton',
 					Text = 'Close Atom',
