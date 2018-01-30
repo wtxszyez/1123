@@ -1,0 +1,218 @@
+--[[--
+Hexagon.Fuse 
+
+A Creator type tool. This creates a hexagon pattern filled image
+
+version 1.0
+January 1st, 2018
+--]]--
+
+FuRegisterClass("HexagonTiles", CT_SourceTool, {
+	REGS_Category = "Creator",
+	REGS_OpIconString = "Hex2",
+	REGS_OpDescription = "Hexagon Pattern Fuse",
+	
+	REG_Source_GlobalCtrls = true,
+	REG_Source_SizeCtrls = true,
+	REG_Source_AspectCtrls = true,
+	REG_Source_DepthCtrls = true,
+	REG_Version = 100,
+	REG_TimeVariant = true,
+	REG_Fuse_NoEdit       = true,
+	REG_Fuse_NoReload     = true,
+	})
+
+
+function Create()
+	InSize = self:AddInput("Size", "Size", {
+		LINKID_DataType      = "Number",
+		INPID_InputControl   = "SliderControl",
+		INP_MinScale         = 1.0,
+		INP_MaxScale         = 20.0,
+		INP_Default          = 5,
+		})
+	InBorderSize = self:AddInput("BorderSize", "BorderSize", {
+		LINKID_DataType      = "Number",
+		INPID_InputControl   = "SliderControl",
+		INP_MinScale         = 1.0,
+		INP_MaxScale         = 20.0,
+		INP_Default          = 2,
+		})
+	self:BeginControlNest("Offset", "Offset", true, {})
+	InXoff = self:AddInput("X Offset", "XOff", {
+		LINKID_DataType      = "Number",
+		INPID_InputControl   = "SliderControl",
+		INP_MinScale         = -500.0,
+		INP_MaxScale         = 500.0,
+		INP_Default          = 0,
+		INP_Integer = true,
+		})
+	InYoff = self:AddInput("Y Offset", "YOff", {
+		LINKID_DataType      = "Number",
+		INPID_InputControl   = "SliderControl",
+		INP_MinScale         = -500.0,
+		INP_MaxScale         = 500.0,
+		INP_Default          = 0,
+		INP_Integer = true,
+		})
+	self:EndControlNest()
+		
+	self:BeginControlNest("Color", "Color", true, {})
+	self:BeginControlNest("Color1", "Color1", true, {})
+	InColor1R= self:AddInput("Red", "Red1", {
+		ICS_Name            = "Color",
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_MaxScale        = 1.0,
+		ICD_Center          = 1.0,
+		INP_DoNotifyChanged = true,
+		CLRC_ShowWheel      = False,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 0,
+		IC_Visible          = true,
+		})
+	InColor1G = self:AddInput("Green", "Green1", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 1,
+		})
+	InColor1B = self:AddInput("Blue", "Blue1", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.8,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 1,
+		IC_ControlID        = 2,
+		})
+	self:EndControlNest()	
+	
+	self:BeginControlNest("BorderColor", "BorderColor", true, {})
+	InColor2R= self:AddInput("Red", "Red2", {
+		ICS_Name            = "Border Color",
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.8,
+		INP_MaxScale        = 1.0,
+		ICD_Center          = 1.0,
+		INP_DoNotifyChanged = true,
+		CLRC_ShowWheel      = False,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 0,
+		IC_Visible          = true,
+		})
+	InColor2G = self:AddInput("Green", "Green2", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 1,
+		})
+	InColor2B = self:AddInput("Blue", "Blue2", {
+		LINKID_DataType     = "Number",
+		INPID_InputControl  = "ColorControl",
+		INP_Default         = 0.2,
+		INP_DoNotifyChanged = true,
+		IC_ControlGroup     = 2,
+		IC_ControlID        = 2,
+		})
+	self:EndControlNest()
+	self:EndControlNest()
+
+end
+function my_smoothstep(x)
+	return 6*x^5-15*x^4+10*x^3
+end
+
+function Process(req) 
+	local size = InSize:GetValue(req).Value
+	local border = InBorderSize:GetValue(req).Value
+	
+	local xoff = InXoff:GetValue(req).Value
+	local yoff = InYoff:GetValue(req).Value
+	
+	local color1_r     = InColor1R:GetValue(req).Value
+	local color1_g     = InColor1G:GetValue(req).Value
+	local color1_b     = InColor1B:GetValue(req).Value
+	
+	local color2_r     = InColor2R:GetValue(req).Value
+	local color2_g     = InColor2G:GetValue(req).Value
+	local color2_b     = InColor2B:GetValue(req).Value
+	
+	local realwidth = Width
+	local realheight = Height
+	
+	local img_aspect = Width / Height
+	
+	-- We'll handle proxy ourselves
+	Width = Width / Scale
+	Height = Height / Scale
+	Scale = 1
+	
+	local imgattrs = {
+		IMG_Document = self.Comp,
+		{ IMG_Channel = "Red", },
+		{ IMG_Channel = "Green", },
+		{ IMG_Channel = "Blue", },
+		{ IMG_Channel = "Alpha", },
+		IMG_Width = Width,
+		IMG_Height = Height,
+		IMG_XScale = XAspect,
+		IMG_YScale = YAspect,
+		IMAT_OriginalWidth = realwidth,
+		IMAT_OriginalHeight = realheight,
+		IMG_Quality = not req:IsQuick(),
+		IMG_MotionBlurQuality = not req:IsNoMotionBlur(),
+		}
+	
+	if not req:IsStampOnly() then
+		imgattrs.IMG_ProxyScale = 1
+	end
+	
+	if SourceDepth ~= 0 then
+		imgattrs.IMG_Depth = SourceDepth
+	end
+	
+	local img = Image(imgattrs)
+	
+	local random = math.random -- faster in a local
+	
+	local p = Pixel({A=1})
+		
+	local syc
+	local sxc
+	local ix
+	local iy
+	local h
+	
+	h = 1
+	for y=0,Height-1 do
+		if self.Status ~= "OK" then break end
+		
+		for x=0,Width - 1 do
+			ix = ((x + xoff) / Width * size) * 0.57735 * 2.0
+			iy = (((y / img_aspect) + yoff) / Height * size) + ((math.floor(ix) % 2.0) * 0.5)
+			
+			ix = math.abs((ix % 1.0) - 0.5)
+			iy = math.abs((iy % 1.0) - 0.5)
+			h = math.abs(math.max(ix * 1.5 + iy, iy * 2.0) - 1.0)
+			if h > 0.05*border then
+				p.R = color1_r
+				p.G = color1_g
+				p.B = color1_b
+			else
+				p.R = color2_r
+				p.G = color2_g
+				p.B = color2_b
+			end
+			img:SetPixel(x,y, p)
+			
+		end
+	end
+	OutImage:Set(req, img)
+	
+end
