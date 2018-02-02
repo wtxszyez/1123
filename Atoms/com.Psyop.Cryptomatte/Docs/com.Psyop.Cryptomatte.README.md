@@ -59,8 +59,13 @@ Decoders:
 * Vladimir Koylazov
 * Peter Loveday
 * Andrew Hazelden
+* Greg Bovine
 
 ## Release Notes
+
+1.2.1:
+
+Updated the Fusion plugin to support Fusion 9.0.2 by fixing a Lua module issue to add Reactor for Fusion installation support.
 
 1.2.0:
 
@@ -292,9 +297,9 @@ os.environ["CRYPTOMATTE_TESTING_SAMPLES"] = "" #  < specify sample_images dir he
 
 1. Download the entire Cryptomatte GitHub repository using the green "Clone or download" button. Select "Download Zip" and then extract the contents.
 2.  Copy the `fusion/cryptomatte_utilities.lua` module into the standard Fusion Lua "package.path" location. The Lua modules can also be added to a folder that is listed in your `LUA_PATH` based environment variable.
-    * Windows : `C:\Program Files\Blackmagic Design\Fusion 9\lua\`
-    * Linux : `/usr/local/share/lua/5.1/`
-    * Mac : `/usr/local/share/lua/5.1/`
+    * Windows : `LuaModules:/`
+    * Linux : `LuaModules:/`
+    * Mac : `LuaModules:/`
 3. Copy the `fusion/cryptomatte.fuse` file into the Fusion user preferences based `Fuses:/` PathMap directory, or the "Fuses" subfolder in the Fusion installation folder.
     * Windows : `C:\Program Files\Blackmagic Design\Fusion 9\Fuses\`
     * Linux : `/opt/BlackmagicDesign/Fusion9/Fuses/`
@@ -308,7 +313,7 @@ os.environ["CRYPTOMATTE_TESTING_SAMPLES"] = "" #  < specify sample_images dir he
 
 ![Cryptomatte for Fusion](https://raw.githubusercontent.com/Psyop/Cryptomatte/master/docs/fusionScreenshot.png)
 
-The Cryptomatte Fuse works in Fusion (Free) and Fusion Studio v9.0.1+. The Fuse allows you to create matte selections using a Cryptomatte "Matte Locator" control that is positioned using transform control the Fusion Viewer window.
+The Cryptomatte Fuse works in Fusion (Free) and Fusion Studio v9.0.2+. The Fuse allows you to create matte selections using a Cryptomatte "Matte Locator" control that is positioned using transform control the Fusion Viewer window.
 
 To get started:
 
