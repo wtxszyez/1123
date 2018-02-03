@@ -1,5 +1,5 @@
 --[[ 
-FusionScript Help Browser - v1.0 2017-09-25 4.05 PM
+FusionScript Help Browser - v1.0 2018-02-03
 By Andrew Hazelden with *major* assistance from Peter Loveday
 
 # Overview #
@@ -32,6 +32,7 @@ local width,height = 800,600
 
 win = disp:AddWindow({
   ID = 'HelpBrowser',
+  TargetID = 'HelpBrowser',
   WindowTitle = 'FusionScript Help Browser',
   Geometry = {100, 100, width, height},
 
@@ -171,6 +172,23 @@ itm.Class:AddItems(classes)
 -- Update the window title caption with the filename
 itm.HelpBrowser.WindowTitle = 'FusionScript Help Browser: ' .. table.getn(classes) .. ' Classes Found'
 
+-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
+app:AddConfig('HelpBrowser', {
+	Target {
+		ID = 'HelpBrowser',
+	},
+
+	Hotkeys {
+		Target = 'HelpBrowser',
+		Defaults = true,
+		
+		CONTROL_W	 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+		CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+	},
+})
+
 win:Show()
 disp:RunLoop()
 win:Hide()
+app:RemoveConfig('HelpBrowser')
+collectgarbage()

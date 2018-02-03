@@ -1,4 +1,4 @@
-_VERSION = [[v1.1 - 2017-11-28]]
+_VERSION = [[v1.2 - 2018-02-03]]
 --[[
 OFX Blacklist Generator 
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -363,3 +363,4 @@ win:Show()
 disp:RunLoop()
 win:Hide()
 app:RemoveConfig('OFXBlacklist')
+collectgarbage()

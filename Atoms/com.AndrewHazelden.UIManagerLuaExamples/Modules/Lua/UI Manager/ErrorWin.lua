@@ -134,6 +134,8 @@ function ErrorWin(title, text)
 				win:Show()
 				disp:RunLoop()
 				win:Hide()
+				app:RemoveConfig('errWin')
+				collectgarbage()
 			end
 		end
 	end

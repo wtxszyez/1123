@@ -385,7 +385,7 @@ function CreateWebpageEditor()
 			Target = 'htmlWin',
 			Defaults = true,
 			
-			CONTROL_W	 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+			CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 			CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 		},
 	})
@@ -408,6 +408,8 @@ function CreateWebpageEditor()
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+	app:RemoveConfig('htmlEditor')
+	collectgarbage()
 end
 
 
