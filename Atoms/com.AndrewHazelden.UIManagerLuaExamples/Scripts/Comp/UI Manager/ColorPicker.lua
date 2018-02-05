@@ -28,7 +28,7 @@ end
 
 -- The color picker value was changed
 function win.On.Color.ColorChanged(ev)
-  print('[RGB Color] ' .. itm.Color.Color.R .. '/' .. itm.Color.Color.R .. '/' ..  itm.Color.Color.R)
+  print('[RGB Color] ' .. itm.Color.Color.R .. '/' .. itm.Color.Color.G .. '/' .. itm.Color.Color.B)
 end
 
 win:Show()
