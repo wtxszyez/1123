@@ -293,6 +293,10 @@ function Main()
 		ID = 'FuseScannerWin',
 		TargetID = 'FuseScannerWin',
 		WindowTitle = 'Fuse Scanner',
+		WindowFlags = {
+			Window = true,
+			WindowStaysOnTopHint = false,
+		},
 		Geometry = {0, 0, width, height},
 		Spacing = 0,
 	
