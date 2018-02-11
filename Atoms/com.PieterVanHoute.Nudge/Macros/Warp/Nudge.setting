@@ -1,0 +1,547 @@
+{
+	Tools = ordered() {
+		Nudge = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Nudge v1.0\r\nPieter Van Houte 2013-2018\r\npieter[at]secondman[dot]com", },
+				Background = InstanceInput {
+					SourceOp = "ChannelBooleans3",
+					Source = "Background",
+				},
+				Source = Input { Value = { 0.45, 0.45, }, },
+				Target = Input { Value = { 0.55, 0.55, }, },
+				EffectMask = InstanceInput {
+					SourceOp = "EffectMask",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "_Nudge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 880, 478.5, },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					GridSnap = true,
+					AutoSnap = true,
+					FullIndicator = true,
+					RemoveRouters = true,
+				},
+				Size = { 786, 332.639, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 4, 38.7831, },
+			},
+			Tools = ordered() {
+				EffectMask = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "CopyUV",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Nudger",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 115.5, }, },
+				},
+				ChannelBooleans3 = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						EnableExtraChannels = Input { Value = 1, },
+						ToBGRed = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,4)",
+						},
+						ToBGGreen = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,4)",
+						},
+						ToBGBlue = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,4)",
+						},
+						ToBGAlpha = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,4)",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 214.5, }, },
+				},
+				CopyBGRGB = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Expression = "Nudge.Concatenate", },
+						LUTIn1 = Input {
+							SourceOp = "CopyBGRGBLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CopyBGRGBLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CopyBGRGBLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CopyBGRGBLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "if(n1==0,r1,bgr1)", },
+						GreenExpression = Input { Value = "if(n1==0,g1,bgg1)", },
+						BlueExpression = Input { Value = "if(n1==0,b1,bgb1)", },
+						AlphaExpression = Input { Value = "if(n1==0,a1,bga1)", },
+						AuxChannelNest = Input { Value = 1, },
+						Image1 = Input {
+							SourceOp = "SetDomain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 214.5, }, },
+				},
+				CopyBGRGBLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyBGRGBLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyBGRGBLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyBGRGBLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyUV = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Expression = "Nudge.Concatenate", },
+						LUTControlsNest = Input { Value = 1, },
+						LUTIn1 = Input {
+							SourceOp = "CopyUVLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CopyUVLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CopyUVLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CopyUVLUTIn4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "if(n1==0,x,r2)", },
+						Intermediate2 = Input { Value = "if(n1==0,y,g2)", },
+						RedExpression = Input { Value = "i1", },
+						GreenExpression = Input { Value = "i2", },
+						AuxChannelNest = Input { Value = 1, },
+						Image1 = Input {
+							SourceOp = "SetDomain1",
+							Source = "Output",
+						},
+						Image2 = Input {
+							SourceOp = "ChannelBooleans2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 82.5, }, },
+				},
+				CopyUVLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyUVLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyUVLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CopyUVLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				ChannelBooleans2 = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,22)",
+						},
+						ToGreen = Input {
+							Value = 15,
+							Expression = "iif(Nudge.Concatenate==0,15,23)",
+						},
+						Background = Input {
+							SourceOp = "SetDomain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 82.5, }, },
+				},
+				Process = Texture {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UV2Aux",
+							Source = "Output",
+						},
+						Texture = Input {
+							SourceOp = "CopyBGRGB",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 214.5, }, },
+				},
+				Nudger = Transform {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "Nudge.Strength*Nudge.Output", },
+						Edges = Input { Value = 2, },
+						Center = Input {
+							SourceOp = "Expression2_1",
+							Source = "PointResult",
+						},
+						Pivot = Input { Expression = "Nudge.Source", },
+						Size = Input { Expression = "Nudge.Size", },
+						Angle = Input {
+							Value = -34.2857143,
+							Expression = "Nudge.Angle",
+						},
+						FilterMethod = Input { Value = 5, },
+						Input = Input {
+							SourceOp = "CopyUV",
+							Source = "Output",
+						},
+						Source = Input { Value = { 0.367256637168142, 0.760194174757282, }, },
+						Target = Input { Value = { 0.323008849557522, 0.659223300970874, }, },
+						EffectMask = Input {
+							SourceOp = "Range",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 82.5, }, },
+					UserControls = ordered() {
+						Source = {
+							INPID_PreviewControl = "CrosshairControl",
+							LINKID_DataType = "Point",
+							IC_ControlPage = 0,
+							CHC_Style = 0,
+							INPID_InputControl = "OffsetControl",
+						},
+						Target = {
+							INPID_PreviewControl = "CrosshairControl",
+							LINKID_DataType = "Point",
+							IC_ControlPage = 0,
+							CHC_Style = 0,
+							INPID_InputControl = "OffsetControl",
+						},
+					},
+				},
+				Expression2_1 = Expression {
+					CtrlWZoom = false,
+					Inputs = {
+						p1 = Input {
+							Value = { 0.45, 0.45, },
+							Expression = "Nudge.Source",
+						},
+						p2 = Input {
+							Value = { 0.55, 0.55, },
+							Expression = "Nudge.Target",
+						},
+						PointExpressionX = Input { Value = "p2x-p1x+0.5", },
+						PointExpressionY = Input { Value = "p2y-p1y+0.5", },
+						PointControls = Input { Value = 1, },
+						NameforPoint1 = Input { Value = "Source", },
+						NameforPoint2 = Input { Value = "Target", },
+					},
+				},
+				UV2Aux = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "EffectMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 148.5, }, },
+				},
+				Range = EllipseMask {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input {
+							Value = 0.1,
+							Expression = "Nudge.RangeSoftness",
+						},
+						MaskWidth = Input { Value = 2048, },
+						MaskHeight = Input { Value = 1556, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Center = Input {
+							Value = { 0.328205128205128, 0.774649298597194, },
+							Expression = "Nudge.Source",
+						},
+						Width = Input {
+							Value = 0.2,
+							Expression = "Nudge.Range",
+						},
+						Height = Input {
+							Value = 0.2,
+							Expression = "Nudge.Range",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 23.572, }, },
+				},
+				["_Nudge"] = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Expression = "iif(Nudge.Concatenate==2,15,4)", },
+						ToVTexture = Input { Expression = "iif(Nudge.Concatenate==2,15,4)", },
+						ToBGRed = Input {
+							Value = 0,
+							Expression = "iif(Nudge.Concatenate==2,15,0)",
+						},
+						ToBGGreen = Input {
+							Value = 1,
+							Expression = "iif(Nudge.Concatenate==2,15,1)",
+						},
+						ToBGBlue = Input {
+							Value = 2,
+							Expression = "iif(Nudge.Concatenate==2,15,2)",
+						},
+						ToBGAlpha = Input {
+							Value = 3,
+							Expression = "iif(Nudge.Concatenate==2,15,3)",
+						},
+						Background = Input {
+							SourceOp = "ChannelBooleans5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CopyBGRGB",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 247.5, }, },
+				},
+				Process_Alpha = Texture {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UV2Aux",
+							Source = "Output",
+						},
+						Texture = Input {
+							SourceOp = "ChannelBooleans4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 181.5, }, },
+				},
+				ChannelBooleans4 = ChannelBoolean {
+					CtrlWShown = false,
+					Inputs = {
+						ToRed = Input { Value = 8, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "CopyBGRGB",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 181.5, }, },
+				},
+				ChannelBooleans5 = ChannelBoolean {
+					CtrlWShown = false,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "Process",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Process_Alpha",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 214.5, }, },
+				},
+				SetDomain1 = SetDomain {
+					CtrlWShown = false,
+					Inputs = {
+						Mode = Input { Value = FuID { "Set", }, },
+						Input = Input {
+							SourceOp = "ChannelBooleans3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 214.5, }, },
+				},
+			},
+			UserControls = ordered() {
+				Output = {
+					{ MBTNC_AddButton = "Source", },
+					{ MBTNC_AddButton = "Target", },
+					LINKID_DataType = "Number",
+					MBTNC_StretchToFit = true,
+					IC_ControlPage = 1,
+					INPID_InputControl = "MultiButtonControl",
+					INP_Default = 1,
+				},
+				Source = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					IC_ControlPage = 1,
+					CHC_Style = 0,
+					INPID_InputControl = "OffsetControl",
+				},
+				Target = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					IC_ControlPage = 1,
+					CHC_Style = 0,
+					INPID_InputControl = "OffsetControl",
+				},
+				Range = {
+					INP_Default = 0.2,
+					INPID_PreviewControl = "EllipseControl",
+					ECID_Center = "Source",
+					INPID_InputControl = "SliderControl",
+					PC_ControlGroup = 1,
+					IC_ControlPage = 1,
+					LINKID_DataType = "Number",
+					PC_ControlID = 0,
+				},
+				RangeSoftness = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "Range Softness",
+					IC_ControlPage = 1,
+					INPID_InputControl = "SliderControl",
+					INP_Default = 0.1,
+				},
+				Angle = {
+					INPID_InputControl = "ScrewControl",
+					LINKID_DataType = "Number",
+					INP_MinScale = -180,
+					IC_ControlPage = 1,
+					INP_MaxScale = 180,
+				},
+				Size = {
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 5,
+					IC_ControlPage = 1,
+					ICD_Center = 1,
+					INP_Default = 1,
+				},
+				Strength = {
+					INP_Default = 1,
+					IC_ControlPage = 1,
+					LINKID_DataType = "Number",
+					INPID_InputControl = "SliderControl",
+				},
+				Concatenate = {
+					{ MBTNC_AddButton = "First In Line", },
+					{ MBTNC_AddButton = "Concatenate", },
+					{ MBTNC_AddButton = "Last In Line", },
+					LINKID_DataType = "Number",
+					MBTNC_StretchToFit = true,
+					IC_ControlPage = 1,
+					INPID_InputControl = "MultiButtonControl",
+				},
+			},
+		},
+	},
+	ActiveTool = "Nudge",
+}
