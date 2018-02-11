@@ -2,6 +2,7 @@
 
 - [Creating Atom Packages](Creating-Atom-Packages.md#creating-atom-packages)
 	- [Adding a Description to an Atom Package](Creating-Atom-Packages.md#adding-a-description-to-an-atom-package)
+	- [HTML Encoded Entity Characters](Creating-Atom-Packages.md#html-encoded-entity-characters)
 	- [Adding Emoticon Images to the Description](Creating-Atom-Packages.md#adding-emoticon-images-to-the-description)
 	- [Using Atomizer to Edit Your Atoms](Creating-Atom-Packages.md#using-atomizer-to-edit-your-atoms)
 	- [Adding a Category to an Atom Package](Creating-Atom-Packages.md#adding-a-category-to-an-atom-package)
@@ -97,7 +98,21 @@ YourPackageName includes support for:
 
 The rich text formatting capability is possible since the description GUI element is created using a Fusion 9 ui:TextEdit field (which is internally done as a QTextEdit item). This means you can read the QT documentation on rich text HTML tags to see what [HTML formatting tags](http://doc.qt.io/qt-4.8/richtext-html-subset.html) can be used. 
 
-If you want to insert a `<` character in the description you should use the HTML encoded "entity" version `<`. If you want to insert a `>` character in the description you should use the HTML encoded "entity" version `>`. The copyright symbol would be added using the HTML encoded "entity" version `&copy;`. You can read a summary of [HTML 4 style encoded entities](https://www.w3schools.com/html/html_entities.asp) here.
+### <a name="html-encoded-entity-characters"></a>HTML Encoded Entity Characters ###
+
+If you want to insert a `<` character in the description you should use the HTML encoded "entity" version `<`. If you want to insert a `>` character in the description you should use the HTML encoded "entity" version `>`. 
+
+The copyright symbol would be added using the HTML encoded "entity" version `&copy;`. 
+If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:
+
+`[` has an HTML encoded format of `&#91;`  
+`]` has an HTML encoded format of `&#93;`  
+
+If you wanted to write in "`Well [[hello]] there!`" in the text part of the atom description text field that could be entered as:
+
+				Well &#91;&#91;hello&#93;&#93; There!
+
+You can read a summary of [HTML 4 style encoded entities](https://www.w3schools.com/html/html_entities.asp) here.
 
 When adding html tags to the description text, you are unable to add any `<img>` image tags that use an external (http) based internet URL. Also any `<a href=""></a>` links added in the description field will not be clickable. 
 
@@ -391,4 +406,4 @@ Then if you want to link to your local documentation file from your Script/Macro
 
 				Reactor:/Deploy/Docs/com.YourCompanyName.YourPackageName.html
 
-Last Revised 2018-01-21 
+Last Revised 2018-02-10
