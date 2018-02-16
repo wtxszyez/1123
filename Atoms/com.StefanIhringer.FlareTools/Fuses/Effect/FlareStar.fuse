@@ -29,6 +29,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------
 
+version 1.8, 2018-02-16: replaced FuRectInt with ImgRectI for compatibility with Fusion 8+ - Pieter Van Houte
 version 1.7, 2017-11-27: added REG_Version for inclusion with Reactor - Pieter Van Houte
 version 1.6, 2012-09-11: added more options for fading and decay
                          changed fading behaviour when falloff color is non-black
@@ -758,7 +759,7 @@ function Process(req)
 	local flare_height = math.ceil(flare_width / (img.YScale / img.XScale) / self.Comp.ProxyScale)
 	flare_width = math.ceil(flare_width / self.Comp.ProxyScale)
 
-	local flare_datawnd = FuRectInt(math.floor(position.X * img.Width - flare_width / 2),
+	local flare_datawnd = ImgRectI(math.floor(position.X * img.Width - flare_width / 2),
 	                                math.floor(position.Y * img.Height - flare_height / 2),
 	                                math.ceil(position.X * img.Width + flare_width / 2),
 	                                math.ceil(position.Y * img.Height + flare_height / 2))
