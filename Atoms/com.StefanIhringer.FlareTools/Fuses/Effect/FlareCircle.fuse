@@ -31,6 +31,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------
 
+version 1.8,  2018-02-16: replaced FuRectInt with ImgRectI for compatibility with Fusion 8+ - Pieter Van Houte
 version 1.7,  2017-11-27: added REG_Version for inclusion with Reactor - Pieter Van Houte
 version 1.61, 2013-03-10: removed a debugging print statement
 version 1.6,  2012-09-10: clipping mask is no longer rendered (was broken anyways)
@@ -943,7 +944,7 @@ function Process(req)
 	local flare_height = math.ceil(flare_width / (img.YScale / img.XScale) / self.Comp.ProxyScale)
 	flare_width = math.ceil(flare_width / self.Comp.ProxyScale)
 
-	local flare_datawnd = FuRectInt(0, 0, flare_width, flare_height)
+	local flare_datawnd = ImgRectI(0, 0, flare_width, flare_height)
 	flare_datawnd:Offset((img.Width - flare_width) / 2, (img.Height - flare_height) / 2)
 	flare_datawnd:Inflate(2,2)
 

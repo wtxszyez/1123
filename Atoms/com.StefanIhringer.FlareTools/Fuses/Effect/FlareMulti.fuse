@@ -28,6 +28,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------
 
+version 1.8,  2018-02-16: replaced FuRectInt with ImgRectI for compatibility with Fusion 8+ - Pieter Van Houte
 version 1.7, 2017-11-27: added REG_Version for inclusion with Reactor - Pieter Van Houte
 version 1.61,2013-03-06: fixes RGB2HSVL value error
 version 1.6, 2012-09-11: fixed crashing when switching between settings slots 
@@ -725,7 +726,7 @@ function Process(req)
 		-- calculate DoD of current flare and add to combined data window
 		local w = img_flare.Width * img.XScale * radii[i]
 		local h = img_flare.Height * img.YScale * radii[i]
-		local flare_datawnd = FuRectInt(math.floor(positions[i].X * img.Width - w / 2),
+		local flare_datawnd = ImgRectI(math.floor(positions[i].X * img.Width - w / 2),
 		                                math.floor(positions[i].Y * img.Height - h / 2),
 		                                math.ceil(positions[i].X * img.Width + w / 2),
 		                                math.ceil(positions[i].Y * img.Height + h / 2))
