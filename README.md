@@ -12,6 +12,8 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 - [Installing Reactor](Docs/Installing-Reactor.md#installing-reactor)
 	- [Installing Reactor Visually](Docs/Installing-Reactor.md#installing-reactor-visually)
 	- [Installing Reactor Manually](Docs/Installing-Reactor.md#installing-reactor-manually)
+	- [Using Reactor Content on a Render Node](Docs/Installing-Reactor.md#using-reactor-content-on-a-rendernode)
+		- [Fusion Render Node Preference File](Docs/Installing-Reactor.md#fusion-render-node-preference-file)
 	- [Uninstalling Reactor Manually](Docs/Installing-Reactor.md#uninstalling-reactor-manually)
 - [Creating Atom Packages](Docs/Creating-Atom-Packages.md#creating-atom-packages)
 	- [Adding a Description to an Atom Package](Docs/Creating-Atom-Packages.md#adding-a-description-to-an-atom-package)
@@ -34,4 +36,4 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Using a Linux BASH Profile](Docs/Creating-Environment-Variables.md#using-a-linux-bash-profile)
 	- [Using MacOS Launch Agent PLIST Files](Docs/Creating-Environment-Variables.md#using-macos-launch-agent-plist-files)
 
-Last Revised 2018-02-10
+Last Revised 2018-02-16

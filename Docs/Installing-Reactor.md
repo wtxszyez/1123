@@ -3,6 +3,8 @@
 - [Installing Reactor](Installing-Reactor.md#installing-reactor)
 	- [Installing Reactor Visually](Installing-Reactor.md#installing-reactor-visually)
 	- [Installing Reactor Manually](Installing-Reactor.md#installing-reactor-manually)
+	- [Using Reactor Content on a Render Node](Installing-Reactor.md#using-reactor-content-on-a-rendernode)
+		- [Fusion Render Node Preference File](Installing-Reactor.md#fusion-render-node-preference-file)
 	- [Uninstalling Reactor Manually](Installing-Reactor.md#uninstalling-reactor-manually)
 
 # <a name="installing-reactor"></a>Installing Reactor #
@@ -49,6 +51,89 @@ Step 2. The next time Fusion is launched a new "Reactor" menu will be added. Sel
 
 ![Reactor Menu](Images/reactor-menu.png)
 
+## <a name="using-reactor-content-on-a-rendernode"></a>Using Reactor Content on a Render Node ##
+
+You can use your Reactor installed content on your render nodes so they have the exact same fuses and plugins installed as your Fusion Studio based workstations have.
+
+This is done by opening the Fusion Render Node's preferences up and setting your PathMaps to match what you have configured on your own workstation's Fusion Studio PathMap preferences so they are 1:1 identical.
+
+![Taskbar Settings](Images/taskbar-render-node-settings.png)
+
+This means you should re-create the Fusion Studio style PathMap settings like this on each of your render nodes:
+
+![Fusion Render Node Preferences](Images/fusion-render-node-prefs.png)
+
+### **User** PathMap Entry ###
+
+**From:**
+
+`Reactor:`
+
+**To:**
+
+`C:\ProgramData\Blackmagic Design\Fusion\Reactor\`
+
+If you have moved Reactor to a new installation location on your network share you would change the "To" section entry to point to that custom location you have placed the files at. This would be the folder you have set in your "`REACTOR_INSTALL_PATHMAP`" environment variable.
+
+### **Defaults** PathMap Entry ###
+
+**From:**
+
+`UserPaths:`
+
+**To:**
+
+`UserData:;AllData:;Fusion:;Reactor:Deploy`
+
+The `UserPaths:` section is where you define the folders that hold your fusion user preferences. Each PathMap location you define here will have a full set of sub-folders created during Fusion or Fusion Render Node's startup for holding the custom addons you can use with Fusion like:
+
+- Bins
+- Brushes
+- Config
+- Defaults
+- Filters
+- Fuses
+- Guides
+- Layouts
+- Library
+- LUTs
+- Macros
+- Modules
+- Plugins
+- Scripts
+- Settings
+- Stamps
+
+### Optional Extra PathMap Entry ###
+
+This extra setting can be configured on a render node if you want to be very thorough with your install. It is not strictly required but is a good idea to have for the future as this setting will become useful a few months from now when more Lua/Python scripted features and atoms are added to the toolset.
+
+**From:**
+
+`Scripts:`
+
+**To:**
+
+`UserPaths:Scripts;Reactor:System/Scripts`
+
+### <a name="fusion-render-node-preference-file"></a>Fusion Render Node Preference File ###
+
+The Fusion Render Node preference file has the filename of `RenderNode.prefs` that is located on your system in this PathMap folder:
+
+`Profile:/`
+
+On Windows this works out to:
+
+`%AppData%\Blackmagic Design\Fusion\Profiles\Default\`
+
+On Linux this works out to:
+
+`$HOME/.fusion/BlackmagicDesign/Fusion/Profiles/Default/`
+
+On MacOS this works out to:
+
+`$HOME/Library/Application Support/Blackmagic Design/Fusion/Profiles/Default/`
+
 ## <a name="uninstalling-reactor-manually"></a>Uninstalling Reactor Manually ##
 
 ![Reactor Folder](Images/reactor-pathmap-folder.png)
@@ -83,4 +168,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2018-01-21
+Last Revised 2018-02-16
