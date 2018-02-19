@@ -1,5 +1,5 @@
 --[[--
-Archive Composition v2.2 2018-01-06
+Archive Composition v2.3 2018-02-19
 by Isaac Guenard and Sean Konrad
 
 -------------------------------------------------------------------------------
@@ -57,6 +57,9 @@ Version History
 	- Added a pathIsAudioFormat() function that could be used in the future
 	- Refactored the string concatenating ".." code to improve formatting
 
+* v2.3 2018-02-19 by Andrew Hazelden (andrew@andrewhazelden.com)
+ - Added improved error handling so nil values are ignored gracefully when accessing COMPS_AudioFilename.
+ 
 -------------------------------------------------------------------------------
 Wishlist
 -------------------------------------------------------------------------------
@@ -601,7 +604,7 @@ function main()
 
 		-- Comp timeline speaker icon based audio clip
 		timeline_sound_file = composition:MapPath(comp:GetAttrs().COMPS_AudioFilename)
-		if not sound_files[timeline_sound_file] then
+		if (timeline_sound_file ~= nil) and (not sound_files[timeline_sound_file]) then
 			sound_files[timeline_sound_file] = { SoundFilename = composition }
 		end
 	end
