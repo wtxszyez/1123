@@ -1,0 +1,106 @@
+--[[--
+Nudge Playhead Hotkeys - v1.0 2018-02-19
+by Andrew Hazelden <andrew@andrewhazelden.com>
+
+Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Shift+Left Cursor" and "Shift+Right Cursor" keys to nudge the timeline playhead forwards/backwards.
+
+Installation:
+
+Step 1. Copy the "Nudge Playhead Hotkeys.fu" file into your Fusion user prefs "Config:/" folder.
+
+Step 3. Restart Fusion for the new "nudge" hotkeys to become active.
+
+--]]--
+{
+	Action {
+		ID = "Nudge_Playhead_Left",
+		Category = "File",
+		Name = "Nudge Playhead Left",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					-- Read the time ranges
+					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
+					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Nudge the timeline back by 10 frames
+					obj:Comp():SetAttrs({COMPN_CurrentTime = currentTime - 10})
+					updatedCurrentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Wrap the timeline at the start/end render frame range boundaries
+					if startFrame > updatedCurrentTime then
+						-- Wrap around the start frame zone
+						difference = math.abs(startFrame - updatedCurrentTime)
+						obj:Comp():SetAttrs({COMPN_CurrentTime = endFrame - difference})
+					elseif endFrame < updatedCurrentTime then
+						-- Wrap around the end frame zone
+						difference = math.abs(endFrame - updatedCurrentTime)
+						obj:Comp():SetAttrs({COMPN_CurrentTime = startFrame - difference })
+					end
+				]=],
+			},
+		},
+	},
+	Action {
+		ID = "Nudge_Playhead_Right",
+		Category = "File",
+		Name = "Nudge Playhead Right",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					
+					-- Read the time ranges
+					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
+					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Nudge the timeline forward by 10 frames
+					obj:Comp():SetAttrs({COMPN_CurrentTime = currentTime + 10})
+					updatedCurrentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Wrap the timeline at the start/end render frame range boundaries
+					if startFrame > updatedCurrentTime then
+						-- Wrap around the start frame zone
+						difference = math.abs(startFrame - updatedCurrentTime)
+						obj:Comp():SetAttrs({COMPN_CurrentTime = endFrame - difference})
+					elseif endFrame < updatedCurrentTime then
+						-- Wrap around the end frame zone
+						difference = math.abs(endFrame - updatedCurrentTime)
+						obj:Comp():SetAttrs({COMPN_CurrentTime = startFrame - difference })
+					end
+				]=],
+			},
+		},
+	},
+	Hotkeys {
+		Target = "FlowView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+	},
+	Hotkeys {
+		Target = "GLView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+	},
+	Hotkeys {
+		Target = "FuFrame",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+	},
+	Hotkeys {
+		Target = "ConsoleView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+	},
+}
