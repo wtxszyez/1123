@@ -4,11 +4,19 @@ by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Shift+Left Cursor" and "Shift+Right Cursor" keys to nudge the timeline playhead forwards/backwards.
 
-Installation:
+
+
+## Nudge Playhead Tip ##
+
+The Fusion playhead will automatically wrap around the Render End Frame/Render Start Frame border zone in the timeline if you use the Nudge Playhead hotkeys to manually advance the timeline past the active render frame range.
+
+
+
+## Installation ##
 
 Step 1. Copy the "Nudge Playhead Hotkeys.fu" file into your Fusion user prefs "Config:/" folder.
 
-Step 3. Restart Fusion for the new "nudge" hotkeys to become active.
+Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 
 --]]--
 {
@@ -22,25 +30,49 @@ Step 3. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
-					-- Read the time ranges
+					-- Current Frame in the timline
+					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+					
+					-- Read the render time frame ranges
 					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
 					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
-					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Read the global time frame ranges
+					-- startFrame = obj:Comp():GetAttrs().COMPN_GlobalStart
+					-- endFrame = obj:Comp():GetAttrs().COMPN_GlobalEnd
+
+					-- Increment the playhead by N frames
+					frameStep = 10
 
 					-- Nudge the timeline back by 10 frames
-					obj:Comp():SetAttrs({COMPN_CurrentTime = currentTime - 10})
-					updatedCurrentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+					offsetTime = currentTime - frameStep
 
 					-- Wrap the timeline at the start/end render frame range boundaries
-					if startFrame > updatedCurrentTime then
-						-- Wrap around the start frame zone
-						difference = math.abs(startFrame - updatedCurrentTime)
-						obj:Comp():SetAttrs({COMPN_CurrentTime = endFrame - difference})
-					elseif endFrame < updatedCurrentTime then
-						-- Wrap around the end frame zone
-						difference = math.abs(endFrame - updatedCurrentTime)
-						obj:Comp():SetAttrs({COMPN_CurrentTime = startFrame + difference})
+					if startFrame > offsetTime then
+						-- Nudge Left = Wrap around start frame around to the end frame
+						difference = math.fmod(offsetTime,startFrame)
+						updatedTime = endFrame + difference
+					elseif endFrame < offsetTime then
+						-- Nudge Right = Wrap around the end frame around to the start frame
+						difference = math.fmod(offsetTime, endFrame)
+						updatedTime = startFrame + difference
+					else
+						-- Update the playhead position
+						difference = frameStep
+						updatedTime = offsetTime
 					end
+
+					-- Move the acutal playhead
+					obj:Comp():SetAttrs({COMPN_CurrentTime = updatedTime})
+
+					-- Debugging
+					-- obj:Comp():Print("[Current Frame] " .. updatedTime)
+					-- obj:Comp():Print(" [Non Wrapped Frame] " .. offsetTime)
+					-- obj:Comp():Print(" [Previous Frame] " .. currentTime)
+					-- obj:Comp():Print(" [Frame Step Delta] " .. difference)
+					-- obj:Comp():Print(" [Start Frame] " .. startFrame)
+					-- obj:Comp():Print(" [End Frame] " .. endFrame)
+					-- obj:Comp():Print("\n")
 				]=],
 			},
 		},
@@ -55,26 +87,49 @@ Step 3. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
-					
-					-- Read the time ranges
-					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
-					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+					-- Current Frame in the timline
 					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
 
+					-- Read the render time frame ranges
+					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
+					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+
+					-- Read the global time frame ranges
+					-- startFrame = obj:Comp():GetAttrs().COMPN_GlobalStart
+					-- endFrame = obj:Comp():GetAttrs().COMPN_GlobalEnd
+
+					-- Increment the playhead by N frames
+					frameStep = 10
+
 					-- Nudge the timeline forward by 10 frames
-					obj:Comp():SetAttrs({COMPN_CurrentTime = currentTime + 10})
-					updatedCurrentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+					offsetTime = currentTime + frameStep
 
 					-- Wrap the timeline at the start/end render frame range boundaries
-					if startFrame > updatedCurrentTime then
-						-- Wrap around the start frame zone
-						difference = math.abs(startFrame - updatedCurrentTime)
-						obj:Comp():SetAttrs({COMPN_CurrentTime = endFrame - difference})
-					elseif endFrame < updatedCurrentTime then
-						-- Wrap around the end frame zone
-						difference = math.abs(endFrame - updatedCurrentTime)
-						obj:Comp():SetAttrs({COMPN_CurrentTime = startFrame + difference})
+					if startFrame > offsetTime then
+						-- Nudge Left = Wrap around start frame around to the end frame
+						difference = math.fmod(offsetTime,startFrame)
+						updatedTime = endFrame + difference
+					elseif endFrame < offsetTime then
+						-- Nudge Right = Wrap around the end frame around to the start frame
+						difference = math.fmod(offsetTime, endFrame)
+						updatedTime = startFrame + difference
+					else
+						-- Update the playhead position
+						difference = frameStep
+						updatedTime = offsetTime
 					end
+
+					-- Move the acutal playhead
+					obj:Comp():SetAttrs({COMPN_CurrentTime = updatedTime})
+
+					-- Debugging
+					-- obj:Comp():Print("[Current Frame] " .. updatedTime)
+					-- obj:Comp():Print(" [Non Wrapped Frame] " .. offsetTime)
+					-- obj:Comp():Print(" [Previous Frame] " .. currentTime)
+					-- obj:Comp():Print(" [Frame Step Delta] " .. difference)
+					-- obj:Comp():Print(" [Start Frame] " .. startFrame)
+					-- obj:Comp():Print(" [End Frame] " .. endFrame)
+					-- obj:Comp():Print("\n")
 				]=],
 			},
 		},
