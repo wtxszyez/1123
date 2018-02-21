@@ -1,5 +1,5 @@
 --[[--
-Archive Composition v2.3 2018-02-19
+Archive Composition v2.3.1 2018-02-21 
 by Isaac Guenard and Sean Konrad
 
 -------------------------------------------------------------------------------
@@ -59,10 +59,20 @@ Version History
 
 * v2.3 2018-02-19 by Andrew Hazelden (andrew@andrewhazelden.com)
  - Added improved error handling so nil values are ignored gracefully when accessing COMPS_AudioFilename.
- 
+
+* v2.3.1 2018-02-21 by Andrew Hazelden (andrew@andrewhazelden.com)
+	- Updated the error handling of frame padding so nil values are processed gracefully
+	- Updated the way saver nodes are processed when the "Include Audio" checkbox is active
+	- Updated the way saver nodes are processed to add support for Saver nodes with PathMaps
+	- Added an ArchiveLog.txt logfile that saves the Console tab error log messages along with a date and time stamp to the Archive Composition output folder.
+	- Added a "Client Notes for ArchiveLog.txt" text field to the AskUser dialog. That textual message is saved into to the ArchiveLog.txt file.
+	- Added an "Open Archive Composition Folder" checkbox to the AskUser dialog that will open the output folder up in a desktop folder browsing window.
+	- Added the ability to save/restore the Archive Composition checkbox states in the AskUser dialog.
+
 -------------------------------------------------------------------------------
 Wishlist
 -------------------------------------------------------------------------------
+IFL sequence processing with individual frame copying support
 standalone version?
 make prints support multiframe better
 saver needs to handle multiframe formats better (currently prints 1 frame)
@@ -71,20 +81,47 @@ Make it ignore orphaned Loaders?
 Handle Fuses and Plugins
 Maybe even handle imported camera paths?
 preserve original file structure
-save file containing date and time into folder so you can tell when it was archived. Maybe allow extra notes?
-dump error log to text file
 make a trimmed files only mode
 compression option for zip files
 
 ------------------------------------------------------------------------------
 --]]--
 
+
 ----------------------------------------------------------------------
 -- Exit if this is not a composition script
 ----------------------------------------------------------------------
 if composition == nil then
-	print("This is a composition script, it should be run from within the Digital Fusion interface.")
+	dprintf("This is a composition script, it should be run from within the Fusion interface.\n")
 	exit()
+end
+
+dprintf = function(fmt, ...)
+	-- Display the debug output in the Console tab
+	comp:Print(fmt:format(...))
+	
+	local archive_log_path = comp:MapPath("Temp:/ArchiveLog.txt")
+	log_fp, err = io.open(archive_log_path, "a")
+	if err then
+		comp:Print("[Log Error] Could not write to the file \"" .. archive_log_path .. "\"\n")
+	else
+		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
+		log_fp:write(time_stamp)
+		log_fp:write(fmt:format(...))
+		log_fp:close()
+	end
+end
+
+-- Clear the log file at the start of the Reactor session
+local archive_log_path = comp:MapPath("Temp:/ArchiveLog.txt")
+local log_start_fp, err = io.open(archive_log_path, "w")
+if err then
+	comp:Print("[Log Error] Could not write to the file \"" .. archive_log_path .. "\"\n")
+else
+	-- time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
+	-- log_start_fp:write(time_stamp .. "\n")
+	log_start_fp:write("")
+	log_start_fp:close()
 end
 
 ----------------------------------------------------------------------
@@ -116,6 +153,59 @@ end
 ------------------------------------------------------------------------------
 --			DECLARE FUNCTIONS																										--
 ------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+-- FUNCTION SetPreferenceData()
+-- Set a fusion specific preference value
+-- Example: SetPreferenceData('EyeonLegacy.ArchiveComposition.fbx', 1, true)
+------------------------------------------------------------------------------
+function SetPreferenceData(pref, value, status)
+	-- comp:SetData(pref, value)
+	fusion:SetData(pref, value)
+
+	-- List the preference value
+	if status == 1 or status == true then
+		if value == nil then
+			print('[Setting ' .. pref .. ' Preference Data] ' .. 'nil')
+		else
+			print('[Setting ' .. pref .. ' Preference Data] ' .. value)
+		end
+	end
+end
+
+------------------------------------------------------------------------------
+-- FUNCTION GetPreferenceData()
+-- Read a fusion specific preference value. If nothing exists set and return a default value
+-- Example: GetPreferenceData('EyeonLegacy.ArchiveComposition.fbx', 1, true)
+------------------------------------------------------------------------------
+function GetPreferenceData(pref, defaultValue, status)
+	-- local newPreference = comp:GetData(pref)
+	local newPreference = fusion:GetData(pref)
+	if newPreference then
+		-- List the existing preference value
+		if status == 1 or status == true then
+			if newPreference == nil then
+				print('[Reading ' .. pref .. ' Preference Data] ' .. 'nil')
+			else
+				print('[Reading ' .. pref .. ' Preference Data] ' .. newPreference)
+			end
+		end
+	else
+		-- Force a default value into the preference & then list it
+		newPreference = defaultValue
+		-- comp:SetData(pref, defaultValue)
+		fusion:SetData(pref, defaultValue)
+
+		if status == 1 or status == true then
+			if newPreference == nil then
+				print('[Creating ' .. pref .. ' Preference Data] ' .. 'nil')
+			else
+				print('[Creating '.. pref .. ' Preference Entry] ' .. newPreference)
+			end
+		end
+	end
+
+	return newPreference
+end
 
 ------------------------------------------------------------------------------
 -- FUNCTION pathIsMovieFormat()
@@ -132,7 +222,7 @@ function pathIsMovieFormat(path)
 				( extension == "aiff" ) or
 				( extension == "avi" ) or
 				( extension == "dvs" ) or
-				( extension == "fb"	 ) or
+				( extension == "fb" ) or
 				( extension == "flv" ) or
 				( extension == "m2ts" ) or
 				( extension == "m4a" ) or
@@ -196,7 +286,7 @@ end
 ------------------------------------------------------------------------------
 -- FUNCTION direxists()
 --
--- masks the real readdir, handles the path to eliminate trailing \ 
+-- Masks the real readdir, handles the path to eliminate trailing \ 
 -- deals with files named same as directory trying to create
 ------------------------------------------------------------------------------
 function direxists(dir)
@@ -211,7 +301,7 @@ function direxists(dir)
 	
 	-- Fusion 8.x compatibility fix: Commented out the lua-fs related readdir() call
 	-- local res = readdir(str)
-	-- if res then	val = res[1].IsDir end
+	-- if res then val = res[1].IsDir end
 	
 	if fu_major_version >= 8 then
 		-- The script is running on Fusion 8+ so we will use the fileexists command
@@ -230,10 +320,10 @@ end
 
 ------------------------------------------------------------------------------
 -- FUNCTION filesize()
--- return the size of the file named in the src_path string, or 0 and an error
+-- Return the size of the file named in the src_path string, or 0 and an error
 ------------------------------------------------------------------------------
 function filesize(src_path)
-	src, errMsg = io.open(src_path, "rb")
+	src, errMsg = io.open(comp:MapPath(src_path), "rb")
 	if src == nil then
 		return 0, "SOURCE : " .. errMsg
 	end
@@ -245,7 +335,7 @@ end
 
 ------------------------------------------------------------------------------
 -- FUNCTION compare_clip()
--- used by buildClipList() to ensure that loaders pointing at the same media are not
+-- Used by buildClipList() to ensure that loaders pointing at the same media are not
 -- added to the cliplist twice. 
 -- WARNING requires global variable 'cliplist'
 ------------------------------------------------------------------------------
@@ -268,25 +358,25 @@ end
 
 ------------------------------------------------------------------------------
 -- FUNCTION buildClipList()
--- assembles a table of values useful for manipulating every clip in the composition
+-- Assembles a table of values useful for manipulating every clip in the composition
 -- WARNING requires global variable 'cliplist'
 ------------------------------------------------------------------------------
 function buildClipList(ld)
 	local attrs = ld:GetAttrs()
 	local isduplicate
 	
-	-- what if we wanted to archive even passed through tools?
-	--tool passed through
+	-- What if we wanted to archive even passed through tools?
+	-- The tool is passed through
 	if attrs.TOOLB_PassThrough == true then
 		return
 	end
 	
-	--loader not set up
+	-- The loader not is set up
 	if attrs.TOOLST_Clip_Name == nil then
 		return
 	end
 	
-	-- if its a loader
+	-- If its a loader
 	for i = 1, table.getn(attrs.TOOLST_Clip_Name) do
 		local seq = eyeon.parseFilename(composition:MapPath(attrs.TOOLST_Clip_Name[i]))
 		clip = {}
@@ -298,7 +388,7 @@ function buildClipList(ld)
 		clip.TrimOut		= attrs.TOOLIT_Clip_TrimOut[i]
 		clip.Loader			= ld
 		
-		-- do we have this clip already?
+		-- Do we have this clip already?
 		isduplicate = compare_clip(seq)
 
 		if isduplicate == nil then
@@ -322,7 +412,7 @@ function GetNextCompositionSave()
 	x, y = string.find(usual_path, ":")
 	
 	if x == nil then
-		-- may not be a valid path, or may be a unc name
+		-- May not be a valid path, or may be a unc name
 		if fu_major_version >= 8 then
 			-- The script is running on Fusion 8+ so we will use the fileexists command
 			if eyeon.fileexists(usual_path) then
@@ -335,7 +425,7 @@ function GetNextCompositionSave()
 			end
 		end
 		
-		-- fallback to using the user's home folder if the absolute path doesn't exist
+		-- Fallback to using the user's home folder if the absolute path doesn't exist
 		if path == nil then
 			if platform == 'Windows' then
 				path = os.getenv("USERPROFILE") .. os_separator .. string.sub(usual_path, x)
@@ -345,7 +435,7 @@ function GetNextCompositionSave()
 			end
 		end
 	else
-		-- may be a virtual using fusion: or temp:
+		-- May be a virtual using fusion: or temp:
 		virtual = string.sub(usual_path, 1, x)
 		
 		if virtual == "fusion:" then
@@ -386,14 +476,14 @@ function SV_GetFrames(sv)
 		return nil, sv.Name .. " is set to 2:3 pulldown. This function does not support pulldown."
 	end
 	
-	-- its safe to assume [0] for Clipname since savers have no cliplists
+	-- Its safe to assume [0] for Clipname since savers have no cliplists
 	local sv_file = sv.Clip[0]
 
 	if sv_file == "" then
 		return nil, sv.Name .. " does not yet have a filename to save to."
 	end
 	
-	-- multiframe clips only have one filename
+	-- Multiframe clips only have one filename
 	if pathIsMovieFormat(sv.Clip[0]) == true then
 		return {sv_file}
 	end
@@ -412,18 +502,55 @@ function SV_GetFrames(sv)
 	local length = fla.COMPN_RenderEnd - fla.COMPN_RenderStart
 
 	if seq.Padding == nil then
-		 -- never rendered, no numbering provided assume default fusion padding
+		 -- Never rendered, no numbering provided assume default fusion padding
 		seq.Padding = 4
 	end
 		
 	local files = {}
 	for i = start, start + length do
-		 table.insert(files, seq.Path .. seq.CleanName .. string.format("%0" .. seq.Padding .. "d", i) .. seq.Extension)
+			-- PathMap process each of the saver node output filenames
+		 table.insert(files, comp:MapPath(seq.Path .. seq.CleanName .. string.format("%0" .. seq.Padding .. "d", i) .. seq.Extension))
 	end
 	return files
-
 end
 
+------------------------------------------------------------------------------
+-- Find out the current directory from a file path
+------------------------------------------------------------------------------
+function Dirname(mediaDirName)
+	return mediaDirName:match('(.*' .. os_separator .. ')')
+end
+
+------------------------------------------------------------------------------
+-- Open a folder window up using your desktop file browser
+------------------------------------------------------------------------------
+function OpenDirectory(mediaDirName)
+	command = nil
+	dir = Dirname(mediaDirName)
+
+	if platform == "Windows" then
+		-- Running on Windows
+		command = 'explorer "' .. dir .. '"'
+		
+		print("[Launch Command] ", command)
+		os.execute(command)
+	elseif platform == "Mac" then
+		-- Running on Mac
+		command = 'open "' .. dir .. '" &'
+
+		print("[Launch Command] ", command)
+		os.execute(command)
+	elseif platform == "Linux" then
+		-- Running on Linux
+		command = 'nautilus "' .. dir .. '" &'
+
+		print("[Launch Command] ", command)
+		os.execute(command)
+	else
+		print("[Platform] ", platform)
+		print("There is an invalid platform defined in the local platform variable at the top of the code.")
+	end
+end
 
 ------------------------------------------------------------------------------
 -- MAIN BODY
@@ -465,22 +592,45 @@ function main()
 	-- Allow the user to choose initial options for the script, including
 	-- pre-calculate filesize for total copy, and to select whether savers are included
 	------------------------------------------------------------------------------
+	
+	-- Restore the previous AskUser dialog settings from the "Profile:/Fusion.prefs" file
+	printStatus = false
+	analyzeChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.analyze', 1, printStatus)
+	saversChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.savers', 1, printStatus)
+	fbxChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.fbx', 1, printStatus)
+	abcChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.abc', 1, printStatus)
+	audioChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.audio', 1, printStatus)
+	fontsChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', 1, printStatus)
+	openFolderChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', 1, printStatus)
+	
+	-- Show the AskUser Dialog
 	init = composition:AskUser("Archive Composition", {
-		{"analyze", Name = "Calculate Total Size", "Checkbox", Default = 1, NumAcross = 2},
-		{"savers", Name = "Include Savers", "Checkbox", Default = 1, NumAcross = 2},
-		{"fbx", Name = "Include FBX", "Checkbox", Default = 1, NumAcross = 2},
-		{"abc", Name = "Include Alembic", "Checkbox", Default = 1, NumAcross = 2},
-		{"audio", Name = "Include Audio", "Checkbox", Default = 1, NumAcross = 2},
-		{"fonts", Name = "Include Fonts", "Checkbox", Default = 1, NumAcross = 2},
+		{"analyze", Name = "Calculate Total Size", "Checkbox", Default = analyzeChk, NumAcross = 2},
+		{"savers", Name = "Include Savers", "Checkbox", Default = saversChk, NumAcross = 2},
+		{"fbx", Name = "Include FBX", "Checkbox", Default = fbxChk, NumAcross = 2},
+		{"abc", Name = "Include Alembic", "Checkbox", Default = abcChk, NumAcross = 2},
+		{"audio", Name = "Include Audio", "Checkbox", Default = audioChk, NumAcross = 2},
+		{"fonts", Name = "Include Fonts", "Checkbox", Default = fontsChk, NumAcross = 2},
+		{"openFolder", Name = "Open Archive Composition Folder", "Checkbox", Default = openFolderChk, NumAcross = 1},
+		{"note", Name = "Client Notes for ArchiveLog.txt", "Text", Default ="", Wrap = true, Lines = 4},
 		{"instructions", Name = "Instructions", "Text", Default ="This script will collect all the clips used by your composition into folders beneath a single root directory. A copy of the composition will also be saved in the destination, with all loaders pointing to the new clip locations.\n\nThe script will calculate total file sizes before copying so that you can ensure enough space is available at the destination. You may disable the filesize pass by deselecting the checkbox above.", Wrap = true, Lines = 12, ReadOnly = true}
 		})
 
 	if init == nil then return end
-
+	
+	-- Save the latest AskUser dialog settings into the "Profile:/Fusion.prefs" file
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.analyze', init.analyze, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.savers', init.savers, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.fbx', init.fbx, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.abc', init.abc, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.audio', init.audio, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', init.fonts, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', init.openFolder, printStatus)
+	
 	------------------------------------------------------------------------------
 	-- LOADERS CLIPLIST
 	--
-	-- assemble the loader cliplist
+	-- Assemble the loader cliplist
 	------------------------------------------------------------------------------
 	for i, ld in pairs(lds) do
 		 buildClipList(ld)
@@ -489,7 +639,7 @@ function main()
 	------------------------------------------------------------------------------
 	-- SAVERS CLIPLIST
 	--
-	-- assemble the saver cliplist. If savers are not included then we just have an empty table
+	-- Assemble the saver cliplist. If savers are not included then we just have an empty table
 	------------------------------------------------------------------------------
 	err = ""
 	sv_cliplist = {}
@@ -521,7 +671,7 @@ function main()
 	------------------------------------------------------------------------------
 	font_files = {}
 
-	-- skip this if there are no text tools
+	-- Skip this if there are no text tools
 	if table.getn(txt) == 0 and table.getn(txt3d) == 0 then
 		init.fonts = 0
 	end
@@ -589,7 +739,7 @@ function main()
 		-- Suckless Audio Modifier - WaveFile
 		for i, sn in pairs(snd) do
 			modifer_sound_file = composition:MapPath(sn.WaveFile[0])
-			if not sound_files[modifer_sound_file] then
+			if (modifer_sound_file ~= nil) and (not sound_files[modifer_sound_file]) then
 				sound_files[modifer_sound_file] = { WaveFile = sn }
 			end
 		end
@@ -612,34 +762,35 @@ function main()
 	------------------------------------------------------------------------------
 	-- CALCULATE FILESIZES
 	--
-	-- if the option to pre-calculate file size was selected, go ahead and do it
+	-- If the option to pre-calculate file size was selected, go ahead and do it
 	------------------------------------------------------------------------------
 	if init.analyze == 1 then
-		-- font filesizes
+		-- Calculate font filesizes
 		for i, v in pairs(font_files) do
 			total_size = total_size + filesize(i)
 		end
 	
-		-- fbx filesizes
+		-- Calculate fbx filesizes
 		for i, v in pairs(fbx_files) do
 			total_size = total_size + filesize(i)
 		end
 	
-		-- abc filesizes
+		-- Calculate abc filesizes
 		for i, v in pairs(abc_files) do
 			total_size = total_size + filesize(i)
 		end
 
-		-- audio filesizes
+		-- Calculate audio filesizes
 		for i, v in pairs(sound_files) do
 			total_size = total_size + filesize(i)
 		end
 
-		-- loader filesizes
+		-- Calculate loader filesizes
 		for i, v in pairs(cliplist) do
 			if v.Multiframe == 1 then
 				total_size = total_size + filesize(v.Seq.FullPath)
 			else
+				
 				-- Check if the footage is a still, an image sequence, or a movie
 				if (v.Seq.Padding == nil) and (v.Length == 1) then
 					-- This is a still frame
@@ -648,9 +799,15 @@ function main()
 					-- This is a movie
 					total_size = total_size + filesize(v.Seq.FullPath)
 				else
+					-- Check if frame padding is missing
+					SeqPadding = v.Seq.Padding
+					if SeqPadding == nil then
+						SeqPadding = 1
+					end
+					
 					-- This is an image sequence
 					for i = v.InitialFrame, v.InitialFrame + (v.Length-1) do
-						fname = v.Seq.CleanName .. string.format("%0" .. v.Seq.Padding .. "d", i) .. v.Seq.Extension
+						fname = v.Seq.CleanName .. string.format("%0" .. SeqPadding .. "d", i) .. v.Seq.Extension
 						total_size = total_size + filesize(v.Seq.Path .. fname)
 					end
 				end
@@ -672,22 +829,22 @@ function main()
 		if ret == nil then return end
 	end
 
-	-- need to add fonts and fbx to filesize calculation
+	-- Need to add fonts and fbx to filesize calculation
 
 	--------------------------------------------
-	-- reset total size to avoid double counting
+	-- Reset total size to avoid double counting
 	total_size = 0
 
 	------------------------------------------------------------------------------
 	-- CHOOSE DESTINATION FOLDER
 	--
-	--	select the ultimate destination folder for the archived composition
+	-- Select the ultimate destination folder for the archived composition
 	------------------------------------------------------------------------------
 	msg = "Select a destination folder, All footage in your composition will be copied to subfolders of this directory."
 	errText = ""
 
 	--------------------------------------------
-	-- keep displaying the dialog until they get a valid path, or they cancel the script
+	-- Keep displaying the dialog until they get a valid path, or they cancel the script
 	gotpath = false
 
 	while gotpath == false do
@@ -715,11 +872,11 @@ function main()
 			end
 		
 			--------------------------------------------
-			-- createdir returns false if it fails, and false if the directory exists
+			-- The createdir() function returns false if it fails, and false if the directory exists
 			-- so we create the directory, and then see if it really is there.
 			createdir(ret.root)
 		
-			-- is the directory there?
+			-- Is the directory there?
 			gotpath = direxists(ret.root)
 			errText = "Error: Could not create directory " .. ret.root .. "\n\n"
 		end
@@ -731,35 +888,46 @@ function main()
 	output_root = ret.root
 
 	--------------------------------------------
-	-- now that the new dir exists
+	-- Now that the new dir exists
 	-- save a copy of the composition in the root folder of the destination directory
 	output_composition = output_root .. composition:GetAttrs().COMPS_Name
 	composition:Save(output_composition)
 
-	print()
-	print("-----------------------------------")
-	print("-- Archiving Composition         --")
-	print("-----------------------------------")
-
+	dprintf("-----------------------------------\n")
+	dprintf("-- Archiving Composition         --\n")
+	dprintf("-----------------------------------\n")
 
 	------------------------------------------------------------------------------
-	--	COPY ALL FONTS
+	-- Save a Client Note entry to the ArchiveLog.txt file
 	--
-	--	
+	--
+	------------------------------------------------------------------------------
+	-- Only add this section if there is content to be written
+	if (init.note ~= nil) and (init.note ~= "") then
+		dprintf("\n")
+		dprintf("Client Notes\n")
+		dprintf("------------\n")
+		dprintf(init.note .. "\n")
+	end
+	
+	------------------------------------------------------------------------------
+	-- COPY ALL FONTS
+	--
+	--
 	------------------------------------------------------------------------------
 	if init.fonts == 1 then 
-		print()
-		print("Copy Fonts")
-		print("------------\n")
+		dprintf("\n")
+		dprintf("Copy Fonts\n")
+		dprintf("------------\n")
 
-		-- create folder for the fonts
+		-- Create a folder for the fonts
 		new_dir = output_root .. "Fonts" .. os_separator
 		createdir(new_dir)
 	
 		for font_path, val in pairs(font_files) do
 			fseq = eyeon.parseFilename(font_path)
 		
-			print(font_path)
+			dprintf(font_path .. "\n")
 			size, errText = eyeon.copyfile(font_path, new_dir .. fseq.FullName)
 	
 			if size == 0 then 
@@ -772,17 +940,17 @@ function main()
 
 
 	------------------------------------------------------------------------------
-	--	COPY ALL FBX FILES
+	-- COPY ALL FBX FILES
 	--
-	--	if two fbx files with the same name came from different directories this 
-	--	function would overwrite one of them.
+	-- if two fbx files with the same name came from different directories this 
+	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
 	if init.fbx == 1 then
-		print()
-		print("Copy FBX + OBJ Meshes")
-		print("------------\n")
+		dprintf("\n")
+		dprintf("Copy FBX + OBJ Meshes\n")
+		dprintf("---------------------\n")
 	
-		-- create folder for the fbx files
+		-- Create a folder for the fbx files
 		new_dir = output_root .. "Meshes" .. os_separator
 		virtual_dir = "Comp:" .. os_separator .. "Meshes" .. os_separator
 	
@@ -791,7 +959,7 @@ function main()
 		for mesh, val in pairs(fbx_files) do
 			mesh_seq = eyeon.parseFilename(mesh)
 		
-			print(mesh)
+			dprintf(mesh .. "\n")
 			size, errText = eyeon.copyfile(mesh, new_dir .. mesh_seq.FullName)
 		
 			if size == 0 then 
@@ -819,11 +987,11 @@ function main()
 	--	function would overwrite one of them.
 	------------------------------------------------------------------------------
 	if init.abc == 1 then
-		print()
-		print("Copy ABC Meshes")
-		print("------------\n")
+		dprintf("\n")
+		dprintf("Copy ABC Meshes\n")
+		dprintf("---------------\n")
 	
-		-- create folder for the abc files
+		-- Create a folder for the abc files
 		new_dir = output_root .. "Meshes" .. os_separator
 		virtual_dir = "Comp:" .. os_separator .. "Meshes" .. os_separator
 	
@@ -832,7 +1000,7 @@ function main()
 		for mesh, val in pairs(abc_files) do
 			mesh_seq = eyeon.parseFilename(mesh)
 		
-			print(mesh)
+			dprintf(mesh .. "\n")
 			size, errText = eyeon.copyfile(mesh, new_dir .. mesh_seq.FullName)
 		
 			if size == 0 then 
@@ -851,17 +1019,17 @@ function main()
 	end
 
 	------------------------------------------------------------------------------
-	--	COPY ALL AUDIO FILES
+	-- COPY ALL AUDIO FILES
 	--
-	--	if two audio files with the same name came from different directories this 
-	--	function would overwrite one of them.
+	-- if two audio files with the same name came from different directories this 
+	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
 	if init.audio == 1 then
-		print()
-		print("Copy Audio")
-		print("------------\n")
+		dprintf("\n")
+		dprintf("Copy Audio\n")
+		dprintf("----------\n")
 	
-		-- create folder for the audio files
+		-- Create a folder for the audio files
 		new_dir = output_root .. "Audio" .. os_separator
 		virtual_dir = "Comp:" .. os_separator .. "Audio" .. os_separator
 	
@@ -869,28 +1037,29 @@ function main()
 	
 		-- Process the audio files from the Saver Node / SuckLessAudio Fuse / Timeline audio clip
 		for audio, val in pairs(sound_files) do
-			audio_seq = eyeon.parseFilename(audio)
+			if (audio ~= "") and (audio ~= nil) then
+				audio_seq = eyeon.parseFilename(audio)
+				dprintf(audio .. "\n")
+				size, errText = eyeon.copyfile(audio, new_dir .. audio_seq.FullName)
 		
-			print(audio)
-			size, errText = eyeon.copyfile(audio, new_dir .. audio_seq.FullName)
+				if size == 0 then 
+					table.insert(badframe, errText)
+				end
 		
-			if size == 0 then 
-				table.insert(badframe, errText)
-			end
+				total_size = total_size + size
 		
-			total_size = total_size + size
-		
-			comp:Lock()
-			for i, tool in pairs(val) do
-				if tool ~= nil and tool:GetAttrs().TOOLS_RegID == 'Saver' then
-					-- Saver node
-					tool.SoundFilename = virtual_dir .. audio_seq.FullName
-				elseif tool ~= nil and tool:GetAttrs().TOOLS_RegID == 'Fuse.SuckLessAudio' then
-					-- SuckLessAudio Modifier
-					tool.WaveFile = virtual_dir .. audio_seq.FullName
-				-- elseif tool ~= nil and tool:GetAttrs().COMPS_AudioFilename ~= nil then
-					-- Todo: Timeline audio clip
-					-- tool:SetAttrs({ COMPS_AudioFilename = virtual_dir .. audio_seq.FullName })
+				comp:Lock()
+				for i, tool in pairs(val) do
+					if tool ~= nil and tool:GetAttrs().TOOLS_RegID == 'Saver' then
+						-- This is a Saver node
+						tool.SoundFilename = virtual_dir .. audio_seq.FullName
+					elseif tool ~= nil and tool:GetAttrs().TOOLS_RegID == 'Fuse.SuckLessAudio' then
+						-- This is a SuckLessAudio Modifier
+						tool.WaveFile = virtual_dir .. audio_seq.FullName
+					-- elseif tool ~= nil and tool:GetAttrs().COMPS_AudioFilename ~= nil then
+						-- Todo: Timeline audio clip
+						-- tool:SetAttrs({ COMPS_AudioFilename = virtual_dir .. audio_seq.FullName })
+					end
 				end
 			end
 			comp:Unlock()
@@ -899,23 +1068,23 @@ function main()
 	end
 
 	------------------------------------------------------------------------------
-	--	COPY ALL LOADER CLIPS
+	-- COPY ALL LOADER CLIPS
 	--
-	--	
+	--
 	------------------------------------------------------------------------------
-	print()
-	print("Copy Loaders")
-	print("------------\n")
+	dprintf("\n")
+	dprintf("Copy Loaders\n")
+	dprintf("------------\n")
 
 	index = 1
 	for i, clip in pairs(cliplist) do
 		seq = clip.Seq
 
 		--------------------------------------------
-		-- different branches for multiframe versus sequence
+		-- Different branches for multiframe versus sequence
 		if clip.Multiframe == 1 or pathIsMovieFormat(seq.FullPath) == true then
 			--------------------------------------------
-			-- before we copy make sure one with the same name does not already exist
+			-- Before we copy make sure one with the same name does not already exist
 			-- an alternate method would be to call fileexists() on filename
 			if io.open(output_root .. seq.FullName, "r") == nil then
 				init_frame = seq.FullName
@@ -928,7 +1097,7 @@ function main()
 
 			createdir(new_dir)
 
-			print(seq.Name .. " : Copying " .. string.format("%.2f", filesize(seq.FullPath) / 1048576) .. " MB")
+			dprintf(seq.Name .. " : Copying " .. string.format("%.2f", filesize(seq.FullPath) / 1048576) .. " MB\n")
 			size, errText = eyeon.copyfile(seq.FullPath, new_dir .. init_frame)
 
 			if size == 0 then 
@@ -943,20 +1112,21 @@ function main()
 
 				createdir(new_dir)
 
-				-- does a still file with the same name already exist at this location?
+				-- Does a still file with the same name already exist at this location?
 				if fileexists(new_dir .. seq.FullName) == true then
 					init_frame = string.format("%04d", i) .. "__" .. seq.FullName
 				else
 					init_frame = seq.FullName
 				end
 
-				print(init_frame .. " : Copying " .. string.format("%.2f", filesize(seq.FullPath) / 1048576) .. " MB")
+				dprintf(init_frame .. " : Copying " .. string.format("%.2f", filesize(seq.FullPath) / 1048576) .. " MB\n")
 				size, errText = eyeon.copyfile(seq.FullPath, new_dir .. init_frame)
 				if size == 0 then 
 					table.insert(badframe, errText)
 				end
 				total_size = total_size + size
-			else -- Its a sequence
+			else
+				-- It's an image sequence
 				d_name = string.format("%04d", index) .. "__" .. seq.CleanName .. "_" .. seq.Extension
 				new_dir = output_root .. d_name .. os_separator
 				virtual_dir = "Comp:" .. os_separator .. d_name .. os_separator
@@ -966,12 +1136,17 @@ function main()
 				start = clip.InitialFrame
 				theend = start + (clip.Length-1)
 			
-				init_frame = seq.CleanName .. string.format("%0" .. seq.Padding .. "d", start) .. seq.Extension
+				seqPadding = seq.Padding
+				if seqPadding == nil then
+					seqPadding = 1
+				end
+					
+				init_frame = seq.CleanName .. string.format("%0" .. seqPadding .. "d", start) .. seq.Extension
 			
-				print(init_frame .. " : " .. clip.Length .. " Frames ")
+				dprintf(init_frame .. " : " .. clip.Length .. " Frames\n")
 			
 				for i = start, theend do
-					fname = seq.CleanName .. string.format("%0" .. seq.Padding .. "d", i) .. seq.Extension
+					fname = seq.CleanName .. string.format("%0" .. seqPadding .. "d", i) .. seq.Extension
 				
 					size, errText = eyeon.copyfile(seq.Path .. fname, new_dir .. fname)
 				
@@ -986,12 +1161,13 @@ function main()
 				end
 			
 				composition:Print("\n")
+				composition:Print("\n")
 				index = index + 1
 			end
 		end
 
 		--------------------------------------------
-		-- clip copied, update loaders using that clip
+		-- The clip was copied so update the loaders using that clip
 		composition:Lock()
 		for index, item in pairs(clip.Clip) do
 			item.Loader.Clip[item.Start] = virtual_dir .. init_frame
@@ -1005,11 +1181,11 @@ function main()
 	------------------------------------------------------------------------------
 	-- COPY FILES FROM SAVERS
 	--
-	--	
+	--
 	------------------------------------------------------------------------------
-	print()
-	print("Copy Savers")
-	print("------------\n")
+	dprintf("\n")
+	dprintf("Copy Savers\n")
+	dprintf("-----------\n")
 
 	for i, s in pairs(sv_cliplist) do
 		sv = s[1]
@@ -1023,7 +1199,7 @@ function main()
 	
 		init_frame = eyeon.getfilename(files[1])
 	
-		print(sva.TOOLS_Name .. " : " .. table.getn(files) .. " Frames ")
+		dprintf(sva.TOOLS_Name .. " : " .. table.getn(files) .. " Frames\n")
 	
 		for i, file in pairs(files) do
 			size, errText = eyeon.copyfile(file, new_dir .. eyeon.parseFilename(file).FullName)
@@ -1038,10 +1214,10 @@ function main()
 			total_size = total_size + size
 		end
 	
-		composition:Print("\n")
+		dprintf("\n")
 	
 		--------------------------------------------
-		-- clip copied, update saver using that clip
+		-- The clip was copied so update saver using that clip
 		composition:Lock()
 		sv.Clip[fu.TIME_UNDEFINED] = "Comp:" .. os_separator .. d_name .. os_separator .. init_frame
 		composition:Unlock()
@@ -1050,40 +1226,57 @@ function main()
 
 	-- Keep track of exec time
 	local t_end = os.time()
+
+	-- Print the estimated time of execution in seconds
+	dprintf(string.format("[Processing Time] %.3f s\n", os.difftime(t_end, t_start)))
+
+	-- Display the ArchiveLog.txt output location:
+	archive_log = "ArchiveLog.txt"
+	archive_log_path = comp:MapPath("Temp:/" .. archive_log)
+	dprintf("[Archive Composition Log] " .. output_root .. archive_log .. "\n")
+
 	------------------------------------------------------------------------------
 	-- PRINT ERRORS THAT OCCURED ALONG THE WAY
 	--
 	------------------------------------------------------------------------------
 
-
 	if table.getn(badframe) == 0 then
 		ret = composition:AskUser("Copy Complete", {
-			{"results", Name = "File Copy Complete", "Text", Default = "File copy complete. All clips have been copied to " .. ret.root .. ". " .. string.format("%.2f", total_size / 1048576) .. " MB were copied in total.", Lines = 5, ReadOnly = true, Wrap = true}
+			{"results", Name = "File Copy Complete", "Text", Default = "File copy complete.\nAll clips have been copied to:\n \"" .. ret.root .. "\"\n\n" .. string.format("%.2f", total_size / 1048576) .. " MB were copied in total.", Lines = 7, ReadOnly = true, Wrap = true}
 			})
 	else
 		ret = composition:AskUser("Copy Complete", {
-			{"results", Name = "File Copy Complete", "Text", Default = "File copy complete. " .. table.getn(badframe) .. " files were not copied to " .. ret.root .. ". " .. string.format("%.2f", total_size / 1048576) .. " MB were copied in total.\n\nClick OK to print a complete list of failed frames to the console, along with reasons for failing.", Lines = 7, ReadOnly = true, Wrap = true}
+			{"results", Name = "File Copy Complete", "Text", Default = "File copy complete.\n" .. table.getn(badframe) .. " files were not copied to:\n \"" .. ret.root .. "\"\n\n" .. string.format("%.2f", total_size / 1048576) .. " MB were copied in total.\n\nClick OK to print a complete list of failed frames to the console, along with reasons for failing.", Lines = 10, ReadOnly = true, Wrap = true}
 			})
 		if ret ~= nil then
 			-- Display a list of the files that couldn't be archived
-			print()
+			dprintf("\n")
 			for i, v in pairs(badframe) do
-				print(v)
+				dprintf(v .. "\n")
 			end
 	--	else
 	--		return
 		end
 	end
 
-	-- Print estimated time of execution in seconds
-	print(string.format("[Processing Time] %.3f s", os.difftime(t_end, t_start)))
+	-- Copy the ArchiveLog.txt file into the output folder:
+	size, errText = eyeon.copyfile(archive_log_path, output_root .. archive_log)
+	if size == 0 then 
+		dprintf("[Archive Composition Log] There was an error saving the file: " .. archive_log .. "\n")
+	end
+
+	-- Open up the Archive Composition output folder
+	if init.openFolder == 1 or init.openFolder == true then
+		OpenDirectory(output_root)
+	end
 
 	-- Save the comp with the relinked file paths
 	composition:Save(output_composition)
+
 end
 
 -- Run main
 main()
 
 -- Our work here is done.
-print("[Done]")
+dprintf("[Done]\n")
