@@ -6,7 +6,7 @@ Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Sh
 
 You can step through inbetween and real keyframes in the Viewer and Flow areas in Fusion using the Control+Alt+[ and Control+Alt+] hotkeys on Windows/Linux, and the Command+Option+[ and  Command+Option+] hotkeys on MacOS.
 
-You can step through inbetween keyframes in the Viewer and Flow areas in Fusion using the Control+Alt+Meta[ and Control+Alt++Meta] hotkeys on Windows/Linux, and the Control+Option+Command+[ and Control+Option+Command+] hotkeys on MacOS.
+You can step through inbetween keyframes in the Viewer and Flow areas in Fusion using the Control+Alt+Meta+[ and Control+Alt+Meta+] hotkeys on Windows/Linux, and the Control+Option+Command+[ and Control+Option+Command+] hotkeys on MacOS.
 
 ## Nudge Playhead Tip ##
 
@@ -145,16 +145,20 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
 				currentTime = obj:Comp().CurrentTime
-				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1))/2)
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1, tool))/2)
 				
 				-- We are still on the same frame
 				if currentTime == offsetTime then
 					-- Step between real and inbetween keyframes
-					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1)
+					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool)
 					
 					-- [Optionally] Step between each of the inbetween keyframes
-					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime-.1) + obj:Comp():GetNextKeyTime(offsetTime-.1))/2)
+					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime-.1, tool) + obj:Comp():GetNextKeyTime(offsetTime-.1, tool))/2)
 				end
 				
 				obj:Comp().CurrentTime = offsetTime
@@ -173,16 +177,20 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
 				currentTime = obj:Comp().CurrentTime
-				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1))/2)
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool))/2)
 				
 				-- We are still on the same frame
 				if currentTime == offsetTime then
 					-- Step between real and inbetween keyframes
-					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1)
+					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool)
 					
 					-- [Optionally] Step between each of the inbetween keyframes
-					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime+.1) + obj:Comp():GetNextKeyTime(offsetTime+.1))/2)
+					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime+.1, tool) + obj:Comp():GetNextKeyTime(offsetTime+.1, tool))/2)
 				end
 				
 				obj:Comp().CurrentTime = offsetTime
@@ -201,13 +209,17 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
 				currentTime = obj:Comp().CurrentTime
-				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1))/2)
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1, tool))/2)
 				
 				-- We are still on the same frame
 				if currentTime == offsetTime then
 					-- Step between real and inbetween keyframes
-					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1)
+					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool)
 				end
 				
 				obj:Comp().CurrentTime = offsetTime
