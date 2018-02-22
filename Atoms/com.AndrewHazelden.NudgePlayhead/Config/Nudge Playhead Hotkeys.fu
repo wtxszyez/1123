@@ -1,5 +1,5 @@
 --[[--
-Nudge Playhead Hotkeys - v1.1 2018-02-20
+Nudge Playhead Hotkeys - v1.1 2018-02-22
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Shift+Left Cursor" and "Shift+Right Cursor" keys to nudge the timeline playhead forwards/backwards.
@@ -238,13 +238,17 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 			Composition =
 			{
 				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
 				currentTime = obj:Comp().CurrentTime
-				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1))/2)
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool))/2)
 				
 				-- We are still on the same frame
 				if currentTime == offsetTime then
 					-- Step between real and inbetween keyframes
-					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1)
+					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool)
 				end
 				
 				obj:Comp().CurrentTime = offsetTime
@@ -259,6 +263,8 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
 		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
 		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
 	},
 	Hotkeys {
 		Target = "GLView",
@@ -267,6 +273,8 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
 		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
 		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
 	},
 	Hotkeys {
 		Target = "FuFrame",
@@ -285,5 +293,7 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
 		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
 		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
 	},
 }
