@@ -8,11 +8,17 @@ Note:
     This tool is not properly tested, it is a quick fix so you don't have to
     copy paste your Macro/Group in your text editor to change the operator
     type, so use at your own risk.
- 
-Requires   : Fusion 5.x or later
+	
+Change log:
+
+v0.2		Pieter Van Houte	changed getclipboard() to bmd.getclipboard() for Fusion 9
+								changed setclipboard() to bmd.setclipboard() for Fusion 9
+								updated version and date
+								removed requirement note of Fu5+
+v0.1		Sven Neve			initial release: version 0.1 (July 10, 2012)
 	
 --]]--
-version = "version 0.1 (July 10, 2012)"
+version = "version 0.2 (March 06, 2018)"
 --[[
 
  Written by Sven Neve (sven[AT]houseofsecrets[DOT]nl)
@@ -47,7 +53,7 @@ attrs = tool:GetAttrs()
 
 if attrs.TOOLS_RegID == "MacroOperator" then
     comp:Copy(tool)
-    macro = getclipboard()
+    macro = bmd.getclipboard()
 
     if string.len(macro) == nil then
         print("Something went wrong")
@@ -68,7 +74,7 @@ else
     return
 end
 
-setclipboard(output)
+bmd.setclipboard(output)
 comp:SetActiveTool()
 comp:Paste()
 
