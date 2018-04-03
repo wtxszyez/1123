@@ -9,7 +9,7 @@
 
 # <a name="installing-reactor"></a>Installing Reactor #
 
-## <a name="installing-reactor-visually"></a>Installing Reactor Visually##
+## <a name="installing-reactor-visually"></a>Installing Reactor Visually ##
 
 The `Reactor-Installer.lua` script makes it quick and easy to set up Reactor.
 
@@ -168,4 +168,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2018-02-16
+Last Revised 2018-02-25
