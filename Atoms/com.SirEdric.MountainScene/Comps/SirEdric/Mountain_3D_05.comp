@@ -1,0 +1,1334 @@
+Composition {
+	CurrentTime = 2,
+	RenderRange = { 1, 150 },
+	GlobalRange = { 1, 1000 },
+	CurrentID = 126,
+	HiQ = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 9.0.2 build 15",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 2,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Comp:\\stills\\MountainView.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 1,
+					GlobalEnd = 1
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 220, 346.5 } },
+		},
+		BrightnessContrast1 = BrightnessContrast {
+			Inputs = {
+				Gain = Input { Value = 0.1333333, },
+				Input = Input {
+					SourceOp = "CustomFilter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1375, 280.5 } },
+		},
+		Fog3D1 = Fog3D {
+			PassThrough = true,
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D2",
+					Source = "Output",
+				},
+				ShowFogInView = Input { Value = 1, },
+				FogRed = Input { Value = 0.799715555555556, },
+				FogGreen = Input { Value = 0.8, },
+				FogBlue = Input { Value = 0.799786666666667, },
+				NearFogDist = Input { Value = 1.1, },
+				FarFogDistance = Input { Value = 3.1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 346.5 } },
+		},
+		Scale1_1 = Scale {
+			Inputs = {
+				XSize = Input { Value = 0.2, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 330, 214.5 } },
+		},
+		Transform1 = Transform {
+			CtrlWZoom = false,
+			Inputs = {
+				Center = Input { Expression = "Point(0.5-H_Offset, 0.5)", },
+				Input = Input {
+					SourceOp = "Instance_Renderer3D1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2035, 247.5 } },
+			UserControls = ordered() {
+				H_Offset = {
+					INP_MinScale = -1,
+					INPID_InputControl = "SliderControl",
+					IC_ControlPage = 0,
+					LINKID_DataType = "Number",
+					INP_Default = 0,
+				}
+			}
+		},
+		Polygon2 = PolylineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			Inputs = {
+				Level = Input { Value = 0.3977901, },
+				SoftEdge = Input { Value = 0.0607735, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Polyline = Input {
+					SourceOp = "Polygon2Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = Polyline {
+					},
+					Disabled = true,
+				},
+				EffectMask = Input {
+					SourceOp = "Polygon1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+		},
+		Polygon1Polyline = BezierSpline {
+			SplineColor = { Red = 173, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true, LockedY = true }, Value = Polyline {
+						Closed = true,
+						Points = {
+							{ Linear = true, X = -0.364525139331818, Y = 0.512526094913483, LX = -0.0596762895584107, LY = 0.00276907285054499, RX = 0.0102420846621197, RY = -0.0243562956651053 },
+							{ Linear = true, X = -0.333798885345459, Y = 0.439457207918167, LX = -0.0102420846621197, LY = 0.0243562956651053, RX = 0.0181564291318257, RY = -0.0375782946745553 },
+							{ Linear = true, X = -0.279329597949982, Y = 0.326722323894501, LX = -0.0181564291318257, LY = 0.0375782946745553, RX = 0.00791433453559901, RY = -0.022964507341385 },
+							{ Linear = true, X = -0.255586594343185, Y = 0.257828801870346, LX = -0.00791433453559901, LY = 0.022964507341385, RX = 0.0111731860088183, RY = -0.024356295975546 },
+							{ Linear = true, X = -0.22206703631673, Y = 0.184759913943708, LX = -0.0111731860088183, LY = 0.024356295975546, RX = 0.00900704870672987, RY = -0.0196343589012236 },
+							{ X = -0.209497213363647, Y = 0.115866385400295, LX = -0.00178138712317638, LY = 0.0246295848210945, RX = 0.006517693400383, RY = -0.0118302007516224 },
+							{ Linear = true, X = -0.189944133162498, Y = 0.0803757831454277, LX = -0.006517693400383, LY = 0.0118302007516224, RX = 0.00465549528598767, RY = -0.0139178844789664 },
+							{ Linear = true, X = -0.175977647304535, Y = 0.0386221297085285, LX = -0.00465549528598767, LY = 0.0139178844789664, RX = 0.00372439126173666, RY = -0.0104384135144452 },
+							{ Linear = true, X = -0.164804473519325, Y = 0.00730688916519284, LX = -0.00372439126173666, LY = 0.0104384135144452, RX = 0.011173183719317, RY = -0.000695894161860147 },
+							{ Linear = true, X = -0.131284922361374, Y = 0.0052192066796124, LX = -0.011173183719317, LY = 0.000695894161860147, RX = 0.00651769340038301, RY = 0 },
+							{ Linear = true, X = -0.111731842160225, Y = 0.0052192066796124, LX = -0.00651769340038301, LY = 0, RX = 0.00698324044545493, RY = -0.00278357688027124 },
+							{ Linear = true, X = -0.0907821208238602, Y = -0.00313152396120131, LX = -0.00698324044545493, LY = 0.00278357688027124, RX = 0.00605214138825737, RY = 0.00139178844013562 },
+							{ Linear = true, X = -0.0726256966590881, Y = 0.00104384135920554, LX = -0.00605214138825737, LY = -0.00139178844013562, RX = 0.0093109868466854, RY = 0.0111343077927207 },
+							{ Linear = true, X = -0.0446927361190319, Y = 0.0344467647373676, LX = -0.0093109868466854, LY = -0.0111343077927207, RX = 0.00605214138825733, RY = 0.0069589416186015 },
+							{ Linear = true, X = -0.0265363119542599, Y = 0.0553235895931721, LX = -0.00605214138825733, LY = -0.0069589416186015, RX = 0.0027932959298293, RY = 0.0438413359224796 },
+							{ Linear = true, X = -0.018156424164772, Y = 0.186847597360611, LX = -0.0027932959298293, LY = -0.0438413359224796, RX = 0.00791433872655033, RY = -0.00765483578046167 },
+							{ Linear = true, X = 0.00558659201487899, Y = 0.163883090019226, LX = -0.00791433872655033, LY = 0.00765483578046167, RX = 0.00651769107207657, RY = -0.00765483578046167 },
+							{ Linear = true, X = 0.0251396652311087, Y = 0.140918582677841, LX = -0.00651769107207657, LY = 0.00765483578046167, RX = 0.0065176902959744, RY = -0.00695894410212833 },
+							{ Linear = true, X = 0.0446927361190319, Y = 0.120041750371456, LX = -0.0065176902959744, LY = 0.00695894410212833, RX = 0.00186219782996888, RY = -0.00487125847454939 },
+							{ X = 0.0502793304622173, Y = 0.105427972972393, LX = -0.00418994342908263, LY = -0.0229645110666752, RX = 0.00418994342908263, RY = 0.0229645110666752 },
+							{ X = 0.0502793304622173, Y = 0.184759914875031, LX = 0.00209497171454132, LY = -0.0281837154179811, RX = -0.0023277476429939, RY = 0.0111343065897623 },
+							{ Linear = true, X = 0.0432960875332356, Y = 0.218162834644318, LX = 0.0023277476429939, LY = -0.0111343065897623, RX = 0.000465549528598767, RY = 0.0173973540465037 },
+							{ Linear = true, X = 0.0446927361190319, Y = 0.270354896783829, LX = -0.000465549528598767, LY = -0.0173973540465037, RX = 0.00605214263002077, RY = -0.0104384124279023 },
+							{ Linear = true, X = 0.0628491640090942, Y = 0.239039659500122, LX = -0.00605214263002077, LY = 0.0104384124279023, RX = 0.00837988654772443, RY = -0.023660401503245 },
+							{ Linear = true, X = 0.0879888236522675, Y = 0.168058454990387, LX = -0.00837988654772443, LY = 0.023660401503245, RX = 0.00372439622879027, RY = -0.00765483578046167 },
+							{ Linear = true, X = 0.0991620123386383, Y = 0.145093947649002, LX = -0.00372439622879027, LY = 0.00765483578046167, RX = -0.000931099057197571, RY = 0.0215727190176647 },
+							{ Linear = true, X = 0.0963687151670456, Y = 0.209812104701996, LX = 0.000931099057197571, LY = -0.0215727190176647, RX = 0.000465549528598767, RY = 0.0132219890753427 },
+							{ Linear = true, X = 0.0977653637528419, Y = 0.249478071928024, LX = -0.000465549528598767, LY = -0.0132219890753427, RX = 0.00837988903125137, RY = -0.00626304745674133 },
+							{ Linear = true, X = 0.122905030846596, Y = 0.2306889295578, LX = -0.00837988903125137, LY = 0.00626304745674133, RX = 0.00791433950265233, RY = -0.0180932482083637 },
+							{ Linear = true, X = 0.146648049354553, Y = 0.176409184932709, LX = -0.00791433950265233, LY = 0.0180932482083637, RX = 0.00744878950839233, RY = 0.002783576802661 },
+							{ Linear = true, X = 0.16899441787973, Y = 0.184759915340692, LX = -0.00744878950839233, LY = -0.002783576802661, RX = 0.00745298413829929, RY = 0.00278514431567658 },
+							{ X = 0.174581006169319, Y = 0.218162834644318, LX = 0.000933197924355297, LY = -0.0153088874939746, RX = 0.00372439622879034, RY = 0.00347947080930067 },
+							{ Linear = true, X = 0.18575419485569, Y = 0.22860124707222, LX = -0.00372439622879034, LY = -0.00347947080930067, RX = 0.0121042827765147, RY = -0.0104384124279023 },
+							{ Linear = true, X = 0.222067043185234, Y = 0.197286009788513, LX = -0.0121042827765147, LY = 0.0104384124279023, RX = 0.011173183719317, RY = -0.00626304745674133 },
+							{ Linear = true, X = 0.255586594343185, Y = 0.178496867418289, LX = -0.011173183719317, LY = 0.00626304745674133, RX = 0.0125698347886403, RY = 0.00139178832372033 },
+							{ Linear = true, X = 0.293296098709106, Y = 0.18267223238945, LX = -0.0125698347886403, LY = -0.00139178832372033, RX = 0.00931098385674104, RY = 0.0139178849585619 },
+							{ X = 0.321229040622711, Y = 0.224425882101059, LX = -0.00139665766619146, LY = -0.0146137839183211, RX = 0.00139665766619146, RY = 0.0146137839183211 },
+							{ X = 0.326815634965897, Y = 0.282880991697311, LX = -0.00209496833849698, LY = -0.0219206628389657, RX = 0.00186219811439499, RY = 0.0111343065897627 },
+							{ Linear = true, X = 0.332402229309082, Y = 0.316283911466599, LX = -0.00186219811439499, LY = -0.0111343065897627, RX = 0.00232775012652068, RY = 0.0139178931713103 },
+							{ Linear = true, X = 0.339385479688644, Y = 0.35803759098053, LX = -0.00232775012652068, LY = -0.0139178931713103, RX = 0.00232774019241333, RY = 0.0132219890753427 },
+							{ Linear = true, X = 0.346368700265884, Y = 0.397703558206558, LX = -0.00232774019241333, LY = -0.0132219890753427, RX = 0.00977654258410132, RY = -0.005567153294881 },
+							{ Linear = true, X = 0.375698328018188, Y = 0.381002098321915, LX = -0.00977654258410132, LY = 0.005567153294881, RX = 0.00837988654772468, RY = 0.00278357664744033 },
+							{ Linear = true, X = 0.400837987661362, Y = 0.389352828264236, LX = -0.00837988654772468, LY = -0.00278357664744033, RX = 0.00791433453559866, RY = 0.022964507341385 },
+							{ Linear = true, X = 0.424580991268158, Y = 0.458246350288391, LX = -0.00791433453559866, LY = -0.022964507341385, RX = 0.00791434446970633, RY = 0.00626304745674133 },
+							{ Linear = true, X = 0.448324024677277, Y = 0.477035492658615, LX = -0.00791434446970633, LY = -0.00626304745674133, RX = 0.00512104233105966, RY = 0.0153096814950307 },
+							{ Linear = true, X = 0.463687151670456, Y = 0.522964537143707, LX = -0.00512104233105966, LY = -0.0153096814950307, RX = 0.0399788518746693, RY = 0.0044979254404703 },
+							{ Linear = true, X = 0.583623707294464, Y = 0.536458313465118, LX = -0.0399788518746693, LY = -0.0044979254404703, RX = -0.00638792566029174, RY = -0.331597215599484 },
+							{ X = 0.564459919929504, Y = -0.458333343267441, LX = -0.00522649101912975, LY = 0.0338541576638818, RX = 0.00522649101912975, RY = -0.0338541576638818 },
+							{ X = 0.576655030250549, Y = -0.502604186534882, LX = 0.00348429847508669, LY = 0.0156249804422259, RX = -0.00348429847508669, RY = -0.0156249804422259 },
+							{ X = -0.583623707294464, Y = -0.588541686534882, LX = 0.578397219534963, LY = 0.035156259778887, RX = 0.013356566429138, RY = 0.369791666666667 },
+							{ Linear = true, X = -0.54355400800705, Y = 0.520833313465118, LX = -0.013356566429138, LY = -0.369791666666667, RX = 0.0596762895584107, RY = -0.00276907285054499 }
+						}
+					} }
+			}
+		},
+		Scale1 = Scale {
+			PassThrough = true,
+			Inputs = {
+				XSize = Input { Value = 0.2, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Input = Input {
+					SourceOp = "Background1_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+		},
+		Polygon5Polyline2 = BezierSpline {
+			SplineColor = { Red = 160, Green = 252, Blue = 4 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true, LockedY = true }, Value = Polyline {
+						Closed = true,
+						Points = {
+							{ LockPF = true, LockP = true, X = -0.545825535895792, Y = -0.546644967010023, LX = -0.00176485732639501, LY = -0.0236966717976726, RX = 0.0030248569812258, RY = 0.0406146389552189 },
+							{ LockP = true, X = -0.520388404308479, Y = -0.430086821192159, LX = -0.0184830398624037, LY = -0.0301268796939194, RX = 0.0184543297924506, RY = 0.0300800830181604 },
+							{ LockP = true, X = -0.470737070484011, Y = -0.332820292581059, LX = -0.0273074041054687, LY = -0.000866794532672473, RX = 0.111254882770611, RY = 0.00353146435106867 },
+							{ LockP = true, X = -0.172859994828168, Y = -0.107950968892271, LX = -0.0400520972907543, LY = -0.101479783654213, RX = 0.0156864362458464, RY = 0.0397446392127285 },
+							{ LockP = true, X = -0.0702971211090408, Y = 0.0130057809263258, LX = -0.0435808861167806, LY = 0.000625946523449319, RX = 0.07430358104711, RY = -0.00106721254156313 },
+							{ LockP = true, X = 0.080378115521296, Y = -0.232169268195543, LX = -0.0743068429940812, LY = 0.000239149924461249, RX = 0.0442241727293462, RY = -0.000142331542310787 },
+							{ LockP = true, X = 0.171945313804847, Y = -0.375350409035211, LX = -0.0441346316772846, LY = 0.00420421951311274, RX = 0.0515128702813085, RY = -0.00490706291596061 },
+							{ LockP = true, X = 0.316508219303877, Y = -0.458275980656951, LX = -0.0443155733087571, LY = 0.0395369598421555, RX = 0.0274730274244831, RY = -0.024510570459202 },
+							{ LockP = true, X = 0.37824585092225, Y = -0.56809354776859, LX = 0.0318602737804236, LY = 0.00445888170546307, RX = -0.301598630715209, RY = -0.0422090728459169 },
+							{ LockP = true, X = -0.529989008097824, Y = -0.614148226359654, LX = 0.302918851690772, LY = -0.000798437121903762, RX = -0.0159609097992284, RY = 4.20699563989853e-005 }
+						}
+					} }
+			}
+		},
+		Instance_Renderer3D1 = Renderer3D {
+			CustomData = {
+				ToolVersion = 1,
+			},
+			SourceOp = "Renderer3D1",
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Merge3D2",
+					Source = "Output",
+				},
+				Eye = Input { Value = 1, },
+				Reporting = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				["RendererSoftware.Nest"] = Input { },
+				["RendererSoftware.Channels.Nest"] = Input { },
+				["RendererSoftware.Channels.RGBA"] = Input { },
+				["RendererSoftware.Channels.Z"] = Input { },
+				["RendererSoftware.Channels.Coverage"] = Input { },
+				["RendererSoftware.Channels.BgColor"] = Input { },
+				["RendererSoftware.Channels.Normal"] = Input { },
+				["RendererSoftware.Channels.TexCoord0"] = Input { },
+				["RendererSoftware.Channels.ObjectID"] = Input { },
+				["RendererSoftware.Channels.MaterialID"] = Input { },
+				["RendererSoftware.Channels.WorldCoord"] = Input { },
+				["RendererSoftware.Channels.Vector"] = Input { },
+				["RendererSoftware.Channels.BackVector"] = Input { },
+				["RendererSoftware.Lighting"] = Input { },
+				["RendererSoftware.LightingEnabled"] = Input { },
+				["RendererSoftware.ShadowsEnabled"] = Input { },
+				["RendererOpenGL.Channels.Nest"] = Input { },
+				["RendererOpenGL.Channels.RGBA"] = Input { },
+				["RendererOpenGL.Supersampling"] = Input { },
+				["RendererOpenGL.ColorSS"] = Input { },
+				["RendererOpenGL.AuxSS.Nest"] = Input { },
+				["RendererOpenGL.AccumulationEffects"] = Input { },
+				["RendererOpenGL.Lighting"] = Input { },
+				["RendererOpenGL.Texturing"] = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 247.5 } },
+		},
+		Bitmap1 = BitmapMask {
+			Inputs = {
+				Level = Input { Value = 0.7845304, },
+				SoftEdge = Input { Value = 0.0033149, },
+				Invert = Input { Value = 1, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Image = Input {
+					SourceOp = "Scale1_1",
+					Source = "Output",
+				},
+				Channel = Input { Value = FuID { "Blue" }, },
+				High = Input { Value = 0.7218543, },
+				Low = Input { Value = 0.3774834, },
+				EffectMask = Input {
+					SourceOp = "Rectangle1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+		},
+		Polygon4Polyline = BezierSpline {
+			SplineColor = { Red = 96, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true, LockedY = true }, Value = Polyline {
+						Closed = true,
+						Points = {
+							{ Linear = true, X = -0.549766719341278, Y = -0.2238979190588, LX = 0.00673923889795932, LY = -0.117556060353915, RX = 0.0321410099665323, RY = -0.0123743166526157 },
+							{ Linear = true, X = -0.453343689441681, Y = -0.261020869016647, LX = -0.0321410099665323, LY = 0.0123743166526157, RX = 0.028512179851532, RY = -0.013921121756236 },
+							{ Linear = true, X = -0.367807149887085, Y = -0.302784234285355, LX = -0.028512179851532, LY = 0.013921121756236, RX = 0.019699325164159, RY = -0.0116009215513863 },
+							{ Linear = true, X = -0.308709174394608, Y = -0.337586998939514, LX = -0.019699325164159, LY = 0.0116009215513863, RX = 0.0150336957676167, RY = 0.0023201829411683 },
+							{ X = -0.26360809803009, Y = -0.330626457929611, LX = -0.0108864810317755, LY = -7.81360220969418e-009, RX = 0.0108864810317755, RY = 7.81360220969418e-009 },
+							{ X = -0.170295491814613, Y = -0.34222736954689, LX = -0.0139968916773796, LY = 0.0139211220666766, RX = 0.0139968916773796, RY = -0.0139211220666766 },
+							{ X = -0.100311040878296, Y = -0.374709963798523, LX = -0.0279937796294689, LY = 0.00928073609247804, RX = 0.026438568836052, RY = -0.00309358515300588 },
+							{ X = -0.0209953337907791, Y = -0.383990705013275, LX = -0.0202177297323942, LY = 0.00696057127788664, RX = 0.0202177297323942, RY = -0.00696057127788663 },
+							{ X = 0.0645412132143974, Y = -0.3909512758255, LX = -0.0139968898147345, LY = 0.00464037153869868, RX = 0.0139968898147345, RY = -0.00464037153869867 },
+							{ X = 0.112752720713615, Y = -0.395591646432877, LX = -0.0171073088422418, LY = -4.65661287307739e-010, RX = 0.01036806901296, RY = 0.000773390134175656 },
+							{ Linear = true, X = 0.143856927752495, Y = -0.39327147603035, LX = -0.01036806901296, LY = -0.000773390134175656, RX = 0.0554691526465245, RY = 0.0819798964958088 },
+							{ X = 0.310264378786087, Y = -0.147331789135933, LX = -0.0139968963339925, LY = -0.0208816733211279, RX = 0.0139968963339925, RY = 0.0208816733211279 },
+							{ X = 0.416018664836884, Y = -0.00812064949423075, LX = -0.045878694858402, LY = -0.0591647331602871, RX = 0.0311042070388793, RY = 0.0510440844421586 },
+							{ Linear = true, X = 0.509331285953522, Y = 0.145011603832245, LX = -0.0311042070388793, LY = -0.0510440844421586, RX = 0.0108864704767863, RY = -0.231245160102844 },
+							{ Linear = true, X = 0.541990697383881, Y = -0.548723876476288, LX = -0.0108864704767863, LY = 0.231245160102844, RX = -0.357179900010427, RY = -0.00928074121475201 },
+							{ Linear = true, X = -0.5295490026474, Y = -0.576566100120544, LX = 0.357179900010427, LY = 0.00928074121475201, RX = -0.00673923889795932, RY = 0.117556060353915 }
+						}
+					} }
+			}
+		},
+		Merge3D1 = Merge3D {
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Shape3D1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Camera3D1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 346.5 } },
+		},
+		Polygon1 = PolylineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			Inputs = {
+				Level = Input { Value = 0.5911602, },
+				SoftEdge = Input { Value = 0.0353591, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Polyline = Input {
+					SourceOp = "Polygon1Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = Polyline {
+					},
+					Disabled = true,
+				},
+				EffectMask = Input {
+					SourceOp = "Bitmap1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+		},
+		Polygon4 = PolylineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			Inputs = {
+				Level = Input { Value = 0.121547, },
+				SoftEdge = Input { Value = 0.0464088, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Polyline = Input {
+					SourceOp = "Polygon4Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = Polyline {
+					},
+					Disabled = true,
+				},
+				EffectMask = Input {
+					SourceOp = "Polygon3",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 115.5 } },
+		},
+		Anaglyph1 = Anaglyph {
+			CustomData = {
+				ToolVersion = 1
+			},
+			Inputs = {
+				Method = Input { Value = 2, },
+				Left = Input {
+					SourceOp = "Transform1",
+					Source = "Output",
+				},
+				Right = Input {
+					SourceOp = "Transform2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 280.5 } },
+		},
+		Instance_1 = Renderer3D {
+			CustomData = {
+				ToolVersion = 1
+			},
+			SourceOp = "Renderer3D1",
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Merge3D2",
+					Source = "Output",
+				},
+				Eye = Input { Value = 2, },
+				Reporting = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				["RendererSoftware.Nest"] = Input { },
+				["RendererSoftware.Channels.Nest"] = Input { },
+				["RendererSoftware.Channels.RGBA"] = Input { },
+				["RendererSoftware.Channels.Z"] = Input { },
+				["RendererSoftware.Channels.Coverage"] = Input { },
+				["RendererSoftware.Channels.BgColor"] = Input { },
+				["RendererSoftware.Channels.Normal"] = Input { },
+				["RendererSoftware.Channels.TexCoord0"] = Input { },
+				["RendererSoftware.Channels.ObjectID"] = Input { },
+				["RendererSoftware.Channels.MaterialID"] = Input { },
+				["RendererSoftware.Channels.WorldCoord"] = Input { },
+				["RendererSoftware.Channels.Vector"] = Input { },
+				["RendererSoftware.Channels.BackVector"] = Input { },
+				["RendererSoftware.Lighting"] = Input { },
+				["RendererSoftware.LightingEnabled"] = Input { },
+				["RendererSoftware.ShadowsEnabled"] = Input { },
+				["RendererOpenGL.Channels.Nest"] = Input { },
+				["RendererOpenGL.Channels.RGBA"] = Input { },
+				["RendererOpenGL.Supersampling"] = Input { },
+				["RendererOpenGL.ColorSS"] = Input { },
+				["RendererOpenGL.AuxSS.Nest"] = Input { },
+				["RendererOpenGL.AccumulationEffects"] = Input { },
+				["RendererOpenGL.Lighting"] = Input { },
+				["RendererOpenGL.Texturing"] = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 280.5 } },
+		},
+		Camera3D2YOffset = BezierSpline {
+			SplineColor = { Red = 252, Green = 131, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0.00843170320404722, Flags = { Linear = true } }
+			}
+		},
+		Displace3D2 = Displace3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Displace3D1",
+					Source = "Output",
+				},
+				Scale = Input { Value = 0.01, },
+				Input = Input {
+					SourceOp = "BrightnessContrast1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1375, 346.5 } },
+		},
+		Camera3D2YRotation = BezierSpline {
+			SplineColor = { Red = 128, Green = 255, Blue = 128 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { -12.0670391, RH = { 50.6666666666667, -5.3631285 }, Flags = { Linear = true } },
+				[150] = { 8.0446927, LH = { 100.333333333333, 1.3407821 }, Flags = { Linear = true } }
+			}
+		},
+		Polygon5Polyline = BezierSpline {
+			SplineColor = { Red = 96, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true, LockedY = true }, Value = Polyline {
+						Closed = true,
+						Points = {
+							{ LockPF = true, LockP = true, X = -0.531104207038879, Y = -0.546403706073761, LX = -0.0012132143162448, LY = -0.0162897822063698, RX = 0.002589127320455, RY = 0.034764113471163 },
+							{ LockP = true, X = -0.509331285953522, Y = -0.446635723114014, LX = -0.0158205640034642, LY = -0.025787112508036, RX = 0.0136223935841977, RY = 0.0222041512494455 },
+							{ LockP = true, X = -0.451788485050201, Y = -0.418793499469757, LX = -0.0201574487218499, LY = -0.000639839886546639, RX = 0.0783707058591874, RY = 0.00248765130138555 },
+							{ LockP = true, X = -0.216951787471771, Y = -0.437354981899261, LX = -0.0782568081719244, LY = 0.0067821551552053, RX = 0.0812789925421307, RY = -0.00704407387876665 },
+							{ LockP = true, X = 0.0272161737084389, Y = -0.446635723114014, LX = -0.0814118997784318, LY = 0.00116930838664339, RX = 0.0368085752996064, RY = -0.000528676715754852 },
+							{ LockP = true, X = 0.137636080384254, Y = -0.448955923318863, LX = -0.0368101912058523, LY = 0.000118470306254192, RX = 0.0368211145529919, RY = -0.000118505462069431 },
+							{ LockP = true, X = 0.248055994510651, Y = -0.453596293926239, LX = -0.0367465625346797, LY = 0.00350043966329679, RX = 0.0208277850751562, RY = -0.00198403333391775 },
+							{ LockP = true, X = 0.308709174394608, Y = -0.47679814696312, LX = -0.0179177598009334, LY = 0.0159856614011333, RX = 0.0179936379161672, RY = -0.0160533574675702 },
+							{ LockP = true, X = 0.349144637584686, Y = -0.548723876476288, LX = 0.0208670934388545, LY = 0.00292037356056453, RX = -0.288690191795392, RY = -0.040402522075439 },
+							{ LockP = true, X = -0.520217716693878, Y = -0.592807412147522, LX = 0.289953907236486, LY = -0.000764263966690926, RX = -0.0109719941544905, RY = 2.89201130446619e-005 }
+						}
+					} }
+			}
+		},
+		Renderer3D1 = Renderer3D {
+			CtrlWZoom = false,
+			CustomData = {
+				ToolVersion = 1
+			},
+			Inputs = {
+				["RendererOpenGL.DoFPlaneOfFocus"] = Input { Value = 1.5, },
+				Camera = Input { Value = FuID { "Camera3D2" }, },
+				GlobalIn = Input { Value = 1, },
+				Width = Input { Value = 1280, },
+				Height = Input { Value = 720, },
+				Depth = Input { Value = 3, },
+				SceneInput = Input {
+					SourceOp = "Merge3D2",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3D2" }, },
+				Reporting = Input { Value = 1, },
+				RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+				["RendererOpenGL.Channels.RGBASS"] = Input { Value = 1, },
+				["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+				["RendererOpenGL.SSRateX"] = Input { Value = 2, },
+				["RendererOpenGL.AccumulationEffects"] = Input { Value = 1, },
+				["RendererOpenGL.AccumQuality"] = Input { Value = 4, },
+				["RendererOpenGL.DoFBlur"] = Input { Value = 0.0116959, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 478.5 } },
+		},
+		ChangeDepth1 = ChangeDepth {
+			Inputs = {
+				Depth = Input { Value = 3, },
+				Input = Input {
+					SourceOp = "Scale1_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 214.5 } },
+		},
+		Camera3D2ZOffset = BezierSpline {
+			SplineColor = { Red = 254, Green = 207, Blue = 46 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0.532266175276455, RH = { 50.6666666666667, 0.668018618127417 }, Flags = { Linear = true } },
+				[150] = { 0.93952350382934, LH = { 100.333333333333, 0.803771060978378 }, Flags = { Linear = true } }
+			}
+		},
+		Background1_1 = Background {
+			Inputs = {
+				GlobalIn = Input { Value = 1, },
+				Width = Input { Value = 776, },
+				Height = Input { Value = 520, },
+				Depth = Input { Value = 3, },
+				TopLeftRed = Input { Value = 1, },
+				TopLeftGreen = Input { Value = 1, },
+				TopLeftBlue = Input { Value = 1, },
+				EffectMask = Input {
+					SourceOp = "Polygon5",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 148.5 } },
+		},
+		CustomFilter1 = CustomFilter {
+			Inputs = {
+				Matrix = Input {
+					Value = FilterTable {
+						NumEntries = 54,
+						Type = 6,
+						Offset = 0,
+						Minimum = 0,
+						Maximum = 1,
+						MinimumValue = 0,
+						MaximumValue = 1,
+						StartSlope = 1,
+						EndSlope = 1,
+						StartIn = 0,
+						EndIn = 1,
+						Table = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, -3, 1, 1, 1, 1, 10, 0, -10, 1, 1, 1, 1, 3, 0, -3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+					},
+				},
+				Input = Input {
+					SourceOp = "ChangeDepth1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1375, 214.5 } },
+		},
+		Camera3D2XOffset = BezierSpline {
+			SplineColor = { Red = 250, Green = 59, Blue = 49 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { -0.0386160197593397, RH = { 50.6666666666667, 0.0215850398268012 }, Flags = { Linear = true } },
+				[150] = { 0.141987158999083, LH = { 100.333333333333, 0.0817860994129421 }, Flags = { Linear = true } }
+			}
+		},
+		Polygon2Polyline = BezierSpline {
+			SplineColor = { Red = 96, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true, LockedY = true }, Value = Polyline {
+						Closed = true,
+						Points = {
+							{ X = -0.440032422542572, Y = 0.504842638969421, LX = -0.0168916792804948, LY = 0.0454234863064427, RX = 0.00810372726991773, RY = -0.0217917673289776 },
+							{ X = -0.375202596187592, Y = 0.378934621810913, LX = -0.0283630495425314, LY = 0.0520581249147654, RX = 0.0253916780153913, RY = -0.0605326890945433 },
+							{ Linear = true, X = -0.299027562141418, Y = 0.197336554527283, LX = -0.0253916780153913, LY = 0.0605326890945433, RX = 0.00918423136075334, RY = -0.00242130458354967 },
+							{ Linear = true, X = -0.271474868059158, Y = 0.190072640776634, LX = -0.00918423136075334, LY = 0.00242130458354967, RX = 0.00702322522799167, RY = -0.0322841008504231 },
+							{ Linear = true, X = -0.250405192375183, Y = 0.0932203382253647, LX = -0.00702322522799167, LY = 0.0322841008504231, RX = 0.005942737062772, RY = -0.0217917673289776 },
+							{ Linear = true, X = -0.232576981186867, Y = 0.0278450362384319, LX = -0.005942737062772, LY = 0.0217917673289776, RX = 0.00756347779162442, RY = -0.0104923324991706 },
+							{ X = -0.20988655090332, Y = -0.00363196129910648, LX = -3.09132675013757e-009, LY = 0.0145278451964259, RX = 3.09132675013757e-009, RY = -0.0145278451964259 },
+							{ X = -0.205024316906929, Y = -0.0762711837887764, LX = -0.0129659697413445, LY = 0.0242130775004625, RX = 0.0129659697413445, RY = -0.0242130775004625 },
+							{ X = -0.188816860318184, Y = -0.122276030480862, LX = -0.00162074342370033, LY = 0.0108958845958114, RX = 0.00864397982756301, RY = -0.00484261661767934 },
+							{ Linear = true, X = -0.162884920835495, Y = -0.1368038803339, LX = -0.00864397982756301, LY = 0.00484261661767934, RX = 0.0183684478203457, RY = 0.00403551508982967 },
+							{ Linear = true, X = -0.107779577374458, Y = -0.124697335064411, LX = -0.0183684478203457, LY = -0.00403551508982967, RX = 0.0124257154187146, RY = -0.00080710300112848 },
+							{ X = -0.0705024302005768, Y = -0.127118647098541, LX = -0.0113452179357409, LY = 0.00726391933858395, RX = 0.0113452179357409, RY = -0.00726391933858395 },
+							{ X = -0.0267423018813133, Y = -0.117433413863182, LX = -0.0162074551917613, LY = -0.00847457628697157, RX = 0.0097244734254976, RY = 0.0104923322796821 },
+							{ Linear = true, X = 0.00243111839517951, Y = -0.0859564170241356, LX = -0.0097244734254976, LY = -0.0104923322796821, RX = 0.0324149102283021, RY = 0.0225988700985909 },
+							{ Linear = true, X = 0.0996758490800858, Y = -0.018159806728363, LX = -0.0324149102283021, LY = -0.0225988700985909, RX = 0.0162074559678634, RY = 0.000807103080054124 },
+							{ X = 0.148298216983676, Y = -0.0157384974882007, LX = -0.0159584190573394, LY = -0.00430463038712122, RX = 0.0388978937019904, RY = 0.0104923335214456 },
+							{ X = 0.201782822608948, Y = -0.00363196129910648, LX = -0.00729335596164068, LY = -0.000807101333824297, RX = 0.031874656677246, RY = 0.00887812759416799 },
+							{ Linear = true, X = 0.297406792640686, Y = 0.0230024214833975, LX = -0.031874656677246, LY = -0.00887812759416799, RX = 0.00378174583117167, RY = 0.00887812736133733 },
+							{ Linear = true, X = 0.308752030134201, Y = 0.0496368035674095, LX = -0.00378174583117167, LY = -0.00887812736133733, RX = 0.00594273209571833, RY = 0.00564971814552943 },
+							{ Linear = true, X = 0.326580226421356, Y = 0.0665859580039978, LX = -0.00594273209571833, LY = -0.00564971814552943, RX = 0.0108049710591633, RY = 0.00484261413415273 },
+							{ Linear = true, X = 0.358995139598846, Y = 0.081113800406456, LX = -0.0108049710591633, LY = -0.00484261413415273, RX = 0.011885464191437, RY = 0.0169491519530613 },
+							{ Linear = true, X = 0.394651532173157, Y = 0.13196125626564, LX = -0.011885464191437, LY = -0.0169491519530613, RX = 0.0102647244930267, RY = 0.0201775630315147 },
+							{ Linear = true, X = 0.425445705652237, Y = 0.192493945360184, LX = -0.0102647244930267, LY = -0.0201775630315147, RX = 0.0259319245815277, RY = 0.0145278473695117 },
+							{ Linear = true, X = 0.50324147939682, Y = 0.236077487468719, LX = -0.0259319245815277, LY = -0.0145278473695117, RX = 0.00594274202982603, RY = 0 },
+							{ Linear = true, X = 0.521069705486298, Y = 0.236077487468719, LX = -0.00594274202982603, LY = 0, RX = 0.00756347179412831, RY = -0.253430187702179 },
+							{ Linear = true, X = 0.543760120868683, Y = -0.524213075637817, LX = -0.00756347179412831, LY = 0.253430187702179, RX = -0.373851974805196, RY = -0.0072639187177023 },
+							{ Linear = true, X = -0.577795803546906, Y = -0.546004831790924, LX = 0.373851974805196, LY = 0.0072639187177023, RX = 0.0113452275594077, RY = 0.355932195981344 },
+							{ Linear = true, X = -0.543760120868683, Y = 0.521791756153107, LX = -0.0113452275594077, LY = -0.355932195981344, RX = 0.0016544165364634, RY = 0.0519037865208117 }
+						}
+					} }
+			}
+		},
+		Polygon3 = PolylineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			Inputs = {
+				Level = Input { Value = 0.2320442, },
+				SoftEdge = Input { Value = 0.0651934, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Polyline = Input {
+					Value = Polyline {
+						Closed = true,
+						Points = {
+							{ Linear = true, X = -0.531104207038879, Y = 0.261020869016647, LX = -0.012441674868266, LY = -0.258314003547033, RX = 0.053395539522171, RY = -0.00928073624769834 },
+							{ Linear = true, X = -0.370917588472366, Y = 0.233178660273552, LX = -0.053395539522171, LY = 0.00928073624769834, RX = 0.0191809237003327, RY = -0.027068833510081 },
+							{ Linear = true, X = -0.313374817371368, Y = 0.151972159743309, LX = -0.0191809237003327, LY = 0.027068833510081, RX = 0.00673924705536022, RY = -0.0270688328301363 },
+							{ X = -0.293157070875168, Y = 0.0707656592130661, LX = -0.00466562435030937, LY = 0.0162412971258163, RX = 0.00466562435030937, RY = -0.0162412971258163 },
+							{ X = -0.274494558572769, Y = -0.00812064949423075, LX = -0.00466563180088997, LY = 0.0232018567621708, RX = 0.00466563180088997, RY = -0.0232018567621708 },
+							{ X = -0.25738725066185, Y = -0.0986078903079033, LX = -0.0139968926087022, LY = 0.0139211118221283, RX = 0.0139968926087022, RY = -0.0139211118221283 },
+							{ X = -0.223172634840012, Y = -0.145011603832245, LX = -0.00777605641633272, LY = 0.0162412971258163, RX = 0.00777605641633272, RY = -0.0162412971258163 },
+							{ X = -0.210730955004692, Y = -0.237819030880928, LX = -0.0023328117094934, LY = 0.0382830649614334, RX = 0.0155521035194397, RY = 0.00309358040491733 },
+							{ Linear = true, X = -0.164074644446373, Y = -0.228538289666176, LX = -0.0155521035194397, LY = -0.00309358040491733, RX = 0.00777604679266601, RY = 0 },
+							{ Linear = true, X = -0.140746504068375, Y = -0.228538289666176, LX = -0.00777604679266601, LY = 0, RX = 0.0336962168415389, RY = -0.004640370607376 },
+							{ Linear = true, X = -0.0396578535437584, Y = -0.242459401488304, LX = -0.0336962168415389, LY = 0.004640370607376, RX = 0.0139968895042936, RY = -0.00386697550614667 },
+							{ Linear = true, X = 0.00233281496912241, Y = -0.254060328006744, LX = -0.0139968895042936, LY = 0.00386697550614667, RX = 0.0165889067575336, RY = -0.00154679035767933 },
+							{ Linear = true, X = 0.0520995352417231, Y = -0.258700699079782, LX = -0.0165889067575336, LY = 0.00154679035767933, RX = 0.0203431859627208, RY = -0.00189684855979553 },
+							{ X = 0.112752720713615, Y = -0.24709977209568, LX = -0.0201549997545858, LY = -0.00674888777194854, RX = 0.0228097438812257, RY = 0.0123743265867233 },
+							{ Linear = true, X = 0.181181952357292, Y = -0.20997679233551, LX = -0.0228097438812257, LY = -0.0123743265867233, RX = 0.020736133058866, RY = 0.0146945069233577 },
+							{ Linear = true, X = 0.24339035153389, Y = -0.165893271565437, LX = -0.020736133058866, LY = -0.0146945069233577, RX = 0.0119232734044393, RY = 0.02010827511549 },
+							{ Linear = true, X = 0.279160171747208, Y = -0.105568446218967, LX = -0.0119232734044393, LY = -0.02010827511549, RX = 0.021254539489746, RY = 0.0247486469646293 },
+							{ Linear = true, X = 0.342923790216446, Y = -0.031322505325079, LX = -0.021254539489746, LY = -0.0247486469646293, RX = 0.00984966754913334, RY = 0.0131477182731033 },
+							{ Linear = true, X = 0.372472792863846, Y = 0.00812064949423075, LX = -0.00984966754913334, LY = -0.0131477182731033, RX = -0.00207874314872277, RY = 0.00973258111642805 },
+							{ Linear = true, X = 0.366236563417678, Y = 0.0373183928435149, LX = 0.00207874314872277, LY = -0.00973258111642805, RX = 0.00153699442391865, RY = 0.0124864756462781 },
+							{ X = 0.366608448697879, Y = 0.0754060298204422, LX = -0.00354031615354996, LY = -0.0158451505051669, RX = 0.0027051805789788, RY = 0.0121073914188685 },
+							{ X = 0.375516033944894, Y = 0.143707696933392, LX = -1.08837711807823e-009, LY = -0.0221968784630375, RX = 1.29843048073123e-009, RY = 0.0264808061935331 },
+							{ X = 0.37374897920016, Y = 0.235180538498666, LX = -7.00573893748036e-009, LY = -0.0337028417866196, RX = 8.59734256026612e-009, RY = 0.0413596449695941 },
+							{ X = 0.360882389377789, Y = 0.32818967378778, LX = 0.00594069077996217, LY = -0.0206798319715198, RX = -0.00448624637878553, RY = 0.0156168406558125 },
+							{ X = 0.364855248230109, Y = 0.381039662429603, LX = -0.0154123801561248, LY = -0.0142862449814294, RX = 0.00740779905042808, RY = 0.00686653601460191 },
+							{ X = 0.396360540041475, Y = 0.383854563693063, LX = -0.00975640960147355, LY = 0.000165709598134408, RX = 0.0047480241700836, RY = -8.06289512206575e-005 },
+							{ X = 0.408648161106585, Y = 0.385530664422511, LX = -0.00174893350303488, LY = -0.00782759118704891, RX = 0.00278650798664471, RY = 0.0124713977524316 },
+							{ X = 0.41554743804633, Y = 0.412159684610213, LX = -0.00101838468404194, LY = -0.00653626906709757, RX = 0.00132843680727614, RY = 0.00852641762116635 },
+							{ X = 0.420684278011322, Y = 0.432714611291885, LX = -0.00143981126571332, LY = -0.00623757041057205, RX = 0.003110428651174, RY = 0.0100541412830353 },
+							{ Linear = true, X = 0.430015563964844, Y = 0.462877035140991, LX = -0.003110428651174, LY = -0.0100541412830353, RX = 0.00294197003728317, RY = 0.00230314577784069 },
+							{ X = 0.439140617847443, Y = 0.469136536121368, LX = -0.003090434511416, LY = -0.00198060118932308, RX = 0.00177890198194656, RY = 0.00114006079629157 },
+							{ X = 0.442553402666912, Y = 0.476138776968219, LX = -0.00176171260195271, LY = -0.00117742861291765, RX = 0.00125864205941264, RY = 0.000841233822126391 },
+							{ X = 0.446431010961533, Y = 0.474036931991577, LX = -0.00122973194062511, LY = -0.000904062844441039, RX = 0.00347238576016112, RY = 0.0025527519191646 },
+							{ X = 0.456107897287208, Y = 0.483303635875821, LX = -0.00289906089716923, LY = -0.00379846020097549, RX = 0.00300889894823775, RY = 0.00394237420635009 },
+							{ X = 0.458909622195163, Y = 0.500735132685511, LX = -0.000933908302651665, LY = -0.00581049893656342, RX = 0.0282120931933989, RY = 0.00516872644715568 },
+							{ Linear = true, X = 0.54354590177536, Y = 0.516241312026978, LX = -0.0282120931933989, LY = -0.00516872644715568, RX = -0.00155522425969434, RY = -0.365815937519074 },
+							{ Linear = true, X = 0.538880228996277, Y = -0.581206500530243, LX = 0.00155522425969434, LY = 0.365815937519074, RX = -0.369103153546651, RY = 0.0224284529685973 },
+							{ Linear = true, X = -0.568429231643677, Y = -0.513921141624451, LX = 0.369103153546651, LY = -0.0224284529685973, RX = 0.012441674868266, RY = 0.258314003547033 }
+						}
+					},
+				},
+				Polyline2 = Input {
+					Value = Polyline {
+					},
+					Disabled = true,
+				},
+				EffectMask = Input {
+					SourceOp = "Polygon2",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, 115.5 } },
+		},
+		Anaglyph2 = Anaglyph {
+			CustomData = {
+				ToolVersion = 1
+			},
+			Inputs = {
+				Method = Input { Value = 2, },
+				HorizStack = Input { Value = 1, },
+				Left = Input {
+					SourceOp = "Instance_Renderer3D1_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 346.5 } },
+		},
+		Shape3D1 = Shape3D {
+			Inputs = {
+				MaterialInput = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+				["SurfacePlaneInputs.SizeLock"] = Input { Value = 0, },
+				["SurfacePlaneInputs.Height"] = Input { Value = 0.669421487603306, },
+				["SurfacePlaneInputs.SubdivisionWidth"] = Input { Value = 500, },
+				["SurfacePlaneInputs.SubdivisionHeight"] = Input { Value = 500, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1045, 346.5 } },
+		},
+		Camera3D1 = Camera3D {
+			Inputs = {
+				["Transform3DOp.Translate.Y"] = Input { Value = 0.00730182552183016, },
+				["Transform3DOp.Translate.Z"] = Input { Value = 1.2421066, },
+				AoV = Input { Value = 24.3265863475745, },
+				["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 412.5 } },
+		},
+		Rectangle1 = RectangleMask {
+			Inputs = {
+				OutputSize = Input { Value = FuID { "Custom" }, },
+				MaskWidth = Input { Value = 776, },
+				MaskHeight = Input { Value = 520, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Width = Input { Value = 1.10101867572156, },
+				Height = Input { Value = 1.08227913518464, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 330, 115.5 } },
+		},
+		Camera3D2 = Camera3D {
+			CtrlWZoom = false,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input {
+					SourceOp = "Camera3D2XOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Translate.Y"] = Input {
+					SourceOp = "Camera3D2YOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Translate.Z"] = Input {
+					SourceOp = "Camera3D2ZOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Rotate.X"] = Input {
+					SourceOp = "Camera3D2XRotation",
+					Source = "Value",
+				},
+				["Transform3DOp.Rotate.Y"] = Input {
+					SourceOp = "Camera3D2YRotation",
+					Source = "Value",
+				},
+				["Transform3DOp.Rotate.Z"] = Input {
+					SourceOp = "Camera3D2ZRotation",
+					Source = "Value",
+				},
+				PerspAdaptiveClip = Input { Value = 0, },
+				AoV = Input { Value = 24.3265863475745, },
+				PlaneOfFocus = Input { Value = 1.6439791, },
+				["Stereo.Nest"] = Input { Value = 1, },
+				["Stereo.Mode"] = Input { Value = FuID { "ToeIn" }, },
+				["Stereo.EyeSeparation"] = Input { Value = 0.01, },
+				["Stereo.ConvergenceDistance"] = Input { Value = 1.17, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 3, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1705, 412.5 } },
+		},
+		Transform2 = Transform {
+			Inputs = {
+				Center = Input { Expression = "Point(0.5+Transform1.H_Offset, 0.5)", },
+				Input = Input {
+					SourceOp = "Instance_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2035, 280.5 } },
+		},
+		Displace3D1 = Displace3D {
+			Inputs = {
+				Camera = Input { Value = FuID { "Camera3D1" }, },
+				SceneInput = Input {
+					SourceOp = "Merge3D1",
+					Source = "Output",
+				},
+				Scale = Input { Value = -2, },
+				CameraDisplacement = Input { Value = 1, },
+				PointCamera = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "Scale1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 346.5 } },
+		},
+		Merge3D2 = Merge3D {
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Fog3D1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Camera3D2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1705, 346.5 } },
+		},
+		Camera3D2ZRotation = BezierSpline {
+			SplineColor = { Red = 128, Green = 128, Blue = 255 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true } }
+			}
+		},
+		Camera3D2XRotation = BezierSpline {
+			SplineColor = { Red = 255, Green = 128, Blue = 128 },
+			NameSet = true,
+			KeyFrames = {
+				[1] = { 0, Flags = { Linear = true } }
+			}
+		},
+		Instance_Renderer3D1_1 = Renderer3D {
+			CustomData = {
+				ToolVersion = 1
+			},
+			SourceOp = "Renderer3D1",
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "Merge3D2",
+					Source = "Output",
+				},
+				Eye = Input { Value = 3, },
+				Reporting = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				["RendererSoftware.Nest"] = Input { },
+				["RendererSoftware.Channels.Nest"] = Input { },
+				["RendererSoftware.Channels.RGBA"] = Input { },
+				["RendererSoftware.Channels.Z"] = Input { },
+				["RendererSoftware.Channels.Coverage"] = Input { },
+				["RendererSoftware.Channels.BgColor"] = Input { },
+				["RendererSoftware.Channels.Normal"] = Input { },
+				["RendererSoftware.Channels.TexCoord0"] = Input { },
+				["RendererSoftware.Channels.ObjectID"] = Input { },
+				["RendererSoftware.Channels.MaterialID"] = Input { },
+				["RendererSoftware.Channels.WorldCoord"] = Input { },
+				["RendererSoftware.Channels.Vector"] = Input { },
+				["RendererSoftware.Channels.BackVector"] = Input { },
+				["RendererSoftware.Lighting"] = Input { },
+				["RendererSoftware.LightingEnabled"] = Input { },
+				["RendererSoftware.ShadowsEnabled"] = Input { },
+				["RendererOpenGL.Channels.Nest"] = Input { },
+				["RendererOpenGL.Channels.RGBA"] = Input { },
+				["RendererOpenGL.Supersampling"] = Input { Value = 1, },
+				["RendererOpenGL.ColorSS"] = Input { },
+				["RendererOpenGL.AuxSS.Nest"] = Input { },
+				["RendererOpenGL.AccumulationEffects"] = Input { Value = 1, },
+				["RendererOpenGL.Lighting"] = Input { },
+				["RendererOpenGL.Texturing"] = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 346.5 } },
+		},
+		Polygon5 = PolylineMask {
+			DrawMode = "ModifyOnly",
+			DrawMode2 = "InsertAndModify",
+			PolyLine2Disabled = true,
+			Inputs = {
+				Level = Input { Value = 0, },
+				SoftEdge = Input { Value = 0.1414365, },
+				MaskWidth = Input { Value = 1280, },
+				MaskHeight = Input { Value = 720, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Polyline = Input {
+					SourceOp = "Polygon5Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					SourceOp = "Polygon5Polyline2",
+					Source = "Value",
+				},
+				EffectMask = Input {
+					SourceOp = "Polygon4",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 115.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1920,
+			Height = 912,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							ForceSource = true,
+							GridSnap = true,
+							PipesAlways = true,
+							AspectPics = false,
+							FullIndicator = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.965936,
+						Offset = { -1130.01, -200.492 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 350 },
+							ScaleX = 2.1421052631579,
+							OffsetX = -51.4105263157895,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 238,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = 32.2,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = true,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.820365535248042,
+					RatioY = 0.00989010989010989,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.571902654867257,
+						{ ID = "Left", RatioX = 0.5, RatioY = 103.400386847195, Pop = true },
+						{ ID = "Right", RatioX = 0.5, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.363938053097345, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 342,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Splines = {
+				AutoSmoothMeshes = false,
+			},
+			Interactive = {
+				Proxy = {
+					Auto = false
+				},
+			},
+			AutoSave = {
+				Delay = 180,
+				OnRender = true
+			},
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			NumberStyles = {
+				ClipFrame = 1
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						CheckerUnderlay = false,
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								FusionViewLUT1 = ViewOperator {
+									NameSet = true,
+									Inputs = {
+									}
+								}
+							},
+							ID = "FusionViewLUT"
+						}
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 4294967295
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 4294967295
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamPersp = {
+							FovY = 45,
+							AdaptiveFar = false,
+							Scale = 1.29235291481018,
+							Separation = 0.100000001490116,
+							Near = 0.0500000007450581,
+							Rotation = {
+								Y = -26.8000049591064,
+								X = -0.599999785423279,
+								Z = 0
+							},
+							Position = {
+								Y = -0.136613041162491,
+								X = -0.110410995781422,
+								Z = 0.129472881555557
+							},
+							AdaptiveNear = false,
+							Convergence = 0,
+							Far = 100000
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CameraName = "Camera3D2",
+						Options = {
+							Grid = false,
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						Normalise = false,
+						CheckerUnderlay = false,
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 0
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 4294967295
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								FusionViewLUT = ViewOperator {
+									NameSet = true,
+									Inputs = {
+									}
+								}
+							},
+							ID = "FusionViewLUT"
+						},
+						SelectedPlugin = "FusionViewLUT",
+						SelectedName = ""
+					},
+					SideB = {
+						Viewer = {
+							ScaleMode = 0,
+						},
+					},
+					Stereo = {
+						Enabled = false,
+						DisplayMethod = "Anaglyph",
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						Options = {
+							Wireframe = false,
+							Grid = false,
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							AdaptiveFar = false,
+							Scale = 1,
+							Far = 100000,
+							AdaptiveNear = false,
+							Near = -100000
+						},
+						CamPersp = {
+							FovY = 45,
+							AdaptiveFar = false,
+							Scale = 0.598738968372345,
+							Separation = 0.100000001490116,
+							Near = 0.0500000007450581,
+							Rotation = {
+								Y = -55.4000015258789,
+								X = 64.6000061035156,
+								Z = 0
+							},
+							Position = {
+								Y = -0.162321910262108,
+								X = -0.182220906019211,
+								Z = 0.330660283565521
+							},
+							AdaptiveNear = false,
+							Convergence = 0,
+							Far = 100000
+						},
+						CameraName = "Perspective",
+					},
+				},
+				View1 = {
+				},
+				Defaults = {
+					View3D = {
+						CamPersp = {
+							Separation = 0.1
+						},
+						CameraConvergence = 0,
+						CameraSeparation = 0.1
+					},
+				},
+			},
+			FrameFormat = {
+				Name = "HDTV 720 Europe",
+				Width = 1280,
+				Height = 720,
+				Rate = 25,
+				GuideRatio = 1.77777777777778,
+				DepthFull = 1,
+				DepthPreview = 1,
+				DepthInteractive = 1,
+			},
+			LastFile = "C:\\eyeon\\projects\\Archive Composition\\destination\\",
+			Unsorted = {
+				GlobalStart = 1,
+			},
+			SplineEditor = {
+				AutoSnap = {
+					Keys = 18,
+				},
+			},
+			Timeline = {
+				ViewFilterMode = 0
+			},
+			FilterModeName = "Show All",
+			Paths = {
+				EnableReverseMapping = true,
+				Map = {
+				}
+			},
+			FlowView = {
+				ForceSource = true,
+				GridSnap = true,
+				PipesOnTop = true,
+				AspectTilePics = false,
+				AutoSnap = false,
+				FullToolIndicator = true,
+				RemoveRouters = false
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 
