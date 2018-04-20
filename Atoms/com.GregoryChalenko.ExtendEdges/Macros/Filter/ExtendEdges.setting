@@ -1,0 +1,273 @@
+{
+	Tools = ordered() {
+		ExtendEdges = MacroOperator {
+			CustomData = {
+				HelpPage = "https://www.steakunderwater.com/VFXPedia/96.0.243.189/indexe0a0.html?title=Settings_and_Macros/DepthDefocus_Description",
+			},
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Expands borders of the objects based on the Alpha channel. The algorithm was suggested by Theodor Groeneboom\r\n\r\nMacro by Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				ExtendAmount = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "ExtendAmount",
+					Default = 0.01,
+				},
+				ExtendXMultiplier = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "ExtendXMultiplier",
+					Default = 1,
+				},
+				ExtendYMultiplier = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "ExtendYMultiplier",
+					Default = 1,
+				},
+				Filter = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "Filter",
+				},
+				Passes = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "Passes",
+					Default = 4,
+				},
+				ClippingMode = InstanceInput {
+					SourceOp = "Blur_Ext",
+					Source = "ClippingMode",
+				},
+				Blend = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "Blend",
+					Default = 1,
+					Page = "Common Controls"
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ProcessAlpha",
+					Name = "Alpha",
+					Default = 1,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaskHigh",
+					ControlGroup = 18,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaskLow",
+					ControlGroup = 18,
+					Default = 0,
+				},
+				MaskClipBlack = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaskClipBlack",
+					Default = 1,
+				},
+				MaskClipWhite = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaskClipWhite",
+					Default = 1,
+				},
+				UseObject = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "UseObject",
+					Default = 0,
+				},
+				UseMaterial = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "UseMaterial",
+					Default = 0,
+				},
+				CorrectEdges = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "CorrectEdges",
+				},
+				ObjectID = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "ObjectID",
+					Name = "Object / Material",
+					ControlGroup = 24,
+					Default = 0,
+				},
+				MaterialID = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "MaterialID",
+					Name = "Object / Material",
+					ControlGroup = 24,
+					Default = 0,
+				},
+				Input = InstanceInput {
+					SourceOp = "PipeRouter1",
+					Source = "Input",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "EffectMask",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "DX_Ext_Blend",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				Mrg_Ext_Underlay = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+						Foreground = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Background = Input {
+							SourceOp = "Bol_Ext_Divide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1188, 288, }, },
+				},
+				Bol_Ext_Divide = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 7, },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "Blur_Ext",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1081, 288, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Blur_Ext = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						LockXY = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 0.72,
+							Expression = "ExtendAmount*720*ExtendXMultiplier",
+						},
+						YBlurSize = Input {
+							Value = 0.72,
+							Expression = "ExtendAmount*720*ExtendYMultiplier",
+						},
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 971, 288, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.541176470588235, B = 0.372549019607843, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						ExtendAmount = {
+							ICD_Center = 0.01,
+							INP_MaxScale = 0.1,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 0,
+							LINKS_Name = "Extend Amount",
+							INP_Default = 0.01,
+						},
+						ExtendXMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 3,
+							LINKS_Name = "Extend X Multiplier",
+						},
+						ExtendYMultiplier = {
+							INP_Default = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 3,
+							LINKS_Name = "Extend X Multiplier",
+						},
+					},
+				},
+				DX_Ext_Blend = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve",
+					},
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Mrg_Ext_Underlay",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1309, 288, }, },
+				},
+				PipeRouter1 = PipeRouter {
+					ViewInfo = PipeRouterInfo { Pos = { 1077, 243, }, },
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.490196078431373, G = 0.525490196078431, B = 0.309803921568627, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}
