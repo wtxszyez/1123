@@ -16,9 +16,7 @@ Website: albertogz.com
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
 comp.Lock()
-
 
 toollist = comp.GetToolList().values()
 tool = []
