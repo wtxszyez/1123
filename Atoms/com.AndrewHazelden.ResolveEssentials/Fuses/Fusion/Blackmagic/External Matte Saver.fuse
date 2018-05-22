@@ -1,0 +1,203 @@
+FuRegisterClass("ExternalMatteSaver", CT_SinkTool, {
+	REGS_Name             = "External Matte Saver",
+	REGS_Category         = "Resolve Connect",
+	REGS_OpIconString     = "EMS",
+	REG_Fuse_NoEdit       = true,
+	REG_Fuse_NoReload     = true,
+	REG_TimeVariant       = true,
+	REG_SupportsDoD       = true,
+	REG_OpNoMask          = true,
+	})
+
+function AddMatte(i)
+	MaxMatte = math.max(MaxMatte, i)
+
+	Mattes[i] = {}
+
+	local istr = tostring(i)
+
+	local matte = Mattes[i]
+
+	self:AddControlPage("Mattes")
+
+	matte.InType = self:AddInput("Type " .. istr, "MatteType" .. istr, {
+		LINKID_AddBeforeID = "AddMatte",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "ComboIDControl",
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICS_Name = "",
+		ICD_Width = 0.225,
+		INPID_DefaultID = "A",
+		{ CCS_AddString = "---", CCID_AddID = "None" },
+		{ CCS_AddString = "A", CCID_AddID = "A" },
+		{ CCS_AddString = "RGB", CCID_AddID = "RGB" },
+		{ CCS_AddString = "RGBA", CCID_AddID = "RGBA" },
+		LINK_ForceSave = true,
+		})
+
+	matte.InName = self:AddInput("Name " .. istr, "Name" .. istr, {
+		LINKID_AddBeforeID = "AddMatte",
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "matte_" .. istr,
+		ICS_Name = "",
+		ICD_Width = 0.35,
+		TEC_Lines = 1,
+		})
+
+	matte.InImage = self:AddInput("Input " .. istr, "Input" .. istr, {
+		LINKID_AddBeforeID = "AddMatte",
+		LINKID_DataType = "Image",
+		INPID_InputControl = "ImageControl",
+		ICS_Name = "  " .. istr,
+		ICD_Width = 0.425,
+		LINK_Main = i,
+		})
+
+	matte.InLabel = self:AddInput("", "Label" .. istr, {
+		LINKID_AddBeforeID = "AddMatte",
+		LINKID_DataType = "Number",
+		INPID_InputControl = "LabelControl",
+		ICD_Width = 0.425+0.35,
+		INP_External = false,
+		IC_Visible = false,
+		})
+
+	self:UpdateControls()
+end
+
+function Create()
+
+	self:RemoveControlPage("Controls")
+	self:AddControlPage("File")
+
+	InFilename = self:AddInput("Filename", "Filename", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FileControl",
+		FC_IsSaver = true,
+		FC_ClipBrowse = true,
+		FCS_FilterString = "OpenEXR Files (*.exr)|*.exr|",
+		})
+
+	self:AddControlPage("Mattes")
+
+	InAddMatte = self:AddInput("Add Matte", "AddMatte", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ButtonControl",
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICD_Width = 0.225,
+		ICS_Name = "+",
+		})
+
+	InPad = self:AddInput("", "Pad", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "LabelControl",
+		ICD_Width = 0.425+0.35,
+		INP_External = false,
+		IC_Visible = true,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	Mattes = {}
+	MaxMatte = 0
+
+	if self.IsBeingLoaded then
+		local inps = self:GetInputIDs()
+		local mattes = {}
+		for i,v in ipairs(inps) do
+			if v:sub(1,9) == "MatteType" then
+				mattes[tonumber(v:sub(10))] = true
+			end
+		end
+		for i,v in pairs(mattes) do
+			AddMatte(tonumber(i))
+		end
+	else
+		AddMatte(1)
+	end
+end
+
+function NotifyChanged(inp, param, time)
+	if inp == InAddMatte then
+		if param.Value > 0.5 then
+			AddMatte(MaxMatte+1)
+		end
+	else
+		for i,matte in pairs(Mattes) do
+			if inp == matte.InType then
+				local on = (param.Value ~= "None")
+
+				matte.InImage:SetAttrs({ LINK_Visible = on, INP_Disabled = not on, IC_Visible = on, INP_Required = on, })
+				matte.InName:SetAttrs({ INP_Disabled = not on, IC_Visible = on, })
+				matte.InLabel:SetAttrs({ IC_Visible = not on, })
+			end
+		end
+	end
+end
+
+function Process(req)
+	local ok = true
+
+	local exr = EXRIO()
+
+	if not req:IsPreCalc() and not req:IsInteractive() then
+		local filename = InFilename:GetValue(req).Value
+
+		filename = self.Comp:MapPath(filename)
+
+		exr:WriteOpen(filename, req.Time+1)
+
+		local parts = {}
+
+		for i,matte in pairs(Mattes) do
+			local img = matte.InImage:GetValue(req)
+			local name = matte.InName:GetValue(req).Value
+			local ctype = matte.InType:GetValue(req).Value
+
+			if ctype ~= "None" then
+				local p = exr:Part(name, img.ImageWindow, img.DataWindow, img.XScale/img.YScale)
+
+				if ctype == "A" then
+					exr:Channel(name .. ".A", HALF, img, CHAN_ALPHA)
+				elseif ctype == "RGB" or ctype == "RGBA" then
+					exr:Channel("R", HALF, img, CHAN_RED)
+					exr:Channel("G", HALF, img, CHAN_GREEN)
+					exr:Channel("B", HALF, img, CHAN_BLUE)
+
+					if ctype == "RGBA" then
+						exr:Channel("A", HALF, img, CHAN_ALPHA)
+					end
+				end
+
+				table.insert(parts, p)
+			end
+		end
+
+		if exr:WriteHeader() then
+			for i,v in ipairs(parts) do
+				ok = ok and exr:WritePart(v, {  })
+			end
+		else
+			ok = false
+		end
+
+		exr:Close()
+	end
+
+	local err = exr:GetLastError()
+	if #err > 0 then
+		printerr(err)
+
+		ok = false
+	end
+
+	if ok then
+		OutImage:Set(req, Mattes[1].InImage:GetValue(req))
+	end
+end

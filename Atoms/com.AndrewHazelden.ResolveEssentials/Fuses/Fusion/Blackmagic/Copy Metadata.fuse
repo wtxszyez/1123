@@ -1,0 +1,97 @@
+--[[--
+This tool can be used to copy or replace metadata from a second image, or to clear the existing metadata.
+Written and tested with Fusion 5.31 and Fusion 6.0
+--]]--
+
+FuRegisterClass("FLS_CopyMetadata", CT_Tool, {
+	REGS_Name = "Copy Metadata",
+	REGS_Category = "Metadata",
+	REGS_OpIconString = "Meta",
+	REGS_OpDescription = "Metadata Copy, Clear and Replace",
+	REG_NoMotionBlurCtrls = true,
+	REG_NoBlendCtrls = true,
+	REG_OpNoMask = true,
+	REG_NoPreCalcProcess = true,	-- make default PreCalcProcess() behaviour be to call Process() rather than automatic pass through.
+	REG_Fuse_NoJIT = true,
+})
+
+function Create()
+	InOperation = self:AddInput("Operation", "Operation", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = "Merge (Replace Duplicates)", },
+		{ CCS_AddString = "Merge (Preserve Duplicates)", },
+		{ CCS_AddString = "Replace", },
+		{ CCS_AddString = "Clear", },
+	})
+
+	InImage = self:AddInput("Background", "Background", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+
+	MetaImage = self:AddInput("Metadata", "Metadata", {
+		LINKID_DataType = "Image",
+		LINK_Main = 2,
+		INP_Required = false,
+	})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+end
+
+function Process(req)
+	local img = InImage:GetValue(req)
+	local meta_img = MetaImage:GetValue(req)
+	local operation = InOperation:GetValue(req).Value
+
+	local result = Image({IMG_Like = img, IMG_NoData = req:IsPreCalc()})
+	-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+	img:Crop(result, { })
+
+	if operation == 0 then -- merge
+		newmetadata = result.Metadata or {}
+		if meta_img then
+			-- source provided
+			if meta_img.Metadata then
+				for name, val in pairs(meta_img.Metadata) do
+					newmetadata[name] = val
+				end
+			end
+		end
+	elseif operation == 1 then -- merge preserve
+		newmetadata = result.Metadata or {}
+		if meta_img then
+			-- source provided
+			if meta_img.Metadata then
+				for name, val in pairs(meta_img.Metadata) do
+					if not newmetadata[name] then
+						newmetadata[name] = val
+					end
+				end
+			end
+		end
+	elseif operation == 2 then -- replace
+		if meta_img then
+			-- source provided
+			if meta_img.Metadata then
+				newmetadata = meta_img.Metadata
+			else
+				newmetadata = result.Metadata or {}
+			end
+		end
+	elseif operation == 3 then -- clear
+		newmetadata = {}
+	end
+
+	meta_img = nil
+
+	result.Metadata = newmetadata
+
+	OutImage:Set(req, result)
+end

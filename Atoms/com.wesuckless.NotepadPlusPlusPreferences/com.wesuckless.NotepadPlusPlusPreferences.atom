@@ -1,0 +1,38 @@
+Atom {
+	Name = "Notepad++ for Fusion Preferences",
+	Category = "Bin",
+	Author = "We Suck Less",
+	Version = 7.54,
+	Date = {2018, 2, 26},
+	Description = [[<p><p>The "Notepad++ for Fusion Preferences" atom adjusts Fusion Script Editor settings so the program can be used as the default text editor in  Fusion's "Script" menu. Also a Notepad++ shortcut is added to the Desktop for convenience.</p></>
+]],
+	Deploy = {
+	},
+	InstallScript = {
+		Windows = {
+			[[if platform == "Windows" then
+	-- Convert the notepad++ PathMap to an absolute file path
+	editorPath = app:MapPath("Reactor:/Deploy/Bin/notepad++/notepad++.exe")
+
+	-- Update Fusion's "Profile:/Fusion.prefs" settings file with a new EditorPrefs entry
+	app:SetPrefs("Global.Script.EditorPath", editorPath)
+	app:SavePrefs()
+
+	-- Print back the result
+	updatedEditorPath = app:GetPrefs("Global.Script.EditorPath")
+	dprintf("[Fusion Editor Path] " .. tostring(updatedEditorPath) .. "\n")
+	
+	-- Add a "Notepad++ for Fusion.lnk" Shortcut to the Desktop Folder
+	CreateShortcut(editorPath, "Desktop:", "Notepad++ for Fusion", "file")
+else
+	dprintf("[Warning] Notepad++ is only available for Windows.\n")
+end]],
+		},
+	},
+	UninstallScript = {
+		Windows = {
+			[[-- Update Fusion's "Profile:/Fusion.prefs" settings file to clear out the EditorPrefs entry
+app:SetPrefs("Global.Script.EditorPath", "")]],
+		},
+	},
+}

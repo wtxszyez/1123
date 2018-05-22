@@ -1,0 +1,45 @@
+--[[--
+Transfer Atoms Settings - v1.0 2018-05-15
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+Saves out a custom Reactor "Collection" atom that has an exported list of your installed Atoms as a series of dependency entries. You can then use it to quickly set up another Fusion workstation identically in a single click.
+
+## Atom File Output ##
+
+The Transfer Atom Settings file is written to the Desktop folder:</p>
+
+$(HOME)/Desktop/com.Local.Reactor.TransferAtomSettings.atom
+
+--]]--
+{
+	Action {
+		ID = "Reactor_Transfer_Atom_Settings",
+		Category = "Reactor",
+		Name = "Transfer Atom Settings",
+
+		Targets = {
+			Composition = {
+				Execute = _Lua [=[
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/Deploy/Scripts/Comp/Andrew Hazelden/Transfer Atom Settings.lua")
+					if bmd.fileexists(scriptPath) == false then
+						print("[Transfer Atoms Settings Error] Please open the Reactor window and re-install \"Transfer Atoms Settings\": " .. scriptPath)
+					else
+						target:RunScript(scriptPath)
+					end
+				]=],
+			},
+		},
+	},
+	Menus
+	{
+		Target = "ChildFrame",
+
+		After "Reactor\\Advanced\\Atomizer"
+		{
+			"Reactor_Transfer_Atom_Settings{}",
+		},
+	},
+}

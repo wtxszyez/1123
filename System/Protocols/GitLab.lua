@@ -1,8 +1,8 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v1.0 2018-01-22
+Reactor Package Manager for Fusion - v2.0 2018-05-21
 ==============================================================================
-Requires    : Fusion 9.0.1+
+Requires    : Fusion 9.0.2+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
             : Andrew Hazelden                 [andrew@andrewhazelden]
@@ -10,7 +10,7 @@ Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/w
 ==============================================================================
 Overview
 ==============================================================================
-Reactor is a package manager for Fusion (Free) and Fusion Studio. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
+Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
 
 Reactor GitLab Public Repository:
 https://gitlab.com/WeSuckLess/Reactor
@@ -27,11 +27,17 @@ The main Reactor Package Manager window is opened by selecting the "Reactor > Op
 
 The "Reactor > Show Reactor Folder" menu item allows you to quickly view the "AllData:/Reactor/" PathMap folder location where the Reactor "atom" packages are downloaded and installed.
 
-The "AllData:/Reactor/" PathMap folder location is:
+The Fusion "AllData:/Reactor/" PathMap folder location is:
 
 (Windows) C:\ProgramData\Blackmagic Design\Fusion\Reactor\
 (Linux) /var/BlackmagicDesign/Fusion/Reactor/
 (Mac) /Library/Application Support/Blackmagic Design/Fusion/
+
+The Resolve "AllData:/Reactor/" PathMap folder location is:
+
+(Windows) C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\
+(Linux) /var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/
+(Mac) /Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/
 
 --]]--
 
@@ -51,10 +57,32 @@ if branch == nil then
 	branch = "master"
 end
 
+dprintf = (os.getenv("REACTOR_DEBUG") ~= "true") and function() end or
+function(fmt, ...)
+	-- Display the debug output in the Console tab
+	-- print(fmt:format(...))
+
+	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+	local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+	local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
+	local reactor_log = reactor_log_root .. "ReactorLog.txt"
+	bmd.createdir(reactor_log_root)
+	log_fp, err = io.open(reactor_log, "a")
+	if err then
+		print("[Log Error] Could not open Reactor.log for writing")
+	else
+		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
+		log_fp:write("\n" .. time_stamp)
+		log_fp:write(fmt:format(...))
+		log_fp:close()
+	end
+end
+
 local gitlab_url = "https://gitlab.com/api/v4/projects/"
 
 local function GetURL(url, do_headers)
-	dprintf("gitlab GetURL('%s')", url:gsub("&private_token=.+", ""))
+	-- dprintf("[Status] GitLab GetURL('%s')", url)
+	dprintf("[Status] GitLab GetURL('%s')", url:gsub("&private_token=.+", ""))
 
 	local body = {}
 	local headers
@@ -118,6 +146,7 @@ function GetRecentCommitID(project_url, token)
 	local commits = GetJSON(project_url .. "/repository/commits/?per_page=1" .. token)
 
 	if commits[1] == nil then
+		dprintf("[Warning] GetRecentCommitID() has a commits[1] value of nil")
 		return nil
 	end
 
@@ -148,7 +177,10 @@ local function UpdateAtoms(msg, repo, id, force)
 	local repo_atoms = atoms_root..repo..'/'
 	local files = {}
 
-	local token = g_Config.Settings[repo].Token and ("&private_token=" .. g_Config.Settings[repo].Token) or ""
+	local token = ""
+	if g_Config.Settings[repo].Token ~= nil and string.len(g_Config.Settings[repo].Token) >= 10 then
+		token = "&private_token=" .. g_Config.Settings[repo].Token
+	end
 
 	if previd == nil or force then
 		-- initial fetch
@@ -156,7 +188,11 @@ local function UpdateAtoms(msg, repo, id, force)
 		files = GetAtomList(project_url, token)
 	else
 		-- update from commits
-		local commits = GetJSON(project_url .. "/repository/compare?per_page=100&from=" .. previd .. "&to=" .. branch .. token)
+		local url = project_url .. "/repository/compare?per_page=100&from=" .. previd .. "&to=" .. branch .. token
+		-- dprintf("[Status] GitLab GetJSON('%s')", url)
+		dprintf("[Status] GitLab GetJSON('%s')", url:gsub("&private_token=.+", ""))
+
+		local commits = GetJSON(url)
 		if commits.diffs then
 			for i,v in ipairs(commits.diffs) do
 				if v.old_path:sub(-5):lower() == ".atom" then
@@ -169,8 +205,9 @@ local function UpdateAtoms(msg, repo, id, force)
 			end
 			previd = commits.commit and commits.commit.id
 		else
-			print("WARNING: Failed to get recent commits from ".. repo ..
-					commits.message and "\n   " .. commits.message or "")
+			local msg = "[Warning] Failed to get recent commits from ".. repo .. commits.message and "\n   " .. commits.message or ""
+			dprintf(msg)
+			print(msg)
 		end
 	end
 
@@ -200,9 +237,13 @@ function CleanUp()
 end
 
 function GetFile(path, id, repo)
-	local token = g_Config.Settings[repo].Token and ("&private_token=" .. g_Config.Settings[repo].Token) or ""
+	local token = ""
+	if g_Config.Settings[repo].Token ~= nil and string.len(g_Config.Settings[repo].Token) >= 10 then
+		token = "&private_token=" .. g_Config.Settings[repo].Token
+	end
 
-	return GetURL(gitlab_url .. id .. "/repository/files/" .. EscapeStr(path) .. "/raw?ref=" .. branch .. token)
+	local url = gitlab_url .. id .. "/repository/files/" .. EscapeStr(path) .. "/raw?ref=" .. branch .. token
+	return GetURL(url)
 end
 
 -- Expose our module interface

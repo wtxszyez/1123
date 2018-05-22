@@ -6,7 +6,7 @@ By Andrew Hazelden with *major* assistance from Peter Loveday
 
 The FusionScript Help Browser allows you to view every single class and member that is present in Fusion. This browser tool is the fastest way for a Fusion based compositing technical director or Fusion plugin developer to find out information about the Fusion session that might not be covered in the existing Fusion reference material.
 
-Besides listing Fusion's build-in class and member details, you can also see results from 3rd party plug-ins and Fuses that are loaded.As you to scroll through the Fusion Class and Member items the available help data will be displayed automatically.
+Besides listing Fusion's built-in class and member details, you can also see results from 3rd party plug-ins and Fuses that are loaded. As you to scroll through the Fusion Class and Member items the available help data will be displayed automatically.
 
 The script works with Fusion 9.0.1 and uses the UI Manager GUI system to display the results.
 
@@ -18,7 +18,7 @@ Copy the "FusionScript Help Browser.lua" script into your Fusion user preference
 
 # Usage #
 
-Step 1. In Fusion you can run the script by selecting the "Script > FusionScript Help Browser" menu item.
+Step 1. In Fusion you can run the script by selecting the "Script > UI Manager > FusionScript Help Browser" menu item.
 
 Step 2. A "FusionScript Help Browser" window will be displayed. This interface is used to scroll through the available Fusion help data..
 
@@ -47,7 +47,7 @@ win = disp:AddWindow({
       Weight = 2,
       Text = [[The FusionScript Help Browser allows you to view every single class and member that is present in Fusion. This browser tool is the fastest way for a Fusion based compositing technical director or Fusion plugin developer to find out information about the Fusion session that might not be covered in the existing Fusion reference material.
 
-Besides listing Fusion's build-in class and member details, you can also see results from 3rd party plug-ins and Fuses that are loaded. As you to scroll through the Fusion Class and Member items the available help data will be displayed automatically.]],
+Besides listing Fusion's built-in class and member details, you can also see results from 3rd party plug-ins and Fuses that are loaded. As you to scroll through the Fusion Class and Member items the available help data will be displayed automatically.]],
       ReadOnly = true,
       Font = ui:Font{
         Family = 'Droid Sans Mono',

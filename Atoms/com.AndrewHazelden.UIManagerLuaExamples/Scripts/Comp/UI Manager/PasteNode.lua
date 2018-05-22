@@ -1,3 +1,4 @@
+_VERSION = [[Version 1.1 - February 17, 2018]]
 --[[
 PasteNode.lua - v1.1 2017-10-02 10.43 AM
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -1502,7 +1503,8 @@ local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width,height = 800,1024
 win = disp:AddWindow({
-  ID = 'EditWin',
+  ID = 'PasteNodeWin',
+  TargetID = 'PasteNodeWin',
   WindowTitle = 'Paste Node',
   Geometry = {100, 100, width, height},
   Spacing = 10,
@@ -1576,7 +1578,7 @@ win = disp:AddWindow({
 itm = win:GetItems()
 
 -- The window was closed
-function win.On.EditWin.Close(ev)
+function win.On.PasteNodeWin.Close(ev)
   disp:ExitLoop()
 end
 
@@ -1593,6 +1595,26 @@ function win.On.PasteButton.Clicked(ev)
   print('[Copies Pasted] ' .. tostring(totalCopies))
 end
 
+-- The app:AddConfig() command that will capture the 'Control + W' or 'Control + F4' hotkeys so they will close the window instead of closing the foreground composite.
+app:AddConfig('PasteNode', {
+  Target {
+    ID = 'PasteNodeWin',
+  },
+
+  Hotkeys {
+    Target = 'PasteNodeWin',
+    Defaults = true,
+
+    CONTROL_W  = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+    CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+  },
+})
+
+comp:Print('\n[PasteNode] ' .. tostring(_VERSION) .. "\n")
+comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
+
 win:Show()
 disp:RunLoop()
 win:Hide()
+app:RemoveConfig('PasteNode')
+collectgarbage()

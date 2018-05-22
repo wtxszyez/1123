@@ -1,0 +1,234 @@
+--[[	 Overlay/underlay fuse, to illustrate image uploading		]]--
+
+-- Here's the Cg shader itself:
+shader = 
+[[
+struct OverlayFuse : ViewShader
+{
+	ViewShader source;												// need this line
+	float4x4 transform, utransform;									// image transform matrices
+	float4 offset, uoffset;											// offset
+	float blend;													// blend
+	sampler2D overlaytex, underlaytex;								// image samplers
+
+	void ShadePixel(inout FuPixel f)
+	{
+		source.ShadePixel(f);										// get source pixel
+
+		// calculate sample offset
+		float4 uv = mul(f.TexCoord0 - uoffset, utransform);			// underlay pixel coords
+		float4 underpix = tex2D(underlaytex, uv.xy + 0.5f);			// fetch underlay pixel
+		f.Color.rgb = f.Color.rgb + underpix.rgb * (1.0f-f.Color.a);// additive merge source over underlay 
+
+		uv = mul(f.TexCoord0 - offset, transform);					// overlay pixel coords
+		float4 overpix = tex2D(overlaytex, uv.xy + 0.5f) * blend;	// fetch overlay pixel
+		f.Color.rgb = overpix.rgb + f.Color.rgb * (1.0f-overpix.a);	// additive merge overlay over the others
+
+		f.Color.a = saturate(underpix.a + f.Color.a + overpix.a);
+	}
+};
+]]
+
+
+-- regnode
+FuRegisterClass("OverlayFuse", CT_ViewLUTPlugin, {		-- ID must be unique
+	REGS_Name = "Overlay Fuse",
+	})
+	
+-- Called on creation. Add any controls here.
+-- Note use of Control Pages
+function Create()
+	self:AddControlPage("Overlay");
+
+	InCenter = self:AddInput("Center", "Center", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INP_DefaultX  = 0.5,
+		INP_DefaultY  = 0.5,
+		})
+
+	InSize = self:AddInput("Size", "Size", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 5.0,
+		INP_Default  = 1.0,
+		})
+	InAngle = self:AddInput("Angle", "Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  = 0.0,
+		})
+	InBlend = self:AddInput("Blend", "Blend", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default  = 1.0,
+		})
+		
+	InFilename = self:AddInput("Overlay Image", "OverlayImage", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FileControl",
+		INP_DefaultText  = "",
+		INP_DoNotifyChanged = true,
+		})
+
+	self:AddControlPage("Underlay");
+
+	InUnderlayCenter = self:AddInput("Center", "UnderlayCenter", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INP_DefaultX  = 0.5,
+		INP_DefaultY  = 0.5,
+		})
+
+	InUnderlaySize = self:AddInput("Size", "UnderlaySize", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 5.0,
+		INP_Default  = 1.0,
+		})
+	InUnderlayAngle = self:AddInput("Angle", "UnderlayAngle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 360.0,
+		INP_Default  = 0.0,
+		})
+		
+	InUnderlayFilename = self:AddInput("Underlay Image", "UnderlayImage", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FileControl",
+		INP_DefaultText  = "",
+		INP_DoNotifyChanged = true,
+		})
+
+	EmptyImage = Image({
+		IMG_Width = 1,
+		IMG_Height = 1,
+		});
+	EmptyImage:Fill(Pixel());		-- Pixel defaults to black/clear
+	
+	OverlayImage = EmptyImage;
+	UnderlayImage = EmptyImage;
+end
+
+-- This is called whenever the value of a control changes,
+-- for any Input with INP_DoNotifyChanged = true
+function NotifyChanged(inp, param, time)
+	if param then
+		if inp == InFilename then
+			local filename = tostring(param.Value);		-- get filename as a string
+			local clip = Clip(filename);				-- make a Clip out of it (defaults to read-only)
+			local img = clip:GetFrame(0);				-- exercise: allow other frames in clip (if any)
+			
+			if img then
+				OverlayImage = img;
+			else
+				OverlayImage = EmptyImage;
+			end
+		elseif inp == InUnderlayFilename then
+			local filename = tostring(param.Value);
+			local clip = Clip(filename);
+			local img = clip:GetFrame(0);
+			
+			if img then
+				UnderlayImage = img;
+			else
+				UnderlayImage = EmptyImage;
+			end
+		end
+	end
+end
+
+-- This is called when the shader is created
+-- img may be nil
+function SetupShader(req, img)
+	local vs = ViewShader("OverlayFuse", shader);	-- pass struct name and shader string
+
+	vs:AddParam("transform");						-- add any external parameters 
+	vs:AddParam("offset");
+	vs:AddParam("blend");
+	vs:AddParam("overlaytex");
+
+	vs:AddParam("utransform");
+	vs:AddParam("uoffset");
+	vs:AddParam("underlaytex");
+
+	
+	return vs;
+end
+
+-- This is called every display refresh
+-- img may be nil
+function SetupParams(req, vs, img)
+	-- Setup overlay params
+	local centerx = InCenter:GetValue(req).X;	-- retrieve control values
+	local centery = InCenter:GetValue(req).Y;
+	local size  = InSize:GetValue(req).Value;
+	local angle = InAngle:GetValue(req).Value;
+	local blend  = InBlend:GetValue(req).Value;
+	local imgw  = img.Width;
+	local imgh  = img.Height;
+	local uploadw = OverlayImage.Width;
+	local uploadh = OverlayImage.Height;
+	local uploadimg = OverlayImage;
+
+	if size > 0.0 then
+		size = 1.0 / size
+	else
+		uploadimg = EmptyImage;
+	end
+
+	local transform = Matrix4();
+	transform:Identity();
+	transform:Scale(size / uploadw, size / uploadh, 1.0);
+	transform:RotZ(angle);
+--	transform:Move(overw * 0.5, overh * 0.5, 0);
+
+	vs:SetParam(1, transform);				-- and setup the shader's parameter values
+	vs:SetParam(2, centerx * imgw, centery * imgh);
+	vs:SetParam(3, blend);
+
+	-- upload the image (table args are optional)
+	vs:SetParam(4, uploadimg, {"Color"}, {	-- {"Color"}, {"R","G","B","A"}, {"Z","Z","Z","A"} etc
+		TR_GLTexTarget = "2D",		-- RECT (default, pixel coords), 2D (normalized coords)
+		TR_F3DTexDataType = "int8",			-- int8, int16, float16, float32, ChooseSmallest (default)
+		TR_WrapModeS = "Black",				-- Clamp (default), Black, and (not for RECTs) Wrap, Mirror
+		TR_WrapModeT = "Black",
+		TR_GLMinFilter = "Linear",			-- Linear (default), Nearest
+		TR_GLMagFilter = "Linear",
+		});
+
+	-- Setup underlay params
+	centerx = InUnderlayCenter:GetValue(req).X;
+	centery = InUnderlayCenter:GetValue(req).Y;
+	size  = InUnderlaySize:GetValue(req).Value;
+	angle = InUnderlayAngle:GetValue(req).Value;
+	uploadw = UnderlayImage.Width;
+	uploadh = UnderlayImage.Height;
+	uploadimg = UnderlayImage;
+
+	if size > 0.0 then
+		size = 1.0 / size
+	else
+		uploadimg = EmptyImage;
+	end
+
+	transform:Identity();
+	transform:Scale(size / uploadw, size / uploadh, 1.0);
+	transform:RotZ(angle);
+
+	vs:SetParam(5, transform);
+	vs:SetParam(6, centerx * imgw, centery * imgh);
+	vs:SetParam(7, uploadimg, {"Color"}, {
+		TR_GLTexTarget = "2D",
+		TR_WrapModeS = "Black",
+		TR_WrapModeT = "Black",
+		});
+
+	return true;
+end
+

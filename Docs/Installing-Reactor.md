@@ -2,8 +2,8 @@
 
 - [Installing Reactor](Installing-Reactor.md#installing-reactor)
 	- [Installing Reactor Visually](Installing-Reactor.md#installing-reactor-visually)
-	- [Installing Reactor Manually](Installing-Reactor.md#installing-reactor-manually)
-	- [Using Reactor Content on a Render Node](Installing-Reactor.md#using-reactor-content-on-a-rendernode)
+	- [Installing Reactor for Fusion Manually](Installing-Reactor.md#installing-reactor-manually)
+	- [Using Reactor Content on a Fusion Render Node](Installing-Reactor.md#using-reactor-content-on-a-rendernode)
 		- [Fusion Render Node Preference File](Installing-Reactor.md#fusion-render-node-preference-file)
 	- [Uninstalling Reactor Manually](Installing-Reactor.md#uninstalling-reactor-manually)
 
@@ -11,9 +11,9 @@
 
 ## <a name="installing-reactor-visually"></a>Installing Reactor Visually ##
 
-The `Reactor-Installer.lua` script makes it quick and easy to set up Reactor.
+The `Reactor-Installer.lua` script makes it quick and easy to set up Reactor inside of Fusion or Resolve.
 
-**Step 1.** Drag the Reactor-Installer.lua script from your desktop into the Fusion Console tab to run it. Alternatively, you can also copy/paste the script into the Console text entry area to run it. An Install Reactor window will open. 
+**Step 1.** Drag the Reactor-Installer.lua script from a folder on your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Nodes" view. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
 
 ![Ready to Install](Images/reactor-installer-ready-to-install.png)
 
@@ -21,15 +21,15 @@ The `Reactor-Installer.lua` script makes it quick and easy to set up Reactor.
 
 ![Reactor Installer Script](Images/reactor-installer-complete.png)
 
-A Reactor.fu file will be downloaded from the Reactor GitLab repository and is saved to the Fusion user prefs location at `Config:/Reactor.fu`. The GitLab repository address string is then written into a new `AllData:Reactor:/System/Reactor.cfg` file that is used to control what GitLab repositories are used with Reactor.
+A Reactor.fu file will be downloaded from the Reactor GitLab repository and is saved to the Fusion user prefs location at `Config:/Reactor.fu`. The GitLab repository address string is then written into a new `Reactor:/System/Reactor.cfg` file that is used to control what GitLab repositories are used with Reactor.
 
 When the installer finishes, Fusion will restart automatically and the Reactor Package Manager will be displayed.
 
 ![Reactor Window](Images/reactor-gui.png)
 
-## <a name="installing-reactor-manually"></a>Installing Reactor Manually ##
+## <a name="installing-reactor-manually"></a>Installing Reactor for Fusion Manually ##
 
-If you are a studio system admin/pipeline TD and need more control over the Reactor install process you can manually download files from the GitLab repo and install the tool by yourself.
+If you are a system admin/pipeline TD and need more control over the Reactor for Fusion Standalone install process you can manually download files from the GitLab repo and install the tool by yourself.
 
 Step 1. To install Reactor, download "Reactor.fu" and place it in your Fusion `Config:/` directory.
 
@@ -47,11 +47,13 @@ Linux `Config:/` Installation Path:
 
 Note: `$HOME` represents your current user account's home folder.
 
-Step 2. The next time Fusion is launched a new "Reactor" menu will be added. Selecting the Reactor > Open Reactor... menu item will open the "Fusion Reactor" Package Manager window.
+Step 2. The next time Fusion is launched a new "Reactor" menu will be added. Selecting the **Reactor > Open Reactor...** menu item will open the "Fusion Reactor" Package Manager window.
 
 ![Reactor Menu](Images/reactor-menu.png)
 
-## <a name="using-reactor-content-on-a-rendernode"></a>Using Reactor Content on a Render Node ##
+**Note:** Since Resolve 15 does not support the use of a `.fu` file for creating menu entries, it is recommended that Reactor for Resolve be installed only by the automated Lua installer script. This is due to the fact there are more files to copy in place so a manual installation would be more complex to describe and support.
+
+## <a name="using-reactor-content-on-a-rendernode"></a>Using Reactor Content on a Fusion Render Node ##
 
 You can use your Reactor installed content on your render nodes so they have the exact same fuses and plugins installed as your Fusion Studio based workstations have.
 
@@ -138,9 +140,13 @@ On MacOS this works out to:
 
 ![Reactor Folder](Images/reactor-pathmap-folder.png)
 
-Step 1. To uninstall Reactor from your system you need to remove the downloaded Reactor "atom" content by deleting the Reactor folder that is located in your shared Fusion `AllData:/Reactor:/` folder. 
+### Step 1.###
+
+To uninstall Reactor from your system you need to remove the downloaded Reactor "atom" content by deleting the Reactor folder that is located in your shared Fusion `AllData:/Reactor:/` folder.
 
 The `AllData:/Reactor:/` folder is located here:
+
+#### Fusion Paths ###
 
 **Windows Reactor Path:**
 
@@ -154,7 +160,23 @@ The `AllData:/Reactor:/` folder is located here:
 
 `/var/BlackmagicDesign/Fusion/Reactor/`
 
-Step 2. You should also remove the `Reactor.fu` file from your Fusion user preferences `Config:/` directory. This will stop the Reactor menu item from being added to Fusion.
+
+#### Resolve Paths ####
+
+**Windows Reactor Path:**
+
+`C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\`
+
+**Mac Reactor Path:**
+
+`/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/`
+
+**Linux Reactor Path:**
+
+`/var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/`
+
+
+Step 2. If you are using Fusion you should remove the `Reactor.fu` file from your Fusion user preferences `Config:/` directory. This will stop the Reactor menu item from being added to Fusion.
 
 Step 3. Open the Fusion Preferences window and switch to the "Global and Default Settings > PathMap" section.
 
@@ -168,4 +190,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2018-02-25
+Last Revised 2018-05-21

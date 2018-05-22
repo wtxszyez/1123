@@ -1,7 +1,7 @@
-_VERSION = [[Version 1.0 - November 18, 2017]]
+_VERSION = [[Version 1.0 - March 13, 2018]]
 --[[--
 ==============================================================================
-ProgressGUI - v1.0 2017-11-18
+ProgressGUI - v1.1 2018-03-13 
 ==============================================================================
 Fu Required: Fusion 9.0.1+
 Created By : Andrew Hazelden[andrew@andrewhazelden]
@@ -37,7 +37,7 @@ function Main()
 	else
 		-- Check what version of Fusion is active
 		local fuVersion = math.floor(tonumber(eyeon._VERSION))
-		if fuVersion < 9 then
+		if fuVersion < 9 and fuVersion ~= 0 then
 			-- Fusion 7 or 8 was detected
 			print("[UI Manager] Fusion 9.0.1 or higher is required. Detected Fusion " .. tostring(eyeon._VERSION) .. "\n")
 		else

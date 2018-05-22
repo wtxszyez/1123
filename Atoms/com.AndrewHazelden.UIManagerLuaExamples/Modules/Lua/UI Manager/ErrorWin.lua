@@ -1,5 +1,5 @@
 --[[--
-UI Manager Error Window - v1.0 2018-01-07
+UI Manager Error Window - v1.0 2018-03-13
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 A Fusion 9 Lua module that creates a UI Manager based error dialog that shows an error string.

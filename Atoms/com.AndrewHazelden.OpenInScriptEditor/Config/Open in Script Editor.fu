@@ -1,0 +1,160 @@
+--[[--
+Open in Script Editor - v2 2018-05-09
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+The "Open in Script Editor.fu" file creates a pair of "File > Open Comp in Script Editor" and "File > Open All Comps in Script Editor" menu entries in Fusion. This allows you to quickly tweak your your comp externally in a programmer's text editor which is a handy way to do raw find and replace editing operations, or to edit a node based element by hand.
+
+This menu entry opens your current Fusion composite document in the external Script Editor that is defined in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.
+
+## Installation ##
+
+Step 1. Move the "Open in Script Editor.fu" file into the Fusion user prefs "Config:/" folder.
+
+Step 2. Open the Fusion Preferences "Global and Default Settings > Script > Editor Path" section and link to your favorite text editor. If you don't have a text editor installed yet consider BBEdit on MacOS, or Notepad++ on Windows.
+
+(Note: In Reactor's "Bin" category there is a "custom "Notepad++ for Fusion" atom.)
+
+Step 3. Restart Fusion so the .fu config file is loaded.
+
+--]]--
+
+{
+	Action
+	{
+		ID = "Open_Comp_in_Script_Editor",
+		Category = "File",
+		Name = "Open Comp in Script Editor",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+function OpenDocument(title, appPath, docPath)
+	if platform == 'Windows' then
+		-- Running on Windows
+		command = 'start "" "' .. appPath .. '" "' .. docPath .. '" &'
+	elseif platform == 'Mac' then
+		-- Running on Mac
+		command = 'open -a "' .. appPath .. '" "' .. docPath .. '" &'
+	 elseif platform == "Linux" then
+		-- Running on Linux
+		command = '"' .. appPath .. '" "' .. docPath .. '" &'
+	else
+		print('[Error] There is an invalid Fusion platform detected')
+		return
+	end
+
+	obj:Comp():Print('[' .. title .. '] [App] "' .. appPath .. '" [Document] "' .. docPath .. '"\n')
+	-- obj:Comp():Print('[Launch Command] ' .. tostring(command) .. '\n')
+	os.execute(command)
+end
+
+editorPath = fu:GetPrefs('Global.Script.EditorPath')
+if editorPath == nil or editorPath == "" then
+	obj:Comp():Print('[Open Comp in Script Editor] The "Editor Path" is empty. Please choose a text editor in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.\n')
+	app:ShowPrefs("PrefsScript")
+else
+	-- Save the existing comp
+	obj:Comp():Save()
+
+	-- Get the active comp filename
+	sourceComp = app:MapPath(obj:Comp():GetAttrs().COMPS_FileName)
+
+	-- Send the comp to the ScriptEditor
+	if sourceComp ~= '' then
+		OpenDocument('Open Comp in Script Editor', editorPath, sourceComp)
+	else
+		obj:Comp():Print('[Open Comp in Script Editor] Please save the untitled comp to disk first.\n')
+	end
+end
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Open_All_Comps_In_Script_Editor",
+		Category = "File",
+		Name = "Open All Comps in Script Editor",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+function OpenDocument(title, appPath, docPath)
+	if platform == 'Windows' then
+		-- Running on Windows
+		command = 'start "" "' .. appPath .. '" ' .. docPath .. ' &'
+	elseif platform == 'Mac' then
+		-- Running on Mac
+		command = 'open -a "' .. appPath .. '" ' .. docPath .. ' &'
+	 elseif platform == "Linux" then
+		-- Running on Linux
+		command = '"' .. appPath .. '" ' .. docPath .. ' &'
+	else
+		obj:Comp():Print('[Error] There is an invalid Fusion platform detected\n')
+		return
+	end
+	obj:Comp():Print('[' .. title .. '] [App] "' .. appPath .. '" [Documents] ' .. docPath .. '\n')
+	-- obj:Comp():Print('[Launch Command] ' .. tostring(command) .. '\n')
+	os.execute(command)
+end
+
+editorPath = fu:GetPrefs('Global.Script.EditorPath')
+if editorPath == nil or editorPath == "" then
+	obj:Comp():Print('[Open in Script Editor] The "Editor Path" is empty. Please choose a text editor in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.\n')
+	app:ShowPrefs("PrefsScript")
+else
+	local sourceCompList = ''
+	obj:Comp():Print('[Open Documents] ' .. '\n')
+	
+	compList = fu:GetCompList()
+	for i = 1, #compList do
+		-- Set cmp to the pointer of the current composite
+		cmp = compList[i]
+		
+		-- Read the comp filename
+		local sourceComp = cmp:GetAttrs().COMPS_FileName
+		if sourceComp ~= '' then
+			-- Print out the active composite name
+			obj:Comp():Print('\t[' .. sourceComp .. ']\n')
+
+			-- Save the existing comp
+			cmp:Save()
+
+			-- Get the active comp filename
+			sourceCompList = sourceCompList .. '"' .. app:MapPath(sourceComp) .. '" '
+		end
+	end
+	
+	-- Send the comp to the ScriptEditor
+	if sourceCompList ~= '' then
+		OpenDocument('Open All Comps in Script Editor', editorPath, sourceCompList)
+	else
+		obj:Comp():Print('[Open All Comps in Script Editor] Please save the untitled comp to disk first.\n')
+	end
+end
+				]=],
+			},
+		},
+	},
+
+	Menus
+	{
+		Target = "ChildFrame",
+
+		After "File\\Open..."
+		{
+			"Open_Comp_in_Script_Editor{}",
+			"Open_All_Comps_In_Script_Editor{}",
+		},
+	},
+}

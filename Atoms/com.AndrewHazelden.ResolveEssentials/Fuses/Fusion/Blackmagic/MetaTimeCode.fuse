@@ -1,0 +1,121 @@
+--[[--
+This tool sets TimeCode into the image's metadata
+
+By Le Grand Fromage
+
+--]]--
+
+FuRegisterClass("SetMetaDataTC", CT_Tool, {
+	REGS_Name = "Set Time Code",
+	REGS_Category = "Metadata",
+	REGS_OpIconString = "TCMeta",
+	REGS_OpDescription = "Sets TimeCodeMetadata",
+	REG_NoMotionBlurCtrls = true,
+	REG_NoBlendCtrls = true,
+	REG_OpNoMask = true,
+	REG_NoPreCalcProcess = true,	-- make default PreCalcProcess() behaviour be to call Process() rather than automatic pass through.
+	REG_SupportsDoD = true,
+	REG_TimeVariant = true,
+	REG_Fuse_NoJIT = true,
+	})
+
+function Create()
+	InFps = self:AddInput("FPS", "FPS", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		MBTNC_StretchToFit = true,
+		{ MBTNC_AddButton = "24" },
+		{ MBTNC_AddButton = "25" },
+		{ MBTNC_AddButton = "30" },
+		{ MBTNC_AddButton = "48" },
+		{ MBTNC_AddButton = "50" },
+		{ MBTNC_AddButton = "60" },
+		})
+	InHours = self:AddInput("Hours", "TCHours", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 23,
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+	InMinutes = self:AddInput("Minutes", "TCMinutes", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 59,
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+	InSeconds = self:AddInput("Seconds", "TCSeconds", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 59,
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+	InFrames = self:AddInput("Frames", "TCFrames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 60,
+		INP_Integer = true,
+		INP_Default = 0,
+		})
+	InConsole = self:AddInput("Print to Console", "Console", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Default = 0,
+		})
+
+
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+end
+
+function Process(req)
+	local img = InImage:GetValue(req)
+	local fps = InFps:GetValue(req).Value
+	local hours = InHours:GetValue(req).Value
+	local minutes = InMinutes:GetValue(req).Value
+	local seconds = InSeconds:GetValue(req).Value
+	local frames = InFrames:GetValue(req).Value
+	local console = (InConsole:GetValue(req).Value >= 0.5)
+	local currentframe = req.Time
+
+	local result = Image({IMG_Like = img, IMG_NoData = req:IsPreCalc()})
+	-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+	img:Crop(result, { })
+
+	local rates = { 24, 25, 30, 48, 50, 60 }
+	local fpsx = rates[math.min(math.max(fps, 0), 5)+1]
+
+	-- Calculate and format the time code strings
+	-- Calculate frames from Time code settings
+	local frames_o  = currentframe + frames + fpsx * (seconds + 60*minutes + 3600*hours)
+
+	local frames_s  = frames_o % fpsx
+	local seconds_s = math.floor(frames_o / fpsx) % 60
+	local minutes_s = math.floor(frames_o / (60*fpsx)) % 60
+	local hours_s   = math.floor(frames_o / (3600*fpsx))
+
+	local timecode  = string.format("%02d:%02d:%02d:%02d", hours_s, minutes_s, seconds_s, frames_s)
+
+	-- Format and save meta data. Pad the time code with "0" for formating
+	local newmetadata = result.Metadata or {}
+
+	newmetadata["TimeCode"] = timecode
+	newmetadata["FrameRate"] = fpsx
+	result.Metadata = newmetadata
+
+	-- This outputs to the console so it can be used as a timecode frames calculator
+	if (not req:IsPreCalc()) and console then
+		print("\nTimeCode:  "..timecode.."\nFrames:    "..frames_o)
+	end
+
+	OutImage:Set(req, result)
+end
