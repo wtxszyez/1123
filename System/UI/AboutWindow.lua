@@ -1,14 +1,14 @@
-_VERSION = [[Version 1.0 - January 22, 2018]]
+_VERSION = [[Version 2.0 - May 21, 2018]]
 --[[
 ==============================================================================
-ReactorAboutWindow.lua - v1.0 2018-01-22
+AboutWindow.lua - v2.0 2018-05-21
 ==============================================================================
-Reactor is a package manager for Fusion (Free) and Fusion Studio. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
+Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
 
 ==============================================================================
 Overview
 ==============================================================================
-This script creates an "About Reactor" window using Fusion's UI Manager GUI building system. 
+This script creates an "About Reactor" window using Fusion's UI Manager GUI building system.
 
 It is called from the Config:/Reactor.fu file based "Reactor > About Reactor" menu item entry.
 
@@ -16,17 +16,17 @@ It is called from the Config:/Reactor.fu file based "Reactor > About Reactor" me
 Installation
 ==============================================================================
 This script is deployed automatically by Reactor's installer and saved to:
-Reactor:/System/UI/ReactorAboutWindow.lua
+Reactor:/System/UI/AboutWindow.lua
 
-There is an associated ui:Icon resource named "reactor.png that is used in this GUI Window. 
+There is an associated ui:Icon resource named "reactorlarge.png" that is used in this GUI Window.
 
 The icon is saved to:
-Reactor:/System/Images/reactor.png
+Reactor:/System/Images/icons.zip/reactorlarge.png
 
 ==============================================================================
 Usage
 ==============================================================================
-Step 1. Install Reactor. 
+Step 1. Install Reactor.
 
 Step 2. Restart Fusion then open the "Reactor > Open Reactor..." menu item once.
 
@@ -49,11 +49,11 @@ function OpenURL(siteName, path)
 		comp:Print("[Error] There is an invalid Fusion platform detected\n")
 		return
 	end
-	
+
 	os.execute(command)
-	
+
 	-- comp:Print("[Launch Command] " tostring(command) .. "\n")
-	comp:Print("[Opening URL] [" .. tostring(siteName) .. "] " .. tostring(path) .. "\n")
+	comp:Print("[Opening URL] " .. tostring(path) .. "\n")
 end
 
 
@@ -61,7 +61,7 @@ end
 function AboutReactorWin()
 	-- Configure the window Size
 	local originX, originY, width, height = 200, 200, 546, 308
-	
+
 	-- Create the new UI Manager Window
 	local win = disp:AddWindow({
 		ID = "AboutReactorWin",
@@ -85,13 +85,13 @@ function AboutReactorWin()
 				Weight = 0,
 				ui:VGroup {
 					Weight = 1,
-					
+
 					ui:Button{
 						ID = 'ReactorIconButton',
 						Weight = 0,
 						IconSize = {68,68},
 						Icon = ui:Icon{
-							File = 'Reactor:/System/UI/Images/reactorlarge.png'
+							File = 'Reactor:/System/UI/Images/icons.zip/reactorlarge.png'
 						},
 						MinimumSize = {
 							68,
@@ -107,7 +107,7 @@ function AboutReactorWin()
 						Text = "Reactor",
 						ReadOnly = true,
 						Alignment = {
-							AlignHCenter = true, 
+							AlignHCenter = true,
 							AlignVCenter = true,
 						},
 						Font = ui:Font{
@@ -122,7 +122,7 @@ function AboutReactorWin()
 						Text = _VERSION,
 						WordWrap = true,
 						Alignment = {
-							AlignHCenter = true, 
+							AlignHCenter = true,
 							AlignVCenter = true,
 						},
 						Font = ui:Font{
@@ -136,7 +136,7 @@ function AboutReactorWin()
 			ui:VGroup{
 				ui:Label {
 					ID = "AboutLabel",
-					Text = [[Reactor is a package manager for Fusion (Free) and Fusion Studio. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.]],
+					Text = [[Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {
@@ -150,7 +150,7 @@ function AboutReactorWin()
 				ui:Label {
 					ID = "URLLabel",
 					Weight = 0,
-					Text = [[Copyright © 2018 We Suck Less<br><a href="https://www.steakunderwater.com/wesuckless">https://www.steakunderwater.com/wesuckless</a>]],
+					Text = [[Copyright © 2018 We Suck Less<br><a href="https://www.steakunderwater.com/wesuckless" style="color: rgb(139,155,216)">https://www.steakunderwater.com/wesuckless</a>]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {
@@ -173,7 +173,7 @@ function AboutReactorWin()
 	function win.On.AboutReactorWin.Close(ev)
 		disp:ExitLoop()
 	end
-	
+
 	-- Open the We Suck Less webpage when the Reactor logo is clicked
 	function win.On.ReactorIconButton.Clicked(ev)
 		OpenURL("We Suck Less", "https://www.steakunderwater.com/wesuckless")
@@ -200,7 +200,8 @@ function AboutReactorWin()
 	disp:RunLoop()
 	win:Hide()
 	app:RemoveConfig('AboutReactorWin')
-	
+	collectgarbage()
+
 	return win,win:GetItems()
 end
 

@@ -1,6 +1,6 @@
 _author = "Andrew Hazelden <andrew@andrewhazelden.com>"
-_date = "2017-11-26"
-_version = "1.0"
+_date = "2018-05-15"
+_version = "1.1"
 
 --[[--
 ==============================================================================
@@ -32,7 +32,7 @@ Development Notes
 The icon images displayed in the window are loaded relative to the Window Snap script's filepath location using the technique presented in the "GetScriptDir.lua" script:
 
 -- Read the parent folder that holds the current "Window Snap.lua" script
-local fileTable = GetScriptDir()
+local fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/Window Snap/Window Snap.lua')
 print("[Lua Script Filename Table]")
 dump(fileTable)
 
@@ -101,11 +101,60 @@ osSeparator = package.config:sub(1,1)
 
 ------------------------------------------------------------------------
 -- Return a string with the directory path where the Lua script was run from
--- scriptTable = GetScriptDir()
-function GetScriptDir()
-  return bmd.parseFilename(string.sub(debug.getinfo(1).source, 2))
+-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+-- fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/Window Snap/Window Snap.lua')
+function GetScriptDir(fallback)
+	if debug.getinfo(1).source == '???' then
+		-- Fallback absolute filepath
+		return parseFilename(app:MapPath(fallback))
+	else
+		-- Filepath coming from the Lua script's location on disk
+		return parseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
+	end
 end
 
+------------------------------------------------------------------------------
+-- parseFilename() from bmd.scriptlib
+--
+-- this is a great function for ripping a filepath into little bits
+-- returns a table with the following
+--
+-- FullPath	: The raw, original path sent to the function
+-- Path		: The path, without filename
+-- FullName	: The name of the clip w\ extension
+-- Name     : The name without extension
+-- CleanName: The name of the clip, without extension or sequence
+-- SNum		: The original sequence string, or "" if no sequence
+-- Number 	: The sequence as a numeric value, or nil if no sequence
+-- Extension: The raw extension of the clip
+-- Padding	: Amount of padding in the sequence, or nil if no sequence
+-- UNC		: A true or false value indicating whether the path is a UNC path or not
+------------------------------------------------------------------------------
+function parseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, "^(.+[/\\])(.+)", function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, "^(.+)(%..+)$", function(name, ext) seq.Name = name seq.Extension = ext end)
+
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+
+	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+
+	if seq.SNum then
+		seq.Number = tonumber(seq.SNum)
+		seq.Padding = string.len(seq.SNum)
+	else
+	   seq.SNum = ""
+	   seq.CleanName = seq.Name
+	end
+
+	if seq.Extension == nil then seq.Extension = "" end
+	seq.UNC = (string.sub(seq.Path, 1, 2) == [[\\]])
+
+	return seq
+end
 
 ------------------------------------------------------------------------
 -- The Main Function
@@ -119,7 +168,7 @@ function Main()
   else
     -- Check what version of Fusion is active
     local fuVersion = math.floor(tonumber(eyeon._VERSION))
-    if fuVersion < 9 then
+    if fuVersion < 9 and fuVersion ~= 0 then
       -- Fusion 7 or 8 was detected
       print("[UI Manager] Fusion 9.0.1 or higher is required. Detected Fusion " .. tostring(eyeon._VERSION) .. "\n")
     else
@@ -145,7 +194,7 @@ end
 -- Example: icons = IconsTable()
 function IconsTable()
   -- Read the parent folder that holds the current "Window Snap.lua" script
-  local fileTable = GetScriptDir()
+  local fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/Window Snap/Window Snap.lua')
   
   -- Generate a table with the absolute filepaths for the icons
   local iconFolderPath = fileTable.Path .. "icons" .. osSeparator

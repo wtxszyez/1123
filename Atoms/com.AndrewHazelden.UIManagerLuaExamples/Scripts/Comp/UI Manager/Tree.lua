@@ -1,4 +1,3 @@
-
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width,height = 430,700
@@ -11,7 +10,7 @@ win = disp:AddWindow({
   
   ui:VGroup{
     ID = 'root',
-    ui:Tree{ID = 'Tree', SortingEnabled=true, Events = {ItemDoubleClicked=true, ItemClicked=true,},},  
+    ui:Tree{ID = 'Tree', SortingEnabled=true, Events = {ItemDoubleClicked=true, ItemClicked=true,},},
   },
 })
 
@@ -46,14 +45,14 @@ itm.Tree.ColumnWidth[5] = 75
 
 -- Add an new row entries to the list
 for row = 1, 50 do
-  itRow = itm.Tree:NewItem(); 
+  itRow = itm.Tree:NewItem();
   -- String.format is used to create a leading zero padded row number like 'Row A01' or 'Row B01'.
-  itRow.Text[0] = string.format('Row %02d', row); 
-  itRow.Text[1] = string.format('A %02d', row); 
-  itRow.Text[2] = string.format('B %02d', row); 
-  itRow.Text[3] = string.format('C %02d', row); 
-  itRow.Text[4] = string.format('D %02d', row);  
-  itRow.Text[5] = string.format('E %02d', row);
+  itRow.Text[0] = string.format('Row %02d', row)
+  itRow.Text[1] = string.format('A %02d', row)
+  itRow.Text[2] = string.format('B %02d', row)
+  itRow.Text[3] = string.format('C %02d', row)
+  itRow.Text[4] = string.format('D %02d', row)
+  itRow.Text[5] = string.format('E %02d', row)
   itm.Tree:AddTopLevelItem(itRow)
 end
 

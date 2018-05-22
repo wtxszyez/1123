@@ -1,0 +1,43 @@
+--[[--
+Restart Fusion - v2 2018-05-09
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+The "Restart Fusion" menu item makes it easy to quit and re-open Fusion. This is handy if you are creating your own fuses, plugins, or .fu files and have to reload Fusion each time you make an edit to see the results of your latest changes.
+
+The "Restart Fusion.fu" config file adds a "File > Restart Fusion" menu item. You can also press the Alt+Q (Windows/Linux) or Option+Q (Mac) hotkeys to restart Fusion.
+
+This script requires Fusion 9.0.2+ or Resolve 15+ to run due to the way the Fusion OS platform was checked.
+
+## Installation ##
+
+Step 1. Move the "Restart Fusion.fu" file into the Fusion user prefs "Config:/" folder.
+
+Step 2. Restart Fusion once so the config file is loaded.
+--]]--
+
+-- Find out the current Fusion host platform (Windows/Mac/Linux)
+platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
+
+-- Get the Fusion program path:
+-- /Applications/Blackmagic Fusion 9/Fusion.app/Contents/MacOS/Fusion
+fusionApp = fusion:GetAttrs().FUSIONS_FileName
+
+-- Create the Fusion launching command
+if platform == "Windows" then
+	command = "start \"\" " .. "\"" .. fusionApp .. "\" 2>&1 &"
+elseif platform == "Mac" then
+	command = "\"" .. fusionApp .. "\" 2>&1 &"
+	-- command = "open \"" .. fusionApp .. "\" 2>&1 &"
+else
+	command = "\"" .. fusionApp .. "\" 2>&1 &"
+end
+
+comp:Print("[Launch Command] " .. tostring(command) .. "\n")
+
+-- Start up a new instance of Fusion
+os.execute(command)
+
+-- Quit the current Fusion session
+fusion:Quit()

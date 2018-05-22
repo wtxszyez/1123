@@ -1,6 +1,6 @@
 --[[
 ------------------------------------------------------------------------------
-Convert Movies to Image Sequences v3.0 for Fusion - 2018-02-12
+Convert Movies to Image Sequences v3.0 for Fusion - 2018-05-21
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Copyright 2015-2018 Andrew Hazelden. 
@@ -75,26 +75,22 @@ local printStatus = false
 -- Check the current computer platform
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
--- Find out if we are running Fusion 7 or 8
+-- Find out if we are running Fusion 7, 8, or 9
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system's / or \\ path separator symbol
 local osSeparator = package.config:sub(1,1)
 
 -- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
-function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
-	return mediaDirName:match('(.*' .. osSeparator .. ')')
+-- Example: print(Dirname("/Users/Shared/file.txt"))
+function Dirname(mediaDirname)
+	return mediaDirname:match('(.*' .. osSeparator .. ')')
 end
 
-
 -- Open a folder window up using your desktop file browser
-function openDirectory(mediaDirName)
+function OpenDirectory(mediaDirname)
 	command = nil
-	dir = dirname(mediaDirName)
+	dir = Dirname(mediaDirname)
 	
 	if platform == "Windows" then
 		-- Running on Windows
@@ -122,8 +118,8 @@ end
 
 
 -- Set a fusion specific preference value
--- Example: setPreferenceData('AndrewHazelden.SendMedia.Format', 3, true)
-function setPreferenceData(pref, value, status)
+-- Example: SetPreferenceData('AndrewHazelden.SendMedia.Format', 3, true)
+function SetPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
 
@@ -139,8 +135,8 @@ end
 
 
 -- Read a fusion specific preference value. If nothing exists set and return a default value
--- Example: getPreferenceData('AndrewHazelden.SendMedia.Format', 3, true)
-function getPreferenceData(pref, defaultValue, status)
+-- Example: GetPreferenceData('AndrewHazelden.SendMedia.Format', 3, true)
+function GetPreferenceData(pref, defaultValue, status)
 	-- local newPreference = comp:GetData(pref)
 	local newPreference = fusion:GetData(pref)
 	if newPreference then
@@ -245,7 +241,7 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 	if framePadding < 0 then
 		framePadding = 0
 		print('[Resetting Frame Padding] ' .. framePadding)
-		setPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', framePadding, printStatus)
+		SetPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', framePadding, printStatus)
 	end
 
 	-- Create the frame number with the frame padding value
@@ -300,7 +296,7 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 		sourceMovie = movieFolder .. files
 
 		-- Create the output directory
-		outputDirectory = dirname(imgSeqFile)
+		outputDirectory = Dirname(imgSeqFile)
 		if platform == 'Windows' then
 			os.execute('mkdir "' .. outputDirectory..'"')
 		else
@@ -313,9 +309,9 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 			if outputDirectory ~= previousOutputDirectory then
 				if imageName == 5 then
 					-- Open the based folder if the mode "#/<name>.<ext> (In a Subfolder)" is selected
-					openDirectory(movieFolder)
+					OpenDirectory(movieFolder)
 				else
-					openDirectory(outputDirectory)
+					OpenDirectory(outputDirectory)
 				end
 			end
 		end
@@ -495,7 +491,7 @@ function Main()
 	-- ------------------------------------
 
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
-	compPath = dirname(comp:GetAttrs().COMPS_FileName)
+	compPath = Dirname(comp:GetAttrs().COMPS_FileName)
 
 	if platform == 'Windows' then
 		ffmpegFile = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg.exe')
@@ -515,21 +511,21 @@ function Main()
 		-- ffmpegFile = 'ffmpeg'
 	end
 
-	ffmpegFile = comp:MapPath(getPreferenceData('AndrewHazelden.ConvertMovies.FFmpegFile', ffmpegFile, printStatus))
+	ffmpegFile = comp:MapPath(GetPreferenceData('AndrewHazelden.ConvertMovies.FFmpegFile', ffmpegFile, printStatus))
 
 	-- Location of movies - use the comp path as the default starting value if the preference doesn't exist yet
-	movieFolder = comp:MapPath(getPreferenceData('AndrewHazelden.ConvertMovies.MovieFolder', compPath, printStatus))
+	movieFolder = comp:MapPath(GetPreferenceData('AndrewHazelden.ConvertMovies.MovieFolder', compPath, printStatus))
 
-	audioFormat = getPreferenceData('AndrewHazelden.ConvertMovies.AudioFormat', 3, printStatus)
-	-- audioChannels = getPreferenceData('AndrewHazelden.ConvertMovies.AudioChannels', 1, printStatus)
+	audioFormat = GetPreferenceData('AndrewHazelden.ConvertMovies.AudioFormat', 3, printStatus)
+	-- audioChannels = GetPreferenceData('AndrewHazelden.ConvertMovies.AudioChannels', 1, printStatus)
 
 	-- if imageName is 0 = <name>.#.<ext> and 4 = <name>/<name>.#.<ext>
-	imageName = getPreferenceData('AndrewHazelden.ConvertMovies.ImageName', 3, printStatus)
-	imageFormat = getPreferenceData('AndrewHazelden.ConvertMovies.ImageFormat', 2, printStatus)
-	compress = getPreferenceData('AndrewHazelden.ConvertMovies.Compression', 2, printStatus)
-	framePadding = getPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', 4, printStatus)
-	frameRate = getPreferenceData('AndrewHazelden.ConvertMovies.FrameRate', 30, printStatus)
-	openFolder = getPreferenceData('AndrewHazelden.ConvertMovies.OpenFolder', 1, printStatus)
+	imageName = GetPreferenceData('AndrewHazelden.ConvertMovies.ImageName', 3, printStatus)
+	imageFormat = GetPreferenceData('AndrewHazelden.ConvertMovies.ImageFormat', 2, printStatus)
+	compress = GetPreferenceData('AndrewHazelden.ConvertMovies.Compression', 2, printStatus)
+	framePadding = GetPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', 4, printStatus)
+	frameRate = GetPreferenceData('AndrewHazelden.ConvertMovies.FrameRate', 30, printStatus)
+	openFolder = GetPreferenceData('AndrewHazelden.ConvertMovies.OpenFolder', 1, printStatus)
 	
 	msg = 'Customize the settings for converting a folder of movies into image sequences.'
 
@@ -570,31 +566,31 @@ function Main()
 		dump(dialog)
 		
 		ffmpegFile = comp:MapPath(dialog.FFmpegFile)
-		setPreferenceData('AndrewHazelden.ConvertMovies.FFmpegFile', ffmpegFile, printStatus)
-
+		SetPreferenceData('AndrewHazelden.ConvertMovies.FFmpegFile', ffmpegFile, printStatus)
+		
 		movieFolder = comp:MapPath(dialog.MovieFolder)
-		setPreferenceData('AndrewHazelden.ConvertMovies.MovieFolder', movieFolder, printStatus)
-	
+		SetPreferenceData('AndrewHazelden.ConvertMovies.MovieFolder', movieFolder, printStatus)
+		
 		audioFormat = dialog.AudioFormat
-		setPreferenceData('AndrewHazelden.ConvertMovies.AudioFormat', audioFormat, printStatus)
-
+		SetPreferenceData('AndrewHazelden.ConvertMovies.AudioFormat', audioFormat, printStatus)
+		
 		imageName = dialog.ImageName
-		setPreferenceData('AndrewHazelden.ConvertMovies.ImageName', imageName, printStatus)
+		SetPreferenceData('AndrewHazelden.ConvertMovies.ImageName', imageName, printStatus)
 		
 		imageFormat = dialog.ImageFormat
-		setPreferenceData('AndrewHazelden.ConvertMovies.ImageFormat', imageFormat, printStatus)
+		SetPreferenceData('AndrewHazelden.ConvertMovies.ImageFormat', imageFormat, printStatus)
 		
 		compress = dialog.Compression
-		setPreferenceData('AndrewHazelden.ConvertMovies.Compression', compress, printStatus)
-	
+		SetPreferenceData('AndrewHazelden.ConvertMovies.Compression', compress, printStatus)
+		
 		framePadding = dialog.FramePadding
-		setPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', framePadding, printStatus)
-	
+		SetPreferenceData('AndrewHazelden.ConvertMovies.FramePadding', framePadding, printStatus)
+		
 		frameRate = dialog.FrameRate
-		setPreferenceData('AndrewHazelden.ConvertMovies.FrameRate', frameRate, printStatus)
+		SetPreferenceData('AndrewHazelden.ConvertMovies.FrameRate', frameRate, printStatus)
 		
 		openFolder = dialog.OpenFolder
-		setPreferenceData('AndrewHazelden.ConvertMovies.OpenFolder', openFolder, printStatus)
+		SetPreferenceData('AndrewHazelden.ConvertMovies.OpenFolder', openFolder, printStatus)
 	end
 
 	-- Use FFmpeg to transcode the files

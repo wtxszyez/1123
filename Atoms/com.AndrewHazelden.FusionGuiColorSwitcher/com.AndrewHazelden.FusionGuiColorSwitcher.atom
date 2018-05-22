@@ -1,0 +1,97 @@
+Atom {
+	Name = "Fusion GUI Color Switcher",
+	Category = "Bin",
+	Author = "Andrew Hazelden",
+	Version = 1,
+	Date = {2018, 2, 25},
+	Description = [[<p>The "Fusion GUI Color Switcher" atom package creates a popup window using an inline InstallScript code block. This UI Manager based window lets you quickly switch your Fusion user interface theme color between the "Pro Neutral Grey" and "Blue Tint" colors.</p>
+<p>You could also adjust this Fusion background interface color setting manually in Fusion's preference window at:<br>
+Global and Default Settings > User Interface > Use gray background interface</p>]],
+	Deploy = {
+	},
+	InstallScript = {
+		[[-- Show a popup window that changes the Fusion background interface color
+function GetFusionColor()
+	colorID = app:GetPrefs(fusionColorPref)
+	if colorID == colorTable[1].colorID then
+		colorName = colorTable[1].colorName
+	else
+		colorName = colorTable[2].colorName
+	end
+	return colorName
+end
+
+function SetFusionColor(colorName)
+	if colorName == colorTable[1].colorName then
+		colorID = colorTable[1].colorID
+	else
+		colorID = colorTable[2].colorID
+	end
+	app:SetPrefs(colorPref, colorID)
+	app:SavePrefs()
+end
+
+function DisplayColorName()
+	dprintf('[' .. windowTitle .. '] "' .. GetFusionColor() .. '"\n')
+end
+
+function FusionColorWin()
+	local width,height = 520,150
+
+	win = disp:AddWindow({
+		ID = 'FusionColorWin',
+		WindowTitle = windowTitle,
+		Geometry = {100, 100, width, height},
+		Spacing = 10,
+		ui:VGroup{
+			ID = 'root',
+			ui:Label{Text = windowTitle, Alignment = alignText, Font = ui:Font{PixelSize = 36}},
+			ui:VGap(5, 1),
+			ui:HGroup{
+				Weight = 0.01,
+				ui:Label{ID = 'ComboLabel', Text = colorTitle},
+				ui:ComboBox{ID = 'ColorCombo'},
+			},
+			ui:VGap(5, 0.01),
+			ui:HGroup{
+				Weight = 0.01,
+				ui:HGap(0, 2.0),
+				ui:Button{ID = 'SaveButton', Text = saveButtonText},
+			},
+		},
+	})
+
+	itm = win:GetItems()
+
+	function win.On.FusionColorWin.Close(ev)
+		disp:ExitLoop()
+	end
+
+	function win.On.SaveButton.Clicked(ev)
+		SetFusionColor(itm.ColorCombo.CurrentText)
+		DisplayColorName()
+		disp:ExitLoop()
+	end
+
+	itm.ColorCombo:AddItems({colorTable[1].colorName, colorTable[2].colorName})
+	itm.ColorCombo.CurrentText = GetFusionColor()
+
+	win:Show()
+	disp:RunLoop()
+	win:Hide()
+end
+
+alignText = {AlignHCenter = true, AlignTop = true,}
+windowTitle = 'Fusion GUI Color Switcher'
+colorTitle = 'Background Interface Color'
+colorPref = 'Global.UserInterface.Skin'
+colorTable = {
+	{colorName = 'Pro Neutral Grey', colorID = 'Neutral'},
+	{colorName = 'Blue Tint', colorID = 'Fusion'},
+}
+saveButtonText = 'Save Preference'
+
+FusionColorWin()]],
+	},
+	Maximum = 9.02,
+}

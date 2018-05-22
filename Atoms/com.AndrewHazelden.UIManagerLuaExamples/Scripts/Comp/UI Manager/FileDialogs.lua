@@ -14,7 +14,7 @@ win = disp:AddWindow({
   Geometry = {100, 100, width, height},
   Spacing = 10,
   Margin = 50,
-        
+  
   ui:VGroup{
     ID = 'root',
     Weight = 1,

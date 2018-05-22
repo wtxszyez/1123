@@ -1,5 +1,5 @@
 --[[
-HTML Code Editor v2.0 2018-01-21 08.03 PM
+HTML Code Editor v2.1 2018-05-21
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -7,7 +7,7 @@ www.andrewhazelden.com
 
 This script is a Fusion Lua based HTML code editor that works in Fusion 9.0.1. It allows you to edit HTML in the edit field at the top of the view and see a live preview rendered at the bottom of the window.
 
-This post is a version 2.0 update to the previous HTML Code Editor example (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10496#p10496). There is now a fancy new HTML code formatting toolbar at the top of the window. Pressing any of these formatting buttons will append short chunks of HTML code to the bottom of the text editing window.
+This post is a version 2.1 update to the previous HTML Code Editor example (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10496#p10496). There is now a fancy new HTML code formatting toolbar at the top of the window. Pressing any of these formatting buttons will append short chunks of HTML code to the bottom of the text editing window.
 
 The HTML Code Editor uses Fusion's UI Manager system to create the GUI and a ui:TextEdit field to render the webpage elements. You can look at the QT Window Manager documentation to see a list of the supported HTML codes:
 
@@ -34,6 +34,10 @@ The button bar controls are created outside of the regular disp:AddWindow() area
 The ui:Icon filenames and the text that is output by the button handler functions are configured on the fly using Lua's dynamic language functionality to create one handler function for each entry in the "buttonTbl" table. This approach lets you make GUI layouts that are very flexible and can have the elements defined by an external data source.
 
 The itm.root:AddChild() function was used to add each of the ui:Buttons to the ui:HGroup horizontal layout that has the ID name of "root".
+
+## What's new in V2.1 ##
+
+Resolve 15 support was added to this script by removing the dependency on the bmd.scriptlib file for bmd.parseFilename().
 
 ## Notes ##
 
@@ -195,9 +199,60 @@ end
 
 ------------------------------------------------------------------------
 -- Return a string with the directory path where the Lua script was run from
--- scriptTable = GetScriptDir()
-function GetScriptDir()
-	return bmd.parseFilename(string.sub(debug.getinfo(1).source, 2))
+-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+-- fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor/HTML Code Editor.lua')
+function GetScriptDir(fallback)
+	if debug.getinfo(1).source == '???' then
+		-- Fallback absolute filepath
+		return parseFilename(app:MapPath(fallback))
+	else
+		-- Filepath coming from the Lua script's location on disk
+		return parseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
+	end
+end
+
+
+------------------------------------------------------------------------------
+-- parseFilename() from bmd.scriptlib
+--
+-- this is a great function for ripping a filepath into little bits
+-- returns a table with the following
+--
+-- FullPath	: The raw, original path sent to the function
+-- Path		: The path, without filename
+-- FullName	: The name of the clip w\ extension
+-- Name     : The name without extension
+-- CleanName: The name of the clip, without extension or sequence
+-- SNum		: The original sequence string, or "" if no sequence
+-- Number 	: The sequence as a numeric value, or nil if no sequence
+-- Extension: The raw extension of the clip
+-- Padding	: Amount of padding in the sequence, or nil if no sequence
+-- UNC		: A true or false value indicating whether the path is a UNC path or not
+------------------------------------------------------------------------------
+function parseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, "^(.+[/\\])(.+)", function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, "^(.+)(%..+)$", function(name, ext) seq.Name = name seq.Extension = ext end)
+
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+
+	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+
+	if seq.SNum then
+		seq.Number = tonumber(seq.SNum)
+		seq.Padding = string.len(seq.SNum)
+	else
+	   seq.SNum = ""
+	   seq.CleanName = seq.Name
+	end
+
+	if seq.Extension == nil then seq.Extension = "" end
+	seq.UNC = (string.sub(seq.Path, 1, 2) == [[\\]])
+
+	return seq
 end
 
 ------------------------------------------------------------------------
@@ -216,7 +271,7 @@ docsFolder = homeFolder .. 'Documents'
 
 ------------------------------------------------------------------------
 -- Find the icons folder
-fileTable = GetScriptDir()
+fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor/HTML Code Editor.lua')
 iconsDir = fileTable.Path .. 'icons' .. osSeparator
 -- print('[Icons Dir] ' .. tostring(iconsDir))
 
@@ -252,7 +307,7 @@ function CreateWebpageEditor()
 	-- Create the window
 	local win = disp:AddWindow({
 		ID = 'htmlWin',
-		Target = 'htmlWin',
+		TargetID = 'htmlWin',
 		WindowTitle = 'HTML Code Editor',
 		Geometry = {100, 100, width, height},
 		Spacing = 10,
@@ -363,7 +418,7 @@ function CreateWebpageEditor()
 			-- Start adding the handler function
 			win.On[btnID].Clicked = function(ev)
 				print('[' .. btnName .. ' Tag]')
-				itm.CodeEntry.PlainText = itm.CodeEntry.PlainText	 .. '\n' .. buttonCode
+				itm.CodeEntry.PlainText = itm.CodeEntry.PlainText .. '\n' .. buttonCode
 			end
 			-- End the handler function
 		end

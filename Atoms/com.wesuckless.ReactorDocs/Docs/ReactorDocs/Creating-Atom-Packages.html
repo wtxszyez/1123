@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child,
+ol li > :first-child,
+ul li ul:first-of-type,
+ol li ol:first-of-type,
+ul li ol:first-of-type,
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */
+  /* padding: 6px 13px; */
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>Table Of Contents</h1>
+<ul>
+<li><a href="Creating-Atom-Packages.html#creating-atom-packages">Creating Atom Packages</a>
+<ul>
+<li><a href="Creating-Atom-Packages.html#adding-a-description-to-an-atom-package">Adding a Description to an Atom Package</a></li>
+<li><a href="Creating-Atom-Packages.html#html-encoded-entity-characters">HTML Encoded Entity Characters</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-emoticon-images-to-the-description">Adding Emoticon Images to the Description</a></li>
+<li><a href="Creating-Atom-Packages.html#using-atomizer-to-edit-your-atoms">Using Atomizer to Edit Your Atoms</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-a-category-to-an-atom-package">Adding a Category to an Atom Package</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-a-required-donation-to-an-atom-package">Adding a Required Donation to an Atom Package</a>
+<ul>
+<li><a href="Creating-Atom-Packages.html#paypal-me-links">PayPal.me Links</a></li>
+<li><a href="Creating-Atom-Packages.html#www-links">WWW Links</a></li>
+<li><a href="Creating-Atom-Packages.html#email-links">Email Links</a></li>
+<li><a href="Creating-Atom-Packages.html#bitcoin-links">Bitcoin Links</a></li>
+</ul>
+</li>
+<li><a href="Creating-Atom-Packages.html#adding-a-deploy-platform-requirement">Adding a Deploy Platform Requirement</a>
+<ul>
+<li><a href="Creating-Atom-Packages.html#platform-specific-deploy-entries">Platform Specific Deploy Entries</a></li>
+</ul>
+</li>
+<li><a href="Creating-Atom-Packages.html#adding-a-package-dependency">Adding a Package Dependency</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility">Adding Fusion Minimum/Maximum Compatibility</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-documentation">Adding Documentation</a></li>
+<li><a href="Creating-Atom-Packages.html#installscripts-and-uninstallscripts">InstallScripts and UninstallScript</a>
+<ul>
+<li><a href="Creating-Atom-Packages.html#ui-manager-guis">UI Manager GUIs</a></li>
+<li><a href="Creating-Atom-Packages.html#create-shortcut">Create Shortcut Function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1><a name="creating-atom-packages"></a>Creating Atom Packages</h1>
+<p>An atom package is used to define a new installable item that is accessible in the Reactor package manager.</p>
+<p>This is a visual image of what a new atom package folder could look like:</p>
+<p><img src="Images/example-atom-package.png" alt="Example Atom Package" /></p>
+<p>A Reactor atom package is arranged with a basic file hierarchy like this:</p>
+<pre><code>		com.YourCompanyName.YourPackageName (folder)
+				com.YourCompanyName.YourPackageName.atom (file)
+				Macros	(folder)
+						YourCompanyName (folder)
+								your-custom.bmp (file)
+								your-custom.setting (file)
+				Fuses (folder)
+						your-custom.fuse (file)
+				Scripts (folder)
+						Comp (folder)
+								YourCompanyName (folder)
+										your-script.lua (file)
+</code></pre>
+<p>The <code>com.YourCompanyName.YourPackageName.atom</code> file contents would look like this:</p>
+<pre><code>		Atom {
+			Name = &quot;YourPackageName&quot;,
+			Category = &quot;Tools&quot;,
+			Author = &quot;YourCompanyName&quot;,
+			Version = 1.0,
+			Date = {2017-11-18},
+
+			Description = [[A minimal Reactor example atom package.]],
+
+			Deploy = {
+				&quot;Macros/YourCompanyName/your-custom.setting&quot;,
+				&quot;Fuses/your-custom.fuse&quot;,
+				&quot;Scripts/Comp/YourCompanyName/your-script.lua&quot;,
+			},
+
+			Dependencies = {
+				&quot;com.wesuckless.Switch&quot;,
+			},
+		}
+</code></pre>
+<p>You only need to add the intermediate folders required for the content your atom is installing. This means if you are creating an Atom package for delivering a Macro, you only need to add a &quot;Macros/&quot; folder and &quot;Deploy&quot; entry for the .setting file and its thumbnail bin icon.</p>
+<h2><a name="adding-a-description-to-an-atom-package"></a>Adding a Description to an Atom Package</h2>
+<p>When creating a Atom file Description entry you should place the text inside a pair of double square brackets <code>[[Your Description Text]]</code> so Lua will fully escape the quote characters and other symbols.</p>
+<p><code>Description = [[A minimal &quot;FUZIONMONGER&quot; Reactor example atom package description.]],</code></p>
+<p>You are able to use HTML formatted text in the description field like:</p>
+<p><code>&lt;p&gt;This is a new paragraph of text&lt;/p&gt;</code></p>
+<p>or</p>
+<p><code>&lt;pre&gt;This looks like monospaced source code&lt;/pre&gt;</code></p>
+<p>You can also create an HTML ordered list of items in the description field using:</p>
+<pre><code>		Description = [[&lt;p&gt;YourPackageName includes support for:&lt;/p&gt;
+		&lt;ul&gt;
+		&lt;li&gt;Note 1&lt;/li&gt;
+		&lt;li&gt;Note 2&lt;/li&gt;
+		&lt;li&gt;Note 3&lt;/li&gt;
+		&lt;li&gt;Note 4&lt;/li&gt;
+		&lt;/ul&gt;]],
+</code></pre>
+<p>This HTML formatting creates an Atom description entry like:</p>
+<p>YourPackageName includes support for:</p>
+<ul>
+<li>Note 1</li>
+<li>Note 2</li>
+<li>Note 3</li>
+<li>Note 4</li>
+</ul>
+<p>The rich text formatting capability is possible since the description GUI element is created using a Fusion 9 ui:TextEdit field (which is internally done as a QTextEdit item). This means you can read the QT documentation on rich text HTML tags to see what <a href="http://doc.qt.io/qt-4.8/richtext-html-subset.html">HTML formatting tags</a> can be used.</p>
+<h3><a name="html-encoded-entity-characters"></a>HTML Encoded Entity Characters</h3>
+<p>If you want to insert a <code>&lt;</code> character in the description you should use the HTML encoded &quot;entity&quot; version <code>&amp;lt;</code>. If you want to insert a <code>&gt;</code> character in the description you should use the HTML encoded &quot;entity&quot; version <code>&amp;gt;</code>.</p>
+<p>The copyright symbol would be added using the HTML encoded &quot;entity&quot; version <code>&amp;copy;</code>.
+If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:</p>
+<p><code>[</code> has an HTML encoded format of <code>&amp;#91;</code><br />
+<code>]</code> has an HTML encoded format of <code>&amp;#93;</code></p>
+<p>If you wanted to write in &quot;<code>Well [[hello]] there!</code>&quot; in the text part of the atom description text field that could be entered as:</p>
+<pre><code>			Well &amp;#91;&amp;#91;hello&amp;#93;&amp;#93; There!
+</code></pre>
+<p>You can read a summary of <a href="https://www.w3schools.com/html/html_entities.asp">HTML 4 style encoded entities</a> here.</p>
+<p>When adding html tags to the description text, you are unable to add any <code>&lt;img&gt;</code> image tags that use an external (http) based internet URL. Also any <code>&lt;a href=&quot;&quot;&gt;&lt;/a&gt;</code> links added in the description field will not be clickable.</p>
+<h3><a name="adding-emoticon-images-to-the-description"></a>Adding Emoticon Images to the Description</h3>
+<p>The atom description field supports the insertion of HTML based smilie/emoticon images. You have 18 different images to choose from:</p>
+<p><img src="Images/atom-description-emoticons.png" alt="Emoticons" /></p>
+<p>The way you add an emoticon to the HTML code in your description field is by using the following HTML &quot;img&quot; tag syntax:</p>
+<pre><code>		&lt;img src=&quot;Emoticons:/banana.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/bowdown.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/buttrock.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/cheer.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/cheers.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/cool.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/cry.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/facepalm.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/lol.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/mad.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/mrgreen.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/nocheer.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/popcorn.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/rolleyes.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/sad.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/smile.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/whistle.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/wink.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/wip.png&quot;&gt;
+</code></pre>
+<p>The emoticon PNG images are stored in the Reactor managed &quot;Reactor:/UI/Emoticons/&quot; folder.</p>
+<h3><a name="using-atomizer-to-edit-your-atoms"></a>Using Atomizer to Edit Your Atoms</h3>
+<p>The Atomizer editing tool is an atom package editor that is built into Reactor. Atomizer is able to preview your HTML based description field content including your headings, paragraphs, bold, italics, lists, tables, and even emoticon images. Using the Atomizer tool to prepare your atom packages makes it a lot easier to see what your atom package descriptions will look like with the help of an interactive live HTML preview window that show edits instantly as you type.</p>
+<p><img src="Images/reactor-tools-atomizer-menu.png" alt="Reactor Atomizer Menu Item" /></p>
+<p>You can access Atomizer using the <strong>Reactor &gt; Tools &gt; Atomizer</strong> menu item.</p>
+<p>When Atomizer loads you are presented with a welcome screen. You can use this window to either open up an existing atom package with the &quot;Open Atom Package&quot; button, or you can click the &quot;Create New Atom Package&quot; button to start preparing your own content for submission to Reactor.</p>
+<p><img src="Images/atomizer-welcome.png" alt="Atomizer" /></p>
+<p>The <strong>Create New Atom Package from Clipboard</strong> option on the welcome screen is interesting if you have a lot of similar atoms to prepare as you can copy the text from an existing .atom file into your clipboard copy/paste buffer and then use that information as the basis for creating each of your new atoms.</p>
+<p>When you click the <strong>Create New Atom Package from Clipboard</strong> button your current copy/paste clipboard data is pre-filled into the Atomizer fields in the editing window. Note: Sometimes you might have to click this button a few times for Fusion to read the latest clipboard data and process the information. If there is an issue with the text in your clipboard you will see the output details in the Console tab.</p>
+<p>Let's take a look at the main Atomizer window. This view is the heart of the Atomizer tool. It is where the atom editing occurs. Your atom descriptions are typed into the <strong>HTML Code Editor</strong> part of the user interface.</p>
+<p><img src="Images/atomizer-emoticons.png" alt="Atomizer Previewing Emoticons" /></p>
+<p>The <strong>Author</strong> text field is for entering your personal or company name.</p>
+<p>The <strong>Package Name</strong> text field is used for the name of the atom as it will be shown to the end user inside of the Reactor package manager window.</p>
+<p>The <strong>Version</strong> field holds a floating point number like 1.2</p>
+<p>The <strong>Category</strong> combo control menu is used to define the purpose of your atom and where it will show up inside of Reactor.</p>
+<p>The <strong>Date</strong> Fields are where you can specify what the original release date was for the current version of your tool. You can either enter the date manually in the Year - Month - Day (YYYY)-(MM)-(DD) textfields, or you can simply press the &quot;Today&quot; button to enter today's date.</p>
+<p>The <strong>Donation URL</strong> allows you to specify an optional web link URL that will be shown to the user when they install or update your atom in Reactor. Typically this is a PayPal.me based address, or a link to your personal/company webpage.</p>
+<p>The <strong>Donation Amount</strong> field would be used to specify a dollar amount you want to be paid as a suggested donation value when the user installs your atom. This is an optional field that should only be used if you have also entered a value in the <strong>Donation URL</strong> field.</p>
+<p>The <strong>Description</strong> section has two elements. An upper <strong>HTML Code Editor</strong> zone and a lower <strong>HTML Live Preview</strong> view.</p>
+<p>The <strong>HTML Code Editor</strong> is a multi-line text entry field that is used to create the Atom package description text. You can enter HTML formatted text in this field and the results will be shown in the <strong>HTML Live Preview</strong> view in Atomizer. You can enter HTML bolds, italics, underline, blockquotes, pre-formatted code, unordered lists, ordered lists, list elements, images, links, tables, font color, strike through, new paragraph, and headings. It is important to know that HTML based web links are not clickable in an Atom description field.</p>
+<p>There is an HTML formatting icon bar that can be clicked on to add new HTML code snippet elements to end of the text in the <strong>HTML Code Editor</strong> view.</p>
+<p>The only images supported in the HTML Code Editor and in an Atom description field are local filepath based <a href="Creating-Atom-Packages.html#adding-emoticon-images-to-the-description">Emoticon images</a> since those pictures are built into Reactor. This limitation comes from the ui:TextEdit GUI element that is used in the Reactor package manager window since it lacks support for displaying internet HTTP based image URLs.</p>
+<p>The <strong>Dependencies</strong> section lets you list other Reactor atom packages that are required in order for your atom to function correctly. These extra atoms will be installed automatically by Reactor when an end user chooses to add your atom to their system.</p>
+<p>The <strong>Deploy</strong> text fields are where the content that will be installed by Reactor is listed. The Common (No Architecture) text field is where material like fuses, macros, and scripts are added that work across all of Fusion's supported os platforms. If you are deploying a plugin that only works on a specific OS platform you can enter that file in the appropriate heading like &quot;Windows&quot;, &quot;Mac&quot;, or &quot;Linux&quot;. The Deploy fields are case-sensitive and must match the filenames on disk that are included with your atom package.</p>
+<p>To the far right of the Deploy section is a <strong>Refresh</strong> icon that looks like a pair of spinning arrows. You can press that button to instantly refresh the entries in the Deploy fields based upon the content in your Atom package folder. The &quot;Refresh&quot; button doesn't automatically save this edit to the atom file so you can close the Atomizer window with the <strong>Close Atom</strong> button if you don't like the changes that have been made to the Deploy list.</p>
+<p>The <strong>Working Directory</strong> section lists the local filepath for the current .atom file that is loaded in the Atomizer view. The <strong>Show Atom Folder</strong> Button to the right of the <strong>Working Directory</strong> text field is used to quickly open up a desktop folder browsing window so you can access the files inside the atom package folder.</p>
+<p>The <strong>Close Atom</strong> button will exit the Atomizer editing session for your current .atom package file. Any unsaved edits in the Atomizer window will be discarded. You are also able to close any of the Atomizer windows using the <strong>Control + W</strong> (Win/Linux) or <strong>Command + W</strong> (MacOS) hotkeys.</p>
+<p>The <strong>Copy BBCode</strong> button will convert the information in your .atom file into the WSL website's phpBB forum format BBCode syntax. This button helps cut down on the effort needed to create a new &quot;WSL Reactor Submissions&quot; thread post in the <a href="https://www.steakunderwater.com/wesuckless/viewforum.php?f=33">Home &gt; Projects &gt; Reactor &gt; Reactor Submissions</a> forum section on the steakunderwater website. You will still need to attach a manually zipped copy of your atom package folder your new the WSL Reactor Submissions thread post.</p>
+<p>The <strong>Copy Atom</strong> button will place the plain text contents of your .atom file into the copy/paste clipboard buffer. The <strong>Copy Atom</strong> feature is designed to be used when you need to create multiple similar atom packages quickly and is paired with a matching Atomizer <strong>Create New Atom Package from Clipboard</strong> option that is accessible on the main welcome screen.</p>
+<p>The <strong>View Raw Text</strong> button shows a plain text code view window that lets you see the raw atom formated package file. Atom file code syntax highlighting is supported on MacOS and Windows platforms but is disabled on Linux due to a Fusion 9 compatibility issue.</p>
+<p>The <strong>Save Atom</strong> button is used to write your atom editing changes to disk.</p>
+<h2><a name="adding-a-category-to-an-atom-package"></a>Adding a Category to an Atom Package</h2>
+<p><img src="Images/reactor-window-categories.png" alt="Reactor Categories" /></p>
+<p>When creating an Atom package it helps to look over the existing <strong>Category</strong> entries in the Reactor GUI to see if something appropriate exists before you create a new category that performs a similar task.</p>
+<p>Here is a quick summary of the typical Reactor categories you can choose from:</p>
+<ul>
+<li>Bin</li>
+<li>Brushes</li>
+<li>Comps</li>
+<li>Comps/Templates</li>
+<li>Console</li>
+<li>Docs</li>
+<li>Fun</li>
+<li>LUTs</li>
+<li>Menus</li>
+<li>Modifiers</li>
+<li>Modules</li>
+<li>Resolve</li>
+<li>Scripts</li>
+<li>Scripts/Bin</li>
+<li>Scripts/Comp</li>
+<li>Scripts/Job</li>
+<li>Scripts/Slave</li>
+<li>Scripts/Reactor</li>
+<li>Scripts/Tool</li>
+<li>Scripts/Utility</li>
+<li>Scripts/Views</li>
+<li>Testing</li>
+<li>Tools</li>
+<li>Tools/3D</li>
+<li>Tools/Color</li>
+<li>Tools/Composite</li>
+<li>Tools/Creator</li>
+<li>Tools/Effect</li>
+<li>Tools/Filter</li>
+<li>Tools/Flow</li>
+<li>Tools/Miscellaneous</li>
+<li>Tools/Optical Flow</li>
+<li>Tools/Particles</li>
+<li>Tools/Plugins</li>
+<li>Tools/Tracking</li>
+<li>Tools/Transform</li>
+<li>Tools/Warp</li>
+<li>Viewshaders</li>
+</ul>
+<h2><a name="adding-a-required-donation-to-an-atom-package"></a>Adding a Required Donation to an Atom Package</h2>
+<p>If you want to mark your Atom package as having a required (suggested) donation you can add the following Donation tag inside the <code>Atom {}</code> code block.</p>
+<h3><a name="paypal-me-links"></a>PayPal.me Links</h3>
+<p>A Donation tag with a <a href="https://www.paypal.me/">PayPal.me</a> based www link:</p>
+<pre><code>		Atom {
+			Donation = {
+				URL = [[http://www.paypal.me/andrewhazelden]],
+				Amount = &quot;$5.00 USD&quot;,
+			},
+		}`
+</code></pre>
+<p>This is a preview of the PayPal.me based donation link in the Reactor UI:</p>
+<p><img src="Images/reactor-donation-view.png" alt="Reactor Donation Dialog" /></p>
+<p>When the Paypal.me link is clicked in the dialog you are then brought to a PayPal payment webpage that looks like this:</p>
+<p><img src="Images/paypal-donation-link-webpage.png" alt="PayPal.me Donation Webpage" /></p>
+<h3><a name="www-links"></a>WWW Links</h3>
+<p>A Donation tag with an HTTP based www link:</p>
+<pre><code>		Atom {
+			Donation = {
+				URL = [[http://www.yourcompany.com/Products/YourPackageName/]],
+				Amount = &quot;$5.00 USD&quot;,
+			},
+		}
+</code></pre>
+<h3><a name="email-links"></a>Email Links</h3>
+<p>A Donation tag with an email <code>mailto:</code> link:</p>
+<pre><code>		Atom {
+			Donation = {
+				URL = [[mailto:you@yourcompany.com]],
+				Amount = &quot;$5.00 USD&quot;,
+			},
+		}
+</code></pre>
+<h3><a name="bitcoin-links"></a>Bitcoin Links</h3>
+<p>A Donation tag with a bitcoin link should generally use the <a href="https://en.bitcoin.it/wiki/BIP_0021">Bitcoin URI scheme BIP21</a>:</p>
+<pre><code>		Atom {
+			Donation = {
+				URL = [[bitcoin:&lt;myaddress&gt;?amount=1&amp;message=mymsg]],
+				Amount = &quot;$5.00 USD&quot;,
+			},
+		}
+</code></pre>
+<h2><a name="adding-a-deploy-platform-requirement"></a>Adding a Deploy Platform Requirement</h2>
+<p>The Deploy tag allows you to have files defined as being shared across all OS platforms, or files can be defined as being Windows/Mac/Linux platform dependent.</p>
+<p>When you enter a specific platform entry in the Deploy tag those resources will only be installed by Reactor if it is running on that platform. This is handy if you have included customized versions of a script, resource, compiled command line tools, .dll/.so/.dylib library, or a Lua binary module for a specific OS platform.</p>
+<p>Here is an example of a deploy tag with platform specific definitions:</p>
+<pre><code>		Atom {
+			Deploy = {
+				&quot;Scripts/Comp/YourCompanyName/your-shared-script.lua&quot;
+				&quot;Scripts/Comp/YourCompanyName/another-shared-script.lua&quot;
+				&quot;Scripts/Comp/YourCompanyName/yet-another-shared-script.lua&quot;
+
+				Windows = {
+					&quot;Scripts/Comp/YourCompanyName/WindowsOnly.lua&quot;,
+				},
+
+				Mac = {
+					&quot;Scripts/Comp/YourCompanyName/MacOnly.lua&quot;,
+				},
+
+				Linux = {
+					&quot;Scripts/Comp/YourCompanyName/LinuxOnly.lua&quot;,
+				},
+			},
+		}
+</code></pre>
+<p>In this deploy example, the <code>your-shared-script.lua</code>, <code>another-shared-script.lua</code>, and <code>yet-another-shared-script.lua</code> entries are installed on all platforms.</p>
+<p>The <code>WindowsOnly.lua</code> script is installed only if Reactor is running on a Windows system.</p>
+<p>The <code>MacOnly.lua</code> script is installed only if Reactor is running on a Mac system.</p>
+<p>The <code>LinuxOnly.lua</code> script is installed only if Reactor is running on a Linux system.</p>
+<p>All filepaths entires that are specified inside a <code>Deploy</code> tag are going to be installed to following PathMap folder location on disk:</p>
+<p><code>AllData:/Reactor/Deploy/</code></p>
+<p>The <code>AllData:/Reactor/Deploy/</code> PathMap location translates to:</p>
+<h3>Fusion Deploy Paths</h3>
+<p><strong>Windows Reactor Path:</strong></p>
+<p><code>C:\ProgramData\Blackmagic Design\Fusion\Reactor\Deploy\</code></p>
+<p><strong>Mac Reactor Path:</strong></p>
+<p><code>/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/</code></p>
+<p><strong>Linux Reactor Path:</strong></p>
+<p><code>/var/BlackmagicDesign/Fusion/Reactor/Deploy/</code></p>
+<h3>Resolve Deploy Paths</h3>
+<p><strong>Windows Reactor Path:</strong></p>
+<p><code>C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\Deploy\</code></p>
+<p><strong>Mac Reactor Path:</strong></p>
+<p><code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/Deploy/</code></p>
+<p><strong>Linux Reactor Path:</strong></p>
+<p><code>/var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/Deploy/</code></p>
+<h3><a name="platform-specific-deploy-entries"></a>Platform Specific Deploy Entries</h3>
+<p>It is important to know that a set of platform specific deploy entries that are listed in the Atom file like this:</p>
+<pre><code>		Windows = {
+			&quot;Scripts/Comp/YourCompanyName/WindowsOnly.lua&quot;,
+		},
+		Mac = {
+			&quot;Scripts/Comp/YourCompanyName/MacOnly.lua&quot;,
+		},
+		Linux = {
+			&quot;Scripts/Comp/YourCompanyName/LinuxOnly.lua&quot;,
+		},
+</code></pre>
+<p>Will end up being be stored in the Atom folder hierarchy on disk like this:</p>
+<pre><code>		com.YourCompanyName.YourPackageName/Windows/Scripts/Comp/YourCompanyName/WindowsOnly.lua
+		com.YourCompanyName.YourPackageName/Mac/Scripts/Comp/YourCompanyName/MacOnly.lua
+		com.YourCompanyName.YourPackageName/Linux/Scripts/Comp/YourCompanyName/LinuxOnly.lua
+</code></pre>
+<p>A platform specific deploy file needs to be stored inside of a folder with the intermediate folder name of &quot;Windows&quot;, &quot;Mac&quot;, and &quot;Linux&quot;. This is due to the way most Fusion plugins have the same filename on Windows/Mac/Linux.</p>
+<p>A custom compiled Fusion plugin you create would be called <code>Your-Custom.plugin</code> on all three supported Fusion OS platforms.</p>
+<h2><a name="adding-a-package-dependency"></a>Adding a Package Dependency</h2>
+<p>You can mark your atom package as having a dependency on another Atom package.</p>
+<p>If you add a Dependencies tag, when your Atom package is selected for installation, Reactor will automatically install each of those dependencies at the same time as your atom.</p>
+<pre><code>		Atom {
+			Dependencies = {
+				&quot;com.wesuckless.SlashCommand&quot;,
+			},
+		}
+</code></pre>
+<p>At this current time, Reactor will not remove the dependent Atom packages that are installed automatically when remove the original base package you selected.</p>
+<h2><a name="adding-documentation"></a>Adding Documentation</h2>
+<p>If you want to add a single page HTML or Markdown formatted documentation file to your atom package you can do that by adding an entry in your Deploy section. This will install your documentation file to the <code>Reactor:/Deploy/Docs/</code> folder.</p>
+<p>HTML:</p>
+<pre><code>			Deploy = {
+				&quot;Docs/com.YourCompanyName.YourPackageName.html&quot;
+			},
+</code></pre>
+<p>Markdown:</p>
+<pre><code>			Deploy = {
+				&quot;Docs/com.YourCompanyName.YourPackageName.md&quot;
+			},
+</code></pre>
+<p>Then if you want to link to your local documentation file from your Script/Macro/Plugin the PathMap address would be:</p>
+<pre><code>			Reactor:/Deploy/Docs/com.YourCompanyName.YourPackageName.html
+</code></pre>
+<h2><a name="adding-fusion-minimum-maximum-compatibility"></a>Adding Fusion Minimum/Maximum Compatibility</h2>
+<p>Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new <code>Minimum</code> and <code>Maximum</code> Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve 15's Fusion page while still allowing for atom installation compatibility with Fusion 9.</p>
+<p>If an atom package is being used to install a macro that might work perfectly well in all versions of Fusion, you can omit adding the <code>Minimum</code> and <code>Maximum</code> attributes.</p>
+<h3>Atoms Limited to Fusion 9 or Resolve 15</h3>
+<p>These two Reactor screenshots show what you see when an atom package is prevented from running in either Fusion or Resolve.</p>
+<p><img src="Images/reactor-limits-installation-to-supported-fusion-version.png" alt="Reactor Supported Fusion Version" /></p>
+<p><img src="Images/reactor-limits-installation-to-supported-resolve-version.png" alt="Reactor Supported Resove Version" /></p>
+<h3>Fusion and Resolve Version Numbers</h3>
+<p>For the purpose of atom packages, Fusion's version numbers are listed as:</p>
+<ul>
+<li>7.71</li>
+<li>8.0</li>
+<li>8.10</li>
+<li>8.20</li>
+<li>8.21</li>
+<li>9.00</li>
+<li>9.01</li>
+<li>9.02</li>
+<li>15</li>
+</ul>
+<p><strong>Note:</strong> The version number &quot;15&quot; is what Resolve 15's Fusion's page is detected as in a Lua script. When checking for a Fusion version number this value is reported to Reactor with the following Lua command:</p>
+<pre><code>		local fuVersion = tonumber(bmd._VERSION)
+</code></pre>
+<h3>Usage Examples</h3>
+<p>If an atom worked with Fusion 9.0 - 9.0.2 you could define both the <code>Minimum</code> and the <code>Maximum</code> values:</p>
+<pre><code>		Atom {
+			Minimum = 9.00,
+			Maximum = 9.02,
+		}
+</code></pre>
+<p>If an atom only worked with Fusion 9.0.2 you could define both the <code>Minimum</code> and the <code>Maximum</code> values:</p>
+<pre><code>		Atom {
+			Minimum = 9.02,
+			Maximum = 9.02,
+		}
+</code></pre>
+<p>If an atom package had a .fu based Menus {} entry that didn't work in Resolve 15 you could define just the <code>Maximum</code> value:</p>
+<pre><code>		Atom {
+			Maximum = 9.02,
+		}
+</code></pre>
+<p>If an atom package only worked in Resolve 15 you could define just the <code>Minimum</code> value:</p>
+<pre><code>		Atom {
+			Minimum = 15,
+		}
+</code></pre>
+<h2><a name="installscripts-and-uninstallscripts"></a>InstallScripts and UninstallScripts</h2>
+<p><img src="Images/atom-package-installscript-confirmation-dialog.png" alt="FFMpeg Install Script Example" /></p>
+<p>A new addition to the Reactor v2.0 atom package specification is the InstallScript and UninstallScript tag capability.</p>
+<p>InstallScript = {} and UninstallScript = {} atom tags can be either Lua, or Python 2.x / Python 3.x code. Python code is defined with the addition of a !Py:, !Py2: or !Py3 prefix in the inline code block.</p>
+<p>This InstallScript feature allows for more complex install procedures to be supported like: Automatic PathMap entry mapping, file permissions adjustments, Windows Desktop shortcut link creation for &quot;Reactor:/Deploy/Bin/&quot; based items, and the abillity to update the &quot;Profile:/Fusion.prefs&quot; settings so a script works automatically.</p>
+<p>When an InstallScript tag is present in the atom file a &quot;Fusion Reactor | Install Script Confirmation&quot; dialog is shown during the atom install/update/remove processes. This confirmation dialog allows you to visually see in advance the proposed Install Script code snippet that would be run, and you have the option to click either the &quot;Cancel Installation&quot; button to skip running the code, or the &quot;OK&quot; button to run the InstallScript.</p>
+<p>The Reactor package manager window's Description field also shows the text &quot;Install Script: Yes&quot; and &quot;Uninstall Script: Yes&quot; if either of these two items are present in the atom file. This gives you added information you can see before you choose to install the atom package.</p>
+<p><img src="Images/atom-package-installscript-reactor-window.png" alt="Reactor Window with an Install Script Entry Visible" /></p>
+<p>An InstallScript element can be present in an atom file for all architectures with the use of the base InstallScript = {} and UninstallScript = {} tags.</p>
+<p>Then entries can be added inside those tables for having code that runs on specific platforms only with the nesting of the child tags Mac = {}, Windows = {}, and Linux = {}. Multiple strings of InstallScript code can be attached inside each table area and each script element will prompt the user with a dialog window for a confirmation that you want to allow the code to run.</p>
+<p><img src="Images/atom-package-installscript-code-example.png" alt="Install Script Code Example" /></p>
+<p>If a developer adds an InstallScript/UninstallScript code block to their atoms they are expected to follow Lua/Python coding best practices for clarity and syntax formatting.</p>
+<p>When a new atom is submitted to Reactor that has an InstallScript added, the developer should anticipate the need for external code review by WSL and the developer needs to be willing to accept a request to revise their code to ensure compatibility and reliability across all supported Fusion/Resolve versions of Reactor running on Windows/Mac/Linux. Highly obfuscated, messy, or unreliable InstallScript code will not be accepted in the Reactor repository as it poses an unacceptable security risk.</p>
+<p>If you have technical questions about writing InstallScript code you should ask it in the WSL Reactor forum section before you submit your new atom package to speed up the atom submission and review process.</p>
+<p>If you are interested in seeing InstallScript code examples check out the following atom packages in the Reactor GitLab repository:</p>
+<ul>
+<li>com.AndrewHazelden.FusionGuiColorSwitcher</li>
+<li>com.wesuckless.ReactorDocs</li>
+<li>com.wesuckless.ffmpeg</li>
+<li>com.wesuckless.ffmpegPermissions</li>
+<li>com.wesuckless.NotepadPlusPlus</li>
+<li>com.wesuckless.NotepadPlusPlusPreferences</li>
+</ul>
+<p>Here is a sample InstallScript Lua code snippet from the &quot;com.wesuckless.NotepadPlusPlusPreferences.atom&quot; atom package. It allows Notepad++ to be specified as the default Fusion script editor on Windows:</p>
+<pre><code>		InstallScript = {
+			Windows = {
+				[[if platform == &quot;Windows&quot; then
+		-- Convert the notepad++ PathMap to an absolute file path
+		editorPath = app:MapPath(&quot;Reactor:/Deploy/Bin/notepad++/notepad++.exe&quot;)
+
+		-- Update Fusion's &quot;Profile:/Fusion.prefs&quot; settings file with a new EditorPrefs entry
+		app:SetPrefs(&quot;Global.Script.EditorPath&quot;, editorPath)
+		app:SavePrefs()
+
+		-- Print back the result
+		updatedEditorPath = app:GetPrefs(&quot;Global.Script.EditorPath&quot;)
+		dprintf(&quot;[Fusion Editor Path] &quot; .. tostring(updatedEditorPath) .. &quot;\n&quot;)
+
+		-- Add a &quot;Notepad++ for Fusion.lnk&quot; Shortcut to the Desktop Folder
+		CreateShortcut(editorPath, &quot;Desktop:&quot;, &quot;Notepad++ for Fusion&quot;, &quot;file&quot;)
+	else
+		dprintf(&quot;[Warning] Notepad++ is only available for Windows.\n&quot;)
+	end]],
+			},
+		},
+		UninstallScript = {
+			Windows = {
+				[[-- Update Fusion's &quot;Profile:/Fusion.prefs&quot; settings file to clear out the EditorPrefs entry
+	app:SetPrefs(&quot;Global.Script.EditorPath&quot;, &quot;&quot;)]],
+			},
+		},
+</code></pre>
+<p>InstallScript and UninstallScript code blocks expose the Lua &quot;<strong>app:</strong>&quot; pointer variable which is equivalent to &quot;<strong>fu:</strong>&quot; or &quot;<strong>fusion:</strong>&quot;. This variable can be used to change Fusion preferences with &quot;<strong>app:SetPrefs()</strong>&quot; or &quot;<strong>app:GetPrefs()</strong>&quot;. You can also access PathMaps using &quot;<strong>app:MapPath()</strong>&quot;.</p>
+<p>Your script can find out the active operating system platform using the Lua &quot;<strong>platform</strong>&quot; variable which returns a value of &quot;<strong>Mac</strong>&quot;, &quot;<strong>Windows</strong>&quot;, or &quot;<strong>Linux</strong>&quot;.</p>
+<p>The &quot;<strong>dprintf()</strong>&quot; function can be used to debug print textual information from your script to the Reactor log file that is saved to the temp folder on the users system. This can help with troubleshooting installation issues. &quot;dprintf()&quot; works very similar to the standard &quot;print()&quot; command in Lua. (Note: The user has to manually enable the <code>REACTOR_DEBUG</code> environment variable on their system for the reactor log file writing feature to be active.)</p>
+<p>There is a &quot;<strong><code>REACTOR_DEBUG_COLLECTIONS</code></strong>&quot; environment variable that can be used to help do automated testing of InstallScript codeblocks when you are creating a Reactor &quot;Collections&quot; category atom that uses multiple dependency tags.</p>
+<h3><a name="ui-manager-guis"></a>UI Manager GUIs</h3>
+<p><img src="Images/atom-package-installscript-ui-manager-gui.png" alt="Install Script GUI Example" /></p>
+<p>It is possible to add an inline UI Manager GUI to an InstallScript that is capable of accepting user input. If you want to see an example of an Atom package that has an inline UI Manager GUI check out the &quot;com.AndrewHazelden.FusionGuiColorSwitcher&quot; atom on the Reactor GitLab page.</p>
+<p>The UI Manager &quot;<strong>ui:</strong>&quot; pointer variable already exists inside of an InstallScript Lua script scope. This means you don't need to add the typical UI manager code entries of:</p>
+<pre><code>	ui = fu.UIManager
+	disp = bmd.UIDispatcher(ui)
+</code></pre>
+<h3><a name="create-shortcut"></a>Create Shortcut Function</h3>
+<p>There is an InstallScript &quot;<strong>CreateShortcut()</strong>&quot; function that can be used by &quot;Bin&quot; category based atoms to add new Windows &quot;Shortcut&quot; / Mac Finder Alias / Linux .desktop links to the installed binary tool/documentation on a user's desktop folder.</p>
+<p>This feature is intended to be used only by &quot;core&quot; atoms in the com.wesuckless.* namespace at this time and is something that new atom Developers will have to discuss on their WSL Reactor Submission thread in advance of using the feature in their shipping atom packages to avoid overuse.</p>
+<p>The arguments for the CreateShortcut() function are:</p>
+<pre><code>	CreateShortcut(sourcePath, shortcutPath, shortcutName, fileType)
+</code></pre>
+<p>The &quot;<strong>fileType</strong>&quot; argument should be set to &quot;<strong>file</strong>&quot; if you are linking to a document or executable, or &quot;<strong>folder</strong>&quot; if you are linking to a folder on disk. This is required as Mac and Linux need that extra detail to customize how the Finder Alias/Linux .desktop links are generated.</p>
+<p>The &quot;<strong>sourcePath</strong>&quot; argument is either an absolute filepath, or a relative PathMap address to the original file that you want to create the link to.</p>
+<p>The &quot;<strong>shortcutPath</strong>&quot; argument is the destination folder where the desktop link will be created. You should generally use &quot;Desktop:/&quot; as the shortcutPath value since that is custom relative PathMap address that is supported inside this function when you want to put the resulting link on your desktop folder.</p>
+<p>The CreateShortcut() function at runtime will automatically re-write the slash direction for each platform and any duplicate (doubled up) slashes in the filepath will be removed too.</p>
+<p><strong>Note:</strong> On some localized operating systems the regional language settings might change the desktop folder name to use another path. In this case the &quot;<strong>Desktop:</strong>&quot; based PathMap &quot;<strong>$HOME/Desktop/</strong>&quot; folder that is created by the atom will still hold your shortcut but it will be ignored by the host OS. In those situations the end user can manually move the files if they wish. From a technical perspective there isn't anything that can be done further in a cross-platform compatible way in Fusion Standalone and Resolve 15 to improve on this issue.</p>
+<h4><a name="notepadplusplus-for-fusion-shortcut-example"></a>Notepad++ for Fusion Shortcut Example</h4>
+<p><img src="Images/atom-package-installscript-example-notepadplusplus.png" alt="Install Script Example" /></p>
+<p>This example creates a desktop folder based shortcut to the Notepad++ for Fusion program:</p>
+<pre><code>	InstallScript = {
+		[[-- Create a shortcut link on your desktop to the Notepad++ for Fusion program
+	CreateShortcut(Reactor:/Deploy/Bin/notepad++/notepad++.exe, &quot;Desktop:&quot;, &quot;Notepad++ for Fusion&quot;, &quot;file&quot;)]],
+	}
+</code></pre>
+<h4><a name="reactor-docs-shortcut-example"></a>Reactor Docs Shortcut Example</h4>
+<p><img src="Images/atom-package-installscript-example-reactor-docs.png" alt="Install Script Reactor Docs Example" /></p>
+<p>This example creates a desktop folder based shortcut to the Reactor Docs folder:</p>
+<pre><code>	InstallScript = {
+		[[-- Create a shortcut link on your desktop to the Reactor documentation folder
+		CreateShortcut(&quot;Reactor:/Deploy/ReactorDocs&quot;, &quot;Desktop:&quot;, &quot;ReactorDocs&quot;, &quot;folder&quot;)]],
+	}
+</code></pre>
+<p>Last Revised 2018-05-21</p>
+</body>
+</html>

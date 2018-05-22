@@ -3,7 +3,7 @@ Atom {
 	Category = "Bin",
 	Author = "We Suck Less",
 	Version = 1,
-	Date = {2018, 2, 12},
+	Date = {2018, 2, 23},
 	Description = [[<p>FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation.</p>
 
 <h2>Open Source License:</h2>
@@ -20,7 +20,7 @@ The FFmpeg Shared Linking 64-bit for Windows/MacOS atom was packaged by Andrew H
 
 <pre>
 	-- Set the FFmpeg program on MacOS to have executable permissions so the ffmpeg command line tool can be used:
-	command = 'chmod -R 755 "' .. comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/') .. '"'
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/') .. '"'
 	print("[Permissions Update] " .. command)
 	os.execute(command)
 </pre>
@@ -124,6 +124,88 @@ sudo pacman -S ffmpeg
 
 		Linux = {
 			"Bin/ffmpeg/LICENSE.txt",
+		},
+	},
+	InstallScript = {
+		Windows = {
+			[[-- Add an FFmpeg PathMap entry called:
+-- ["FFmpeg:"] = "Reactor:/Deploy/Bin/ffmpeg/bin/"
+if platform ~= 'Linux' then
+	local ffmpegPrefEntry = 'Global.Paths.Map.FFmpeg:'
+	local ffmpegReactorPath = 'Reactor:/Deploy/Bin/ffmpeg/bin/'
+	local ffmpegFound = app:GetPrefs(ffmpegPrefEntry)
+
+	if ffmpegFound and ffmpegFound:find(ffmpegReactorPath) then
+		dprintf('[FFmpeg PathMap] Existing Entry Found for: ' .. ffmpegReactorPath .. '"\n')
+	else
+		dprintf('[FFmpeg PathMap] Added Entry: "' .. ffmpegReactorPath .. '"\n')
+		app:SetPrefs(ffmpegPrefEntry, ffmpegReactorPath)
+		app:SavePrefs()
+	end
+end
+
+-- Turn on executable permissions for the MacOS FFmpeg program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/') .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end]],
+		},
+		Mac = {
+			[[-- Add an FFmpeg PathMap entry called:
+-- ["FFmpeg:"] = "Reactor:/Deploy/Bin/ffmpeg/bin/"
+if platform ~= 'Linux' then
+	local ffmpegPrefEntry = 'Global.Paths.Map.FFmpeg:'
+	local ffmpegReactorPath = 'Reactor:/Deploy/Bin/ffmpeg/bin/'
+	local ffmpegFound = app:GetPrefs(ffmpegPrefEntry)
+
+	if ffmpegFound and ffmpegFound:find(ffmpegReactorPath) then
+		dprintf('[FFmpeg PathMap] Existing Entry Found for: ' .. ffmpegReactorPath .. '"\n')
+	else
+		dprintf('[FFmpeg PathMap] Added Entry: "' .. ffmpegReactorPath .. '"\n')
+		app:SetPrefs(ffmpegPrefEntry, ffmpegReactorPath)
+		app:SavePrefs()
+	end
+end
+
+-- Turn on executable permissions for the MacOS FFmpeg program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/') .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end]],
+		},
+	},
+	UninstallScript = {
+		Windows = {
+			[[-- Remove an FFmpeg PathMap entry called:
+-- ["FFmpeg:"] = "Reactor:/Deploy/Bin/ffmpeg/bin/"
+
+local ffmpegPrefEntry = 'Global.Paths.Map.FFmpeg:'
+local ffmpegReactorPath = 'Reactor:/Deploy/Bin/ffmpeg/bin/'
+
+if app:GetPrefs(ffmpegPrefEntry) and app:GetPrefs(ffmpegPrefEntry):find(ffmpegReactorPath) then
+	dprintf('[FFmpeg PathMap] Removed Entry: "' .. ffmpegReactorPath .. '"\n')
+	app:SetPrefs(ffmpegPrefEntry, '')
+	app:SavePrefs()
+else
+	dprintf('[FFmpeg PathMap] No Entry Found for: ' .. ffmpegReactorPath .. '"\n')
+end]],
+		},
+		Mac = {
+			[[-- Remove an FFmpeg PathMap entry called:
+-- ["FFmpeg:"] = "Reactor:/Deploy/Bin/ffmpeg/bin/"
+
+local ffmpegPrefEntry = 'Global.Paths.Map.FFmpeg:'
+local ffmpegReactorPath = 'Reactor:/Deploy/Bin/ffmpeg/bin/'
+
+if app:GetPrefs(ffmpegPrefEntry) and app:GetPrefs(ffmpegPrefEntry):find(ffmpegReactorPath) then
+	dprintf('[FFmpeg PathMap] Removed Entry: "' .. ffmpegReactorPath .. '"\n')
+	app:SetPrefs(ffmpegPrefEntry, '')
+	app:SavePrefs()
+else
+	dprintf('[FFmpeg PathMap] No Entry Found for: ' .. ffmpegReactorPath .. '"\n')
+end]],
 		},
 	},
 }

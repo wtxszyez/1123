@@ -1,5 +1,6 @@
+_VERSION = [[Version 2.0 - May 21, 2018]]
 --[[
-Atomizer v1.2.1 - 2018-01-23
+Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
 http://www.andrewhazelden.com
 
@@ -10,11 +11,11 @@ Welcome to Atomizer: The Atom Package Editor.
 Atomizer is an editing tool that simplifies the process of creating a Reactor "Atom" package:
 https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229
 
-This script requires Fusion 9.0.1+ so it won't work in older versions of Fusion.
+This script requires Fusion 9.0.2+ or Resolve 15+.
 
 ## Installation ##
 
-Copy the "Atomizer" folder into your Fusion user preferences "Scripts:/Comp/" folder.
+Use Reactor to install Atomizer.
 
 ## Usage ##
 
@@ -28,6 +29,7 @@ Step 4. In the main editing window enter your Atom details in the text fields. T
 
 A new Atom package will be saved to disk. You can then submit this atom module to the Reactor GitLab page to have it considered for inclusion.
 
+
 ## Pro Tips ##
 
 Don't spend time manually entering filenames in the Deploy section. Simply add the files to the Atom package folder on disk the same way you want them to be install in the Reactor:/Deploy directory. Then click the "Refresh" icon on the far right side of the Deploy section in the GUI to automatically fill in the Deploy details for you. If the information looks correct then click the "Save Atom" button to write these changes to disk.
@@ -35,6 +37,34 @@ Don't spend time manually entering filenames in the Deploy section. Simply add t
 Clicking the "Open Atom Folder" button will display the atom folder in a new Explorer/Finder/Nautilus/ folder view.
 
 You can close any of the Atomizer windows with the Control+W (Win/Linux) or Command+W (Mac) hotkeys. This makes it fast to quickly edit several atoms in a row and close the windows as you go.
+
+
+## Command line Usage ##
+
+It is possible to launch the Atomizer script and open up an atom file instantly for editing using the following syntax:
+
+From the Fusion Console tab:
+
+comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})
+
+From the terminal with FuScript for Fusion:
+
+'/Applications/Blackmagic Fusion 9/Fusion.app/Contents/MacOS/fuscript' -l lua -x 'fusion = bmd.scriptapp("Fusion", "localhost");if fusion ~= nil then fu = fusion;app = fu;composition = fu.CurrentComp;comp = composition;SetActiveComp(comp) else print("[Error] Please open up the Fusion GUI before running this tool.") end comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})'
+
+From the terminal with FuScript for Resolve:
+
+'/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fuscript' -l lua -x 'fusion = bmd.scriptapp("Fusion", "localhost");if fusion ~= nil then fu = fusion;app = fu;composition = fu.CurrentComp;comp = composition;SetActiveComp(comp) else print("[Error] Please open up the Fusion GUI before running this tool.") end comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})'
+
+# Atom Slash Command #
+
+A "com.AndrewHazelden.SlashAtom" SlashCommand is also available in Reactor's "Console" category. This package allows you to edit an Atom file from the Fusion Console tab using the syntax of:
+
+/atom
+
+or
+
+/atom <atom filepath>
+
 
 ## Version History ##
 
@@ -59,24 +89,113 @@ You can close any of the Atomizer windows with the Control+W (Win/Linux) or Comm
 
 - Added Windows style slash translations to the Unix/Internet URL slash format when writing the Atom file Deploy tags to disk or scanning a directory with the Deploy "Refresh" button.
 
+### 1.2.2B 2018-02-20 ###
+
+- Special thanks goes to SirEdric <Eric@SirEdric.de> for the Atomizer GUI layout adjustment ideas!
+- Resized the Atomizer window and adjusted the spacing of the Description/Deploy/Dependencies fields
+- Added a HTML formatting toolbar with icons
+- Encoded the png icons into a Fusion "ZIPIO" based asset package stored at "Images/icons.zip"
+- Atomizer now verifies you are running Fusion 9.0.2+ so the formatting bar icons can be created using the AddChild() function. You will be brought to the Fusion product webpage if you are running a legacy build of Fusion and try to launch the Atomizer script.
+- Added HTML syntax highlighting in the Description field.
+- Added "Collections" and "We Suck Less" Categories.
+- Turned off padding on the date fields so there are no leading zeros
+- Edited the placeholder text for the Deploy sections
+- Added a "Reset to Defaults" button that clears out the text in the view. A confirmation dialog makes sure this is what you really want to do.
+- Added a "Copy BBCode" button to make it easier to prepare the WSL Atom Submissions entry description text. This means in mere moments the information from your Atom is translated into the WSL forum's BBCode format and is ready to be pasted into a new thread post.
+- Added a "Copy Atom" button to make it easier to create several atoms that are very similar. This button is intended to be used along side the "Create Atom Package from Clipboard" feature on the main Atomizer screen that uses the atom data that is in your clipboard.
+- Changed the "Atom Text View" window so it now stays ontop of the other windows and doesn't get lost.
+- Changed the Deploy section Refresh button code so the Windows/Mac/Linux specific files have thir base "OS" folder name removed from the relative file paths.
+- Added direct command line Atom loading support via an atomFile argument. This also makes it possible to for Atomizer to work with the new SlashAtom SlashCommand.
+
+### 1.2.3 2018-02-25 ###
+
+- Updated the "Create New Atom Package" window so you can't type tab or space characters in the "Package Name" field.
+- Improved the support for loading Atoms from a PathMap based location.
+- Updated the GetScriptDir() function to add a fallback location to look for a resource. This is used in cases where you paste a script into Fusion's Console tab which means the "debug.getinfo(1).source" command is unable to discover the filesystem based path to the currently running .lua file.
+- Added more <li> entries to the list button in the formatting bar. Added a default indent to the <li> entries added using the * list items button.
+
+### 1.3 2018-03-15 ###
+
+- Added parseFilename() from bmd.scriptlib
+- Added support for Reactor v1.1
+- Added initial Reactor for Resolve compatibility
+- Updated formatting bar HTML table code
+
+### 2.0 2018-05-21 ###
+
+- Resolve 15 compatibility update
+- Updated the default folder to $HOME
+- Added error handling for when the "Open Atom Package" dialog's default filepath no longer exists.
+- Added a new "Templates" root level category.
+- Added a new "Tools/Transform" category.
+
 ## Todos ##
 
+- Add GUI editing support for the new Reactor Atom v1.1 specification tags:
+  - InstallScript = {} and UninstallScript = {} elements.
+  - Minimum/Maximum Fusion compatible version tags
+
 - If the CategoryCombo is set to "Custom" then show a (hidden) custom Category entry field to allow new categories to be created by the end user.
+
+## Known Issues ##
+
+- Resolve 15 Beta crashes frequently when Lua based file requester dialogs are shown. If you need to edit an atom package in Resolve 15 Beta 1 you might need to use the Slash Atom "SlashCommand" to help open up your atoms if this is an issue.
+
+- Resolve 15 Beta 2 crashes when Lua AskUser dialogs are displayed like the "Reset to Defaults" button uses for the confirmation message.
+
 ]]
 
 ------------------------------------------------------------------------
--- Check the current computer platform
-platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+-- Minimum version of Fusion required to run Reactor
+local reactorMinVersion = 9.02
+
+------------------------------------------------------------------------
+-- Fusion Product Webpage
+local fusionDownloadURL = 'https://www.blackmagicdesign.com/products/fusion/'
+-- local fusionDownloadURL = 'https://www.blackmagicdesign.com/products/davinciresolve/'
 
 ------------------------------------------------------------------------
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
+
+------------------------------------------------------------------------
+-- Wrong version of Fusion detected
+function VersionError(ver, minVer, os)
+	local msg = 'Detected Fusion ' .. ver .. ' running on ' .. os .. '.\n\nReactor requires Fusion ' .. minVer .. ' or higher. It also works in Resolve Studio 15+!\n\nPlease update your copy of Fusion.\n'
+	comp:Print('[Reactor Installer Error] ' .. msg)
+
+	-- Show a warning message in an AskUser dialog
+	dlg = {
+		{'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 8, Wrap = true, Default = msg},
+	}
+	dialog = comp:AskUser('Reactor Installer Error', dlg)
+
+	-- Open the Blackmagic Fusion Webpage using your OS native http URL handler
+	OpenURL("Blackmagic Fusion Webpage", fusionDownloadURL)
+end
+
+------------------------------------------------------------------------
+-- Correct version of Fusion detected
+function VersionOK(ver, os)
+	comp:Print('[Reactor Installer] Detected Fusion ' .. ver .. ' running on ' .. os .. '.\n\n')
+end
+
 ------------------------------------------------------------------------
 -- Find out the current directory from a file path
--- Example: print(dirname("/Volumes/Media/image.exr"))
-function dirname(filename)
+-- Example: print(Dirname("/Volumes/Media/image.exr"))
+function Dirname(filename)
 	return filename:match('(.*' .. tostring(osSeparator) .. ')')
+end
+
+------------------------------------------------------------------------
+-- Add a slash to the end of folder paths
+function ValidateDirectoryPath(path)
+	if string.sub(path, -1, -1) ~= osSeparator then
+		path = path .. osSeparator
+	end
+
+	return path
 end
 
 ------------------------------------------------------------------------
@@ -147,7 +266,7 @@ function OpenURL(siteName, path)
 	end
 	os.execute(command)
 	-- print('[Launch Command] ', command)
-	print('[Opening URL] [' .. siteName .. '] ' .. path)
+	print('[Opening URL] ' .. path)
 end
 
 ------------------------------------------------------------------------
@@ -190,7 +309,7 @@ end
 function SplitStringAtNewlines(srcString)
 	local linesTbl = {}
 
-	for s in (srcString .. '\n'):gmatch("[^\r\n]+") do
+	for s in (srcString .. '\n'):gmatch('[^\r\n]+') do
 		table.insert(linesTbl, s)
 	end
 
@@ -212,9 +331,174 @@ end
 
 ------------------------------------------------------------------------
 -- Return a string with the directory path where the Lua script was run from
--- scriptTable = GetScriptDir()
-function GetScriptDir()
-	return bmd.parseFilename(string.sub(debug.getinfo(1).source, 2))
+-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+-- fileTable = GetScriptDir('Reactor:/System/UI/Atomizer.lua')
+function GetScriptDir(fallback)
+	if debug.getinfo(1).source == '???' then
+		-- Fallback absolute filepath
+		-- return bmd.parseFilename(app:MapPath(fallback))
+		return parseFilename(app:MapPath(fallback))
+	else
+		-- Filepath coming from the Lua script's location on disk
+		-- return bmd.parseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
+		return parseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
+	end
+end
+
+------------------------------------------------------------------------------
+-- parseFilename() from bmd.scriptlib
+--
+-- this is a great function for ripping a filepath into little bits
+-- returns a table with the following
+--
+-- FullPath	: The raw, original path sent to the function
+-- Path		: The path, without filename
+-- FullName	: The name of the clip w\ extension
+-- Name     : The name without extension
+-- CleanName: The name of the clip, without extension or sequence
+-- SNum		: The original sequence string, or "" if no sequence
+-- Number 	: The sequence as a numeric value, or nil if no sequence
+-- Extension: The raw extension of the clip
+-- Padding	: Amount of padding in the sequence, or nil if no sequence
+-- UNC		: A true or false value indicating whether the path is a UNC path or not
+------------------------------------------------------------------------------
+function parseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, "^(.+[/\\])(.+)", function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, "^(.+)(%..+)$", function(name, ext) seq.Name = name seq.Extension = ext end)
+
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+
+	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+
+	if seq.SNum then
+		seq.Number = tonumber( seq.SNum )
+		seq.Padding = string.len( seq.SNum )
+	else
+	   seq.SNum = ""
+	   seq.CleanName = seq.Name
+	end
+
+	if seq.Extension == nil then seq.Extension = "" end
+	seq.UNC = ( string.sub(seq.Path, 1, 2) == [[\\]] )
+
+	return seq
+end
+
+
+------------------------------------------------------------------------
+-- Convert Unicode characters into HTML entities
+-- Example: EncodeHTML('¿')
+function EncodeHTML(txt)
+	if txt ~= nil then
+		htmlCharacters = {
+			{pattern = '¡', replace = '&iexcl;'},
+			{pattern = '¿', replace = '&iquest;'},
+			{pattern = '·', replace = '&middot;'},
+			{pattern = '«', replace = '&laquo;'},
+			{pattern = '»', replace = '&raquo;'},
+			{pattern = '〈', replace = '&#x3008;'},
+			{pattern = '〉', replace = '&#x3009;'},
+			{pattern = '§', replace = '&sect;'},
+			{pattern = '¶', replace = '&para;'},
+			{pattern = '%[', replace = '&#91;'},
+			{pattern = '%]', replace = '&#93;'},
+			{pattern = '‰', replace = '&permil;'},
+			{pattern = '†', replace = '&dagger;'},
+			{pattern = '‡', replace = '&Dagger;'},
+			{pattern = '¨', replace = '&uml;'},
+			{pattern = '°', replace = '&deg;'},
+			{pattern = '©', replace = '&copy;'},
+			{pattern = '®', replace = '&reg;'},
+			{pattern = '∇', replace = '&nabla;'},
+			{pattern = '∈', replace = '&isin;'},
+			{pattern = '∉', replace = '&notin;'},
+			{pattern = '∋', replace = '&ni;'},
+			{pattern = '±', replace = '&plusmn;'},
+			{pattern = '÷', replace = '&divide;'},
+			{pattern = '×', replace = '&times;'},
+			{pattern = '≠', replace = '&ne;'},
+			{pattern = '¬', replace = '&not;'},
+			{pattern = '√', replace = '&radic;'},
+			{pattern = '∞', replace = '&infin;'},
+			{pattern = '∠', replace = '&ang;'},
+			{pattern = '∧', replace = '&and;'},
+			{pattern = '∨', replace = '&or;'},
+			{pattern = '∩', replace = '&cap;'},
+			{pattern = '∪', replace = '&cup;'},
+			{pattern = '∫', replace = '&int;'},
+			{pattern = '∴', replace = '&there4;'},
+			{pattern = '≅', replace = '&cong;'},
+			{pattern = '≈', replace = '&asymp;'},
+			{pattern = '≡', replace = '&equiv;'},
+			{pattern = '≤', replace = '&le;'},
+			{pattern = '≥', replace = '&ge;'},
+			{pattern = '⊂', replace = '&sub;'},
+			{pattern = '⊄', replace = '&nsub;'},
+			{pattern = '⊃', replace = '&sup;'},
+			{pattern = '⊆', replace = '&sube;'},
+			{pattern = '⊇', replace = '&supe;'},
+			{pattern = '⊕', replace = '&oplus;'},
+			{pattern = '⊗', replace = '&otimes;'},
+			{pattern = '⊥', replace = '&perp;'},
+			{pattern = '◊', replace = '&loz; '},
+			{pattern = '♠', replace = '&spades;'},
+			{pattern = '♣', replace = '&clubs;'},
+			{pattern = '♥', replace = '&hearts;'},
+			{pattern = '♦', replace = '&diams;'},
+			{pattern = '¤', replace = '&curren;'},
+			{pattern = '¢', replace = '&cent;'},
+			{pattern = '£', replace = '&pound;'},
+			{pattern = '¥', replace = '&yen;'},
+			{pattern = '€', replace = '&euro;'},
+			{pattern = '¹', replace = '&sup1;'},
+			{pattern = '½', replace = '&frac12;'},
+			{pattern = '¼', replace = '&frac14;'},
+			{pattern = '²', replace = '&sup2;'},
+			{pattern = '³', replace = '&sup3;'},
+			{pattern = '¾', replace = '&frac34;'},
+			{pattern = 'ª', replace = '&ordf;'},
+			{pattern = 'ƒ', replace = '&fnof;'},
+			{pattern = '™', replace = '&trade;'},
+			{pattern = 'β', replace = '&beta;'},
+			{pattern = 'Δ', replace = '&Delta;'},
+			{pattern = 'ϑ', replace = '&thetasym;'},
+			{pattern = 'Θ', replace = '&Theta;'},
+			{pattern = 'ι', replace = '&iota;'},
+			{pattern = 'λ', replace = '&lambda;'},
+			{pattern = 'Λ', replace = '&Lambda;'},
+			{pattern = 'μ', replace = '&mu;'},
+			{pattern = 'µ', replace = '&micro;'},
+			{pattern = 'ξ', replace = '&xi;'},
+			{pattern = 'Ξ', replace = '&Xi;'},
+			{pattern = 'π', replace = '&pi;'},
+			{pattern = 'ϖ', replace = '&piv;'},
+			{pattern = 'Π', replace = '&Pi;'},
+			{pattern = 'ρ', replace = '&rho;'},
+			{pattern = 'σ', replace = '&sigma;'},
+			{pattern = 'ς', replace = '&sigmaf;'},
+			{pattern = 'Σ', replace = '&Sigma;'},
+			{pattern = 'τ', replace = '&tau;'},
+			{pattern = 'υ', replace = '&upsilon;'},
+			{pattern = 'ϒ', replace = '&upsih;'},
+			{pattern = 'φ', replace = '&phi;'},
+			{pattern = 'Φ', replace = '&Phi;'},
+			{pattern = 'χ', replace = '&chi;'},
+			{pattern = 'ψ', replace = '&psi;'},
+			{pattern = 'Ψ', replace = '&Psi;'},
+			{pattern = 'ω', replace = '&omega;'},
+			{pattern = 'Ω', replace = '&Omega;'},
+		}
+
+		for i,val in ipairs(htmlCharacters) do
+			txt = string.gsub(txt, htmlCharacters[i].pattern, htmlCharacters[i].replace)
+		end
+	end
+
+	return txt
 end
 
 ------------------------------------------------------------------------
@@ -229,12 +513,109 @@ end
 
 ------------------------------------------------------------------------
 -- Documents Folder
-docsFolder = homeFolder .. 'Documents'
+-- docsFolder = homeFolder .. 'Documents'
+docsFolder = homeFolder
 
+-- Add emoticon support for local images like <img src="Emoticons:/wink.png">
+-- Example: dump(EmoticonParse([[<img src="Emoticons:/wink.png">]]))
+function EmoticonParse(str)
+	return string.gsub(str, '[Ee]moticons:/', emoticonsDir)
+end
+
+
+------------------------------------------------------------------------
+-- Load an atom file into a variable
+function LoadAtom()
+	if atomFile ~= nil then
+		if bmd.fileexists(fusion:MapPath(atomFile)) == true then
+			print('[Open Atom] "' .. tostring(atomFile) .. '"')
+
+			-- Update the Atom Folder text field
+			atomFolder = Dirname(tostring(fusion:MapPath(atomFile)))
+
+			-- Save the last folder accessed to a Atomizer.Directory preference
+			SetPreferenceData('Atomizer.Directory', atomFolder, false)
+
+			-- Read in the atom lua table
+			atomData = bmd.readfile(fusion:MapPath(atomFile))
+			if atomData == nil then
+				print('[Atom Data Warning] is nil')
+			end
+		else
+			print('[Open Atom Error] File does not exist: "' .. tostring(atomFile) .. '"')
+		end
+	end
+end
 
 -- Atomizer Main window
 -- Example: local atmwin,atmitm = AtomWin()
 function AtomWin()
+	------------------------------------------------------------------------
+	-- Create a new table to hold the formatting buttons
+	buttonTbl = {
+		icons = {
+			'bold.png',
+			'italic.png',
+			'underline.png',
+			'quote.png',
+			'code.png',
+			'list.png',
+			'list_ordered.png',
+			'asterisk.png',
+			'image.png',
+			'link.png',
+			'table.png',
+			'tint.png',
+			'strike.png',
+			'paragraph.png',
+			'heading.png',
+		},
+		html = {
+			'<strong></strong>',
+			'<i></i>',
+			'<u></u>',
+			'<blockquote></blockquote>',
+			'<pre></pre>',
+			[[<ul>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>]],
+			[[<ol>
+	<li></li>
+</ol>]],
+			'	<li></li>',
+			'<img src="">',
+			'<a href=""></a>',
+			[[<table border="1" cellpadding="5">
+	<tr><td></td></tr>
+	<tr><td></td></tr>
+</table>]],
+			'<font color="red"></font>',
+			'<s></s>',
+			'<p></p>',
+			'<h2></h2>',
+		},
+		name = {
+			'Bold',
+			'Italic',
+			'Underline',
+			'Quote',
+			'Code',
+			'List',
+			'List Ordered',
+			'List Entry',
+			'Image',
+			'Link',
+			'Table',
+			'Font',
+			'Strikethrough',
+			'Paragraph',
+			'Heading',
+		}
+	}
+
 	------------------------------------------------------------------------
 	-- Create a new table to hold the list of categories
 	-- Add an extra dummy "Testing" entry to the top of the list should the atom have a category set that doesn't exist in this Lua table list.
@@ -248,11 +629,13 @@ function AtomWin()
 		{text = 'Console'},
 		{text = 'Docs'},
 		{text = 'Fun'},
+		{text = 'Hotkeys'},
 		{text = 'Layouts'},
 		{text = 'LUTs'},
 		{text = 'Menus'},
 		{text = 'Modifiers'},
 		{text = 'Modules/Lua'},
+		{text = 'Resolve'},
 		{text = 'Scripts'},
 		{text = 'Scripts/Comp'},
 		{text = 'Scripts/Flow'},
@@ -260,6 +643,8 @@ function AtomWin()
 		{text = 'Scripts/Tool'},
 		{text = 'Scripts/Intool'},
 		{text = 'Scripts/Utility'},
+		{text = 'Scripts/We Suck Less'},
+		{text = 'Templates'},
 		{text = 'Testing'},
 		{text = 'Tools'},
 		{text = 'Tools/3D'},
@@ -277,6 +662,7 @@ function AtomWin()
 		{text = 'Tools/Particles'},
 		{text = 'Tools/Plugins'},
 		{text = 'Tools/Tracking'},
+		{text = 'Tools/Transform'},
 		{text = 'Tools/Warp'},
 		{text = 'Viewshaders'},
 	}
@@ -331,7 +717,7 @@ function AtomWin()
 	end
 
 	if atomData.Description ~= nil then
-		description = atomData.Description
+		description = EncodeHTML(atomData.Description)
 	else
 		description = ''
 	end
@@ -393,7 +779,7 @@ function AtomWin()
 	--	author = GetPreferenceData('Atomizer.Author', 'YourName', true)
 	--	donationURL = GetPreferenceData('Atomizer.DonationURL', '', true)
 	--	donationAmount = GetPreferenceData('Atomizer.DonationAmount', '', true)
-	--	description = GetPreferenceData('Atomizer.Description', '', true)
+	--	description = EncodeHTML(GetPreferenceData('Atomizer.Description', '', true))
 	--	deploy = GetPreferenceData('Atomizer.Deploy', '', true)
 	--	dependencies = GetPreferenceData('Atomizer.Dependencies', '', true)
 	--	category = GetPreferenceData('Atomizer.Category', 'Tools', true)
@@ -403,7 +789,7 @@ function AtomWin()
 	print('[Author] ' .. author)
 	print('[Donation URL] ' .. donationURL)
 	print('[Donation Amount] ' .. donationAmount)
-	print('[Description] ' .. description)
+	print('[Description] ' .. EncodeHTML(description))
 	print('[Date YY-MM-DD] ' .. year .. '-' .. month .. '-' .. day)
 	print('[Deploy Common] ' .. deploy)
 	print('[Deploy Windows] ' .. deployWin)
@@ -412,8 +798,24 @@ function AtomWin()
 	print('[Dependencies] ' .. dependencies)
 	print('[Category] ' .. category)
 
-	local width,height = 1024,768
-	-- local width,height = 1600,900
+	------------------------------------------------------------------------
+	-- Create new buttons for the GUI that have an icon resource attached and no border shading
+	-- Example: AddButton(1, 'bold.png')
+	function AddButton(index, filename)
+		return
+		ui:Button{
+			ID = 'IconButton' .. tostring(index),
+			Flat = false,
+			IconSize = iconsToolbarSmall,
+			Icon = ui:Icon{
+				File = iconsDir .. filename
+				},
+			MinimumSize = iconsMedium,
+			Flat = true,
+		}
+	end
+
+	local width,height = 1600,1040
 	local win = disp:AddWindow({
 		ID = 'AtomizerWin',
 		TargetID = 'AtomizerWin',
@@ -422,14 +824,12 @@ function AtomWin()
 			Window = true,
 			WindowStaysOnTopHint = false,
 		},
-		Geometry = {0, 100, width, height},
+		Geometry = {0, 0, width, height},
 
 		ui:VGroup{
-			ID = 'root',
-
 			-- Author Name
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'AuthorLabel',
 					Weight = 0.1,
@@ -444,7 +844,7 @@ function AtomWin()
 
 			-- Package Name
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'NameLabel',
 					Weight = 0.1,
@@ -459,7 +859,7 @@ function AtomWin()
 
 			-- Atom Category
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'CategoryLabel',
 					Weight = 0.1,
@@ -473,7 +873,7 @@ function AtomWin()
 
 			-- Atom Version X.X
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'VersionLabel',
 					Weight = 0.1,
@@ -489,7 +889,7 @@ function AtomWin()
 			-- Atom Date {YYYY, MM, DD}
 			-- Todo: Pre-fill the default values using Lua's date commands
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'DateLabel',
 					Weight = 0.1,
@@ -516,22 +916,19 @@ function AtomWin()
 						ID = 'TodayButton',
 						Weight = 0,
 						Text = 'Today',
-						IconSize = {32,32},
+						IconSize = iconsMedium,
 						Icon = ui:Icon{
 							File = iconsDir .. 'calendar.png'
 						},
-						MinimumSize = {
-							110,
-							32,
-						},
-						-- Flat = true,
+						MinimumSize = iconsMediumLong,
+						Flat = true,
 					},
 				},
 			},
 
 			-- Atom Donation.URL HTTP/HTTPS/MAILTO Link
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'DonationURLLabel',
 					Weight = 0.1,
@@ -552,22 +949,19 @@ function AtomWin()
 						ID = 'DonationButton',
 						Weight = 0,
 						Text = 'Open Link',
-						IconSize = {32,32},
+						IconSize = iconsMedium,
 						Icon = ui:Icon{
 							File = iconsDir .. 'link.png'
 						},
-						MinimumSize = {
-							110,
-							32,
-						},
-						-- Flat = true,
+						MinimumSize = iconsMediumLong,
+						Flat = true,
 					},
 				},
 			},
 
 			-- Atom Donation.Amount X.Y
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'DonationAmountLabel',
 					Weight = 0.1,
@@ -580,52 +974,80 @@ function AtomWin()
 				},
 			},
 
-			-- Atom Description
-			ui:HGroup{
-				Weight = 1,
+			ui:VGroup{
+
 				ui:Label{
-					ID = 'DescriptionLabel',
 					Weight = 0.1,
-					Text = 'Description',
-				},
-				-- HTML Preview Section
-				-- HMTL based Smilies/Emoticons are supported using the "Emoticons:/" PathMap on an <img> tag. This PathMap like URL pulls icon images from the local "Reactor:/System/UI/Emoticons/" folder.
-				ui:VGroup{
-					ui:Label{
-						Weight = 0.1,
-						ID = 'CodeViewLabel',
-						Text = 'HTML Code Editor',
-						Alignment = {
-							AlignHCenter = true,
-							AlignTop = true,
-						},
-					},
-					ui:TextEdit{
-						Weight = 1,
-						ID = 'DescriptionText',
-						PlaceholderText = '<p>An example description blurb that concisely describes what your Atom package is, how the resource is to used in Fusion, and any essential notes you feel the user needs to see before installing the atom.</p>',
-						PlainText = description,
-					},
-					ui:Label{
-						Weight = 0.1,
-						ID = 'HTMLViewLabel',
-						Text = 'HTML Live Preview',
-						Alignment = {
-							AlignHCenter = true,
-							AlignTop = true,
-						},
-					},
-					ui:TextEdit{
-						Weight = 1,
-						ID = 'HTMLPreview',
-						ReadOnly = true,
+					ID = 'CodeViewLabel',
+					Text = 'HTML Code Editor',
+					Alignment = {
+						AlignHCenter = true,
+						AlignTop = true,
 					},
 				},
+
+				-- The dynamically added buttons will be inserted here
+				ui:HGroup{
+					Weight = 0.01,
+					ui:HGap(65),
+					ui:HGap(60),
+					ui:HGroup{
+						ID = 'root',
+						Weight = 0.5,
+					},
+					ui:HGap(60),
+				},
+
+				-- ui:VGap(10),
+
+				-- Atom Description
+				ui:HGroup{
+					Weight = 2,
+					ui:Label{
+						ID = 'DescriptionLabel',
+						Weight = 0.01,
+						Text = 'Description',
+					},
+					-- HTML Preview Section
+					-- HMTL based Smilies/Emoticons are supported using the "Emoticons:/" PathMap on an <img> tag. This PathMap like URL pulls icon images from the local "Reactor:/System/UI/Emoticons/" folder.
+					ui:VGroup{
+						ui:TextEdit{
+							Weight = 1.2,
+							ID = 'DescriptionText',
+							PlaceholderText = '<p>An example description blurb that concisely describes what your Atom package is, how the resource is to used in Fusion, and any essential notes you feel the user needs to see before installing the atom.</p>',
+							PlainText = EncodeHTML(description),
+							Font = ui:Font{
+								Family = 'Droid Sans Mono',
+								StyleName = 'Regular',
+								PixelSize = 12,
+								MonoSpaced = true,
+								StyleStrategy = {ForceIntegerMetrics = true},
+							},
+							TabStopWidth = 28,
+							AcceptRichText = false,
+						},
+						ui:Label{
+							Weight = 0.05,
+							ID = 'HTMLViewLabel',
+							Text = 'HTML Live Preview',
+							Alignment = {
+								AlignHCenter = true,
+								AlignTop = true,
+							},
+						},
+						ui:TextEdit{
+							Weight = 1.2,
+							ID = 'HTMLPreview',
+							ReadOnly = true,
+						},
+					},
+				},
+
 			},
 
 			-- Atom Dependencies List (One atom entry per line)
 			ui:HGroup{
-				Weight = 0.4,
+				Weight = 0.1,
 				ui:Label{
 					ID = 'DependenciesLabel',
 					Weight = 0.1,
@@ -640,7 +1062,7 @@ function AtomWin()
 
 			-- Atom Deploy List (One file entry per line)
 			ui:HGroup{
-				Weight = 0.3,
+				Weight = 0.15,
 
 				ui:Label{
 					ID = 'DeployLabel',
@@ -665,11 +1087,7 @@ function AtomWin()
 							ID='DeployCommonListText',
 							Text = deploy,
 							PlaceholderText =
-[[Comps/your-custom.comp
-Fuses/your-custom.fuse
-Macros/YourCompanyName/your-custom.bmp
-Macros/YourCompanyName/your-custom.setting
-Scripts/Comp/YourCompanyName/your-script.lua]],
+[[Comps/your-custom.comp]],
 						},
 					},
 
@@ -732,7 +1150,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 				},
 				-- Refresh button
 				ui:VGroup{
-					Weight = 0.1,
+					Weight = 0.01,
 					ui:Label{
 						Weight = 0,
 						ID = 'DeployRefreshLabel',
@@ -744,22 +1162,19 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 					},
 					ui:Button{
 						ID = 'RefreshDeployButton',
-						IconSize = {32,32},
+						IconSize = iconsMedium,
 						Icon = ui:Icon{
 							File = iconsDir .. 'refresh.png'
 						},
-						MinimumSize = {
-							32,
-							32,
-						},
-						-- Flat = true,
+						MinimumSize = iconsMedium,
+						Flat = true,
 					},
 				},
 			},
 
 			-- Atom Working Directory
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'WorkingDirectoryLabel',
 					Weight = 0.1,
@@ -774,70 +1189,89 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 					},
 					ui:Button{
 						ID = 'ShowAtomFolderButton',
-						Weight = 0,
+						Weight = 0.01,
 						Text = 'Show Atom Folder',
-						IconSize = {32,32},
+						IconSize = iconsMedium,
 						Icon = ui:Icon{
 							File = iconsDir .. 'folder.png'
 						},
-						MinimumSize = {
-							150,
-							32,
-						},
-						-- Flat = true,
+						MinimumSize = iconsMediumLong,
+						Flat = true,
 					},
 				},
 			},
 
 			-- Button Controls
 			ui:HGroup{
-				Weight = 0.1,
+				Weight = 0.01,
 				ui:Button{
 					ID = 'CloseAtomButton',
 					Text = 'Close Atom',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
+					Icon = ui:Icon{
+						File = iconsDir .. 'quit.png'
+					},
+					MinimumSize = iconsMedium,
+					Flat = true,
+				},
+				ui:HGap(20),
+				ui:Button{
+					ID = 'ResetDefaultsButton',
+					Text = 'Reset to Defaults',
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'close.png'
 					},
-					MinimumSize = {
-						32,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
-				ui:HGap(25),
+				ui:HGap(20),
+				ui:Button{
+					ID = 'CopyBBCodeButton',
+					Text = 'Copy BBCode',
+					IconSize = iconsMedium,
+					Icon = ui:Icon{
+						File = iconsDir .. 'bbcode.png'
+					},
+					MinimumSize = iconsMedium,
+					Flat = true,
+				},
+				ui:HGap(20),
+				ui:Button{
+					ID = 'CopyAtomButton',
+					Text = 'Copy Atom',
+					IconSize = iconsMedium,
+					Icon = ui:Icon{
+						File = iconsDir .. 'code.png'
+					},
+					MinimumSize = iconsMedium,
+					Flat = true,
+				},
+				ui:HGap(20),
 				ui:Button{
 					ID = 'ViewRawTextButton',
 					Text = 'View Raw Text',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'open.png'
 					},
-					MinimumSize = {
-						32,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
-				ui:HGap(25),
+				ui:HGap(20),
 				ui:Button{
 					ID = 'SaveAtomButton',
 					Text = 'Save Atom',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'save.png'
 					},
-					MinimumSize = {
-						32,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
 			},
-
 		},
 	})
-
 
 	-- Add your GUI element based event functions here:
 	itm = win:GetItems()
@@ -845,6 +1279,68 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 	-- The window was closed
 	function win.On.AtomizerWin.Close(ev)
 		disp:ExitLoop()
+	end
+
+	-- @todo - Verify if we are on a platform that supports the button modes
+
+	------------------------------------------------------------------------
+	-- Dynamically create ui:Buttons from a Lua table
+	-- Example: AddButtonTable({'bold.png', 'italic.png', 'underline.png', 'quote.png'})
+	function AddButtonTable(srcTable)
+		-- Add each of the buttons one at a time dynamically to the UI
+		for k,v in pairs(srcTable) do
+			-- print('[' .. k .. '] ' .. v)
+			itm.root:AddChild(AddButton(k, v))
+		end
+
+		-- You can add any extra formatting bar controls you want here
+		-- ...
+	end
+
+	------------------------------------------------------------------------
+	-- Create the handler functions for the ui:Buttons from a Lua table
+	function AddButtonHandler(srcTableIcons, srcTableHTML, srcTableName)
+		for k,v in pairs(srcTableIcons) do
+			-- Create the button ID
+			-- Tip: These two variables have to be local in scope so they are stored inside the button handler
+			local btnID = 'IconButton' .. tostring(k)
+
+			-- This is a local variable with the name of the button that was clicked
+			local btnName = srcTableName[k]
+
+			-- This is a local variable with the HTML code that will be written into the Edit window
+			local buttonCode = srcTableHTML[k]
+
+			-- Start adding the handler function
+			win.On[btnID].Clicked = function(ev)
+				print('[' .. btnName .. ' Tag]')
+				itm.DescriptionText.PlainText = itm.DescriptionText.PlainText .. '\n' .. buttonCode
+			end
+			-- End the handler function
+		end
+	end
+
+	-- Dynamically add ui:Buttons to the GUI after the window was created
+	AddButtonTable(buttonTbl.icons)
+
+	-- Create the handler functions for the ui:Buttons
+	AddButtonHandler(buttonTbl.icons, buttonTbl.html, buttonTbl.name)
+
+	-- Adjust the syntax highlighting colors
+	bgcol = {
+		R = 0.125,
+		G = 0.125,
+		B = 0.125,
+		A = 1
+	}
+	-- Updated the color palette in the "Description" TextEdit
+	itm.DescriptionText.BackgroundColor = bgcol
+	itm.DescriptionText:SetPaletteColor('All', 'Base', bgcol)
+
+	-- Enable syntax highlighting on Win/Mac only (tends to crash on Fu 9.0.2 on Linux)
+	if platform ~= 'Linux' then
+		-- itm.DescriptionText.Lexer = 'fusion'
+		itm.DescriptionText.Lexer = 'html'
 	end
 
 	-- This function is run when a user picks a different Donation type in the ComboBox control
@@ -900,7 +1396,9 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 		-- Create a Lua table that holds a (fake) virtual PathMap table for the Git Atom Package folder
 		mp:Map({['AtomsPackage:'] = atomFolder})
 
-		files = mp:ReadDir("*", true, true) -- (string pattern, boolean recursive, boolean flat hierarchy)
+		-- Scan the folder recursively
+		-- Example: mp:ReadDir(string pattern, boolean recursive, boolean flat hierarchy)
+		files = mp:ReadDir('*', true, true)
 		-- dump(files)
 
 		print('[Scanning Atom Package Folder] ' .. atomFolder .. '\n\n')
@@ -912,13 +1410,16 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 					print('[Skipping Hidden Files] ' .. val.RelativePath)
 				elseif string.match(val.RelativePath, '^Mac[/\\].*') then
 					-- Search for Mac platform deploy files
-					table.insert(deployMacTable.filename, val.RelativePath)
+					local trimmedPath = string.gsub(val.RelativePath, '^Mac[/\\]', '')
+					table.insert(deployMacTable.filename, trimmedPath)
 				elseif string.match(val.RelativePath, '^Windows[/\\].*') then
 					-- Search for Windows platform deploy files
-					table.insert(deployWindowsTable.filename, val.RelativePath)
+					local trimmedPath = string.gsub(val.RelativePath, '^Windows[/\\]', '')
+					table.insert(deployWindowsTable.filename, trimmedPath)
 				elseif string.match(val.RelativePath, '^Linux[/\\].*') then
 					-- Search for Linux platform deploy files
-					table.insert(deployLinuxTable.filename, val.RelativePath)
+					local trimmedPath = string.gsub(val.RelativePath, '^Linux[/\\]', '')
+					table.insert(deployLinuxTable.filename, trimmedPath)
 				elseif string.lower(val.RelativePath):match('%.atom$') then
 					-- Remove root level atom packages from the list
 					print('[Skipping Atoms] ' .. val.RelativePath)
@@ -989,11 +1490,11 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 	-- Set the Date fields to today's date
 	function win.On.TodayButton.Clicked(ev)
 		-- Year four digit padded (2017)
-		year = tostring(os.date('%Y'))
+		year = tostring(tonumber(os.date('%Y')))
 		-- Month zero padded two digit (01)
-		month = tostring(os.date('%m'))
+		month = tostring(tonumber(os.date('%m')))
 		-- Day Zero padded two digit (01)
-		day = tostring(os.date('%d'))
+		day = tostring(tonumber(os.date('%d')))
 
 		itm.YearText.Text = year
 		itm.MonthText.Text = month
@@ -1002,39 +1503,121 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 
 	-- Reset the current settings as the Atomizer defaults
 	function win.On.ResetDefaultsButton.Clicked(ev)
-		SetPreferenceData('Atomizer.Name', 'YourPackage', false)
-		SetPreferenceData('Atomizer.Version', nil, false)
-		SetPreferenceData('Atomizer.Author', 'YourName', false)
-		SetPreferenceData('Atomizer.DonationURL', nil, false)
-		SetPreferenceData('Atomizer.DonationAmount', nil, false)
-		SetPreferenceData('Atomizer.Description', nil, false)
-		SetPreferenceData('Atomizer.Deploy', nil, false)
-		SetPreferenceData('Atomizer.Dependencies', nil, false)
-		SetPreferenceData('Atomizer.Category', nil, false)
+		local msg = 'Are you sure you want to clear out all of the information in your Atom?\n'
+		comp:Print('[Reset Defaults] ' .. msg)
 
-		itm.NameText.Text = 'YourPackage'
-		itm.VersionText.Text = '1.0'
-		itm.AuthorText.Text = 'YourName'
-		itm.DonationURLText.Text = ''
-		itm.DonationAmountText.Text = ''
-		itm.DescriptionText.Text = ''
-		itm.DeployCommonListText.Text = ''
-		itm.DependenciesListText.Text = ''
-		itm.CategoryCombo.CurrentText = 'Tools'
-	end
+		-- Show a warning message in an AskUser dialog
+		dlg = {
+			{'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 8, Wrap = true, Default = msg},
+		}
+		dialog = comp:AskUser('Reset Defaults', dlg)
 
-	-- Add emoticon support for local images like <img src="Emoticons:/wink.png">
-	-- Example: == EmoticonParse([[<img src="Emoticons:/wink.png">]])
-	function EmoticonParse(str)
-		return string.gsub(str, '[Ee]moticons:/', emoticonsDir)
+		if dialog == nil then
+			print('You cancelled the dialog!')
+			return
+		else
+			SetPreferenceData('Atomizer.Name', 'YourPackage', false)
+			SetPreferenceData('Atomizer.Version', nil, false)
+			SetPreferenceData('Atomizer.Author', 'YourName', false)
+			SetPreferenceData('Atomizer.DonationURL', nil, false)
+			SetPreferenceData('Atomizer.DonationAmount', nil, false)
+			SetPreferenceData('Atomizer.Description', nil, false)
+			SetPreferenceData('Atomizer.Deploy', nil, false)
+			SetPreferenceData('Atomizer.Dependencies', nil, false)
+			SetPreferenceData('Atomizer.Category', nil, false)
+
+			itm.NameText.Text = 'YourPackage'
+			itm.VersionText.Text = '1.0'
+			itm.AuthorText.Text = 'YourName'
+			itm.DonationURLText.Text = ''
+			itm.DonationAmountText.Text = ''
+			itm.DescriptionText.Text = ''
+			itm.DeployCommonListText.Text = ''
+			itm.DependenciesListText.Text = ''
+			itm.CategoryCombo.CurrentText = 'Tools'
+		end
 	end
 
 	function win.On.DescriptionText.TextChanged(ev)
 		-- print('[Description Preview] Updating the HTML preview')
 
 		-- Force the HTML code into the rendering engine
-		-- Add emoticon support for local images like <img src="Emoticons:/wink.png">
+		-- Add HTML entity encoding and emoticon support for local images like <img src="Emoticons:/wink.png">
 		itm.HTMLPreview.HTML = EmoticonParse(itm.DescriptionText.PlainText)
+	end
+
+	function win.On.CopyBBCodeButton.Clicked(ev)
+		if atomFile ~= nil then
+			print('[Copy BBCode] Copying the Atom file as BBCode to the clipboard: ' .. tostring(atomFile) .. '"')
+			local atomBodyTxt = io.open(fusion:MapPath(atomFile), 'r'):read('*all')
+			if atomBodyTxt ~= nil then
+				-- pkgName = bmd.parseFilename(fusion:MapPath(atomFile)).FullName
+				pkgName = parseFilename(fusion:MapPath(atomFile)).FullName
+				if pkgName == nil then
+					pkgName = 'com.YourName.YourPackage'
+				end
+
+				-- Start the BBCode text string
+				submissionsText = '<Write a Description Here>' .. '\n\n'
+
+				-- [size=150]Screenshot[/size]
+				submissionsText = submissionsText ..'[' .. 'size=150' .. ']' .. 'Screenshot' .. '[' .. '/size' .. ']' .. '\n'
+				submissionsText = submissionsText .. '<Attach Your Screenshot Image Here Here>' .. '\n\n'
+
+				-- [size=150]Changelog[/size]
+				submissionsText = submissionsText ..'[' .. 'size=150' .. ']' .. 'Changelog' .. '[' .. '/size' .. ']' .. '\n'
+
+				-- [hr][/hr]
+				submissionsText = submissionsText .. '[' ..'hr' .. '][' .. '/hr' .. ']' .. '\n\n'
+
+				-- v1.0 2018-02-17
+				submissionsText = submissionsText .. 'v' .. tostring(itm.VersionText.Text) .. ' ' .. tostring(itm.YearText.Text or tonumber(os.date('%Y'))) .. '-' .. tostring(itm.MonthText.Text or tonumber(os.date('%m'))) .. '-' .. tostring(itm.DayText.Text or tonumber(os.date('%d'))) .. '\n\n'
+
+				-- [List][*][/list] fields
+				submissionsText = submissionsText .. '[' ..'list' .. ']\n'
+				submissionsText = submissionsText .. '[*]\n'
+				submissionsText = submissionsText .. '[*]\n'
+				submissionsText = submissionsText .. '[' .. '/list' .. ']' .. '\n\n'
+
+				-- Atom File Contents
+				submissionsText = submissionsText .. '[' .. 'size=150' .. ']' .. 'Atom File Contents' .. '[' .. '/size' .. ']' .. '\n\n'
+
+				-- [Codebox=lua file=com.YourName.YourPackage]
+				-- submissionsText = submissionsText .. '[' .. 'Codebox=lua file=' .. bmd.parseFilename(atomFile).FullName .. ']' .. '\n'
+				submissionsText = submissionsText .. '[' .. 'Codebox=lua file=' .. parseFilename(atomFile).FullName .. ']' .. '\n'
+				-- <The atom text pasted inline>
+				submissionsText = submissionsText .. atomBodyTxt .. '\n'
+				-- [/Codebox]
+				submissionsText = submissionsText .. '[' .. '/Codebox' .. ']' .. '\n\n'
+
+				-- Atom Package Zip
+				submissionsText = submissionsText .. '[' .. 'size=150' .. ']' .. 'Zipped Atom Package' .. '[' .. '/size' .. ']' .. '\n\n'
+				submissionsText = submissionsText .. '<Attach Your Zipped Atom Package Here>' .. '\n\n'
+
+				-- Copy the atom as BBCode into the clipboard
+				bmd.setclipboard(submissionsText)
+				print(submissionsText)
+			else
+				print('[Copy Atom] Empty Atom File Contents')
+			end
+		else
+			print('[Copy Atom] Empty Filename')
+		end
+	end
+
+	function win.On.CopyAtomButton.Clicked(ev)
+		if atomFile ~= nil then
+			print('[Copy Atom] Copying the Atom file to the clipboard: ' .. tostring(atomFile) .. '"')
+			local atomTxt = io.open(fusion:MapPath(atomFile), 'r'):read('*all')
+			if atomTxt ~= nil then
+				bmd.setclipboard(atomTxt)
+				print(atomTxt)
+			else
+				print('[Copy Atom] Empty Atom File Contents')
+			end
+		else
+			print('[Copy Atom] Empty Filename')
+		end
 	end
 
 	function win.On.SaveAtomButton.Clicked(ev)
@@ -1058,7 +1641,6 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 		print('[Show Atom Folder] ' .. atomFolder)
 		bmd.openfileexternal('Open', atomFolder)
 	end
-
 
 	------------------------------------------------------------------------
 	-- Save the atom to disk
@@ -1126,7 +1708,8 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 		atom = atom .. '\tDate = {' .. itm.YearText.Text .. ', ' .. itm.MonthText.Text .. ', ' .. itm.DayText.Text .. '},\n'
 		-- atom = atom .. '\t\n'
 
-		atom = atom .. '\tDescription = [[' .. itm.DescriptionText.PlainText .. ']],\n'
+		-- Add the escaped Description tag
+		atom = atom .. '\tDescription = [[' .. EncodeHTML(itm.DescriptionText.PlainText) .. ']],\n'
 		-- atom = atom .. '\n'
 
 		-- Optional Donation
@@ -1215,7 +1798,7 @@ Scripts/Comp/YourCompanyName/your-script.lua]],
 		SetPreferenceData('Atomizer.Author', atomAuthor, false)
 		SetPreferenceData('Atomizer.DonationURL', itm.DonationURLText.Text, false)
 		SetPreferenceData('Atomizer.DonationAmount', itm.DonationAmountText.Text, false)
-		SetPreferenceData('Atomizer.Description', itm.DescriptionText.PlainText, false)
+		SetPreferenceData('Atomizer.Description', EncodeHTML(itm.DescriptionText.PlainText), false)
 		SetPreferenceData('Atomizer.Deploy', itm.DeployCommonListText.PlainText, false)
 		SetPreferenceData('Atomizer.Dependencies', itm.DependenciesListText.PlainText, false)
 		SetPreferenceData('Atomizer.Category', itm.CategoryCombo.CurrentText, false)
@@ -1273,15 +1856,16 @@ end
 
 -- Show the atom file in a raw text editor view
 function AtomTextView(centerX, CenterY)
-	local width,height = 850,580
 	-- local width,height = 1024,512
+	local width,height = 850,580
 	local vwin = disp:AddWindow({
 		ID = 'AtomViewWin',
 		TargetID = 'AtomViewWin',
 		WindowTitle = 'Atom Text View - Read Only',
 		WindowFlags = {
 			Window = true,
-			WindowStaysOnTopHint = false,
+			-- WindowStaysOnTopHint = false,
+			WindowStaysOnTopHint = true,
 		},
 		Geometry = {centerX-(width/2), CenterY-(height/2), width, height},
 
@@ -1303,8 +1887,6 @@ function AtomTextView(centerX, CenterY)
 				TabStopWidth = 28,
 				AcceptRichText = false,
 				-- LineWrapMode = 'NoWrap',
-				-- Use the Fusion 9.0.1+ hybrid lexer module to add colored syntax highlighting
-				Lexer = 'fusion',
 			},
 
 			-- Button Controls
@@ -1315,15 +1897,12 @@ function AtomTextView(centerX, CenterY)
 					ID = 'CloseTextViewButton',
 					Weight = 0.1,
 					Text = 'Close Text View',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'close.png'
 					},
-					MinimumSize = {
-						150,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
 
 				-- Add horizontal space between the two buttons
@@ -1333,15 +1912,12 @@ function AtomTextView(centerX, CenterY)
 					ID = 'RefreshAtomButton',
 					Weight = 0.1,
 					Text = 'Refresh Atom',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'refresh.png'
 					},
-					MinimumSize = {
-						150,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
 			},
 		},
@@ -1359,10 +1935,14 @@ function AtomTextView(centerX, CenterY)
 	function AtomRefresh()
 		if atomFile ~= nil then
 			print('[View Atom] "' .. tostring(atomFile) .. '"')
-
-			vitm.AtomTextEdit.PlainText = io.open(atomFile, "r"):read("*all")
+			atomContents = io.open(fusion:MapPath(atomFile), 'r'):read('*all')
+			if atomContents ~= nil then
+				vitm.AtomTextEdit.PlainText = tostring(atomContents)
+			else
+				print('[View Atom] Nil Empty Atom File Contents')
+			end
 		else
-			print('[View Atom] Empty Filename')
+			print('[View Atom] Nil Empty Filename')
 		end
 	end
 
@@ -1376,6 +1956,11 @@ function AtomTextView(centerX, CenterY)
 	function vwin.On.RefreshAtomButton.Clicked(ev)
 		-- Display the Atom text file
 		AtomRefresh()
+	end
+
+	-- Enable syntax highlighting on Win/Mac (tends to crashe on Fu 9.0.2 on Linux)
+	if platform ~= 'Linux' then
+		vitm.AtomTextEdit.Lexer = 'fusion'
 	end
 
 	-- Display the Atom text file
@@ -1419,7 +2004,10 @@ function NewPackageWin()
 		ID = 'NewPackageWin',
 		TargetID = 'NewPackageWin',
 		WindowTitle = 'Create New Atom Package',
-		Geometry = {200,100,650,130},
+		Geometry = {200,100,600,140},
+		MinimumSize = {600, 140},
+		-- Spacing = 10,
+		-- Margin = 20,
 
 		ui:VGroup{
 			ID = 'root',
@@ -1442,19 +2030,16 @@ function NewPackageWin()
 						ID = 'SelectFolderButton',
 						Weight = 0,
 						Text = 'Select Folder',
-						IconSize = {32,32},
+						IconSize = iconsMedium,
 						Icon = ui:Icon{
 							File = iconsDir .. 'folder.png'
 						},
-						MinimumSize = {
-							150,
-							32,
-						},
-						-- Flat = true,
+						MinimumSize = iconsMediumLong,
+						Flat = true,
 					},
 				},
 			},
-
+			ui:VGap(5),
 			-- Author
 			ui:HGroup{
 				Weight = 0,
@@ -1472,36 +2057,31 @@ function NewPackageWin()
 				},
 			},
 
-			ui:VGap(0),
+			ui:VGap(5),
 
 			ui:HGroup{
 				Weight = 0,
 				ui:Button{
 					ID = 'CancelButton',
 					Text = 'Cancel',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'close.png'
 					},
-					MinimumSize = {
-						32,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
-				ui:HGap(25),
+				-- ui:HGap(20),
+				ui:HGap(150),
 				ui:Button{
 					ID = 'ContinueButton',
 					Text = 'Continue',
-					IconSize = {32,32},
+					IconSize = iconsMedium,
 					Icon = ui:Icon{
 						File = iconsDir .. 'create.png'
 					},
-					MinimumSize = {
-						32,
-						32,
-					},
-					-- Flat = true,
+					MinimumSize = iconsMedium,
+					Flat = true,
 				},
 			},
 		}
@@ -1510,7 +2090,7 @@ function NewPackageWin()
 	-- Write the stub atom package to disk
 	function CreateAtom(pkgName)
 		-- Open up the file pointer for the output textfile
-		outFile, err = io.open(atomFile,'w')
+		outFile, err = io.open(fusion:MapPath(atomFile),'w')
 		if err then
 			print('[Error Opening File for Writing] ' .. atomFile)
 			return
@@ -1528,11 +2108,11 @@ function NewPackageWin()
 			defaultCategory = 'Tools'
 
 			-- Year four digit padded (2017)
-			year = tostring(os.date('%Y'))
+			year = tostring(tonumber(os.date('%Y')))
 			-- Month zero padded two digit (01)
-			month = tostring(os.date('%m'))
+			month = tostring(tonumber(os.date('%m')))
 			-- Day Zero padded two digit (01)
-			day = tostring(os.date('%d'))
+			day = tostring(tonumber(os.date('%d')))
 
 			-- Remove the com. prefix from the name
 			-- name = string.gsub(pkgName, 'com%.', '')
@@ -1563,6 +2143,11 @@ function NewPackageWin()
 	-- Add your GUI element based event functions here:
 	npitm = npwin:GetItems()
 
+	-- Remove any spaces or tabs from this text field as they are entered
+	function npwin.On.PackageNameText.TextChanged(ev)
+		npitm.PackageNameText.Text = string.gsub(npitm.PackageNameText.Text, '%s', '')
+	end
+
 	-- The window was closed
 	function npwin.On.NewPackageWin.Close(ev)
 		npwin:Hide()
@@ -1584,7 +2169,7 @@ function NewPackageWin()
 		end
 
 		-- Read the Working Directory textfield
-		workingDir = npitm.WorkingDirectoryText.Text
+		workingDir = ValidateDirectoryPath(npitm.WorkingDirectoryText.Text)
 
 		if workingDir == nil then
 			-- Check if the working directory is empty
@@ -1600,7 +2185,7 @@ function NewPackageWin()
 			end
 
 			-- Build the Atom package folder path
-			atomFolder = comp:MapPath(workingDir .. osSeparator .. packageName .. osSeparator)
+			atomFolder = fusion:MapPath(workingDir .. osSeparator .. packageName .. osSeparator)
 
 			-- Remove double slashes from the path
 			atomFolder = string.gsub(atomFolder, '//', '/')
@@ -1632,7 +2217,7 @@ function NewPackageWin()
 
 	-- The Select Folder Button was clicked
 	function npwin.On.SelectFolderButton.Clicked(ev)
-		selectedPath = fu:RequestDir(workingFolder)
+		selectedPath = fusion:RequestDir(workingFolder)
 		if selectedPath ~= nil then
 			print('[Select Folder] "' .. tostring(selectedPath) .. '"')
 			npitm.WorkingDirectoryText.Text = tostring(selectedPath)
@@ -1686,29 +2271,31 @@ function StartupWin()
 		ID = 'startupWin',
 		TargetID = 'startupWin',
 		WindowTitle = 'Atomizer',
-		Geometry = {200,100,320,400},
+		Geometry = {200,100,275,360},
+		MinimumSize = {275,360},
+		Spacing = 10,
+		Margin = 20,
 
 		ui:VGroup{
 			ID = 'root',
-
 			ui:Button{
 				ID = 'ReactorIconButton',
 				Weight = 0,
-				IconSize = {32,32},
+				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'reactor.png'
 				},
-				MinimumSize = {
-					32,
-					32,
-				},
+				MinimumSize = iconsMedium,
 				Flat = true,
 			},
-
+			-- ui:VGap(5),
 			ui:Label{
-				ID = "Title",
+				ID = 'Title',
 				Weight = 0.5,
-				Text = [[<p>Welcome to Atomizer:<br> The <a href="https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229">Atom Package</a> Editor</p>]],
+				Text = [[<p>Welcome to Atomizer:<br> The <a href="https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229" style="color: rgb(139,155,216)">Atom Package</a> Editor</p>]],
+				Font = ui:Font{
+					PixelSize = 16,
+				},
 				Alignment = {
 					AlignHCenter = true,
 					AlignVCenter = true,
@@ -1716,66 +2303,50 @@ function StartupWin()
 				WordWrap = true,
 				OpenExternalLinks = true,
 			},
-
-			ui:VGap(0),
-
+			ui:VGap(10),
 			ui:Button{
 				ID = 'OpenAtomButton',
 				Text = 'Open Atom Package',
-				IconSize = {32,32},
+				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'open.png'
 				},
-				MinimumSize = {
-					32,
-					32,
-				},
-				-- Flat = true,
+				MinimumSize = iconsMedium,
+				Flat = true,
 			},
-
-			ui:VGap(10),
-
+			-- ui:VGap(10),
 			ui:Button{
 				ID = 'NewAtomButton',
 				Text = 'Create New Atom Package',
-				IconSize = {32,32},
+				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'create.png'
 				},
-				MinimumSize = {
-					32,
-					32,
-				},
-				-- Flat = true,
+				MinimumSize = iconsMedium,
+				Flat = true,
 			},
+			-- ui:VGap(10),
 			ui:Button{
 				ID = 'NewAtomClipboardButton',
-				Text = 'Create Atom Package from Clipboard',
-				IconSize = {32,32},
+				Text = 'Create Atom from Clipboard',
+				-- Text = 'Create Atom Package from Clipboard',
+				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'create.png'
 				},
-				MinimumSize = {
-					32,
-					32,
-				},
-				-- Flat = true,
+				MinimumSize = iconsMedium,
+				Flat = true,
 			},
-
-			ui:VGap(10),
-
+			-- ui:VGap(10),
 			ui:Button{
 				ID = 'QuitButton',
 				Text = 'Quit',
-				IconSize = {32,32},
+				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'quit.png'
 				},
-				MinimumSize = {
-					32,
-					32,
-				},
-				-- Flat = true,
+				MinimumSize = iconsMedium,
+				Flat = true,
 			},
 
 		}
@@ -1815,6 +2386,7 @@ function StartupWin()
 
 		-- Read in the atom lua table
 		atomText = bmd:getclipboard()
+		bmd.wait(1)
 		atomData = bmd.readstring(atomText)
 
 		-- Verify the user selected an atom and the data was not nil
@@ -1846,19 +2418,17 @@ function StartupWin()
 		-- The default value for the first time the FileRequester is shown in the "$HOME/Documents/" folder.
 		atomFolder = GetPreferenceData('Atomizer.Directory', docsFolder, true)
 
-		atomFile = comp:MapPath(fu:RequestFile(atomFolder))
+		-- Double check the folder exists before showing the Request File dialog
+		if not bmd.fileexists(fusion:MapPath(atomFolder)) then
+			print('[Atom File Open Dialog] The previous directory was not found: ', atomFolder)
+			print('[Atom File Open Dialog] Reverting to the directory: ', docsFolder)
+			atomFolder = docsFolder
+		end
+
+		atomFile = fusion:MapPath(fusion:RequestFile(atomFolder))
 		if atomFile ~= nil then
-			print('[Open Atom] "' .. tostring(atomFile) .. '"')
-
-			-- Update the Atom Folder text field
-			atomFolder = dirname(tostring(atomFile))
-
-			-- Save the last folder accessed to a Atomizer.Directory preference
-			SetPreferenceData('Atomizer.Directory', atomFolder, false)
-
-			-- Read in the atom lua table
-			atomData = bmd.readfile(atomFile)
-
+			-- Load an atom file into a variable
+			LoadAtom()
 		else
 			print('[Open Atom] Cancelled Dialog')
 		end
@@ -1909,17 +2479,83 @@ function StartupWin()
 	return stwin,stwin:GetItems()
 end
 
-------------------------------------------------------------------------
--- Load UI Manager
-ui = app.UIManager
-disp = bmd.UIDispatcher(ui)
+function Main()
+	-- Note: fuVersion is a number like "9.02" or higher
+	local fuVersion = tonumber(eyeon._VERSION)
 
-------------------------------------------------------------------------
--- Find the Icons folder
-fileTable = GetScriptDir()
-iconsDir = fileTable.Path .. 'Images' .. osSeparator
-emoticonsDir = fileTable.Path .. 'Emoticons' .. osSeparator
+	-- Fusion legacy version debug testing line
+	-- local fuVersion = tonumber(8.21)
 
--- Show the Atomizer new session message dialog
-StartupWin()
+	-- Find out the current Fusion host platform (Windows/Mac/Linux)
+	if string.find(fusion:MapPath('Fusion:/'), 'Program Files', 1) then
+		platform = 'Windows'
+	elseif string.find(fusion:MapPath('Fusion:/'), 'PROGRA~1', 1) then
+		platform = 'Windows'
+	elseif string.find(fusion:MapPath('Fusion:/'), 'Applications', 1) then
+		platform = 'Mac'
+	else
+		platform = 'Linux'
+	end
+
+	if math.floor(fuVersion) < 9 and math.floor(fuVersion) ~= 0 then
+		-- Fusion 7 or 8 was detected
+		VersionError(fuVersion, reactorMinVersion, platform)
+	elseif fuVersion < reactorMinVersion and math.floor(fuVersion) ~= 0 then
+		-- Fusion 9.00 or 9.01 was detected
+		VersionError(fuVersion, reactorMinVersion, platform)
+	else
+		-- Fusion 9.02+ was detected
+
+		-- Load UI Manager
+		ui = app.UIManager
+		disp = bmd.UIDispatcher(ui)
+
+		-- Find the Icons folder
+		-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+		fileTable = GetScriptDir('Reactor:/System/UI/Atomizer.lua')
+
+		-- Load the emoticons as standalone PNG image resources
+		emoticonsDir = fileTable.Path .. 'Emoticons' .. osSeparator
+		-- Load the Atomizer script icons as from a single ZIPIO bundled resource
+		iconsDir = fileTable.Path .. 'Images' .. osSeparator .. 'icons.zip' .. osSeparator
+
+		-- Create a list of the standard PNG format ui:Icon/ui:Button Sizes/MinimumSizes in px
+		tiny = 14
+		small = 16
+		toolbarSmall = 24
+		medium = 24
+		large = 32
+		long = 110
+		big = 150
+
+		-- Create Lua tables with X/Y defined Icon Sizes
+		iconsTiny = {tiny, tiny}
+		iconsSmall = {small, small}
+		iconsToolbarSmall = {toolbarSmall, toolbarSmall}
+		iconsMedium = {large,large}
+		iconsMediumLong = {big,large}
+		iconsLarge = {large,large}
+		iconsLong = {long,large}
+		iconsBigLong = {big,large}
+
+		comp:Print('\n[Atomizer] ' .. tostring(_VERSION) .. '\n')
+		comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
+
+		-- Was FuScript from the command line used to specify an atom filepath?
+		if atomFile ~= nil then
+			-- Load an atom file into a variable
+			LoadAtom()
+
+			if atomData ~= nil then
+				-- Show the Atomizer window
+				local atmwin,atmitm = AtomWin()
+			end
+		end
+
+		-- Show the Atomizer new session message dialog
+		StartupWin()
+	end
+end
+
+Main()
 print('[Done]')

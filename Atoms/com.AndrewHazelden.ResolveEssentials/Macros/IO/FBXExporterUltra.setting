@@ -1,0 +1,93 @@
+{
+	Tools = ordered() {
+		FBXExporterUltra = ExporterFBX {
+			CustomData = {
+					HelpPage = "https://www.steakunderwater.com/wesuckless/viewtopic.php?p=16429#p16429",
+				},
+			CtrlWZoom = false,
+			Inputs = {
+				Filename = Input { Value = "", },
+				ExportRenderRange = Input { Value = 0, },
+				FilePerFrame = Input { Value = 0, },
+				FrameRenderScriptNest = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 490, 119.485 } },
+			UserControls = ordered() {
+				RenderButton = {
+					LINKID_DataType = "Number",
+					BTNCS_Execute = [[
+------------------------------------------------------------------------
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
+-- Find out the current directory from a file path
+-- Example: print(Dirname('/Users/Shared/file.txt'))
+function Dirname(mediaDirName)
+	return mediaDirName:match('(.*' .. osSeparator .. ')')
+end
+
+-- Check if the output folder exists
+filename = comp:MapPath(tool:GetInput('Filename'))
+if filename ~= '' then
+	dir = Dirname(filename)
+	if not bmd.fileexists(dir) then
+		print('[Create Directory] ', dir)
+		bmd.createdir(dir)
+	end
+
+	-- Print the status info
+	-- Timeline frame range
+	startFrame = comp:GetAttrs().COMPN_RenderStart
+	endFrame = comp:GetAttrs().COMPN_RenderEnd
+	print('[FBX Render Range] ' .. startFrame .. '-' .. endFrame .. ' [Node] ' .. tostring(tool.Name))
+
+	-- Render the FBX Exporter node to disk
+	comp:Render({Tool = tool})
+else
+	print('[FBX Render] Empty Filename. Please type in a filename and then click the "Render to Disk" button again.')
+end
+]],
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Render to Disk"
+				},
+					OpenContainingButton = {
+					LINKID_DataType = "Number",
+					BTNCS_Execute = [[
+------------------------------------------------------------------------
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
+-- Find out the current directory from a file path
+-- Example: print(Dirname('/Users/Shared/file.txt'))
+function Dirname(mediaDirName)
+	return mediaDirName:match('(.*' .. osSeparator ..')')
+end
+
+-- Open a folder window up using your desktop file browser
+function OpenDirectory(mediaDirName)
+	dir = Dirname(mediaDirName)
+
+	if not bmd.fileexists(dir) then
+		print('[Create Directory] ', dir)
+		bmd.createdir(dir)
+	end
+	
+	if bmd.fileexists(dir) then
+		print('[Open Directory] ', dir)
+		bmd.openfileexternal('Open', dir)
+	end
+end
+
+filename = comp:MapPath(tool:GetInput('Filename'))
+OpenDirectory(filename)
+]],
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Open Containing Folder "
+				}
+			},
+		},
+	},
+	ActiveTool = "FBXExporterUltra"
+}

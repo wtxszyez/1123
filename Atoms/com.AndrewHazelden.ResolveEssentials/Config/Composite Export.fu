@@ -1,0 +1,90 @@
+--[[--
+Composite Import/Export for Resolve - v1 2018-03-16
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+This atom provides a Resolve config .fu hotkey file that allows you to import and export your current Fusion page composites. You can export the active Flow area composite to disk using the Alt+S (Linux/Windows) or Option+S (macOS) hotkey. You can import a .comp file into the Flow area using the Alt+O (Linux/Windows) or Option+O (macOS) hotkey. Resolve Fusion page Tool scripts called "Composite Export.lua" and "Composite Import.lua" are also included.
+
+## Installation ##
+
+Step 1. Move the "Export Composite.fu" file into the Resolve Fusion page user prefs "Config:/" folder.
+
+Step 2. Restart Resolve so the config file is loaded.
+--]]--
+
+{
+	Action
+	{
+		ID = "Reactor_Comp_Export",
+		Category = "File",
+		Name = "Composite Export",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+if obj:Comp() then
+	obj:Comp():Print('[Composite Export]')
+	obj:Comp():SaveCopyAs()
+else
+	obj:Comp():Print('[Composite Export] Please open a Fusion Page compositing session.')
+end
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Reactor_Comp_Import",
+		Category = "File",
+		Name = "Composite Import",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+-- Check if the comp is nil
+if obj:Comp() then
+	sourceComp = app:MapPath(obj:Comp():GetAttrs().COMPS_FileName)
+
+	-- Close the existing comp
+	if sourceComp ~= nil or sourceComp ~= '' then
+		obj:Comp():Close()
+	end
+end
+
+-- Open a comp file from disk
+app:LoadComp()
+obj:Comp():Print('[Composite Import] ' .. tostring(obj:Comp():GetAttrs().COMPS_FileName))
+				]=],
+			},
+		},
+	},
+
+	Hotkeys
+	{
+		Target = "FlowView",
+		ALT_O_RELEASED = "Reactor_Comp_Import{}",
+	},
+
+	Hotkeys
+	{
+		Target = "ConsoleView",
+		ALT_O_RELEASED = "Reactor_Comp_Import{}",
+	},
+
+	Hotkeys
+	{
+		Target = "FlowView",
+		ALT_S_RELEASED = "Reactor_Comp_Export{}",
+	},
+
+	Hotkeys
+	{
+		Target = "ConsoleView",
+		ALT_S_RELEASED = "Reactor_Comp_Export{}",
+	},
+}

@@ -1,0 +1,96 @@
+{
+	Tools = ordered() {
+		RotateView = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/",
+			},
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Input",
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "ViewCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1010, 51 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true
+				},
+				Size = { 376.051, 98.3515, 118, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -1371, -248.3 }
+			},
+			Tools = ordered() {
+				ViewTransform = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Expression = "RotateView.ViewRotation*90", },
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, 280.5 } },
+				},
+				ViewCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 5760,
+							Expression = "iif(RotateView.ViewRotation == 0 or RotateView.ViewRotation == 2,PanoMerge.Output.OriginalWidth,PanoMerge.Output.OriginalHeight)",
+						},
+						YSize = Input {
+							Value = 11520,
+							Expression = "iif(RotateView.ViewRotation == 0 or RotateView.ViewRotation == 2,PanoMerge.Output.OriginalHeight,PanoMerge.Output.OriginalWidth)",
+						},
+						KeepCentered = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "ViewTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 280.5 } },
+				},
+				PanoMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1320, 280.5 } },
+				}
+			},
+			UserControls = ordered() {
+				ViewRotation = {
+					{ CCS_AddString = "0°" },
+					{ CCS_AddString = "90°" },
+					{ CCS_AddString = "180°" },
+					{ CCS_AddString = "270°" },
+					INP_MaxAllowed = 4,
+					INP_Integer = true,
+					INPID_InputControl = "ComboControl",
+					CC_LabelPosition = "Horizontal",
+					INP_MaxScale = 4,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Rotate",
+				}
+			}
+		}
+	},
+	ActiveTool = "RotateView"
+}

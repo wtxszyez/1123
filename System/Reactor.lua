@@ -1,9 +1,9 @@
-_VERSION = [[Version 1.0 - January 22, 2018]]
+_VERSION = [[Version 2.0 - May 21, 2018]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v1.0 2018-01-22
+Reactor Package Manager for Fusion - v2.0 2018-05-21
 ==============================================================================
-Requires    : Fusion 9.0.1+
+Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
             : Andrew Hazelden                 [andrew@andrewhazelden]
@@ -11,7 +11,7 @@ Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/w
 ==============================================================================
 Overview
 ==============================================================================
-Reactor is a package manager for Fusion (Free) and Fusion Studio. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
+Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
 
 Reactor GitLab Public Repository:
 https://gitlab.com/WeSuckLess/Reactor
@@ -28,11 +28,17 @@ The main Reactor Package Manager window is opened by selecting the "Reactor > Op
 
 The "Reactor > Show Reactor Folder" menu item allows you to quickly view the "AllData:/Reactor/" PathMap folder location where the Reactor "atom" packages are downloaded and installed.
 
-The "AllData:/Reactor/" PathMap folder location is:
+The Fusion "AllData:/Reactor/" PathMap folder location is:
 
 (Windows) C:\ProgramData\Blackmagic Design\Fusion\Reactor\
 (Linux) /var/BlackmagicDesign/Fusion/Reactor/
 (Mac) /Library/Application Support/Blackmagic Design/Fusion/
+
+The Resolve "AllData:/Reactor/" PathMap folder location is:
+
+(Windows) C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\
+(Linux) /var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/
+(Mac) /Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/
 
 ==============================================================================
 Environment Variables
@@ -56,7 +62,7 @@ The `REACTOR_INSTALL_PATHMAP` environment variable can be used to change the Rea
 export REACTOR_INSTALL_PATHMAP=AllData:
 --]]--
 
--- Reactor GitLab Project ID 
+-- Reactor GitLab Public Project ID
 local reactor_project_id = "5058837"
 
 -- Check if we are in the master or dev branch
@@ -73,15 +79,65 @@ local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
 
 dprintf = (os.getenv("REACTOR_DEBUG") ~= "true") and function() end or
 function(fmt, ...)
-	print(fmt:format(...))
+	-- Display the debug output in the Console tab
+	-- print(fmt:format(...))
+
+	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+	local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+	local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
+	local reactor_log = reactor_log_root .. "ReactorLog.txt"
+	bmd.createdir(reactor_log_root)
+	log_fp, err = io.open(reactor_log, "a")
+	if err then
+		print("[Log Error] Could not open Reactor.log for writing")
+	else
+		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
+		log_fp:write("\n" .. time_stamp)
+		log_fp:write(fmt:format(...))
+		log_fp:close()
+	end
 end
 
 local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
+local reactor_log = reactor_log_root .. "ReactorLog.txt"
+bmd.createdir(reactor_log_root)
 local atoms_root = reactor_root .. "Atoms/"
 local deploy_root = reactor_root .. "Deploy/"
 local installed_root = deploy_root .. "Atoms/"
 local system_ui_root = reactor_root .. "System/UI/"
+
+if os.getenv("REACTOR_DEBUG") == "true" then
+	-- Clear the log file at the start of the Reactor session
+	local log_start_fp, err = io.open(reactor_log, "w")
+	if err then
+		print("[Log Error] Could not open Reactor.log for writing")
+	else
+		log_start_fp:write("--------------------------------------------------------------------------------\n")
+		log_start_fp:close()
+	end
+
+	dprintf("[Status] Reactor Window Opened")
+	dprintf("[Status] Reactor Branch: " .. branch)
+	dprintf("[Status] Reactor Location: " .. reactor_root)
+	dprintf("[Status] Reactor Log File: " ..  reactor_log)
+
+	dprintf("[Status] REACTOR_DEBUG Env Var: Enabled")
+end
+
+if os.getenv("REACTOR_DEBUG_FILES") == "true" then
+	dprintf("[Status] REACTOR_DEBUG_FILES Env Var: Enabled")
+else
+	dprintf("[Status] REACTOR_DEBUG_FILES Env Var: Disabled")
+end
+
+if os.getenv("REACTOR_DEBUG_COLLECTIONS") == "true" then
+	dprintf("[Status] REACTOR_DEBUG_COLLECTIONS Env Var: Enabled")
+else
+	dprintf("[Status] REACTOR_DEBUG_COLLECTIONS Env Var: Disabled")
+end
+
 
 -- Reactor GitLab repository URL
 local reactor_system_url = "https://gitlab.com/api/v4/projects/" .. reactor_project_id
@@ -118,7 +174,7 @@ g_Protocols = { }
 
 
 function LoadFile(path)
-	dprintf("LoadFile('%s')", path)
+	dprintf("[Status] LoadFile('%s')", path)
 	local file = io.open(path, "r")
 	local ret = file:read("*all")
 	file:close()
@@ -127,21 +183,36 @@ function LoadFile(path)
 end
 
 function SaveFile(path, content)
-	dprintf("SaveFile('%s')", path)
-	dprintf("File Contents: %s", content)
+	dprintf("[Status] SaveFile('%s')", path)
+
+	-- GitLab cURL download error
 	if content == '{"message":"404 File Not Found"}' then
-		dprintf("Error: 404 File Not Found")
+		dprintf("[Download Error] 404 File Not Found")
 	elseif content == '{"message":"404 Project Not Found"}' then
-		dprintf("Error: 404 Project Not Found")
+		dprintf("[Download Error] 404 Project Not Found")
+	elseif content == '{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token.","scope":"api"}' then
+		dprintf("[Download Error] GitLab TokenID Permissions Scope Issue")
+	elseif content == '{"error":"invalid_token","error_description":"Token was revoked. You have to re-authorize from the user."}' then
+		dprintf("[Download Error] GitLab TokenID Revoked Error")
+	elseif content == '{"message":"404 Commit Not Found"}' then
+		dprintf("[Download Error] GitLab Previous CommitID Empty Error")
 	else
 		-- Write the content to disk in ASCII mode with ASCII newline translations
 		-- local file = io.open(path, "w")
 
 		-- Write the content to disk in binary mode to avoid ASCII newline translations
 		local file = io.open(path, "wb")
-
-		file:write(content)
-		file:close()
+		if file ~= nil then
+			file:write(content)
+			file:close()
+			if os.getenv("REACTOR_DEBUG_FILES") == "true" then
+				dprintf("[Status] File Contents\n%s", content)
+			end
+		else
+			errMsg = "[Disk Permissions Error] Could not open file for writing: " .. path
+			dprintf(errMsg)
+			print(errMsg)
+		end
 	end
 end
 
@@ -162,19 +233,29 @@ function FindAtom(id)
 end
 
 function AskDonation(atom)
+	local donationtext = ""
+	if atom.Donation.Amount ~= "" then
+		donationAlign = { AlignHCenter = true, AlignTop = true }
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick below to donate:"
+	else
+		donationAlign = { AlignHCenter = true, AlignVCenter = true }
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation to:"
+	end
+
 	local win = disp:AddWindow(
 	{
 		ID = "DonationWin",
-		WindowTitle = "Fusion Reactor",
+		TargetID = "DonationWin",
+		WindowTitle = "Reactor",
 		Geometry = { 500,300,400,200 },
 		ui:VGroup
 		{
 			ui:Label
 			{
 				ID = "Message",
-				Alignment = { AlignHCenter = true, AlignTop = true },
 				WordWrap = true,
-				Text = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick below to donate:",
+				Alignment = donationAlign,
+				Text = donationText,
 			},
 
 			ui:Label
@@ -183,7 +264,7 @@ function AskDonation(atom)
 				Weight = 0,
 				Alignment = { AlignHCenter = true, AlignVCenter = true },
 				OpenExternalLinks = true,
-				Text = "<a href=" .. atom.Donation.URL .. ">" .. atom.Donation.URL .. "</a>",
+				Text = "<a href=" .. atom.Donation.URL .. " style=\"color: rgb(139,155,216)\">" .. atom.Donation.URL .. "</a>",
 			},
 
 			ui:VGap(20),
@@ -204,11 +285,340 @@ function AskDonation(atom)
 		disp:ExitLoop()
 	end
 
+	function win.On.DonationWin.Close(ev)
+		disp:ExitLoop()
+	end
+
+	app:AddConfig("Donation", {
+		Target
+		{
+			ID = "DonationWin",
+		},
+
+		Hotkeys
+		{
+			Target = "DonationWin",
+			Defaults = true,
+
+			CONTROL_W = "Execute{ cmd = [[ app.UIManager:QueueEvent(obj, 'Close', {}) ]] }",
+			CONTROL_F4 = "Execute{ cmd = [[ app.UIManager:QueueEvent(obj, 'Close', {}) ]] }",
+		},
+	})
+
 	win:Show()
-	disp:RunLoop()
+
+	-- The Reactor "Collections" debug mode hides the confirmation window during automated testing.
+	if os.getenv("REACTOR_DEBUG_COLLECTIONS") ~= "true" then
+		disp:RunLoop()
+	else
+		-- bmd.wait(1)
+	end
+
 	win:Hide()
+	app:RemoveConfig("Donation")
 
 	return win,win:GetItems()
+end
+
+function ScriptLanguageCheck(scpt)
+	if string.lower(scpt):match('^%s*!py[23]?:') then
+		return "Python"
+	else
+		return "Lua"
+	end
+end
+
+function AskScript(title, atom, script)
+	local ok = false
+	local scriptLanguage = ScriptLanguageCheck(script)
+	function InstallScriptRun()
+		-- Provide access to the current OS platform along with UI Manager support
+		scriptPrefix = [=[
+ui = fu.UIManager
+disp = bmd.UIDispatcher(ui)
+platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
+
+-- Debug printing
+function dprintf(fmt, ...)
+	-- Display the debug output in the Console tab
+	cmp = fu.CurrentComp
+	if cmp then
+		cmp:Print(fmt, ...)
+	end
+
+	if (os.getenv("REACTOR_DEBUG") == "true") then
+		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+		local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+		local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
+		local reactor_log = reactor_log_root .. "ReactorLog.txt"
+		bmd.createdir(reactor_log_root)
+		log_fp, err = io.open(reactor_log, "a")
+		if err then
+			print("[Log Error] Could not open Reactor.log for writing")
+		else
+			log_fp:write("\n")
+			log_fp:write(fmt:format(...))
+			log_fp:close()
+		end
+	end
+end
+
+function RemoveDupSlashes(path)
+	path = string.gsub(path, [[//]], [[/]])
+	path = string.gsub(path, [[\\]], [[\]])
+	return path
+end
+
+function NormalizeSlashes(path)
+	if platform == "Windows" then
+		local result = RemoveDupSlashes(string.gsub(path, [[/]], [[\]]))
+		return result
+	else
+		local result = RemoveDupSlashes(string.gsub(path, [[\]], [[/]]))
+		return result
+	end
+end
+
+function AddDesktopPathMap(path)
+	path = app:MapPath(path)
+
+	if platform == "Windows" then
+		local result = NormalizeSlashes(string.gsub(path, "[Dd]esktop:", "%%USERPROFILE%%\\Desktop\\"))
+		return result
+	else
+		local result = NormalizeSlashes(string.gsub(path, "[Dd]esktop:", os.getenv("HOME") .. "/Desktop"))
+		return result
+	end
+end
+
+
+function validateFiletype(fileType)
+	-- A fileType can be a "file" or "folder"
+	if not fileType or ((fileType ~= "file") and (fileType ~= "folder")) then
+		fileType = "file"
+	end
+
+	return fileType
+end
+
+-- Create new Windows "Shortcut" / Mac Finder Alias / Linux .desktop Link
+-- Example: CreateShortcut("Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg", "Desktop:/", "FFmpeg", "file")
+-- Example: CreateShortcut("Reactor:/Deploy/Docs/ReactorDocs", "Desktop:/", "ReactorDocs", "folder")
+function CreateShortcut(sourcePath, shortcutPath, shortcutName, fileType)
+	if bmd.fileexists(app:MapPath(sourcePath)) then
+		if platform == "Windows" then
+			if sourcePath and shortcutPath and shortcutName then
+				-- Add Desktop:/ as a supported PathMap address
+				sourcePath = AddDesktopPathMap(sourcePath)
+				shortcutPath = AddDesktopPathMap(shortcutPath)
+				shortcutFile = AddDesktopPathMap(shortcutPath .. shortcutName .. ".lnk")
+
+				-- Create the destination directory
+				bmd.createdir(shortcutPath)
+
+				-- Create the shortcut using a Windows Powershell command
+				local shortcutCommand = "powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -Command \"$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('" .. shortcutFile .. "'); $S.TargetPath = '" .. sourcePath .. "'; $S.Save()\""
+				dprintf("[" .. shortcutName .. " Shortcut] [From] \"" .. sourcePath:gsub("%%", "%%%%") .. "\" [To] \"" .. shortcutFile:gsub("%%", "%%%%%") .. "\"\n")
+
+				-- dprintf("\n[Shortcut Creation Command] " .. shortcutCommand:gsub("%%", "%%%%%") .. "\n\n")
+				os.execute(shortcutCommand)
+			end
+		elseif platform == "Mac" then
+			if sourcePath then
+				-- Add Desktop:/ as a supported PathMap address
+				sourcePath = AddDesktopPathMap(sourcePath)
+
+				local aliasCommand = [[osascript -e 'tell application "Finder"' -e 'make new alias to ]] .. validateFiletype(fileType) .. [[ (posix file "]] .. sourcePath .. [[") at desktop' -e 'end tell']]
+				dprintf("[Finder Alias] [From] \"" .. app:MapPath(sourcePath) .. "\" [To] An alias on your Desktop\n")
+
+				-- dprintf("\n[Finder Alias Creation Command] " .. aliasCommand .. "\n\n")
+				os.execute(aliasCommand)
+			end
+		elseif platform == "Linux" then
+			if sourcePath and shortcutPath and shortcutName then
+				-- Add Desktop:/ as a supported PathMap address
+				sourcePath = AddDesktopPathMap(sourcePath)
+				shortcutPath = AddDesktopPathMap(shortcutPath)
+
+				local fileContents = "[Desktop Entry]\nVersion=3.0\nName=" .. shortcutName .. "\nGenericName=" .. shortcutName .. "\n"
+
+				if validateFiletype(fileType) == "folder" then
+					-- fileContents = fileContents .. "Type=Directory\n"
+					fileContents = fileContents .. "Type=Link\nIcon=folder\n"
+					fileContents = fileContents .. "URL=file://" .. sourcePath .. "\n"
+					shortcutFile = AddDesktopPathMap(shortcutPath .. "/" .. shortcutName .. ".desktop")
+				else
+					fileContents = fileContents .. "Type=Application\n"
+					fileContents = fileContents .. "Exec=gnome-terminal -e \"bash -c '" .. sourcePath .. "'\"\n"
+					shortcutFile = AddDesktopPathMap(shortcutPath .. "/" .. shortcutName .. ".desktop")
+				end
+				fileContents = fileContents .. "Terminal=false\nCategories=Graphics;3DGraphics\nStartupNotify=false\n"
+
+				-- Save the .desktop link
+				bmd.createdir(shortcutPath)
+				desktop_fp, err = io.open(shortcutFile, "w")
+				if err then
+					dprintf("[Desktop Link] Could not open " .. shortcutFile .. " for writing")
+				else
+					desktop_fp:write(fileContents)
+					desktop_fp:close()
+				end
+
+				-- Make the file executable
+				os.execute("chmod +x '" .. shortcutFile .. "'")
+
+				-- dprintf("\n[Desktop Link Contents]\n\n" .. fileContents .. "\n\n")
+				dprintf("[" .. shortcutName .. " Desktop Link] [From] \"" .. sourcePath:gsub("%%", "%%%%") .. "\" [To] \"" .. shortcutFile .. "\"")
+			end
+		end
+	else
+		dprintf("\n[Desktop Link Error] [Source File Missing] \"" .. app:MapPath(sourcePath) .. "\"\n\n")
+	end
+end
+
+-- Start of Atom InstallScript block:
+
+]=]
+
+		local scriptLanguage = ScriptLanguageCheck(script)
+		-- Check if the code is a Python or Lua code snippet
+		if scriptLanguage == "Python" then
+			status = "[" .. tostring(title) .. "] \"" .. tostring(atom.Name) .. "\" Atom Running " .. scriptLanguage .. " Code:\n" .. script
+		else
+			status = "[" .. tostring(title) .. "] \"" .. tostring(atom.Name) .. "\" Atom Running " .. scriptLanguage .. " Code:\n" .. script
+			script = scriptPrefix .. script
+		end
+
+		dprintf(status)
+		local result = fusion:Execute(script)
+		dprintf("[" .. tostring(title) .. "] Return Code: " .. tostring(result))
+	end
+
+	function InstallScriptSkipped()
+		status = "[" .. tostring(title) .. "] \"" .. tostring(atom.Name) .. "\" Atom Install Script Cancelled by User.\n"
+		dprintf(status)
+	end
+
+
+	local askText = "The \"" .. tostring(atom.Name) .. "\" atom by \"" .. tostring(atom.Author) .. "\" wants to run the following " .. scriptLanguage .. " install script code:"
+	dprintf("[" .. title .. "] " .. askText .. "\n" .. script)
+
+	local win = disp:AddWindow(
+	{
+		ID = "ScriptConfirmWin",
+		TargetID = "ScriptConfirmWin",
+		WindowTitle = "Fusion Reactor | " .. tostring(title) .. " Confirmation: " .. tostring(atom.Name),
+		Geometry = { 300,220,800,280 },
+		ui:VGroup
+		{
+			ui:Label
+			{
+				Weight = 0.01,
+				ID = "Message",
+				WordWrap = true,
+				Alignment = { AlignHCenter = true, AlignTop = true },
+				Text = askText,
+			},
+
+			ui:TextEdit
+			{
+				Weight = 1.2,
+				ID = 'CodeText',
+				PlainText = tostring(script),
+				Font = ui:Font{
+					Family = 'Droid Sans Mono',
+					StyleName = 'Regular',
+					PixelSize = 12,
+					MonoSpaced = true,
+					StyleStrategy = {ForceIntegerMetrics = true},
+				},
+				TabStopWidth = 28,
+				AcceptRichText = false,
+				ReadOnly = true,
+			},
+
+			ui:HGroup
+			{
+				Weight = 0.01,
+				ui:HGap(0, 1.0),
+				ui:Button { ID = "Cancel", Text = "Cancel Installation" },
+				ui:Button { ID = "OK", Text = "OK" },
+				ui:HGap(0, 1.0),
+			},
+		},
+
+	})
+
+	itm = win:GetItems()
+
+	function win.On.ScriptConfirmWin.Close(ev)
+		ok = false
+		disp:ExitLoop()
+	end
+
+	function win.On.OK.Clicked(ev)
+		ok = true
+		disp:ExitLoop()
+	end
+
+	function win.On.Cancel.Clicked(ev)
+		ok = false
+		disp:ExitLoop()
+	end
+
+	app:AddConfig("ScriptConfirm", {
+		Target
+		{
+			ID = "ScriptConfirmWin",
+		},
+
+		Hotkeys
+		{
+			Target = "ScriptConfirmWin",
+			Defaults = true,
+
+			CONTROL_W = "Execute{ cmd = [[ app.UIManager:QueueEvent(obj, 'Close', {}) ]] }",
+			CONTROL_F4 = "Execute{ cmd = [[ app.UIManager:QueueEvent(obj, 'Close', {}) ]] }",
+		},
+	})
+
+	-- Enable syntax highlighting on Win/Mac only (tends to crash on Fu 9.0.2 on Linux)
+	if (g_ThisPlatform == 'Mac') or (g_ThisPlatform == 'Windows') then
+		-- Adjust the syntax highlighting colors
+		bgcol = {
+			R = 0.125,
+			G = 0.125,
+			B = 0.125,
+			A = 1
+		}
+
+		itm.CodeText.BackgroundColor = bgcol
+		itm.CodeText:SetPaletteColor('All', 'Base', bgcol)
+		itm.CodeText.Lexer = 'fusion'
+	end
+
+	win:Show()
+	-- disp:RunLoop()
+
+	-- The Reactor "Collections" debug mode hides the confirmation window during automated testing.
+	if os.getenv("REACTOR_DEBUG_COLLECTIONS") ~= "true" then
+		disp:RunLoop()
+	else
+		-- bmd.wait(1)
+		ok = true
+	end
+
+	win:Hide()
+	app:RemoveConfig("ScriptConfirm")
+
+	-- Has the user confirmed they want to run the install script code?
+	if ok == true then
+		InstallScriptRun()
+	else
+		InstallScriptSkipped()
+	end
+
+	return ok, win,win:GetItems()
 end
 
 function InstallAtom(id, deps)
@@ -288,6 +698,22 @@ function InstallAtom(id, deps)
 			bmd.wait(2)
 		end
 
+		if atom.InstallScript then
+			for i, script in ipairs(atom.InstallScript) do
+				if type(script) == "string" then
+					local ok = AskScript("Install Script", atom, script)
+				end
+			end
+
+			if atom.InstallScript[g_ThisPlatform] then
+				for i, script in ipairs(atom.InstallScript[g_ThisPlatform]) do
+					if type(script) == "string" then
+						local ok = AskScript("Install Script", atom, script)
+					end
+				end
+			end
+		end
+
 		msgwin:Hide()
 		msgwin = nil
 	end
@@ -340,6 +766,22 @@ function RemoveAtom(id, deps)
 		bmd.wait(2)
 	end
 
+	if atom.UninstallScript then
+		for i, script in ipairs(atom.UninstallScript) do
+			if type(script) == "string" then
+				local ok = AskScript("Uninstall Script", atom, script)
+			end
+		end
+
+		if atom.UninstallScript[g_ThisPlatform] then
+			for i, script in ipairs(atom.UninstallScript[g_ThisPlatform]) do
+				if type(script) == "string" then
+					local ok = AskScript("Uninstall Script", atom, script)
+				end
+			end
+		end
+	end
+
 	msgwin:Hide()
 	msgwin = nil
 
@@ -364,7 +806,15 @@ function MessageWin(title, text)
 	return win,win:GetItems()
 end
 
+function MessageWinUpdate(title, text, win, itm)
+	if itm ~= nil then
+		itm.Title.Text = title
+		itm.Message.Text = text
+	end
+end
+
 function MigrateLegacyInstall()
+	dprintf("[Status] MigrateLegacyInstall()")
 	local repo = "Reactor"
 
 	os.rename(atoms_root, reactor_root .. "_Temp")
@@ -383,7 +833,8 @@ function MigrateLegacyInstall()
 end
 
 local function GetURL(url)
-	dprintf("reactor GetURL('%s')", url:gsub("&private_token=.+", ""))
+	-- dprintf("[Status] GetURL('%s')", url)
+	dprintf("[Status] GetURL('%s')", url:gsub("&private_token=.+", ""))
 
 	local body = {}
 
@@ -400,8 +851,30 @@ local function GetURL(url)
 	return table.concat(body)
 end
 
-local function DownloadSystemURL(relativeURL, relativeFilename)
-	local content = GetURL(reactor_system_url .. relativeURL .. "/raw?ref=" .. branch .. "&private_token=" .. g_Config.Settings.Reactor.Token)
+local function EncodeURL(txt)
+	if txt ~= nil then
+		urlCharacters = {
+			{pattern = '[/]', replace = '%%2F'},
+			{pattern = '[.]', replace = '%%2E'},
+			{pattern = '[ ]', replace = '%%20'},
+		}
+
+		for i,val in ipairs(urlCharacters) do
+			txt = string.gsub(txt, urlCharacters[i].pattern, urlCharacters[i].replace)
+		end
+	end
+
+	return txt
+end
+
+local function DownloadSystemURL(baseFolder, relativePath, relativeFilename)
+	local token = ""
+	if g_Config.Settings.Reactor.Token ~= nil and string.len(g_Config.Settings.Reactor.Token) >= 10 then
+		token = "&private_token=" .. g_Config.Settings.Reactor.Token
+	end
+
+	local url = reactor_system_url .. baseFolder .. EncodeURL(relativePath) .. "/raw?ref=" .. branch .. token
+	local content = GetURL(url)
 	SaveFile(reactor_root .. relativeFilename, content)
 end
 
@@ -420,7 +893,7 @@ function UpdateDependencies(atom)
 			UpdateDependencies(av)
 
 			if not av or av.Disabled then
-				table.insert(atom.Issues, "Dependency '" .. v .. "' is not available.")
+				table.insert(atom.Issues, "The dependency '" .. v .. "' is not available.")
 				atom.Disabled = true
 			end
 		end
@@ -453,8 +926,30 @@ function ReadAtoms(path)
 					end
 
 					if plat and not enable then
-						table.insert(atom.Issues, "This Atom does not support this platform.")
+						-- table.insert(atom.Issues, "This Atom does not support this platform.")
+						table.insert(atom.Issues, "This Atom package cannot be installed on your OS.")
 						atom.Disabled = plat and not enable
+					end
+
+					local fuVersion = tonumber(bmd._VERSION)
+					local fuAppName = "Fusion"
+					if fuVersion >= 15 then
+						fuAppName = "Resolve"
+					end
+
+					local fuAppCompatibleName = "Fusion"
+					if atom.Maximum and fuVersion > atom.Maximum then
+						if atom.Maximum >= 15 then
+							fuAppCompatibleName = "Resolve"
+						end
+						table.insert(atom.Issues, "This Atom does not support " .. fuAppName .. " " .. fuVersion .. ". You need " .. fuAppCompatibleName .. " " .. atom.Maximum .. " to use this atom.")
+						atom.Disabled = true
+					elseif atom.Minimum and fuVersion < atom.Minimum then
+						if atom.Minimum >= 15 then
+							fuAppCompatibleName = "Resolve"
+						end
+						table.insert(atom.Issues, "This Atom does not support " .. fuAppName .. " " .. fuVersion .. ". You need " .. fuAppCompatibleName .. " " .. atom.Minimum .. " to use this atom.")
+						atom.Disabled = true
 					end
 
 					table.insert(Atoms, atom)
@@ -489,17 +984,19 @@ function GetAtomDescription(atom)
 
 	str = str .. atom.Description
 
-	if atom.Donation then
-		str = str .. "<p>Suggested Donation: " .. atom.Donation.Amount
+	if atom.Donation and atom.Donation.Amount ~= "" then
+		str = str .. "<p>Suggested Donation: " .. atom.Donation.Amount .. "</p>"
+	elseif atom.Donation and atom.Donation.URL ~= "" then
+		str = str .. "<p>Suggested Donation: Yes</p>"
 	end
 
 	if #atom.Issues > 0 then
-		str = str .. "<p>Issues:<ul><font color = #ff8c8c>"
+		str = str .. "<p>Status:<ul><font color = #ff8c8c>"
 
 		for i,v in ipairs(atom.Issues) do
 			str = str .. "<li>&nbsp;&nbsp;" .. v .. "</li>"
 		end
-		str = str .. "</font></ul>"
+		str = str .. "</font></ul></p>"
 	end
 
 	if atom.Dependencies then
@@ -508,7 +1005,7 @@ function GetAtomDescription(atom)
 		for i,v in ipairs(atom.Dependencies) do
 			str = str .. "<li>&nbsp;&nbsp;" .. v .. "</li>"
 		end
-		str = str .. "</ul>"
+		str = str .. "</ul></p>"
 	end
 
 	if atom.Deploy then
@@ -528,7 +1025,16 @@ function GetAtomDescription(atom)
 			end
 		end
 
-		str = str .. "</ul>"
+		str = str .. "</ul></p>"
+	end
+
+	if atom.InstallScript and atom.UninstallScript then
+		str = str .. "<p>Install Script: Yes<br>"
+		str = str .. "Uninstall Script: Yes</p>"
+	elseif atom.InstallScript then
+		str = str .. "<p>Install Script: Yes</p>"
+	elseif atom.UninstallScript then
+		str = str .. "<p>Uninstall Script: Yes</p>"
 	end
 
 	str = str .. "</body></html>"
@@ -540,6 +1046,11 @@ function GetAtomDescription(atom)
 end
 
 function Init()
+	ui = app.UIManager
+	disp = bmd.UIDispatcher(ui)
+
+	local msgwin,msgitm = MessageWin("Initializing...", "Fusion Reactor")
+
 	g_Config = bmd.readfile(reactor_root .. "System/Reactor.cfg")
 
 	if type(g_Config) ~= "table" then
@@ -548,11 +1059,6 @@ function Init()
 		MigrateLegacyInstall()
 	end
 
-	ui = app.UIManager
-	disp = bmd.UIDispatcher(ui)
-
-	local msgwin,msgitm = MessageWin("Initializing...", "Fusion Reactor")
-
 	Atoms = {}
 
 	curl_handle = curl.curl_easy_init()
@@ -560,20 +1066,21 @@ function Init()
 	-- Create the extra Docs, Comps, and Bin folders
 	-- Reactor:/Deploy/Docs/ folder
 	bmd.createdir(deploy_root .. "Docs/")
+
 	-- Add the Reactor:/Deploy/Comps/ folder
 	bmd.createdir(deploy_root .. "Comps/")
+
 	-- Add the Reactor:/Deploy/Bin/ folder
 	bmd.createdir(deploy_root .. "Bin/")
 
 	-- Reactor:/System/ folders
 	bmd.createdir(reactor_root .. "System/Protocols/")
 	bmd.createdir(reactor_root .. "System/UI/")
-	bmd.createdir(reactor_root .. "System/Images/")
 
 	-- Add the Reactor:/System/Scripts/Comp/Reactor/ folders
 	scripts_root = reactor_root .. "System/Scripts/Comp/Reactor/"
 	bmd.createdir(scripts_root)
-	bmd.createdir(scripts_root .. "Advanced/")
+	bmd.createdir(scripts_root .. "Tools/")
 	bmd.createdir(scripts_root .. "Resources/")
 
 	-- Add the Reactor:/System/UI/ image resource folders for Atomizer
@@ -581,8 +1088,7 @@ function Init()
 	bmd.createdir(system_ui_root .. 'Emoticons/')
 
 	if local_system then
-		msgwin:Hide()
-		msgwin,msgitm = MessageWin("Updating Reactor Core...", "Fusion Reactor")
+		MessageWinUpdate("Updating Reactor Core...", "Fusion Reactor", msgwin, msgitm)
 
 		--@todo: Scan dir and fetch
 		-- Copy the Reactor:/System/Protocol files
@@ -592,20 +1098,10 @@ function Init()
 		-- Copy the Reactor:/System/UI files
 		LoadSaveSystemFile("/UI/AboutWindow.lua", "System/UI/AboutWindow.lua")
 		LoadSaveSystemFile("/UI/ResyncRepository.lua", "System/UI/ResyncRepository.lua")
-		LoadSaveSystemFile("/UI/Images/reactorlarge.png", "System/UI/Images/reactorlarge.png")
-		
+
 		-- Copy the Atomizer Package Editor files
 		LoadSaveSystemFile("/UI/Atomizer.lua", "System/UI/Atomizer.lua")
-		LoadSaveSystemFile("/UI/Images/calendar.png", "System/UI/Images/calendar.png")
-		LoadSaveSystemFile("/UI/Images/close.png", "System/UI/Images/close.png")
-		LoadSaveSystemFile("/UI/Images/create.png", "System/UI/Images/create.png")
-		LoadSaveSystemFile("/UI/Images/folder.png", "System/UI/Images/folder.png")
-		LoadSaveSystemFile("/UI/Images/link.png", "System/UI/Images/link.png")
-		LoadSaveSystemFile("/UI/Images/open.png", "System/UI/Images/open.png")
-		LoadSaveSystemFile("/UI/Images/quit.png", "System/UI/Images/quit.png")
-		LoadSaveSystemFile("/UI/Images/reactor.png", "System/UI/Images/reactor.png")
-		LoadSaveSystemFile("/UI/Images/refresh.png", "System/UI/Images/refresh.png")
-		LoadSaveSystemFile("/UI/Images/save.png", "System/UI/Images/save.png")
+		LoadSaveSystemFile("/UI/Images/icons.zip", "System/UI/Images/icons.zip")
 
 		-- @todo: Add the local_system Reactor:/System/UI/Emoticons/ files
 		-- @todo: Add the local_system Script > Reactor menu items
@@ -616,105 +1112,87 @@ function Init()
 		bmd.createdir(installed_root)
 
 		-- @todo: Scan dir and fetch
+		MessageWinUpdate("Updating Reactor Core...", "Fusion Reactor", msgwin, msgitm)
+		git_system_folder = "/repository/files/System"
+
 		-- Download the Reactor:/System/Protocol files
-		DownloadSystemURL("/repository/files/System%2FProtocols%2FGitLab%2Elua", "System/Protocols/GitLab.lua")
-		DownloadSystemURL("/repository/files/System%2FProtocols%2FFileSystem%2Elua", "System/Protocols/FileSystem.lua")
+		DownloadSystemURL(git_system_folder, "/Protocols/GitLab.lua", "System/Protocols/GitLab.lua")
+		DownloadSystemURL(git_system_folder, "/Protocols/FileSystem.lua", "System/Protocols/FileSystem.lua")
 
-		-- msgwin:Hide()
-		-- msgwin,msgitm = MessageWin("Updating Reactor Menus...", "Fusion Reactor")
-
+		-- MessageWinUpdate("Updating Reactor Menus...", "Fusion Reactor", msgwin, msgitm)
 		-- Download the Script > Reactor menu items
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FAbout%20Reactor%2Elua", "System/Scripts/Comp/Reactor/About Reactor.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FOpen%20Reactor%2E%2E%2E%2Elua", "System/Scripts/Comp/Reactor/Open Reactor....lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FAdvanced%2FAtomizer%20Package%20Editor%2Elua", "System/Scripts/Comp/Reactor/Advanced/Atomizer Package Editor.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FAdvanced%2FResync%20Repository%2Elua", "System/Scripts/Comp/Reactor/Advanced/Resync Repository.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FAdvanced%2FShow%20Config%20Folder%2Elua", "System/Scripts/Comp/Reactor/Advanced/Show Config Folder.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FAdvanced%2FShow%20Reactor%20Folder%2Elua", "System/Scripts/Comp/Reactor/Advanced/Show Reactor Folder.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FResources%2FReactor%20Online%20Discussion%2Elua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FResources%2FReactor%20Online%20Repository%2Elua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua")
-		-- DownloadSystemURL("/repository/files/System%2FScripts%2FComp%2FReactor%2FResources%2FWe%20Suck%20Less%2Elua", "System/Scripts/Comp/Reactor/Resources/We Suck Less.lua")
-
-		msgwin:Hide()
-		msgwin,msgitm = MessageWin("Updating Reactor Core...", "Fusion Reactor")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/About Reactor.lua", "System/Scripts/Comp/Reactor/About Reactor.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Open Reactor....lua", "System/Scripts/Comp/Reactor/Open Reactor....lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Atomizer.lua", "System/Scripts/Comp/Reactor/Tools/Atomizer.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Macro Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Macro Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua", "System/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua", "System/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Resync Repository.lua", "System/Scripts/Comp/Reactor/Tools/Resync Repository.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Config Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Config Folder.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Temp Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Temp Folder.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua")
+		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/We Suck Less.lua", "System/Scripts/Comp/Reactor/Resources/We Suck Less.lua")
 
 		-- Download the Reactor:/System/UI files
-		DownloadSystemURL("/repository/files/System%2FUI%2FAboutWindow%2Elua", "System/UI/AboutWindow.lua")
-		DownloadSystemURL("/repository/files/System%2FUI%2FAtomizer%2Elua", "System/UI/Atomizer.lua")
-		DownloadSystemURL("/repository/files/System%2FUI%2FResyncRepository%2Elua", "System/UI/ResyncRepository.lua")
-
+		DownloadSystemURL(git_system_folder, "/Protocols/FileSystem.lua", "System/Protocols/FileSystem.lua")
+		DownloadSystemURL(git_system_folder, "/UI/AboutWindow.lua", "System/UI/AboutWindow.lua")
+		DownloadSystemURL(git_system_folder, "/UI/Atomizer.lua", "System/UI/Atomizer.lua")
+		DownloadSystemURL(git_system_folder, "/UI/Fuse Scanner.lua", "System/UI/Fuse Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/UI/Macro Scanner.lua", "System/UI/Macro Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/UI/Plugin Scanner.lua", "System/UI/Plugin Scanner.lua")
+		DownloadSystemURL(git_system_folder, "/UI/ResyncRepository.lua", "System/UI/ResyncRepository.lua")
 
 		-- Download the Reactor:/System/Images files
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Freactorlarge%2Epng", "System/UI/Images/reactorlarge.png")
-
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fcalendar%2Epng", "System/UI/Images/calendar.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fclose%2Epng", "System/UI/Images/close.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fcreate%2Epng", "System/UI/Images/create.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Ffolder%2Epng", "System/UI/Images/folder.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Flink%2Epng", "System/UI/Images/link.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fopen%2Epng", "System/UI/Images/open.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fquit%2Epng", "System/UI/Images/quit.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Freactor%2Epng", "System/UI/Images/reactor.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Frefresh%2Epng", "System/UI/Images/refresh.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fsave%2Epng", "System/UI/Images/save.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fasterisk%2Epng", "System/UI/Images/asterisk.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fbold%2Epng", "System/UI/Images/bold.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fcode%2Epng", "System/UI/Images/code.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fheading%2Epng", "System/UI/Images/heading.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fimage%2Epng", "System/UI/Images/image.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fitalic%2Epng", "System/UI/Images/italic.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Flist_ordered%2Epng", "System/UI/Images/list_ordered.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Flist%2Epng", "System/UI/Images/list.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fparagraph%2Epng", "System/UI/Images/paragraph.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fquote%2Epng", "System/UI/Images/quote.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Fstrike%2Epng", "System/UI/Images/strike.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Ftable%2Epng", "System/UI/Images/table.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Ftint%2Epng", "System/UI/Images/tint.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FImages%2Funderline%2Epng", "System/UI/Images/underline.png")
-
-		msgwin:Hide()
-		msgwin,msgitm = MessageWin("Updating Reactor Icons...", "Fusion Reactor")
+		-- All of the icons are accessible in single download using a Fusion ZIPIO Resource
+		DownloadSystemURL(git_system_folder, "/UI/Images/icons.zip", "System/UI/Images/icons.zip")
 
 		-- Download the Reactor:/System/Emoticons files
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fbanana%2Epng", "System/UI/Emoticons/banana.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fbowdown%2Epng", "System/UI/Emoticons/bowdown.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fbuttrock%2Epng", "System/UI/Emoticons/buttrock.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fcheer%2Epng", "System/UI/Emoticons/cheer.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fcheers%2Epng", "System/UI/Emoticons/cheers.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fcool%2Epng", "System/UI/Emoticons/cool.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fcry%2Epng", "System/UI/Emoticons/cry.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Flol%2Epng", "System/UI/Emoticons/lol.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fmad%2Epng", "System/UI/Emoticons/mad.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fmrgreen%2Epng", "System/UI/Emoticons/mrgreen.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fnocheer%2Epng", "System/UI/Emoticons/nocheer.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fpopcorn%2Epng", "System/UI/Emoticons/popcorn.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Frolleyes%2Epng", "System/UI/Emoticons/rolleyes.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fsad%2Epng", "System/UI/Emoticons/sad.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fsmile%2Epng", "System/UI/Emoticons/smile.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fwink%2Epng", "System/UI/Emoticons/wink.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fwip%2Epng", "System/UI/Emoticons/wip.png")
-		DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fwhistle%2Epng", "System/UI/Emoticons/whistle.png")
-		
+		MessageWinUpdate("Updating Reactor Icons...", "Fusion Reactor", msgwin, msgitm)
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/banana.png", "System/UI/Emoticons/banana.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/bowdown.png", "System/UI/Emoticons/bowdown.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/buttrock.png", "System/UI/Emoticons/buttrock.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cheer.png", "System/UI/Emoticons/cheer.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cheers.png", "System/UI/Emoticons/cheers.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cool.png", "System/UI/Emoticons/cool.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cry.png", "System/UI/Emoticons/cry.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/facepalm.png", "System/UI/Emoticons/facepalm.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/lol.png", "System/UI/Emoticons/lol.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/mad.png", "System/UI/Emoticons/mad.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/mrgreen.png", "System/UI/Emoticons/mrgreen.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/nocheer.png", "System/UI/Emoticons/nocheer.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/popcorn.png", "System/UI/Emoticons/popcorn.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/rolleyes.png", "System/UI/Emoticons/rolleyes.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/sad.png", "System/UI/Emoticons/sad.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/smile.png", "System/UI/Emoticons/smile.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/wink.png", "System/UI/Emoticons/wink.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/wip.png", "System/UI/Emoticons/wip.png")
+		DownloadSystemURL(git_system_folder, "/UI/Emoticons/whistle.png", "System/UI/Emoticons/whistle.png")
+
 		-- The extended set of emoticons are disabled for now:
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Farrow%2Epng", "System/UI/Emoticons/arrow.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fbanghead%2Epng", "System/UI/Emoticons/banghead.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fbiggrin%2Epng", "System/UI/Emoticons/biggrin.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fconfused%2Epng", "System/UI/Emoticons/confused.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Feek%2Epng", "System/UI/Emoticons/eek.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fevil%2Epng", "System/UI/Emoticons/evil.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fexclaim%2Epng", "System/UI/Emoticons/exclaim.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fgeek%2Epng", "System/UI/Emoticons/geek.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fidea%2Epng", "System/UI/Emoticons/idea.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fneutral%2Epng", "System/UI/Emoticons/neutral.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fquestion%2Epng", "System/UI/Emoticons/question.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Frazz%2Epng", "System/UI/Emoticons/razz.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fredface%2Epng", "System/UI/Emoticons/redface.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fsurprised%2Epng", "System/UI/Emoticons/surprised.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Ftwisted%2Epng", "System/UI/Emoticons/twisted.png")
-		-- DownloadSystemURL("/repository/files/System%2FUI%2FEmoticons%2Fugeek%2Epng", "System/UI/Emoticons/ugeek.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/arrow.png", "System/UI/Emoticons/arrow.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/banghead.png", "System/UI/Emoticons/banghead.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/biggrin.png", "System/UI/Emoticons/biggrin.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/confused.png", "System/UI/Emoticons/confused.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/eek.png", "System/UI/Emoticons/eek.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/evil.png", "System/UI/Emoticons/evil.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/exclaim.png", "System/UI/Emoticons/exclaim.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/geek.png", "System/UI/Emoticons/geek.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/idea.png", "System/UI/Emoticons/idea.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/neutral.png", "System/UI/Emoticons/neutral.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/question.png", "System/UI/Emoticons/question.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/razz.png", "System/UI/Emoticons/razz.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/redface.png", "System/UI/Emoticons/redface.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/surprised.png", "System/UI/Emoticons/surprised.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/twisted.png", "System/UI/Emoticons/twisted.png")
+		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/ugeek.png", "System/UI/Emoticons/ugeek.png")
 	end
-	
-	msgwin:Hide()
-	msgwin,msgitm = MessageWin("Updating Reactor PathMap...", "Fusion Reactor")
+
+	MessageWinUpdate("Updating Reactor PathMap...", "Fusion Reactor", msgwin, msgitm)
 
 	local pdir = bmd.readdir(reactor_root .. "System/Protocols/*.lua")
 
@@ -735,7 +1213,7 @@ function Init()
 		end
 	end
 
-	-- Edit the PathMaps to add a Reactor: UserPaths entry
+	-- Add a "Reactor:" UserPaths PathMap entry
 	local userpath = app:GetPrefs("Global.Paths.Map.UserPaths:")
 	app:SetPrefs("Global.Paths.Map.Reactor:", reactor_root)
 	if not userpath:find("Reactor:Deploy") then
@@ -743,7 +1221,7 @@ function Init()
 		app:SetPrefs("Global.Paths.Map.UserPaths:", userpath)
 	end
 
-	-- Edit the PathMaps to add a Reactor: Scripts entry
+	-- Add a "Reactor:System/Scripts" Scripts PathMap entry
 	local scriptpath = app:GetPrefs("Global.Paths.Map.Scripts:")
 	if not scriptpath:find("Reactor:System/Scripts") then
 		scriptpath = scriptpath .. ";Reactor:System/Scripts"
@@ -751,12 +1229,9 @@ function Init()
 	end
 
 	app:SavePrefs()
-	
-	msgwin:Hide()
-	msgwin,msgitm = MessageWin("Initializing...", "Fusion Reactor")
-	
-	UpdateAtoms(msgitm.Message, nil)
 
+	MessageWinUpdate("Initializing...", "Fusion Reactor", msgwin, msgitm)
+	UpdateAtoms(msgitm.Message, nil)
 	ReadAtoms(atoms_root)
 
 	msgwin:Hide()
@@ -794,7 +1269,7 @@ function CreateMainWin()
 		ID = "ReactorWin",
 		TargetID = "ReactorWin",
 		WindowTitle = "Fusion Reactor",
-		Geometry = { 100,100,1000,600 },
+		Geometry = { 100,100,1160,600 },
 		Composition = comp,
 
 		ui:HGroup
@@ -861,7 +1336,7 @@ function CreateMainWin()
 				},
 				ui:TextEdit
 				{
-					Weight = 1.0,
+					Weight = 1.5,
 					ID = "Description",
 					ReadOnly = true,
 					TabStopWidth = 32,
@@ -883,8 +1358,16 @@ function CreateMainWin()
 	itm.Description:SetPaletteColor("All", "Base", { R=0.12, G=0.12, B=0.12, A=1.0 })
 
 	itm.AtomTree.ColumnCount = 6
-	itm.AtomTree:SetHeaderLabels({"Name", "Category", "Version", "Author", "Date", "ID"})
-	itm.AtomTree.ColumnWidth[0] = 200
+	itm.AtomTree:SetHeaderLabels({"Name", "Category", "Version", "Author", "Date", "Repo", "Status", "ID", })
+	itm.AtomTree.ColumnWidth[0] = 240
+	itm.AtomTree.ColumnWidth[1] = 120
+	itm.AtomTree.ColumnWidth[2] = 52
+	itm.AtomTree.ColumnWidth[3] = 130
+	itm.AtomTree.ColumnWidth[4] = 78
+	itm.AtomTree.ColumnWidth[5] = 68
+	itm.AtomTree.ColumnWidth[6] = 68
+	itm.AtomTree.ColumnWidth[7] = 190
+
 	itm.AtomTree:SortByColumn(0, "AscendingOrder")
 
 	function win.On.ReactorWin.Close(ev)
@@ -900,6 +1383,13 @@ function CreateMainWin()
 		g_FilterText = ev.Text
 		itm.SearchButton.Text = (g_FilterText == "") and "\xF0\x9F\x94\x8D" or "\xF0\x9F\x97\x99",
 		PopulateAtomTree(itm.AtomTree)
+
+		if g_FilterText and g_FilterText ~= "" then
+			-- @todo - add items found count Fusion Reactor | Searching for "foo" | X items found
+			itm.ReactorWin.WindowTitle = "Fusion Reactor | Searching for \"" .. tostring(g_FilterText) .. "\""
+		else
+			itm.ReactorWin.WindowTitle = "Fusion Reactor"
+		end
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
@@ -1076,24 +1566,32 @@ function PopulateAtomTree(tree)
 			if (v.Category .. "/"):sub(1, #g_Category) == g_Category then
 				if #g_FilterText == 0 or MatchFilter(v, g_FilterText:lower()) then
 					it = tree:NewItem()
-						it.Text[0] = v.Name
-						it.Text[1] = v.Category
-						it.Text[2] = ("%.2f"):format(v.Version or 0)
-						it.Text[3] = v.Author
-						if v.Date then
-							it.Text[4] = ("%04d-%02d-%02d"):format(v.Date[1], v.Date[2], v.Date[3])
-						end
-						it.Text[5] = v.ID
 
-						it.CheckState[0] = installed and "Checked" or "Unchecked"
-						it.Flags = { ItemIsSelectable = true, ItemIsEnabled = true }
-						it:SetData(0, "UserRole", GetAtomID(v))
+					local disabled = "OK"
+					if v.Disabled == true then
+						disabled = "Disabled"
+					end
 
-						if v.Disabled then
-							for i=0,5 do
-								it.TextColor[i] = { R=1, G=1, B=1, A=0.3 }
-							end
+					it.Text[0] = v.Name
+					it.Text[1] = v.Category
+					it.Text[2] = ("%.2f"):format(v.Version or 0)
+					it.Text[3] = v.Author
+					if v.Date then
+						it.Text[4] = ("%04d-%02d-%02d"):format(v.Date[1], v.Date[2], v.Date[3])
+					end
+					it.Text[5] = v.Repo
+					it.Text[6] = disabled
+					it.Text[7] = v.ID
+
+					it.CheckState[0] = installed and "Checked" or "Unchecked"
+					it.Flags = { ItemIsSelectable = true, ItemIsEnabled = true }
+					it:SetData(0, "UserRole", GetAtomID(v))
+
+					if v.Disabled then
+						for i=0,7 do
+							it.TextColor[i] = { R=1, G=1, B=1, A=0.3 }
 						end
+					end
 					tree:AddTopLevelItem(it)
 				end
 			end
@@ -1124,6 +1622,9 @@ function Main()
 	end
 
 	CleanUp()
+
+	dprintf("[Status] Reactor Window Closed")
+	dprintf("--------------------------------------------------------------------------------\n\n")
 end
 
 Main()

@@ -1,0 +1,124 @@
+--[[-- 
+A simple frame averaging tool, which temporally samples multiple frames around 
+the current time, and blends them into a single image..
+--]]--
+
+-- TODO
+-- Improve support for single channel
+-- falloff for samples?
+
+
+FuRegisterClass("FrameAverage", CT_Tool, {
+	REGS_Name = "Frame Average",
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "Avg",
+	REGS_OpDescription = "Averages several frames together.",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	})
+
+function Create()
+	InSample = self:AddInput("Sample Direction", "SampleDirection", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0.0,
+		{MBTNC_AddButton = "Backward", 	MBTNCD_ButtonWidth = 1/3, },
+		{MBTNC_AddButton = "Both", 		MBTNCD_ButtonWidth = 1/3, },
+		{MBTNC_AddButton = "Forward", 	MBTNCD_ButtonWidth = 1/3, },
+		INP_Integer = true,		
+		--INP_DoNotifyChanged = true, -- We want to hear about changes on this control
+		})
+
+	InMissing = self:AddInput("Missing Frames", "MissingFrames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0.0,
+		{MBTNC_AddButton = "Duplicate Original", 	MBTNCD_ButtonWidth = 0.5, },
+		{MBTNC_AddButton = "Blank Frame", 	MBTNCD_ButtonWidth = 0.5, },
+		INP_Integer = true,
+		--INP_DoNotifyChanged = true, -- We want to hear about changes on this control
+		})
+
+	InFrames = self:AddInput("Frames", "Frames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 5.0,
+		INP_Default = 0,
+		INP_Integer = true,
+		})
+
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+end
+ 
+function Process(req)
+	local frames = InFrames:GetValue(req).Value
+	local sample_dir = InSample:GetValue(req).Value
+	local missing = InMissing:GetValue(req).Value
+
+	if frames == 0 then
+		local img = InImage:GetValue(req)
+
+		OutImage:Set(req, img)
+		img = nil
+	else
+		local orig = InImage:GetValue(req)
+
+		local avg = Image({IMG_Like = orig, IMG_Depth = 8})
+		orig:Crop(avg, {CROP_XOffset = 0, CROP_YOffset = 0})
+
+		if sample_dir == 0 then
+			-- forwards
+			s = -frames
+			e = -1
+			divisor = frames + 1
+		elseif sample_dir == 1 then
+			--both
+			s = -frames
+			e = frames
+			divisor = (frames * 2) + 1
+		elseif sample_dir == 2 then
+			s = 1
+			e = frames
+			divisor = frames + 1
+		end
+
+		for i = s, e do
+			if not (i == 0) then
+				local sample = InImage:GetSource(req.Time + i)
+
+				if sample then
+					avg = avg:ChannelOpOf("Add", sample, {R = "fg.R", G = "fg.G", B = "fg.B", A = "fg.A"})
+
+					sample = nil
+				elseif missing == 0 then
+					avg = avg:ChannelOpOf("Add", orig, {R = "fg.R", G = "fg.G", B = "fg.B", A = "fg.A"})
+				end
+
+				collectgarbage()
+			end
+		end
+
+		-- now divide the results
+		avg = avg:ChannelOpOf("Multiply", nil, {R = 1/divisor, G = 1/divisor, B = 1/divisor, A = 1/divisor})
+
+		out = Image({IMG_Like = orig})
+
+		avg:Crop(out, {CROP_XOffset = 0, CROP_YOffset = 0})
+		avg = nil
+
+		OutImage:Set(req, out)
+		out = nil
+	end
+	collectgarbage()
+end
