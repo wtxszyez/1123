@@ -1,0 +1,757 @@
+{
+	Tools = ordered() {
+		ExponentialGlow = MacroOperator {
+			CustomData = {
+				HelpPage = "https://www.steakunderwater.com/VFXPedia/96.0.243.189/index2f2f.html?title=Settings_and_Macros/ExponentialGlow_Description",
+			}, 
+			Inputs = ordered() {
+				Input = InstanceInput {
+					SourceOp = "_ExpGlowBG",
+					Source = "Background",
+					Name = "Input",
+				},
+				GlowMask = InstanceInput {
+					SourceOp = "_ExpGlowMask",
+					Source = "GarbageMatte",
+					Name = "Glow Mask",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "_ExpGlowOut",
+					Source = "EffectMask",
+				},
+				Gain = InstanceInput {
+					SourceOp = "_ExpGlowGainSaturation",
+					Source = "Gain",
+					Default = 1,
+				},
+				Radius = InstanceInput {
+					SourceOp = "_BlurRadius1",
+					Source = "Radius",
+					Default = 1.0,
+				},
+				Falloff = InstanceInput {
+					SourceOp = "_AddGlow2",
+					Source = "Falloff",
+					Default = 1,
+				},
+				Separator1 = InstanceInput {
+					SourceOp = "_ExpGlowOut",
+					Source = "Separator1",
+				},
+				ColorNest = InstanceInput {
+					SourceOp = "_ExpGlowTint",
+					Source = "ColorNest",
+					Default = 0,
+				},
+				Saturation = InstanceInput {
+					SourceOp = "_ExpGlowGainSaturation",
+					Source = "Saturation",
+					Default = 1,
+				},
+				TintRed = InstanceInput {
+					SourceOp = "_ExpGlowTint",
+					Source = "TintRed",
+					ControlGroup = 8,
+					Default = 1,
+				},
+				TintGreen = InstanceInput {
+					SourceOp = "_ExpGlowTint",
+					Source = "TintGreen",
+					ControlGroup = 8,
+					Default = 1,
+				},
+				TintBlue = InstanceInput {
+					SourceOp = "_ExpGlowTint",
+					Source = "TintBlue",
+					ControlGroup = 8,
+					Default = 1,
+				},
+				Separator2 = InstanceInput {
+					SourceOp = "_ExpGlowOut",
+					Source = "Separator2",
+				},
+				EffectOnly = InstanceInput {
+					SourceOp = "_ExpGlowOut",
+					Source = "EffectOnly",
+					Default = 0,
+				},
+				Blend = InstanceInput {
+					SourceOp = "_ExpGlowOut",
+					Source = "Blend",
+					Default = 1.0,
+				},
+				Low = InstanceInput {
+					SourceOp = "_ExpGlowKey",
+					Source = "Low",
+					ControlGroup = 1,
+					Default = 0,
+					Page = "Advanced",
+				},
+				High = InstanceInput {
+					SourceOp = "_ExpGlowKey",
+					Source = "High",
+					ControlGroup = 1,
+					Default = 1,
+				},
+				Overscan = InstanceInput {
+					SourceOp = "_ExpGlowDomain",
+					Source = "Overscan",
+					Default = 0.1,
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "_ExpGlowOut",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "Exponential Blur",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				["_ExpGlowMask"] = MatteControl {
+					NameSet = true,
+					Inputs = {
+						InvertGarbageMatte = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "_ExpGlowBG",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 115.5, }, },
+				},
+				["_ExpGlowKey"] = LumaKeyer {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "_ExpGlowMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 115.5, }, },
+				},
+				["_ClearAlpha"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToAlpha = Input { Value = 15, },
+						Background = Input {
+							SourceOp = "_ExpGlowKey",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 115.5, }, },
+				},
+				["_PreGain"] = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Gain = Input { Value = 0.1, },
+						Input = Input {
+							SourceOp = "_ClearAlpha",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 115.5, }, },
+				},
+				["_Scale_2"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 0.5, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_PreGain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 115.5, }, },
+				},
+				["_Scale_4"] = Scale {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 0.25, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_PreGain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 214.5, }, },
+				},
+				["_BlurRadius128"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 64,
+							Expression = "_BlurRadius1.XBlurSize * 128",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 214.5, }, },
+				},
+				["_BlurRadius32"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 16,
+							Expression = "_BlurRadius1.XBlurSize * 32",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 148.5, }, },
+				},
+				["_BlurRadius16"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 8,
+							Expression = "_BlurRadius1.XBlurSize * 16",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 115.5, }, },
+				},
+				["_BlurRadius64"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 32,
+							Expression = "_BlurRadius1.XBlurSize * 64",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 181.5, }, },
+				},
+				["_BlurRadius8"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 4,
+							Expression = "_BlurRadius1.XBlurSize * 8",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 82.5, }, },
+				},
+				["_BlurRadius4"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 2,
+							Expression = "_BlurRadius1.XBlurSize * 4",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_PreGain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 49.5, }, },
+				},
+				["_BlurRadius2"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input { Expression = "_BlurRadius1.XBlurSize * 2", },
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_PreGain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 16.5, }, },
+				},
+				["_BlurRadius1"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 0.5,
+							Expression = "Radius",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_PreGain",
+							Source = "Output",
+						},
+						Radius = Input { Value = 0.5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, -16.5, }, },
+					UserControls = ordered() {
+						Radius = {
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MaxScale = 10,
+							ICD_Center = 1,
+							INP_Default = 1,
+						},
+					},
+				},
+				["_BlurRadius256"] = Blur {
+					NameSet = true,
+					Inputs = {
+						Filter = Input { Value = FuID { "Multi-box", }, },
+						Alpha = Input { Value = 0, },
+						XBlurSize = Input {
+							Value = 128,
+							Expression = "_BlurRadius1.XBlurSize * 256",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Input = Input {
+							SourceOp = "_Scale_4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 247.5, }, },
+				},
+				["_ExpGlowBG"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 4, },
+						ToGreen = Input { Value = 4, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 412.5, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				["_Scale_2a"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius8",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 82.5, }, },
+				},
+				["_Scale_2c"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius32",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 148.5, }, },
+				},
+				["_Scale_2b"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius16",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 115.5, }, },
+				},
+				["_Scale_4a"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 4, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius64",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 181.5, }, },
+				},
+				["_Scale_4c"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 4, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius256",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 247.5, }, },
+				},
+				["_Scale_4b"] = Scale {
+					NameSet = true,
+					Inputs = {
+						XSize = Input { Value = 4, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "_BlurRadius128",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 214.5, }, },
+				},
+				["_AddGlow8"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 3)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow4",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_2a",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 82.5, }, },
+				},
+				["_ExpGlowDomain"] = SetDomain {
+					NameSet = true,
+					Inputs = {
+						Mode = Input { Value = FuID { "Set", }, },
+						Left = Input {
+							Value = -0.1,
+							Expression = "-Overscan",
+						},
+						Bottom = Input {
+							Value = -0.1,
+							Expression = "-Overscan",
+						},
+						Right = Input {
+							Value = 1.1,
+							Expression = "1 + Overscan",
+						},
+						Top = Input {
+							Value = 1.1,
+							Expression = "1 + Overscan",
+						},
+						Combine = Input { Value = FuID { "Intersect", }, },
+						Input = Input {
+							SourceOp = "_AddGlow256",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 280.5, }, },
+					UserControls = ordered() {
+						Overscan = {
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_Default = 0.1,
+						},
+					},
+				},
+				["_AddGlow32"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 5)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow16",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_2c",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 148.5, }, },
+				},
+				["_AddGlow16"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 4)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow8",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_2b",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 115.5, }, },
+				},
+				["_AddGlow128"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 7)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow64",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_4b",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 214.5, }, },
+				},
+				["_AddGlow2"] = ChannelBoolean {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / Falloff", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_BlurRadius1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_BlurRadius2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 16.5, }, },
+					UserControls = ordered() {
+						Falloff = {
+							LINKID_DataType = "Number",
+							INP_MinScale = 0.1,
+							INP_MinAllowed = 0.5,
+							INPID_InputControl = "SliderControl",
+							IC_Steps = 0.1,
+							INP_MaxScale = 3,
+							ICD_Center = 1,
+							INP_Default = 1,
+						},
+					},
+				},
+				["_ExpGlowGainSaturation"] = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						ClipBlack = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "_ExpGlowDomain",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 313.5, }, },
+				},
+				["_ExpGlowTint"] = ColorGain {
+					NameSet = true,
+					Inputs = {
+						GainNest = Input { Value = 0, },
+						GainRed = Input { Expression = "TintRed", },
+						GainGreen = Input { Expression = "TintGreen", },
+						GainBlue = Input { Expression = "TintBlue", },
+						LiftNest = Input { Value = 0, },
+						GammaNest = Input { Value = 0, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1, },
+											{ 0.125, 0.75, },
+											{ 0.375, 0.25, },
+											{ 0.5, 0, },
+										},
+									},
+									{
+										Points = {
+											{ 0.5, 0, },
+											{ 0.625, 0.25, },
+											{ 0.875, 0.75, },
+											{ 1, 1, },
+										},
+									},
+								},
+							},
+						},
+						Input = Input {
+							SourceOp = "_ExpGlowGainSaturation",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 346.5, }, },
+					UserControls = ordered() {
+						ColorNest = {
+							INP_Default = 0,
+							INP_Passive = true,
+							LBLC_DropDownButton = true,
+							INPID_InputControl = "LabelControl",
+							LBLC_NumInputs = 4,
+							LBLC_NestLevel = 1,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Color",
+						},
+						TintRed = {
+							INP_Default = 1,
+							IC_ControlGroup = 1,
+							CLRC_ShowWheel = true,
+							INPID_InputControl = "ColorControl",
+							CLRC_ColorSpace = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							LINKS_Name = "Glow Tint",
+						},
+						TintGreen = {
+							IC_ControlGroup = 1,
+							INPID_InputControl = "ColorControl",
+							IC_ControlID = 1,
+							CLRC_ColorSpace = 0,
+							LINKID_DataType = "Number",
+							INP_Default = 1,
+						},
+						TintBlue = {
+							INP_Default = 1,
+							CLRC_ShowWheel = true,
+							INPID_InputControl = "ColorControl",
+							CLRC_ColorSpace = 0,
+							LINKID_DataType = "Number",
+							IC_ControlID = 2,
+							IC_ControlGroup = 1,
+						},
+					},
+				},
+				["_AddGlow4"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 2)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_BlurRadius4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 49.5, }, },
+				},
+				["_AddGlow256"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 8)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow128",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_4c",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 247.5, }, },
+				},
+				["_AddGlow64"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "1.0 / math.pow(_AddGlow2.Falloff, 6)", },
+						Operation = Input { Value = 1, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_AddGlow32",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_Scale_4a",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 181.5, }, },
+				},
+				["_ExpGlowOut"] = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Operation = Input {
+							Value = 1,
+							Expression = "1 - math.min(math.max(0, EffectOnly), 1)",
+						},
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "_ExpGlowBG",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "_ExpGlowTint",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 412.5, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						Separator1 = {
+							LBLC_DropDownButton = false,
+							INPID_InputControl = "LabelControl",
+							LBLC_NumInputs = 0,
+							INP_Default = 0,
+							INP_External = false,
+							LINKID_DataType = "Number",
+							INP_Passive = true,
+							LBLC_NestLevel = 1,
+							LINKS_Name = "",
+						},
+						EffectOnly = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Effect Only",
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 0,
+						},
+						Separator2 = {
+							LBLC_DropDownButton = false,
+							INPID_InputControl = "LabelControl",
+							LBLC_NumInputs = 0,
+							INP_Default = 0,
+							INP_External = false,
+							LINKID_DataType = "Number",
+							INP_Passive = true,
+							LBLC_NestLevel = 1,
+							LINKS_Name = "",
+						},
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.423529411764706, G = 0.545098039215686, B = 0.376470588235294, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+	ActiveTool = "ExponentialBlur",
+}

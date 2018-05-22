@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - 2018-05-20 10.12 PM
+Open Containing Folder - 2018-05-22 01.58 AM
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
@@ -72,23 +72,26 @@ function Main()
 		
 		local result = nil
 		-- Read the file path data from the node
-		if toolAttrs.TOOLS_RegID == 'Loader' then
-		
-			mediaDirName = Dirname(comp:MapPath(toolAttrs.TOOLST_Clip_Name[1]))
-			-- Get the file name from the clip
-			result = '[Loader file] ' .. tostring(mediaDirName)
+		if toolAttrs.TOOLS_RegID == 'MediaIn' then
+			loadedImage = comp:MapPath(selectedNode:GetData('MediaProps.MEDIA_PATH'))
+			mediaDirName = Dirname(loadedImage)
+			result = '[MediaIn file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Loader' then
+			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
+			mediaDirName = Dirname(loadedImage)
+			result = '[Loader file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Saver' then
 			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
 			mediaDirName = Dirname(loadedImage)
-			result = '[Saver file] ' .. tostring(mediaDirName)
+			result = '[Saver file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceFBXMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('ImportFile'))
 			mediaDirName = Dirname(loadedMesh)
-			result = '[FBXMesh3D file] ' .. tostring(mediaDirName)
+			result = '[FBXMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceAlembicMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = Dirname(loadedMesh)
-			result = '[AlembicMesh3D file] ' .. tostring(mediaDirName)
+			result = '[AlembicMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'ExporterFBX' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = Dirname(loadedMesh)

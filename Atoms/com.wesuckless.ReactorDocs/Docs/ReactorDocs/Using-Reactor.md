@@ -188,6 +188,7 @@ Here is a quick summary of the typical Reactor categories that are supported in 
 - Tools/Particles
 - Tools/Plugins
 - Tools/Tracking
+- Tools/Transform
 - Tools/Warp
 - Viewshaders
 
