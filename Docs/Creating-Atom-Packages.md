@@ -123,7 +123,7 @@ When adding html tags to the description text, you are unable to add any `<img>`
 
 ### <a name="adding-emoticon-images-to-the-description"></a>Adding Emoticon Images to the Description ###
 
-The atom description field supports the insertion of HTML based smilie/emoticon images. You have 18 different images to choose from:
+The atom description field supports the insertion of HTML based smilie/emoticon images. You have 19 different images to choose from:
 
 ![Emoticons](Images/atom-description-emoticons.png)
 
