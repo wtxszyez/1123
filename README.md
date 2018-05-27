@@ -43,6 +43,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 		- [Platform Specific Deploy Entries](Docs/Creating-Atom-Packages.md#platform-specific-deploy-entries)
 	- [Adding a Package Dependency](Docs/Creating-Atom-Packages.md#adding-a-package-dependency)
 	- [Adding Documentation](Docs/Creating-Atom-Packages.md#adding-documentation)
+	- [Adding Fusion Minimum/Maximum Compatibility](Docs/Creating-Atom-Packages.md#adding-fusion-minimum-maximum-compatibility)
 	- [InstallScripts and UninstallScript](Docs/Creating-Atom-Packages.md#installscripts-and-uninstallscripts)
 		- [UI Manager GUIs](Docs/Creating-Atom-Packages.md#ui-manager-guis)
 		- [Create Shortcut Function](Docs/Creating-Atom-Packages.md#create-shortcut)

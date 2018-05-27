@@ -14,8 +14,8 @@
 	- [Adding a Deploy Platform Requirement](Creating-Atom-Packages.md#adding-a-deploy-platform-requirement)
 		- [Platform Specific Deploy Entries](Creating-Atom-Packages.md#platform-specific-deploy-entries)
 	- [Adding a Package Dependency](Creating-Atom-Packages.md#adding-a-package-dependency)
-	- [Adding Fusion Minimum/Maximum Compatibility](Creating-Atom-Packages.md#adding-fusion-minimum-maximum-compatibility)
 	- [Adding Documentation](Creating-Atom-Packages.md#adding-documentation)
+	- [Adding Fusion Minimum/Maximum Compatibility](Creating-Atom-Packages.md#adding-fusion-minimum-maximum-compatibility)
 	- [InstallScripts and UninstallScript](Creating-Atom-Packages.md#installscripts-and-uninstallscripts)
 		- [UI Manager GUIs](Creating-Atom-Packages.md#ui-manager-guis)
 		- [Create Shortcut Function](Creating-Atom-Packages.md#create-shortcut)
@@ -107,6 +107,7 @@ The rich text formatting capability is possible since the description GUI elemen
 If you want to insert a `<` character in the description you should use the HTML encoded "entity" version `&lt;`. If you want to insert a `>` character in the description you should use the HTML encoded "entity" version `&gt;`.
 
 The copyright symbol would be added using the HTML encoded "entity" version `&copy;`.
+
 If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:
 
 `[` has an HTML encoded format of `&#91;`
