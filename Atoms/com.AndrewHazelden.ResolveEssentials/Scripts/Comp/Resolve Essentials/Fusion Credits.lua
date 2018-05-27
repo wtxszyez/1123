@@ -1,23 +1,46 @@
-
 --[[--
-Fusion Credits v1.0 - 2018-05-27
+Fusion Credits v1.1 - 2018-05-27
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 Overview:
-This script shows a Fusion Credits dialog that gives thanks to the developers who created Eyeon / Blackmagic Fusion.
+This script shows a "Fusion Credits" dialog that gives thanks to the developers who created Eyeon / Blackmagic Fusion.
 --]]--
 
-local ui = fu.UIManager
-local disp = bmd.UIDispatcher(ui)
-
--- Find out the current Fusion host platform (Windows/Mac/Linux)
-platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+developerNames = {
+"Stuart MacKinnon",
+"Peter Loveday",
+"Leo Wong",
+"Anastasio Garcia",
+"Peter Urbanec",
+"Stephen Horwat",
+"Vesa Peltonen",
+"Daniel Koch",
+"Srecko Zrillic",
+"Jith Kumar",
+"Raf Schoenmaekers",
+"Mike Gibson",
+"Swati Tulsian",
+"Colin Hui",
+}
 
 -- Create a "Credits Window" dialog
 function CreditsWindow()
+	local ui = fu.UIManager
+	local disp = bmd.UIDispatcher(ui)
+
+	-- Find out the current Fusion host platform (Windows/Mac/Linux)
+	platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
 	local URL = 'http://www.blackmagicdesign.com/'
-		
-	local width,height = 400,250
+	
+	-- Assemble the names in the list
+	local developerNamesStr = ''
+	for i,val in ipairs(randomOrder(developerNames)) do
+		developerNamesStr = val .. ', ' .. developerNamesStr
+	end
+	developerNamesStr = developerNamesStr .. 'and Steve Roberts.'
+
+	local width,height = 400,270
 	win = disp:AddWindow({
 		ID = 'CreditsWin',
 		TargetID = 'CreditsWin',
@@ -48,7 +71,7 @@ function CreditsWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [[<h1>Fusion for ]] .. platform .. [[</h1>
 <p>The WSL community would like to thank the people we know were involved in the creation of Fusion:</p>
-<p>Stuart MacKinnon, Peter Loveday, Daniel Koch, Stephen Horwat, Jith Kumar, Leo Wong, Anastasio Garcia, Peter Urbanec, Vesa Peltonen, Srecko Zrillic, Raf Schoenmaekers, Mike Gibson, Swati Tulsian, Colin Hui and Steve Roberts.</p>]],
+<p>]] .. developerNamesStr .. [[ </p>]],
 			},
 		},
 	})
@@ -93,5 +116,19 @@ function CreditsWindow()
 	return win,win:GetItems()
 end
 
+-- Randomize the order of numeric Lua table entries:
+-- From Stackoverflow tip: https://stackoverflow.com/questions/32069912/lua-sort-table-and-randomize-ties#32070757
+function randomOrder(tbl)
+	-- Randomize the starting seed value for the number generator
+	math.randomseed(bmd.getuptime())
+	
+	-- Resort the table list
+	local len, random = #tbl, math.random
+	for i = len, 2, -1 do
+		local j = random(1, i)
+		tbl[i], tbl[j] = tbl[j], tbl[i]
+	end
+	return tbl
+end
 
 CreditsWindow()
