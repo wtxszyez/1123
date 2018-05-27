@@ -21,6 +21,7 @@ developerNames = {
 "Mike Gibson",
 "Swati Tulsian",
 "Colin Hui",
+"Steve Roberts",
 }
 
 -- Create a "Credits Window" dialog
@@ -36,9 +37,17 @@ function CreditsWindow()
 	-- Assemble the names in the list
 	local developerNamesStr = ''
 	for i,val in ipairs(randomOrder(developerNames)) do
-		developerNamesStr = val .. ', ' .. developerNamesStr
+		if i == 1 then
+			-- First name in the list
+			developerNamesStr = val
+		elseif i ~= #developerNames then
+			-- Every other name in the list
+			developerNamesStr = developerNamesStr .. ', ' .. val
+		else
+			-- Last name in the list
+			developerNamesStr = developerNamesStr .. ', and ' .. val .. '.'
+		end
 	end
-	developerNamesStr = developerNamesStr .. 'and Steve Roberts.'
 
 	local width,height = 400,270
 	win = disp:AddWindow({
@@ -117,7 +126,7 @@ function CreditsWindow()
 end
 
 -- Randomize the order of numeric Lua table entries:
--- From Stackoverflow tip: https://stackoverflow.com/questions/32069912/lua-sort-table-and-randomize-ties#32070757
+-- From the Stackoverflow tip: https://stackoverflow.com/questions/32069912/lua-sort-table-and-randomize-ties#32070757
 function randomOrder(tbl)
 	-- Randomize the starting seed value for the number generator
 	math.randomseed(bmd.getuptime())
