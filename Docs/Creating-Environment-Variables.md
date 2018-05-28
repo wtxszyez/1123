@@ -39,9 +39,9 @@ The `REACTOR_DEBUG_FILES` environment variable can be set to true if you want to
 
 ### <a name="reactor-debug-collections"></a>Reactor Debug Collections ###
 
-The `REACTOR_DEBUG_Collections` environment variable can be set to true while you are developing and testing atoms that use the Reactor Collections category.
+The `REACTOR_DEBUG_COLLECTIONS` environment variable can be set to true while you are developing and testing atoms that use the Reactor Collections category.
 
-`REACTOR_DEBUG_Collections=true`
+`REACTOR_DEBUG_COLLECTIONS=true`
 
 ### <a name="reactor-branch"></a>Reactor Branch ###
 

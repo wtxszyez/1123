@@ -39,9 +39,9 @@ The `REACTOR_DEBUG_FILES` environment variable can be set to true if you want to
 
 ### <a name="reactor-debug-collections"></a>Reactor Debug Collections ###
 
-The `REACTOR_DEBUG_Collections` environment variable can be set to true while you are developing and testing atoms that use the Reactor Collections category.
+The `REACTOR_DEBUG_COLLECTIONS` environment variable can be set to true while you are developing and testing atoms that use the Reactor Collections category.
 
-`REACTOR_DEBUG_Collections=true`
+`REACTOR_DEBUG_COLLECTIONS=true`
 
 ### <a name="reactor-branch"></a>Reactor Branch ###
 
@@ -138,7 +138,11 @@ You will then see a directory listing that looks something like this:
 			-rw-r--r--@  1 root  wheel   475 Oct 25 07:27 setenv.reactor.REACTOR_DEBUG_FILES.plist
 			-rw-r--r--@  1 root  wheel   473 Dec  7 22:23 setenv.reactor.REACTOR_INSTALL_PATHMAP.plist
 
+If you don't want to install the .plist files in the system wide LaunchAgents folder you have the option to use a user account specific entry of:
+
+			$HOME/Library/LaunchAgents/
+
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2018-05-21
+Last Revised 2018-05-28
