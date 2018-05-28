@@ -1,4 +1,4 @@
-_VERSION = [[v1 2018-05-15]]
+_VERSION = [[v1.1 2018-05-28]]
 _AUTHOR = [[Andrew Hazelden <andrew@andrewhazelden.com>]]
 --[[--
 Transfer Atom Settings
@@ -20,13 +20,22 @@ $(HOME)/Desktop/com.Local.Reactor.TransferAtomSettings.atom
 Make one settings file per repo and add the repo prefix to the folder name:
 com.Local.<Repo Name>.TransferAtomSettings.atom
 --]]--
+local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
 _ATOM_PACKAGE_NAME = [[Transfer Atom Settings]]
 _ATOM_CATEGORY = [[Collections]]
-_ATOM_AUTHOR = tostring(os.getenv('USER'))
+
+-- Add the user account name - Example: Administrator
+if platform == 'Windows' then
+	_ATOM_AUTHOR = tostring(os.getenv('USERNAME'))
+else
+	-- Mac and Linux
+	_ATOM_AUTHOR = tostring(os.getenv('USER'))
+end
+
 _ATOM_VERSION = 1
 _ATOM_REPO = [[Reactor]]
-_ATOM_DESCRIPTION = [[<p>This atom package is special in that it allows you to autmatically restore your previous atom settings on another system.</p>
+_ATOM_DESCRIPTION = [[<p>This atom package is special in that it allows you to automatically restore your previous atom settings on another system.</p>
 
 <h2>Usage Note</h2>
 
@@ -38,7 +47,6 @@ _ATOM_DESCRIPTION = [[<p>This atom package is special in that it allows you to a
 <p>Step 3. Click on the "]] .. _ATOM_PACKAGE_NAME .. [[" file and then press the "Install" or "Update" buttons.</p>
 ]]
 
-local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
 -- Find out the current operating system's / or \\ path separator symbol
 local osSeparator = package.config:sub(1,1)
