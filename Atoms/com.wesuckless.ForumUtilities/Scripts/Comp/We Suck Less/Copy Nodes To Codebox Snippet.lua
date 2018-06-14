@@ -1,10 +1,11 @@
 --[[--
-Copy to Codebox - v1.4 Feb 8, 2018
+Copy to Codebox - v1.5 Jun 13, 2018
 by Pieter Van Houte
 
 A quick code snippet that copies the flow view selection and formats it for easy inclusion on the WSL forum. This script also creates the codebox filename based on the OS' date and time.
 
 Change log:
+v1.5	- added workaround for bmd.getclipboard() apparently losing the last line containing the closing bracket on MacOS
 v1.4	- added tiny wait after comp:Copy(tools) to avoid occasional hiccups 
 v1.3	- removed print string duplication (thanks once more Andrew!)
 v1.2	- splitting into functions, more error handling and now capable of itself being posted inside of WSL Codebox tags :) (thanks again AndrewHazelden)
@@ -53,7 +54,7 @@ end
 -- The main function
 function Main()
 	local opentag = "[" .. "Codebox=lua file=WSLsnippet-" .. os.date("%Y%b%d") .. "-" .. os.date("%H%M") .. ".setting" .. "]"
-	local closetag = "[" .. "/Codebox" .. "]"
+	local closetag = "\n}[" .. "/Codebox" .. "]" -- v1.5
 
 	-- Get the nodes in the comp
 	local tools = fusion.CurrentComp:GetToolList(true)
@@ -63,7 +64,7 @@ function Main()
 		-- Copy the selected nodes from the flow area
 		local err = comp:Copy(tools)
 		bmd.wait(0.01)
-		local nodes = bmd:getclipboard()
+		local nodes = bmd:getclipboard():gsub("(.*)[\n].*$","%1") -- v1.5
 	
 		-- Check if the copy command succeeded
 		if err == true and nodes ~= nil then
