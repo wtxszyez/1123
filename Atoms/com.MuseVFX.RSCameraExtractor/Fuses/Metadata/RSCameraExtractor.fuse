@@ -1,0 +1,190 @@
+--[[--
+This tool extracts the Redshift Camera Matrix metadata and converts it to individual fields.
+Portions of this code are by Andrew Hazelden, Fuse by Bryan Ray for MuseVFX
+Based in part on the Copy Metadata Fuse
+
+v1.0 6/11/2018, Corrected the rotation matrix multiplication for ZXY rotation order.
+v0.1 5/30/2018, intial release
+--]]--
+
+FuRegisterClass("RSCameraExtractor", CT_Tool, {
+	REGS_Name = "RS Camera Extractor",
+	REGS_Category = "Metadata",
+	REGS_OpIconString = "RSCam",
+	REGS_OpDescription = "Reformats Redshift Camera Metadata",
+	REG_NoMotionBlurCtrls = true,
+	REG_NoBlendCtrls = true,
+	REG_OpNoMask = true,
+	REG_NoPreCalcProcess = true,	-- make default PreCalcProcess() behaviour be to call Process() rather than automatic pass through.
+	REG_SupportsDoD = true,
+	REG_Version = 100,
+	})
+
+function Create()
+
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})				
+end
+
+function Process(req) 
+
+	local img = InImage:GetValue(req)
+
+	local result = Image({IMG_Like = img, IMG_NoData = req:IsPreCalc()})
+	-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+	img:Crop(result, { })
+
+	local newmetadata = result.Metadata or {}
+	
+	-- Transform
+	if result.Metadata.RSCameraTransform ~= nil then
+	  m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,m15,m16 = string.match(result.Metadata.RSCameraTransform, "([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+)")
+
+
+		-- Adding the XYZ Offset
+		newmetadata.Translate = {}
+		newmetadata.Translate.X = m13
+		newmetadata.Translate.Y = m14
+		newmetadata.Translate.Z = m15
+		
+		-- Adding the ZXY Rotation. See comments at end of file for the correct matrix and an analysis of the solution
+		newmetadata.Rotate = {}
+		local rx = math.asin(m10)
+		newmetadata.Rotate.X = math.deg(rx)
+	  
+		if math.cos(-m10) ~= 0 then
+--			newmetadata.Test = "arctan("..m2.."/"..math.cos(-math.asin(m10)..", "..m6.."/"..math.cos(newmetadata.Rotate.X)
+			newmetadata.Rotate.Z = math.deg(math.atan2(m2/math.cos(rx), m6/math.cos(rx)))
+			newmetadata.Rotate.Y = math.deg(math.atan2(m9/math.cos(rx), m11/math.cos(rx))) - 180
+		else
+			newmetadata.Rotate.Z = 0
+			newmetadata.Rotate.Y = math.deg(math.atan2(m3, m1)) - 180
+		end
+			
+	end
+	  
+
+	-- Aperture
+	newmetadata.Aperture = {}
+	if result.Metadata.RSCameraAperture ~= nil then
+	  a1,a2 = string.match(result.Metadata.RSCameraAperture, "([%w%-%.]+),([%w%-%.]+)")
+	  newmetadata.Aperture.W = a1
+	  newmetadata.Aperture.H = a2
+	end
+
+	-- Lens Shift X/Y
+	newmetadata.LensShift = {}
+	if result.Metadata.RSCameraShift ~= nil then
+	  lx,ly = string.match(result.Metadata.RSCameraShift, "([%w%-%.]+),([%w%-%.]+)")
+	  newmetadata.LensShift.X = lx
+	  newmetadata.LensShift.Y = ly
+	end
+
+	
+	result.Metadata = newmetadata
+
+
+	OutImage:Set(req, result)
+end
+
+--[[--
+The Redshift Camera Transform matrix is ZXY. The following shows the results of multiplying out the rotation matrices
+
+|												|												|							|			|
+| m1 = cos(Ry)*cos(Rz)+sin(Ry)*sin(Rx)*sin(Rz) 	| m5 = sin(Rx)*sin(Ry)*cos(Rz)-cos(Ry)*sin(Rx) 	| m9 = sin(Ry)*cos(Rx)		| m13 = Tx	|
+| m2 = cos(Rx)*sin(Rz)							| m6 = cos(Rx)*cos(Rz)							| m10 = -sin(Rx)			| m14 = Ty	|
+| m3 = cos(Ry)*sin(Rx)*sin(Rz)-sin(Ry)*cos(Rz)	| m7 = sin(Ry)*sin(Rz)+cos(Ry)*sin(Rx)*cos(Rz)	| m11 = cos(Ry)*cos(Rx)		| m15 = Tz	|
+| m4 = 0										| m8 = 0										| m12 = 0					| m16 = 1	|
+|												|												|							|			|
+
+From "Computing Euler angles from a rotation matrix" by Gregory G. Slabaugh (with some
+adaptation, editing, and annotation by Bryan Ray):
+
+Starting with m10, we find 
+	m10 = -sin(Rx)		
+
+This equation can be inverted to yield
+	Rx = -asin(m10)							(1)
+	
+However, one must be careful in interpreting this equation. Since sin(π - θ) = sin(θ), 
+there are actually two distinct values of Rx that satisfy Equation 1. 
+(For the purposes of getting a single valid result, this Fuse disregards the second case.
+It is possible that some circumstances may warrant retrieving that second result, in which
+case a switch should be added to the Fuse to use it.)
+
+We will handle the special case of m10 = +/-1 later in this report.
+
+To find the values for Ry, we observe that
+	m9/m11 = tan(Ry)
+	
+We use this equation to solve for Ry, as 
+	Ry = atan2(m9, m11)						(2)
+where atan2(x,y) is the arc tangent of the two variables x and y. It is similar to 
+calculating the arc tangent of y/x, except that the signs of both arguments are
+used to determine the quadrant of the result, which lies in the range [-π, π].
+The function atan2 is available in Lua's math library as math.atan2().
+
+One must be careful in interpreting Equation 2. If cos(Rx) > 0, then Ry = atan2(m9, m11).
+However, when cos(Rx) < 0, Ry = atan2(-m9, -m11). A simple way to handle this is to use 
+the equation
+	Ry = atans(m9/cos(Rx), m11/cos(Rx)		(3)
+	
+(Remember that this is radians, but the Fuse is outputting degrees. Make sure that you 
+don't use the actual Rotate.X value here!)
+
+Equation 3 is valid for all cases except when cos(Rx) = 0. We will deal with this special
+case later in this report. (Since we have disregarded the second result for Rx, we will 
+likewise discard the second result for Ry.)
+
+A similar analysis holds for finding Rz. We observe that
+	m2/m6 = tan(Rz)
+	
+We solve for Rz using the equation
+	Rz= = atan2(m2/cos(Rx), m6/cos(Rx))		(6)
+	
+Again, this equation is valid for all cases except when cos(Rx) = 0. We will deal with this
+special case later in this report (he couldn't have put a bookmark in the pdf for "later
+in this report"? Anyway, once again we'll throw away the alternate solution.)
+
+For the case of cos(Rx) ~= 0, we now have a triplet of Euler angles that reproduce the rotation 
+matrix, namely
+	(Rz, Rx, Ry)
+	
+If we had not discarded the alternate solutions, there would be another, equally valid triplet.
+
+The technique described above does not work if the m10 element of the rotation matrix is 1 or -1,
+which corresponds to Rx = -π/2 or Rx = π/2, respectively, and to cos(Rx) = 0. When we try to solve 
+for Ry and Rz using the above technique, problems will occur since equations 3 and 6 will become
+	Ry = atan2(0/0, 0/0)
+	Rz = atan2(0/0, 0/0)
+	
+In this case, m2, m6, m9, and m11 do not constrain the values of Ry and Rz. Therefore we must use
+different elements of the rotation matrix to comput the values of Ry and Rz.
+
+Consider the case when Rx = π/2. Then
+	m3 = cos(Ry)*sin(Rz)-sin(Ry)*cos(Rz) = sin(Ry - Rz)
+	m1 = cos(Ry)*cos(Rz)+sin(Ry)*sin(Rz) = cos(Ry - Rz)
+	
+Using these, we find that
+	Ry - Rz = atan2(m3, m1)
+	Ry = Rz + atan2(m3, m1)
+	
+Not surprisingly, a similar result holds for the case when Rx = -π/2, for which
+	Rz = -Ry + atan2(-m3, -m1)
+
+In both cases, we have found that Ry and Rz are linked. This phenomenon is called Gimbal lock. 
+Although in this case there are an infinite number of solutions to the problem, in practice, one
+is often interested in finding just one solution. For this task, it is convenient to set Rz = 0
+and compute Ry as described above.
+
+(Slabaugh goes on to provide a Pseudo-code example, but we've already got fully realized Lua code
+above, so I'll skip that and his conclusion.)
+	
+--]]--

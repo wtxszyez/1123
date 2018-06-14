@@ -1,0 +1,200 @@
+{
+	Tools = ordered() {
+		GradientMapper1 = MacroOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "Channel",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "High",
+					ControlGroup = 5,
+					Default = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "Low",
+					ControlGroup = 5,
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "SoftEdge",
+					Name = "Softness",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "GM_BitmapMask",
+					Source = "Invert",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Detail",
+					Name = "Noise Detail",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Contrast",
+					Name = "Noise Contrast",
+					Default = 1,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Discontinuous",
+					Name = "Discontinuous Noise",
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Inverted",
+					Name = "Inverted Noise",
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Center",
+					Name = "Noise Center",
+				},
+				Input11 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "XScale",
+					Name = "Noise Scale",
+					Default = 1,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Angle",
+					Name = "Noise Angle",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Seethe",
+					Name = "Noise Seethe",
+					Default = 0,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "SeetheRate",
+					Name = "Noise Seethe Rate",
+					Default = 0,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "GradientType",
+				},
+				Input16 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Start",
+					Name = "Line Start",
+					DefaultX = 0,
+					DefaultY = 0.5,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "End",
+					Name = "Line End",
+					DefaultX = 1,
+					DefaultY = 0.5,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Gradient",
+				},
+				Input19 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Offset",
+					Default = 0.5,
+				},
+				Input20 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "Repeat",
+					Default = 0,
+				},
+				Input21 = InstanceInput {
+					SourceOp = "GM_FastNoise",
+					Source = "SubPixel",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "GM_FastNoise",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "GradientMapper",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				GM_BitmapMask = BitmapMask {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Channel = Input {
+							Value = FuID { "Luminance", },
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 332, 24, },
+					},
+				},
+				GM_FastNoise = FastNoise {
+					ExtentSet = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input {
+							Value = 300,
+						},
+						Detail = Input {
+							Value = 0,
+						},
+						Brightness = Input {
+							Value = 1,
+						},
+						XScale = Input {
+							Value = 1,
+						},
+						YScale = Input {
+							Disabled = true,
+						},
+						Type = Input {
+							Value = 1,
+						},
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+						Offset = Input {
+							Value = 0.5,
+						},
+						FrameRenderScript = Input {
+							Value = "Width = GM_BitmapMask.Image.Width\r\nHeight = GM_BitmapMask.Image.Height\r\nDepth = GM_BitmapMask.Image.Depth - 4\r\nPixelAspect = {GM_BitmapMask.Image.XScale, GM_BitmapMask.Image.YScale}",
+						},
+						NoiseBrightnessMap = Input {
+							SourceOp = "GM_BitmapMask",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo {
+						Pos = { 456, 24, },
+					},
+				},
+			},
+		},
+	},
+	ActiveTool = "GradientMapper1",
+	Name = "GradientMapper1",
+	IsMacro = true,
+}
