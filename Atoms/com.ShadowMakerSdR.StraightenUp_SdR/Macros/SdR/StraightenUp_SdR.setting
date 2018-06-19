@@ -1,0 +1,194 @@
+{
+	Tools = ordered() {
+		StraightenUp_SdR = MacroOperator{
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2277",
+				},
+			Inputs = ordered() {
+				HorizonRight = Input { Value = { 0.75, 0.5 }, },
+				HorizonLeft = Input { Value = { 0.25, 0.5 }, },
+				PutYourImageInHere = InstanceInput {
+					SourceOp = "PipeRouter1",
+					Source = "Input",
+				},
+				Size = InstanceInput {
+					SourceOp = "Scaler",
+					Source = "Size",
+					Default = 1,
+				},
+				Edges = InstanceInput {
+					SourceOp = "Leveller",
+					Source = "Edges",
+					Default = 0,
+				},
+				Reset = InstanceInput {
+					SourceOp = "Previewer",
+					Source = "ResetButton",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "Previewer",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 440, 49.5 },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					GridSnap = true,
+					ShowGrid = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 730.5, 254.6, 225.75, 50 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -442.25, 5.5 }
+			},
+			Tools = ordered() {
+				Leveller = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Pivot = Input { Expression = "StraightenUp_SdR.Pivot", },
+						Angle = Input {
+							SourceOp = "Offset1",
+							Source = "Angle",
+						},
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 16.5 } },
+				},
+				Previewer = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					NameSet = true,
+					Inputs = {
+						Mix = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Scaler",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 115.5 } },
+					UserControls = ordered() {
+					ResetButton = {
+					ICD_Width = 1,
+					INP_Integer = false,
+					LINKID_DataType = "Number",
+					BTNCS_Execute = [[
+					Previewer.Mix=0
+					StraightenUp_SdR.Size = 1
+					StraightenUp_SdR.Edges = 0
+					StraightenUp_SdR.Pivot = {0.5, 0.5}
+					StraightenUp_SdR.HorizonLeft= {0.25, 0.5}
+					StraightenUp_SdR.HorizonRight= {0.75, 0.5}
+					]],
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Reset All Settings"
+						}
+					}
+				},
+				PipeRouter1 = PipeRouter {
+					CtrlWShown = false,
+					ViewInfo = PipeRouterInfo { Pos = { 330, 16.5 } },
+				},
+				Scaler = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Pivot = Input { Expression = "StraightenUp_SdR.Pivot", },
+						Edges = Input {
+							Value = 3,
+							Expression = "Leveller.Edges",
+						},
+						Input = Input {
+							SourceOp = "Leveller",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 16.5 } },
+				}
+			},
+			UserControls = ordered() {
+				HorizonRight = {
+					ICS_ControlPage = "Controls",
+					INPID_PreviewControl = "PointControl",
+					LINKID_DataType = "Point",
+					LINKS_Name = "HorizonRight"
+				},
+				HorizonLeft = {
+					INPID_PreviewControl = "PointControl",
+					LINKID_DataType = "Point",
+					PCID_PrevPoint = "HorizonRight",
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "HorizonLeft"
+				},
+				OriginalImage = {
+					INP_MaxAllowed = 1000000,
+					INP_Integer = false,
+					INPID_InputControl = "ButtonControl",
+					BTNCS_Execute = "Previewer.Mix=0",
+					INP_MaxScale = 1,
+					INP_MinScale = 0,
+					INP_MinAllowed = -1000000,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					ICD_Width = 0.5,
+					LINKS_Name = "Original Image"
+				},
+				ShowResult = {
+					INP_MaxAllowed = 1000000,
+					INP_Integer = false,
+					INPID_InputControl = "ButtonControl",
+					BTNCS_Execute = "Previewer.Mix=1",
+					INP_MaxScale = 1,
+					INP_MinScale = 0,
+					INP_MinAllowed = -1000000,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					ICD_Width = 0.5,
+					LINKS_Name = "Show Result"
+				},
+				Pivot = {
+					INPID_PreviewControl = "CrosshairControl",
+					LINKID_DataType = "Point",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "OffsetControl",
+					CHC_Style = "DiagonalCross",
+					LINKS_Name = "Pivot"
+				}
+			}
+		},
+		Offset1 = Offset {
+			CtrlWZoom = false,
+			Inputs = {
+				Position = Input {
+					Value = { 0.25, 0.5 },
+					Expression = "StraightenUp_SdR.HorizonLeft",
+				},
+				Offset = Input {
+					Value = { 0.75, 0.5 },
+					Expression = "StraightenUp_SdR.HorizonRight",
+				},
+				Mode = Input { Value = 1, },
+			},
+		}
+	},
+	ActiveTool = "StraightenUp_SdR"
+}
