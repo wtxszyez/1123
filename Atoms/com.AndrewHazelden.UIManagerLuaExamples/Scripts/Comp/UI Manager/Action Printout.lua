@@ -1,4 +1,4 @@
---[[
+--[[--
 Action Printout v1.0 - 2018-06-17
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
@@ -25,3 +25,4 @@ for i, act in ipairs(actionList) do
 		print(act.ID)
 	end
 end
+
