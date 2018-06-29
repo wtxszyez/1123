@@ -1,4 +1,4 @@
-_VERSION = [[Version 2.0 - May 21, 2018]]
+_VERSION = [[Version 2.0.1 - June 29, 2018]]
 --[[--
 ==============================================================================
 Reactor Package Manager for Fusion - v2.0 2018-05-21
@@ -232,14 +232,33 @@ function FindAtom(id)
 	return nil
 end
 
+function OpenURL(siteName, path)
+		if platform == "Windows" then
+				-- Running on Windows
+				command = "explorer \"" .. path .. "\""
+		elseif platform == "Mac" then
+				-- Running on Mac
+				command = "open \"" .. path .. "\" &"
+		elseif platform == "Linux" then
+				-- Running on Linux
+				command = "xdg-open \"" .. path .. "\" &"
+		else
+				print("[Error] There is an invalid Fusion platform detected")
+				return
+		end
+		os.execute(command)
+		-- print("[Launch Command] ", command)
+		print("[Opening URL] [" .. siteName .. "] " .. path)
+end
+
 function AskDonation(atom)
 	local donationtext = ""
 	if atom.Donation.Amount ~= "" then
 		donationAlign = { AlignHCenter = true, AlignTop = true }
-		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick below to donate:"
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick the button to donate via the URL:"
 	else
 		donationAlign = { AlignHCenter = true, AlignVCenter = true }
-		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation to:"
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation via the URL:"
 	end
 
 	local win = disp:AddWindow(
@@ -247,7 +266,7 @@ function AskDonation(atom)
 		ID = "DonationWin",
 		TargetID = "DonationWin",
 		WindowTitle = "Reactor",
-		Geometry = { 500,300,400,200 },
+		Geometry = { 500,300,730,185 },
 		ui:VGroup
 		{
 			ui:Label
@@ -263,8 +282,7 @@ function AskDonation(atom)
 				ID = "URL",
 				Weight = 0,
 				Alignment = { AlignHCenter = true, AlignVCenter = true },
-				OpenExternalLinks = true,
-				Text = "<a href=" .. atom.Donation.URL .. " style=\"color: rgb(139,155,216)\">" .. atom.Donation.URL .. "</a>",
+				Text = atom.Donation.URL,
 			},
 
 			ui:VGap(20),
@@ -274,14 +292,15 @@ function AskDonation(atom)
 				Weight = 0,
 
 				ui:HGap(0, 1.0),
-				ui:Button { ID = "OK", Text = "OK" },
+				ui:Button { ID = "Donate", Text = "Shut up and take my money!" },
 				ui:HGap(0, 1.0),
 			},
 		},
 
 	})
 
-	function win.On.OK.Clicked(ev)
+	function win.On.Donate.Clicked(ev)
+		OpenURL("Donate to " .. atom.Name, atom.Donation.URL)
 		disp:ExitLoop()
 	end
 
