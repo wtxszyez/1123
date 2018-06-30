@@ -1,0 +1,151 @@
+{
+	Tools = ordered() {
+		FilmicTonemapping1 = MacroOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = ordered() {
+				Comments = Input { Value = "Filmic tonemap operator is based on John Hable's work for Unchartered 2:  http://filmicgames.com/archives/75\r\n\r\nCopyright 2013 Martin Geupel\r\nThanks goes to Simon Lundberg for the respective Nuke Gizmo!\r\nFeel free to re-use, adapt, distribute and change tool to suit your needs, but please don't sell it.", },
+				MainInput1 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "Image1",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn1",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn2",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn3",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn4",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn5",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn6",
+				},
+				Input7 = InstanceInput {
+					SourceOp = "FilmicTonemapping",
+					Source = "NumberIn7",
+					MaxScale = 20,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FilmicTonemapping",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 1045, 247.5, }, },
+			Tools = ordered() {
+				FilmicTonemapping = Custom {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Value = 0.22, },
+						NumberIn2 = Input { Value = 0.3, },
+						NumberIn3 = Input { Value = 0.1, },
+						NumberIn4 = Input { Value = 0.2, },
+						NumberIn5 = Input { Value = 0.01, },
+						NumberIn6 = Input { Value = 0.3, },
+						NumberIn7 = Input { Value = 11.2, },
+						LUTIn1 = Input {
+							SourceOp = "FilmicTonemappingLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "FilmicTonemappingLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "FilmicTonemappingLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "FilmicTonemappingLUTIn4",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "n5/n6", },
+						Setup2 = Input { Value = "n4*n6", },
+						Setup3 = Input { Value = "n4*n5", },
+						Setup4 = Input { Value = "n3*n2", },
+						Intermediate1 = Input { Value = "( ( (n7*(n2*n7+s4)+s3) / (n7*(n1*n7+n2)+s2) ) - s1) ", },
+						RedExpression = Input { Value = "( ( (r1*(n2*r1+s4)+s3) / (r1*(n1*r1+n2)+s2) ) - s1) *i1", },
+						GreenExpression = Input { Value = "( ( (g1*(n2*g1+s4)+s3) / (g1*(n1*g1+n2)+s2) ) - s1) *i1", },
+						BlueExpression = Input { Value = "( ( (b1*(n2*b1+s4)+s3) / (b1*(n1*b1+n2)+s2) ) - s1) *i1", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "Shoulder Str.", },
+						NameforNumber2 = Input { Value = "Linear Str.", },
+						NameforNumber3 = Input { Value = "Linear Angle", },
+						NameforNumber4 = Input { Value = "Toe Str.", },
+						NameforNumber5 = Input { Value = "Toe Num.", },
+						NameforNumber6 = Input { Value = "Toe Denum.", },
+						NameforNumber7 = Input { Value = "White Point", },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Comments = Input { Value = "Filmic tonemap operator is based on John Hable's work for Unchartered 2:  http://filmicgames.com/archives/75\r\n\r\nCopyright 2013 Martin Geupel\r\nThanks goes to Simon Lundberg for the respective Nuke Gizmo!\r\nFeel free to re-use, adapt, distribute and change tool to suit your needs, but please don't sell it.", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15, }, },
+				},
+				FilmicTonemappingLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+					CtrlWShown = false,
+				},
+				FilmicTonemappingLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+					CtrlWShown = false,
+				},
+				FilmicTonemappingLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+					CtrlWShown = false,
+				},
+				FilmicTonemappingLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+					CtrlWShown = false,
+				},
+			},
+		},
+	},
+	ActiveTool = "FilmicTonemapping1",
+}

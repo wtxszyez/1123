@@ -1,0 +1,213 @@
+{
+	Tools = ordered() {
+		Reinhard_Tonemapping = MacroOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "ToneMap_Yxy2XYZ",
+					Source = "NumberIn1",
+					Default = 1,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ToneMap_Yxy2XYZ",
+					Source = "NumberIn2",
+					Default = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ToneMap_Yxy2XYZ",
+					Source = "NumberIn3",
+					MaxScale = 5,
+					Default = 1,
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "RGB2XYZ",
+					Source = "Input",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "XYZ2RGB",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				XYZ2RGB = ColorSpace {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ColorSpaceConversion = Input { Value = 2, },
+						ColorType = Input { Value = 5, },
+						Input = Input {
+							SourceOp = "ToneMap_Yxy2XYZ",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 955, 231, }, },
+				},
+				ToneMap_Yxy2XYZ = Custom {
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Value = 1, },
+						NumberIn2 = Input { Value = 1, },
+						NumberIn3 = Input { Value = 1, },
+						LUTIn1 = Input {
+							SourceOp = "ToneMap_Yxy2XYZLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "ToneMap_Yxy2XYZLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "ToneMap_Yxy2XYZLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "ToneMap_Yxy2XYZLUTIn4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "r1 * n1 / n2", },
+						Intermediate2 = Input { Value = "(i1 * (1.0 + i1 / (n3^2))) / (1 + i1)", },
+						RedExpression = Input { Value = "i2 * g1 / b1", },
+						GreenExpression = Input { Value = "i2", },
+						BlueExpression = Input { Value = "i2 * (1 - g1 - b1) / b1", },
+						NameforNumber1 = Input { Value = "exposure", },
+						NameforNumber2 = Input { Value = "avg luminance", },
+						NameforNumber3 = Input { Value = "whitePoint", },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "XYZ2Yxy",
+							Source = "Output",
+						},
+						Comments = Input { Value = "n1 = exposure\r\nn2 = avgLuminance\r\nn3 = whitePoint", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 842, 231, }, },
+				},
+				ToneMap_Yxy2XYZLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+				},
+				ToneMap_Yxy2XYZLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+				},
+				ToneMap_Yxy2XYZLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+				},
+				ToneMap_Yxy2XYZLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+				},
+				XYZ2Yxy = Custom {
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "XYZ2YxyLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "XYZ2YxyLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "XYZ2YxyLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "XYZ2YxyLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "g1", },
+						GreenExpression = Input { Value = "r1 / (r1 + g1 + b1)", },
+						BlueExpression = Input { Value = "g1 / (r1 + g1 + b1)", },
+						Image1 = Input {
+							SourceOp = "RGB2XYZ",
+							Source = "Output",
+						},
+						Comments = Input { Value = "Doing the XYZ to Yxy in a separate CT for readability", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 732, 231, }, },
+				},
+				XYZ2YxyLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0, },
+				},
+				XYZ2YxyLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0, },
+				},
+				XYZ2YxyLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204, },
+				},
+				XYZ2YxyLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333, }, Flags = { Linear = true, }, },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667, }, Flags = { Linear = true, }, },
+						},
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204, },
+				},
+				RGB2XYZ = ColorSpace {
+					NameSet = true,
+					Inputs = {
+						ColorSpaceConversion = Input { Value = 1, },
+						ColorType = Input { Value = 5, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 622, 231, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "Reinhard_Tonemapping",
+}
