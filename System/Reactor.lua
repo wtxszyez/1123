@@ -1,7 +1,7 @@
-_VERSION = [[Version 2.0 - May 21, 2018]]
+_VERSION = [[Version 2.0.1 - June 29, 2018]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0 2018-05-21
+Reactor Package Manager for Fusion - v2.0.1 2018-06-29
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -126,6 +126,12 @@ if os.getenv("REACTOR_DEBUG") == "true" then
 	dprintf("[Status] REACTOR_DEBUG Env Var: Enabled")
 end
 
+if os.getenv("REACTOR_LOCAL_SYSTEM") then
+	dprintf("[Status] REACTOR_LOCAL_SYSTEM Env Var: " .. tostring(os.getenv("REACTOR_LOCAL_SYSTEM")))
+else
+	dprintf("[Status] REACTOR_LOCAL_SYSTEM Env Var: Disabled")
+end
+
 if os.getenv("REACTOR_DEBUG_FILES") == "true" then
 	dprintf("[Status] REACTOR_DEBUG_FILES Env Var: Enabled")
 else
@@ -232,14 +238,33 @@ function FindAtom(id)
 	return nil
 end
 
+function OpenURL(siteName, path)
+		if g_ThisPlatform == "Windows" then
+				-- Running on Windows
+				command = "explorer \"" .. path .. "\""
+		elseif g_ThisPlatform == "Mac" then
+				-- Running on Mac
+				command = "open \"" .. path .. "\" &"
+		elseif g_ThisPlatform == "Linux" then
+				-- Running on Linux
+				command = "xdg-open \"" .. path .. "\" &"
+		else
+				print("[Error] There is an invalid Fusion platform detected")
+				return
+		end
+		os.execute(command)
+		-- print("[Launch Command] ", command)
+		print("[Opening URL] [" .. siteName .. "] " .. path)
+end
+
 function AskDonation(atom)
 	local donationtext = ""
 	if atom.Donation.Amount ~= "" then
 		donationAlign = { AlignHCenter = true, AlignTop = true }
-		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick below to donate:"
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation of " .. atom.Donation.Amount .. ".\n\nClick the button to donate via the URL:"
 	else
 		donationAlign = { AlignHCenter = true, AlignVCenter = true }
-		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation to:"
+		donationText = "The author of the atom:\n" .. atom.Name .. "\nhas suggested a donation via the URL:"
 	end
 
 	local win = disp:AddWindow(
@@ -247,7 +272,7 @@ function AskDonation(atom)
 		ID = "DonationWin",
 		TargetID = "DonationWin",
 		WindowTitle = "Reactor",
-		Geometry = { 500,300,400,200 },
+		Geometry = { 500,300,730,185 },
 		ui:VGroup
 		{
 			ui:Label
@@ -263,8 +288,7 @@ function AskDonation(atom)
 				ID = "URL",
 				Weight = 0,
 				Alignment = { AlignHCenter = true, AlignVCenter = true },
-				OpenExternalLinks = true,
-				Text = "<a href=" .. atom.Donation.URL .. " style=\"color: rgb(139,155,216)\">" .. atom.Donation.URL .. "</a>",
+				Text = atom.Donation.URL,
 			},
 
 			ui:VGap(20),
@@ -274,14 +298,15 @@ function AskDonation(atom)
 				Weight = 0,
 
 				ui:HGap(0, 1.0),
-				ui:Button { ID = "OK", Text = "OK" },
+				ui:Button { ID = "Donate", Text = "Shut up and take my money!" },
 				ui:HGap(0, 1.0),
 			},
 		},
 
 	})
 
-	function win.On.OK.Clicked(ev)
+	function win.On.Donate.Clicked(ev)
+		OpenURL("Donate to " .. atom.Name, atom.Donation.URL)
 		disp:ExitLoop()
 	end
 
@@ -926,7 +951,6 @@ function ReadAtoms(path)
 					end
 
 					if plat and not enable then
-						-- table.insert(atom.Issues, "This Atom does not support this platform.")
 						table.insert(atom.Issues, "This Atom package cannot be installed on your OS.")
 						atom.Disabled = plat and not enable
 					end
@@ -1537,6 +1561,24 @@ function IsAtomInstalled(id)
 	return bmd.fileexists(installed_root .. id .. ".atom")
 end
 
+function IsAtomUpdatable(atom)
+	if atom and atom.ID and IsAtomInstalled(GetAtomID(atom)) and atom.Version then
+		local installedAtomPath = installed_root .. GetAtomID(atom) .. ".atom"
+		local installedAtom = bmd.readfile(installedAtomPath)
+		if installedAtom and installedAtom.Version then
+			if atom.Version ~= installedAtom.Version then
+				return true
+			else
+				return false
+			end
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 function MatchFilter(t, filter)
 	for i,v in pairs(t) do
 		if type(v) == "string" or type(v) == "number" then
@@ -1561,17 +1603,15 @@ function PopulateAtomTree(tree)
 
 	for i,v in ipairs(Atoms) do
 		local installed = IsAtomInstalled(GetAtomID(v))
-
+		local updatable = IsAtomUpdatable(v)
+		
 		if not g_Repository or g_Repository == v.Repo or (installed and g_Repository == "Installed") then
 			if (v.Category .. "/"):sub(1, #g_Category) == g_Category then
 				if #g_FilterText == 0 or MatchFilter(v, g_FilterText:lower()) then
 					it = tree:NewItem()
-
-					local disabled = "OK"
-					if v.Disabled == true then
-						disabled = "Disabled"
-					end
-
+					
+					local status = (v.Disabled and "Disabled") or (updatable and "Update") or 'OK'
+					
 					it.Text[0] = v.Name
 					it.Text[1] = v.Category
 					it.Text[2] = ("%.2f"):format(v.Version or 0)
@@ -1580,16 +1620,20 @@ function PopulateAtomTree(tree)
 						it.Text[4] = ("%04d-%02d-%02d"):format(v.Date[1], v.Date[2], v.Date[3])
 					end
 					it.Text[5] = v.Repo
-					it.Text[6] = disabled
+					it.Text[6] = status
 					it.Text[7] = v.ID
-
+					
 					it.CheckState[0] = installed and "Checked" or "Unchecked"
 					it.Flags = { ItemIsSelectable = true, ItemIsEnabled = true }
 					it:SetData(0, "UserRole", GetAtomID(v))
-
+					
 					if v.Disabled then
 						for i=0,7 do
-							it.TextColor[i] = { R=1, G=1, B=1, A=0.3 }
+							it.TextColor[i] = { R=1, G=1, B=1, A=0.3}
+						end
+					elseif updatable then
+						for i=0,7 do
+							it.TextColor[i] = { R=0.55, G=0.6, B=0.84, A=1.0}
 						end
 					end
 					tree:AddTopLevelItem(it)
