@@ -1,4 +1,4 @@
-_VERSION = [[Version 2.0 - May 21, 2018]]
+_VERSION = [[Version 2.0.1 - July 4, 2018]]
 --[[
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -128,6 +128,16 @@ or
 - Added error handling for when the "Open Atom Package" dialog's default filepath no longer exists.
 - Added a new "Templates" root level category.
 - Added a new "Tools/Transform" category.
+
+### 2.0.1 2018-07-04 ###
+
+- Fixed a ui:Button flat tag syntax error.
+- Added a new "Tools/Film" category.
+- Added a new "Tools/IO" category.
+- Added a new "Tools/Mask" category.
+- Added a new "Tools/Metadata" category.
+- Added a new "Tools/Position" category.
+- Added a new "Tools/Stereo" category.
 
 ## Todos ##
 
@@ -351,16 +361,16 @@ end
 -- this is a great function for ripping a filepath into little bits
 -- returns a table with the following
 --
--- FullPath	: The raw, original path sent to the function
--- Path		: The path, without filename
--- FullName	: The name of the clip w\ extension
--- Name     : The name without extension
+-- FullPath : The raw, original path sent to the function
+-- Path : The path, without filename
+-- FullName : The name of the clip w\ extension
+-- Name : The name without extension
 -- CleanName: The name of the clip, without extension or sequence
--- SNum		: The original sequence string, or "" if no sequence
--- Number 	: The sequence as a numeric value, or nil if no sequence
+-- SNum : The original sequence string, or "" if no sequence
+-- Number : The sequence as a numeric value, or nil if no sequence
 -- Extension: The raw extension of the clip
--- Padding	: Amount of padding in the sequence, or nil if no sequence
--- UNC		: A true or false value indicating whether the path is a UNC path or not
+-- Padding : Amount of padding in the sequence, or nil if no sequence
+-- UNC : A true or false value indicating whether the path is a UNC path or not
 ------------------------------------------------------------------------------
 function parseFilename(filename)
 	local seq = {}
@@ -372,14 +382,14 @@ function parseFilename(filename)
 		seq.Name = seq.FullName
 	end
 
-	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	string.gsub(seq.Name, "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
 
 	if seq.SNum then
 		seq.Number = tonumber( seq.SNum )
 		seq.Padding = string.len( seq.SNum )
 	else
-	   seq.SNum = ""
-	   seq.CleanName = seq.Name
+		seq.SNum = ""
+		seq.CleanName = seq.Name
 	end
 
 	if seq.Extension == nil then seq.Extension = "" end
@@ -653,16 +663,23 @@ function AtomWin()
 		{text = 'Tools/Composite'},
 		{text = 'Tools/Creator'},
 		{text = 'Tools/Effect'},
+		{text = 'Tools/Film'},
 		{text = 'Tools/Filter'},
 		{text = 'Tools/Flow'},
+		{text = 'Tools/IO'},
+		{text = 'Tools/Mask'},
 		{text = 'Tools/Matte'},
+		{text = 'Tools/Metadata'},
 		{text = 'Tools/Miscellaneous'},
 		{text = 'Tools/Modifier'},
 		{text = 'Tools/Optical Flow'},
 		{text = 'Tools/Particles'},
+		{text = 'Tools/Position'},
 		{text = 'Tools/Plugins'},
+		{text = 'Tools/Stereo'},
 		{text = 'Tools/Tracking'},
 		{text = 'Tools/Transform'},
+		{text = 'Tools/VR'},
 		{text = 'Tools/Warp'},
 		{text = 'Viewshaders'},
 	}
@@ -805,7 +822,6 @@ function AtomWin()
 		return
 		ui:Button{
 			ID = 'IconButton' .. tostring(index),
-			Flat = false,
 			IconSize = iconsToolbarSmall,
 			Icon = ui:Icon{
 				File = iconsDir .. filename

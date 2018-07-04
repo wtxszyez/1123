@@ -738,7 +738,7 @@ function ErrorWin(title, text)
 				},
 				WordWrap = true,
 			},
-
+			
 			ui:HGroup{
 				Weight = 1,
 				-- Add a horizontal spacer
