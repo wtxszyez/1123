@@ -1,0 +1,451 @@
+--[[--
+NetLoader - v1.2 2018-07-04 08.58 PM
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+The NetLoader fuse uses cURL to download and display a still image in Fusion's viewer window using the "file://", "http://", and "https://" web protocols. To use this node type in a URL, and then click the "Download Image" button.
+
+The NetLoader fuse allows you to load jpg/png/bmp/exr/fusepic/raw/tga/tiff/psd format imagery into the composite. In Fusion Standalone you can also load in mp4 and mov movies and scrubbing the timeline will update the current frame in the video. Since this Loader node replacement is implemented as a fuse you can instance this node in your comp, and you can save S1-S6 settings.
+
+Fusion 9.0.2 or Resolve 15 B4+ is required.
+
+If there is an error loading an image you will see a blank canvas. The "Verbose" button lets you see the raw cURL download data which is useful for troubleshooting HTTP error messages.
+
+If you have auto-proxy enabled (APrx) in your comp you may notice a view updating glitch occasionally down stream of this fuse related to the way the proxy resolution is set. If this bothers you, adding a crop node after this fuse, and setting the crop node to the frame size should stop this glitch from happening.
+
+# Controls #
+
+URL (TextEditControl)
+
+	- The URL field allows you to download images using a cURL HTTP/HTTPS network connection.
+
+File Type (ComboControl)
+
+	- Lets you define the file type of the Download.
+
+		JPEG
+		PNG
+		BMP
+		EXR
+		FUSEPIC
+		RAW
+		TGA
+		TIFF
+		PSD
+		MP4
+		MOV
+
+Download Image (Button)
+
+	- Clicking this button will refresh the image in the view by downloading the image that is defined in the URL field.
+
+Open Containing Folder (Button)
+
+	- Clicking this button will show a desktop folder browsing window that shows the temporary folder where NetLoader images are saved to.
+
+Clear Old Downloads (Button)
+
+	- Should a previous download be removed automatically the next time the comp is opened, or when a new node of the same name is added to the comp?
+
+Verbose(Checkbox)
+
+	- Print debugging information like the raw cURL download data.
+
+# Sample Image URLS #
+
+## Reactor Logo URL ##
+
+https://www.steakunderwater.com/wesuckless/styles/Subway/theme/nivo-slider/images/reactorresolved.png
+
+## Eastern Canada Weather Satellite URL ##
+
+https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg
+
+## Fusion 9 Smile Brush Local File URL ##
+
+file:///Applications/Blackmagic%20Fusion%209/Fusion.app/Contents/MacOS/Brushes/smile.tga
+
+# Version History #
+
+v1.0 2018-06-16
+	- Initial version
+
+v1.1 2018-06-17
+	- Added Open Containing Folder (Button)
+	- Added Clear Old Downloads (Checkbox)
+
+v1.2 2018-07-04
+	- Reactor packaged version
+
+--]]--
+
+FuRegisterClass('NetLoader', CT_Tool, {
+	REGS_Name = 'NetLoader',
+	REGS_Category = 'I/O',
+	REGS_OpIconString = 'NLD',
+	REGS_OpDescription = 'Downloads a jpg/png/bmp/exr/fusepic/raw/tga/tiff/mp4/mov format image from the web and then displays it.',
+	REGS_Company = 'Andrew Hazelden',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	REGS_HelpTopic = 'http://www.andrewhazelden.com',
+	
+	-- Should the current time setting be cached?
+	REG_TimeVariant = true,
+	
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_SupportsDoD = true,
+	
+	-- Should the Edit and Reload buttons be hidden?
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	
+	-- Version number where 120 = v1.20
+	REG_Version = 120,
+	})
+
+function Create()
+	-- Remove the default "Controls" page from the Fuse GUI
+	self:RemoveControlPage('Controls')
+	
+	-- Add a new "File" page to the Fuse GUI
+	self:AddControlPage('File')
+	
+	-- Add a text field with fuse usage info
+	InHELP = self:AddInput('Help', 'Help', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INPS_DefaultText = [=[The NetLoader fuse uses cURL to download and display a still image in Fusion's viewer window using the "file://", "http://", and "https://" web protocols. To use this node type in a URL, and then click the "Download Image" button.
+
+If there is an error loading an image you will see a blank canvas. The "Verbose" button lets you see the raw cURL download data which is useful for troubleshooting HTTP error messages.]=],
+		TEC_Wrap = true,
+		TEC_ReadOnly = false,
+		TEC_Lines = 6,
+		ICS_ControlPage = 'File',
+		})
+	
+	-- Add a text field that is used to paste in the download URL
+	InURL = self:AddInput('URL', 'URL', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INPS_DefaultText = '',
+		TEC_Lines = 1,
+		ICS_ControlPage = 'File',
+		})
+	
+	-- Add a ComboControl control to list the file type that are supported for downloads.
+	InFileType = self:AddInput('File Type', 'FileType', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ComboControl',
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'JPEG' },
+		{ CCS_AddString = 'PNG' },
+		{ CCS_AddString = 'BMP' },
+		{ CCS_AddString = 'EXR' },
+		{ CCS_AddString = 'FUSEPIC' },
+		{ CCS_AddString = 'RAW' },
+		{ CCS_AddString = 'TGA' },
+		{ CCS_AddString = 'TIFF' },
+		{ CCS_AddString = 'PSD' },
+		{ CCS_AddString = 'MP4' },
+		{ CCS_AddString = 'MOV' },
+		CC_LabelPosition = 'Vertical'
+	})
+	
+	-- The button that actually downloads the content
+	InDownload = self:AddInput('Download Image', 'Download', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		})
+	
+	-- The button that allows you to browse to the Temp folder where downloaded files are saved
+	InOpenContainingFolder = self:AddInput('Open Containing Folder', 'OpenContainingFolder', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		})
+	
+	-- Should a previous download be removed automatically the next time the comp is opened, or when a new node of the same name is added to the comp?
+	InClearOldDownloads = self:AddInput("Clear Old Downloads", "ClearOldDownloads", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_DoNotifyChanged = true,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		ICS_ControlPage = 'File',
+		})
+	
+	-- Verbose Console logging
+	InVerbose = self:AddInput("Verbose", "Verbose", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_DoNotifyChanged = true,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		ICS_ControlPage = 'File',
+		})
+	
+	-- The output node connection where imagery is pushed out of the fuse
+	OutImage = self:AddOutput('Output', 'Output', {
+		LINKID_DataType = 'Image',
+		LINK_Main = 1,
+		})
+end
+
+function NotifyChanged(inp, param, time)
+	if inp == InDownload and param and param.Value == 1 then
+		-- Should detailed logging be printed to the Console
+		local verbose = InVerbose:GetSource(time).Value
+		
+		-- The download URL (HTTP/HTTPS)
+		local url = InURL:GetSource(time).Value
+		
+		-- Get the file extension
+		local fileType = InFileType:GetSource(time).Value
+		local fileExt = GetFileType(fileType)
+		
+		-- Get the current NetLoader node name
+		local nodeName = self.Name
+		
+		-- Get the comp name like "Composition1"
+		local compName = tostring(self.Comp.Name)
+		-- Remove spaces from the file name
+		compName = string.gsub(compName, '%s+', '')
+		-- Remove the ".comp" file extension if it is present
+		compName = string.gsub(compName, '%.comp', '')
+		
+		-- Create the filename for the downloaded image
+		local folder = self.Comp:MapPath('Temp:/NetLoader/')
+		local filename = folder .. compName .. '_' .. nodeName .. '.0.' .. fileExt
+		
+		-- Create the folder if it doesn't exist yet
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			print('[Created Directory]', folder)
+		end
+		
+		-- Download the resource
+		Download(filename, url, verbose)
+	elseif inp == InOpenContainingFolder and param and param.Value == 1 then
+		-- Create the filename for the downloaded image
+		local folder = self.Comp:MapPath('Temp:/NetLoader/')
+		
+		-- Create the folder if it doesn't exist yet
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			print('[Created Directory]', folder)
+		end
+		
+		-- Open the containing folder in a new desktop folder browsing window
+		if bmd.fileexists(folder) == true then
+			-- This openfileexternal() function only exists in Fusion 9+ and Resolve 15+.
+			bmd.openfileexternal('Open', folder)
+		end
+	end
+end
+
+-- The OnAddToFlow() function is automatically run when the a new fuse node is added to the comp, or when the .comp file is opened up.
+function OnAddToFlow()
+	-- Should a previous download be removed automatically the next time the comp is opened, or when a new node of the same name is added to the comp?
+	local clearOldDownloads = InClearOldDownloads:GetSource(0).Value
+	
+	if clearOldDownloads == 1 then
+		-- Get the file extension
+		local fileType = InFileType:GetSource(0).Value
+		local fileExt = GetFileType(fileType)
+	
+		-- Get the current NetLoader node name
+		local nodeName = self.Name
+	
+		-- Get the comp name like "Composition1"
+		local compName = tostring(self.Comp.Name)
+		-- Remove spaces from the file name
+		compName = string.gsub(compName, '%s+', '')
+		-- Remove the ".comp" file extension if it is present
+		compName = string.gsub(compName, '%.comp', '')
+	
+		-- Create the filename for the downloaded image
+		local folder = self.Comp:MapPath('Temp:/NetLoader/')
+		local filename = folder .. compName .. '_' .. nodeName .. '.0.' .. fileExt
+	
+		-- Create the folder if it doesn't exist yet
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			print('[Created Directory]', folder)
+		end
+	
+		-- Check if an old file exists from previous downloads
+		if bmd.fileexists(filename) == true then
+			-- Remove the old file
+			os.remove(filename)
+			
+			print('\n[NetLoader] Clearing Out the Previous Download')
+		end
+	end
+end
+
+function Process(req)
+	local currentFrame = req.Time
+	local date = os.date('%Y-%m-%d')
+	
+	-- Get the file extension
+	local fileType = InFileType:GetValue(req).Value
+	local fileExt = GetFileType(fileType)
+	
+	-- Get the current NetLoader node name
+	local nodeName = self.Name
+	
+	-- Get the comp name like "Composition1"
+	local compName = tostring(self.Comp.Name)
+	-- Remove spaces from the file name
+	compName = string.gsub(compName, '%s+', '')
+	-- Remove the ".comp" file extension if it is present
+	compName = string.gsub(compName, '%.comp', '')
+	
+	-- Create the filename for the downloaded image
+	local filename = self.Comp:MapPath('Temp:/NetLoader/' .. compName .. '_' .. nodeName .. '.0.' .. fileExt)
+	
+	-- Should detailed logging be printed to the Console
+	local verbose = InVerbose:GetValue(req).Value
+	
+	-- Verify the file exists
+	if bmd.fileexists(filename) == true then
+		-- Get the image clip
+		local clip = Clip(filename)
+	
+		if (fileExt == 'mp4') or (fileExt == 'mov') then
+			-- Start frame one of the clip at the GlobalStart range inpoint
+			timelineFrame = self.Comp.CurrentTime - self.Comp.GlobalStart
+			
+			if verbose == 1 then
+				print('[Frame] ', timelineFrame)
+			end
+			
+			out = clip:GetFrame(timelineFrame)
+		else
+			-- View frame 0 of the sequence
+			out = clip:GetFrame(0)
+		end
+		
+		-- Push the result to the node's output connection
+		OutImage:Set(req, out)
+	else
+		-- Fallback to a blank canvas when no image is found
+		local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width') or 1920
+		local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height') or 1080
+		
+		emptyImage = Image({
+			IMG_Width = compWidth,
+			IMG_Height = compHeight,
+			})
+		
+		-- Pixel defaults to black/clear
+		emptyImage:Fill(Pixel())
+		
+		-- Push the empty result to the node's output connection
+		OutImage:Set(req, emptyImage)
+	end
+end
+
+-- Download a file using cURL
+function Download(destFilename, url, verbose)
+	if url and url:match('^file://') or url:match('^https?://') then
+		ffi = require 'ffi'
+		curl = require 'lj2curl'
+		ezreq = require 'lj2curl.CRLEasyRequest'
+		local req = ezreq(url)
+		local body = {}
+		req:setOption(curl.CURLOPT_SSL_VERIFYPEER, 0)
+		req:setOption(curl.CURLOPT_WRITEFUNCTION, ffi.cast('curl_write_callback', function(buffer, size, nitems, userdata)
+			table.insert(body, ffi.string(buffer, size*nitems))
+			return nitems
+		end))
+		
+		print('\n\n[Comp] ' .. tostring(self.Comp.Name))
+		print('[Download URL] ' .. tostring(url))
+		print('[Local Filename] ', tostring(destFilename))
+		
+		ok, err = req:perform()
+		if ok then
+			-- Write the output to the terminal
+			if verbose == 1 then
+				print(table.concat(body))
+				print('\n')
+			end
+		
+			if table.concat(body) == [[{"message":"401 Unauthorized"}]] then
+				print('[cURL Error] 401 Unauthorized')
+				return false
+			elseif table.concat(body) == [[{"message":"404 Project Not Found"}]] then
+				print('[cURL Error] 404 Project Not Found')
+				return false
+			elseif table.concat(body) == [[{"message":"404 File Not Found"}]] then
+				print('[cURL Error] 404 File Not Found')
+				return false
+			elseif table.concat(body) == [[{"error":"invalid_token","error_description":"Token was revoked. You have to re-authorize from the user."}]] then
+				print('[cURL Error] Invalid Token')
+				return false
+			elseif table.concat(body) == [[{"message":"404 Commit Not Found"}]] then
+				print('[cURL Error] 404 Commit Not Found')
+				return false
+			elseif table.concat(body) == [[{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token.","scope":"api"}]] then
+				print('[cURL Error] Insufficient Scope')
+				return false
+			end
+			
+			-- Save file to disk
+			local file = io.open(destFilename, 'wb')
+			if file then
+				file:write(table.concat(body))
+				file:close()
+				return true
+			else
+				print('[Write Error]')
+				return false
+			end
+		end
+	else
+		print('\n[Download URL] Please enter a file/http/http based URL and try again!')
+		return false
+	end
+end
+
+-- Get the file extension
+function GetFileType(fileType)
+	local fileExt = ''
+	if fileType == 0 then
+		fileExt = 'jpg'
+	elseif fileType == 1 then
+		fileExt = 'png'
+	elseif fileType == 2 then
+		fileExt = 'bmp'
+	elseif fileType == 3 then
+		fileExt = 'exr'
+	elseif fileType == 4 then
+		fileExt = 'fusepic'
+	elseif fileType == 5 then
+		fileExt = 'raw'
+	elseif fileType == 6 then
+		fileExt = 'tga'
+	elseif fileType == 7 then
+		fileExt = 'tif'
+	elseif fileType == 8 then
+		fileExt = 'psd'
+	elseif fileType == 9 then
+		fileExt = 'mp4'
+	elseif fileType == 10 then
+		fileExt = 'mov'
+	else
+		fileExt = 'jpg'
+	end
+	
+	return fileExt
+end
+

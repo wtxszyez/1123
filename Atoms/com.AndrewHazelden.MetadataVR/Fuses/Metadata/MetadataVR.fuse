@@ -1,0 +1,197 @@
+--[[--
+MetadataVR.fuse - v1.1 2018-07-04 09.08 PM
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+The MetadataVR fuse provides a quick set of controls to adjust the metadata tags on your 360VR and Stereo 3D imagery. This metadata information lets Fusion's viewer windows switch to the correct Stereo 3D, and 360VR image projection display modes automatically which can save you time if you are working in a large composite and are constantly remapping your imagery between several different image projections in your flow.
+
+The MetadataVR fuse works by assigning the Fusion centric "Stereo.Method" and the "Pano.Format" metadata tags.
+
+Fusion 9.0.2 or Resolve 15 B4+ is required.
+
+Note: This fuse does not add YouTube 360/Facebook 360 spatial media metadata tags to the video output. A separate Python based Comp script tool would be need to be created in the future to carry out that task since a Fusion Saver/MediaOut node does not support passing that specific kind of information directly into the rendered MP4/MOV file at this time.
+
+# Node Inputs #
+
+Image
+
+# Controls #
+
+Stereo Format  (ComboControl)
+
+	- Mono 2D
+	- Stereo 3D Over Under
+	- Stereo 3D Side By Side
+
+Image Projection (ComboControl)
+
+	- None
+	- LatLong
+	- Vertical Cross
+	- Horizontal Cross
+	- Vertical Strip
+	- Horizontal Strip
+
+Verbose (Checkbox)
+
+	- Prints the raw metadata info to the Fusion Console.
+
+# Version History #
+
+v1.0 2018-06-11
+	- Initial version
+
+v1.1 2018-07-04
+	- Reactor packaged version
+
+# Todo #
+
+	- Add a Python Comp script would provide an easy way to add the YouTube 360/Facebook 360 spatial media metadata tags to an MP4/MOV move using this Python script:
+		https://github.com/google/spatial-media/tree/master/spatialmedia
+
+--]]--
+
+FuRegisterClass('MetadataVR', CT_Tool, {
+	REGS_Name = 'Metadata VR',
+	REGS_Category = 'Metadata',
+	REGS_OpIconString = 'MetaVR',
+	REGS_OpDescription = 'Sets metadata tags for VR imagery',
+	REGS_HelpTopic = 'http://www.andrewhazelden.com',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	
+	REG_NoMotionBlurCtrls = true,
+	REG_NoBlendCtrls = true,
+	REG_Fuse_NoJIT = true,
+	REG_OpNoMask = true,
+	REG_SupportsDoD = true,
+	
+	-- make default PreCalcProcess() behaviour be to call Process() rather than automatic pass through.
+	REG_NoPreCalcProcess = true, 
+	
+
+	-- Should the Edit and Reload buttons be hidden?
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	
+	-- Version number where 110 = v1.10
+	REG_Version = 110,
+	})
+
+function Create()
+	InProjection = self:AddInput('Image Projection', 'Projection', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ComboControl',
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'None' },
+		{ CCS_AddString = 'LatLong' },
+		{ CCS_AddString = 'Vertical Cross' },
+		{ CCS_AddString = 'Horizontal Cross' },
+		{ CCS_AddString = 'Vertical Strip' },
+		{ CCS_AddString = 'Horizontal Strip' },
+		CC_LabelPosition = 'Vertical'
+	})
+	InStereo = self:AddInput('Stereo Format', 'Stereo', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ComboControl',
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'Mono 2D' },
+		{ CCS_AddString = 'Stereo 3D Over Under' },
+		{ CCS_AddString = 'Stereo 3D Side By Side' },
+		CC_LabelPosition = 'Vertical'
+	})
+	InVerbose = self:AddInput('Verbose', 'Verbose', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1.0
+	})
+	InImage = self:AddInput('Input', 'Input', {
+		LINKID_DataType = 'Image',
+		LINK_Main = 1,
+	})
+	OutImage = self:AddOutput('Output', 'Output', {
+		LINKID_DataType = 'Image',
+		LINK_Main = 1,
+	})
+end
+
+function Process(req)
+	-- Get the Image Projection (ComboControl)
+	local projection = InProjection:GetValue(req).Value
+	
+	-- Get the Stereo Format (ComboControl)
+	local stereo = InStereo:GetValue(req).Value
+	
+	-- Get the Verbose (Checkbox)
+	-- Should detailed logging be printed to the Console
+	local verbose = InVerbose:GetValue(req).Value
+	
+	-- Read the image input connection
+	local img = InImage:GetValue(req)
+	
+	local result = Image({IMG_Like = img, IMG_NoData = req:IsPreCalc()})
+	-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+	img:Crop(result, { })
+	
+	-- Grab the Metadata Lua table from the image input
+	local meta = result.Metadata or {}
+	
+	-- Set the panoramic image projection tag
+	meta.Pano = {}
+	if projection == 0 then
+		-- None
+		meta.Pano.Format = ''
+	elseif projection == 1 then
+		-- LatLong/Equirectangular/Spherical
+		meta.Pano.Format = 'LatLong'
+	elseif projection == 2 then
+		-- Vertical Cross
+		meta.Pano.Format = 'VCross'
+	elseif projection == 3 then
+		-- Horizontal Cross
+		meta.Pano.Format = 'HCross'
+	elseif projection == 4 then
+		-- Vertical Strip
+		meta.Pano.Format = 'VStrip'
+	elseif projection == 5 then
+		-- Horizontal Strip
+		meta.Pano.Format = 'HStrip'
+	else
+		-- Fallback - None
+		meta.Pano.Format = ''
+	end
+	
+	
+	-- Set the stereo format
+	meta.Stereo = {}
+	if stereo == 0 then
+		-- None
+		meta.Stereo.Method = ''
+	elseif stereo == 1 then
+		-- Vertical Stack/Stereo 3D Over Under
+		meta.Stereo.Method = 'vstack'
+	elseif stereo == 2 then
+		-- Horizontal Stack/Stereo 3D Side By Side
+		meta.Stereo.Method = 'hstack'
+	else
+		-- None
+		meta.Stereo.Method = ''
+	end
+	
+	-- Force the updated Metadata Lua table back into the output
+	result.Metadata = meta
+	
+	-- Print the raw metadata info to the Console
+	if verbose == 1 then
+		print('\n\n[Metadata]')
+		dump(result.Metadata)
+	end
+	
+	-- Send the image to the fuse output connection
+	OutImage:Set(req, result)
+end
+
