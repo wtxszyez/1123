@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.3 2018-07-14 01.20 PM
+LifeSaver v0.4 2018-07-14 02.03 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -7,7 +7,7 @@ www.andrewhazelden.com
 
 LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export. 
 
-This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the Fusion Comp Link atom in Reactor, or using a .comp file
+This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file
 
 The LifeSaver fuse is compatible with Fusion 9.0.2 and Resolve 15 B5+.
 
@@ -31,7 +31,8 @@ Note: Currently the EXR image format is the only supported output format in the 
 
 LifeSaver supports the use of the following pre-defined token values in the Filename field. If any other value is written inside the ${} token format it will be looked up as if it was an environment variable.
 
-${VERSION} - The LifeSaver node version field
+${VERSION} - The LifeSaver node 'Version' field
+${UUID} - The LifeSaver node 'UUID' field (f9fa311b-904c-4b93-892f-0d772887db88)
 ${COMP} - The current Fusion comp name (Composition1)
 ${COMPWIDTH} - The current comp default height (1080)
 ${COMPHEIGHT} - The current comp default width (1920)
@@ -50,7 +51,6 @@ ${SEP} - The file separator slash (/ or \)
 ${PLATFORM} - The OS Platform (Mac/Windows/Linux)
 ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
-${UUID} - The UUID value (f9fa311b-904c-4b93-892f-0d772887db88)
 
 ### Supported Frame Padding Indicators ###
 
@@ -100,13 +100,17 @@ Preview Input Connection [Input #1/Input #2/...]
 
 File Tab:
 	Filename _____________ (Browse)
-	Version ______________
 	Format:
 		Output Format [OpenEXR Files]
 		Save Frames [Full Renders Only/Interactive]
 		[] Saver-Relative Numbering
 		Sequence Offset
-	
+		
+	Version Control:
+		Version ______________
+		UUID ______________
+		Update UUID (Button)
+		
 	Folder Creation:
 		[x] Create Folder During Render
 		Create Folder (Button)
@@ -898,7 +902,20 @@ function Create()
 		FCS_FilterString = 'OpenEXR Files (*.exr)|*.exr|',
 		ICS_ControlPage = 'File',
 		})
-	-- A version control field on the node
+	
+	-- Version Control Nest on File tab
+	InVersionControlNest = self:AddInput('Version Control', 'VersionControlNest', {
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'Version Control',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 4,
+		INP_Default = 2,
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	-- A Version textfield
 	InVersion = self:AddInput('Version', 'Version', {
 		LINKID_DataType = 'Text',
 		INPID_InputControl = 'TextEditControl',
@@ -911,7 +928,47 @@ function Create()
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
 		})
-		
+	
+	-- Create a new UUID value like 'f9fa311b-904c-4b93-892f-0d772887db88'
+	local uuid = bmd.createuuid()
+
+	-- A UUID textfield
+	InUUID = self:AddInput('UUID', 'UUID', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = uuid,
+		ICS_Name = 'UUID',
+		TEC_Lines = 1,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Button to generate a new UUID code
+	InUpdateUUID = self:AddInput('Update', 'UpdateUUID', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICD_Width = 1,
+		ICS_Name = 'Update UUID',
+		BTNCS_Execute = [[
+if not tool then
+	tool = comp.ActiveTool
+end
+
+-- Create a new UUID value like 'f9fa311b-904c-4b93-892f-0d772887db88'
+local uuid = bmd.createuuid()
+
+-- Update the UUID textfield contents
+tool:SetInput('UUID', uuid, fu.TIME_UNDEFINED)
+]],
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	
+	
 	-- Format Nest on File tab
 	InFormatNest = self:AddInput('Format', 'FormatNest', {
 		INPID_InputControl = 'LabelControl',
@@ -1018,7 +1075,6 @@ function Create()
 		INPID_InputControl = 'ButtonControl',
 		INP_DoNotifyChanged = true,
 		})
-
 	
 	-- Rendering Nest on File tab
 	InRenderNest = self:AddInput('Rendering', 'RenderingNest', {
@@ -1027,7 +1083,7 @@ function Create()
 		INP_DoNotifyChanged = true,
 		INP_External = false,
 		LBLC_DropDownButton = true,
-		LBLC_NumInputs = 3,
+		LBLC_NumInputs = 4,
 		INP_Default = 1,
 		IC_Visible = true,
 	})
@@ -1296,8 +1352,11 @@ function NotifyChanged(inp, param, time)
 		-- Get the version field contents
 		local version = InVersion:GetSource(time).Value
 		
+		-- Get the uuid field contents
+		local uuid = InUUID:GetSource(time).Value
+		
 		-- Process the tokens in the filename field
-		filename = ParseTokens(filename, version)
+		filename = ParseTokens(filename, version, uuid)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1317,8 +1376,11 @@ function NotifyChanged(inp, param, time)
 		-- Get the version field contents
 		local version = InVersion:GetSource(time).Value
 		
+		-- Get the uuid field contents
+		local uuid = InUUID:GetSource(time).Value
+		
 		-- Process the tokens in the filename field
-		filename = ParseTokens(filename, version)
+		filename = ParseTokens(filename, version, uuid)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1443,9 +1505,12 @@ function Process(req)
 	
 	-- Get the version field contents
 	local version = InVersion:GetValue(req).Value
+	
+	-- Get the uuid field contents
+	local uuid = InUUID:GetValue(req).Value
 		
 	-- Process the tokens in the filename field
-	filename = ParseTokens(filename, version)
+	filename = ParseTokens(filename, version, uuid)
 	
 	-- Load the EXRIO library
 	local exr = EXRIO()
@@ -1858,7 +1923,7 @@ end
 
 -- Process the tokens in the filename field
 -- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr')
-function ParseTokens(file, version)
+function ParseTokens(file, version, uuid)
 	local verbose = false
 	local filename = file
 	
@@ -1882,8 +1947,7 @@ function ParseTokens(file, version)
 	local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width')
 	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height')
 	
-	-- Create a new UUID value like 'f9fa311b-904c-4b93-892f-0d772887db88'
-	local uuid = bmd.createuuid()
+	
 	
 	-- req.Time is the same as comp.CurrentTime
 	local currentFrame = self.Comp.CurrentTime
@@ -1957,7 +2021,7 @@ function ParseTokens(file, version)
 		-- ${VERSION} - Read the LifeSaver node version field
 		local versionString = tostring(version)
 		if versionString ~= '' and versionString ~= nil then
-			versionString = 'V' .. versionString
+			versionString = 'v' .. versionString
 		end
 		filename = string.gsub(filename, '${VERSION}', versionString)
 		
