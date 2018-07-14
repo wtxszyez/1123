@@ -1,0 +1,1951 @@
+--[[--
+LifeSaver v0.1 2018-07-13 09.51 PM
+By Andrew Hazelden <andrew@andrewhazelden.com>
+www.andrewhazelden.com
+
+## Overview ##
+
+LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export. 
+
+This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the Fusion Comp Link atom in Reactor, or using a .comp file
+
+The LifeSaver fuse is compatible with Fusion 9.0.2 and Resolve 15 B5+.
+
+## Usage ##
+
+The LifeSaver fuse allows you to save additional multi-part EXR image elements to the same EXR file using the following technique:
+
+Step 1. Switch to the Channels tab and click the '+' button to add a new image input connection.
+
+Step 2. In the Channels tab set the new 'Export Part #' ComboControl to 'Enabled', and update the 'Layer Name' so it is relevant. EXRIO doesn't like to have duplicate multi-part elements written with the same layer name.
+
+Step 3. Connect your imagery to the new input connection on the fuse so it is written to the multi-part EXR output.
+
+Step 4. You can use the fuse's 'Preview Input Connection' ComboControl to send a specific input image # to the Fuse's output connection. This makes it easer to work with a specific multi-part EXR exported image element further downstream in your flow, after the LifeSaver node
+
+If you have added several extra node inputs to the LifeSaver fuse but have no images connected to them you should switch to the Channels tab and set the disconnected inputs's 'Export Part #' ComboControl menu to 'Disabled'.
+
+Note: Currently the EXR image format is the only supported output format in the LifeSaver fuse. In the future, it is (theoretically) possible to use the fuse based Clip() function to write out each of the individual flat image channels to disk using other image formats if that became a popular and frequently requested feature.
+
+## Tokens ##
+
+LifeSaver supports the use of the following pre-defined token values in the Filename field. If any other value is written inside the ${} token format it will be looked up as if it was an environment variable.
+
+${VERSION} - The LifeSaver node version field
+${COMP} - The current Fusion comp name (Composition1)
+${COMPWIDTH} - The current comp default height (1080)
+${COMPHEIGHT} - The current comp default width (1920)
+${NODE} - The LifeSaver node name (LifeSaver1)
+${FPS} - The current frame rate (24)
+${FRAME} - The current unpadded frame number (1001)
+${STARTFRAME} - The global start frame (1001)
+${ENDFRAME} - The global end frame (1144)
+${DURATION} - The global time duration (144)
+${DATE} - The date in YYYY-MM-DD format (2018-06-16)
+${TIME} - The time in HH.MM.SS format (14.59.05)
+${HOME} - The Home folder name (/Users/andrew)
+${USER} - The current user account name (andrew)
+${HOSTNAME} - The computer's host name (Pine.local)
+${SEP} - The file separator slash (/ or \)
+${PLATFORM} - The OS Platform (Mac/Windows/Linux)
+${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
+${FUVERSION} - The version of Fusion is running (9.02/15)
+
+### Supported Frame Padding Indicators ###
+
+0000 - The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
+%04d - The c-code style printf integer number formating symbol can be used to define the frame padding token
+# - The number sign/hash/octothorp # character can be used to define the frame padding (0)
+
+### Filename Examples ###
+
+Filename Token Example 1:
+Comp:/${COMP}/${COMP}_${NODE}.0000.exr
+
+This would result in a rendered EXR image filename like:
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.0000.exr
+
+
+Filename Token Example 2:
+Comp:/${COMP}/${COMP}_${NODE}.$06d.exr
+
+This would result in a rendered EXR image filename like:
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.000000.exr
+
+
+Filename Token Example 3:
+${HOME}/Desktop/${COMP}/${COMP}_${NODE}_Frames_[${STARTFRAME}-${ENDFRAME}]_Res_${COMPWIDTH}x${COMPHEIGHT}@${FPS}fps.0000.exr
+
+This would result in a rendered EXR image filename like:
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1_Frames[1001-1004]_1920x800@24.0000.exr
+
+
+## Fusion Environment Variable Debugging Tip ###
+
+You can print out the environment variables that are active inside of Fusion using the following Lua script snippet:
+
+logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');
+os.execute('env > "' .. logFile .. '"');
+bmd.openfileexternal('Open', logFile);
+
+
+## GUI Controls ##
+
+Preview Input Connection [Input #1/Input #2/...]
+
+File Tab:
+	Filename _____________ (Browse)
+	[x] Create Folder During Render (Create)
+	Output Format [OpenEXR Files]
+	Save Frames [Full Renders Only/Interactive]
+	[] Saver-Relative Numbering
+	Sequence Offset
+
+Channels Tab:
+	Depth (Auto)(float16)(float32)
+	Compression [None/RLE/Zip (1 Line)/Zip (16 Lines)/DWA (32 Line)/DWA (256 Line)]
+
+	Parts
+		Export Part # (Enable/Disable)
+		Layer Name <export_#>
+		Input Connection <Background1_7_22_2_5_53_2_1>
+
+	Channels
+		[x] Red <R______>
+		[x] Green <G______>
+		[x] Blue <B______>
+		[x] Alpha <A______>
+		[x] Z <Z______>
+		[x] Coverage <pixelCover______>
+		[x] ObjectID <objectID______>
+		[x] MaterialID <materialID______>
+		[x] U <U______>
+		[x] V <V______>
+		[x] X Normal <NX______>
+		[x] Y Normal <NY______>
+		[x] Z Normal <NZ______>
+		[x] X Velocity <velX______>
+		[x] Y Velocity <velY______>
+		[x] X Reverse Velocity <rvelX______>
+		[x] Y Reverse Velocity <rvelY______>
+		[x] Z Reverse Velocity <rvelZ______>
+		[x] X Position <posX______>
+		[x] Y Position <posY______>
+		[x] Z Position <posZ______>
+		[x] X Disparity <dispX______>
+		[x] Y Disparity <dispY______>
+		[ ] Custom <______>
+
+## EXRIO Supported Channel Mappings ##
+
+	CHAN_ALPHA
+	CHAN_BACKVECTORS
+	CHAN_BACKVECTORX
+	CHAN_BACKVECTORY
+	CHAN_BGA
+	CHAN_BGB
+	CHAN_BGCOLOR
+	CHAN_BGG
+	CHAN_BGR
+	CHAN_BLUE
+	CHAN_COLOR
+	CHAN_COLORALPHA
+	CHAN_COVERAGE
+	CHAN_DISPARITIES
+	CHAN_DISPARITYX
+	CHAN_DISPARITYY
+	CHAN_GREEN
+	CHAN_MASK
+	CHAN_MATERIAL
+	CHAN_NONE
+	CHAN_NORMALS
+	CHAN_NORMALX
+	CHAN_NORMALY
+	CHAN_NORMALZ
+	CHAN_OBJECT
+	CHAN_POSITIONS
+	CHAN_POSITIONX
+	CHAN_POSITIONY
+	CHAN_POSITIONZ
+	CHAN_REALA
+	CHAN_REALB
+	CHAN_REALCOLOR
+	CHAN_REALG
+	CHAN_REALR
+	CHAN_RED
+	CHAN_UV
+	CHAN_U
+	CHAN_V
+	CHAN_VECTORS
+	CHAN_VECTORX
+	CHAN_VECTORY
+
+## EXRIO Framebuffer Data Types ##
+
+	ANY_TYPE = -1
+	HALF = 1
+	FLOAT = 2
+
+## EXRIO Compression formats ##
+
+	NO_COMPRESSION = 0
+	RLE_COMPRESSION = 1
+	ZIPS_COMPRESSION = 2
+	ZIP_COMPRESSION = 3
+	PIZ_COMPRESSION = 4
+	PXR24_COMPRESSION = 5
+	B44_COMPRESSION = 6
+	B44A_COMPRESSION = 7
+	DWAA_COMPRESSION = 8
+	DWAB_COMPRESSION = 9
+
+## Todo ##
+
+- Add support for IFL based sequence naming in the Filename field
+
+- Look at how the input image metadata can be mapped into the individual EXR multi-part metadata tag sections.
+
+- Enable the following controls:
+
+	Channels Tab:
+		Compression [None/RLE/Zip (1 Line)/Zip (16 Lines)/DWA (32 Line)/DWA (256 Line)]
+
+- Verify the X Reverse Vector/Y Reverse Vector channel names are really:
+
+	CHAN_BACKVECTORS
+	CHAN_BACKVECTORX
+	CHAN_BACKVECTORY
+
+--]]--
+
+-- Set up the Fuse registry settings
+FuRegisterClass('LifeSaver', CT_SinkTool, {
+	REGS_Name = 'LifeSaver',
+	REGS_Category = 'I/O',
+	REGS_OpIconString = 'LSV',
+	REGS_OpDescription = 'Allows you to save out EXR format imagery in Resolve and Fusion with multi-part and multi-channel support.',
+	REGS_Company = 'Andrew Hazelden',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	REGS_HelpTopic = 'https://www.steakunderwater.com/wesuckless/viewtopic.php?p=18356',
+	
+	-- Should the Edit and Reload buttons be hidden?
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	
+	-- Should the current time setting be cached?
+	REG_TimeVariant = true,
+	
+	REG_SupportsDoD = true,
+	REG_OpNoMask = true,
+	
+	-- Sets the fuse version number (100 means v1.0) so newer fuses override older versions
+	REG_Version = 100,
+	})
+
+-- Add a new output entry to the Channels tab when the '+' button is clicked.
+function AddOutput(i)
+	MaxExport = math.max(MaxExport, i)
+	
+	Exports[i] = {}
+	
+	local istr = tostring(i)
+	local export = Exports[i]
+	
+	self:AddControlPage('Channels')
+	
+	export.InSep = self:AddInput(string.rep('_', 9999), 'Sep' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'LabelControl',
+		ICS_Name = string.rep('_', 9999),
+		ICD_Width = 1,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	
+	export.InExport = self:AddInput('Type ' .. istr, 'Export' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICS_Name = 'Export Part #'  .. istr,
+		ICD_Width = 1,
+		INP_Default = 0,
+		{ CCS_AddString = 'Enabled'},
+		{ CCS_AddString = 'Disabled'},
+		LINK_ForceSave = true,
+		})
+	
+	export.InName = self:AddInput('Layer Name ' .. istr, 'Name' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'export_' .. istr,
+		ICS_Name = 'Layer Name',
+		ICD_Width = 1,
+		TEC_Lines = 1,
+		})
+	
+	export.InImage = self:AddInput('Input ' .. istr, 'Input' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Image',
+		INPID_InputControl = 'ImageControl',
+		ICS_Name = 'Input Connection',
+		INP_Required = true,
+		LINK_Visible = true,
+		INP_Disabled = false,
+		ICD_Width = 1,
+		LINK_Main = i,
+		})
+	
+	-- EXR Channel nested control
+	export.InChannelsNest = self:AddInput('EXR Channels', 'ChannelsNest' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'EXR Channels',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 44,
+		INP_Default = 0,
+		IC_Visible = true,
+	})
+	export.InRedEnable = self:AddInput('Red', 'RedEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InRed = self:AddInput('Red', 'RedName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'R',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InGreenEnable = self:AddInput('Green', 'GreenEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InGreen = self:AddInput('Green', 'GreenName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'G',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InBlueEnable = self:AddInput('Blue', 'BlueEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InBlue = self:AddInput('Blue', 'BlueName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'B',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InAlphaEnable = self:AddInput('Alpha', 'AlphaEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InAlpha = self:AddInput('Alpha', 'AlphaName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'A',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	-- The Extra EXR channels are unchecked by default
+	export.InZEnable = self:AddInput('Z', 'ZEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InZ = self:AddInput('Z', 'ZName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'Z',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InCovEnable = self:AddInput('Coverage', 'CovEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InCov = self:AddInput('Cov', 'CovName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'pixelCover',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InObjIDEnable = self:AddInput('ObjID', 'ObjIDEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InObjID = self:AddInput('Object ID', 'ObjIDName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'objectID',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InMatIDEnable = self:AddInput('Material ID', 'MatIDEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InMatID = self:AddInput('Material ID', 'MatIDName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'materialID',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InUEnable = self:AddInput('U', 'UEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InU = self:AddInput('U', 'UName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'U',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InVEnable = self:AddInput('V', 'VEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InV = self:AddInput('V', 'VName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'V',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InXNormEnable = self:AddInput('X Normal', 'XNormEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InXNorm = self:AddInput('X Normal', 'XNormName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'NX',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InYNormEnable = self:AddInput('Y Normal', 'YNormEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InYNorm = self:AddInput('Y Normal', 'YNormName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'NY',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InZNormEnable = self:AddInput('Z Normal', 'ZNormEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InZNorm = self:AddInput('Z Normal', 'ZNormName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'NZ',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InXVelEnable = self:AddInput('X Velocity', 'XVelEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InXVel = self:AddInput('X Velocity', 'XVelName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'velX',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InYVelEnable = self:AddInput('Y Velocity', 'YVelEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InYVel = self:AddInput('Y Velocity', 'YVelName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'velY',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InXRevVelEnable = self:AddInput('X Reverse Velocity', 'XRevVelEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InXRevVel = self:AddInput('X Reverse Velocity', 'XRevVelName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'rvelX',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InYRevVelEnable = self:AddInput('Y Reverse Velocity', 'YRevVelEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InYRevVel = self:AddInput('Y Reverse Velocity', 'YRevVelName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'rvelY',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InXPosEnable = self:AddInput('X Position', 'XPosEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InXPos = self:AddInput('X Position', 'XPosName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'posX',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InYPosEnable = self:AddInput('Y Position', 'YPosEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InYPos = self:AddInput('Y Position', 'YPosName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'posY',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InZPosEnable = self:AddInput('Z Position', 'ZPosEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InZPos = self:AddInput('Z Position', 'ZPosName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'posZ',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InXDispEnable = self:AddInput('X Disparity', 'XDispEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InXDisp = self:AddInput('X Disparity', 'XDispName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'dispX',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	export.InYDispEnable = self:AddInput('Y Disparity', 'YDispEnable' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 0.5,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		})
+	export.InYDisp = self:AddInput('Y Disparity', 'YDispName' .. istr, {
+		LINKID_AddBeforeID = 'AddOutput',
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INPS_DefaultText = 'dispY',
+		ICS_Name = '',
+		TEC_Lines = 1,
+		ICD_Width = 0.5,
+		INP_External = false,
+		IC_Visible = true,
+		IC_Visible = true,
+		INP_Passive = true,
+		})
+	
+	-- Add a new "View Input Connection" ComboControl entry
+	InViewOutput:SetAttrs({ CCS_AddString = 'Input #' .. tonumber(i), })
+	
+	self:UpdateControls()
+end
+
+-- Create the fuse's GUI elements
+function Create()
+	self:RemoveControlPage('Controls')
+	
+	
+	-- Add the 'Preview Input Connection' ComboControl above the tabs
+	-- Select the input connection # that will be fed as the preview image to the node's image output connection
+	InViewOutput = self:AddInput('Preview Input Connection', 'ViewOutput', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		-- ICS_ControlPage = 'File',
+		IC_ControlPage = -1
+		})
+		
+	-- The first tab is named 'File'
+	self:AddControlPage('File')
+	
+	-- The output filename supports absolute filepaths and relative PathMap based filepaths
+	InFilename = self:AddInput('Filename', 'Filename', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'FileControl',
+		FC_IsSaver = true,
+		FC_ClipBrowse = true,
+		FCS_FilterString = 'OpenEXR Files (*.exr)|*.exr|',
+		ICS_ControlPage = 'File',
+		})
+	-- A version control field on the node
+	InVersion = self:AddInput('Version', 'Version', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = '',
+		ICS_Name = 'Version',
+		TEC_Lines = 1,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Automatically creates a new folder at render time if the output filepath doesn't exist
+	InCreateDir = self:AddInput('Create Folder During Render', 'CreateDir', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+	})
+	-- Creates a new folder using the base directory from the Filename field
+	InCreateButton = self:AddInput('Create Folder', 'CreateButton', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+	})
+	-- The button that allows you to browse to the Temp folder where downloaded files are saved
+	InOpenContainingFolder = self:AddInput('Open Containing Folder', 'OpenContainingFolder', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		})
+	-- This lets you set the output format - EXR is the only supported output format at the moment but it would be theoretically possible to use Clip() in the future to write out individual flat channels to disk in other file formats
+	InOutputFormat = self:AddInput('Output Format', 'OutputFormat', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'OpenEXR Files',},
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI?
+	InSaveFrames = self:AddInput('Save Frames', 'SaveFrames', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'Full Renders Only',},
+		{ CCS_AddString = 'Interactive',},
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	
+	-- Should the image sequence frame numbering be done relative to the first frame number that is specified in the filename field?
+	InSetSequenceStart = self:AddInput('Saver-Relative Numbering', 'SetSequenceStart', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1.0,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Should the image sequence frame numbering be shifted (forwards/backwards) by the sequence offset value?
+	InSequenceStartFrame = self:AddInput('Sequence Offset', 'SequenceStartFrame', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ScrewControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1.0,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+
+	-- Verbose Console logging
+	InVerbose = self:AddInput('Verbose', 'Verbose', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_Integer = true,
+		INP_Default = 1,
+		ICD_Width = 1,
+		ICS_ControlPage = 'File',
+		})
+	
+-- The 2nd tab is named 'Export'
+--	self:AddControlPage('Export')
+--	
+--	InClippingMode = self:AddInput('Clipping Mode', 'ClippingMode', {
+--		LINKID_DataType = 'Number',
+--		INPID_InputControl = 'MultiButtonControl',
+--		INP_DoNotifyChanged = true,
+--		INP_External = false,
+--		INP_Integer = true,
+--		INP_Default = 1,
+--		ICD_Width = 1.0,
+--		{ MBTNC_AddButton = 'None' },
+--		{ MBTNC_AddButton = 'Frame' },
+--		MBTNC_ShowBasicButton = true,
+--		MBTNC_StretchToFit = true,
+--		MBTNC_ShowName = true,
+--		LINK_ForceSave = true,
+--		ICS_ControlPage = 'Export',
+--		})
+--	InSaveAlphaToColor = self:AddInput('Save Alpha to Color', 'SaveAlphaToColor', {
+--		LINKID_DataType = 'Number',
+--		INPID_InputControl = 'CheckboxControl',
+--		INP_DoNotifyChanged = true,
+--		INP_External = false,
+--		INP_Integer = true,
+--		INP_Default = 0.0,
+--		ICD_Width = 1.0,
+--		LINK_ForceSave = true,
+--		ICS_ControlPage = 'Export',
+--		})
+	
+	-- The 3rd tab is named 'Channels'
+	self:AddControlPage('Channels')
+	
+	-- The bit-depth of the EXR output (HALF/ANY_TYPE)
+	InDepth = self:AddInput('RGBA Depth', 'Depth', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'MultiButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 1.0,
+		-- { MBTNC_AddButton = 'Auto' },
+		{ MBTNC_AddButton = 'float16' },
+		{ MBTNC_AddButton = 'float32' },
+		MBTNC_ShowBasicButton = true,
+		MBTNC_StretchToFit = true,
+		MBTNC_ShowName = true,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'Channels',
+		})
+	-- What EXR image compression format should be used for the RGBA channels?
+	InCompression = self:AddInput('Compression', 'Compression', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 1,
+		INP_Integer = true,
+		ICD_Width = 1,
+		-- { CCS_AddString = 'None',},
+		-- { CCS_AddString = 'RLE',},
+		{ CCS_AddString = 'ZIP',},
+		-- { CCS_AddString = 'ZIP (1 line)',},
+		-- { CCS_AddString = 'ZIP (16 lines)',},
+		-- { CCS_AddString = 'Piz (wavelet)',},
+		-- { CCS_AddString = 'Pxr24',},
+		-- { CCS_AddString = 'B44',},
+		-- { CCS_AddString = 'B44A',},
+		-- { CCS_AddString = 'DWA (32 line)',},
+		-- { CCS_AddString = 'DWA (256 line)',},
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'Channels',
+		})
+	
+	-- Button to add extra Multi-part EXR channels
+	InAddOutput = self:AddInput('Add Output', 'AddOutput', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICD_Width = 1,
+		ICS_Name = '+',
+		ICS_ControlPage = 'Channels',
+		})
+	
+	-- The image output connection
+	OutImage = self:AddOutput('Output', 'Output', {
+		LINKID_DataType = 'Image',
+		LINK_Main = 1,
+		})
+	
+	Exports = {}
+	MaxExport = 0
+	
+	-- The self.IsBeingLoaded value is a flag that will make sure this code only runs when the node is being initialized the first time.
+	if self.IsBeingLoaded then
+		local inps = self:GetInputIDs()
+		local exports = {}
+		for i,v in ipairs(inps) do
+			-- Input connection names - This debugging print() command is used when you change the attribute name to something other then 'Export' and need to refine the sub() based trimming of the export counter.
+			-- print('[Raw] ' .. v .. '\t[Trimmmed] ' ..  v:sub(1,6) .. '\t[Export number] ' .. v:sub(7))
+			if v:sub(1,6) == 'Export' then
+				exports[tonumber(v:sub(7))] = true
+			end
+		end
+		for i,v in pairs(exports) do
+			-- Add a new Channels tab based output entry
+			AddOutput(tonumber(i))
+		end
+	else
+		-- Add the first Channels tab based output entry
+		AddOutput(1)
+	end
+end
+
+-- Code that runs when the node is first added to the flow, or the comp is opened
+function OnAddToFlow()
+	-- ...
+	-- ...
+	-- ...
+end
+
+-- NotifyChanged is run when a Fuse GUI element is modified by the user and the "INP_DoNotifyChanged = true," flag is enabled on a GUI control.
+function NotifyChanged(inp, param, time)
+	local verbose = InVerbose:GetSource(time).Value
+	
+	if inp == InAddOutput then
+		if param.Value > 0.5 then
+			AddOutput(MaxExport + 1)
+		end
+	elseif inp == InCreateButton and param and param.Value == 1 then
+		-- Create the output folder
+		
+		-- Add the platform specific folder slash character
+		local osSeparator = package.config:sub(1,1)
+		
+		-- Get the filename for the sequence output
+		local filename = InFilename:GetSource(time).Value
+		
+		-- Get the version field contents
+		local version = InVersion:GetSource(time).Value
+		
+		-- Process the tokens in the filename field
+		filename = ParseTokens(filename, version)
+		
+		-- Create the folder if it doesn't exist yet
+		local folder = Dirname(self.Comp:MapPath(filename))
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			if verbose == 1 then
+				print('[Created Directory]', folder)
+			end
+		end
+	elseif inp == InOpenContainingFolder and param and param.Value == 1 then
+		-- Add the platform specific folder slash character
+		local osSeparator = package.config:sub(1,1)
+		
+		-- Get the filename for the sequence output
+		local filename = InFilename:GetSource(time).Value
+		
+		-- Get the version field contents
+		local version = InVersion:GetSource(time).Value
+		
+		-- Process the tokens in the filename field
+		filename = ParseTokens(filename, version)
+		
+		-- Create the folder if it doesn't exist yet
+		local folder = Dirname(self.Comp:MapPath(filename))
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			if verbose == 1 then
+				print('[Created Directory]', folder)
+			end
+		end
+		
+		-- Open the containing folder in a new desktop folder browsing window
+		if bmd.fileexists(folder) == true then
+			if bmd and bmd.openfileexternal then
+				-- The openfileexternal() function only exists in Fusion 9+ and Resolve 15+.
+				bmd.openfileexternal('Open', folder)
+			else
+				print('[Error] This fuse requires Fusion 9 or Resolve 15.')
+			end
+		end
+	elseif inp == InViewOutput and param then
+		if verbose == 1 then
+			print('[View Input Connection] Input #' .. (tonumber(param.Value) + 1))
+		end
+	else
+		for i,export in pairs(Exports) do
+			if inp == export.InExport then
+				local on = (param.Value == 0)
+				
+				export.InImage:SetAttrs({ LINK_Visible = on, INP_Disabled = not on, IC_Visible = on, INP_Required = on, })
+				export.InName:SetAttrs({ INP_Disabled = not on, IC_Visible = on, })
+				export.InSep:SetAttrs({ IC_Visible = on, })
+				
+				-- Enable the EXR channels nest items
+				export.InChannelsNest:SetAttrs({ IC_Visible = on, })
+				
+				-- Enable the individual EXR channel controls
+				export.InRedEnable:SetAttrs({ IC_Visible = on, })
+				export.InRed:SetAttrs({ IC_Visible = on, })
+				export.InGreenEnable:SetAttrs({ IC_Visible = on, })
+				export.InGreen:SetAttrs({ IC_Visible = on, })
+				export.InBlueEnable:SetAttrs({ IC_Visible = on, })
+				export.InBlue:SetAttrs({ IC_Visible = on, })
+				export.InAlphaEnable:SetAttrs({ IC_Visible = on, })
+				export.InAlpha:SetAttrs({ IC_Visible = on, })
+				export.InZEnable:SetAttrs({ IC_Visible = on, })
+				export.InZ:SetAttrs({ IC_Visible = on, })
+				export.InCovEnable:SetAttrs({ IC_Visible = on, })
+				export.InCov:SetAttrs({ IC_Visible = on, })
+				export.InObjIDEnable:SetAttrs({ IC_Visible = on, })
+				export.InObjID:SetAttrs({ IC_Visible = on, })
+				export.InMatIDEnable:SetAttrs({ IC_Visible = on, })
+				export.InMatID:SetAttrs({ IC_Visible = on, })
+				export.InUEnable:SetAttrs({ IC_Visible = on, })
+				export.InU:SetAttrs({ IC_Visible = on, })
+				export.InVEnable:SetAttrs({ IC_Visible = on, })
+				export.InV:SetAttrs({ IC_Visible = on, })
+				export.InXNormEnable:SetAttrs({ IC_Visible = on, })
+				export.InXNorm:SetAttrs({ IC_Visible = on, })
+				export.InYNormEnable:SetAttrs({ IC_Visible = on, })
+				export.InYNorm:SetAttrs({ IC_Visible = on, })
+				export.InZNormEnable:SetAttrs({ IC_Visible = on, })
+				export.InZNorm:SetAttrs({ IC_Visible = on, })
+				export.InXVelEnable:SetAttrs({ IC_Visible = on, })
+				export.InXVel:SetAttrs({ IC_Visible = on, })
+				export.InYVelEnable:SetAttrs({ IC_Visible = on, })
+				export.InYVel:SetAttrs({ IC_Visible = on, })
+				export.InXRevVelEnable:SetAttrs({ IC_Visible = on, })
+				export.InXRevVel:SetAttrs({ IC_Visible = on, })
+				export.InYRevVelEnable:SetAttrs({ IC_Visible = on, })
+				export.InYRevVel:SetAttrs({ IC_Visible = on, })
+				export.InXPosEnable:SetAttrs({ IC_Visible = on, })
+				export.InXPos:SetAttrs({ IC_Visible = on, })
+				export.InYPosEnable:SetAttrs({ IC_Visible = on, })
+				export.InYPos:SetAttrs({ IC_Visible = on, })
+				export.InZPosEnable:SetAttrs({ IC_Visible = on, })
+				export.InZPos:SetAttrs({ IC_Visible = on, })
+				export.InXDispEnable:SetAttrs({ IC_Visible = on, })
+				export.InXDisp:SetAttrs({ IC_Visible = on, })
+				export.InYDispEnable:SetAttrs({ IC_Visible = on, })
+				export.InYDisp:SetAttrs({ IC_Visible = on, })
+			end
+		end
+	end
+end
+
+
+-- Process is the code that is run when the frame is being rendered in the Resolve/Fusion Viewer window, or by the Fusion Render Node
+function Process(req)
+	local ok = true
+	
+	-- Should detailed logging be printed to the Console
+	local verbose = InVerbose:GetValue(req).Value
+	
+	-- Should a new folder be created automatically when the image is written to disk
+	local createDir = InCreateDir:GetValue(req).Value
+	
+	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI?
+	local saveFrame = InSaveFrames:GetValue(req).Value
+	
+	-- Select the input connection # that will be fed as the preview image to the node's image output connection
+	local viewOutput = tonumber(InViewOutput:GetValue(req).Value) + 1
+	
+	-- Should the image sequence frame numbering be done relative to the first frame number that is specified in the filename field?
+	local setSequenceStart = tonumber(InSetSequenceStart:GetValue(req).Value)
+	
+	-- Should the image sequence frame numbering be shifted (forwards/backwards) by the sequence offset value?
+	local sequenceStartFrame = tonumber(InSequenceStartFrame:GetValue(req).Value)
+	
+	-- The bit-depth of the EXR output (HALF/ANY_TYPE)
+	local depth = tonumber(InDepth:GetValue(req).Value)
+	
+	local rgbaDepth = FLOAT
+	if depth == 0 then
+		rgbaDepth = HALF
+	end
+	
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+	
+	-- Get the filename for the sequence output
+	local filename = InFilename:GetValue(req).Value
+	
+	-- Get the version field contents
+	local version = InVersion:GetValue(req).Value
+		
+	-- Process the tokens in the filename field
+	filename = ParseTokens(filename, version)
+	
+	-- Load the EXRIO library
+	local exr = EXRIO()
+	
+	-- Autofill a default filename when the field is empty
+	if filename == nil or filename == '' then
+		print('\n[LifeSaver Error] There is an empty "Filename" field!!!\n[LifeSaver Tip] Enter a filename for the LifeSaver node like "Comp:/Render/output.0000.exr" and then re-render the comp.\n')
+		
+		-- Showing the image output in the Viewer window even though the filename is empty
+		OutImage:Set(req, Exports[viewOutput].InImage:GetValue(req))
+		
+		ok = false
+	else
+		-- Make sure to only write images when a render to disk action is happening, or the Save Frames mode is set to 'Interactive' in the GUI
+		if not req:IsPreCalc() and (saveFrame == 1 and req:IsInteractive()) or not req:IsInteractive() then
+			-- Get the frame number from the Filename field or the number 0 if there is no frame present in the filename
+			local sequenceStart = tonumber(ParseFilename(filename).Number) or 0
+			
+			-- Get the 'final' frame number that will be written into the filename
+			local currentFrame = tonumber(req.Time) + tonumber(sequenceStartFrame) + tonumber(sequenceStart)
+			if verbose == 1 then
+				print('\n[Frame] ' .. currentFrame .. '\t[Node] "' .. tostring(self.Name) .. '"\t[Base Filename] "' .. self.Comp:MapPath(filename) .. '"')
+			end
+			
+			-- Create the folder if it doesn't exist yet
+			local folder = Dirname(self.Comp:MapPath(filename))
+			if (createDir == 1) and (bmd.fileexists(folder) == false) then
+				bmd.createdir(folder)
+				print('[Created Directory]', folder)
+			elseif (bmd.fileexists(folder) == false) then
+				print('[Directory Missing]', folder)
+			end
+			
+			-- Open the new EXR image for write access
+			exr:WriteOpen(self.Comp:MapPath(filename), currentFrame)
+			
+			local parts = {}
+			
+			-- Scan through each of the multi-part export 'layers'
+			for i,export in pairs(Exports) do
+				-- Get the image input connection for the current multi-part EXR layer
+				local img = export.InImage:GetValue(req)
+				
+				-- Get the 'Layer Name' for the export
+				local name = export.InName:GetValue(req).Value
+				
+				-- Get the 'Export #' Disabled/Enabled state
+				local exportPart = export.InExport:GetValue(req).Value
+				
+				-- Read the EXR Channel settings
+				
+				-- Red channel checkbox + customized channel name
+				local redEnable = export.InRedEnable:GetValue(req).Value
+				local red = export.InRed:GetValue(req).Value
+				
+				-- Green channel checkbox + customized channel name
+				local greenEnable = export.InGreenEnable:GetValue(req).Value
+				local green = export.InGreen:GetValue(req).Value
+				
+				-- Blue channel checkbox + customized channel name
+				local blueEnable = export.InBlueEnable:GetValue(req).Value
+				local blue = export.InBlue:GetValue(req).Value
+				
+				-- Alpha channel checkbox + customized channel name
+				local alphaEnable = export.InAlphaEnable:GetValue(req).Value
+				local alpha = export.InAlpha:GetValue(req).Value
+				
+				-- Read the extra EXR Channel settings
+				
+				-- Z-Depth channel checkbox + customized channel name
+				local zEnable = export.InZEnable:GetValue(req).Value
+				local z = export.InZ:GetValue(req).Value
+				
+				-- Coverage channel checkbox + customized channel name
+				local covEnable = export.InCovEnable:GetValue(req).Value
+				local cov = export.InCov:GetValue(req).Value
+				
+				-- Object ID channel checkbox + customized channel name
+				local objIDEnable = export.InObjIDEnable:GetValue(req).Value
+				local objID = export.InObjID:GetValue(req).Value
+				
+				-- Material ID channel checkbox + customized channel name
+				local matIDEnable = export.InMatIDEnable:GetValue(req).Value
+				local matID = export.InMatID:GetValue(req).Value
+				
+				-- U channel checkbox + customized channel name
+				local uEnable = export.InUEnable:GetValue(req).Value
+				local u = export.InU:GetValue(req).Value
+				
+				-- V channel checkbox + customized channel name
+				local vEnable = export.InVEnable:GetValue(req).Value
+				local v = export.InV:GetValue(req).Value
+				
+				-- X Normal channel checkbox + customized channel name
+				local xNormEnable = export.InXNormEnable:GetValue(req).Value
+				local xNorm = export.InXNorm:GetValue(req).Value
+				
+				-- Y Normal channel checkbox + customized channel name
+				local yNormEnable = export.InYNormEnable:GetValue(req).Value
+				local yNorm = export.InYNorm:GetValue(req).Value
+				
+				-- Z Normal channel checkbox + customized channel name
+				local zNormEnable = export.InZNormEnable:GetValue(req).Value
+				local zNorm = export.InZNorm:GetValue(req).Value
+				
+				-- X Velocity channel checkbox + customized channel name
+				local xVelEnable = export.InXVelEnable:GetValue(req).Value
+				local xVel = export.InXVel:GetValue(req).Value
+				
+				-- Y Velocity channel checkbox + customized channel name
+				local yVelEnable = export.InYVelEnable:GetValue(req).Value
+				local yVel = export.InYVel:GetValue(req).Value
+				
+				-- X Reverse Velocity channel checkbox + customized channel name
+				local xRevVelEnable = export.InXRevVelEnable:GetValue(req).Value
+				local xRevVel = export.InXRevVel:GetValue(req).Value
+				
+				-- Y Reverse Velocity channel checkbox + customized channel name
+				local yRevVelEnable = export.InYRevVelEnable:GetValue(req).Value
+				local yRevVel = export.InYRevVel:GetValue(req).Value
+				
+				-- X Position channel checkbox + customized channel name
+				local xPosEnable = export.InXPosEnable:GetValue(req).Value
+				local xPos = export.InXPos:GetValue(req).Value
+				
+				-- Y Position channel checkbox + customized channel name
+				local yPosEnable = export.InYPosEnable:GetValue(req).Value
+				local yPos = export.InYPos:GetValue(req).Value
+				
+				-- Z Position channel checkbox + customized channel name
+				local zPosEnable = export.InZPosEnable:GetValue(req).Value
+				local zPos = export.InZPos:GetValue(req).Value
+				
+				-- X Disparity channel checkbox + customized channel name
+				local xDispEnable = export.InXDispEnable:GetValue(req).Value
+				local xDisp = export.InXDisp:GetValue(req).Value
+				
+				-- Z Disparity channel checkbox + customized channel name
+				local yDispEnable = export.InYDispEnable:GetValue(req).Value
+				local yDisp = export.InYDisp:GetValue(req).Value
+				
+				-- Print the EXR multi-part details to the Console when the fuse is rendered
+				PrintPartDetails(verbose, name, i, exportPart)
+				
+				-- Select the EXR channels and channel names to export
+				if exportPart and exportPart == 0 then
+					local p = exr:Part(name, img.ImageWindow, img.DataWindow, img.XScale/img.YScale)
+					
+					-- CHAN_COLOR / CHAN_COLORALPHA
+					
+					-- CHAN_RED
+					if redEnable == 1 then
+						exr:Channel(red, rgbaDepth, img, CHAN_RED)
+						-- exr:Channel(name .. '.' .. red, HALF, img, CHAN_RED)
+						
+						PrintChannelDetails(verbose, red, 'Red', redEnable, rgbaDepth)
+					end
+				
+					-- CHAN_GREEN
+					if greenEnable == 1 then
+						exr:Channel(green, rgbaDepth, img, CHAN_GREEN)
+						-- exr:Channel(name .. '.' .. green, HALF, img, CHAN_GREEN)
+						
+						PrintChannelDetails(verbose, green, 'Green', greenEnable, rgbaDepth)
+					end
+				
+					-- CHAN_BLUE
+					if blueEnable == 1 then
+						exr:Channel(blue, rgbaDepth, img, CHAN_BLUE)
+						-- exr:Channel(name .. '.' .. blue, HALF, img, CHAN_BLUE)
+						
+						PrintChannelDetails(verbose, blue, 'Blue', blueEnable, rgbaDepth)
+					end
+				
+					-- CHAN_ALPHA
+					if alphaEnable == 1 then
+						exr:Channel(alpha, rgbaDepth, img, CHAN_ALPHA)
+						-- exr:Channel(name .. '.' .. alpha, HALF, img, CHAN_ALPHA)
+						
+						PrintChannelDetails(verbose, alpha, 'Alpha', alphaEnable, rgbaDepth)
+					end
+				
+					-- The extra EXR channels
+				
+					-- CHAN_Z
+					if zEnable == 1 then
+						exr:Channel(z, HALF, img, CHAN_Z)
+						-- exr:Channel(name .. '.' .. z, HALF, img, CHAN_Z)
+						
+						PrintChannelDetails(verbose, z, 'Z-Depth', zEnable, nil)
+					end
+				
+					-- CHAN_COVERAGE
+					if covEnable == 1 then
+						exr:Channel(cov, HALF, img, CHAN_COVERAGE)
+						-- exr:Channel(name .. '.' .. cov, HALF, img, CHAN_COVERAGE)
+						
+						PrintChannelDetails(verbose, cov, 'Coverage', covEnable, nil)
+					end
+				
+					-- CHAN_OBJECT
+					if objIDEnable == 1 then
+						exr:Channel(objID, HALF, img, CHAN_OBJECT)
+						-- exr:Channel(name .. '.' .. objID, HALF, img, CHAN_OBJECT)
+						
+						PrintChannelDetails(verbose, objID, 'Object ID', objIDEnable, nil)
+					end
+				
+					-- CHAN_MATERIAL
+					if matIDEnable == 1 then
+						exr:Channel(matID, HALF, img, CHAN_MATERIAL)
+						-- exr:Channel(name .. '.' .. matID, HALF, img, CHAN_MATERIAL)
+						
+						PrintChannelDetails(verbose, matID, 'Material ID', matIDEnable, nil)
+					end
+				
+					-- CHAN_UV
+				
+					-- CHAN_U
+					if uEnable == 1 then
+						exr:Channel(u, HALF, img, CHAN_U)
+						-- exr:Channel(name .. '.' .. u, HALF, img, CHAN_U)
+						
+						PrintChannelDetails(verbose, u, 'U', uEnable, nil)
+					end
+				
+					-- CHAN_V
+					if vEnable == 1 then
+						exr:Channel(v, HALF, img, CHAN_V)
+						-- exr:Channel(name .. '.' .. v, HALF, img, CHAN_V)
+						
+						PrintChannelDetails(verbose, v, 'V', vEnable, nil)
+					end
+				
+					-- CHAN_NORMALS
+				
+					-- CHAN_NORMALX
+					if xNormEnable == 1 then
+						exr:Channel(xNorm, HALF, img, CHAN_NORMALX)
+						-- exr:Channel(name .. '.' .. xNorm, HALF, img, CHAN_NORMALX)
+						
+						PrintChannelDetails(verbose, xNorm, 'X Normal', xNormEnable, nil)
+					end
+				
+					-- CHAN_NORMALY
+					if yNormEnable == 1 then
+						exr:Channel(yNorm, HALF, img, CHAN_NORMALY)
+						-- exr:Channel(name .. '.' .. yNorm, HALF, img, CHAN_NORMALY)
+						
+						PrintChannelDetails(verbose, yNorm, 'Y Normal', yNormEnable, nil)
+					end
+				
+					-- CHAN_NORMALZ
+					if zNormEnable == 1 then
+						exr:Channel(zNorm, HALF, img, CHAN_NORMALZ)
+						-- exr:Channel(name .. '.' .. zNorm, HALF, img, CHAN_NORMALZ)
+						
+						PrintChannelDetails(verbose, zNorm, 'Z Normal', zNormEnable, nil)
+					end
+				
+					-- CHAN_VECTORS
+				
+					-- CHAN_VECTORX
+					if xVelEnable == 1 then
+						exr:Channel(xVel, HALF, img, CHAN_VECTORX)
+						-- exr:Channel(name .. '.' .. xVel, HALF, img, CHAN_VECTORX)
+						
+						PrintChannelDetails(verbose, xVel, 'X Velocity', xVelEnable, nil)
+					end
+				
+					-- CHAN_VECTORY
+					if yVelEnable == 1 then
+						exr:Channel(yVel, HALF, img, CHAN_VECTORY)
+						-- exr:Channel(name .. '.' .. yVel, HALF, img, CHAN_VECTORY)
+						
+						PrintChannelDetails(verbose, yVel, 'Y Velocity', yVelEnable, nil)
+					end
+				
+					-- CHAN_BACKVECTORS
+				
+					-- CHAN_BACKVECTORX
+					if xRevVelEnable == 1 then
+						exr:Channel(xRevVel, HALF, img, CHAN_BACKVECTORX)
+						-- exr:Channel(name .. '.' .. xRevVel, HALF, img, CHAN_BACKVECTORX)
+						
+						PrintChannelDetails(verbose, xRevVel, 'X Reverse Velocity', xRevVelEnable, nil)
+					end
+				
+					-- CHAN_BACKVECTORY
+					if yRevVelEnable == 1 then
+						exr:Channel(yRevVel, HALF, img, CHAN_BACKVECTORY)
+						-- exr:Channel(name .. '.' .. yRevVel, HALF, img, CHAN_BACKVECTORY)
+						
+						PrintChannelDetails(verbose, yRevVel, 'Y Reverse Velocity', yRevVelEnable, nil)
+					end
+				
+					-- CHAN_POSITIONS
+					if xPosEnable == 1 then
+						exr:Channel(xPos, HALF, img, CHAN_POSITIONX)
+						-- exr:Channel(name .. '.' .. xPos, HALF, img, CHAN_POSITIONX)
+						
+						PrintChannelDetails(verbose, xPos, 'X Position', xPosEnable, nil)
+					end
+					
+					if yPosEnable == 1 then
+						exr:Channel(yPos, HALF, img, CHAN_POSITIONY)
+						-- exr:Channel(name .. '.' .. yPos, HALF, img, CHAN_POSITIONY)
+						
+						PrintChannelDetails(verbose, yPos, 'Y Position', yPosEnable, nil)
+					end
+					
+					if zPosEnable == 1 then
+						exr:Channel(zPos, HALF, img, CHAN_POSITIONZ)
+						-- exr:Channel(name .. '.' .. zPos, HALF, img, CHAN_POSITIONZ)
+						
+						PrintChannelDetails(verbose, zPos, 'Z Position', zPosEnable, nil)
+					end
+					
+					-- CHAN_DISPARITIES
+					
+					-- CHAN_DISPARITYX
+					if xDispEnable == 1 then
+						exr:Channel(xDisp, HALF, img, CHAN_DISPARITYX)
+						-- exr:Channel(name .. '.' .. xDisp, HALF, img, CHAN_DISPARITYX)
+						
+						PrintChannelDetails(verbose, xDisp, 'X Disparity', xDispEnable, nil)
+					end
+					
+					-- CHAN_DISPARITYY
+					if yDispEnable == 1 then
+						exr:Channel(yDisp, HALF, img, CHAN_DISPARITYY)
+						-- exr:Channel(name .. '.' .. yDisp, HALF, img, CHAN_DISPARITYY)
+					
+						PrintChannelDetails(verbose, yDisp, 'Y Disparity', yDispEnable, nil)
+					end
+					
+					table.insert(parts, p)
+				end
+			end
+			
+			if exr:WriteHeader() then
+				for i,v in ipairs(parts) do
+					ok = ok and exr:WritePart(v, { })
+				end
+			else
+				ok = false
+			end
+			
+			exr:Close()
+		end
+		
+		local err = exr:GetLastError()
+		if #err > 0 then
+			print(bmd.writestring(err))
+			
+			ok = false
+		end
+		
+		-- Push the actively selected 'View Input Connection' ComboControl item based image input to the node's output connection
+		if ok then
+			OutImage:Set(req, Exports[viewOutput].InImage:GetValue(req))
+		end
+	end
+end
+
+-- Find out the current directory from a file path
+-- Example: print(Dirname('/Users/Shared/image.0000.exr'))
+function Dirname(mediaDirName)
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+	
+	if mediaDirName then
+		return mediaDirName:match('(.*' .. osSeparator .. ')')
+	else
+		return nil
+	end
+end
+
+-- Print the EXR channel details to the Console when the fuse is rendered
+-- Example: PrintChannelDetails(1, 'R', 'Red', 1, HALF)
+function PrintChannelDetails(verbose, channelName, channelType, channelEnabled, depth)
+	if verbose == 1 then
+	-- Check the bitdepth
+	local bitDepth = 'Float32'
+	if depth == HALF then
+		bitDepth = 'Float16'
+	end
+	
+	-- Only show the active channels
+	if channelEnabled == 1 then
+		print(string.format('\t\t[Channel Name] %10s\t[Channel Type] %20s\t[Depth] %s', channelName, channelType, bitDepth))
+		end
+	end
+end
+
+-- Print the EXR multi-part details to the Console when the fuse is rendered
+-- Example: PrintPartDetails(1, 'export_1', 1)
+function PrintPartDetails(verbose, partName, partNum, partEnabled)
+	if verbose == 1 then
+		if partEnabled == 0 then
+			-- Part Enabled
+			
+			print(string.format('\n\t[Part # %04d] "%s"\n', partNum, partName))
+		else
+			-- Part Disabled
+		end
+	end
+end
+
+
+-- Process the tokens in the filename field
+-- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr')
+function ParseTokens(file, version)
+	local verbose = false
+	local filename = file
+	
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+	
+	-- Find out the current Fusion host platform (Windows/Mac/Linux)
+	local platform = ''
+	if string.find(self.Comp:MapPath('Fusion:/'), 'Program Files', 1) then
+		platform = 'Windows'
+	elseif string.find(self.Comp:MapPath('Fusion:/'), 'PROGRA~1', 1) then
+		platform = 'Windows'
+	elseif string.find(self.Comp:MapPath('Fusion:/'), 'Applications', 1) then
+		platform = 'Mac'
+	else
+		platform = 'Linux'
+	end
+	
+	-- Probe the Fusion preferences for token settings
+	local frameRate = self.Comp:GetPrefs('Comp.FrameFormat.Rate')
+	local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width')
+	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height')
+	
+	-- req.Time is the same as comp.CurrentTime
+	local currentFrame = self.Comp.CurrentTime
+	
+	local startFrame = self.Comp.GlobalStart
+	local endFrame = self.Comp.GlobalEnd
+	local duration = self.Comp.GlobalEnd - self.Comp.GlobalStart
+	
+	local date = os.date('%Y-%m-%d')
+	
+	local time = os.date('%H.%M.%S')
+	
+	-- Fusion version number
+	local fuVersion = bmd._VERSION
+	
+	-- Check if Resolve or Fusion is running
+	local fuHost = ''
+	local fuHostPath = self.Comp:MapPath('Fusion:/')
+	if string.lower(fuHostPath):match('resolve') then
+		fuHost = 'Resolve'
+	else
+		fuHost = 'Fusion'
+	end
+	
+	-- Home Folder
+	local home = ''
+	if platform == 'Windows' then
+		home = os.getenv('USERPROFILE')
+	else
+		-- Mac and Linux
+		home = os.getenv('HOME')
+	end
+	
+	-- Machine Hostname
+	local hostname = ''
+	if platform == 'Windows' then
+		hostname = os.getenv('COMPUTERNAME')
+	else
+		-- Mac and Linux
+		hostname = System('hostname')
+	end
+	
+	-- User Account Name
+	local user = ''
+	if platform == 'Windows' then
+		user = os.getenv('USERNAME')
+	else
+		-- Mac and Linux
+		user = os.getenv('USER')
+	end
+	
+	-- The LifeSaver node name
+	local nodeName = self.Name
+	
+	-- Get the comp name like "Composition1"
+	local compName = tostring(self.Comp.Name)
+	-- Remove spaces from the file name and replace them with underscores
+	compName = string.gsub(compName, '%s+', '_')
+	-- Remove the ".comp" file extension if it is present
+	compName = string.gsub(compName, '%.comp', '')
+	-- If Resolve 15 is being used and the comp has no name then add a fallback placeholder
+	if compName == 'nil' then
+		compName = 'Composition1'
+	end
+	
+	-- Match the tokens
+	if filename and filename ~= '' then
+		-- # - Read the number sign/hash/octothorp # character for the frame padding
+		filename = string.gsub(filename, '#', '0')
+		
+		-- ${VERSION} - Read the LifeSaver node version field
+		local versionString = tostring(version)
+		if versionString ~= '' and versionString ~= nil then
+			versionString = 'V' .. versionString
+		end
+		filename = string.gsub(filename, '${VERSION}', versionString)
+		
+		-- ${COMP} - Read the current Fusion comp name
+		filename = string.gsub(filename, '${COMP}', compName)
+		
+		-- ${NODE} - Read the current LifeSaver node name
+		filename = string.gsub(filename, '${NODE}', nodeName)
+		
+		-- ${FPS} - Read the current frame rate
+		filename = string.gsub(filename, '${FPS}', frameRate)
+		
+		-- ${COMPWIDTH} - Read the current comp width
+		filename = string.gsub(filename, '${COMPWIDTH}', compWidth)
+		
+		-- ${COMPHEIGHT} - Read the current comp height
+		filename = string.gsub(filename, '${COMPHEIGHT}', compHeight)
+		
+		-- ${FRAME} - Read the current unpadded frame number
+		filename = string.gsub(filename, '${FRAME}', currentFrame)
+		
+		-- ${STARTFRAME} - Read the global start frame
+		filename = string.gsub(filename, '${STARTFRAME}', startFrame)
+		
+		-- ${ENDFRAME} - Read the global end frame
+		filename = string.gsub(filename, '${ENDFRAME}', endFrame)
+		
+		-- ${DURATION} - Read the global time duration
+		filename = string.gsub(filename, '${DURATION}', duration)
+		
+		-- ${FUVERSION} - Read the Fusion version number
+		filename = string.gsub(filename, '${FUVERSION}', fuVersion)
+		
+		-- ${FUHOST} - Read the Fusion/Resolve hostname
+		filename = string.gsub(filename, '${FUHOST}', fuHost)
+		
+		-- ${PLATFORM} - Read the current OS platform - Mac/Windows/Linux
+		filename = string.gsub(filename, '${PLATFORM}', platform)
+		
+		-- ${SEP} - Read the file separator slash
+		filename = string.gsub(filename, '${SEP}', osSeparator)
+		
+		-- ${HOME} - Read the home folder name
+		filename = string.gsub(filename, '${HOME}', home)
+		
+		-- ${DATE} - Read the current date in YYYY-MM-DD format (2018-06-16)
+		filename = string.gsub(filename, '${DATE}', date)
+		
+		-- ${TIME} - Read the current date in HH.MM.SS format (14.59.05)
+		filename = string.gsub(filename, '${TIME}', time)
+		
+		-- ${USER} - Read the current user account name
+		filename = string.gsub(filename, '${USER}', user)
+		
+		-- ${HOSTNAME} - Read the computer's hostname
+		filename = string.gsub(filename, '${HOSTNAME}', hostname)
+		
+		-- %04d - Read the frame padding token
+		token = '%%(%d*)[dD]'
+		while(string.match(filename, token))
+		do
+			-- Search for each of the $04d token items
+			local framePadNumber = string.match(filename, token)
+			-- Run the extracted token into the Lua environment variable lookup function
+			-- local result = string.format('%0' .. tonumber(framePadNumber) .. 'd', 0)
+			local result = string.format('%0' .. tonumber(framePadNumber) .. 'd', currentFrame)
+			if result then
+				-- The frame padding token was found
+				filename = string.gsub(filename, token, result)
+				if verbose == 1 then
+					print('[Frame Padding Token] for frame ' .. currentFrame .. ' .. the "' ..  tostring(framePadNumber) .. '" is "' .. tostring(result) .. '"')
+				end
+			else
+				-- The environment variable wasn't found and the string is a nil
+				filename = string.gsub(filename, token, '')
+				if verbose == 1 then
+					print('[Frame Padding Token] A valid token was not found.')
+				end
+			end
+		end
+		
+		-- Otherwise read environment variables from the token
+		token = '%${([_%-%w]*)}'
+		while(string.match(filename, token))
+		do
+			-- Search for each of the ${} token items
+			local envVar = string.match(filename, token)
+			-- Run the extracted token into the Lua environment variable lookup function
+			local result = os.getenv(envVar)
+			if result then
+				-- The environment variable was found
+				filename = string.gsub(filename, '${' .. envVar .. '}', result)
+				if verbose == 1 then
+					print('[Env Var Token] "' ..  tostring(envVar) .. '" is "' .. tostring(result) .. '"')
+				end
+			else
+				-- The environment variable wasn't found and the string is a nil
+				filename = string.gsub(filename, '${' .. envVar .. '}', '')
+				if verbose == 1 then
+					print('[Env Var Token] "' .. tostring(envVar) .. '" was not found.')
+				end
+			end
+		end
+	end
+	
+	return filename
+end
+------------------------------------------------------------------------------
+-- ParseFilename() is from bmd.scriptlib
+--
+-- This is a great function for ripping a filepath into little bits
+-- returns a table with the following
+--
+-- FullPath : The raw, original path sent to the function
+-- Path : The path, without filename
+-- FullName : The name of the clip w\ extension
+-- Name : The name without extension
+-- CleanName: The name of the clip, without extension or sequence
+-- SNum : The original sequence string, or '' if no sequence
+-- Number : The sequence as a numeric value, or nil if no sequence
+-- Extension: The raw extension of the clip
+-- Padding : Amount of padding in the sequence, or nil if no sequence
+-- UNC : A true or false value indicating whether the path is a UNC path or not
+------------------------------------------------------------------------------
+-- Example: frameNumber = tonumber(ParseFilename(filename).Number)
+function ParseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, '^(.+[/\\])(.+)', function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, '^(.+)(%..+)$', function(name, ext) seq.Name = name seq.Extension = ext end)
+	
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+	
+	string.gsub(seq.Name, '^(.-)(%d+)$', function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	
+	if seq.SNum then
+		seq.Number = tonumber(seq.SNum)
+		seq.Padding = string.len(seq.SNum)
+	else
+		seq.SNum = ''
+		seq.CleanName = seq.Name
+	end
+	
+	if seq.Extension == nil then seq.Extension = '' end
+	seq.UNC = (string.sub(seq.Path, 1, 2) == [[\\]])
+	
+	return seq
+end
+
+-- Run a system command and get the result back from the terminal session
+-- Example: print(System('/usr/bin/env')
+function System(commandString)
+	local handler = io.popen(commandString);
+	local response = tostring(handler:read('*a'));
+	
+	-- Trim off the last character which is a newline
+	return response:sub(1,-2)
+end

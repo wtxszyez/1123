@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - 2018-05-22 01.58 AM
+Open Containing Folder - 2018-07-13 09.11 PM
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
@@ -7,9 +7,11 @@ The "Open Containing Folder" script reads the active Nodes view selection and th
 This script works with the following types of nodes in the Resolve 15 Fusion page Nodes view / Fusion 9 Flow area:
 
 - MediaIn
+- LifeSaver (fuse)
 - Loader
+- NetLoader (fuse)
 - Saver
-- External Matte Saver
+- External Matte Saver (fuse)
 - AlembicMesh3D
 - FBXMesh3D
 - ExporterFBX
@@ -100,6 +102,14 @@ function Main()
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = Dirname(loadedImage)
 			result = '[ExternalMatteSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = Dirname(loadedImage)
+			result = '[LifeSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.NetLoader' then
+			loadedImage = comp:MapPath('Temp:/NetLoader/')
+			mediaDirName = Dirname(loadedImage)
+			result = '[NetLoader Temp Folder] ' .. tostring(loadedImage)
 		else
 			result = '[Invalid Node Type] '
 		end
