@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.2 2018-07-14 07.28 AM
+LifeSaver v0.3 2018-07-14 01.20 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -100,11 +100,25 @@ Preview Input Connection [Input #1/Input #2/...]
 
 File Tab:
 	Filename _____________ (Browse)
-	[x] Create Folder During Render (Create)
-	Output Format [OpenEXR Files]
-	Save Frames [Full Renders Only/Interactive]
-	[] Saver-Relative Numbering
-	Sequence Offset
+	Version ______________
+	Format:
+		Output Format [OpenEXR Files]
+		Save Frames [Full Renders Only/Interactive]
+		[] Saver-Relative Numbering
+		Sequence Offset
+	
+	Folder Creation:
+		[x] Create Folder During Render
+		Create Folder (Button)
+		Open Containing Folder (Button)
+	
+	Rendering:
+		Render Current Frame (Button)
+		Render Selected (Button)
+		Render All Nodes (Button)
+		Network Render All Nodes (Button)
+		
+	[x]Verbose Console Output
 
 Channels Tab:
 	Depth (Auto)(float16)(float32)
@@ -857,7 +871,6 @@ end
 function Create()
 	self:RemoveControlPage('Controls')
 	
-	
 	-- Add the 'Preview Input Connection' ComboControl above the tabs
 	-- Select the input connection # that will be fed as the preview image to the node's image output connection
 	InViewOutput = self:AddInput('Preview Input Connection', 'ViewOutput', {
@@ -898,6 +911,84 @@ function Create()
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
 		})
+		
+	-- Format Nest on File tab
+	InFormatNest = self:AddInput('Format', 'FormatNest', {
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'Format',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 4,
+		INP_Default = 1,
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	-- This lets you set the output format - EXR is the only supported output format at the moment but it would be theoretically possible to use Clip() in the future to write out individual flat channels to disk in other file formats
+	InOutputFormat = self:AddInput('Output Format', 'OutputFormat', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'OpenEXR Files',},
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI?
+	InSaveFrames = self:AddInput('Save Frames', 'SaveFrames', {
+		INPID_InputControl = 'ComboControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0,
+		INP_Integer = true,
+		ICD_Width = 1,
+		{ CCS_AddString = 'Full Renders Only',},
+		{ CCS_AddString = 'Interactive',},
+		CC_LabelPosition = 'Vertical',
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Should the image sequence frame numbering be done relative to the first frame number that is specified in the filename field?
+	InSetSequenceStart = self:AddInput('Saver-Relative Numbering', 'SetSequenceStart', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1.0,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- Should the image sequence frame numbering be shifted (forwards/backwards) by the sequence offset value?
+	InSequenceStartFrame = self:AddInput('Sequence Offset', 'SequenceStartFrame', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ScrewControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 1.0,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	
+	
+	-- Folder Creation Nest on File tab
+	InRenderNest = self:AddInput('Folder Creation', 'FolderCreationNest', {
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'Folder Creation',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 3,
+		INP_Default = 1,
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
 	-- Automatically creates a new folder at render time if the output filepath doesn't exist
 	InCreateDir = self:AddInput('Create Folder During Render', 'CreateDir', {
 		LINKID_DataType = 'Number',
@@ -927,62 +1018,10 @@ function Create()
 		INPID_InputControl = 'ButtonControl',
 		INP_DoNotifyChanged = true,
 		})
-	-- This lets you set the output format - EXR is the only supported output format at the moment but it would be theoretically possible to use Clip() in the future to write out individual flat channels to disk in other file formats
-	InOutputFormat = self:AddInput('Output Format', 'OutputFormat', {
-		INPID_InputControl = 'ComboControl',
-		INP_DoNotifyChanged = true,
-		INP_External = false,
-		INP_Default = 0,
-		INP_Integer = true,
-		ICD_Width = 1,
-		{ CCS_AddString = 'OpenEXR Files',},
-		CC_LabelPosition = 'Vertical',
-		LINK_ForceSave = true,
-		ICS_ControlPage = 'File',
-		})
-	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI?
-	InSaveFrames = self:AddInput('Save Frames', 'SaveFrames', {
-		INPID_InputControl = 'ComboControl',
-		INP_DoNotifyChanged = true,
-		INP_External = false,
-		INP_Default = 0,
-		INP_Integer = true,
-		ICD_Width = 1,
-		{ CCS_AddString = 'Full Renders Only',},
-		{ CCS_AddString = 'Interactive',},
-		CC_LabelPosition = 'Vertical',
-		LINK_ForceSave = true,
-		ICS_ControlPage = 'File',
-		})
+
 	
-	-- Should the image sequence frame numbering be done relative to the first frame number that is specified in the filename field?
-	InSetSequenceStart = self:AddInput('Saver-Relative Numbering', 'SetSequenceStart', {
-		LINKID_DataType = 'Number',
-		INPID_InputControl = 'CheckboxControl',
-		INP_DoNotifyChanged = true,
-		INP_External = false,
-		INP_Integer = true,
-		INP_Default = 0.0,
-		ICD_Width = 1.0,
-		LINK_ForceSave = true,
-		ICS_ControlPage = 'File',
-		})
-	-- Should the image sequence frame numbering be shifted (forwards/backwards) by the sequence offset value?
-	InSequenceStartFrame = self:AddInput('Sequence Offset', 'SequenceStartFrame', {
-		LINKID_DataType = 'Number',
-		INPID_InputControl = 'ScrewControl',
-		INP_DoNotifyChanged = true,
-		INP_External = false,
-		INP_Integer = true,
-		INP_Default = 0.0,
-		ICD_Width = 1.0,
-		LINK_ForceSave = true,
-		ICS_ControlPage = 'File',
-		})
-		
 	-- Rendering Nest on File tab
 	InRenderNest = self:AddInput('Rendering', 'RenderingNest', {
-		LINKID_AddBeforeID = 'AddOutput',
 		INPID_InputControl = 'LabelControl',
 		LINKS_Name = 'Rendering',
 		INP_DoNotifyChanged = true,
@@ -991,6 +1030,54 @@ function Create()
 		LBLC_NumInputs = 3,
 		INP_Default = 1,
 		IC_Visible = true,
+	})
+	-- Render Current Frame
+	InRenderSelected = self:AddInput('Render Current Frame', 'RenderCurrentFrameButton', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+if not tool then
+	tool = comp.ActiveTool
+end
+
+-- Render Settings
+local startFrame = comp.CurrentTime
+local endFrame = comp.CurrentTime + 1
+local hiQ = true
+local motionBlur = 1
+-- local proxy = -1 -- Custom (only used by PreviewSavers during a preview render)
+local proxy = 0 -- Use prefs setting
+-- local proxy = 1 -- Full Size (default)
+-- local proxy = 2 -- Half Size
+-- local proxy = 3 -- Third Size
+-- local proxy = 4 -- Quarter Size
+local stepBy = 1
+local wait = true
+local networkRender = false
+
+if tool then
+	print('[LifeSaver] Render Current Frame ' .. tool.Name)
+	
+	comp:Render({
+		Tool = tool,
+		Start = startFrame,
+		End = endFrame,
+		HiQ = hiQ,
+		MotionBlur = motionBlur,
+		SizeType = proxy,
+		StepRender = stepBy,
+		Wait = wait,
+		UseNetwork = networkRender,
+	})
+else
+	print('[LifeSaver] Selection Error - Please select a node before running this script.')
+end]],
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
 	})
 	-- Render Selected
 	InRenderSelected = self:AddInput('Render Selected', 'RenderSelectedButton', {
@@ -1006,11 +1093,12 @@ if not tool then
 end
 
 if tool then
-	print('[LifeSaver Render Selected] ' .. tool.Name)
+	print('[LifeSaver] Render Selected ' .. tool.Name)
 	comp:Render({Tool = tool})
 else
-	print('[LifeSaver Render Selected] Selection Error - Please select a node before running this script.')
+	print('[LifeSaver] Selection Error - Please select a node before running this script.')
 end]],
+		IC_Visible = true,
 		ICS_ControlPage = 'File',
 	})
 	-- Render All
@@ -1022,19 +1110,44 @@ end]],
 		INP_Default = 0.0,
 		ICD_Width = 1,
 		BTNCS_Execute = [[
-print('[LifeSaver Render All Nodes]')
+print('[LifeSaver] Render All Nodes')
 comp:Render()
 ]],
+		IC_Visible = true,
 		ICS_ControlPage = 'File',
 	})
+	-- Network Render All Nodes
+	InNetworkRenderAll = self:AddInput('Network Render All Nodes', 'NetworkRenderAllButton', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+-- Check if Resolve or Fusion is running
+local fuHostPath = comp:MapPath('Fusion:/')
+if string.lower(fuHostPath):match('resolve') then
+	print('[LifeSaver] Network Rendering is not available in Resolve.')
+else
+	print('[LifeSaver] Network Render All Nodes')
+	-- Render all the nodes on the network using the Fusion Render Manager window.
+	comp:Render({UseNetwork = true})
 	
+	-- Show the Render Manager view
+	fusion:ToggleRenderManager()
+end
+]],
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
 	-- Verbose Console logging
-	InVerbose = self:AddInput('Verbose', 'Verbose', {
+	InVerbose = self:AddInput('Verbose Console Output', 'Verbose', {
 		LINKID_DataType = 'Number',
 		INPID_InputControl = 'CheckboxControl',
 		INP_DoNotifyChanged = true,
 		INP_Integer = true,
-		INP_Default = 1,
+		INP_Default = 0,
 		ICD_Width = 1,
 		ICS_ControlPage = 'File',
 		})
