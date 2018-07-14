@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.4 2018-07-14 02.03 PM
+LifeSaver v0.5 2018-07-14 02.40 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -108,6 +108,7 @@ File Tab:
 		
 	Version Control:
 		Version ______________
+		- (Button) / + (Button)
 		UUID ______________
 		Update UUID (Button)
 		
@@ -910,7 +911,7 @@ function Create()
 		INP_DoNotifyChanged = true,
 		INP_External = false,
 		LBLC_DropDownButton = true,
-		LBLC_NumInputs = 4,
+		LBLC_NumInputs = 5,
 		INP_Default = 2,
 		IC_Visible = true,
 		ICS_ControlPage = 'File',
@@ -921,13 +922,104 @@ function Create()
 		INPID_InputControl = 'TextEditControl',
 		INP_DoNotifyChanged = true,
 		INP_External = false,
-		INPS_DefaultText = '',
+		INPS_DefaultText = '001',
 		ICS_Name = 'Version',
 		TEC_Lines = 1,
 		ICD_Width = 1,
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
 		})
+	-- The - button to lower the Version number
+	InUpdateMinusVersion = self:AddInput('UpdateMinus', 'UpdateVersionMinus', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICD_Width = 0.5,
+		ICS_Name = '-',
+		BTNCS_Execute = [[
+if not tool then
+	tool = comp.ActiveTool
+end
+
+-- This is the raw contents of the Version field
+versionRaw = tool:GetInput('Version', fu.TIME_UNDEFINED)
+
+-- Check if the version field is empty
+if versionRaw and versionRaw ~= '' then
+	-- There is a number in the version field
+	
+	-- Read the Version textfiled
+	versionStr = string.match(versionRaw, '%d+')
+
+	-- Check the frame padding
+	versionPadding = string.len(versionStr)
+
+	-- Increment the version number and apply the frame padding
+	if tonumber(versionStr) > 0 then
+		-- The version number is above zero
+		versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(versionStr) - 1)
+	else
+		-- Clamp the minimum version value at zero
+		versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(0))
+	end
+	
+	-- Replace the version number in a text string that might also have words in it
+	VersionUpdated = string.gsub(versionRaw, versionStr, versionFormatted)
+
+	-- Push the updated version back into the textfield
+	tool:SetInput('Version', VersionUpdated, fu.TIME_UNDEFINED)
+else
+	-- The version field is empty so set the field value to 1
+	tool:SetInput('Version', '001', fu.TIME_UNDEFINED)
+end
+]],
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	-- The + button to lower the Version number
+	InUpdatePlusVersion = self:AddInput('UpdatePlus', 'UpdateVersionPlus', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		ICD_Width = 0.5,
+		ICS_Name = '+',
+		BTNCS_Execute = [[
+if not tool then
+	tool = comp.ActiveTool
+end
+
+-- This is the raw contents of the Version field
+versionRaw = tool:GetInput('Version', fu.TIME_UNDEFINED)
+
+-- Check if the version field is empty
+if versionRaw and versionRaw ~= '' then
+	-- There is a number in the version field
+	
+	-- Read the Version textfiled
+	versionStr = string.match(versionRaw, '%d+')
+
+	-- Check the frame padding
+	versionPadding = string.len(versionStr)
+
+	-- Increment the version number and apply the frame padding
+	versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(versionStr) + 1)
+
+	-- Replace the version number in a text string that might also have words in it
+	VersionUpdated = string.gsub(versionRaw, versionStr, versionFormatted)
+
+	-- Push the updated version back into the textfield
+	tool:SetInput('Version', VersionUpdated, fu.TIME_UNDEFINED)
+else
+	-- The version field is empty so set the field value to 1
+	tool:SetInput('Version', '001', fu.TIME_UNDEFINED)
+end
+]],
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	
 	
 	-- Create a new UUID value like 'f9fa311b-904c-4b93-892f-0d772887db88'
 	local uuid = bmd.createuuid()
