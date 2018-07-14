@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.1 2018-07-13 09.51 PM
+LifeSaver v0.1 2018-07-14 12.24 AM 
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -52,10 +52,13 @@ ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
 
 ### Supported Frame Padding Indicators ###
+${FRAME} - The current unpadded frame number (1001)
 
 0000 - The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
+
 %04d - The c-code style printf integer number formating symbol can be used to define the frame padding token
-# - The number sign/hash/octothorp # character can be used to define the frame padding (0)
+
+#### - The number sign/hash/octothorp # character can be used to define the frame padding (0000)
 
 ### Filename Examples ###
 
@@ -1850,7 +1853,7 @@ function ParseTokens(file, version)
 		token = '%%(%d*)[dD]'
 		while(string.match(filename, token))
 		do
-			-- Search for each of the $04d token items
+			-- Search for each of the %04d token items
 			local framePadNumber = string.match(filename, token)
 			-- Run the extracted token into the Lua environment variable lookup function
 			-- local result = string.format('%0' .. tonumber(framePadNumber) .. 'd', 0)
