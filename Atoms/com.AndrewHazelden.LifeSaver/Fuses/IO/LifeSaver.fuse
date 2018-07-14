@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.1 2018-07-14 12.24 AM 
+LifeSaver v0.2 2018-07-14 07.28 AM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -50,6 +50,7 @@ ${SEP} - The file separator slash (/ or \)
 ${PLATFORM} - The OS Platform (Mac/Windows/Linux)
 ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
+${UUID} - The UUID value (f9fa311b-904c-4b93-892f-0d772887db88)
 
 ### Supported Frame Padding Indicators ###
 
@@ -978,7 +979,55 @@ function Create()
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
 		})
+		
+	-- Rendering Nest on File tab
+	InRenderNest = self:AddInput('Rendering', 'RenderingNest', {
+		LINKID_AddBeforeID = 'AddOutput',
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'Rendering',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 3,
+		INP_Default = 1,
+		IC_Visible = true,
+	})
+	-- Render Selected
+	InRenderSelected = self:AddInput('Render Selected', 'RenderSelectedButton', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+if not tool then
+	tool = comp.ActiveTool
+end
 
+if tool then
+	print('[LifeSaver Render Selected] ' .. tool.Name)
+	comp:Render({Tool = tool})
+else
+	print('[LifeSaver Render Selected] Selection Error - Please select a node before running this script.')
+end]],
+		ICS_ControlPage = 'File',
+	})
+	-- Render All
+	InRenderAll = self:AddInput('Render All Nodes', 'RenderAllButton', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+print('[LifeSaver Render All Nodes]')
+comp:Render()
+]],
+		ICS_ControlPage = 'File',
+	})
+	
 	-- Verbose Console logging
 	InVerbose = self:AddInput('Verbose', 'Verbose', {
 		LINKID_DataType = 'Number',
@@ -1720,6 +1769,9 @@ function ParseTokens(file, version)
 	local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width')
 	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height')
 	
+	-- Create a new UUID value like 'f9fa311b-904c-4b93-892f-0d772887db88'
+	local uuid = bmd.createuuid()
+	
 	-- req.Time is the same as comp.CurrentTime
 	local currentFrame = self.Comp.CurrentTime
 	
@@ -1798,6 +1850,9 @@ function ParseTokens(file, version)
 		
 		-- ${COMP} - Read the current Fusion comp name
 		filename = string.gsub(filename, '${COMP}', compName)
+		
+		-- ${UUID} - Read the current UUID
+		filename = string.gsub(filename, '${UUID}', uuid)
 		
 		-- ${NODE} - Read the current LifeSaver node name
 		filename = string.gsub(filename, '${NODE}', nodeName)
