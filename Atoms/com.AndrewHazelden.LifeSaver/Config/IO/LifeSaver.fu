@@ -1,0 +1,138 @@
+--[[--
+LifeSaver Fuse Hotkeys - v1.0.1 2018-07-15 04.34 PM
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+This .fu hotkeys file makes it easier to manage your LifeSaver node version attributes.
+
+## Installation ##
+
+Step 1. Copy the .fu file into your Resolve 15 / Fusion 9 Standalone user preferences "Config:/" PathMap folder.
+
+Step 2. Restart Resolve/Fusion Standalone.
+
+## Usage ##
+
+Press the "Alt+Up Cursor" (Win/Linux) or "Option+Up Cursor" (macOS) hotkey to increment the selected LifeSaver Node version.
+
+Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de-increment the selected LifeSaver Node version.
+
+--]]--
+{
+	Action
+	{
+		ID = "LifeSaverVersionUp",
+		Category = "LifeSaver",
+		Name = "LifeSaver VersionUp",
+		
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					-- Read the active selection
+					tool = obj:Comp().ActiveTool
+					
+					-- Update the version field on the active LifeSaver node
+					if tool and tool:GetID() == 'Fuse.LifeSaver' then
+						-- This is the raw contents of the Version field
+						versionRaw = tool:GetInput('Version', fu.TIME_UNDEFINED)
+						
+						-- Check if the version field is empty
+						if versionRaw and versionRaw ~= '' then
+							-- There is a number in the version field
+							
+							-- Read the Version textfiled
+							versionStr = string.match(versionRaw, '%d+')
+							
+							-- Check the frame padding
+							versionPadding = string.len(versionStr)
+							
+							-- Increment the version number and apply the frame padding
+							versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(versionStr) + 1)
+							
+							
+							-- Replace the version number in a text string that might also have words in it
+							VersionUpdated = string.gsub(versionRaw, versionStr, versionFormatted)
+							
+							-- Push the updated version back into the textfield
+							tool:SetInput('Version', VersionUpdated, fu.TIME_UNDEFINED)
+							
+							print('[VersionUp] ' .. tool.Name .. ' to ' .. VersionUpdated)
+						else
+							-- The version field is empty so set the field value to 1
+							tool:SetInput('Version', '001', fu.TIME_UNDEFINED)
+						end
+					else
+						print('[VersionUp Error] Please select a node in the flow.')
+					end
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "LifeSaverVersionDown",
+		Category = "LifeSaver",
+		Name = "LifeSaver VersionDown",
+		
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					-- Read the active selection
+					tool = obj:Comp().ActiveTool
+					
+					-- Update the version field on the active LifeSaver node
+					if tool and tool:GetID() == 'Fuse.LifeSaver' then
+						-- This is the raw contents of the Version field
+						versionRaw = tool:GetInput('Version', fu.TIME_UNDEFINED)
+						
+						-- Check if the version field is empty
+						if versionRaw and versionRaw ~= '' then
+							-- There is a number in the version field
+							
+							-- Read the Version textfiled
+							versionStr = string.match(versionRaw, '%d+')
+							
+							-- Check the frame padding
+							versionPadding = string.len(versionStr)
+							
+							-- Increment the version number and apply the frame padding
+							if tonumber(versionStr) > 0 then
+								-- The version number is above zero
+								versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(versionStr) - 1)
+							else
+								-- Clamp the minimum version value at zero
+								versionFormatted = string.format('%0' .. versionPadding .. 'd', tonumber(0))
+							end
+							
+							-- Replace the version number in a text string that might also have words in it
+							VersionUpdated = string.gsub(versionRaw, versionStr, versionFormatted)
+							
+							-- Push the updated version back into the textfield
+							tool:SetInput('Version', VersionUpdated, fu.TIME_UNDEFINED)
+							
+							print('[VersionDown] ' .. tool.Name .. ' to ' .. VersionUpdated)
+						else
+							-- The version field is empty so set the field value to 1
+							tool:SetInput('Version', '001', fu.TIME_UNDEFINED)
+						end
+					else
+						print('[VersionDown Error] Please select a node in the flow.')
+					end
+				]=],
+			},
+		},
+	},
+	
+	Hotkeys
+	{
+		Target = "FlowView",
+		
+		ALT_UP = "LifeSaverVersionUp{}",
+		ALT_DOWN = "LifeSaverVersionDown{}",
+	},
+}

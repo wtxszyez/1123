@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v1.0 2018-07-15 03.10 AM
+LifeSaver - v1.0.1 2018-07-15 04.33 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -234,6 +234,12 @@ Help Tab:
 	B44A_COMPRESSION = 7
 	DWAA_COMPRESSION = 8
 	DWAB_COMPRESSION = 9
+	
+## LifeSaver Hotkeys ##
+
+Press the "Alt+Up Cursor" (Win/Linux) or "Option+Up Cursor" (macOS) hotkey to increment the selected LifeSaver Node version.
+
+Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de-increment the selected LifeSaver Node version.
 
 ## Todo ##
 
@@ -253,6 +259,8 @@ Help Tab:
 	CHAN_BACKVECTORY
 
 - Fix an Open Containing Folder issue when tokens like ${SHELL1}-${SHELL4} are embedded into the folder path section of the Filename. When the comp is rendered the folders are created as expected.
+
+- Look into a Fusion 9 Render Node issue where Fusion reports an error loading the fuse when rendering comps using the Fusion Render Manager. In this case the fuse file runs fine on the same system in the Fusion GUI session.
 
 --]]--
 
@@ -277,7 +285,7 @@ FuRegisterClass('LifeSaver', CT_SinkTool, {
 	REG_OpNoMask = true,
 	
 	-- Sets the fuse version number (100 means v1.0) so newer fuses override older versions
-	REG_Version = 100,
+	REG_Version = 101,
 	})
 
 -- Add a new output entry to the Channels tab when the '+' button is clicked.
@@ -1646,6 +1654,11 @@ Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
 os.execute('env > "' .. logFile .. '"');
 bmd.openfileexternal('Open', logFile);</pre>
 
+<h1>LifeSaver Hotkeys</h1>
+
+<p>Press the "Alt+Up Cursor" (Win/Linux) or "Option+Up Cursor" (macOS) hotkey to increment the selected LifeSaver Node version.</p>
+
+<p>Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de-increment the selected LifeSaver Node version.</p>
 ]=]
 			},
 			-- Add clickable links
