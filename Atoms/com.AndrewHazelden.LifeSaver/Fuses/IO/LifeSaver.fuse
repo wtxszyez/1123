@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.6 2018-07-15 02.07 AM
+LifeSaver v1.0 2018-07-15 02.36 AM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -66,10 +66,10 @@ ${FRAME} - The current unpadded frame number (1001).
 ### Filename Examples ###
 
 Filename Token Example 1:
-Comp:/${COMP}/${COMP}_${NODE}.0000.exr
+Comp:/${COMP}/${COMP}_${NODE}_${VERSION}.0000.exr
 
 This would result in a rendered EXR image filename like:
-/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.0000.exr
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1_v001.0000.exr
 
 
 Filename Token Example 2:
@@ -1547,7 +1547,7 @@ function HelpWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [=[
 <h1>About LifeSaver Fuse</h1>
-<h2>Version 1.0 - 2018-07-14</h2>
+<h2>Version 1.0 - 2018-07-15</h2>
 <p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
 
 <p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
@@ -1621,10 +1621,10 @@ The number sign/hash/octothorp # character can be used to define the frame paddi
 <h2>Filename Examples</h2>
 
 <p>Filename Token Example 1:<br>
-Comp:/${COMP}/${COMP}_${NODE}.0000.exr</p>
+Comp:/${COMP}/${COMP}_${NODE}_${VERSION}.0000.exr</p>
 
 <p>This would result in a rendered EXR image filename like:<br>
-/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.0000.exr</p>
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1_v001.0000.exr</p>
 
 
 <p>Filename Token Example 2:<br>
@@ -1638,8 +1638,8 @@ Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
 
 <p>You can print out the environment variables that are active inside of Fusion using the following Lua script snippet:</p>
 
-<pre>logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');<br>
-os.execute('env > "' .. logFile .. '"');<br>
+<pre>logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');
+os.execute('env > "' .. logFile .. '"');
 bmd.openfileexternal('Open', logFile);</pre>
 
 ]=]
@@ -1776,7 +1776,7 @@ function NotifyChanged(inp, param, time)
 			if verbose == 1 then
 				print('[Created Directory]', folder)
 			end
-		elseif bmd.fileexists(folder) == false then
+		else
 			if verbose == 1 then
 				print('[Directory Missing]', folder)
 			end
@@ -1810,7 +1810,7 @@ function NotifyChanged(inp, param, time)
 			if verbose == 1 then
 				print('[Created Directory]', folder)
 			end
-		elseif bmd.fileexists(folder) == false then
+		else
 			if verbose == 1 then
 				print('[Directory Missing]', folder)
 			end
@@ -2759,8 +2759,8 @@ function System(commandString, verbose, use)
 	end
 	
 	-- There was no commandString
-	if verbose and (verbose == 1 or verbose == true) then
-		print('\t\t[Launch Command] "' .. tostring(commandString) .. '"')
-	end
+	-- if verbose and (verbose == 1 or verbose == true) then
+	-- 	print('\t\t[Launch Command] "' .. tostring(commandString) .. '"')
+	-- end
 	return ''
 end
