@@ -1,5 +1,5 @@
 --[[--
-LifeSaver v0.5 2018-07-14 03.51 PM
+LifeSaver v0.6 2018-07-15 02.07 AM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -51,16 +51,17 @@ ${SEP} - The file separator slash (/ or \)
 ${PLATFORM} - The OS Platform (Mac/Windows/Linux)
 ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
+${SHELL1}-${SHELL4} - The Shell tokens textfield content is run in the Terminal/Command Prompt (echo Hello_World)
 
 ### Supported Frame Padding Indicators ###
 
-${FRAME} - The current unpadded frame number (1001)
+${FRAME} - The current unpadded frame number (1001).
 
 0000 - The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
 
-%04d - The c-code style printf integer number formating symbol can be used to define the frame padding token
+%04d - The c-code style printf integer number formating symbol can be used to define the frame padding token.
 
-#### - The number sign/hash/octothorp # character can be used to define the frame padding (0000)
+#### - The number sign/hash/octothorp # character can be used to define the frame padding (0000).
 
 ### Filename Examples ###
 
@@ -122,7 +123,13 @@ File Tab:
 		Render Selected (Button)
 		Render All Nodes (Button)
 		Network Render All Nodes (Button)
-		
+	
+	Shell Tokens:
+		${SHELL1} ______________
+		${SHELL2} ______________
+		${SHELL3} ______________
+		${SHELL4} ______________
+	
 	[x]Verbose Console Output
 
 Channels Tab:
@@ -158,7 +165,10 @@ Channels Tab:
 		[x] Z Position <posZ______>
 		[x] X Disparity <dispX______>
 		[x] Y Disparity <dispY______>
-		[ ] Custom <______>
+	
+Help Tab:
+	WSL - LifeSaver Fuse (Button)
+	Show Help Window (Button)
 
 ## EXRIO Supported Channel Mappings ##
 
@@ -240,6 +250,8 @@ Channels Tab:
 	CHAN_BACKVECTORX
 	CHAN_BACKVECTORY
 
+- Fix an Open Containing Folder issue when tokens like ${SHELL1}-${SHELL4} are embedded into the folder path section of the Filename. When the comp is rendered the folders are created as expected.
+
 --]]--
 
 -- Set up the Fuse registry settings
@@ -293,7 +305,7 @@ function AddOutput(i)
 		INPID_InputControl = 'ComboControl',
 		INP_DoNotifyChanged = true,
 		INP_External = false,
-		ICS_Name = 'Export Part #'  .. istr,
+		ICS_Name = 'Export Part #'	.. istr,
 		ICD_Width = 1,
 		INP_Default = 0,
 		{ CCS_AddString = 'Enabled'},
@@ -912,7 +924,7 @@ function Create()
 		INP_External = false,
 		LBLC_DropDownButton = true,
 		LBLC_NumInputs = 5,
-		INP_Default = 2,
+		INP_Default = 1,
 		IC_Visible = true,
 		ICS_ControlPage = 'File',
 	})
@@ -929,7 +941,7 @@ function Create()
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
 		})
-	-- The - button to lower the Version number
+	-- The '-' button to lower the Version number
 	InUpdateMinusVersion = self:AddInput('UpdateMinus', 'UpdateVersionMinus', {
 		LINKID_DataType = 'Number',
 		INPID_InputControl = 'ButtonControl',
@@ -977,7 +989,7 @@ end
 		IC_Visible = true,
 		ICS_ControlPage = 'File',
 	})
-	-- The + button to lower the Version number
+	-- The '+' button to raise the Version number
 	InUpdatePlusVersion = self:AddInput('UpdatePlus', 'UpdateVersionPlus', {
 		LINKID_DataType = 'Number',
 		INPID_InputControl = 'ButtonControl',
@@ -1289,6 +1301,74 @@ end
 		IC_Visible = true,
 		ICS_ControlPage = 'File',
 	})
+	
+	
+	-- Shell Token Nest on File tab
+	InShellTokensNest = self:AddInput('Shell Tokens', 'ShellTokensNest', {
+		INPID_InputControl = 'LabelControl',
+		LINKS_Name = 'Shell Tokens',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		LBLC_DropDownButton = true,
+		LBLC_NumInputs = 4,
+		INP_Default = 1,
+		IC_Visible = true,
+		ICS_ControlPage = 'File',
+	})
+	-- ${SHELL1} textfield
+	InShell1 = self:AddInput('Shell1', 'Shell1', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = '',
+		ICS_Name = '${SHELL1}',
+		TEC_Lines = 3,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- ${SHELL2} textfield
+	InShell2 = self:AddInput('Shell2', 'Shell2', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = '',
+		ICS_Name = '${SHELL2}',
+		TEC_Lines = 3,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- ${SHELL3} textfield
+	InShell3 = self:AddInput('Shell3', 'Shell3', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = '',
+		ICS_Name = '${SHELL3}',
+		TEC_Lines = 3,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	-- ${SHELL4} textfield
+	InShell4 = self:AddInput('Shell4', 'Shell4', {
+		LINKID_DataType = 'Text',
+		INPID_InputControl = 'TextEditControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INPS_DefaultText = '',
+		ICS_Name = '${SHELL4}',
+		TEC_Lines = 3,
+		ICD_Width = 1,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'File',
+		})
+	
+	
 	-- Verbose Console logging
 	InVerbose = self:AddInput('Verbose Console Output', 'Verbose', {
 		LINKID_DataType = 'Number',
@@ -1386,6 +1466,239 @@ end
 		ICS_Name = '+',
 		ICS_ControlPage = 'Channels',
 		})
+		
+	-- The 4th tab is named 'Help'
+	self:AddControlPage('Help')
+	
+	-- WSL - LifeSaver Fuse
+	InWSLHelpThread = self:AddInput('WSL - LifeSaver Fuse', 'WSLHelpThread', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+------------------------------------------------------------------------
+-- Open a webpage window up using your default web browser
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+function OpenURL(siteName, path)
+	if platform == "Windows" then
+		-- Running on Windows
+		command = 'explorer "' .. path .. '"'
+	elseif platform == 'Mac' then
+		-- Running on Mac
+		command = 'open "' .. path .. '" &'
+	 elseif platform == "Linux" then
+		-- Running on Linux
+		command = 'xdg-open "' .. path .. '" &'
+	else
+		print('[Error] There is an invalid Fusion platform detected')
+		return
+	end
+	os.execute(command)
+	-- print('[Launch Command] ', command)
+	print('[Opening URL] [' .. siteName .. '] ' .. path)
+end
+
+OpenURL('We Suck Less - LifeSaver Fuse', 'https://www.steakunderwater.com/wesuckless/viewtopic.php?p=18356')
+]],
+			IC_Visible = true,
+			ICS_ControlPage = 'Help',
+		})
+	-- Show UI Manager Window
+	InHelpWindow = self:AddInput('Show Help Window', 'HelpWindow', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'ButtonControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Default = 0.0,
+		ICD_Width = 1,
+		BTNCS_Execute = [[
+-- Create a UI Manager dialog
+function HelpWindow()
+	-- Init UI Manager
+	local ui = fu.UIManager
+	local disp = bmd.UIDispatcher(ui)
+	local width,height = 640,740
+	local x = fu:GetMousePos()[1]
+	local y = fu:GetMousePos()[2]
+
+	-- Help Resources
+	local URL = 'https://www.steakunderwater.com/wesuckless/viewtopic.php?p=18356#p18356'
+
+	-- Build the new window
+	win = disp:AddWindow({
+		ID = 'HelpWin',
+		TargetID = 'HelpWin',
+		WindowTitle = 'LifeSaver Fuse Help Window',
+		Geometry = {x-(width/2), y+8, width, height},
+		Spacing = 10,
+
+		ui:VGroup{
+			ID = 'root',
+			-- Add your GUI elements here:
+
+			-- Add the main Message
+			ui:TextEdit{
+				ID = 'AboutText',
+				ReadOnly = true,
+				Alignment = {AlignHCenter = true, AlignTop = true},
+				HTML = [=[
+<h1>About LifeSaver Fuse</h1>
+<h2>Version 1.0 - 2018-07-14</h2>
+<p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
+
+<p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
+
+<p>The LifeSaver fuse is compatible with Fusion 9.0.2 and Resolve 15 B5+.</p>
+
+<h1>Usage</h1>
+
+<p>The LifeSaver fuse allows you to save additional multi-part EXR image elements to the same EXR file using the following technique:</p>
+
+<p>Step 1. Switch to the Channels tab and click the '+' button to add a new image input connection.</p>
+
+<p>Step 2. In the Channels tab set new the 'Export #' ComboControl to 'Enabled', and update the 'Layer Name' so it is relevant.</p>
+
+<p>Step 3. Connect your imagery to the new input connection on the fuse so it is written to the multi-part EXR output.</p>
+
+<p>Step 4. You can use the fuse's 'Preview Input Connection' ComboControl to send a specific input image # to the Fuse's output connection. This makes it easer to work with a specific multi-part EXR exported image element further downstream in your flow, after the LifeSaver node</p>
+
+<p>If you have added several extra node inputs to the LifeSaver fuse but have no images connected to them you should switch to the Channels tab and set the disconnected inputs's 'Export Part #' ComboControl menu to 'Disabled'</p>
+
+<p>Note: Currently the EXR image format is the only supported output format in the LifeSaver fuse. In the future, it is (theoretically) possible to use the fuse based Clip() function to write out each of the individual flat image channels to disk using other image formats if that was a popular and frequently requested feature.</p>
+
+<h1>Tokens</h1>
+
+<p>LifeSaver supports the use of the following pre-defined token values in the Filename field. If any other value is written inside the ${} token format it will be looked up as if it was an environment variable.</p>
+
+<pre>
+${VERSION} - The LifeSaver node 'Version' field
+${UUID} - The LifeSaver node 'UUID' field (f9fa311b-904c-4b93-892f-0d772887db88)
+${COMP} - The current Fusion comp name (Composition1)
+${COMPWIDTH} - The current comp default height (1080)
+${COMPHEIGHT} - The current comp default width (1920)
+${NODE} - The LifeSaver node name (LifeSaver1)
+${FPS} - The current frame rate (24)
+${FRAME} - The current unpadded frame number (1001)
+${STARTFRAME} - The global start frame (1001)
+${ENDFRAME} - The global end frame (1144)
+${DURATION} - The global time duration (144)
+${DATE} - The date in YYYY-MM-DD format (2018-06-16)
+${TIME} - The time in HH.MM.SS format (14.59.05)
+${HOME} - The Home folder name (/Users/andrew)
+${USER} - The current user account name (andrew)
+${HOSTNAME} - The computer's host name (Pine.local)
+${SEP} - The file separator slash (/ or \)
+${PLATFORM} - The OS Platform (Mac/Windows/Linux)
+${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
+${FUVERSION} - The version of Fusion is running (9.02/15)
+${UUID} - The per frame UUID value (f9fa311b-904c-4b93-892f-0d772887db88)
+${SHELL1}-${SHELL4} - The Shell tokens textfield content is run in the Terminal/Command Prompt (echo Hello_World)
+</pre>
+
+<h2>Supported Frame Padding Indicators</h2>
+
+<h3>${FRAME}</h3>
+
+The current unpadded frame number (1001).
+
+<h3>0000</h3>
+
+The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
+
+<h3>&#37;04d</h3>
+
+The c-code style printf integer number formating symbol can be used to define the frame padding token.
+
+<h3>####</h3>
+
+The number sign/hash/octothorp # character can be used to define the frame padding (0000).
+
+
+<h2>Filename Examples</h2>
+
+<p>Filename Token Example 1:<br>
+Comp:/${COMP}/${COMP}_${NODE}.0000.exr</p>
+
+<p>This would result in a rendered EXR image filename like:<br>
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.0000.exr</p>
+
+
+<p>Filename Token Example 2:<br>
+Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
+
+<p>This would result in a rendered EXR image filename like:<br>
+/Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.000000.exr</p>
+
+
+<h1>Fusion Environment Variable Debugging Tip</h1>
+
+<p>You can print out the environment variables that are active inside of Fusion using the following Lua script snippet:</p>
+
+<pre>logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');<br>
+os.execute('env > "' .. logFile .. '"');<br>
+bmd.openfileexternal('Open', logFile);</pre>
+
+]=]
+			},
+			-- Add clickable links
+			ui:VGroup{
+				Weight = 0,
+
+				ui:Label{
+					ID = "URL",
+					Text = 'Web: <a style="color: rgb(139,155,216)" href="' .. URL .. '">' .. URL .. '</a>',
+					Alignment = {
+						AlignHCenter = true,
+						AlignTop = true,
+					},
+					WordWrap = true,
+					OpenExternalLinks = true,
+				},
+			},
+		},
+	})
+
+	function win.On.HelpWin.Close(ev)
+		disp:ExitLoop()
+	end
+
+	function win.On.DoneButton.Clicked(ev)
+		disp:ExitLoop()
+	end
+	
+	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
+	app:AddConfig('HelpWin', {
+		Target {
+			ID = 'HelpWin',
+		},
+
+		Hotkeys {
+			Target = 'HelpWin',
+			Defaults = true,
+			
+			CONTROL_W = 'Execute{cmd = [=[app.UIManager:QueueEvent(obj, "Close", {})]=]}',
+			CONTROL_F4 = 'Execute{cmd = [=[app.UIManager:QueueEvent(obj, "Close", {})]=]}',
+		},
+	})
+	
+	itm = win:GetItems()
+	win:Show()
+	disp:RunLoop()
+	win:Hide()
+
+	return win,win:GetItems()
+end
+
+-- Create a UI Manager dialog
+HelpWindow()
+]],
+			IC_Visible = true,
+			ICS_ControlPage = 'Help',
+		})
 	
 	-- The image output connection
 	OutImage = self:AddOutput('Output', 'Output', {
@@ -1402,7 +1715,7 @@ end
 		local exports = {}
 		for i,v in ipairs(inps) do
 			-- Input connection names - This debugging print() command is used when you change the attribute name to something other then 'Export' and need to refine the sub() based trimming of the export counter.
-			-- print('[Raw] ' .. v .. '\t[Trimmmed] ' ..  v:sub(1,6) .. '\t[Export number] ' .. v:sub(7))
+			-- print('[Raw] ' .. v .. '\t[Trimmmed] ' ..	v:sub(1,6) .. '\t[Export number] ' .. v:sub(7))
 			if v:sub(1,6) == 'Export' then
 				exports[tonumber(v:sub(7))] = true
 			end
@@ -1439,7 +1752,7 @@ function NotifyChanged(inp, param, time)
 		local osSeparator = package.config:sub(1,1)
 		
 		-- Get the filename for the sequence output
-		local filename = InFilename:GetSource(time).Value
+		local srcFilename = InFilename:GetSource(time).Value
 		
 		-- Get the version field contents
 		local version = InVersion:GetSource(time).Value
@@ -1447,8 +1760,14 @@ function NotifyChanged(inp, param, time)
 		-- Get the uuid field contents
 		local uuid = InUUID:GetSource(time).Value
 		
+		-- Get the SHELL tokens
+		local shell1 = System(InShell1:GetSource(time).Value, verbose, 'SHELL1')
+		local shell2 = System(InShell2:GetSource(time).Value, verbose, 'SHELL2')
+		local shell3 = System(InShell3:GetSource(time).Value, verbose, 'SHELL3')
+		local shell4 = System(InShell4:GetSource(time).Value, verbose, 'SHELL4')
+		
 		-- Process the tokens in the filename field
-		filename = ParseTokens(filename, version, uuid)
+		local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1457,13 +1776,17 @@ function NotifyChanged(inp, param, time)
 			if verbose == 1 then
 				print('[Created Directory]', folder)
 			end
+		elseif bmd.fileexists(folder) == false then
+			if verbose == 1 then
+				print('[Directory Missing]', folder)
+			end
 		end
 	elseif inp == InOpenContainingFolder and param and param.Value == 1 then
 		-- Add the platform specific folder slash character
 		local osSeparator = package.config:sub(1,1)
 		
 		-- Get the filename for the sequence output
-		local filename = InFilename:GetSource(time).Value
+		local srcFilename = InFilename:GetSource(time).Value
 		
 		-- Get the version field contents
 		local version = InVersion:GetSource(time).Value
@@ -1471,8 +1794,14 @@ function NotifyChanged(inp, param, time)
 		-- Get the uuid field contents
 		local uuid = InUUID:GetSource(time).Value
 		
+		-- Get the SHELL tokens
+		local shell1 = System(InShell1:GetSource(time).Value, verbose, 'SHELL1')
+		local shell2 = System(InShell2:GetSource(time).Value, verbose, 'SHELL2')
+		local shell3 = System(InShell3:GetSource(time).Value, verbose, 'SHELL3')
+		local shell4 = System(InShell4:GetSource(time).Value, verbose, 'SHELL4')
+		
 		-- Process the tokens in the filename field
-		filename = ParseTokens(filename, version, uuid)
+		local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1480,6 +1809,10 @@ function NotifyChanged(inp, param, time)
 			bmd.createdir(folder)
 			if verbose == 1 then
 				print('[Created Directory]', folder)
+			end
+		elseif bmd.fileexists(folder) == false then
+			if verbose == 1 then
+				print('[Directory Missing]', folder)
 			end
 		end
 		
@@ -1584,32 +1917,75 @@ function Process(req)
 	-- The bit-depth of the EXR output (HALF/ANY_TYPE)
 	local depth = tonumber(InDepth:GetValue(req).Value)
 	
+	local date = os.date('%Y-%m-%d')
+	
+	local time = os.date('%H.%M.%S')
+	
 	local rgbaDepth = FLOAT
 	if depth == 0 then
 		rgbaDepth = HALF
+	end
+	
+	-- Get the comp name like "Composition1"
+	local compName = tostring(self.Comp.Name)
+	-- Remove spaces from the file name and replace them with underscores
+	compName = string.gsub(compName, '%s+', '_')
+	-- Remove the ".comp" file extension if it is present
+	compName = string.gsub(compName, '%.comp', '')
+	-- If Resolve 15 is being used and the comp has no name then add a fallback placeholder
+	if compName == 'nil' then
+		compName = 'Composition1'
 	end
 	
 	-- Add the platform specific folder slash character
 	local osSeparator = package.config:sub(1,1)
 	
 	-- Get the filename for the sequence output
-	local filename = InFilename:GetValue(req).Value
+	local srcFilename = InFilename:GetValue(req).Value
 	
 	-- Get the version field contents
 	local version = InVersion:GetValue(req).Value
 	
 	-- Get the uuid field contents
 	local uuid = InUUID:GetValue(req).Value
-		
+	
+	-- Get the script tokens
+	local shell1 = System(InShell1:GetValue(req).Value, verbose, 'SHELL1')
+	local shell2 = System(InShell2:GetValue(req).Value, verbose, 'SHELL2')
+	local shell3 = System(InShell3:GetValue(req).Value, verbose, 'SHELL3')
+	local shell4 = System(InShell4:GetValue(req).Value, verbose, 'SHELL4')
+	
+	-- Check if Resolve or Fusion is running
+	local fuHost = ''
+	local fuHostPath = self.Comp:MapPath('Fusion:/')
+	if string.lower(fuHostPath):match('resolve') then
+		fuHost = 'Resolve'
+	else
+		fuHost = 'Fusion'
+	end
+	
+	-- Home Folder
+	local home = ''
+	if platform == 'Windows' then
+		home = os.getenv('USERPROFILE')
+	else
+		-- Mac and Linux
+		home = os.getenv('HOME')
+	end
+	
+	-- Fusion version number
+	local fuVersion = bmd._VERSION
+	
 	-- Process the tokens in the filename field
-	filename = ParseTokens(filename, version, uuid)
+	local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
 	
 	-- Load the EXRIO library
 	local exr = EXRIO()
 	
 	-- Autofill a default filename when the field is empty
 	if filename == nil or filename == '' then
-		print('\n[LifeSaver Error] There is an empty "Filename" field!!!\n[LifeSaver Tip] Enter a filename for the LifeSaver node like "Comp:/Render/output.0000.exr" and then re-render the comp.\n')
+		print('\n[LifeSaver Error] The "Filename" is empty!\n\n')
+		print('[LifeSaver Tip] Enter a filename like "Comp:/Render/${COMP}_${NODE}_${VERSION}.0000.exr" and then re-render the comp.\n')
 		
 		-- Showing the image output in the Viewer window even though the filename is empty
 		OutImage:Set(req, Exports[viewOutput].InImage:GetValue(req))
@@ -1629,7 +2005,7 @@ function Process(req)
 			
 			-- Create the folder if it doesn't exist yet
 			local folder = Dirname(self.Comp:MapPath(filename))
-			if (createDir == 1) and (bmd.fileexists(folder) == false) then
+			if (createDir == 1 or createDir == true) and (bmd.fileexists(folder) == false) then
 				bmd.createdir(folder)
 				print('[Created Directory]', folder)
 			elseif (bmd.fileexists(folder) == false) then
@@ -1644,7 +2020,14 @@ function Process(req)
 			-- Scan through each of the multi-part export 'layers'
 			for i,export in pairs(Exports) do
 				-- Get the image input connection for the current multi-part EXR layer
-				local img = export.InImage:GetValue(req)
+				local imgInput = export.InImage:GetValue(req)
+				
+				-- Create a new image from the image input connection data
+				local img = Image({IMG_Like = imgInput, IMG_NoData = req:IsPreCalc()})
+				
+				-- Copy the image using the crop feature without any offsets applied
+				imgInput:Crop(img, { })
+				
 				
 				-- Get the 'Layer Name' for the export
 				local name = export.InName:GetValue(req).Value
@@ -1750,7 +2133,7 @@ function Process(req)
 				-- Select the EXR channels and channel names to export
 				if exportPart and exportPart == 0 then
 					local p = exr:Part(name, img.ImageWindow, img.DataWindow, img.XScale/img.YScale)
-					
+
 					-- CHAN_COLOR / CHAN_COLORALPHA
 					
 					-- CHAN_RED
@@ -1961,9 +2344,76 @@ function Process(req)
 			ok = false
 		end
 		
-		-- Push the actively selected 'View Input Connection' ComboControl item based image input to the node's output connection
+		-- There were no errors
 		if ok then
-			OutImage:Set(req, Exports[viewOutput].InImage:GetValue(req))
+			-- Get the image input connection for the current multi-part EXR layer
+			local imgInput = Exports[viewOutput].InImage:GetValue(req)
+			
+			-- Create a new image from the image input connection data
+			local result = Image({IMG_Like = imgInput, IMG_NoData = req:IsPreCalc()})
+			
+			-- Copy the image using the crop feature without any offsets applied
+			imgInput:Crop(result, { })
+			
+			-- Metadata
+			-- Grab the Metadata Lua table from the image input
+			local meta = result.Metadata or {}
+			
+			-- Define the Filename metadata attributes
+			meta.Filename = self.Comp:MapPath(filename)
+			
+			-- Define the parent directory for the EXR image metadata attribute
+			meta.Directory = Dirname(self.Comp:MapPath(filename))
+			
+			-- Define the UUID metadata attribute
+			meta.UUID = uuid
+			
+			-- Define the VersionControl metadata attribute
+			meta.VersionControl = version
+			
+			-- Define the Node name metadata attribute
+			meta.Node = self.Name
+			
+			-- Define the Platform metadata attribute
+			meta.Platform = platform
+			
+			-- Define the Composition metadata attribute
+			meta.Composition = compName
+			
+			-- Define the Date metadata attribute
+			meta.Date = date .. ' ' .. time
+			
+			-- Image Creator metadata attribute
+			meta.Program = 'LifeSaver.fuse for ' .. fuHost .. ' ' .. fuVersion
+			
+			-- Image Part metadata attribute
+			meta.Part = name
+			
+			-- Image Dimensions metadata attributes
+			-- if result.ImageWindow then
+				-- local rect = result.ImageWindow
+				
+				-- if verbose == 1 then
+				--	 print('\n\n\t\t[Image Window]')
+				--	 dump(rect)
+				-- end
+				
+				-- Example rect Lua table: ImgRectI = { left = 0, bottom = 0, right = 1920, top = 1080 }
+				-- meta.Width = rect.ImgRectI.right - rect.ImgRectI.left
+				-- meta.Height = rect.ImgRectI.top - rect.ImgRectI.bottom
+			-- end
+			
+			-- Force the updated Metadata Lua table back into the output
+			result.Metadata = meta
+						
+			-- Print the raw metadata info to the Console
+			-- if verbose == 1 then
+			--	 print('\n\n[Metadata]')
+			--	 dump(result.Metadata)
+			-- end
+			
+			-- Push the actively selected 'View Input Connection' ComboControl item based image input to the node's output connection
+			OutImage:Set(req, result)
 		end
 	end
 end
@@ -2014,8 +2464,8 @@ end
 
 
 -- Process the tokens in the filename field
--- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr')
-function ParseTokens(file, version, uuid)
+-- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr', '', '', '', '')
+function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
 	local verbose = false
 	local filename = file
 	
@@ -2039,17 +2489,14 @@ function ParseTokens(file, version, uuid)
 	local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width')
 	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height')
 	
-	
-	
 	-- req.Time is the same as comp.CurrentTime
 	local currentFrame = self.Comp.CurrentTime
-	
 	local startFrame = self.Comp.GlobalStart
 	local endFrame = self.Comp.GlobalEnd
 	local duration = self.Comp.GlobalEnd - self.Comp.GlobalStart
 	
+	-- Date (YYYY-MM-DD) and time (HH.MM.SS)
 	local date = os.date('%Y-%m-%d')
-	
 	local time = os.date('%H.%M.%S')
 	
 	-- Fusion version number
@@ -2079,7 +2526,7 @@ function ParseTokens(file, version, uuid)
 		hostname = os.getenv('COMPUTERNAME')
 	else
 		-- Mac and Linux
-		hostname = System('hostname')
+		hostname = System('hostname', 0, 'hostname')
 	end
 	
 	-- User Account Name
@@ -2174,6 +2621,22 @@ function ParseTokens(file, version, uuid)
 		-- ${HOSTNAME} - Read the computer's hostname
 		filename = string.gsub(filename, '${HOSTNAME}', hostname)
 		
+		-- ${SHELL1}-${SHELL4} - Read the command prompt shell field
+		if shell1 then
+			filename = string.gsub(filename, '${SHELL1}', shell1)
+		end
+		
+		if shell2 then
+			filename = string.gsub(filename, '${SHELL2}', shell2)
+		end
+		
+		if shell31 then
+			filename = string.gsub(filename, '${SHELL3}', shell3)
+		end
+		
+		if shell4 then
+			filename = string.gsub(filename, '${SHELL4}', shell4)
+		end
 		-- %04d - Read the frame padding token
 		token = '%%(%d*)[dD]'
 		while(string.match(filename, token))
@@ -2187,7 +2650,7 @@ function ParseTokens(file, version, uuid)
 				-- The frame padding token was found
 				filename = string.gsub(filename, token, result)
 				if verbose == 1 then
-					print('[Frame Padding Token] for frame ' .. currentFrame .. ' .. the "' ..  tostring(framePadNumber) .. '" is "' .. tostring(result) .. '"')
+					print('[Frame Padding Token] for frame ' .. currentFrame .. ' .. the "' ..	tostring(framePadNumber) .. '" is "' .. tostring(result) .. '"')
 				end
 			else
 				-- The environment variable wasn't found and the string is a nil
@@ -2210,7 +2673,7 @@ function ParseTokens(file, version, uuid)
 				-- The environment variable was found
 				filename = string.gsub(filename, '${' .. envVar .. '}', result)
 				if verbose == 1 then
-					print('[Env Var Token] "' ..  tostring(envVar) .. '" is "' .. tostring(result) .. '"')
+					print('[Env Var Token] "' ..	tostring(envVar) .. '" is "' .. tostring(result) .. '"')
 				end
 			else
 				-- The environment variable wasn't found and the string is a nil
@@ -2269,11 +2732,35 @@ function ParseFilename(filename)
 end
 
 -- Run a system command and get the result back from the terminal session
--- Example: print(System('/usr/bin/env')
-function System(commandString)
-	local handler = io.popen(commandString);
-	local response = tostring(handler:read('*a'));
+-- Example: print(System('/usr/bin/env', true, 'SHELL1')
+function System(commandString, verbose, use)
+	-- Make sure the string is not nil
+	if commandString and commandString ~= '' and commandString ~= 'nil' then
+		local handler = io.popen(commandString)
+		local response = handler:read('*a')
 	
-	-- Trim off the last character which is a newline
-	return response:sub(1,-2)
+		-- Show the shell output
+		if verbose and (verbose == 1 or verbose == true) then
+			print('\n\n')
+			print('\t\t[Launch Command] "' .. tostring(commandString) .. '"')
+			if response and response ~= '' then
+				-- An actual result was returned by io.popen
+				print('\t\t[Result] "' .. tostring(response:sub(1,-2)) .. '"')
+			else
+				-- A nil result returned by io.popen
+				print('\t\t[Result] "' .. tostring(response) .. '"')
+			end
+		end
+		
+		-- Trim off the last character which is a newline
+		if response and response ~= '' then
+			return response:sub(1,-2)
+		end
+	end
+	
+	-- There was no commandString
+	if verbose and (verbose == 1 or verbose == true) then
+		print('\t\t[Launch Command] "' .. tostring(commandString) .. '"')
+	end
+	return ''
 end

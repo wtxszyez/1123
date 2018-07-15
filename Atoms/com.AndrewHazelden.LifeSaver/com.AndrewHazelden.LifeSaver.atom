@@ -2,8 +2,8 @@ Atom {
 	Name = "LifeSaver",
 	Category = "Tools/IO",
 	Author = "Andrew Hazelden",
-	Version = 0.5,
-	Date = {2018, 7, 14},
+	Version = 0.6,
+	Date = {2018, 7, 15},
 	Description = [[<p>LifeSaver is a fuse based replacement for the traditional Saver or MediaOut nodes. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR image saving. This node is special in that you can use the same node in comps that are created inside of both Resolve's Fusion page and inside of Fusion Standalone. This dual environment support allows you to move documents between both programs easily via copy/paste, the "Fusion Comp Link" atom in Reactor, or using a .comp file.</p>
 
 <p>Fusion 9.0.2 or Resolve 15 Beta 5+ is required.</p>
@@ -18,9 +18,9 @@ Atom {
 
 <p>Step 3. Connect your imagery to the new input connection on the fuse so it is written to the multi-part EXR output.</p>
 
-<p>Step 4. You can use the fuse's 'File' tab &gt; 'View Input Connection' ComboControl to send a specific input image # to the Fuse's output connection. This makes it easer to work with a specific multi-part EXR exported image element further downstream in your flow, after the LifeSaver node</p>
+<p>Step 4. You can use the fuse's 'Preview Input Connection' ComboControl to send a specific input image # to the Fuse's output connection. This makes it easer to work with a specific multi-part EXR exported image element further downstream in your flow, after the LifeSaver node</p>
 
-<p>If you have added several extra node inputs to the LifeSaver fuse but have no images connected to them you should switch to the Channels tab and set the disconnected inputs's 'Export Part #' ComboControl menu to 'Disabled'./p>
+<p>If you have added several extra node inputs to the LifeSaver fuse but have no images connected to them you should switch to the Channels tab and set the disconnected inputs's 'Export Part #' ComboControl menu to 'Disabled'</p>
 
 <p>Note: Currently the EXR image format is the only supported output format in the LifeSaver fuse. In the future, it is (theoretically) possible to use the fuse based Clip() function to write out each of the individual flat image channels to disk using other image formats if that was a popular and frequently requested feature.</p>
 
@@ -50,19 +50,27 @@ ${PLATFORM} - The OS Platform (Mac/Windows/Linux)
 ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
 ${UUID} - The per frame UUID value (f9fa311b-904c-4b93-892f-0d772887db88)
+${SHELL1}-${SHELL4} - The Shell tokens textfield content is run in the Terminal/Command Prompt and the return value captured (echo Hello_World)
 </pre>
 
 <h2>Supported Frame Padding Indicators</h2>
 
-<pre>
-${FRAME} - The current unpadded frame number (1001)
+<h3>${FRAME}</h3>
 
-0000 - The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
+The current unpadded frame number (1001).
 
-%04d - The c-code style printf integer number formating symbol can be used to define the frame padding token
+<h3>0000</h3>
 
-#### - The number sign/hash/octothorp # character can be used to define the frame padding (0000)
-</pre>
+The number you type in at the end of the filename before the file extension can be used as a frame padding indicator. The number of digits you add define how much padding is added. You can also type a number other then '0000' like '1001' and this value will be used along side the 'Sequence Offset' value on the node when you have the [x] Saver Relative Numbering checkbox enabled.
+
+<h3>&#37;04d</h3>
+
+The c-code style printf integer number formating symbol can be used to define the frame padding token.
+
+<h3>####</h3>
+
+The number sign/hash/octothorp # character can be used to define the frame padding (0000).
+
 
 <h2>Filename Examples</h2>
 
@@ -71,7 +79,6 @@ Comp:/${COMP}/${COMP}_${NODE}.0000.exr</p>
 
 <p>This would result in a rendered EXR image filename like:<br>
 /Volumes/VFX/MultiChannel/MultiChannel_LifeSaver1.0000.exr</p>
-
 
 <p>Filename Token Example 2:<br>
 Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
@@ -84,9 +91,9 @@ Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
 
 <p>You can print out the environment variables that are active inside of Fusion using the following Lua script snippet:</p>
 
-<p>logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');<br>
+<pre>logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');<br>
 os.execute('env > "' .. logFile .. '"');<br>
-bmd.openfileexternal('Open', logFile);</p>
+bmd.openfileexternal('Open', logFile);</pre>
 ]],
 	Donation = {
 		URL = [[http://www.paypal.me/andrewhazelden]],
