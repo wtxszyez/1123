@@ -67,9 +67,13 @@ or
 
 or your own custom Reactor installation location on a local or network path like:
 
-`REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor`
-`REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor`
-`REACTOR_INSTALL_PATHMAP=/opt/Reactor`
+		REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor
+		REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor
+		REACTOR_INSTALL_PATHMAP=/opt/Reactor
+
+On Windows you would open the **System Control Panel > Advanced System Settings > Environment Variables...** window and add a new `REACTOR_INSTALL_PATHMAP` entry like this:
+
+![Windows Environment Variable](Images/windows-adding-an-environment-variable.png)
 
 ### <a name="reactor-local-system"></a>Reactor Local System ###
 
@@ -145,4 +149,4 @@ If you don't want to install the .plist files in the system wide LaunchAgents fo
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2018-05-28
+Last Revised 2018-07-16

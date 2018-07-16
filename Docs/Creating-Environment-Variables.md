@@ -67,9 +67,13 @@ or
 
 or your own custom Reactor installation location on a local or network path like:
 
-`REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor`
-`REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor`
-`REACTOR_INSTALL_PATHMAP=/opt/Reactor`
+		REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor
+		REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor
+		REACTOR_INSTALL_PATHMAP=/opt/Reactor
+
+On Windows you would open the **System Control Panel > Advanced System Settings > Environment Variables...** window and add a new `REACTOR_INSTALL_PATHMAP` entry like this:
+
+![Windows Environment Variable](Images/windows-adding-an-environment-variable.png)
 
 ### <a name="reactor-local-system"></a>Reactor Local System ###
 
@@ -141,4 +145,4 @@ You will then see a directory listing that looks something like this:
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2018-05-21
+Last Revised 2018-07-16
