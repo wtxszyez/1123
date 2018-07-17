@@ -1,5 +1,5 @@
 --[[--
-LifeSaver - v1.0.1 2018-07-15 04.33 PM
+LifeSaver - v1.0.2 2018-07-17 01.44 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -95,7 +95,6 @@ You can print out the environment variables that are active inside of Fusion usi
 logFile = comp:MapPath('Temp:/FusionEnvironmentVars.txt');
 os.execute('env > "' .. logFile .. '"');
 bmd.openfileexternal('Open', logFile);
-
 
 ## GUI Controls ##
 
@@ -1557,7 +1556,7 @@ function HelpWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [=[
 <h1>About LifeSaver Fuse</h1>
-<h2>Version 1.0 - 2018-07-15</h2>
+<h2>Version 1.0.2 - 2018-07-17</h2>
 <p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
 
 <p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
@@ -1759,6 +1758,7 @@ function NotifyChanged(inp, param, time)
 	local verbose = InVerbose:GetSource(time).Value
 	
 	if inp == InAddOutput then
+		-- Add an extra input connection on the fuse
 		if param.Value > 0.5 then
 			AddOutput(MaxExport + 1)
 		end
@@ -1778,23 +1778,41 @@ function NotifyChanged(inp, param, time)
 		local uuid = InUUID:GetSource(time).Value
 		
 		-- Get the SHELL tokens
-		local shell1 = System(InShell1:GetSource(time).Value, verbose, 'SHELL1')
-		local shell2 = System(InShell2:GetSource(time).Value, verbose, 'SHELL2')
-		local shell3 = System(InShell3:GetSource(time).Value, verbose, 'SHELL3')
-		local shell4 = System(InShell4:GetSource(time).Value, verbose, 'SHELL4')
+		local shell1 = InShell1:GetSource(time).Value or ''
+		local shell2 = InShell2:GetSource(time).Value or ''
+		local shell3 = InShell3:GetSource(time).Value or ''
+		local shell4 = InShell4:GetSource(time).Value or ''
+		
+		-- Process any of the tokens inside the shell textfields
+		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
+		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
+		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
+		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+		
+		-- Run the shell tokens
+		shell1 = System(shell1, verbose, 'SHELL1')
+		shell2 = System(shell2, verbose, 'SHELL2')
+		shell3 = System(shell3, verbose, 'SHELL3')
+		shell4 = System(shell4, verbose, 'SHELL4')
+		
+		-- Process the tokens in the result string the come back from executing the shell commands
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
 		
 		-- Process the tokens in the filename field
-		local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
+		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
 		if bmd.fileexists(folder) == false then
 			bmd.createdir(folder)
-			if verbose == 1 then
+			if verbose == 1 or verbose == true then
 				print('[Created Directory]', folder)
 			end
 		else
-			if verbose == 1 then
+			if verbose == 1 or verbose == true then
 				print('[Directory Missing]', folder)
 			end
 		end
@@ -1812,23 +1830,41 @@ function NotifyChanged(inp, param, time)
 		local uuid = InUUID:GetSource(time).Value
 		
 		-- Get the SHELL tokens
-		local shell1 = System(InShell1:GetSource(time).Value, verbose, 'SHELL1')
-		local shell2 = System(InShell2:GetSource(time).Value, verbose, 'SHELL2')
-		local shell3 = System(InShell3:GetSource(time).Value, verbose, 'SHELL3')
-		local shell4 = System(InShell4:GetSource(time).Value, verbose, 'SHELL4')
+		local shell1 = InShell1:GetSource(time).Value or ''
+		local shell2 = InShell2:GetSource(time).Value or ''
+		local shell3 = InShell3:GetSource(time).Value or ''
+		local shell4 = InShell4:GetSource(time).Value or ''
+		
+		-- Process any of the tokens inside the shell textfields
+		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
+		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
+		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
+		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+		
+		-- Run the shell tokens
+		shell1 = System(shell1, verbose, 'SHELL1')
+		shell2 = System(shell2, verbose, 'SHELL2')
+		shell3 = System(shell3, verbose, 'SHELL3')
+		shell4 = System(shell4, verbose, 'SHELL4')
+		
+		-- Process the tokens in the result string the come back from executing the shell commands
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
 		
 		-- Process the tokens in the filename field
-		local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
+		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
 		if bmd.fileexists(folder) == false then
 			bmd.createdir(folder)
-			if verbose == 1 then
+			if verbose == 1 or verbose == true then
 				print('[Created Directory]', folder)
 			end
 		else
-			if verbose == 1 then
+			if verbose == 1 or verbose == true then
 				print('[Directory Missing]', folder)
 			end
 		end
@@ -1843,7 +1879,7 @@ function NotifyChanged(inp, param, time)
 			end
 		end
 	elseif inp == InViewOutput and param then
-		if verbose == 1 then
+		if verbose == 1 or verbose == true then
 			print('[View Input Connection] Input #' .. (tonumber(param.Value) + 1))
 		end
 	else
@@ -1965,13 +2001,7 @@ function Process(req)
 	
 	-- Get the uuid field contents
 	local uuid = InUUID:GetValue(req).Value
-	
-	-- Get the script tokens
-	local shell1 = System(InShell1:GetValue(req).Value, verbose, 'SHELL1')
-	local shell2 = System(InShell2:GetValue(req).Value, verbose, 'SHELL2')
-	local shell3 = System(InShell3:GetValue(req).Value, verbose, 'SHELL3')
-	local shell4 = System(InShell4:GetValue(req).Value, verbose, 'SHELL4')
-	
+		
 	-- Check if Resolve or Fusion is running
 	local fuHost = ''
 	local fuHostPath = self.Comp:MapPath('Fusion:/')
@@ -1993,8 +2023,32 @@ function Process(req)
 	-- Fusion version number
 	local fuVersion = bmd._VERSION
 	
+	-- Get the SHELL tokens
+	local shell1 = InShell1:GetValue(req).Value or ''
+	local shell2 = InShell2:GetValue(req).Value or ''
+	local shell3 = InShell3:GetValue(req).Value or ''
+	local shell4 = InShell4:GetValue(req).Value or ''
+	
+	-- Process any of the tokens inside the shell textfields
+	shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
+	shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
+	shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
+	shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+	
+	-- Run the shell tokens
+	shell1 = System(shell1, verbose, 'SHELL1')
+	shell2 = System(shell2, verbose, 'SHELL2')
+	shell3 = System(shell3, verbose, 'SHELL3')
+	shell4 = System(shell4, verbose, 'SHELL4')
+	
+	-- Process the tokens in the result string the come back from executing the shell commands
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
+	
 	-- Process the tokens in the filename field
-	local filename = ParseTokens(srcFilename, version, uuid, shell1, shell2, shell3, shell4)
+	local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4, false)
 	
 	-- Load the EXRIO library
 	local exr = EXRIO()
@@ -2016,7 +2070,7 @@ function Process(req)
 			
 			-- Get the 'final' frame number that will be written into the filename
 			local currentFrame = tonumber(req.Time) + tonumber(sequenceStartFrame) + tonumber(sequenceStart)
-			if verbose == 1 then
+			if verbose == 1 or verbose == true then
 				print('\n[Frame] ' .. currentFrame .. '\t[Node] "' .. tostring(self.Name) .. '"\t[Base Filename] "' .. self.Comp:MapPath(filename) .. '"')
 			end
 			
@@ -2410,7 +2464,7 @@ function Process(req)
 			-- if result.ImageWindow then
 				-- local rect = result.ImageWindow
 				
-				-- if verbose == 1 then
+				-- verbose == 1 or verbose == true then
 				--	 print('\n\n\t\t[Image Window]')
 				--	 dump(rect)
 				-- end
@@ -2424,7 +2478,7 @@ function Process(req)
 			result.Metadata = meta
 						
 			-- Print the raw metadata info to the Console
-			-- if verbose == 1 then
+			-- if verbose == 1 or verbose == true then
 			--	 print('\n\n[Metadata]')
 			--	 dump(result.Metadata)
 			-- end
@@ -2451,7 +2505,7 @@ end
 -- Print the EXR channel details to the Console when the fuse is rendered
 -- Example: PrintChannelDetails(1, 'R', 'Red', 1, HALF)
 function PrintChannelDetails(verbose, channelName, channelType, channelEnabled, depth)
-	if verbose == 1 then
+	if verbose == 1 or verbose == true then
 	-- Check the bitdepth
 	local bitDepth = 'Float32'
 	if depth == HALF then
@@ -2468,7 +2522,7 @@ end
 -- Print the EXR multi-part details to the Console when the fuse is rendered
 -- Example: PrintPartDetails(1, 'export_1', 1)
 function PrintPartDetails(verbose, partName, partNum, partEnabled)
-	if verbose == 1 then
+	if verbose == 1 or verbose == true then
 		if partEnabled == 0 then
 			-- Part Enabled
 			
@@ -2481,9 +2535,25 @@ end
 
 
 -- Process the tokens in the filename field
--- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr', '', '', '', '')
-function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
-	local verbose = false
+-- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr', 'Filename', '', '', '', '')
+function ParseTokens(file, useCase, version, uuid, shell1, shell2, shell3, shell4)
+	-- Disable console logging output unless debug testing
+	-- local verbose = false
+	local verbose = true
+	
+	-- List the parse arguments
+	if verbose == 1 or verbose == true then
+		print('\t\t[Parse ' .. tostring(useCase) .. ' Tokens]')
+		print('\t\t\t[File] "' .. tostring(file) .. '"')
+		print('\t\t\t[Version] "' .. tostring(version) .. '"')
+		print('\t\t\t[UUID] "' .. tostring(uuid) .. '"')
+		print('\t\t\t[SHELL1] "' .. tostring(shell1) .. '"')
+		print('\t\t\t[SHELL2] "' .. tostring(shell2) .. '"')
+		print('\t\t\t[SHELL3] "' .. tostring(shell3) .. '"')
+		print('\t\t\t[SHELL4] "' .. tostring(shell4) .. '"')
+	end
+	
+	-- The filename string to parse
 	local filename = file
 	
 	-- Add the platform specific folder slash character
@@ -2543,7 +2613,13 @@ function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
 		hostname = os.getenv('COMPUTERNAME')
 	else
 		-- Mac and Linux
-		hostname = System('hostname', 0, 'hostname')
+		-- hostname = System('hostname', true, 'hostname')
+		hostname = System('hostname', false, 'hostname')
+	end
+	
+	-- Catch a nil hostname value and turn it into an empty '' string
+	if hostname == nil then
+		hostname = ''
 	end
 	
 	-- User Account Name
@@ -2642,18 +2718,19 @@ function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
 		if shell1 then
 			filename = string.gsub(filename, '${SHELL1}', shell1)
 		end
-		
+	
 		if shell2 then
 			filename = string.gsub(filename, '${SHELL2}', shell2)
 		end
-		
-		if shell31 then
+	
+		if shell3 then
 			filename = string.gsub(filename, '${SHELL3}', shell3)
 		end
-		
+	
 		if shell4 then
 			filename = string.gsub(filename, '${SHELL4}', shell4)
 		end
+		
 		-- %04d - Read the frame padding token
 		token = '%%(%d*)[dD]'
 		while(string.match(filename, token))
@@ -2666,13 +2743,13 @@ function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
 			if result then
 				-- The frame padding token was found
 				filename = string.gsub(filename, token, result)
-				if verbose == 1 then
-					print('[Frame Padding Token] for frame ' .. currentFrame .. ' .. the "' ..	tostring(framePadNumber) .. '" is "' .. tostring(result) .. '"')
+				if verbose == 1 or verbose == true then
+					print('[Frame Padding Token] for frame ' .. currentFrame .. ' .. the "' .. tostring(framePadNumber) .. '" is "' .. tostring(result) .. '"')
 				end
 			else
 				-- The environment variable wasn't found and the string is a nil
 				filename = string.gsub(filename, token, '')
-				if verbose == 1 then
+				if verbose == 1 or verbose == true then
 					print('[Frame Padding Token] A valid token was not found.')
 				end
 			end
@@ -2689,17 +2766,22 @@ function ParseTokens(file, version, uuid, shell1, shell2, shell3, shell4)
 			if result then
 				-- The environment variable was found
 				filename = string.gsub(filename, '${' .. envVar .. '}', result)
-				if verbose == 1 then
-					print('[Env Var Token] "' ..	tostring(envVar) .. '" is "' .. tostring(result) .. '"')
+				if verbose == 1 or verbose == true then
+					print('[Env Var Token] "' .. tostring(envVar) .. '" is "' .. tostring(result) .. '"')
 				end
 			else
 				-- The environment variable wasn't found and the string is a nil
 				filename = string.gsub(filename, '${' .. envVar .. '}', '')
-				if verbose == 1 then
+				if verbose == 1 or verbose == true then
 					print('[Env Var Token] "' .. tostring(envVar) .. '" was not found.')
 				end
 			end
 		end
+	end
+	
+	-- List the result of the string parsing
+	if verbose == 1 or verbose == true then
+		print('\t\t\t[Parse Result] "' .. tostring(filename) .. '"\n')
 	end
 	
 	return filename
@@ -2750,29 +2832,43 @@ end
 
 -- Run a system command and get the result back from the terminal session
 -- Example: print(System('/usr/bin/env', true, 'SHELL1')
-function System(commandString, verbose, use)
+function System(commandString, verbose, useCase)
 	-- Make sure the string is not nil
 	if commandString and commandString ~= '' and commandString ~= 'nil' then
+		-- Run the shell string in the command prompt with popen
 		local handler = io.popen(commandString)
 		local response = handler:read('*a')
-	
+		
+		-- Trim off newline, and tab characters from the terminal result
+		if response and response ~= '' then
+			-- response = response:sub(1,-2)
+			response = response:gsub('\n','')
+			response = response:gsub('\t','')
+		end
+		
 		-- Show the shell output
 		if verbose and (verbose == 1 or verbose == true) then
-			print('\n\n')
-			print('\t\t[Launch Command] "' .. tostring(commandString) .. '"')
+			-- An actual result was returned by io.popen
+			print('\n')
+			print('\t\t[' .. useCase .. ' Launch Command] "' .. tostring(commandString) .. '"')
+			
+			-- Check the response from popen
 			if response and response ~= '' then
-				-- An actual result was returned by io.popen
-				print('\t\t[Result] "' .. tostring(response:sub(1,-2)) .. '"')
+				-- Trim off the final character from the terminal result
+				-- response = response:sub(1,-2)
+				response = response:gsub('\n','')
+				
+				print('\t\t[Result] "' .. tostring(response) .. '"')
 			else
 				-- A nil result returned by io.popen
 				print('\t\t[Result] "' .. tostring(response) .. '"')
+				
+				-- Turn the nil into an empty '' string
+				response = ''
 			end
 		end
 		
-		-- Trim off the last character which is a newline
-		if response and response ~= '' then
-			return response:sub(1,-2)
-		end
+		return response
 	end
 	
 	-- There was no commandString
