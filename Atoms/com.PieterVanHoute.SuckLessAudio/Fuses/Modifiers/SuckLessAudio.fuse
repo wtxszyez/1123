@@ -3,7 +3,7 @@
 Suck Less Audio Fuse
 
 -------------------------------------------------------------------
-Copyright (c) 2015-2017,  Pieter Van Houte
+Copyright (c) 2015-2018,  Pieter Van Houte
 <pieter[at]secondman[dot]com>
 -------------------------------------------------------------------
 
@@ -17,8 +17,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --]]
 
-version = "Suck Less Audio v1.3 - 9 Jun 2017"
+version = "Suck Less Audio v2.0 - 13 July 2018"
 
+-------------------------------------------------------------------
 -------------------------------------------------------------------
 
 FuRegisterClass("SuckLessAudio", CT_Modifier, {
@@ -34,12 +35,33 @@ FuRegisterClass("SuckLessAudio", CT_Modifier, {
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
 	REG_Fuse_NoEdit     = true,
 	REG_Fuse_NoReload   = true,
-	REG_Version			= 130,
+	REG_Version			= 200,
 	})
 
 -------------------------------------------------------------------
-	
+
+FuRegisterClass("SuckLessAudioPoint", CT_Modifier, {
+	REGS_Category       = "Modifiers",
+	REGS_OpIconString   = "SLA",
+	REGS_OpDescription  = "Audio (WAV) File Modifier Fuse",
+	REGS_Name           = "Audio (WAV)",
+	REGID_DataType      = "Point",
+	REGID_InputDataType = "Point",
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.steakunderwater.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 200,
+	})
+
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
 function Create()
+
+	ModType = ffi.string(self.RegNode.m_ID):sub(6) -- get the ID we were created with, and strip 'Fuse.'
 
 	InFile = self:AddInput("Wave File", "WaveFile", {
 		LINKID_DataType = "Text",
@@ -66,13 +88,38 @@ function Create()
 		IC_Visible = false
 		})
 
-	InSampleStartFrame = self:AddInput("Sample Start Frame", "SampleStartFrame", {
+	InSampleStartFrame = self:AddInput("Sample Start Frame (Time Offset)", "SampleStartFrame", {
 		LINKID_DataType = "Number",
 		INPID_InputControl = "ScrewControl",
 		INP_Default = 0,
 		INP_MaxScale = 100,
 		INP_Integer = true,
 		})
+		
+	InTimeScale = self:AddInput("Sample Stretch (Time Scale)", "TimeScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		--ICS_ControlPage = "Wave Shaping",
+		})
+		
+	InProxy = self:AddInput("Proxy (for sampling)", "Proxy", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 1,
+		INP_MinAllowed = 1,
+		INP_MaxScale = 100,
+		INP_Default = 25,
+		INP_Integer = true,
+		})
+		
+--[[InTimeScaleY = self:AddInput("Time Scale Y", "TimeScaleY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		--ICS_ControlPage = "Wave Shaping",
+		})
+--]]	
 		
 	InMode = self:AddInput("Mode", "Mode", {
 		{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Max", MBTNCID_AddID = "Max", },
@@ -89,38 +136,84 @@ function Create()
 		MBTNC_StretchToFit = true,
 		})
 		
-	InProxy = self:AddInput("Proxy (for sampling)", "Proxy", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "SliderControl",
-		INP_MinScale = 1,
-		INP_MinAllowed = 1,
-		INP_MaxScale = 100,
-		INP_Default = 25,
-		INP_Integer = true,
-		})
-		
-	InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScale", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "ScrewControl",
-		INP_Default = 1,
-		INP_MaxScale = 5,
-		--ICS_ControlPage = "Wave Shaping",
-		})
-		
-	InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "ScrewControl",
-		INP_Default = 0,
-		INP_MaxScale = 5,
-		--ICS_ControlPage = "Wave Shaping",
-		})
-		
-	InTimeScale = self:AddInput("Time Scale", "TimeScale", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "ScrewControl",
-		INP_Default = 1,
-		--ICS_ControlPage = "Wave Shaping",
-		})
+	if ModType == "SuckLessAudio" then
+
+		InInvert = self:AddInput("Invert", "Invert", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 0,
+			})
+			
+		InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScale", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 1,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+			
+		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 0,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+				
+	elseif ModType == "SuckLessAudioPoint" then
+	
+		InLockXY = self:AddInput("Lock X/Y", "LockXY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 1,
+			INP_DoNotifyChanged = true,
+			})
+			
+		InInvert = self:AddInput("Invert", "Invert", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 0,
+			})
+			
+		InInvertY = self:AddInput("Invert Y", "InvertY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 0,
+			})
+
+		InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScaleX", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 1,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+
+		InAmplitudeScaleY = self:AddInput("Amplitude Scale Y", "AmplitudeScaleY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 1,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+
+		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffsetX", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 0.5,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+
+		InAmplitudeOffsetY = self:AddInput("Amplitude Offset Y", "AmplitudeOffsetY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 0.5,
+			INP_MaxScale = 5,
+			--ICS_ControlPage = "Wave Shaping",
+			})
+			
+	end
 		
 	InLabel = self:AddInput(version, "version", {
 		LINKID_DataType = "Text",
@@ -129,11 +222,59 @@ function Create()
 		INP_Passive = true,
 		--ICS_ControlPage = "Controls",
 		})
-		
-	OutValue = self:AddOutput("Output", "Output", {
-		LINKID_DataType = "Number",
-		LINK_Main = 1,
-		})
+	
+	if ModType == "SuckLessAudio" then
+		OutValue = self:AddOutput("Output", "Output", {
+			LINKID_DataType = "Number",
+			LINK_Main = 1,
+			})
+	elseif ModType == "SuckLessAudioPoint" then
+		OutValue = self:AddOutput("Output", "Output", {
+			LINKID_DataType = "Point",
+			LINK_Main = 1,
+			})
+	end
+end
+
+-------------------------------------------------------------------
+
+function NotifyChanged(inp, param, time)
+	if inp ~= nil and param ~= nil then
+		if inp == InFile then	
+			local filedata = readAll(param.Value)
+			if not filedata then
+				return
+			else
+				local header = getHeader(filedata, 44)
+				if header[23] == "2" then
+					InChannels:SetAttrs({IC_Visible = true})
+				else
+					InChannels:SetAttrs({IC_Visible = false})
+				end
+			end
+		end
+		if inp == InLockXY then
+			if param.Value == 1 then
+				InAmplitudeScaleY:SetAttrs({IC_Visible = false})
+				InAmplitudeScale:SetAttrs({ICS_Name = "Amplitude Scale"})
+				InAmplitudeOffsetY:SetAttrs({IC_Visible = false})
+				InAmplitudeOffset:SetAttrs({ICS_Name = "Amplitude Offset"})
+--				InTimeScaleY:SetAttrs({IC_Visible = false})
+--				InTimeScale:SetAttrs({ICS_Name = "Time Scale"})
+				InInvertY:SetAttrs({IC_Visible = false})
+				InInvert:SetAttrs({ICS_Name = "Invert"})
+			elseif param.Value == 0 then
+				InAmplitudeScaleY:SetAttrs({IC_Visible = true})
+				InAmplitudeScale:SetAttrs({ICS_Name = "Amplitude Scale X"})
+				InAmplitudeOffsetY:SetAttrs({IC_Visible = true})
+				InAmplitudeOffset:SetAttrs({ICS_Name = "Amplitude Offset X"})
+--				InTimeScaleY:SetAttrs({IC_Visible = true})
+--				InTimeScale:SetAttrs({ICS_Name = "Time Scale X"})
+				InInvertY:SetAttrs({IC_Visible = true})
+				InInvert:SetAttrs({ICS_Name = "Invert X"})
+			end
+		end
+	end
 end
 
 -------------------------------------------------------------------
@@ -287,36 +428,38 @@ function getUnsignedMedian(data)
 end
 
 -------------------------------------------------------------------
-
-function NotifyChanged(inp, param, time)
-	if inp ~= nil and param ~= nil then
-		if inp == InFile then	
-			local filedata = readAll(param.Value)
-			if not filedata then
-				return
-			else
-				local header = getHeader(filedata, 44)
-				if header[23] == "2" then
-					InChannels:SetAttrs({IC_Visible = true})
-				else
-					InChannels:SetAttrs({IC_Visible = false})
-				end
-			end
-		end
-	end
-end
-
 -------------------------------------------------------------------
 
 function Process(req)
 	
 	local infile = InFile:GetValue(req).Value
 	local startframe = InSampleStartFrame:GetValue(req).Value
-	local timescale = InTimeScale:GetValue(req).Value
 	local proxy = InProxy:GetValue(req).Value
 	local mode = InMode:GetValue(req).Value
 	local scale = InAmplitudeScale:GetValue(req).Value
 	local offset = InAmplitudeOffset:GetValue(req).Value
+	local timescale = InTimeScale:GetValue(req).Value
+	local invert = InInvert:GetValue(req).Value
+	local inv = 1
+		if invert == 1 then inv = -1 end
+
+	local scaley = scale
+	local offsety = offset
+--	local timescaley = 1
+	local lockxy = 1
+	local inverty = invert
+	local invy = 1
+	
+	if ModType == "SuckLessAudioPoint" then
+		scaley = InAmplitudeScaleY:GetValue(req).Value
+		offsety = InAmplitudeOffsetY:GetValue(req).Value
+--		local timescaley = InTimeScaleY:GetValue(req).Value
+		lockxy = InLockXY:GetValue(req).Value
+		inverty = InInvertY:GetValue(req).Value
+		invy = 1
+			if inverty == 1 then invy = -1 end
+	end
+		
 	local currenttime = req.Time
 	local format
 	local sampleoffset
@@ -390,23 +533,54 @@ function Process(req)
 	end
 	
 	if mode == "Max" then
-		amp = offset + getMax(sampledata)/32767*scale
+		amp = offset + (inv*getMax(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "UnsignedMax" then
-		amp = offset + getUnsignedMax(sampledata)/32767*scale
+		amp = offset + (inv*getUnsignedMax(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "Min" then
-		amp = offset + getMin(sampledata)/32767*scale
+		amp = offset + (inv*getMin(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "UnsignedMin" then
-		amp = offset + getUnsignedMin(sampledata)/32767*scale
+		amp = offset + (inv*getUnsignedMin(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "Average" then
-		amp = offset + getAverage(sampledata)/32767*scale
+		amp = offset + (inv*getAverage(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "UnsignedAverage" then
-		amp = offset + getUnsignedAverage(sampledata)/32767*scale
+		amp = offset + (inv*getUnsignedAverage(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "Median" then
-		amp = offset + getMedian(sampledata)/32767*scale
+		amp = offset + (inv*getMedian(sampledata)/32767)*scale
+		ampy = amp
 	elseif mode == "UnsignedMedian" then
-		amp = offset + getUnsignedMedian(sampledata)/32767*scale
+		amp = offset + (inv*getUnsignedMedian(sampledata)/32767)*scale
+		ampy = amp
 	end
-		
-	OutValue:Set(req, Number(amp))
 	
+	if lockxy == 0 and (scale ~= scaley or offset ~= offsety or invert ~= inverty) then
+		if mode == "Max" then
+			ampy = offsety + (invy*getMax(sampledata)/32767)*scaley
+		elseif mode == "UnsignedMax" then
+			ampy = offsety + (invy*getUnsignedMax(sampledata)/32767)*scaley
+		elseif mode == "Min" then
+			ampy = offsety + (invy*getMin(sampledata)/32767)*scaley
+		elseif mode == "UnsignedMin" then
+			ampy = offsety + (invy*getUnsignedMin(sampledata)/32767)*scaley
+		elseif mode == "Average" then
+			ampy = offsety + (invy*getAverage(sampledata)/32767)*scaley
+		elseif mode == "UnsignedAverage" then
+			ampy = offsety + (invy*getUnsignedAverage(sampledata)/32767)*scaley
+		elseif mode == "Median" then
+			ampy = offsety + (invy*getMedian(sampledata)/32767)*scaley
+		elseif mode == "UnsignedMedian" then
+			ampy = offsety + (invy*getUnsignedMedian(sampledata)/32767)*scaley
+		end
+	end
+	
+	if ModType == "SuckLessAudio" then
+		OutValue:Set(req, Number(amp))
+	elseif ModType == "SuckLessAudioPoint" then
+		OutValue:Set(req, Point(amp,ampy))
+	end
 end
