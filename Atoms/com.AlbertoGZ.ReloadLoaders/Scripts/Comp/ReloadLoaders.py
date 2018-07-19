@@ -1,32 +1,52 @@
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ReloadLoaders
 -------------
-Version: v1.01
-Last update: Apr 2018 
+Version: v1.02
+Last update: 29 Apr 2018 
 
-Description: Reload all loaders in your comp by refreshing clip filename.
-			 Unlike PassingThrough or other methods that affecting clip cache, 
-			 reloading the filename do that duration of the sequence be updated.
+Description:The ReloadLoaders script will refresh all or selected Loader nodes in your comp 
+			by rereading the "clip" filename attribute so it also updates the footage 
+			for the full duration of the sequence.
 
-Installation: place in Fusion:/Scripts/Comp
+Installation: copy AlbertoGZ/ReloadLoaders folder in your Fusion:/Scripts/Comp/
 
-Author: Alberto GZ
+Author: AlbertoGZ
 Email: albertogzgz@gmail.com
 Website: albertogz.com
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-comp.Lock()
+allLoaders = comp.GetToolList(False, "Loader").values()
+selLoaders = comp.GetToolList(True, "Loader").values()
 
-toollist = comp.GetToolList().values()
-tool = []
-
+# Check if selection and builds list with Loaders in, 
+# otherwise list inlcude all Loaders
+if selLoaders:
+	toollist = selLoaders
+else:
+	toollist = allLoaders
+	
+# Evaluate Loaders in list
 for tool in toollist:
-	if tool.GetAttrs("TOOLS_RegID") == "Loader":
-		loaderPath = tool.GetAttrs("TOOLST_Clip_Name")
-      		loaderPathClean = loaderPath[1]
-		tool.Clip = loaderPathClean
-		
-		print (tool.Clip[0])
+	loaderPath = tool.GetAttrs("TOOLST_Clip_Name")
+	loaderName = tool.GetAttrs("TOOLS_Name")
+	loaderPathClean = loaderPath[1]
+	durationOld = tool.GetAttrs("TOOLIT_Clip_Length")
+	durationOldClean = durationOld[1]
 
-comp.Unlock()
+	#Rename the clipname to force reload duration
+	tool.Clip = loaderPathClean + ""
+	tool.Clip = loaderPathClean
+	durationNew = tool.GetAttrs("TOOLIT_Clip_Length")
+	durationNewClean = durationNew[1]
+	
+	#Disable/enable to reload clip cache
+	tool.SetAttrs({'TOOLB_PassThrough' : True})
+	tool.SetAttrs({'TOOLB_PassThrough' : False})
+		
+	# Outputs
+	print (loaderName + " has been reloaded.")
+	print (" + current filename: " + tool.Clip[0])
+	print (" + old duration: " + str(durationOldClean) + " frames")
+	print (" + new duration: " + str(durationNewClean) + " frames")
+	print ("")
