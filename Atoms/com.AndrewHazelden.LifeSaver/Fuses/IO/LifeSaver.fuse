@@ -1,5 +1,5 @@
 --[[--
-LifeSaver - v1.0.2 2018-07-17 01.51 PM
+LifeSaver - v1.0.3 2018-07-19 05.56 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -136,7 +136,8 @@ File Tab:
 Channels Tab:
 	Depth (Auto)(float16)(float32)
 	Compression [None/RLE/Zip (1 Line)/Zip (16 Lines)/DWA (32 Line)/DWA (256 Line)]
-
+	[x] Assign Part Name Prefix to Channel Name
+	
 	Parts
 		Export Part # (Enable/Disable)
 		Layer Name <export_#>
@@ -240,6 +241,38 @@ Press the "Alt+Up Cursor" (Win/Linux) or "Option+Up Cursor" (macOS) hotkey to in
 
 Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de-increment the selected LifeSaver Node version.
 
+## Metadata ##
+
+### Reading the Metadata Table ###
+
+You can read the LifeSaver node metadata using:
+
+meta = comp:FindTool('LifeSaver1').Output[comp.CurrentTime].Metadata
+dump(meta)
+
+
+This results in a Lua table output like:
+table: 0x01db142e58
+	UUID = 952edc60-365a-4c58-a8ac-5e5360fc4be0
+	Filename = /Volumes/Media/Renders/LifeSaver1.0000.exr
+	Node = LifeSaver1
+	Composition = 
+	Date = 2018-07-19 08.47.10
+	VersionControl = 007
+	Program = LifeSaver.fuse for Resolve 15.0
+	Directory = /Volumes/Media/Renders/
+
+### Reading the Metadata Filename ###
+
+You can read the LifeSaver's node metadata Filename tag using:
+
+file = comp:FindTool('LifeSaver1').Output[comp.CurrentTime].Metadata['Filename']
+dump(file)
+
+This results in a Lua table output like:
+/Volumes/Media/Renders/LifeSaver1.0000.exr
+
+
 ## Todo ##
 
 - Add support for IFL based sequence naming in the Filename field
@@ -257,9 +290,30 @@ Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de
 	CHAN_BACKVECTORX
 	CHAN_BACKVECTORY
 
-- Fix an Open Containing Folder issue when tokens like ${SHELL1}-${SHELL4} are embedded into the folder path section of the Filename. When the comp is rendered the folders are created as expected.
+- Fix an 'Open Containing Folder' Button script issue when tokens like ${SHELL1}-${SHELL4} are embedded into the folder path section of the Filename. When the comp is rendered the folders are created as expected.
 
-- Look into a Fusion 9 Render Node issue where Fusion reports an error loading the fuse when rendering comps using the Fusion Render Manager. In this case the fuse file runs fine on the same system in the Fusion GUI session.
+## Notes ##
+
+- The ${SHELL1}-${SHELL4} input textfields are live updated and executed so you may want to write the text in another text editor and paste it in if you were going to do anything that would cause issues with partial text entry being run.
+
+
+## Version History ##
+
+### v1.0 2018-07-12 ###
+
+- Initial Release
+
+### v1.0.1 2018-07-15 ###
+
+- Added Shell Tokens
+
+- Added metadata tags to the LifeSaver node's output connection
+
+### v1.0.3 2018-07-19 ###
+
+- Updated the time handling code to use req.time which allows for metadata reading at random time values other then the current frame.
+
+- Added an "Assign Part Name Prefix to Channel Name" checkbox that turns a channel name like 'posY' into 'export_1.posY' when it is written to the EXR image.
 
 --]]--
 
@@ -268,7 +322,7 @@ FuRegisterClass('LifeSaver', CT_SinkTool, {
 	REGS_Name = 'LifeSaver',
 	REGS_Category = 'I/O',
 	REGS_OpIconString = 'LSV',
-	REGS_OpDescription = 'Allows you to save out EXR format imagery in Resolve and Fusion with multi-part and multi-channel support.',
+	REGS_OpDescription = 'Allows you to save out EXR format imagery in Resolve and Fusion with multi-part and multi-channel support, and filename tokens',
 	REGS_Company = 'Andrew Hazelden',
 	REGS_URL = 'http://www.andrewhazelden.com',
 	REGS_HelpTopic = 'https://www.steakunderwater.com/wesuckless/viewtopic.php?p=18356',
@@ -284,7 +338,7 @@ FuRegisterClass('LifeSaver', CT_SinkTool, {
 	REG_OpNoMask = true,
 	
 	-- Sets the fuse version number (100 means v1.0) so newer fuses override older versions
-	REG_Version = 101,
+	REG_Version = 103,
 	})
 
 -- Add a new output entry to the Channels tab when the '+' button is clicked.
@@ -1464,7 +1518,19 @@ end
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'Channels',
 		})
-	
+	-- The 'Assign Part Name Prefix to Channel Name' control turns a channel name like 'posY' into 'export_1.posY' when it is written to the EXR image
+	InPartNamePrefixToChannel = self:AddInput('Assign Part Name Prefix to Channel Name', 'PartNamePrefixToChannel', {
+		LINKID_DataType = 'Number',
+		INPID_InputControl = 'CheckboxControl',
+		INP_DoNotifyChanged = true,
+		INP_External = false,
+		INP_Integer = true,
+		INP_Default = 0,
+		ICD_Width = 1,
+		IC_Visible = true,
+		LINK_ForceSave = true,
+		ICS_ControlPage = 'Channels',
+		})
 	-- Button to add extra Multi-part EXR channels
 	InAddOutput = self:AddInput('Add Output', 'AddOutput', {
 		LINKID_DataType = 'Number',
@@ -1556,7 +1622,7 @@ function HelpWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [=[
 <h1>About LifeSaver Fuse</h1>
-<h2>Version 1.0.2 - 2018-07-17</h2>
+<h2>Version 1.0.3 - 2018-07-19</h2>
 <p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
 
 <p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
@@ -1606,7 +1672,6 @@ ${SEP} - The file separator slash (/ or \)
 ${PLATFORM} - The OS Platform (Mac/Windows/Linux)
 ${FUHOST} - Is Fusion or Resolve the host package (Fusion/Resolve)
 ${FUVERSION} - The version of Fusion is running (9.02/15)
-${UUID} - The per frame UUID value (f9fa311b-904c-4b93-892f-0d772887db88)
 ${SHELL1}-${SHELL4} - The Shell tokens textfield content is run in the Terminal/Command Prompt (echo Hello_World)
 </pre>
 
@@ -1653,11 +1718,47 @@ Comp:/${COMP}/${COMP}_${NODE}.$06d.exr</p>
 os.execute('env > "' .. logFile .. '"');
 bmd.openfileexternal('Open', logFile);</pre>
 
+
 <h1>LifeSaver Hotkeys</h1>
 
 <p>Press the "Alt+Up Cursor" (Win/Linux) or "Option+Up Cursor" (macOS) hotkey to increment the selected LifeSaver Node version.</p>
 
 <p>Press "Alt+Down Cursor" (Win/Linux) or "Option+Down Cursor" (macOS) hotkey to de-increment the selected LifeSaver Node version.</p>
+
+
+<h1>Metadata</h1>
+
+<h2>Reading the Metadata Table</h2>
+
+<p>You can read the LifeSaver node metadata using:</p>
+
+<pre>meta = comp:FindTool('LifeSaver1').Output[comp.CurrentTime].Metadata
+dump(meta)</pre>
+
+<p>This results in a Lua table output like:</p>
+
+<pre>
+table: 0x01db142e58
+	UUID = 952edc60-365a-4c58-a8ac-5e5360fc4be0
+	Filename = /Volumes/Media/Renders/LifeSaver1.0000.exr
+	Node = LifeSaver1
+	Composition = 
+	Date = 2018-07-19 08.47.10
+	VersionControl = 007
+	Program = LifeSaver.fuse for Resolve 15.0
+	Directory = /Volumes/Media/Renders/
+</pre>
+
+<h2>Reading the Metadata Filename</h2>
+
+<p>You can read the LifeSaver's node metadata Filename tag using:</p>
+
+<pre>file = comp:FindTool('LifeSaver1').Output[comp.CurrentTime].Metadata['Filename']
+dump(file)</pre>
+
+<p>This results in a Lua table output like:</p>
+
+<pre>/Volumes/Media/Renders/LifeSaver1.0000.exr</pre>
 ]=]
 			},
 			-- Add clickable links
@@ -1731,7 +1832,7 @@ HelpWindow()
 		local exports = {}
 		for i,v in ipairs(inps) do
 			-- Input connection names - This debugging print() command is used when you change the attribute name to something other then 'Export' and need to refine the sub() based trimming of the export counter.
-			-- print('[Raw] ' .. v .. '\t[Trimmmed] ' ..	v:sub(1,6) .. '\t[Export number] ' .. v:sub(7))
+			-- print('[Raw] ' .. v .. '\t[Trimmmed] ' .. v:sub(1,6) .. '\t[Export number] ' .. v:sub(7))
 			if v:sub(1,6) == 'Export' then
 				exports[tonumber(v:sub(7))] = true
 			end
@@ -1746,7 +1847,7 @@ HelpWindow()
 	end
 end
 
--- Code that runs when the node is first added to the flow, or the comp is opened
+-- The OnAddToFlow() function runs when the node is first added to the flow, or the comp file is opened
 function OnAddToFlow()
 	-- ...
 	-- ...
@@ -1756,6 +1857,9 @@ end
 -- NotifyChanged is run when a Fuse GUI element is modified by the user and the "INP_DoNotifyChanged = true," flag is enabled on a GUI control.
 function NotifyChanged(inp, param, time)
 	local verbose = InVerbose:GetSource(time).Value
+	
+	-- local currentFrame = self.Comp.CurrentTime
+	local currentFrame = 0
 	
 	if inp == InAddOutput then
 		-- Add an extra input connection on the fuse
@@ -1784,10 +1888,10 @@ function NotifyChanged(inp, param, time)
 		local shell4 = InShell4:GetSource(time).Value or ''
 		
 		-- Process any of the tokens inside the shell textfields
-		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
-		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
-		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
-		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 		
 		-- Run the shell tokens
 		shell1 = System(shell1, verbose, 'SHELL1')
@@ -1796,13 +1900,13 @@ function NotifyChanged(inp, param, time)
 		shell4 = System(shell4, verbose, 'SHELL4')
 		
 		-- Process the tokens in the result string the come back from executing the shell commands
-		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
-		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
-		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
-		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 		
 		-- Process the tokens in the filename field
-		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4)
+		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4, currentFrame)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1836,10 +1940,10 @@ function NotifyChanged(inp, param, time)
 		local shell4 = InShell4:GetSource(time).Value or ''
 		
 		-- Process any of the tokens inside the shell textfields
-		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
-		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
-		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
-		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+		shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+		shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+		shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+		shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 		
 		-- Run the shell tokens
 		shell1 = System(shell1, verbose, 'SHELL1')
@@ -1848,13 +1952,13 @@ function NotifyChanged(inp, param, time)
 		shell4 = System(shell4, verbose, 'SHELL4')
 		
 		-- Process the tokens in the result string the come back from executing the shell commands
-		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
-		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
-		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
-		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 		
 		-- Process the tokens in the filename field
-		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4)
+		local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4, currentFrame)
 		
 		-- Create the folder if it doesn't exist yet
 		local folder = Dirname(self.Comp:MapPath(filename))
@@ -1949,6 +2053,10 @@ end
 function Process(req)
 	local ok = true
 	
+	-- Allows the node to repsond to an offset current time value
+	-- This is used when metadata or other time based fields are accessed in cases like comp:FindTool('LifeSaver1').Output[comp.CurrentTime].Metadata['Filename']
+	local currentFrame = req.Time
+	
 	-- Should detailed logging be printed to the Console
 	local verbose = InVerbose:GetValue(req).Value
 	
@@ -1970,8 +2078,8 @@ function Process(req)
 	-- The bit-depth of the EXR output (HALF/ANY_TYPE)
 	local depth = tonumber(InDepth:GetValue(req).Value)
 	
+	-- Generate date and time stamps
 	local date = os.date('%Y-%m-%d')
-	
 	local time = os.date('%H.%M.%S')
 	
 	local rgbaDepth = FLOAT
@@ -2030,10 +2138,10 @@ function Process(req)
 	local shell4 = InShell4:GetValue(req).Value or ''
 	
 	-- Process any of the tokens inside the shell textfields
-	shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '')
-	shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '')
-	shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '')
-	shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '')
+	shell1 = ParseTokens(shell1, '${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+	shell2 = ParseTokens(shell2, '${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+	shell3 = ParseTokens(shell3, '${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+	shell4 = ParseTokens(shell4, '${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 	
 	-- Run the shell tokens
 	shell1 = System(shell1, verbose, 'SHELL1')
@@ -2042,20 +2150,20 @@ function Process(req)
 	shell4 = System(shell4, verbose, 'SHELL4')
 	
 	-- Process the tokens in the result string the come back from executing the shell commands
-		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '')
-		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '')
-		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '')
-		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '')
+		shell1 = ParseTokens(shell1, 'System ${SHELL1}', version, uuid, '', '', '', '', currentFrame)
+		shell2 = ParseTokens(shell2, 'System ${SHELL2}', version, uuid, '', '', '', '', currentFrame)
+		shell3 = ParseTokens(shell3, 'System ${SHELL3}', version, uuid, '', '', '', '', currentFrame)
+		shell4 = ParseTokens(shell4, 'System ${SHELL4}', version, uuid, '', '', '', '', currentFrame)
 	
 	-- Process the tokens in the filename field
-	local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4, false)
+	local filename = ParseTokens(srcFilename, 'Filename', version, uuid, shell1, shell2, shell3, shell4, currentFrame)
 	
 	-- Load the EXRIO library
 	local exr = EXRIO()
 	
 	-- Autofill a default filename when the field is empty
 	if filename == nil or filename == '' then
-		print('\n[LifeSaver Error] The "Filename" is empty!\n\n')
+		print('\n[LifeSaver Error] The \'Filename\' is empty!\n\n')
 		print('[LifeSaver Tip] Enter a filename like "Comp:/Render/${COMP}_${NODE}_${VERSION}.0000.exr" and then re-render the comp.\n')
 		
 		-- Showing the image output in the Viewer window even though the filename is empty
@@ -2105,6 +2213,9 @@ function Process(req)
 				
 				-- Get the 'Export #' Disabled/Enabled state
 				local exportPart = export.InExport:GetValue(req).Value
+				
+				-- Get the 'Assign Part Name Prefix to Channel Name' state
+				local partNamePrefixToChannel = InPartNamePrefixToChannel:GetValue(req).Value
 				
 				-- Read the EXR Channel settings
 				
@@ -2204,193 +2315,302 @@ function Process(req)
 				-- Select the EXR channels and channel names to export
 				if exportPart and exportPart == 0 then
 					local p = exr:Part(name, img.ImageWindow, img.DataWindow, img.XScale/img.YScale)
-
+					
 					-- CHAN_COLOR / CHAN_COLORALPHA
 					
 					-- CHAN_RED
 					if redEnable == 1 then
-						exr:Channel(red, rgbaDepth, img, CHAN_RED)
-						-- exr:Channel(name .. '.' .. red, HALF, img, CHAN_RED)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(red, rgbaDepth, img, CHAN_RED)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. red, HALF, img, CHAN_RED)
+						end
 						
-						PrintChannelDetails(verbose, red, 'Red', redEnable, rgbaDepth)
+						PrintChannelDetails(verbose, red, 'Red', redEnable, rgbaDepth, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_GREEN
 					if greenEnable == 1 then
-						exr:Channel(green, rgbaDepth, img, CHAN_GREEN)
-						-- exr:Channel(name .. '.' .. green, HALF, img, CHAN_GREEN)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(green, rgbaDepth, img, CHAN_GREEN)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. green, HALF, img, CHAN_GREEN)
+						end
 						
-						PrintChannelDetails(verbose, green, 'Green', greenEnable, rgbaDepth)
+						PrintChannelDetails(verbose, green, 'Green', greenEnable, rgbaDepth, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_BLUE
 					if blueEnable == 1 then
-						exr:Channel(blue, rgbaDepth, img, CHAN_BLUE)
-						-- exr:Channel(name .. '.' .. blue, HALF, img, CHAN_BLUE)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(blue, rgbaDepth, img, CHAN_BLUE)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. blue, HALF, img, CHAN_BLUE)
+						end
 						
-						PrintChannelDetails(verbose, blue, 'Blue', blueEnable, rgbaDepth)
+						PrintChannelDetails(verbose, blue, 'Blue', blueEnable, rgbaDepth, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_ALPHA
 					if alphaEnable == 1 then
-						exr:Channel(alpha, rgbaDepth, img, CHAN_ALPHA)
-						-- exr:Channel(name .. '.' .. alpha, HALF, img, CHAN_ALPHA)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(alpha, rgbaDepth, img, CHAN_ALPHA)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. alpha, HALF, img, CHAN_ALPHA)
+						end
 						
-						PrintChannelDetails(verbose, alpha, 'Alpha', alphaEnable, rgbaDepth)
+						PrintChannelDetails(verbose, alpha, 'Alpha', alphaEnable, rgbaDepth, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- The extra EXR channels
-				
+					
 					-- CHAN_Z
 					if zEnable == 1 then
-						exr:Channel(z, HALF, img, CHAN_Z)
-						-- exr:Channel(name .. '.' .. z, HALF, img, CHAN_Z)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(z, HALF, img, CHAN_Z)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. z, HALF, img, CHAN_Z)
+						end
 						
-						PrintChannelDetails(verbose, z, 'Z-Depth', zEnable, nil)
+						PrintChannelDetails(verbose, z, 'Z-Depth', zEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_COVERAGE
 					if covEnable == 1 then
-						exr:Channel(cov, HALF, img, CHAN_COVERAGE)
-						-- exr:Channel(name .. '.' .. cov, HALF, img, CHAN_COVERAGE)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(cov, HALF, img, CHAN_COVERAGE)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. cov, HALF, img, CHAN_COVERAGE)
+						end
 						
-						PrintChannelDetails(verbose, cov, 'Coverage', covEnable, nil)
+						PrintChannelDetails(verbose, cov, 'Coverage', covEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_OBJECT
 					if objIDEnable == 1 then
-						exr:Channel(objID, HALF, img, CHAN_OBJECT)
-						-- exr:Channel(name .. '.' .. objID, HALF, img, CHAN_OBJECT)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(objID, HALF, img, CHAN_OBJECT)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. objID, HALF, img, CHAN_OBJECT)
+						end
 						
-						PrintChannelDetails(verbose, objID, 'Object ID', objIDEnable, nil)
+						PrintChannelDetails(verbose, objID, 'Object ID', objIDEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_MATERIAL
 					if matIDEnable == 1 then
-						exr:Channel(matID, HALF, img, CHAN_MATERIAL)
-						-- exr:Channel(name .. '.' .. matID, HALF, img, CHAN_MATERIAL)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(matID, HALF, img, CHAN_MATERIAL)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. matID, HALF, img, CHAN_MATERIAL)
+						end
 						
-						PrintChannelDetails(verbose, matID, 'Material ID', matIDEnable, nil)
+						PrintChannelDetails(verbose, matID, 'Material ID', matIDEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_UV
-				
+					
 					-- CHAN_U
 					if uEnable == 1 then
-						exr:Channel(u, HALF, img, CHAN_U)
-						-- exr:Channel(name .. '.' .. u, HALF, img, CHAN_U)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(u, HALF, img, CHAN_U)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. u, HALF, img, CHAN_U)
+						end
 						
-						PrintChannelDetails(verbose, u, 'U', uEnable, nil)
+						PrintChannelDetails(verbose, u, 'U', uEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_V
 					if vEnable == 1 then
-						exr:Channel(v, HALF, img, CHAN_V)
-						-- exr:Channel(name .. '.' .. v, HALF, img, CHAN_V)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(v, HALF, img, CHAN_V)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. v, HALF, img, CHAN_V)
+						end
 						
-						PrintChannelDetails(verbose, v, 'V', vEnable, nil)
+						PrintChannelDetails(verbose, v, 'V', vEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_NORMALS
-				
+					
 					-- CHAN_NORMALX
 					if xNormEnable == 1 then
-						exr:Channel(xNorm, HALF, img, CHAN_NORMALX)
-						-- exr:Channel(name .. '.' .. xNorm, HALF, img, CHAN_NORMALX)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(xNorm, HALF, img, CHAN_NORMALX)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. xNorm, HALF, img, CHAN_NORMALX)
+						end
 						
-						PrintChannelDetails(verbose, xNorm, 'X Normal', xNormEnable, nil)
+						PrintChannelDetails(verbose, xNorm, 'X Normal', xNormEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_NORMALY
 					if yNormEnable == 1 then
-						exr:Channel(yNorm, HALF, img, CHAN_NORMALY)
-						-- exr:Channel(name .. '.' .. yNorm, HALF, img, CHAN_NORMALY)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(yNorm, HALF, img, CHAN_NORMALY)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. yNorm, HALF, img, CHAN_NORMALY)
+						end
 						
-						PrintChannelDetails(verbose, yNorm, 'Y Normal', yNormEnable, nil)
+						PrintChannelDetails(verbose, yNorm, 'Y Normal', yNormEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_NORMALZ
 					if zNormEnable == 1 then
-						exr:Channel(zNorm, HALF, img, CHAN_NORMALZ)
-						-- exr:Channel(name .. '.' .. zNorm, HALF, img, CHAN_NORMALZ)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(zNorm, HALF, img, CHAN_NORMALZ)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. zNorm, HALF, img, CHAN_NORMALZ)
+						end
 						
-						PrintChannelDetails(verbose, zNorm, 'Z Normal', zNormEnable, nil)
+						PrintChannelDetails(verbose, zNorm, 'Z Normal', zNormEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_VECTORS
-				
+					
 					-- CHAN_VECTORX
 					if xVelEnable == 1 then
-						exr:Channel(xVel, HALF, img, CHAN_VECTORX)
-						-- exr:Channel(name .. '.' .. xVel, HALF, img, CHAN_VECTORX)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(xVel, HALF, img, CHAN_VECTORX)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. xVel, HALF, img, CHAN_VECTORX)
+						end
 						
-						PrintChannelDetails(verbose, xVel, 'X Velocity', xVelEnable, nil)
+						PrintChannelDetails(verbose, xVel, 'X Velocity', xVelEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_VECTORY
 					if yVelEnable == 1 then
-						exr:Channel(yVel, HALF, img, CHAN_VECTORY)
-						-- exr:Channel(name .. '.' .. yVel, HALF, img, CHAN_VECTORY)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(yVel, HALF, img, CHAN_VECTORY)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. yVel, HALF, img, CHAN_VECTORY)
+						end
 						
-						PrintChannelDetails(verbose, yVel, 'Y Velocity', yVelEnable, nil)
+						PrintChannelDetails(verbose, yVel, 'Y Velocity', yVelEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_BACKVECTORS
-				
+					
 					-- CHAN_BACKVECTORX
 					if xRevVelEnable == 1 then
-						exr:Channel(xRevVel, HALF, img, CHAN_BACKVECTORX)
-						-- exr:Channel(name .. '.' .. xRevVel, HALF, img, CHAN_BACKVECTORX)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(xRevVel, HALF, img, CHAN_BACKVECTORX)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. xRevVel, HALF, img, CHAN_BACKVECTORX)
+						end
 						
-						PrintChannelDetails(verbose, xRevVel, 'X Reverse Velocity', xRevVelEnable, nil)
+						PrintChannelDetails(verbose, xRevVel, 'X Reverse Velocity', xRevVelEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_BACKVECTORY
 					if yRevVelEnable == 1 then
-						exr:Channel(yRevVel, HALF, img, CHAN_BACKVECTORY)
-						-- exr:Channel(name .. '.' .. yRevVel, HALF, img, CHAN_BACKVECTORY)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(yRevVel, HALF, img, CHAN_BACKVECTORY)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. yRevVel, HALF, img, CHAN_BACKVECTORY)
+						end
 						
-						PrintChannelDetails(verbose, yRevVel, 'Y Reverse Velocity', yRevVelEnable, nil)
+						PrintChannelDetails(verbose, yRevVel, 'Y Reverse Velocity', yRevVelEnable, nil, name, partNamePrefixToChannel)
 					end
-				
+					
 					-- CHAN_POSITIONS
 					if xPosEnable == 1 then
-						exr:Channel(xPos, HALF, img, CHAN_POSITIONX)
-						-- exr:Channel(name .. '.' .. xPos, HALF, img, CHAN_POSITIONX)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(xPos, HALF, img, CHAN_POSITIONX)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. xPos, HALF, img, CHAN_POSITIONX)
+						end
 						
-						PrintChannelDetails(verbose, xPos, 'X Position', xPosEnable, nil)
+						PrintChannelDetails(verbose, xPos, 'X Position', xPosEnable, nil, name, partNamePrefixToChannel)
 					end
 					
 					if yPosEnable == 1 then
-						exr:Channel(yPos, HALF, img, CHAN_POSITIONY)
-						-- exr:Channel(name .. '.' .. yPos, HALF, img, CHAN_POSITIONY)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(yPos, HALF, img, CHAN_POSITIONY)
+						else
+							exr:Channel(name .. '.' .. yPos, HALF, img, CHAN_POSITIONY)
+						end
 						
-						PrintChannelDetails(verbose, yPos, 'Y Position', yPosEnable, nil)
+						PrintChannelDetails(verbose, yPos, 'Y Position', yPosEnable, nil, name, partNamePrefixToChannel)
 					end
 					
 					if zPosEnable == 1 then
-						exr:Channel(zPos, HALF, img, CHAN_POSITIONZ)
-						-- exr:Channel(name .. '.' .. zPos, HALF, img, CHAN_POSITIONZ)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(zPos, HALF, img, CHAN_POSITIONZ)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. zPos, HALF, img, CHAN_POSITIONZ)
+						end
 						
-						PrintChannelDetails(verbose, zPos, 'Z Position', zPosEnable, nil)
+						PrintChannelDetails(verbose, zPos, 'Z Position', zPosEnable, nil, name, partNamePrefixToChannel)
 					end
 					
 					-- CHAN_DISPARITIES
 					
 					-- CHAN_DISPARITYX
 					if xDispEnable == 1 then
-						exr:Channel(xDisp, HALF, img, CHAN_DISPARITYX)
-						-- exr:Channel(name .. '.' .. xDisp, HALF, img, CHAN_DISPARITYX)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(xDisp, HALF, img, CHAN_DISPARITYX)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. xDisp, HALF, img, CHAN_DISPARITYX)
+						end
 						
-						PrintChannelDetails(verbose, xDisp, 'X Disparity', xDispEnable, nil)
+						PrintChannelDetails(verbose, xDisp, 'X Disparity', xDispEnable, nil, name, partNamePrefixToChannel)
 					end
 					
 					-- CHAN_DISPARITYY
 					if yDispEnable == 1 then
-						exr:Channel(yDisp, HALF, img, CHAN_DISPARITYY)
-						-- exr:Channel(name .. '.' .. yDisp, HALF, img, CHAN_DISPARITYY)
-					
-						PrintChannelDetails(verbose, yDisp, 'Y Disparity', yDispEnable, nil)
+						if partNamePrefixToChannel == 0 then
+							-- Channel name only
+							exr:Channel(yDisp, HALF, img, CHAN_DISPARITYY)
+						else
+							-- Part name + channel name
+							exr:Channel(name .. '.' .. yDisp, HALF, img, CHAN_DISPARITYY)
+						end
+						
+						PrintChannelDetails(verbose, yDisp, 'Y Disparity', yDispEnable, nil, name, partNamePrefixToChannel)
 					end
 					
 					table.insert(parts, p)
@@ -2451,6 +2671,9 @@ function Process(req)
 			-- Define the Composition metadata attribute
 			meta.Composition = compName
 			
+			-- Define the frame metadata attribute
+			meta.Frame = currentFrame
+			
 			-- Define the Date metadata attribute
 			meta.Date = date .. ' ' .. time
 			
@@ -2504,17 +2727,24 @@ end
 
 -- Print the EXR channel details to the Console when the fuse is rendered
 -- Example: PrintChannelDetails(1, 'R', 'Red', 1, HALF)
-function PrintChannelDetails(verbose, channelName, channelType, channelEnabled, depth)
+function PrintChannelDetails(verbose, channelName, channelType, channelEnabled, depth, part, partNamePrefix)
 	if verbose == 1 or verbose == true then
-	-- Check the bitdepth
-	local bitDepth = 'Float32'
-	if depth == HALF then
-		bitDepth = 'Float16'
-	end
-	
-	-- Only show the active channels
-	if channelEnabled == 1 then
-		print(string.format('\t\t[Channel Name] %10s\t[Channel Type] %20s\t[Depth] %s', channelName, channelType, bitDepth))
+		-- Check the bitdepth
+		local bitDepth = 'Float32'
+		if depth == HALF then
+			bitDepth = 'Float16'
+		end
+		
+		-- Only show the active channels
+		if channelEnabled == 1 then
+			if partNamePrefix == 0 then
+				-- channel name only
+				print(string.format('\t\t[Channel Name] %10s\t[Channel Type] %20s\t[Depth] %s', channelName, channelType, bitDepth))
+			else
+				-- Part name + channel name
+				channelName = part .. '.' .. channelName
+				print(string.format('\t\t[Channel Name] %15s\t[Channel Type] %20s\t[Depth] %s', channelName, channelType, bitDepth))
+			end
 		end
 	end
 end
@@ -2535,8 +2765,8 @@ end
 
 
 -- Process the tokens in the filename field
--- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr', 'Filename', '', '', '', '')
-function ParseTokens(file, useCase, version, uuid, shell1, shell2, shell3, shell4)
+-- Example: local filename = ParseTokens('Comp:/${COMP}_${NODE}.0000.exr', 'Filename', '', '', '', '', self.Comp.CurrentTime)
+function ParseTokens(file, useCase, version, uuid, shell1, shell2, shell3, shell4, currentFrame)
 	-- Disable console logging output unless debug testing
 	local verbose = false
 	-- local verbose = true
@@ -2577,7 +2807,7 @@ function ParseTokens(file, useCase, version, uuid, shell1, shell2, shell3, shell
 	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height')
 	
 	-- req.Time is the same as comp.CurrentTime
-	local currentFrame = self.Comp.CurrentTime
+	-- local currentFrame = self.Comp.CurrentTime
 	local startFrame = self.Comp.GlobalStart
 	local endFrame = self.Comp.GlobalEnd
 	local duration = self.Comp.GlobalEnd - self.Comp.GlobalStart
