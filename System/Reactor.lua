@@ -1,7 +1,7 @@
-_VERSION = [[Version 2.0.1 - June 29, 2018]]
+_VERSION = [[Version 2.0.2 - July 20, 2018]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0.1 2018-06-29
+Reactor Package Manager for Fusion - v2.0.2 2018-07-20
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -975,7 +975,13 @@ function ReadAtoms(path)
 						table.insert(atom.Issues, "This Atom does not support " .. fuAppName .. " " .. fuVersion .. ". You need " .. fuAppCompatibleName .. " " .. atom.Minimum .. " to use this atom.")
 						atom.Disabled = true
 					end
-
+					
+					local installed = IsAtomInstalled(GetAtomID(atom))
+					local updatable, installedVersion, newVersion = IsAtomUpdatable(atom)
+					if updatable == true then
+						table.insert(atom.Issues, "You have v" .. tostring(installedVersion) .. " of this atom installed. There is a v" .. tostring(newVersion) .. " update available. Click the update button to install the new version.")
+					end
+					
 					table.insert(Atoms, atom)
 				end
 			end
@@ -1015,7 +1021,7 @@ function GetAtomDescription(atom)
 	end
 
 	if #atom.Issues > 0 then
-		str = str .. "<p>Status:<ul><font color = #ff8c8c>"
+		str = str .. "<p>Status:<ul><font color = #ffd100>"
 
 		for i,v in ipairs(atom.Issues) do
 			str = str .. "<li>&nbsp;&nbsp;" .. v .. "</li>"
@@ -1504,6 +1510,7 @@ function PopulateRepoCombo(combo)
 	table.sort(repos)
 	table.insert(repos, 1, "All")
 	table.insert(repos, 2, "Installed")
+	table.insert(repos, 3, "Update")
 
 	combo:AddItems(repos)
 end
@@ -1567,15 +1574,15 @@ function IsAtomUpdatable(atom)
 		local installedAtom = bmd.readfile(installedAtomPath)
 		if installedAtom and installedAtom.Version then
 			if atom.Version ~= installedAtom.Version then
-				return true
+				return true, installedAtom.Version, atom.Version
 			else
-				return false
+				return false, installedAtom.Version, atom.Version
 			end
 		else
-			return false
+			return false, atom.Version, atom.Version
 		end
 	else
-		return false
+		return false, atom.Version, atom.Version
 	end
 end
 
@@ -1605,7 +1612,7 @@ function PopulateAtomTree(tree)
 		local installed = IsAtomInstalled(GetAtomID(v))
 		local updatable = IsAtomUpdatable(v)
 		
-		if not g_Repository or g_Repository == v.Repo or (installed and g_Repository == "Installed") then
+		if not g_Repository or g_Repository == v.Repo or (installed and g_Repository == "Installed") or (updatable and g_Repository == "Update") then
 			if (v.Category .. "/"):sub(1, #g_Category) == g_Category then
 				if #g_FilterText == 0 or MatchFilter(v, g_FilterText:lower()) then
 					it = tree:NewItem()
@@ -1629,10 +1636,12 @@ function PopulateAtomTree(tree)
 					
 					if v.Disabled then
 						for i=0,7 do
-							it.TextColor[i] = { R=1, G=1, B=1, A=0.3}
+							-- Faint Red
+							it.TextColor[i] = { R=1.0, G=0.549, B=0.549, A=1.0}
 						end
 					elseif updatable then
 						for i=0,7 do
+							-- Upgrade Blue
 							it.TextColor[i] = { R=0.55, G=0.6, B=0.84, A=1.0}
 						end
 					end
@@ -1641,7 +1650,7 @@ function PopulateAtomTree(tree)
 			end
 		end
 	end
-
+	
 	tree.SortingEnabled = true
 	tree.UpdatesEnabled = true
 end
