@@ -1,12 +1,21 @@
+--[[--
+External Matte Saver v2 2018-07-20 07.10 AM
+
+Resolve 15 Fuse Compatibility Patch
+By Andrew Hazelden <andrew@andrewhazelden.com>
+www.andrewhazelden.com
+--]]--
+
 FuRegisterClass("ExternalMatteSaver", CT_SinkTool, {
 	REGS_Name             = "External Matte Saver",
-	REGS_Category         = "Resolve Connect",
+	REGS_Category         = "I/O",
 	REGS_OpIconString     = "EMS",
-	REG_Fuse_NoEdit       = true,
-	REG_Fuse_NoReload     = true,
+	REG_Fuse_NoEdit       = false,
+	REG_Fuse_NoReload     = false,
 	REG_TimeVariant       = true,
 	REG_SupportsDoD       = true,
 	REG_OpNoMask          = true,
+	REG_Version           = 200,
 	})
 
 function AddMatte(i)
@@ -20,15 +29,26 @@ function AddMatte(i)
 
 	self:AddControlPage("Mattes")
 
+	matte.InSep = self:AddInput(string.rep("_", 9999), "Sep" .. istr, {
+		LINKID_AddBeforeID = "AddMatte",
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		ICS_Name = string.rep("_", 9999),
+		ICD_Width = 1,
+		INP_External = false,
+		IC_Visible = false,
+		INP_Passive = true,
+		})
+
 	matte.InType = self:AddInput("Type " .. istr, "MatteType" .. istr, {
 		LINKID_AddBeforeID = "AddMatte",
 		LINKID_DataType = "FuID",
 		INPID_InputControl = "ComboIDControl",
 		INP_DoNotifyChanged = true,
 		INP_External = false,
-		ICS_Name = "",
-		ICD_Width = 0.225,
-		INPID_DefaultID = "A",
+		ICS_Name = "Export #"  .. istr,
+		ICD_Width = 1,
+		INPID_DefaultID = "RGBA",
 		{ CCS_AddString = "---", CCID_AddID = "None" },
 		{ CCS_AddString = "A", CCID_AddID = "A" },
 		{ CCS_AddString = "RGB", CCID_AddID = "RGB" },
@@ -36,39 +56,29 @@ function AddMatte(i)
 		LINK_ForceSave = true,
 		})
 
-	matte.InName = self:AddInput("Name " .. istr, "Name" .. istr, {
+	matte.InName = self:AddInput("Layer Name " .. istr, "Name" .. istr, {
 		LINKID_AddBeforeID = "AddMatte",
 		LINKID_DataType = "Text",
 		INPID_InputControl = "TextEditControl",
 		INPS_DefaultText = "matte_" .. istr,
-		ICS_Name = "",
-		ICD_Width = 0.35,
+		ICS_Name = "Layer Name",
+		ICD_Width = 1,
 		TEC_Lines = 1,
 		})
-
+		
 	matte.InImage = self:AddInput("Input " .. istr, "Input" .. istr, {
 		LINKID_AddBeforeID = "AddMatte",
 		LINKID_DataType = "Image",
 		INPID_InputControl = "ImageControl",
-		ICS_Name = "  " .. istr,
-		ICD_Width = 0.425,
+		ICS_Name = "Input Connection",
+		ICD_Width = 1,
 		LINK_Main = i,
-		})
-
-	matte.InLabel = self:AddInput("", "Label" .. istr, {
-		LINKID_AddBeforeID = "AddMatte",
-		LINKID_DataType = "Number",
-		INPID_InputControl = "LabelControl",
-		ICD_Width = 0.425+0.35,
-		INP_External = false,
-		IC_Visible = false,
 		})
 
 	self:UpdateControls()
 end
 
 function Create()
-
 	self:RemoveControlPage("Controls")
 	self:AddControlPage("File")
 
@@ -87,16 +97,8 @@ function Create()
 		INPID_InputControl = "ButtonControl",
 		INP_DoNotifyChanged = true,
 		INP_External = false,
-		ICD_Width = 0.225,
+		ICD_Width = 1,
 		ICS_Name = "+",
-		})
-
-	InPad = self:AddInput("", "Pad", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "LabelControl",
-		ICD_Width = 0.425+0.35,
-		INP_External = false,
-		IC_Visible = true,
 		})
 
 	OutImage = self:AddOutput("Output", "Output", {
@@ -135,7 +137,7 @@ function NotifyChanged(inp, param, time)
 
 				matte.InImage:SetAttrs({ LINK_Visible = on, INP_Disabled = not on, IC_Visible = on, INP_Required = on, })
 				matte.InName:SetAttrs({ INP_Disabled = not on, IC_Visible = on, })
-				matte.InLabel:SetAttrs({ IC_Visible = not on, })
+				matte.InSep:SetAttrs({ IC_Visible = on, })
 			end
 		end
 	end
