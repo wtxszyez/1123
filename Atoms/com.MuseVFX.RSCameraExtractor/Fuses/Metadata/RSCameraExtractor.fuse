@@ -3,6 +3,7 @@ This tool extracts the Redshift Camera Matrix metadata and converts it to indivi
 Portions of this code are by Andrew Hazelden, Fuse by Bryan Ray for MuseVFX
 Based in part on the Copy Metadata Fuse
 
+v2.0 7/24/2018, Updated for new versions of Redshift with modified metadata fields
 v1.0 6/11/2018, Corrected the rotation matrix multiplication for ZXY rotation order.
 v0.1 5/30/2018, intial release
 --]]--
@@ -42,7 +43,7 @@ function Process(req)
 	img:Crop(result, { })
 
 	local newmetadata = result.Metadata or {}
-	
+	dump(newmetadata)
 	-- Transform
 	if result.Metadata.RSCameraTransform ~= nil then
 	  m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,m15,m16 = string.match(result.Metadata.RSCameraTransform, "([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+),([%w%-%.]+)")
@@ -67,24 +68,52 @@ function Process(req)
 			newmetadata.Rotate.Z = 0
 			newmetadata.Rotate.Y = math.deg(math.atan2(m3, m1)) - 180
 		end
-			
+	elseif result.Metadata['rs/camera/transform'] ~= nil then
+		local m = result.Metadata['rs/camera/transform']
+		
+		-- Adding the XYZ Offset
+		newmetadata.Translate = {}
+		newmetadata.Translate.X = m[13]
+		newmetadata.Translate.Y = m[14]
+		newmetadata.Translate.Z = m[15]
+		
+		-- Adding ZXY Rotation.
+		newmetadata.Rotate = {}
+		local rx = math.asin(m[10])
+		newmetadata.Rotate.X = math.deg(rx)
+		
+		if math.cos(-m[10]) ~= 0 then
+--			newmetadata.Test = "arctan("..m2.."/"..math.cos(-math.asin(m10)..", "..m6.."/"..math.cos(newmetadata.Rotate.X)
+			newmetadata.Rotate.Z = math.deg(math.atan2(m[2]/math.cos(rx), m[6]/math.cos(rx)))
+			newmetadata.Rotate.Y = math.deg(math.atan2(m[9]/math.cos(rx), m[11]/math.cos(rx))) - 180
+		else
+			newmetadata.Rotate.Z = 0
+			newmetadata.Rotate.Y = math.deg(math.atan2(m[3], m[1])) - 180
+		end
+		
 	end
 	  
 
 	-- Aperture
 	newmetadata.Aperture = {}
 	if result.Metadata.RSCameraAperture ~= nil then
-	  a1,a2 = string.match(result.Metadata.RSCameraAperture, "([%w%-%.]+),([%w%-%.]+)")
-	  newmetadata.Aperture.W = a1
-	  newmetadata.Aperture.H = a2
+		a1,a2 = string.match(result.Metadata.RSCameraAperture, "([%w%-%.]+),([%w%-%.]+)")
+		newmetadata.Aperture.W = a1
+		newmetadata.Aperture.H = a2
+	elseif result.Metadata['rs/camera/aperture'] ~= nil then
+		newmetadata.Aperture.W = result.Metadata['rs/camera/aperture'][1]
+		newmetadata.Aperture.H = result.Metadata['rs/camera/aperture'][2]
 	end
 
 	-- Lens Shift X/Y
 	newmetadata.LensShift = {}
 	if result.Metadata.RSCameraShift ~= nil then
-	  lx,ly = string.match(result.Metadata.RSCameraShift, "([%w%-%.]+),([%w%-%.]+)")
-	  newmetadata.LensShift.X = lx
-	  newmetadata.LensShift.Y = ly
+		lx,ly = string.match(result.Metadata.RSCameraShift, "([%w%-%.]+),([%w%-%.]+)")
+		newmetadata.LensShift.X = lx
+		newmetadata.LensShift.Y = ly
+	elseif result.Metadata['rs/camera/shift'] ~= nil then
+		newmetadata.LensShift.X = result.Metadata['rs/camera/shift'][1]
+		newmetadata.LensShift.Y = result.Metadata['rs/camera/shift'][2]
 	end
 
 	
