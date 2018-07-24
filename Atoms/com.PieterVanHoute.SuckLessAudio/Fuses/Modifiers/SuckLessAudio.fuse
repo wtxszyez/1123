@@ -16,7 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --]]
 
-version = "Suck Less Audio v2.1 - 20 July 2018"
+version = "Suck Less Audio v2.5 - 24 July 2018"
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
@@ -32,9 +32,9 @@ FuRegisterClass("SuckLessAudio", CT_Modifier, {
 	REGS_Company 		= "Pieter Van Houte",
 	REGS_URL 			= "http://www.steakunderwater.com",
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
-	REG_Fuse_NoEdit     = true,
-	REG_Fuse_NoReload   = true,
-	REG_Version			= 210,
+--	REG_Fuse_NoEdit     = true,
+--	REG_Fuse_NoReload   = true,
+	REG_Version			= 250,
 	})
 
 -------------------------------------------------------------------
@@ -50,9 +50,9 @@ FuRegisterClass("SuckLessAudioPoint", CT_Modifier, {
 	REGS_Company 		= "Pieter Van Houte",
 	REGS_URL 			= "http://www.steakunderwater.com",
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
-	REG_Fuse_NoEdit     = true,
-	REG_Fuse_NoReload   = true,
-	REG_Version			= 210,
+--	REG_Fuse_NoEdit     = true,
+--	REG_Fuse_NoReload   = true,
+	REG_Version			= 250,
 	})
 
 -------------------------------------------------------------------
@@ -61,6 +61,30 @@ FuRegisterClass("SuckLessAudioPoint", CT_Modifier, {
 function Create()
 
 	ModType = ffi.string(self.RegNode.m_ID):sub(6) -- get the ID we were created with, and strip 'Fuse.'
+	
+	InOutType = self:AddInput("Output Type", "OutputType", {
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		INPID_DefaultID = "Sample",
+		INP_DoNotifyChanged  = true,
+		MBTNC_StretchToFit = true,	
+		{ MBTNC_AddButton = "Sample Values", MBTNCID_AddID = "Sample", MBTNCS_ToolTip = "Outputs the values in the sample file.", },
+		{ MBTNC_AddButton = "Sample Modifies Input", MBTNCID_AddID = "Modified", MBTNCS_ToolTip = "Adds the values in the sample file to the input parameter.", },
+		})
+	
+	if ModType == "SuckLessAudio" then
+		InParameter = self:AddInput("Value Input", "ValueInput", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "SliderControl",
+			LINK_Main = 1,
+			})
+	elseif ModType == "SuckLessAudioPoint" then
+		InParameter = self:AddInput("Point Input", "PointInput", {
+			LINKID_DataType = "Point",
+			INPID_InputControl = "OffsetControl",
+			LINK_Main = 1,
+			})
+	end
 	
 	if ModType == "SuckLessAudioPoint" then
 	
@@ -319,6 +343,13 @@ end
 
 function NotifyChanged(inp, param, time)
 	if inp ~= nil and param ~= nil then
+		if inp == InOutType then
+			if param.Value == "Sample" then
+				InParameter:SetAttrs({IC_Visible = false})
+			elseif param.Value == "Modified" then
+				InParameter:SetAttrs({IC_Visible = true})
+			end
+		end
 		if inp == InFile then	
 			local filedata = readAll(param.Value)
 			if not filedata then
@@ -617,6 +648,8 @@ end
 function Process(req)
 
 	-- VARIABLES
+	
+	local iotype = InOutType:GetValue(req).Value
 
 	--------------------------------------
 	--sample routing settings
@@ -787,8 +820,19 @@ function Process(req)
 	end
 	
 	if ModType == "SuckLessAudio" then
-		OutValue:Set(req, Number(amp))
+		if iotype == "Sample" then
+			OutValue:Set(req, Number(amp))
+		elseif iotype == "Modified" then
+			amp = InParameter:GetValue(req).Value + amp
+			OutValue:Set(req, Number(amp))
+		end
 	elseif ModType == "SuckLessAudioPoint" then
-		OutValue:Set(req, Point(amp,ampy))
+		if iotype == "Sample" then
+			OutValue:Set(req, Point(amp,ampy))
+		elseif iotype == "Modified" then
+			amp = InParameter:GetValue(req).X + amp
+			ampy = InParameter:GetValue(req).Y + ampy
+			OutValue:Set(req, Point(amp,ampy))
+		end
 	end
 end
