@@ -1,5 +1,5 @@
 --[[--
-LifeSaver - v1.0.3 2018-07-19 05.56 PM
+LifeSaver - v1.0.4 2018-07-29 12.03 PM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -104,7 +104,7 @@ File Tab:
 	Filename _____________ (Browse)
 	Format:
 		Output Format [OpenEXR Files]
-		Save Frames [Full Renders Only/Interactive]
+		Save Frames [Full Renders Only/Interactive/None]
 		[] Saver-Relative Numbering
 		Sequence Offset
 		
@@ -297,6 +297,14 @@ This results in a Lua table output like:
 - The ${SHELL1}-${SHELL4} input textfields are live updated and executed so you may want to write the text in another text editor and paste it in if you were going to do anything that would cause issues with partial text entry being run.
 
 
+## Disable File Writing ##
+
+If you are using the LifeSaver Fuse in Resolve there is a neat thing you can do: Set the Life Saver Fuse to use a Format > Save Frames > None ComboControl menu setting to disable image writing.
+
+This trick could be useful if you want to use the LifeSaver node to pre-process your images, allow you to switch between each of the image inputs for previews, apply auto DoD/Proxy cropping to the frame, and inject a Filename Metadata tag output into the node based image stream.
+
+You can use this trick to connect a MediaIn > LifeSaver > Cryptomatte node flow in Resolve 15 beta 7 and get working output as part of a Cryptomatte v1.2.1 (WSL Reactor Edition) workflow. If you do this you have to set the LifeSaver Save Frames setting to "None", and manually enter the Filename for your EXR image sequence in the LifeSaver node to match what the EXR sequence coming from the MediaIn node provides to the comp.
+
 ## Version History ##
 
 ### v1.0 2018-07-12 ###
@@ -307,13 +315,17 @@ This results in a Lua table output like:
 
 - Added Shell Tokens
 
-- Added metadata tags to the LifeSaver node's output connection
+- Added metadata tags to the LiveSaver node's output connection
 
 ### v1.0.3 2018-07-19 ###
 
 - Updated the time handling code to use req.time which allows for metadata reading at random time values other then the current frame.
 
 - Added an "Assign Part Name Prefix to Channel Name" checkbox that turns a channel name like 'posY' into 'export_1.posY' when it is written to the EXR image.
+
+### v1.0.4 2018-07-29 ###
+
+- Added a "Format > Save Frames > None" ComboControl entry that lets you skip doing the frame writing. This allows the LifeSaver fuse to be a wedge that enables the Cryptomatte v1.2.1 (WSL Reactor Edition) fuse to run inside of Resolve 15 Beta 7 without any changes.
 
 --]]--
 
@@ -338,7 +350,7 @@ FuRegisterClass('LifeSaver', CT_SinkTool, {
 	REG_OpNoMask = true,
 	
 	-- Sets the fuse version number (100 means v1.0) so newer fuses override older versions
-	REG_Version = 103,
+	REG_Version = 104,
 	})
 
 -- Add a new output entry to the Channels tab when the '+' button is clicked.
@@ -368,7 +380,7 @@ function AddOutput(i)
 		INPID_InputControl = 'ComboControl',
 		INP_DoNotifyChanged = true,
 		INP_External = false,
-		ICS_Name = 'Export Part #'	.. istr,
+		ICS_Name = 'Export Part #' .. istr,
 		ICD_Width = 1,
 		INP_Default = 0,
 		{ CCS_AddString = 'Enabled'},
@@ -1171,6 +1183,7 @@ tool:SetInput('UUID', uuid, fu.TIME_UNDEFINED)
 		ICD_Width = 1,
 		{ CCS_AddString = 'Full Renders Only',},
 		{ CCS_AddString = 'Interactive',},
+		{ CCS_AddString = 'None',},
 		CC_LabelPosition = 'Vertical',
 		LINK_ForceSave = true,
 		ICS_ControlPage = 'File',
@@ -1622,7 +1635,7 @@ function HelpWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [=[
 <h1>About LifeSaver Fuse</h1>
-<h2>Version 1.0.3 - 2018-07-19</h2>
+<h2>Version 1.0.4 - 2018-07-27</h2>
 <p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
 
 <p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
@@ -1759,6 +1772,14 @@ dump(file)</pre>
 <p>This results in a Lua table output like:</p>
 
 <pre>/Volumes/Media/Renders/LifeSaver1.0000.exr</pre>
+
+<h2>Disable File Writing</h2>
+
+<p>If you are using the LifeSaver Fuse in Resolve there is a neat thing you can do: Set the Life Saver Fuse &gt; Format &gt; Save Frames &gt; None ComboControl menu setting to disable image writing.</p>
+
+<p>This trick could be useful if you want to use the LifeSaver node to pre-process your images, allow you to switch between each of the image inputs for previews, apply auto DoD/Proxy cropping to the frame, and inject a Filename Metadata tag output into the node based image stream.</p>
+
+<p>You can use this trick to connect a MediaIn &gt; LifeSaver &gt; Cryptomatte node flow in Resolve 15 beta 7 and get working output as part of a Cryptomatte v1.2.1 (WSL Reactor Edition) workflow. If you do this you have to set the LifeSaver "Save Frames" setting to "None", and manually enter the Filename for your EXR image sequence in the LifeSaver node to match what the EXR sequence coming from the MediaIn node provides to the comp.</p>
 ]=]
 			},
 			-- Add clickable links
@@ -2063,7 +2084,7 @@ function Process(req)
 	-- Should a new folder be created automatically when the image is written to disk
 	local createDir = InCreateDir:GetValue(req).Value
 	
-	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI?
+	-- Should the fuse write EXR images to disk only when rendering, or when running interactively in the GUI, or not at all (and act like a special passthrough device)?
 	local saveFrame = InSaveFrames:GetValue(req).Value
 	
 	-- Select the input connection # that will be fed as the preview image to the node's image output connection
@@ -2172,7 +2193,7 @@ function Process(req)
 		ok = false
 	else
 		-- Make sure to only write images when a render to disk action is happening, or the Save Frames mode is set to 'Interactive' in the GUI
-		if not req:IsPreCalc() and (saveFrame == 1 and req:IsInteractive()) or not req:IsInteractive() then
+		if (not (saveFrame == 2) and not req:IsPreCalc() and (saveFrame == 1 and req:IsInteractive())) or (not req:IsInteractive() and not (saveFrame == 2)) then
 			-- Get the frame number from the Filename field or the number 0 if there is no frame present in the filename
 			local sequenceStart = tonumber(ParseFilename(filename).Number) or 0
 			

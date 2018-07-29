@@ -2,8 +2,8 @@ Atom {
 	Name = "LifeSaver",
 	Category = "Tools/IO",
 	Author = "Andrew Hazelden",
-	Version = 1.03,
-	Date = {2018, 7, 19},
+	Version = 1.04,
+	Date = {2018, 7, 29},
 	Description = [[<p>LifeSaver is a fuse based replacement for the traditional Saver or MediaOut nodes. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR image saving. This node is special in that you can use the same node in comps that are created inside of both Resolve's Fusion page and inside of Fusion Standalone. This dual environment support allows you to move documents between both programs easily via copy/paste, the "Fusion Comp Link" atom in Reactor, or using a .comp file.</p>
 
 <p>Fusion 9.0.2 or Resolve 15 Beta 5+ is required.</p>
@@ -139,6 +139,14 @@ dump(file)</pre>
 <p>This results in a Lua table output like:</p>
 
 <pre>/Volumes/Media/Renders/LifeSaver1.0000.exr</pre>
+
+<h2>Disable File Writing</h2>
+
+<p>If you are using the LifeSaver Fuse in Resolve there is a neat thing you can do: Set the Life Saver Fuse &gt; Format &gt; Save Frames &gt; None ComboControl menu setting to disable image writing.</p>
+
+<p>This trick could be useful if you want to use the LifeSaver node to pre-process your images, allow you to switch between each of the image inputs for previews, apply auto DoD/Proxy cropping to the frame, and inject a Filename Metadata tag output into the node based image stream.</p>
+
+<p>You can use this trick to connect a MediaIn &gt; LifeSaver &gt; Cryptomatte node flow in Resolve 15 beta 7 and get working output as part of a Cryptomatte v1.2.1 (WSL Reactor Edition) workflow. If you do this you have to set the LifeSaver "Save Frames" setting to "None", and manually enter the Filename for your EXR image sequence in the LifeSaver node to match what the EXR sequence coming from the MediaIn node provides to the comp.</p>
 ]],
 	Donation = {
 		URL = [[http://www.paypal.me/andrewhazelden]],
