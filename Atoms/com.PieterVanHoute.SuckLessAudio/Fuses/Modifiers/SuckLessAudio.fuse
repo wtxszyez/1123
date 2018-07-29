@@ -12,12 +12,11 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 -------------------------------------------------------------------
 
 --]]
 
-version = "Suck Less Audio v2.0 - 13 July 2018"
+version = "Suck Less Audio v2.5 - 24 July 2018"
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
@@ -35,7 +34,7 @@ FuRegisterClass("SuckLessAudio", CT_Modifier, {
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
 	REG_Fuse_NoEdit     = true,
 	REG_Fuse_NoReload   = true,
-	REG_Version			= 200,
+	REG_Version			= 250,
 	})
 
 -------------------------------------------------------------------
@@ -53,7 +52,7 @@ FuRegisterClass("SuckLessAudioPoint", CT_Modifier, {
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
 	REG_Fuse_NoEdit     = true,
 	REG_Fuse_NoReload   = true,
-	REG_Version			= 200,
+	REG_Version			= 250,
 	})
 
 -------------------------------------------------------------------
@@ -62,6 +61,44 @@ FuRegisterClass("SuckLessAudioPoint", CT_Modifier, {
 function Create()
 
 	ModType = ffi.string(self.RegNode.m_ID):sub(6) -- get the ID we were created with, and strip 'Fuse.'
+	
+	InOutType = self:AddInput("Output Type", "OutputType", {
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		INPID_DefaultID = "Sample",
+		INP_DoNotifyChanged  = true,
+		MBTNC_StretchToFit = true,	
+		{ MBTNC_AddButton = "Sample Values", MBTNCID_AddID = "Sample", MBTNCS_ToolTip = "Outputs the values in the sample file.", },
+		{ MBTNC_AddButton = "Sample Modifies Input", MBTNCID_AddID = "Modified", MBTNCS_ToolTip = "Adds the values in the sample file to the input parameter.", },
+		})
+	
+	if ModType == "SuckLessAudio" then
+		InParameter = self:AddInput("Value Input", "ValueInput", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "SliderControl",
+			LINK_Main = 1,
+			})
+	elseif ModType == "SuckLessAudioPoint" then
+		InParameter = self:AddInput("Point Input", "PointInput", {
+			LINKID_DataType = "Point",
+			INPID_InputControl = "OffsetControl",
+			LINK_Main = 1,
+			})
+	end
+	
+	if ModType == "SuckLessAudioPoint" then
+	
+		InSampleSlots = self:AddInput("Sample Slots (Wave Files)", "SampleSlots", {
+			{ MBTNC_AddButton = "1"},
+			{ MBTNC_AddButton = "2"},
+			INP_Default = 0,
+			LINKID_DataType = "Number",
+			INPID_InputControl = "MultiButtonControl",
+			MBTNC_StretchToFit = true,
+			INP_DoNotifyChanged  = true,
+			})	
+			
+	end
 
 	InFile = self:AddInput("Wave File", "WaveFile", {
 		LINKID_DataType = "Text",
@@ -70,6 +107,18 @@ function Create()
 		INP_DoNotifyChanged  = true,
 		})
 		
+	if ModType == "SuckLessAudioPoint" then
+		
+		InFile2 = self:AddInput("Wave File Slot 2 (Y)", "WaveFile2", {
+			LINKID_DataType = "Text",
+			INPID_InputControl =  "FileControl",
+			FC_ClipBrowse = true,
+			INP_DoNotifyChanged  = true,
+			INP_Required = false,
+			})	
+			
+	end
+		
 	Reload = self:AddInput("Reload Sample", "ReloadSample", {
 		INPID_InputControl =  "ButtonControl",
 		INP_DoNotifyChanged  = true,
@@ -77,6 +126,17 @@ function Create()
 		BTNCS_Execute = "tool.ScriptReload[fu.TIME_UNDEFINED] = 1",
 		})
 		
+	if ModType == "SuckLessAudioPoint" then	
+		
+		InLockSamplesXY = self:AddInput("Lock Sample Channels X/Y", "LockSamplesXY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 1,
+			INP_DoNotifyChanged = true,
+			})
+	
+	end
+	
 	InChannels = self:AddInput("Select Channel(s)", "SelectChannels", {
 		{ MBTNC_AddButton = "Left", MBTNCID_AddID = "Left", },
 		{ MBTNC_AddButton = "Right", MBTNCID_AddID = "Right", },
@@ -100,7 +160,6 @@ function Create()
 		LINKID_DataType = "Number",
 		INPID_InputControl = "ScrewControl",
 		INP_Default = 1,
-		--ICS_ControlPage = "Wave Shaping",
 		})
 		
 	InProxy = self:AddInput("Proxy (for sampling)", "Proxy", {
@@ -113,55 +172,43 @@ function Create()
 		INP_Integer = true,
 		})
 		
---[[InTimeScaleY = self:AddInput("Time Scale Y", "TimeScaleY", {
-		LINKID_DataType = "Number",
-		INPID_InputControl = "ScrewControl",
-		INP_Default = 1,
-		--ICS_ControlPage = "Wave Shaping",
-		})
---]]	
-		
-	InMode = self:AddInput("Mode", "Mode", {
-		{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Max", MBTNCID_AddID = "Max", },
-		{ MBTNC_AddButton = "Unsigned Max", MBTNCID_AddID = "UnsignedMax", },
-		{ MBTNC_AddButton = "Min", MBTNCID_AddID = "Min", },
-		{ MBTNC_AddButton = "Unsigned Min", MBTNCID_AddID = "UnsignedMin", },
-		{ MBTNC_AddButton = "Average", MBTNCID_AddID = "Average", },
-		{ MBTNC_AddButton = "Unsigned Average", MBTNCID_AddID = "UnsignedAverage", },
-		{ MBTNC_AddButton = "Median", MBTNCID_AddID = "Median", },
-		{ MBTNC_AddButton = "Unsigned Median", MBTNCID_AddID = "UnsignedMedian", },
-		INPID_DefaultID = "Max",
+	InChannelsY = self:AddInput("Select Channel(s) Y", "SelectChannelsY", {
+		{ MBTNC_AddButton = "Left", MBTNCID_AddID = "Left", },
+		{ MBTNC_AddButton = "Right", MBTNCID_AddID = "Right", },
+		{ MBTNC_AddButton = "Both", MBTNCID_AddID = "Both", },
+		INPID_DefaultID = "Both",
 		LINKID_DataType = "FuID",
 		INPID_InputControl = "MultiButtonIDControl",
 		MBTNC_StretchToFit = true,
+		IC_Visible = false
+		})
+
+	InSampleStartFrameY = self:AddInput("Sample Start Frame (Time Offset) Y", "SampleStartFrameY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 0,
+		INP_MaxScale = 100,
+		INP_Integer = true,
 		})
 		
-	if ModType == "SuckLessAudio" then
-
-		InInvert = self:AddInput("Invert", "Invert", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "CheckboxControl",
-			INP_Default = 0,
-			})
-			
-		InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScale", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "ScrewControl",
-			INP_Default = 1,
-			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
-			})
-			
-		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "ScrewControl",
-			INP_Default = 0,
-			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
-			})
-				
-	elseif ModType == "SuckLessAudioPoint" then
+	InTimeScaleY = self:AddInput("Sample Stretch (Time Scale) Y", "TimeScale Y", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		})
+		
+	InProxyY = self:AddInput("Proxy (for sampling) Y", "ProxyY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 1,
+		INP_MinAllowed = 1,
+		INP_MaxScale = 100,
+		INP_Default = 25,
+		INP_Integer = true,
+		})
 	
+	if ModType == "SuckLessAudioPoint" then	
+		
 		InLockXY = self:AddInput("Lock X/Y", "LockXY", {
 			LINKID_DataType = "Number",
 			INPID_InputControl = "CheckboxControl",
@@ -169,24 +216,91 @@ function Create()
 			INP_DoNotifyChanged = true,
 			})
 			
-		InInvert = self:AddInput("Invert", "Invert", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "CheckboxControl",
-			INP_Default = 0,
-			})
-			
-		InInvertY = self:AddInput("Invert Y", "InvertY", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "CheckboxControl",
-			INP_Default = 0,
-			})
+	end
+	
+--[[	InSelectSampleSlot = self:AddInput("Select Sample Slot", "SelectSampleSlot", {
+		{ MBTNC_AddButton = "1"},
+		{ MBTNC_AddButton = "2"},
+		INP_Default = 0,
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		MBTNC_StretchToFit = true,
+		})
+--]]	
+	InMode = self:AddInput("Mode", "Mode", {
+		{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Max", MBTNCID_AddID = "Max", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return -4 (because 4 is higher than 3)", },
+		{ MBTNC_AddButton = "Unsigned Max", MBTNCID_AddID = "UnsignedMax", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return +3 (because +3 is higher than -4)", },
+		{ MBTNC_AddButton = "Min", MBTNCID_AddID = "Min", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return +3 (because 3 is less than 4)", },
+		{ MBTNC_AddButton = "Unsigned Min", MBTNCID_AddID = "UnsignedMin", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return -4 (because -4 is less than +3)", },
+		{ MBTNC_AddButton = "Average", MBTNCID_AddID = "Average", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return -0.5 (because (3-4)/2 = -0.5)", },
+		{ MBTNC_AddButton = "Unsigned Average", MBTNCID_AddID = "UnsignedAverage", MBTNCS_ToolTip = "If sample A is +3 and sample B is -4, SLA will return +3.5 (because (3+4)/2 = 3.5)", },
+		{ MBTNC_AddButton = "Median", MBTNCID_AddID = "Median", MBTNCS_ToolTip = "If sample A is +3, sample B is -4 and sample C is -2, SLA will return sample C (because sorting returns [-4, -2, 3])", },
+		{ MBTNC_AddButton = "Unsigned Median", MBTNCID_AddID = "UnsignedMedian", MBTNCS_ToolTip = "If sample A is +3, sample B is -4 and sample C is -2, SLA will return sample A (because sorting returns [2, 3, 4])", },
+		INPID_DefaultID = "Max",
+		LINKID_DataType = "FuID",
+		INPID_InputControl = "MultiButtonIDControl",
+		MBTNC_StretchToFit = true,
+		})
 
-		InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScaleX", {
+	InInvert = self:AddInput("Invert Values", "Invert", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Default = 0,
+		})
+		
+	InAmplitudeScale = self:AddInput("Amplitude Scale", "AmplitudeScale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Default = 1,
+		INP_MaxScale = 5,
+		})
+		
+	if ModType == "SuckLessAudio" then
+		
+		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
 			LINKID_DataType = "Number",
 			INPID_InputControl = "ScrewControl",
-			INP_Default = 1,
+			INP_Default = 0,
 			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
+			})
+				
+	elseif ModType == "SuckLessAudioPoint" then
+	
+		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffset", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "ScrewControl",
+			INP_Default = 0.5,
+			INP_MaxScale = 5,
+			})
+			
+--[[		InSelectSampleSlotY = self:AddInput("Select Sample Slot Y", "SelectSampleSlotY", {
+			{ MBTNC_AddButton = "1"},
+			{ MBTNC_AddButton = "2"},
+			INP_Default = 1,
+			LINKID_DataType = "Number",
+			INPID_InputControl = "MultiButtonControl",
+			MBTNC_StretchToFit = true,
+			})
+--]]	
+		InModeY = self:AddInput("Mode Y", "ModeY", {
+			{ MBTNCD_ButtonWidth = 0.5, MBTNC_AddButton = "Max", MBTNCID_AddID = "Max", },
+			{ MBTNC_AddButton = "Unsigned Max", MBTNCID_AddID = "UnsignedMax", },
+			{ MBTNC_AddButton = "Min", MBTNCID_AddID = "Min", },
+			{ MBTNC_AddButton = "Unsigned Min", MBTNCID_AddID = "UnsignedMin", },
+			{ MBTNC_AddButton = "Average", MBTNCID_AddID = "Average", },
+			{ MBTNC_AddButton = "Unsigned Average", MBTNCID_AddID = "UnsignedAverage", },
+			{ MBTNC_AddButton = "Median", MBTNCID_AddID = "Median", },
+			{ MBTNC_AddButton = "Unsigned Median", MBTNCID_AddID = "UnsignedMedian", },
+			INPID_DefaultID = "Max",
+			LINKID_DataType = "FuID",
+			INPID_InputControl = "MultiButtonIDControl",
+			MBTNC_StretchToFit = true,
+			})
+			
+		InInvertY = self:AddInput("Invert Values Y", "InvertY", {
+			LINKID_DataType = "Number",
+			INPID_InputControl = "CheckboxControl",
+			INP_Default = 0,
 			})
 
 		InAmplitudeScaleY = self:AddInput("Amplitude Scale Y", "AmplitudeScaleY", {
@@ -194,23 +308,13 @@ function Create()
 			INPID_InputControl = "ScrewControl",
 			INP_Default = 1,
 			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
 			})
-
-		InAmplitudeOffset = self:AddInput("Amplitude Offset", "AmplitudeOffsetX", {
-			LINKID_DataType = "Number",
-			INPID_InputControl = "ScrewControl",
-			INP_Default = 0.5,
-			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
-			})
-
+		
 		InAmplitudeOffsetY = self:AddInput("Amplitude Offset Y", "AmplitudeOffsetY", {
 			LINKID_DataType = "Number",
 			INPID_InputControl = "ScrewControl",
 			INP_Default = 0.5,
 			INP_MaxScale = 5,
-			--ICS_ControlPage = "Wave Shaping",
 			})
 			
 	end
@@ -220,7 +324,6 @@ function Create()
 		INPID_InputControl = "LabelControl",
 		INP_External = false,
 		INP_Passive = true,
-		--ICS_ControlPage = "Controls",
 		})
 	
 	if ModType == "SuckLessAudio" then
@@ -240,6 +343,13 @@ end
 
 function NotifyChanged(inp, param, time)
 	if inp ~= nil and param ~= nil then
+		if inp == InOutType then
+			if param.Value == "Sample" then
+				InParameter:SetAttrs({IC_Visible = false})
+			elseif param.Value == "Modified" then
+				InParameter:SetAttrs({IC_Visible = true})
+			end
+		end
 		if inp == InFile then	
 			local filedata = readAll(param.Value)
 			if not filedata then
@@ -259,19 +369,59 @@ function NotifyChanged(inp, param, time)
 				InAmplitudeScale:SetAttrs({ICS_Name = "Amplitude Scale"})
 				InAmplitudeOffsetY:SetAttrs({IC_Visible = false})
 				InAmplitudeOffset:SetAttrs({ICS_Name = "Amplitude Offset"})
---				InTimeScaleY:SetAttrs({IC_Visible = false})
---				InTimeScale:SetAttrs({ICS_Name = "Time Scale"})
 				InInvertY:SetAttrs({IC_Visible = false})
-				InInvert:SetAttrs({ICS_Name = "Invert"})
+				InInvert:SetAttrs({ICS_Name = "Invert Values"})
+				InModeY:SetAttrs({IC_Visible = false})
+				InMode:SetAttrs({ICS_Name = "Mode"})
+--				InSelectSampleSlotY:SetAttrs({IC_Visible = false})
 			elseif param.Value == 0 then
 				InAmplitudeScaleY:SetAttrs({IC_Visible = true})
 				InAmplitudeScale:SetAttrs({ICS_Name = "Amplitude Scale X"})
 				InAmplitudeOffsetY:SetAttrs({IC_Visible = true})
 				InAmplitudeOffset:SetAttrs({ICS_Name = "Amplitude Offset X"})
---				InTimeScaleY:SetAttrs({IC_Visible = true})
---				InTimeScale:SetAttrs({ICS_Name = "Time Scale X"})
 				InInvertY:SetAttrs({IC_Visible = true})
-				InInvert:SetAttrs({ICS_Name = "Invert X"})
+				InInvert:SetAttrs({ICS_Name = "Invert Values X"})
+				InModeY:SetAttrs({IC_Visible = true})
+				InMode:SetAttrs({ICS_Name = "Mode X"})
+--				InSelectSampleSlotY:SetAttrs({IC_Visible = true})
+			end
+		end
+		if inp == InSampleSlots then
+			if param.Value == 0 then
+				InFile2:SetAttrs({IC_Visible = false})
+				InFile2:SetAttrs({INP_Required = false})
+				InFile:SetAttrs({ICS_Name = "Wave File"})
+				Reload:SetAttrs({ICS_Name = "Reload Sample"})
+--				InSelectSampleSlot:SetAttrs({IC_Visible = false})
+--				InSelectSampleSlotY:SetAttrs({IC_Visible = false})
+			elseif param.Value == 1 then
+				InFile2:SetAttrs({IC_Visible = true})
+				InFile2:SetAttrs({INP_Required = true})
+				InFile:SetAttrs({ICS_Name = "Wave File Slot 1 (X)"})
+				Reload:SetAttrs({ICS_Name = "Reload Samples"})
+--				InSelectSampleSlot:SetAttrs({IC_Visible = true})
+--				InSelectSampleSlotY:SetAttrs({IC_Visible = true})
+			end
+		end
+		if inp == InLockSamplesXY then	
+			if param.Value == 1 then
+				InChannelsY:SetAttrs({IC_Visible = false})
+				InSampleStartFrameY:SetAttrs({IC_Visible = false})
+				InTimeScaleY:SetAttrs({IC_Visible = false})
+				InProxyY:SetAttrs({IC_Visible = false})
+				InChannels:SetAttrs({ICS_Name = "Select Channel(s)"})
+				InSampleStartFrame:SetAttrs({ICS_Name = "Sample Start Frame (Time Offset)"})
+				InTimeScale:SetAttrs({ICS_Name = "Sample Stretch (Time Scale)"})
+				InProxy:SetAttrs({ICS_Name = "Proxy (for sampling)"})
+			elseif param.Value == 0 then
+				InChannelsY:SetAttrs({IC_Visible = true})
+				InSampleStartFrameY:SetAttrs({IC_Visible = true})
+				InTimeScaleY:SetAttrs({IC_Visible = true})
+				InProxyY:SetAttrs({IC_Visible = true})
+				InChannels:SetAttrs({ICS_Name = "Select Channel(s) X"})
+				InSampleStartFrame:SetAttrs({ICS_Name = "Sample Start Frame (Time Offset) X"})
+				InTimeScale:SetAttrs({ICS_Name = "Sample Stretch (Time Scale) X"})
+				InProxy:SetAttrs({ICS_Name = "Proxy (for sampling) X"})
 			end
 		end
 	end
@@ -347,6 +497,69 @@ function sampleRead(data, first, second, complement)
 	return sample
 end
 
+-- function for reading all the required sample data for a given frame, taking into account bitrate and channels (mono,stereo) and returning the result in a table
+function getSampleData(filedata, channelchoice, framerate, timescale, currenttime, startframe, proxy)
+	local format
+	local sampleoffset
+	local samplestep
+	local sampleunit
+	
+	if channelchoice == "Right" then
+		sampleoffset = 2
+		samplestep = 4
+		sampleunit = 1
+	elseif channelchoice == "Left" then
+		sampleoffset = 0
+		samplestep = 4
+		sampleunit = 1
+	else
+		sampleoffset = 0
+		samplestep = 2 -- samplestep is never smaller than 2 (2 times 8 bit is 16 bit)
+		sampleunit = 2
+	end		
+		
+	-- Initialize tables needed for WAVE data.
+	local sampledata = {}
+	
+	-- create a table containing the header of the file. This will then be used to get file type, sample rate etc. In wave file the header is stored in the first 44 bytes of the file.
+	local header = getHeader(filedata, 44)
+	
+	--get some vital information out of the header, to do some form of file format checking
+	if header[3] == header[4] and header[17] == "16" then
+		format = "WAV"
+	else
+		print ("Unsupported file type.\nPlease only load of type WAV (Microsoft) signed 16-bit PCM.")
+		return nil
+	end
+	
+	local bitrate = sampleRead(filedata, 26, 25, 0)
+	local channels = header[23]
+		if channels == "1" then -- if this is a mono file 
+			sampleoffset = 0
+			samplestep = 2
+			sampleunit = 1
+		end
+	
+	local spf = math.floor(bitrate/framerate/timescale*sampleunit) -- calculate the amount of samples per frame
+
+	-- create sampledata table for MS WAV (little endian)
+	if format == "WAV" then
+		for pos = (45+sampleoffset)+((currenttime-startframe)*spf*samplestep), ((45+sampleoffset)+((currenttime-startframe)+1)*spf*samplestep)-samplestep, samplestep*proxy do 
+			if pos > 44 then
+				--print (pos)
+				for i = 0, sampleunit, samplestep do -- make sure to read from all channels per step 
+					table.insert(sampledata, sampleRead(filedata, pos+i+1, pos+i, 1))
+					i = i+1
+				end
+			else
+				table.insert(sampledata, 0)
+			end
+		end
+	end
+	return sampledata
+end
+	
+	
 -- function for returning the signed maximum of a table
 function getMax(data)
 	local max = 0
@@ -427,109 +640,137 @@ function getUnsignedMedian(data)
     return unsdata[math.ceil(#unsdata/2)]
 end
 
+
+
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 
 function Process(req)
+
+	-- VARIABLES
 	
+	local iotype = InOutType:GetValue(req).Value
+
+	--------------------------------------
+	--sample routing settings
+	--------------------------------------
+	local lockxy = 1
+	local slots = 0
+	local locksamplesxy = 1
+
+	--------------------------------------
+	--sample 1 processing settings
+	--------------------------------------
 	local infile = InFile:GetValue(req).Value
+	local channelchoice = InChannels:GetValue(req).Value
 	local startframe = InSampleStartFrame:GetValue(req).Value
+	local timescale = InTimeScale:GetValue(req).Value
 	local proxy = InProxy:GetValue(req).Value
+	--------------------------------------
+	--sample 2 processing settings
+	--------------------------------------
+	local infile2 = infile
+	local channelchoice2 = channelchoice
+	local startframe2 = startframe
+	local timescale2 = timescale
+	local proxy2 = proxy
+	--------------------------------------
+	
 	local mode = InMode:GetValue(req).Value
 	local scale = InAmplitudeScale:GetValue(req).Value
 	local offset = InAmplitudeOffset:GetValue(req).Value
-	local timescale = InTimeScale:GetValue(req).Value
 	local invert = InInvert:GetValue(req).Value
 	local inv = 1
-		if invert == 1 then inv = -1 end
+	
+	if invert == 1 then inv = -1 end
 
+	local modey = mode
 	local scaley = scale
 	local offsety = offset
---	local timescaley = 1
-	local lockxy = 1
 	local inverty = invert
-	local invy = 1
+	
+	local invy = 1 -- invert multiplier
 	
 	if ModType == "SuckLessAudioPoint" then
-		scaley = InAmplitudeScaleY:GetValue(req).Value
-		offsety = InAmplitudeOffsetY:GetValue(req).Value
---		local timescaley = InTimeScaleY:GetValue(req).Value
+	
+		--------------------------------------
+		--routing settings
+		--------------------------------------
+		slots = InSampleSlots:GetValue(req).Value
+		locksamplesxy = InLockSamplesXY:GetValue(req).Value
 		lockxy = InLockXY:GetValue(req).Value
-		inverty = InInvertY:GetValue(req).Value
-		invy = 1
+		--------------------------------------
+		if slots == 1 then
+			infile2 = InFile2:GetValue(req).Value
+		end
+		if locksamplesxy == 0 then
+			channelchoice2 = InChannelsY:GetValue(req).Value
+			startframe2 = InSampleStartFrameY:GetValue(req).Value
+			timescale2 = InTimeScaleY:GetValue(req).Value
+			proxy2 = InProxyY:GetValue(req).Value
+		end
+		if lockxy == 0 then
+			modey = InModeY:GetValue(req).Value
+			scaley = InAmplitudeScaleY:GetValue(req).Value
+			offsety = InAmplitudeOffsetY:GetValue(req).Value
+			inverty = InInvertY:GetValue(req).Value
+			
 			if inverty == 1 then invy = -1 end
+		end
 	end
 		
-	local currenttime = req.Time
-	local format
-	local sampleoffset
-	local samplestep
-	local sampleunit
-	local channelchoice = InChannels:GetValue(req).Value
-		if channelchoice == "Right" then
-			sampleoffset = 2
-			samplestep = 4
-			sampleunit = 1
-		elseif channelchoice == "Left" then
-			sampleoffset = 0
-			samplestep = 4
-			sampleunit = 1
-		else
-			sampleoffset = 0
-			samplestep = 2 -- samplestep is never smaller than 2 (2 times 8 bit is 16 bit)
-			sampleunit = 2
-		end		
-	
+	local currenttime = req.Time -- get the current frame of the comp
 	local framerate = self.Comp:GetPrefs("Comp.FrameFormat.Rate") -- get the frame rate of the comp set in the preferences
 	
-	if not filedata or infiledup ~= infile then
+	if not filedata or infiledup ~= infile then -- got to load some audio files to play with :)
 --		print ("loading")
 		filedata = readAll(infile)
 		infiledup = infile
-		if not filedata then
+		if not filedata and slots == 0 then
 			print("Please load an audio file.")
+			return
+		elseif not filedata and slots == 1 then
+			print("Please load an audio file in Slot 1.")
 			return
 		end
 	end
-		
-	-- Initialize tables needed for WAVE data.
-	local wavedata = {} -- will be deprecated in favour of sampledata
+	
+	if slots == 1 then
+		if not filedata2 or infiledup2 ~= infile2 then
+	--		print ("loading")
+			filedata2 = readAll(infile2)
+			infiledup2 = infile2
+			if not filedata2 then
+				print("Please load an audio file in Slot 2.")
+				return
+			end
+		end
+	end
+	
+	--------------------------------------
+	--sample 1 processing 
+	--------------------------------------
+	
 	local sampledata = {}
+	local sampledata2 = {}
 	
-	-- create a table containing the header of the file. This will then be used to get file type, sample rate etc. In wave file the header is stored in the first 44 bytes of the file.
-	local header = getHeader(filedata, 44)
-	
-	--get some vital information out of the header, to do some form of file format checking
-	if header[3] == header[4] and header[17] == "16" then
-		format = "WAV"
-	else
-		print ("Unsupported file type.\nPlease only load of type WAV (Microsoft) signed 16-bit PCM.")
+	sampledata = getSampleData(filedata, channelchoice, framerate, timescale, currenttime, startframe, proxy)
+	if sampledata == nil then
 		return
 	end
 	
-	local bitrate = sampleRead(filedata, 26, 25, 0)
-	local channels = header[23]
-		if channels == "1" then
-			sampleoffset = 0
-			samplestep = 2
-			sampleunit = 1
+	if slots == 0 and locksamplesxy == 0 and (channelchoice ~= channelchoice2 or startframe ~= startframe2 or timescale ~= timescale2 or proxy ~= proxy2) then
+		sampledata2 = getSampleData(filedata, channelchoice2, framerate, timescale2, currenttime, startframe2, proxy2)
+		if sampledata2 == nil then
+			return
 		end
-	
-	local spf = math.floor(bitrate/framerate/timescale*sampleunit) -- calculate the amount of samples per frame
-
-	-- create sampledata table for MS WAV (little endian)
-	if format == "WAV" then
-		for pos = (45+sampleoffset)+((currenttime-startframe)*spf*samplestep), ((45+sampleoffset)+((currenttime-startframe)+1)*spf*samplestep)-samplestep, samplestep*proxy do 
-			if pos > 44 then
-				--print (pos)
-				for i = 0, sampleunit, samplestep do -- make sure to read from all channels per step 
-					table.insert(sampledata, sampleRead(filedata, pos+i+1, pos+i, 1))
-					i = i+1
-				end
-			else
-				table.insert(sampledata, 0)
-			end
+	elseif slots == 1 then
+		sampledata2 = getSampleData(filedata2, channelchoice2, framerate, timescale2, currenttime, startframe2, proxy2)
+		if sampledata2 == nil then
+			return
 		end
+	elseif slots == 0 then
+		sampledata2 = sampledata
 	end
 	
 	if mode == "Max" then
@@ -558,29 +799,40 @@ function Process(req)
 		ampy = amp
 	end
 	
-	if lockxy == 0 and (scale ~= scaley or offset ~= offsety or invert ~= inverty) then
-		if mode == "Max" then
-			ampy = offsety + (invy*getMax(sampledata)/32767)*scaley
-		elseif mode == "UnsignedMax" then
-			ampy = offsety + (invy*getUnsignedMax(sampledata)/32767)*scaley
-		elseif mode == "Min" then
-			ampy = offsety + (invy*getMin(sampledata)/32767)*scaley
-		elseif mode == "UnsignedMin" then
-			ampy = offsety + (invy*getUnsignedMin(sampledata)/32767)*scaley
-		elseif mode == "Average" then
-			ampy = offsety + (invy*getAverage(sampledata)/32767)*scaley
-		elseif mode == "UnsignedAverage" then
-			ampy = offsety + (invy*getUnsignedAverage(sampledata)/32767)*scaley
-		elseif mode == "Median" then
-			ampy = offsety + (invy*getMedian(sampledata)/32767)*scaley
-		elseif mode == "UnsignedMedian" then
-			ampy = offsety + (invy*getUnsignedMedian(sampledata)/32767)*scaley
+	if sampledata ~= sampledata2 or ( lockxy == 0 and (mode ~= modey or scale ~= scaley or offset ~= offsety or invert ~= inverty) ) then
+		if modey == "Max" then
+			ampy = offsety + (invy*getMax(sampledata2)/32767)*scaley
+		elseif modey == "UnsignedMax" then
+			ampy = offsety + (invy*getUnsignedMax(sampledata2)/32767)*scaley
+		elseif modey == "Min" then
+			ampy = offsety + (invy*getMin(sampledata2)/32767)*scaley
+		elseif modey == "UnsignedMin" then
+			ampy = offsety + (invy*getUnsignedMin(sampledata2)/32767)*scaley
+		elseif modey == "Average" then
+			ampy = offsety + (invy*getAverage(sampledata2)/32767)*scaley
+		elseif modey == "UnsignedAverage" then
+			ampy = offsety + (invy*getUnsignedAverage(sampledata2)/32767)*scaley
+		elseif modey == "Median" then
+			ampy = offsety + (invy*getMedian(sampledata2)/32767)*scaley
+		elseif modey == "UnsignedMedian" then
+			ampy = offsety + (invy*getUnsignedMedian(sampledata2)/32767)*scaley
 		end
 	end
 	
 	if ModType == "SuckLessAudio" then
-		OutValue:Set(req, Number(amp))
+		if iotype == "Sample" then
+			OutValue:Set(req, Number(amp))
+		elseif iotype == "Modified" then
+			amp = InParameter:GetValue(req).Value + amp
+			OutValue:Set(req, Number(amp))
+		end
 	elseif ModType == "SuckLessAudioPoint" then
-		OutValue:Set(req, Point(amp,ampy))
+		if iotype == "Sample" then
+			OutValue:Set(req, Point(amp,ampy))
+		elseif iotype == "Modified" then
+			amp = InParameter:GetValue(req).X + amp
+			ampy = InParameter:GetValue(req).Y + ampy
+			OutValue:Set(req, Point(amp,ampy))
+		end
 	end
 end

@@ -1,7 +1,7 @@
-_VERSION = [[Version 2.0.1 - June 29, 2018]]
+_VERSION = [[Version 2.0.2 - July 20, 2018]]
 --[[
 ==============================================================================
-AboutWindow.lua - v2.0.1 2018-06-29
+AboutWindow.lua - v2.0.2 2018-07-20
 ==============================================================================
 Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
 
