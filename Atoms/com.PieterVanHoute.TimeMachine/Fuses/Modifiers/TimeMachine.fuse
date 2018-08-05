@@ -16,7 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --]]
 
-version = "Time Machine v2.0 - 24 July 2018"
+version = "Time Machine v2.1 - 4 August 2018"
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
@@ -34,7 +34,7 @@ FuRegisterClass("TimeMachine", CT_Modifier, {
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
 	REG_Fuse_NoEdit     = true,
 	REG_Fuse_NoReload   = true,
-	REG_Version			= 200,
+	REG_Version			= 210,
 	})
 	
 -------------------------------------------------------------------
@@ -52,34 +52,128 @@ FuRegisterClass("TimeMachinePoint", CT_Modifier, {
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
 	REG_Fuse_NoEdit     = true,
 	REG_Fuse_NoReload   = true,
-	REG_Version			= 200,
+	REG_Version			= 210,
 	})
+	
+-------------------------------------------------------------------
+
+FuRegisterClass("TimeMachineImage", CT_Tool, {
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "TM",
+	REGS_OpDescription = "Advanced Image Retimer",
+	REGS_Name = "Time Machine",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_NoPreCalcProcess = true,
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.secondman.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 210,
+	})
+	
+-------------------------------------------------------------------
+
+FuRegisterClass("TimeMachine3D", CT_Tool, {
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "TM3D",
+	REGS_OpDescription = "Advanced 3D Scene Retimer",
+	REGS_Name = "Time Machine 3D",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_NoPreCalcProcess = true,
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.secondman.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 210,
+	})
+	
+-------------------------------------------------------------------
+
+FuRegisterClass("TimeMachineMaterial", CT_Tool, {
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "TM3M",
+	REGS_OpDescription = "Advanced 3D Material Retimer",
+	REGS_Name = "Time Machine 3D Material",
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_NoPreCalcProcess = true,
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGS_Company 		= "Pieter Van Houte",
+	REGS_URL 			= "http://www.secondman.com",
+	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=74",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version			= 210,
+	})
+	
+-------------------------------------------------------------------
 	
 function Create()
 	
 	ModType = ffi.string(self.RegNode.m_ID):sub(6) -- get the ID we were created with, and strip 'Fuse.'
 	
-	InOutType = self:AddInput("Output Type", "OutputType", {
-		LINKID_DataType = "FuID",
-		INPID_InputControl = "MultiButtonIDControl",
-		INPID_DefaultID = "Numbers",
-		INP_DoNotifyChanged  = true,
-		MBTNC_StretchToFit = true,	
-		{ MBTNC_AddButton = "Frame Numbers", MBTNCID_AddID = "Numbers", MBTNCS_ToolTip = "Outputs the resulting frame number from the retime calculations. Good for use with a TimeStretcher.", },
-		{ MBTNC_AddButton = "Value at Frame", MBTNCID_AddID = "Values", MBTNCS_ToolTip = "Outputs the Value of the input at the calculated frame number. Good for re-timing animated parameters.", },
-		})
-	
 	if ModType == "TimeMachine" then
+		InOutType = self:AddInput("Output Type", "OutputType", {
+			LINKID_DataType = "FuID",
+			INPID_InputControl = "MultiButtonIDControl",
+			INPID_DefaultID = "Numbers",
+			INP_DoNotifyChanged  = true,
+			MBTNC_StretchToFit = true,	
+			{ MBTNC_AddButton = "Frame Numbers", MBTNCID_AddID = "Numbers", MBTNCS_ToolTip = "Outputs the resulting frame number from the retime calculations. Good for use with a TimeStretcher.", },
+			{ MBTNC_AddButton = "Value at Frame", MBTNCID_AddID = "Values", MBTNCS_ToolTip = "Outputs the Value of the input at the calculated frame number. Good for re-timing animated parameters.", },
+			})
 		InParameter = self:AddInput("Value Input", "ValueInput", {
 			LINKID_DataType = "Number",
 			INPID_InputControl = "SliderControl",
 			LINK_Main = 1,
 			})
 	elseif ModType == "TimeMachinePoint" then
+		InOutType = self:AddInput("Output Type", "OutputType", {
+			LINKID_DataType = "FuID",
+			INPID_InputControl = "MultiButtonIDControl",
+			INPID_DefaultID = "Numbers",
+			INP_DoNotifyChanged  = true,
+			MBTNC_StretchToFit = true,	
+			{ MBTNC_AddButton = "Frame Numbers", MBTNCID_AddID = "Numbers", MBTNCS_ToolTip = "Outputs the resulting frame number from the retime calculations. Good for use with a TimeStretcher.", },
+			{ MBTNC_AddButton = "Value at Frame", MBTNCID_AddID = "Values", MBTNCS_ToolTip = "Outputs the Value of the input at the calculated frame number. Good for re-timing animated parameters.", },
+			})
 		InParameter = self:AddInput("Point Input", "PointInput", {
 			LINKID_DataType = "Point",
 			INPID_InputControl = "OffsetControl",
 			LINK_Main = 1,
+			})
+	elseif ModType == "TimeMachineImage" then
+		InParameter = self:AddInput("Image Input", "ImageInput", {
+			LINKID_DataType = "Image",
+			LINK_Main = 1,
+			INP_SendRequest = false,
+			INP_Required = false,
+			})
+	elseif ModType == "TimeMachine3D" then
+		InParameter = self:AddInput("3D Input", "3DInput", {
+			LINKID_DataType = "DataType3D",
+			LINK_Main = 1,
+			INP_SendRequest = false,
+			INP_Required = false,
+			})
+	elseif ModType == "TimeMachineMaterial" then
+		InParameter = self:AddInput("3D Input", "3DInput", {
+			LINKID_DataType = "MtlGraph3D",
+			LINK_Main = 1,
+			INP_SendRequest = false,
+			INP_Required = false,
 			})
 	end
 	
@@ -435,6 +529,21 @@ function Create()
 	elseif ModType == "TimeMachinePoint" then
 		OutValue = self:AddOutput("Output", "Output", {
 			LINKID_DataType = "Point",
+			LINK_Main = 1,
+			})
+	elseif ModType == "TimeMachineImage" then
+		OutValue = self:AddOutput("Output", "Output", {
+			LINKID_DataType = "Image",
+			LINK_Main = 1,
+			})	
+	elseif ModType == "TimeMachine3D" then
+		OutValue = self:AddOutput("Output", "Output", {
+			LINKID_DataType = "DataType3D",
+			LINK_Main = 1,
+			})
+	elseif ModType == "TimeMachineMaterial" then
+		OutValue = self:AddOutput("Output", "Output", {
+			LINKID_DataType = "MtlGraph3D",
 			LINK_Main = 1,
 			})
 	end
@@ -1647,7 +1756,11 @@ end
 
 function Process(req)
 
-	local iotype = InOutType:GetValue(req).Value
+	local iotype
+
+	if ModType == "TimeMachine" or ModType == "TimeMachinePoint" then
+		iotype = InOutType:GetValue(req).Value
+	end
 
 	local mode = InMode:GetValue(req).Value
 
@@ -1976,7 +2089,7 @@ function Process(req)
 	if oiv == "Up" then retime = math.ceil(retime) end
 
 ------------------------------------------------------------------- OUTPUT
-	
+		
 	if ModType == "TimeMachine" then
 		if iotype == "Numbers" then
 			OutValue:Set(req, Number(retime))
@@ -1991,5 +2104,8 @@ function Process(req)
 			retime = InParameter:GetSource(retime, REQF_SecondaryTime)
 			OutValue:Set(req, Point(retime.X, retime.Y))
 		end
+	elseif ModType == "TimeMachineImage" or ModType == "TimeMachine3D" or ModType == "TimeMachineMaterial" then
+		local img = InParameter:GetSource(retime, req:GetFlags())
+		OutValue:Set(req, img)
 	end
 end
