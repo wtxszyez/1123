@@ -1,4 +1,3 @@
-
 -- The URL for the cURL based download:
 local sourceURL = [[https://www.steakunderwater.com/wesuckless/index.php]]
 

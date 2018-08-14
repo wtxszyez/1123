@@ -1,4 +1,3 @@
-
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width,height = 400,100
