@@ -1,0 +1,673 @@
+Composition {
+	CurrentTime = 1,
+	RenderRange = { 1, 1 },
+	GlobalRange = { 1, 2 },
+	CurrentID = 28,
+	HiQ = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 10 build 2",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Temp:/Teapot/Teapot.0001.tif"
+	},
+	Tools = {
+		DarkYellowBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalIn = Input { Value = 1, },
+				GlobalOut = Input { Value = 2, },
+				Width = Input { Value = 1920, },
+				Height = Input { Value = 1080, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftRed = Input { Value = 0.592, },
+				TopLeftGreen = Input { Value = 0.478, },
+				TopLeftBlue = Input { Value = 0.247, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 715, 412.5 } },
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "This Fusion composite creates a light/dark yellow colored teapot based image using the Teapot masking macro node from Reactor.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 605, 247.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 552.037, 102.909 }
+			},
+		},
+		YellowBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalIn = Input { Value = 1, },
+				GlobalOut = Input { Value = 2, },
+				Width = Input { Value = 1920, },
+				Height = Input { Value = 1080, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftRed = Input { Value = 0.996, },
+				TopLeftGreen = Input { Value = 0.8, },
+				TopLeftBlue = Input { Value = 0.4, },
+				EffectMask = Input {
+					SourceOp = "TeapotHandle",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 715, 379.5 } },
+		},
+		Saver1 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:/Teapot/Teapot.0001.tif",
+						FormatID = "TiffFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "TiffFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "Merge",
+					Source = "Output",
+				},
+				["TiffFormat.Depth"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 935, 412.5 } },
+		},
+		Teapot = GroupOperator {
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/",
+			},
+			Inputs = ordered() {
+				HandleLevel = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Level",
+					Name = "Teapot Handle Level",
+					Default = 1,
+				},
+				OutlineLevel = InstanceInput {
+					SourceOp = "TeapotOutline",
+					Source = "Level",
+					Name = "Teapot Outline Level",
+					Default = 1,
+				},
+				Filter = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Filter",
+				},
+				SoftEdge = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "SoftEdge",
+				},
+				Passes = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Passes",
+					Default = 4,
+				},
+				BorderWidth = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "BorderWidth",
+				},
+				InvertOutline = InstanceInput {
+					SourceOp = "TeapotOutline",
+					Source = "Invert",
+					Name = "Invert Outline",
+				},
+				InvertHandle = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Invert",
+					Name = "Invert Handle",
+				},
+				Solid = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Solid",
+					Default = 1,
+				},
+				Center = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Center",
+				},
+				Size = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Size",
+					Default = 1,
+				},
+				XRotation = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "XRotation",
+					Default = 0,
+				},
+				YRotation = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "YRotation",
+					Default = 0,
+				},
+				ZRotation = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "ZRotation",
+					Default = 0,
+				},
+				OutputSize = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "OutputSize",
+				},
+				ProcessMode = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "ProcessMode",
+				},
+				UseFrameFormatSettings = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "UseFrameFormatSettings",
+					Default = 0,
+				},
+				Width = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "MaskWidth",
+					MaxScale = 7680,
+					Default = 1920,
+				},
+				Height = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "MaskHeight",
+					MaxScale = 4320,
+					Default = 1080,
+				},
+				PixelAspect = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "PixelAspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Depth = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Depth",
+					Default = 0,
+				},
+				ClippingMode = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "ClippingMode",
+				},
+				ShowViewControls1 = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "ShowViewControls",
+					Name = "Show Handle View Controls",
+					Default = 0,
+				},
+				ShowViewControls2 = InstanceInput {
+					SourceOp = "TeapotOutline",
+					Source = "ShowViewControls",
+					Name = "Show Outline View Controls",
+					Default = 0,
+				},
+				ShapeAnimation1 = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "Polyline",
+					Name = "Right-click here for teapot handle shape animation",
+					Default = 0,
+				},
+				ShapeAnimation2 = InstanceInput {
+					SourceOp = "TeapotOutline",
+					Source = "Polyline",
+					Name = "Right-click here for teapot outline shape animation",
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "TeapotHandle",
+					Source = "EffectMask",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "TeapotHandle",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 605, 379.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 110.125, 94.3688, 55.0625, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				TeapotHandle = PolylineMask {
+					DrawMode = "ModifyOnly",
+					DrawMode2 = "InsertAndModify",
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ShowViewControls = Input { Value = 0, },
+						PaintMode = Input { Value = FuID { "Invert" }, },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Polyline = Input {
+							Value = Polyline {
+								Closed = true,
+								Points = {
+									{ X = -0.188942718505859, Y = 0.103122230812355, LX = 0, LY = 0, RX = 1.01725260437391e-08, RY = -8.59013310483547e-09 },
+									{ X = -0.209122403462728, Y = 0.000614816171151611, LX = 0.00552656253178913, LY = 0.0289824079584192, RX = -0.00552655487060544, RY = -0.0289824087637442 },
+									{ X = -0.222669283548991, Y = -0.103957395200376, LX = 0.00211614593863491, LY = 0.0237703711898238, RX = -0.000220299784342404, RY = -0.00247038257740162 },
+									{ X = -0.257458337148031, Y = -0.055561093930845, LX = 0.00840312540531157, LY = -0.0174777772691515, RX = -0.0131432253519694, RY = 0.0273370198567709 },
+									{ X = -0.286123959223429, Y = 0.0396259166576244, LX = 0.00319635421037678, LY = -0.0339537020082827, RX = -0.00319635327657064, RY = 0.0339537129720052 },
+									{ X = -0.266513538360596, Y = 0.0906453733091001, LX = -0.0136135419209798, LY = -0.00647222201029463, RX = 0.00941822586059571, RY = 0.00447684891312211 },
+									{ X = -0.22415885925293, Y = 0.100952770091869, LX = -0.0134833335876465, LY = -0.00098333336688855, RX = 0.0164697967529296, RY = 0.00120000768590856 }
+								}
+							},
+						},
+						Polyline2 = Input {
+							Value = Polyline {
+							},
+							Disabled = true,
+						},
+						EffectMask = Input {
+							SourceOp = "TeapotOutline",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 0.125, 41.5594 } },
+				},
+				TeapotOutline = PolylineMask {
+					DrawMode = "ModifyOnly",
+					DrawMode2 = "InsertAndModify",
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ShowViewControls = Input { Value = 0, },
+						Filter = Input { Expression = "\"Gaussian\"", },
+						SoftEdge = Input { Expression = "TeapotHandle.SoftEdge", },
+						BorderWidth = Input { Expression = "TeapotHandle.BorderWidth", },
+						PaintMode = Input { Value = FuID { "Maximum" }, },
+						Solid = Input { Expression = "TeapotHandle.Solid", },
+						OutputSize = Input { Expression = "TeapotHandle.OutputSize", },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Expression = "TeapotHandle.ClippingMode", },
+						Center = Input { Expression = "TeapotHandle.Center", },
+						Size = Input { Expression = "TeapotHandle.Size", },
+						XRotation = Input { Expression = "TeapotHandle.XRotation", },
+						YRotation = Input { Expression = "TeapotHandle.YRotation", },
+						ZRotation = Input { Expression = "TeapotHandle.ZRotation", },
+						FillMethod = Input { Expression = "TeapotHandle.FillMethod", },
+						Polyline = Input {
+							Value = Polyline {
+								Closed = true,
+								Points = {
+									{ X = 0.366484387715658, Y = 0.184378701669199, LX = 0.000510416676600789, LY = 0.000624074097032856, RX = -0.00117709604899074, RY = -0.00144444240993924 },
+									{ X = 0.345333353678385, Y = 0.164298135262949, LX = 0.00504687478144972, LY = 0.00468148169694121, RX = -0.00494272867838541, RY = -0.00458702415183743 },
+									{ X = 0.322078132629395, Y = 0.131562042236328, LX = 0.00707812507947281, LY = 0.0142407408467046, RX = -0.00572396596272784, RY = -0.0115055607548467 },
+									{ X = 0.299526023864746, Y = 0.0509546350549768, LX = 0.00540104160706201, LY = 0.0402759269431786, RX = -0.00616144053141277, RY = -0.0459546350549769 },
+									{ X = 0.286031277974447, Y = -0.0366833157009548, LX = 0.00510937521855037, LY = 0.0269629637400309, RX = -0.00920836130777991, RY = -0.0485824250397859 },
+									{ X = 0.244338544209798, Y = -0.13151109483507, LX = 0.0123854170242945, LY = 0.0142277779402556, RX = -0.0137343775431316, RY = -0.0157805718315972 },
+									{ X = 0.219932301839193, Y = -0.152240724916811, LX = 0, LY = 0, RX = -1.01725260437391e-08, RY = -1.58239292780138e-08 },
+									{ X = 0.20147393544515, Y = -0.213332395200376, LX = 0.014197916785876, LY = 0.0295259263780382, RX = -0.00508851877848304, RY = -0.0105870492440683 },
+									{ X = 0.162515640258789, Y = -0.273591670283565, LX = 0.00952083369096124, LY = 0.0118129633091114, RX = -0.000703140258789037, RY = -0.000874996383101845 },
+									{ X = 0.160338528951009, Y = -0.283515760633681, LX = 0.00288541664679842, LY = 0.00724351847613292, RX = -0.00271352895100907, RY = -0.0068064615885417 },
+									{ X = 0.122515614827474, Y = -0.316493507667824, LX = 0.0203125, LY = 0.00750833352406821, RX = -0.020312489827474, RY = -0.00750741825810186 },
+									{ X = 0.0210885365804037, Y = -0.337954655400029, LX = 0.0453229149182637, LY = 0.00229999996997698, RX = -0.045323432413737, RY = -0.00230090015552653 },
+									{ X = -0.110223960876465, Y = -0.322388882107205, LX = 0.0301500002543131, LY = -0.0110388888253107, RX = -0.0301499974568685, RY = 0.0110388821072048 },
+									{ X = -0.159418233235677, Y = -0.287152777777778, LX = 0.00520208328962329, LY = -0.0090324075133712, RX = -0.00520207926432292, RY = 0.00903333333333334 },
+									{ X = -0.163629182179769, Y = -0.273129611545139, LX = 0.000697916684051392, LY = -0.00108981485720028, RX = -0.00484321365356444, RY = 0.00755738932291672 },
+									{ X = -0.192107804616292, Y = -0.231947213632089, LX = 0.00508802086114885, LY = -0.00948888902310974, RX = -0.00604844538370769, RY = 0.0112814728913484 },
+									{ X = -0.219396877288818, Y = -0.159844462076823, LX = 0.00474947939316428, LY = -0.0331129639237016, RX = -5.93727111816711e-05, RY = 0.000414832447193314 },
+									{ X = -0.266153128941854, Y = -0.109442590784144, LX = 0.00878437459468839, LY = -0.0136787034847118, RX = -0.00881562105814615, RY = 0.0137268500434027 },
+									{ X = -0.317503118515015, Y = 0.000249057345920123, LX = 0.0096088538567225, LY = -0.0553009245130751, RX = -0.0105328189849854, RY = 0.0606176093207465 },
+									{ X = -0.319464063644409, Y = 0.0912583245171441, LX = -0.00345625008145967, LY = -0.0159962954344573, RX = 0.00530260531107585, RY = 0.0245435273347077 },
+									{ X = -0.271874475479126, Y = 0.135148140236183, LX = -0.0251171867052714, LY = -0.00747499995761447, RX = 0.0268890588124593, RY = 0.00800185976381651 },
+									{ X = -0.174650001525879, Y = 0.142195383707682, LX = 0, LY = 0, RX = 1.52587892321421e-09, RY = -1.33373118660352e-08 },
+									{ X = -0.166019280751546, Y = 0.173255553068938, LX = -0.00408854161699618, LY = -0.0160361113371673, RX = 0.00556875991821282, RY = 0.0218416691532841 },
+									{ X = -0.148146883646647, Y = 0.208830543800637, LX = -0.0057098959883054, LY = -0.00370092590649918, RX = 0.0195078211466471, RY = 0.0126444561993634 },
+									{ X = -0.0901703198750814, Y = 0.22901944760923, LX = -0.0155166665712992, LY = -0.00305833330860844, RX = 0.0218203198750814, RY = 0.00429999683521415 },
+									{ X = -0.0190078099568685, Y = 0.236322219283492, LX = 0, LY = 0, RX = -2.5431314831792e-09, RY = 2.93872975953846e-09 },
+									{ X = -0.0199333190917969, Y = 0.248383331298828, LX = 0.00157135414580506, LY = -0.00577592584821912, RX = -0.0015713684082031, RY = 0.00577685388635707 },
+									{ X = -0.0336973826090495, Y = 0.278549067179362, LX = 0.00250937491655351, LY = -0.00498240744626088, RX = -0.00457970072428382, RY = 0.00909352541323061 },
+									{ X = -0.0358760515848796, Y = 0.306264820805302, LX = -0.00471093753973645, LY = -0.00637870364718968, RX = 0.00596823908487953, RY = 0.00808054956506798 },
+									{ X = -0.000785414377848292, Y = 0.320794437549732, LX = -0.0172864576180776, LY = 0.000482407433015308, RX = 0.000144268544514936, RY = -3.69680899159341e-06 },
+									{ X = -0.000353654225667299, Y = 0.320781481707538, LX = -0.000143749996398934, LY = 4.62962952613166e-06, RX = 0.0170192792256673, RY = -0.000548148374204249 },
+									{ X = 0.0306979179382324, Y = 0.311868512188947, LX = -0.00428125013907754, LY = 0.00368611106166139, RX = 0.0101874987284343, RY = -0.00878425292968749 },
+									{ X = 0.0336041768391927, Y = 0.280394448174371, LX = 0.0032812500993411, LY = 0.0058203701619749, RX = -0.00328126017252606, RY = -0.0058213000262225 },
+									{ X = 0.0191156387329101, Y = 0.248995378282335, LX = 0.00174895835419497, LY = 0.00573333325209441, RX = -0.00175105539957676, RY = -0.00573426717122394 },
+									{ X = 0.018288008371989, Y = 0.236159261067708, LX = 0, LY = 0, RX = 1.24613444008048e-08, RY = -1.80844905717237e-09 },
+									{ X = 0.0776614507039388, Y = 0.231627768057364, LX = -0.0100989580154419, LY = 0.00152962958371194, RX = 0.0121197992960612, RY = -0.00183702731662333 },
+									{ X = 0.127494812011719, Y = 0.219827779134115, LX = -0.0054062500596046, LY = 0.00245555550963794, RX = 0.00602602132161456, RY = -0.00273796431929973 },
+									{ X = 0.159375, Y = 0.191800011528863, LX = -0.00706770817438762, LY = 0.0186425933131465, RX = 0.00706249999999997, RY = -0.0186426041214555 },
+									{ X = 0.186067708333333, Y = 0.0962259363245081, LX = -0.00315104176600767, LY = 0.0102499997174298, RX = 0.005, RY = -0.0162638992874711 },
+									{ X = 0.209739557902018, Y = -0.00778610794632528, LX = 0, LY = 0, RX = 2.54313150538366e-08, RY = -3.16478587780722e-09 },
+									{ X = 0.233281262715658, Y = 0.010975025318287, LX = -0.0111666669448216, LY = -0.0167407406700982, RX = 0.0111666539510091, RY = 0.0167407154224537 },
+									{ X = 0.251692708333333, Y = 0.0546675788031684, LX = -0.0025260416169961, LY = -0.011425926067211, RX = 0.00205729166666668, RY = 0.00930742119683164 },
+									{ X = 0.27508856455485, Y = 0.14585927327474, LX = -0.00782291690508519, LY = -0.0187814818488227, RX = 0.00749997711181638, RY = 0.0179972082067419 },
+									{ X = 0.297786458333333, Y = 0.180127772578487, LX = -0.00380208343267441, LY = -0.00164259263762723, RX = 0.00650520833333335, RY = 0.00281389408818 },
+									{ X = 0.336895815531413, Y = 0.187005558720341, LX = -0.00649999976158144, LY = -0.000518518520726097, RX = 0.0084271011352538, RY = 0.000672219057436363 },
+									{ X = 0.366005198160807, Y = 0.187236107720269, LX = -0.00130729166169952, LY = 0.000355555558646137, RX = 0.00131251017252609, RY = -0.000354626238787625 }
+								}
+							},
+						},
+						Polyline2 = Input {
+							Value = Polyline {
+							},
+							Disabled = true,
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -0.125, 8.80938 } },
+				}
+			},
+		},
+		Merge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "DarkYellowBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "YellowBackground",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 825, 412.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1440,
+			Height = 733,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.22226,
+						Offset = { -518.84, -221.131 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.00214424951267056,
+							OffsetX = 0.94990253411306,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.554844606946984,
+					RatioY = 99.75,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.515873015873016,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00923076923076923, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.392063492063492, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 485,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.58609794628752, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.41390205371248, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			NumberStyles = {
+				ClipFrame = 1
+			},
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					AlwaysOnTop = true,
+					FullScreen = false
+				},
+				View2 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View5 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View3 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View4 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				}
+			},
+			FrameFormat = {
+				Name = "DSI HD",
+				Rate = 24,
+				GuideRatio = 1,
+				DepthFull = 3,
+				DepthPreview = 3,
+				DepthInteractive = 3,
+			},
+			Unsorted = {
+				GlobalStart = 1,
+				GlobalEnd = 2,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							StepRender = false,
+							PriorityClasses = "local",
+							SizeType = 1,
+							MotionBlur = true,
+							CustomAspect = true,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							StepSize = 5,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = true
+						},
+						Preview = {
+							StepRender = false,
+							PriorityClasses = "local",
+							SizeType = 1,
+							MotionBlur = true,
+							CustomAspect = true,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							StepSize = 5,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = false
+						}
+					},
+					PreviewConfig = "Preview",
+					CurrentConfig = "Final"
+				}
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			},
+			Paths = {
+				EnableReverseMapping = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 
