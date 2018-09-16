@@ -1,6 +1,6 @@
 --[[
 ------------------------------------------------------------------------------
-Convert Movies to Image Sequences v3.0 for Fusion - 2018-05-21
+Convert Movies to Image Sequences v3.1 for Fusion - 2018-09-16
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Copyright 2015-2018 Andrew Hazelden. 
@@ -11,7 +11,7 @@ This script was originally created as a custom pipeline tool that was included w
 
 The Convert Movies to Image Sequences script lets you extract image sequences from a folder's worth of movie files.
 
-This script requires Fusion 9+ to function.
+This script requires Fusion 9+ or Resolve 15.1+ to function.
 
 ## Usage ##
 
@@ -20,7 +20,6 @@ Step 1. Start Fusion and open a new comp. Then run the Script > Andrew Hazelden 
 Step 2. In the Convert Movies to Image Sequences dialog window you need to define the output formats and settings for the extracted image sequence.
 
 Note: The close X box on the dialog window does not work. You have to hit the "Cancel" button to close the window.
-
 
 ## Installation ##
 
@@ -167,6 +166,23 @@ function GetPreferenceData(pref, defaultValue, status)
 end
 
 
+-----------------------------------------------------
+-- From bmd.scriptlib: trimExtension(path)
+--
+-- returns the portion of the string filename up to
+-- but not including the last "."
+-----------------------------------------------------
+function TrimExtension(filename)
+	for i = string.len(filename), 1, -1 do
+		if string.sub(filename, i, i) == "." then
+			period_loc = i
+			break
+		end
+	end
+	
+	return string.sub(filename, 1, period_loc-1)
+end
+
 -- Use FFmpeg to transcode the files
 function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, framePadding, compress, frameRate)
 	-- Select the audio file format
@@ -256,37 +272,37 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 		-- Generate the extracted audio filename
 		if imageName == 0 then
 			-- <name>.#.<ext>
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 1 then
 			-- <name>_#.<ext>
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 2 then
 			-- <name>#.<ext>
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files).. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files).. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 3 then
 			-- <name>/<name>.#.<ext> (In a Subfolder)
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. osSeparator .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. osSeparator .. TrimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 4 then
 			-- <name>/<name>_#.<ext> (In a Subfolder)
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. osSeparator .. eyeon.trimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. osSeparator .. TrimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 5 then
 			-- <name>/#.<ext> (In a Subfolder)
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. osSeparator .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. osSeparator .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 6 then
 			-- #/<name>.<ext> (In a Subfolder)
-			imgSeqFile = movieFolder .. frameNumber .. osSeparator .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. frameNumber .. osSeparator .. TrimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		else 
 			-- Fallback to <name>.#.<ext>
-			imgSeqFile = movieFolder .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = movieFolder .. TrimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		end
 
 		-- Generate the extracted audio filename
 		if imageName == 3 or imageName == 4 or imageName == 5 then
 			-- (In a Subfolder) <audio name>.<ext>
-			audioFile = movieFolder .. eyeon.trimExtension(files) .. osSeparator .. eyeon.trimExtension(files) .. '.' .. audioFormatExt
+			audioFile = movieFolder .. TrimExtension(files) .. osSeparator .. TrimExtension(files) .. '.' .. audioFormatExt
 		else
 			-- Just name the audio file format with <audio name>.ext
-			audioFile = movieFolder .. eyeon.trimExtension(files) .. '.' .. audioFormatExt
+			audioFile = movieFolder .. TrimExtension(files) .. '.' .. audioFormatExt
 		end
 
 		-- -----------------------------------
