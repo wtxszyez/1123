@@ -1,5 +1,5 @@
 --[[--
-Split EXR Ultra v2.0
+Split EXR Ultra v2.1
 by S.Neve / House of Secrets
 
 -------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ This script will split a multi-channel EXR image out into multiple Loader nodes.
 -------------------------------------------------------------------------------
 Fusion Support
 -------------------------------------------------------------------------------
-This script has been tested and works with Fusion v7 to v9. It runs on Windows, Mac, and Linux.
+This script has been tested and works with Fusion v7 to v9 and Resolve 15.1+. It runs on Windows, Mac, and Linux.
 
 -------------------------------------------------------------------------------
 Installation
@@ -27,6 +27,11 @@ The hos_SplitEXR script will then generate a series of Loader nodes in your comp
 -------------------------------------------------------------------------------
 RELEASE NOTES
 -------------------------------------------------------------------------------
+
+* v2.1 Ultra 2018-09-16 by Andrew Hazelden <andrew@andrewhazelden.com>
+	- Resolve 15.1+ Loader node compatibility verified.
+	- Note: You may have to run the Split EXR Ultra script a 2nd time to activate settings in the script's GUI like switching from a horizontal to a vertical placement in Resolve.
+
 * v2.0.0 Ultra 2018-01-17 by Andrew Hazelden <andrew@andrewhazelden.com>
 	- Prepared for inclusion with Reactor.
 
@@ -96,7 +101,7 @@ RELEASE NOTES
 	- Initial prototype.
 --]]--
 
-VERSION = [[v2.0 "Ultra" (2018-01-17)]]
+VERSION = [[v2.1 "Ultra" (2018-09-16)]]
 AUTHOR = [[S.Neve / House of Secrets]]
 CONTRIBUTORS = {"Tim Little", "Andrew Hazelden", "Cedric Duriau"}
 CHANNEL_NO_MATCH = "SomethingThatWontMatchHopefully"
