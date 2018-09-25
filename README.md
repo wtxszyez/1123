@@ -28,6 +28,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Reactor Categories Explained](Docs/UsingReactor.md#reactor-categories-explained)
 	- [Resync Repository](Docs/Using-Reactor.md#resync-repository)
 		- [What is a PrevCommitID Value](Docs/Using-Reactor.md#what-is-a-prevcommitid-value)
+	- [Creating the AllData Folder](Docs/Using-Reactor.md#creating-the-alldata-folder)
 - [Creating Atom Packages](Docs/Creating-Atom-Packages.md#creating-atom-packages)
 	- [Adding a Description to an Atom Package](Docs/Creating-Atom-Packages.md#adding-a-description-to-an-atom-package)
 	- [HTML Encoded Entity Characters](Docs/Creating-Atom-Packages.md#html-encoded-entity-characters)
@@ -54,5 +55,4 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Using a Linux BASH Profile](Docs/Creating-Environment-Variables.md#using-a-linux-bash-profile)
 	- [Using MacOS Launch Agent PLIST Files](Docs/Creating-Environment-Variables.md#using-macos-launch-agent-plist-files)
 
-Last Revised 2018-05-21
-
+Last Revised 2018-09-25
