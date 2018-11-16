@@ -1,0 +1,122 @@
+--[[--
+JD_Snapshot.Fuse
+
+Create by Jacob Danell, Ember Light, 2018
+--]]--
+
+snaps = {}
+
+FuRegisterClass("Snapshot", CT_Tool, {
+	REGS_Name = "Snapshot",
+	REGS_Category = "Miscellaneous",
+	REGS_OpIconString = "ss",
+	REGS_OpDescription = "Take a snapshot to quickly compare without rerender",
+	REG_NoAutoProxy = true,
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_NoPreCalcProcess = true,
+	REG_Version = 100,
+})
+	
+function Create()
+	SnapOperation = self:AddInput("Snap", "Snap", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0,
+		{ MBTNC_AddButton = "1", },
+		{ MBTNC_AddButton = "2", },
+		{ MBTNC_AddButton = "3", },
+		{ MBTNC_AddButton = "4", },
+		MBTNC_ShowBasicButton = false,
+		MBTNC_ShowName = true,
+		MBTNC_StretchToFit = true,
+		INP_DoNotifyChanged = true,
+	})
+
+	ShowOperation = self:AddInput("Show", "Show", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "MultiButtonControl",
+		INP_Default = 0,
+		{ MBTNC_AddButton = "Source", },
+		{ MBTNC_AddButton = "1", },
+		{ MBTNC_AddButton = "2", },
+		{ MBTNC_AddButton = "3", },
+		{ MBTNC_AddButton = "4", },
+		MBTNC_ShowBasicButton = true,
+		MBTNC_ShowName = true,
+		MBTNC_StretchToFit = true,
+	})
+
+	DifferenceOperation = self:AddInput("Difference", "Difference", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+	})
+		
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+
+end
+
+function take_snap(img, index)
+	snaps[index] = img:CopyOf()
+end
+
+function Process(req)
+	local show = ShowOperation:GetValue(req).Value
+	local diff = DifferenceOperation:GetValue(req).Value
+	local img = InImage:GetValue(req)
+	local takeSnap = self:GetData("takeSnapp")
+
+	if takeSnap == true then
+		take_snap(img, SnapOperation:GetValue(req).Value)
+		self:SetData("takeSnapp", false)
+	end
+
+	if show == 0 then
+		OutImage:Set(req, img)
+	else
+		if snaps[show-1] == nil then
+			take_snap(img, show-1)
+		end
+		
+		local snapImg = snaps[show-1]
+
+		if diff == 1 then
+			local fgImg = img:Copy()
+			fgImg:Merge(snapImg, {
+				MO_ApplyMode = "Difference",
+				MO_ApplyOperator = "Over",
+				MO_XOffset = 0.5,
+				MO_YOffset = 0.5,
+				MO_XSize = 1,
+				MO_YSize = 1,
+				MO_Angle = 0,
+				MO_FgAddSub = 1,
+				MO_BgAddSub = 1,
+				MO_BurnIn = 0,
+				MO_FgAlphaGain = 1,
+				MO_Invert = 1,
+				MO_DoZ = false,
+			})
+			OutImage:Set(req, fgImg)
+		else
+			OutImage:Set(req, snapImg)
+		end
+
+	end
+end
+
+function NotifyChanged(inp, param, time)
+	self:SetData("takeSnapp", true)
+end
