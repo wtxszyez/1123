@@ -1,0 +1,82 @@
+[UnSharpenMaskPanoramicWrap]
+
+This node allows you to apply an UnSharpen Mask effect to a panoramic image and have the edge zones warp around and preserve the details correctly.
+
+  [ImageInputResize]
+    Input = Image
+    Width = 3840 Max=16384
+    Height = 1920 Max=8192
+
+  [PanoramicUnSharpenMask]
+    Channels
+    Lock[X/Y]
+    Size
+    Gain
+    Threshold
+    Blend (2nd tab)
+
+  [EffectMaskPoleFadeBackground]
+    Gradient Type
+    Start
+    End
+    Gradient
+
+  [EffectMaskBackground]
+    Effect_Mask = Effect Mask (EffectMask = InstanceInput {})
+
+  [CanvasShrink]
+    Output = Output
+  
+Macro GUI Control Order:
+  Image
+  Effect Mask
+  
+[ImageInputResize]
+  Width
+  Height
+  
+[PanoramicUnSharpenMask]
+  Channels
+  Lock[X/Y]
+  Size
+  Gain
+  Threshold
+  Blend
+
+[EffectMaskPoleFadeBackground]
+  Gradient Type
+  Start
+  End
+  Gradient
+  
+Tile Repeat Pattern
+--------------------------
+S1
+
+ImageCanvasCrop - 2x2 tile repeat (50% edge offset)
+-ImageInputResize.Width*0.5
+-ImageInputResize.Height*0.5
+ImageInputResize.Width*2
+ImageInputResize.Height*2
+
+CanvasShrink - 2x2 tile crop:
+ImageInputResize.Width*0.5
+ImageInputResize.Height*0.5
+ImageInputResize.Width
+ImageInputResize.Height
+
+--------------------------
+
+S2
+
+ImageCanvasCrop - 3x3 tile repeat
+-ImageInputResize.Width
+-ImageInputResize.Height
+ImageInputResize.Width*3
+ImageInputResize.Height*3
+
+CanvasShrink - 3x3 tile crop:
+ImageInputResize.Width
+ImageInputResize.Height
+ImageInputResize.Width
+ImageInputResize.Height

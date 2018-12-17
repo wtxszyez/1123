@@ -1,0 +1,35 @@
+[AlphaMaskErode]
+
+This node runs an alpha divide > dialate/erode > blur > alpha multiply tool chain to shrink the matte. This is added primarily for working with UV pass imagery and alpha masks for blending in the nadir/zenith zone.
+
+  [AlphaDivideMask]
+    Input=Input
+        
+  [ErodeDilateMask]
+    Filter=Erode Filter Default=Box
+    LockXY=Erode Lock X/Y Default=1.0
+    XAmount=Erode X Amount Default=0.0 Min=-0.2 Max=0.2
+    YAmount=Erode Y Amount Default=0.0 Min=-0.2 Max=0.2
+
+  [BlurMask]
+    Blur Filter=4 (Gaussian)
+    Blur Lock X/Y Default=1.0
+    XBlurSize=Blur Size Default=0.0 Min=0 Max=100
+    YBlurSize=Blur Y Size Default=0.0 Min=0 Max=100
+    Blur Blend Default=1.0
+
+  [AlphaMultiplyMask]
+    Output=Output
+
+Macro GUI Control Order:
+    Erode Filter
+    Erode Lock X/Y
+    Erode X Amount
+    Erode Y Amount
+    Blur Filter
+    Blur Lock X/Y
+    Blur X Size
+    Blur Y Size
+    Blur Blend
+
+

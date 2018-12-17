@@ -1,0 +1,602 @@
+inetutils-server
+========================================================================
+Common networking clients and servers, including the inetd super-server,
+telnetd and telnet, ftpd and ftp, talkd and talk, uucpd (but no uucp
+client), and syslogd.
+
+Most of these utilities are security nightmares, dating from a time when
+the internet was a more innocent place. It is NOT recommended that you
+enable or use ANY of these utilities -- except inetd and syslogd --
+unless you have a VERY good reason [1].
+
+With regards to telnet and telnetd, the cygwin 'openssh' package
+provides a full replacement that is secure.
+
+The ftp protocol is fundamentally flawed, but if you must use it, the
+cygwin 'proftpd' is a more modern and "secure" replacement for the
+server.  ncftp, lftp, curl, and a myriad of other cygwin packages may
+satisfy your needs for an ftp client.
+
+Does anybody use talk anymore, in these days of IRC and IM?
+
+uucp is all-but-dead, having been formally shut down in 2000:
+http://en.wikipedia.org/wiki/UUCP#Decline
+This cygwin port of the uucpd server is completely untested.
+
+Concerning inetd and syslogd, more modern, secure, and flexible
+replacements are available from the cygwin packages 'xinetd' and
+'syslog-ng'.
+
+So why is this package present?  Because as insecure and flawed as they
+are, the telnet and ftp tools, servers, and protocols are still in
+wide use, and their conspicuous absence would be viewed as a flaw, not
+a feature.
+
+
+
+[1] and even then, employ firewall protection and the tcpd tool from
+    the tcp_wrappers package: see /etc/defaults/etc/inetd.conf for more
+    information.
+========================================================================
+
+Build requirements
+  cygwin-1.7.25-1
+  cygport-0.13.0-1
+  terminfo
+  libncursesw-devel
+  readline
+  crypt
+  gcc-core
+  binutils
+  bison
+  autoconf2.5
+  automake1.11
+  texinfo
+
+Canonical homepage:
+  http://www.gnu.org/software/inetutils/
+
+Canonical download:
+  http://ftp.gnu.org/gnu/inetutils/
+
+License:
+  GPL v3
+
+Language:
+  C
+
+========================================================================
+
+Port Notes:
+
+This port supports only cygwin-1.7 or newer, and only Windows NT 4.0
+and above (as that version of cygwin only supoorts these newer OSs).
+
+By default, all services are disabled. You must manually edit
+/etc/inetd.conf to activate any services.
+
+The r* clients and servers:
+	rsh rcp rlogin rexec
+	rshd rlogind rexecd
+are now provided by the 'rsh' and 'rsh-server' packages.
+
+The tftp client and server:
+	tftp tftpd
+are now provided by the 'tftp' and 'tftp-server' packages.
+
+inetd can no longer run as a service on its own. It can be run as
+a service via cygrunsrv, which is how iu-config now and for the past
+two years, has installed it.
+
+In some cases, client applications may experience long delays during
+authentication.  There are two possible explanations:
+
+  1) Poor DNS configuration; make sure the client can do both forward
+     and reverse DNS lookups of the server, and that the server can
+     do both forward and reverse DNS lookups of the client.
+
+  2) In some cases, the *client* machine must be running an identd
+     server, so that the *server* daemon can do an auth callback.
+     Cygwin does not yet have a ported identd daemon, but the following
+        http://rndware.info/products/windows-ident-server.html
+     works pretty well. It's a free-as-in-beer, but closed-source,
+     identd service for Win32.  You'll need to open a hole in your
+     firewall at port 113, for any identd service you install. On
+     Windows Vista, enter the following command from an Administrator
+     cmd prompt (or use the Control Panel GUI):
+        netsh advfirewall firewall add rule name="ident" action=allow protocol=TCP dir=in localport=113
+
+Also, the inetutils package no longer installs the server programs as
+`in.telnetd' and similar.  Instead they are are installed as `telnetd'.
+If you have an existing /etc/inetd.conf file (or ./etc/xinetd.conf) you
+should manually update these references, or run the 'iu-config' script
+and allow it to update your inetd.conf file for you.
+
+Be sure to read /usr/share/doc/inetutils/inetutils.OLD-README
+Eventually the relevant information will be moved to this file, but for
+now, be SURE to read that one...
+
+
+-------------------- inetd --------------------
+
+There are two ways to install the inetd super-server (there used
+to be three, but one is no longer supported. See below).
+
+  (1) as a Windows NT service via cygrunsrv, via the iu-config script.
+      Simply run /usr/bin/iu-config and answer the prompts.
+
+      Manually, for OS versions older than Windows XP 64bit, Windows
+      NT Server 2003 and Windows Vista:
+
+        cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a -D
+
+      where the '-D' option means "do not fork and do not use
+      registry entries to control inetd's behavior".  You can
+      specify additional arguments with more '-a <>' options, 
+      such as to use custom .conf files and configuration 
+      directories (otherwise, it will use /etc/inetd.conf and
+      the contents of /etc/inetd.d/).
+
+      Manually, for Windows XP 64bit, Windows Server 2003, Windows Vista,
+      and newer:
+
+        cygrunsrv -I inetd -d "CYGWIN inetd" -p /usr/sbin/inetd -a -D \
+           -u <SOME PRIVILEGED ACCOUNT> -w <THE PASSWORD>
+
+      Note that on these newer versions of Windows, the default SYSTEM
+      (aka LocalSystem) account does NOT have the necessary permissions
+      to switch user context (that is, allow logons as a different user).
+      If any slave servers are activated in /etc/inetd.conf which require
+      this ability -- such as ftpd, telnetd, rshd, etc -- then inetd must
+      be started under an appropriately privileged user account. The
+      iu-config script will make this easy, so you really should use that
+      instead of trying to install the service manually.
+
+      Once the service is installed, it can be started and stopped via:
+
+        cygrunsrv -S inetd      
+        cygrunsrv -E inetd
+
+      To remove the service:
+
+        cygrunsrv -R inetd
+
+  (2) As a slave of the init service.  To do this, use the cygwin
+      setup program to download and install the following packages:
+
+        sysvinit
+        chkconfig
+        initscripts
+        psmisc
+
+      Follow the directions in the various README files associated
+      which those packages, to get the init daemon installed as
+      a service and running properly.  Then:
+
+        /usr/sbin/chkconfig --add inetd
+
+      and restart the init service:
+
+        net stop init
+        net start init
+
+      In this configuration, inetd will always use the configuration
+      files /etc/inetd.conf and /etc/inetd.d/ (unless you edit 
+      /etc/rc.d/init.d/inetd.  But if you're going to edit files,
+      why not just edit the configuration files themselves?
+
+      To disable the inetd service in this mode:
+
+        /usr/sbin/chkconfig inetd off
+        /etc/rc.d/init.d/inetd stop
+
+      Alternatively:
+
+        /usr/sbin/chkconfig inetd off
+        /usr/sbin/telinit 1
+        /usr/sbin/telinit 3
+
+      Note that inetd inherits the account privileges of the init service,
+      when installed in this manner. Therefore, the same restrictions 
+      concerning inetd and Windows XP 64bit, Windows 2003 Server, and
+      Windows Vista that were detailed in (1) above, apply to the *init*
+      service here.
+
+  (3) REMOVED: as a Windows NT service on its own.  This method was 
+      deprecated for a year, and has now been removed.  If you have
+      been using the old inetd in this way, then you will have problems.
+      (Re)install the inetutils-1.5-6, and run;
+
+	inetd --remove-as-service
+
+      Then, re-install inetutils-1.7-X and use one of the other two
+      methods above.
+
+
+  The default configuration does not enable any services. To
+  enable them, manually edit the /etc/inetd.conf file (or
+  whichever configuration file you choose to launch inetd with)
+
+  ++++++++ slave servers - brief overview ++++++++
+  The following "external" services are available:
+    ftp
+    telnet
+    shell (rsh, rcp) --- provided by the rsh-server package
+    login (rlogin)   --- provided by the rsh-server package
+    exec  (rexec)    --- provided by the rsh-server package
+    talk
+    ntalk
+    tftp             --- provided by the tftp-server package
+    uucp [*]
+  where each server runs with the same privileges that the inetd 
+  server has.  This is probably 'root' (e.g. SYSTEM aka LocalSystem),
+  or a special privileged user on Windows XP 64bit, Windows NT Server
+  2003, Windows Vista, and above.  In addition, NO access restrictions
+  are applied.  Think VERY hard about the security issues involved
+  before enabling any of these servers.
+
+  [*] inetd does support running slave servers under unprivileged
+  accounts, by modifiying the fifth field in the server invocation
+  line in inetd.conf -- that is, change 'root' to 'some_user'. However,
+  of the provided slave servers, only uucp doesn't actually need the
+  elevated privileges of LocalSystem or a special privileged user.
+  In other words, all the other servers -- ftpd, telnetd, rlogind,
+  etc -- require 'root'.  (inetutils' own tftpd server, which was
+  historically provided by this package, like uucp did not require
+  elevated privileges. However, the tftp-server version of tftpd does
+  require those privileges, because it chroot()s to the tftp directory
+  and then changes its user id to a special tftp user for added
+  security. These actions require the elevated privileges, but then
+  those privilegs are dropped).
+
+  At minimum, you should install the tcp_wrappers package, and
+  change the non-builtin service configurations (for example):
+
+  BAD:    telnet  stream  tcp     nowait  root    /usr/sbin/telnetd telnetd
+  BETTER: telnet  stream  tcp     nowait  root    /usr/sbin/tcpd /usr/sbin/telnetd
+  BEST:   #telnet  don't care, use sshd instead
+
+  with appropriate access restrictions in /etc/hosts.allow and 
+  /etc/hosts.deny (see `man -s 5 hosts_access')
+
+  See the more detailed 'slave servers' section below.
+
+  ++++++++ built-in servers ++++++++
+  inetd also provides several built-in servers (but these are
+  disabled by default).
+
+  (1) echo    tcp - try: telnet localhost echo
+      echo    udp - try: udp_client localhost echo "blah blah blah"
+  (2) chargen tcp - try: telnet localhost chargen
+      chargen udp - try: udp_client localhost chargen "blah blah blah"
+  (3) discard tcp - try: telnet localhost discard
+      discard udp - try: udp_client localhost discard "blah blah blah"
+  (4) time    tcp - try: telnet localhost time 
+      time    udp - try: udp_client localhost time
+  (5) daytime tcp - try: telnet localhost daytime
+      daytime udp - try: udp_client localhost daytime
+
+  udp_client is a simple program whose source is in 
+  /usr/share/doc/inetutils/
+
+  If you choose to manually enable any of the five built-in servers,
+  understand that inetd does not perform any access restriction
+  on these services, so unless these ports are blocked by a
+  (hardware or software) firewall, this could expose you to a DoS
+  attack, especially in the case of the chargen service.  The echo
+  service is also vulnerable to a ping-pong attack. (And tcpd cannot
+  be used with these built-in servers).
+
+  You should probably leave all five built-in services disabled.
+  The first three services (echo, chargen, and discard) were never
+  designed to be anything more than tools for debugging network 
+  connections -- which nowadays is done using ping, traceroute, 
+  and the ICMP protocol (not TCP or UDP).  The other two (time
+  and daytime) have a better replacement in the ntp protocol
+  and related servers and clients.  While the cygwin distribution
+  does not at present provide ntp tools, MS Windows has supported
+  the ntp client protocol natively since XP -- although they
+  call it "Internet Time", which actually means something entirely
+  different:
+    http://www.ntp.org/
+    http://www.timeanddate.com/time/internettime.html 
+
+
+-------------------- syslogd --------------------
+
+  syslogd is a daemon that monitors all messages written
+  using the unix 'syslog' interface, and writes those messages
+  to various files.  Depending on the configuration specified
+  in /etc/syslog.conf, messages can be written to multiple
+  files, ignored, written to a pipe or console, etc.  The
+  default configuration logs absolutely everything to a 
+  single file, /var/log/messages.
+
+  To install the syslogd logging daemon as a service,
+  run the syslogd-config script.  Then:
+
+    cygrunsrv -S syslogd
+
+  to start the daemon.  To stop it:
+
+    cygrunsrv -E syslogd
+
+  Note that you must not install both syslogd and
+  syslog-ng at the same time; fortunately, the two
+  installation scripts (syslogd-config and syslog-ng-config)
+  will ensure that only one is installed at a time.
+
+  syslogd's behavior is controlled by /etc/syslog.conf.
+  See `man syslog.conf' for more information.
+
+  Also, note that there is only ONE way to run syslogd
+  as a service: it does not have a sysvinit startup script,
+  nor can it install itself as a service without the
+  assistance of cygrunsrv.
+
+  syslogd configuration can be somewhat tricky, and the 
+  format of the file (`man -s 5 syslog.conf`) is notoriously
+  finicky.  Be sure to use TABs, not SPACEs as separators,
+  and consider using syslog-ng instead, whose configuration
+  is both modular, uses a sane syntax, and more forgiving.
+
+  Both syslogd and syslog-ng can run as the SYSTEM user, even
+  on Windows XP 64bit, Windows Server 2003/2008, and Vista.
+
+-------------------- slave servers --------------------
+  This section contains a few notes concerning the requirements
+  of the various slave servers, and any known issues.
+
+  ++++++++++++ telnetd ++++++++++++
+  No known issues. You should install the tcp_wrappers package, and
+  edit /etc/inetd.conf as follows:
+    telnet  stream  tcp     nowait  root    /usr/sbin/tcpd /usr/sbin/telnetd
+  Then, add something like the following to /etc/hosts.allow:
+    telnetd: 192.168.1.0/255.255.255.0
+  Finally, on Windows XP and above, you may also need to allow
+  port 23/TCP through the Windows Firewall (or whatever firewall
+  software you are using. You ARE using firewall software, right?)
+
+  In Windows Vista, this can be done by launching a cmd shell 'as
+  administrator', and issuing the following commands:
+    netsh advfirewall firewall add rule name="telnet" action=allow protocol=TCP dir=in localport=23
+
+  The client machine may need to also have an identd server running,
+  and accessible to the server machine.
+
+  ++++++++++++++ ftpd ++++++++++++++
+  No known issues. You should install the tcp_wrappers package, and
+  edit /etc/inetd.conf as follows:
+    ftp     stream  tcp     nowait  root    /usr/sbin/tcpd /usr/sbin/ftpd
+  Then, add something like the following to /etc/hosts.allow:
+    ftpd: 192.168.1.0/255.255.255.0
+  Finally, on Windows XP and above, you may also need to allow
+  port 21/TCP through the Windows Firewall (or whatever firewall
+  software you are using. You ARE using firewall software, right?)
+  
+  In Windows Vista, this can be done by launching a cmd shell 'as
+  administrator', and issuing the following commands:
+    netsh advfirewall firewall add rule name="Cygwin ftp service" action=allow protocol=TCP dir=in localport=21
+    netsh advfirewall firewall add rule name="Cygwin ftpd.exe" action=allow dir=in program="`cygpath -m /usr/sbin/ftpd.exe`" enable=yes
+    netsh advfirewall set global StatefulFtp enable
+  The second and third commands are necessary to allow the PASV
+  protocol, which is required if client(s) are behind a NAT router
+  -- which is to say, almost always.
+
+  When accessing a server in ACTIVE mode (rather than PASV), the server
+  will attempt to open a connection back to the ftp client on random
+  port. If you are running a firewall on the client machine and wish
+  to allow ACTIVE ftp connections, you will need to open a hole in your
+  firewall for that.  You can either make an global exception for the ftp
+  client program, or turn on stateful FTP support on the client. In
+  Windows Vista, the latter can be done by launching a cmd shell 'as
+  administrator', and issuing the following command:
+    netsh advfirewall set global StatefulFtp enable
+  (Yes, this is the same command used on the *server* machine to support
+  PASV transfers. Here, we use that command on the *client* machine to
+  supoort ACTIVE transfers).
+
+  The client machine may need to also have an identd server running,
+  and accessible to the server machine.
+
+  +++++++++++++ rlogind +++++++++++++
+  See rsh-server.README
+
+  +++++++++++++  rshd   +++++++++++++
+  See rsh-server.README
+
+  +++++++++++++ rexecd  +++++++++++++
+  See rsh-server.README
+
+  ++++++++++++++ tftpd ++++++++++++++
+  See tftp.README
+
+  ++++++++++++++ talkd ++++++++++++++
+  There are issues. You should install the tcp_wrappers package, and
+  edit /etc/inetd.conf as follows:
+    talk    dgram   udp     wait    root    /usr/sbin/tcpd /usr/sbin/talkd
+    ntalk   dgram   udp     wait    root    /usr/sbin/tcpd /usr/sbin/talkd
+  Then, add something like the following to /etc/hosts.allow:
+    talkd: 192.168.1.0/255.255.255.0
+
+  Finally, on Windows XP and above, you may also need to allow
+  ports 517/UDP (for talk) and 518/UDP (for ntalk) through the
+  Windows Firewall (or whatever firewall software you are using.
+  You ARE using firewall software, right?)
+
+  The talk/ntalk protocols are fairly complex, but in short, the
+  talkd servers use port 517/UDP (518/UDP) to set up the connection
+  between the two talk clients, and then get out of the way. This
+  means that the talk *clients* also need a hole through the firewall.
+  They both send and receive on some random port >1023, as negotiated
+  by the talk servers, in both UDP and TCP modes. Therefore, you need
+  to set up a 'program exception' for C:\cygwin\bin\talk.exe in the
+  Windows Firewall (on Vista, you need to set up two: one for UDP and
+  one for TCP).
+  
+  In Windows Vista, all of this can be done by launching a cmd
+  shell 'as administrator', and issuing the following commands:
+    netsh advfirewall firewall add rule name="talk" action=allow protocol=UDP dir=in localport=517
+    netsh advfirewall firewall add rule name="ntalk" action=allow protocol=UDP dir=in localport=518
+    netsh advfirewall firewall add rule name="talk.exe UDP" action=allow protocol=UDP dir=in program="C:\cygwin\bin\talk.exe"
+    netsh advfirewall firewall add rule name="talk.exe TCP" action=allow protocol=TCP dir=in program="C:\cygwin\bin\talk.exe"
+
+  Talk also requires that /var/log/wtmp accounting is turned on.
+  This means the file /var/log/wtmp must exist, and must readable
+  by all, and writable by SYSTEM and (if necessary) any special 
+  privileged user that might be running a login-capable server (that
+  is, running telnetd, sshd, etc).  To ensure this is the case,
+  create the file and set permissions as follows (from a cygwin shell
+  that was launched via 'run as administrator'):
+    touch /var/log/wtmp
+    chgrp Users /var/log/wtmp
+    chmod 744 /var/log/wtmp
+    setfacl -m u:system:rwx /var/log/wtmp
+    setfacl -m u:<USER>:rwx /var/log/wtmp
+  where <USER> is cyg_server, or sshd_server, etc.  talk will use this 
+  file to determine the tty on which to print the invitation message
+  for incoming requests:
+     Message from Talk_Daemon@<LOCAL MACHINE> at 13:52 ...       
+     talk: connection requested by REMOTE_USER@REMOTE_MACHINE
+     talk: respond with:  talk REMOTE_USER@REMOTE_MACHINE
+  However, only processes which invoke login are actually recorded in
+  /var/log/wtmp.  If you just launch a local cygwin shell, or local
+  rxvt terminal, /var/run/utmp is updated but NOT /var/log/wtmp. To
+  put an entry into /var/log/wtmp for some window that you want allow
+  incoming talk requests on, there are a few extra steps.
+    (1) allow your local users write access to /var/log/wtmp (e.g. from
+        an administrator window: chmod g+w /var/log/wtmp
+        You only need to do this once.
+    (2) In the window you want to enable to recieve talk requests, run:
+            login -f ${USER}
+        This will create an entry in /var/log/wtmp -- as well as starting
+        a new subshell in your current terminal.  Which means you'll need
+        to type 'exit' or 'logout' twice.
+  The iu-config script should handle most of these wtmp issues.
+
+  (None of this is necessary on linux. Everybody has to login -- not
+  necessarily true on Windows -- and the linux login will record that fact
+  in /var/log/wtmp. The windows logon doesn't do that. Furthermore, 
+  linux supports the 'setuid' bit on the login executable, which means you
+  don't need to grant write privileges on /var/log/wtmp to J. Random User.
+  The windows file system, even with the cygwin layer, doesn't support 
+  the setuid bit)
+
+
+  Note that talkd also supports its own form of user-specific 
+  access control. Either talkd may be invoked with the '--acl FILE'
+  option, or any user may create a ~/.talkrc file.  Both files have
+  the same (undocumented) format: multiple lines of the form
+
+     allow|deny <RE> <INET> [<INET> [<INET> ...]
+
+  where one of allow/deny is required
+
+  <RE> is a regular expression (regcomp() style) that is applied to the
+  caller's username. Whether "Extended" RE patterns are allowed depends on
+  the system implementation of regcomp.
+
+  <INET> is a network address. It appears that any of these formats work:
+    192.168.1.0/255.255.255.0 
+    192.168.1.0/24
+    192.168.1.2
+    any
+
+  but no dns lookups are possible (that is, no machine names). Both 
+  <RE> and (one of the) <INET> have to match for the specified rule
+  (allow or deny) to apply. The default behavior is:
+
+    allow * any
+
+  
+  Unfortunately, I can't seem to get talk to work reliably on my 
+  network. I believe these issues are (yet more) firewall problems.
+  So far:
+     1) cygwin-vista initiates to cygwin-XP    : works
+     2) cygwin-vista initiates to linux        : works
+     3) cygwin-xp    initiates to linux        : works
+     4) cygwin-xp    initiates to cygwin-vista : NOT WORK
+     5) linux        initiates to cygwin-vista : NOT WORK
+     6) linux        initiates to cygwin-xp    : NOT WORK
+
+  I hope track this down and document or fix it in a later release.
+
+  ++++++++++++++ uucpd ++++++++++++++
+  UNTESTED.  However, if you wish to use this server, you should install
+  the tcp_wrappers package, and edit /etc/inetd.conf as follows:
+    uucp    stream  tcp     nowait  <USER>  /usr/sbin/tcpd /usr/sbin/uucpd
+  where <USER> is some non-privileged user (not 'root', 'SYSTEM', etc).
+  If you have the 'sshd' "privileged separation" user, you can use that.
+
+  Then, add something like the following to /etc/hosts.allow:
+    uucpd: 192.168.1.0/255.255.255.0
+
+  Finally, on Windows XP and above, you may also need to allow
+  ports 540/TCP and 117/TCP through the Windows Firewall (or 
+  whatever firewall software you are using. You ARE using firewall
+  software, right?)
+
+  In Windows Vista, this can be done by launching a cmd shell 'as
+  administrator', and issuing the following commands:
+    netsh advfirewall firewall add rule name="uucp" action=allow protocol=TCP dir=in localport=540
+    netsh advfirewall firewall add rule name="uucp-path" action=allow protocol=TCP dir=in localport=117
+
+  inetutils does not provide a UUCP client, but you can probably find
+  one on the net and compile it for cygwin.  If it works, let me know.
+  If it doesn't, send me patches to make it work.
+
+-------------------- other servers --------------------
+  The following section contains a few notes on using the inetd 
+  super-server to control additional servers, provided by other
+  cygwin packages.
+
+  ++++++++++++++ sshd ++++++++++++++
+  The ssh server from the openssh package can be invoked via inetd.
+  It is recommended to install sshd as a service itself, without
+  dependence on inetd.  However, if you insist:
+
+  openssh-5.0p1-1 and earlier:
+    These packages ship with a script, ssh-host-config, which
+    will add an appropriate line to /etc/inetd.conf -- commented out.
+    Remove the '#' from that line only if you did NOT install sshd
+    as a service. Then, restart inetd. The line in question looks like:
+      # ssh  stream  tcp     nowait  root    /usr/sbin/sshd sshd -i
+
+  openssh-5.0p1-2 and newer:
+    These packages' ssh-host-config detect the new /etc/inetd.d/ 
+    configuration directory, and install a sshd-inetd fragment there,
+    instead of modifying /etc/inetd.conf.  By default, the relevant
+    server command is commented out; remove the '#' from that line 
+    in /etc/inetd.d/sshd-inetd only if you did NOT install sshd as
+    a service. Then, restart inetd. Again, the line in question is:
+      # ssh  stream  tcp     nowait  root    /usr/sbin/sshd sshd -i
+
+========================================================================
+User reports:
+
+Achuth Sankar A 
+http://www.mail-archive.com/bug-inetutils@gnu.org/msg01170.html
+and private email. Not sure yet whether OP is using cygwin port
+of server or client or both (seems likely it is both, but...)
+    | 1)  Backspace won't work if we do telnet localhost. Or terminal in 
+    |     which TERM=cygwin is set.
+
+[csw]: Still present in this release. Will look into it later
+
+    | 2)  When I start inetd service as SYSTEM user in win xp 64 bit,
+    |     set UID error is shown when the inetd.conf file is updated
+    |     to start telnet/ftp as admin user.
+
+[csw]: Win XP 64 bit is actually closely related to Windows NT Server
+       2003 (same kernel).  Therefore, it shares the "SYSTEM user can't
+       change UID" restrictions that NT2003, Vista, and newer do.  The
+       solution is to run inetd under special privileged account (e.g.
+       cyg_server) rather than SYSTEM.
+
+========================================================================
+
+Change History
+See inetutils.README
+
+Cygwin port maintained by:  Charles Wilson  <cygwin@cygwin.com>
+

@@ -1,0 +1,54 @@
+[ViewerMeshLUT]
+
+  A panoramic media viewer that works with a user defined mesh.
+
+  Test Meshes:
+      Macros:/KartaVR/Images/ricoh_theta_s.obj
+  
+  [PanoMerge]
+    Background = Input
+  
+  [FBXMesh3DLoader]
+    Import File = FBX File = Mesh File(Empty)
+    Scale XYZ  1000 Min:0.001 Max:10000
+  
+  [Renderer3DFront]
+    Output
+    Width  (Expression: PanoMerge.Background.OriginalWidth)
+    Height (Expression: PanoMerge.Background.OriginalHeight)
+    
+  [Camera3DFront]
+    X Rotation
+    Y Rotation
+    Z Rotation
+    
+    Angle of View Type
+    Angle Of View Default=90
+    Focal Length (mm)
+    Rotation Order
+
+[Macro Node GUI]
+  [PanoMerge]
+    Background = Input
+    
+  [FBXMesh3DLoader]
+    ImportFile
+    
+  [Camera3DFront]
+    AOVType
+    AoV
+    FLength
+    FilmGate
+    ApertureW
+    ApertureH
+    LensShiftX
+    LensShiftY
+    Rotate.RotOrder
+    Rotate.X
+    Rotate.Y
+    Rotate.Z
+    
+  [FBXMesh3DLoader]
+    Scale.X
+
+    

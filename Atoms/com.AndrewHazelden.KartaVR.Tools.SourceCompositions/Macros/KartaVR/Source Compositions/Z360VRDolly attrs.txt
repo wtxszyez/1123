@@ -1,0 +1,72 @@
+[Z360VRDolly]
+
+The "Z360 VR Dolly" macro applies omni-directional stereo compatible XYZ translations and rotations in a 3D workspace using an over/under formatted color/depthmap image as the source media.
+
+The output from the macro is merged back into a Z360 frame for a seamless procesing flow.
+
+CameraFrontYOffset
+
+Sample Demo Translation Animation: 
+X Offset 110 to -110
+Y Rotation -36 to -27.8
+
+  [PanoMergeInput]
+  Input=Input
+
+  [RotationCustomTool]
+    NumberIn4=Yaw (Y Rotation) Min=-360 Max=360 Default=0
+    NumberIn2=Pitch (Z Rotation)
+    NumberIn3=Roll (X Rotation)
+  
+  [RGBUVRenderer3D]
+    (Switch the Rotation Axis internally to YZX)
+    Depth
+    
+  [Camera3DFront]    
+    Transform3DOp.Translate.X=X Offset Default=0 Min=-200 Max=200
+    Transform3DOp.Translate.Y=Y Offset Default=0 Min=-200 Max=200
+    Transform3DOp.Translate.Z=Z Offset Default=0 Min=-200 Max=200
+    
+  [RGBShape3DSphere]
+    X Rotation Expression=(RotationCustomTool.NumberIn4 * -1) -90
+    Y Rotation Expression=(RotationCustomTool.NumberIn2 * -1) + 180
+    Z Rotation Expression=RotationCustomTool.NumberIn3
+    
+  [DepthLevelsCorrector]
+      MasterRGBLow=Depth Far Level Default=0.2
+      MasterRGBMid=Depth Mid Level Default=0.56
+      MasterRGBHigh=Depth Near Level Default=0.8
+
+  [SphericalShape3D]
+    Radius=Environment Radius Default=1000
+    Environment Subdivisions (Base) Default=1536 Min=128 Max=2048
+    Environment Subdivisions (Height) Default=1024 Min=128 Max=2048
+    
+  [DepthDisplace3D]
+    Scale=Displacement Scale
+    Bias=Displacement Bias
+    
+  [Z360OverUnderCrop]
+    Output=Output
+    
+[Z360VRDolly] GUI Controls
+  Depth
+  
+  X Offset
+  Y Offset
+  Z Offset
+  
+  Yaw (Y Rotation)
+  Pitch (Z Rotation)
+  Roll (X Rotation)
+
+  Displacement Scale
+  Displacement Bias
+  
+  Depth Far Level
+  Depth Mid Level
+  Depth Near Level
+    
+  Environment Radius
+  Environment Subdivisions (Base)
+  Environment Subdivisions (Height)

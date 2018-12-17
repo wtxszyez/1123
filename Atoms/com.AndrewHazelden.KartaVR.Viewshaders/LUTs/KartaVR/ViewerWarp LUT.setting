@@ -1,0 +1,129 @@
+{
+	Tools = ordered() {
+		ViewerWarpLUT = MacroOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/luts.html",
+      },
+			Inputs = ordered() {
+			  MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVLoader",
+					Source = "Clip",
+					Name = "UV Pass Image",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipHoriz",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipVert",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ResizeOutput",
+					Source = "KeepAspect",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Texture",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				UVLoader = Loader {
+					Clips = {
+					},
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						MissingFrames = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 214.5 } },
+				},
+				UVPassChannelBoolean = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 214.5 } },
+				},
+				Texture = Texture {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVPassChannelBoolean",
+							Source = "Output",
+						},
+						Texture = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 313.5 } },
+				},
+				UVTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ResizeOutput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 214.5 } },
+				},
+				ResizeOutput = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1080,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						KeepAspect = Input { Value = 1, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "UVLoader",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 214.5 } },
+				},
+				PanoMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 313.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "ViewerWarpLUT"
+}

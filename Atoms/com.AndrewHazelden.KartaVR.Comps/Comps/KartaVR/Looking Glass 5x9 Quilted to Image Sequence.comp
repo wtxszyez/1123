@@ -1,0 +1,571 @@
+Composition {
+	CurrentTime = 45,
+	RenderRange = { 0, 45 },
+	GlobalRange = { 0, 45 },
+	CurrentID = 239,
+	HiQ = true,
+	MotionBlur = false,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Previews:/KartaVR/Green-Lantern-Image-Sequence.0000.png"
+	},
+	Tools = {
+		Loader4 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/lg_green_lantern_5x9_quilted.0001.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = 1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 90,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = -45,
+					GlobalEnd = 45
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -440, -16.5 } },
+		},
+		Note1 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "This comp will decode a static Looking Glass display quilted grid based linear array image and turn it into an image sequence.\n\nDue to the way the timeStretcher node works inside of the \"ImageGridExtractor\" macro, you have to start the in-point in the timeline at Global In (zero minus the total number of quilted views). In this case there are 5x9 quilted views so the timeline starts on frame  \"Gobal In -45\"", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -330, -148.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 426.466, 78.3654 }
+			},
+		},
+		Saver1_1 = Saver {
+			CustomData = {
+				Settings = {
+				}
+			},
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Previews:/KartaVR/Green-Lantern-Image-Sequence.0000.png",
+						FormatID = "PNGFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "PNGFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "ImageGridViewCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 110, -16.5 } },
+		},
+		ImageGridExtractor = GroupOperator {
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-photogrammetry.html#ImageGridExtractor",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ImageGridTimeStretcher",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "HorizontalTiles",
+					Default = 13,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "VerticalTiles",
+					Default = 10,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ImageGridViewCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -163.011, -2.57713 },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 345.005, 59.3276, 173, 45.8678 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				ImageGridCustomTool = Custom {
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn4_1",
+							Source = "Value",
+						},
+						Intermediate4 = Input { Value = "Width\n", },
+						Image1 = Input {
+							SourceOp = "ImageGridTimeStretcher",
+							Source = "Output",
+						},
+						HorizontalTiles = Input { Value = 5, },
+						VerticalTiles = Input { Value = 9, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, -16.5 } },
+					UserControls = ordered() {
+						HorizontalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "HorizontalTiles",
+						},
+						VerticalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "VerticalTiles",
+						}
+					}
+				},
+				ImageGridCustomToolLUTIn1_1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				ImageGridCustomToolLUTIn2_1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				ImageGridCustomToolLUTIn3_1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				ImageGridCustomToolLUTIn4_1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				ImageGridViewCrop = Crop {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 3200,
+							Expression = "(ceil(time/ImageGridCustomTool.HorizontalTiles) * (ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles)) % ImageGridCustomTool.Image1.Width\n",
+						},
+						YOffset = Input {
+							Value = 3000,
+							Expression = "(ceil(time/(ImageGridCustomTool.VerticalTiles)) * (ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles)) % ImageGridCustomTool.Image1.Height",
+						},
+						XSize = Input {
+							Value = 800,
+							Expression = "ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles",
+						},
+						YSize = Input {
+							Value = 600,
+							Expression = "ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles",
+						},
+						Input = Input {
+							SourceOp = "ImageGridCustomTool",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, -16.5 } },
+				},
+				ImageGridTimeStretcher = TimeStretcher {
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 1,
+							Expression = "ceil(time/(ImageGridCustomTool.HorizontalTiles*ImageGridCustomTool.VerticalTiles))",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+						Input = Input {
+							SourceOp = "Loader4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, -17.4945 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1440,
+			Height = 734,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.00554,
+						Offset = { 519.724, 194.213 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.0964912280701754,
+							OffsetX = -2.21929824561403,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = 6,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.660627177700348,
+					RatioY = 104.571038251366,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.522038567493113,
+						{ ID = "Left", RatioX = 0.5005291005291, RatioY = 126.332453825858, Pop = true },
+						{ ID = "Right", RatioX = 0.499470899470899, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.398071625344353, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 485,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.585733882030178, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.414266117969822, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					AutoScale = 1,
+					Auto = false
+				},
+			},
+			Memory = {
+				Render = {
+					SimultaneousBranching = true
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			NumberStyles = {
+				ClipFrame = 1
+			},
+			Views = {
+				Right = {
+					Viewer = {
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ShowControls = false,
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					SubView = {
+						Navigator = false,
+						Magnifier = false,
+						ID = "GLImageInfo",
+						Enabled = true,
+						GLImageInfo = {
+							AutoBounds = true
+						}
+					}
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					FullScreen = false,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					AlwaysOnTop = true,
+					PrevCtrlActiveColor = 0,
+					PickH = 1
+				},
+				View2 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View5 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View3 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View4 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				}
+			},
+			FrameFormat = {
+				Name = "DSI HD",
+				Rate = 24,
+				GuideRatio = 1,
+				DepthFull = 3,
+				DepthPreview = 3,
+				DepthInteractive = 3,
+			},
+			Unsorted = {
+				GlobalEnd = 45,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							Quality = true,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "local",
+							ShowSlaves = false
+						},
+						Preview = {
+							Quality = false,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "local",
+							ShowSlaves = false
+						}
+					},
+					CurrentConfig = "Final",
+					PreviewConfig = "Preview"
+				}
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			},
+			Paths = {
+				EnableReverseMapping = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

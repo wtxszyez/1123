@@ -1,0 +1,56 @@
+[Z360DepthBlur]
+
+This node allows you to take a color + depthmap over/under panoramic image and apply a depth blur effect.
+
+Todo: Possibly add a ChangeDepth node for 16bit vs 32bit output
+
+  [PanoMerge]
+		Background=Input
+
+	[RGBColorCorrector]
+		Saturation1=RGB Saturation Default=10
+		masterRGBContrast=RGB - Contrast Default=1.0
+		masterRGBGain=RGB - Gain Default=1
+		masterRGBGain=RGB - Lift Default=1
+		masterRGBGamma=RGB - Gamma Default=1.0
+
+	[ZDepthColorCorrector]
+		masterRGBContrast=ZDepth - Contrast Default=2.2
+		masterRGBGain=ZDepth - Gain Default=1
+		masterRGBGain=ZDepth - Lift Default=1
+		masterRGBGamma=ZDepth - Gamma Default=0.6
+
+  [DepthBlur]
+    Blur Channel = Depth Blur Channel = Luma
+    Filter = Depth Blur Filter = Super Soften
+    Blur Size = Depth Blur Size = 0.0
+
+	[OverUnderCrop]
+		Output=Output
+
+Macro GUI Control Order:
+	[PanoMerge]
+		Input
+	
+  [DepthBlur]
+		Depth Blur Filter
+		Depth Blur Size
+	
+	[ZDepthColorCorrector]
+		ZDepth Contrast
+    ZDepth Gain
+		ZDepth Lift
+		ZDepth Gamma
+			
+	[RGBColorCorrector]
+		RGB Saturation
+		RGB Contrast
+		RGB Gain
+		RGB Lift
+		RGB Gamma
+
+	
+  [OverUnderCrop]
+		Output=Output
+  
+  

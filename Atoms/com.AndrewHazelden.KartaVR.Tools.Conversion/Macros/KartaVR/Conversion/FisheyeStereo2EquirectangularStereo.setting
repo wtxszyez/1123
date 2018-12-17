@@ -1,0 +1,974 @@
+{
+	Tools = ordered() {
+		FisheyeStereo2EquirectangularStereo = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#FisheyeStereo2EquirectangularStereo",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "LeftInputScaling",
+					Source = "Input",
+					Name = "LeftInput",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "RightInputScaling",
+					Source = "Input",
+					Name = "RightInput",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "LeftInputScaling",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "LeftUVRenderer3D",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "FOVCustomTool",
+					Source = "NumberIn1",
+					MinScale = 1,
+					MaxScale = 360,
+					Default = 180,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftRed",
+					Name = "Color",
+					ControlGroup = 5,
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftGreen",
+					ControlGroup = 5,
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftBlue",
+					ControlGroup = 5,
+					Default = 0,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftAlpha",
+					ControlGroup = 5,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "LeftUVRenderer3D",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "RightUVRenderer3D",
+					Source = "Output",
+					Name = "Right",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				LeftInputScaling = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 148.5 } },
+				},
+				LeftEquirectConversion = CoordSpace {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "LeftInputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 148.5 } },
+				},
+				LeftViewSlide = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LeftEquirectConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 148.5 } },
+				},
+				LeftEquirectConversionCrop = Crop {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "LeftInputScaling.Height",
+						},
+						YSize = Input {
+							Value = 1440,
+							Expression = "LeftEquirectConversionCrop.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "LeftViewSlide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 148.5 } },
+				},
+				LeftViewResize = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "LeftInputScaling.Height*2",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "LeftInputScaling.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "LeftEquirectConversionCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 148.5 } },
+				},
+				LeftViewRotate = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "LeftViewResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+				},
+				RightInputScaling = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					SourceOp = "LeftInputScaling",
+					Inputs = {
+						Width = Input { Expression = "Height" },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 346.5 } },
+				},
+				RightViewRotate = Transform {
+					NameSet = true,
+					SourceOp = "LeftViewRotate",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightViewResize",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 346.5 } },
+				},
+				RightFOVTransform = Transform {
+					NameSet = true,
+					SourceOp = "LeftFOVTransform",
+					Inputs = {
+						YSize = Input { Expression = "FOVCustomTool.NumberIn1*(1/360)" },
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightViewRotate",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 346.5 } },
+				},
+				FOVCustomTool = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									FOVCustomTool = Custom {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											NumberIn1 = Input { Value = 180, },
+											LUTIn1 = Input {
+												SourceOp = "FOVCustomToolLUTIn1",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "FOVCustomToolLUTIn2",
+												Source = "Value",
+											},
+											LUTIn3 = Input {
+												SourceOp = "FOVCustomToolLUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "FOVCustomToolLUTIn4",
+												Source = "Value",
+											},
+											NumberControls = Input { Value = 1, },
+											NameforNumber1 = Input { Value = "FOV", },
+										},
+										ViewInfo = OperatorInfo { Pos = { 660, 82.5 } },
+										Name = "FOVCustomTool"
+									},
+									FOVCustomToolLUTIn1 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 204, Green = 0, Blue = 0 },
+										NameSet = true,
+										Name = "FOVCustomToolLUTIn1"
+									},
+									FOVCustomToolLUTIn2 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 0, Green = 204, Blue = 0 },
+										NameSet = true,
+										Name = "FOVCustomToolLUTIn2"
+									},
+									FOVCustomToolLUTIn3 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 0, Green = 0, Blue = 204 },
+										NameSet = true,
+										Name = "FOVCustomToolLUTIn3"
+									},
+									FOVCustomToolLUTIn4 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 204, Green = 204, Blue = 204 },
+										NameSet = true,
+										Name = "FOVCustomToolLUTIn4"
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									FOVCustomTool = Custom {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											NumberIn1 = Input { Value = 360, },
+											LUTIn1 = Input {
+												SourceOp = "FOVCustomToolLUTIn1",
+												Source = "Value",
+											},
+											LUTIn2 = Input {
+												SourceOp = "FOVCustomToolLUTIn2",
+												Source = "Value",
+											},
+											LUTIn3 = Input {
+												SourceOp = "FOVCustomToolLUTIn3",
+												Source = "Value",
+											},
+											LUTIn4 = Input {
+												SourceOp = "FOVCustomToolLUTIn4",
+												Source = "Value",
+											},
+											NumberControls = Input { Value = 1, },
+											NameforNumber1 = Input { Value = "FOV", },
+										},
+										ViewInfo = OperatorInfo { Pos = { 660, 82.5 } },
+									},
+									FOVCustomToolLUTIn1 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 204, Green = 0, Blue = 0 },
+										NameSet = true,
+									},
+									FOVCustomToolLUTIn2 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 0, Green = 204, Blue = 0 },
+										NameSet = true,
+									},
+									FOVCustomToolLUTIn3 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 0, Green = 0, Blue = 204 },
+										NameSet = true,
+									},
+									FOVCustomToolLUTIn4 = LUTBezier {
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Red = 204, Green = 204, Blue = 204 },
+										NameSet = true,
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input { Value = 180, },
+						LUTIn1 = Input {
+							SourceOp = "FOVCustomToolLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "FOVCustomToolLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "FOVCustomToolLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "FOVCustomToolLUTIn4",
+							Source = "Value",
+						},
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "FOV", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 82.5 } },
+				},
+				FOVCustomToolLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+				},
+				FOVCustomToolLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+				},
+				FOVCustomToolLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+				},
+				FOVCustomToolLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+				},
+				LeftFOVTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Pivot = Input { Value = { 0.5, 1 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Expression = "FOVCustomTool.NumberIn1*(1/360)", },
+						Input = Input {
+							SourceOp = "LeftViewRotate",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 148.5 } },
+				},
+				RightViewResize = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftViewResize",
+					Inputs = {
+						Width = Input { Expression = "LeftInputScaling.Height*2" },
+						Height = Input { Expression = "LeftInputScaling.Height" },
+						ResetSize = Input { },
+						Input = Input {
+							SourceOp = "RightEquirectConversionCrop",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 346.5 } },
+				},
+				RightEquirectConversionCrop = Crop {
+					NameSet = true,
+					SourceOp = "LeftEquirectConversionCrop",
+					Inputs = {
+						XSize = Input { Expression = "LeftInputScaling.Height" },
+						YSize = Input { Expression = "LeftEquirectConversionCrop.XSize/1.422222222222222" },
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "RightViewSlide",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 346.5 } },
+				},
+				RightEquirectConversion = CoordSpace {
+					NameSet = true,
+					SourceOp = "LeftEquirectConversion",
+					Inputs = {
+						Input = Input {
+							SourceOp = "RightInputScaling",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 346.5 } },
+				},
+				RightViewSlide = Transform {
+					NameSet = true,
+					SourceOp = "LeftViewSlide",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightEquirectConversion",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 346.5 } },
+				},
+				BackgroundColor = Background {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 4096,
+							Expression = "LeftInputScaling.Height*2",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "LeftInputScaling.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftAlpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 214.5 } },
+				},
+				LeftFOVMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "LeftFOVTransform",
+							Source = "Output",
+						},
+						FlattenTransform = Input { Value = 1, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 148.5 } },
+				},
+				RightFOVMerge = Merge {
+					NameSet = true,
+					SourceOp = "LeftFOVMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RightFOVTransform",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 346.5 } },
+				},
+				RightSphereMap = SphereMap {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+											["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+										},
+										Name = "SphereMap",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					SourceOp = "LeftSphereMap",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						Image = Input {
+							SourceOp = "RightFOVMerge",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1045, 346.5 } },
+				},
+				LeftSphereMap = SphereMap {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+											["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+										},
+										Name = "SphereMap",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "LeftFOVMerge",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1045, 148.5 } },
+				},
+				RightShape3D = Shape3D {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Shape3D = Shape3D {
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "SphereMap",
+												Source = "MaterialOutput"
+											},
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					SourceOp = "LeftShape3D",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						MaterialInput = Input {
+							SourceOp = "RightSphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+						["SurfacePlaneInputs.Nest"] = Input { },
+						["SurfacePlaneInputs.SizeLock"] = Input { },
+						["SurfacePlaneInputs.Width"] = Input { },
+						["SurfacePlaneInputs.Height"] = Input { },
+						["SurfacePlaneInputs.SubdivisionWidth"] = Input { },
+						["SurfacePlaneInputs.SubdivisionHeight"] = Input { },
+						["SurfacePlaneInputs.Wireframe"] = Input { },
+						["SurfacePlaneInputs.IsWireframeAntialiased"] = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Visibility.IsVisible"] = Input { },
+						["SurfacePlaneInputs.Visibility.IsUnseenByCameras"] = Input { },
+						["SurfacePlaneInputs.Visibility.CullFrontFace"] = Input { },
+						["SurfacePlaneInputs.Visibility.CullBackFace"] = Input { },
+						["SurfacePlaneInputs.Visibility.IgnoreTransparentPixelsInAuxChannels"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsAffectedByLights"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsShadowCaster"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsShadowReceiver"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.IsMatte"] = Input { },
+						["SurfacePlaneInputs.Matte.OpaqueAlpha"] = Input { },
+						["SurfacePlaneInputs.Matte.InfiniteZ"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.GL.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.GL.BlendMode"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.BlendMode"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Operator"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.SubtractiveAdditive"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Gain"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.BurnIn"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Normals.Scale"] = Input { },
+						["SurfacePlaneInputs.Controls.Normals.Show"] = Input { },
+						["SurfacePlaneInputs.Controls.Tangents.Show"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { },
+						["SurfaceSphereInputs.BlendMode.Nest"] = Input { },
+						["SurfaceSphereInputs.Controls.Nest"] = Input { },
+						["SurfaceSphereInputs.ObjectID.Nest"] = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 346.5 } },
+				},
+				LeftShape3D = Shape3D {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LeftShape3D = Shape3D {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "LeftSphereMap",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+										},
+										ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LeftShape3D = Shape3D {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+											["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+											["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+											["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+											["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "LeftSphereMap",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+										},
+										ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+										Name = "LeftShape3D"
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									LeftShape3D = Shape3D {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+											["Transform3DOp.Rotate.Z"] = Input { Value = -90, },
+											["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+											["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+											["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+											["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "LeftSphereMap",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+										},
+										ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "LeftSphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+				},
+				LeftUVRenderer3D = Renderer3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 4096,
+							Expression = "LeftInputScaling.Height*2",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "LeftInputScaling.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "LeftShape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 148.5 } },
+				},
+				RightUVRenderer3D = Renderer3D {
+					NameSet = true,
+					SourceOp = "LeftUVRenderer3D",
+					Inputs = {
+						Width = Input { Expression = "LeftInputScaling.Height*2" },
+						Height = Input { Expression = "LeftInputScaling.Height" },
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "RightShape3D",
+							Source = "Output",
+						},
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
+						["RendererOpenGLUV.Lighting"] = Input { },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 346.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "FisheyeStereo2EquirectangularStereo"
+}

@@ -1,0 +1,572 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 1000 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 79,
+	Version = "Fusion 8.0 build 23",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader5 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_right.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 181.5 } },
+		},
+		Loader3 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_front.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 115.5 } },
+		},
+		Loader6 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_top.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 214.5 } },
+		},
+		Loader4 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_left.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+		},
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_back.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 49.5 } },
+		},
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubemap_bottom.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 82.5 } },
+		},
+		Resize_Back = BetterResize {
+			NameSet = true,
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height",
+				},
+				Height = Input { Value = 1024, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 49.5 } },
+		},
+		Resize_Top = BetterResize {
+			NameSet = true,
+			SourceOp = "Resize_Back",
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height"
+				},
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "Loader6",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 214.5 } },
+		},
+		Resize_Right = BetterResize {
+			NameSet = true,
+			SourceOp = "Resize_Back",
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height"
+				},
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "Loader5",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 181.5 } },
+		},
+		Shape3DTop = Shape3D {
+			NameSet = true,
+			Inputs = {
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+				["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+				["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+				["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+				["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+				Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+				MaterialInput = Input {
+					SourceOp = "CubeMapTop",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.596899224806202, },
+				["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.364341085271318, },
+				["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.65891472868217, },
+				["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+				["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+				["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+				["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+				["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+				["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+				["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+				["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+				["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+				["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+				["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+				["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 114.285 } },
+		},
+		Resize_Bottom = BetterResize {
+			NameSet = true,
+			SourceOp = "Resize_Back",
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height"
+				},
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "Loader2",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 82.5 } },
+		},
+		Dome220Renderer3DTop = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				Width = Input {
+					Value = 1178,
+					Expression = "Height",
+				},
+				Height = Input {
+					Value = 1178,
+					Expression = "Resize_Back.Height*1.15",
+				},
+				Overscan = Input { Value = 1.4, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "Shape3DTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+		},
+		CropTop = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input { Value = 77, },
+				YOffset = Input { Value = 77, },
+				XSize = Input {
+					Value = 1024,
+					Expression = "YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "Resize_Back.Height",
+				},
+				KeepCentered = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "Dome220Renderer3DTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, 115.5 } },
+		},
+		CubeMapTop = CubeMap {
+			NameSet = true,
+			Inputs = {
+				Orientation = Input { Value = 0, },
+				Rotation = Input { Value = 1, },
+				["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+				["Rotate.X"] = Input { Value = -90, },
+				["Rotate.Y"] = Input { Value = 180, },
+				Left = Input {
+					SourceOp = "Resize_Left",
+					Source = "Output",
+				},
+				Right = Input {
+					SourceOp = "Resize_Right",
+					Source = "Output",
+				},
+				Up = Input {
+					SourceOp = "Resize_Top",
+					Source = "Output",
+				},
+				Down = Input {
+					SourceOp = "Resize_Bottom",
+					Source = "Output",
+				},
+				Front = Input {
+					SourceOp = "Resize_Front",
+					Source = "Output",
+				},
+				Back = Input {
+					SourceOp = "Resize_Back",
+					Source = "Output",
+				},
+				MaterialID = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+		},
+		Resize_Front = BetterResize {
+			NameSet = true,
+			SourceOp = "Resize_Back",
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height"
+				},
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "Loader3",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 115.5 } },
+		},
+		Resize_Left = BetterResize {
+			NameSet = true,
+			SourceOp = "Resize_Back",
+			Inputs = {
+				Width = Input {
+					Value = 1024,
+					Expression = "Height"
+				},
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "Loader4",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+		},
+		FisheyeMask = EllipseMask {
+			NameSet = true,
+			Inputs = {
+				Invert = Input { Value = 1, },
+				OutputSize = Input { Value = FuID { "Custom" }, },
+				MaskWidth = Input {
+					Value = 1024,
+					Expression = "MaskHeight",
+				},
+				MaskHeight = Input {
+					Value = 1024,
+					Expression = "Resize_Back.Height",
+				},
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Width = Input { Value = 1, },
+				Height = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 49.5 } },
+		},
+		FisheyeMergeTop = Merge {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				ApplyMaskInverted = Input { Value = 1, },
+				MultiplyByMask = Input { Value = 1, },
+				Background = Input {
+					SourceOp = "CropTop",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "FisheyeMask",
+					Source = "Mask",
+				},
+				Operator = Input { Value = FuID { "XOr" }, },
+				PerformDepthMerge = Input { Value = 0, },
+				EffectMask = Input {
+					SourceOp = "FisheyeMask",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 115.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1324,
+			Height = 876,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.82293,
+						Offset = { -12.9339, 134.598 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.776501305483029,
+					RatioY = 97.1109839816934,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.498847926267281,
+						{ ID = "Left", RatioX = 0.73305296822246, RatioY = 101.250564334086, Pop = true },
+						{ ID = "Right", RatioX = 0.26694703177754, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.434331797235023, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 426,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "Macros:/KartaVR/Images/domemaster220.jpg",
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

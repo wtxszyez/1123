@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><p><a name="version-history"></a></p>
+<h2>Version History</h2>
+<h3>Version 4 - 2018-12-15</h3>
+<ul>
+<li>
+<p>Created a Reactor installable version of KartaVR.</p>
+</li>
+<li>
+<p>Updated PanoView to support PathMaps in the program paths. This allows &quot;Programs:/&quot; to be used as a PathMap to represent the Applications/Program Files folder.</p>
+</li>
+<li>
+<p>Rewrote Lua scripts to use <code>Reactor:/Deploy/Bin</code> based command line tools.</p>
+</li>
+<li>
+<p>Added Looking Glass Display based lightfield rendering support with a <code>Macros/Looking Glass/LookingGlassRenderer3D</code> node and several Fusion comp examples that show how to created lightfield based tiled texture atlas &quot;quilted&quot; layouts.</p>
+</li>
+<li>
+<p>Added a macOS compatible Fusion <code>Scripts &gt; KartaVR &gt; Movies &gt; Video Capture</code> menu item/script that allows for capturing media directly from a live video input source into a new Loader node in the active Fusion composite.</p>
+</li>
+</ul>
+<h3>Version 3.5.2 - 2017-10-20</h3>
+<ul>
+<li>Added Adobe CC 2018 support to the KartaVR &quot;Send Media To&quot; scripts for After Effects, Photoshop, and Illustrator.</li>
+</ul>
+<h3>Version 3.5.1 - 2017-10-20</h3>
+<ul>
+<li>
+<p>Updated the <a href="macros-guide-z360.html#Z360Stereo">Z360Stereo</a> node to embed the SetMetadata tag of <strong>Field Name:</strong> <code>Pano</code>, <strong>Field Value:</strong> <code>{Format = &quot;LatLong&quot;}</code>.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-miscellaneous.html#SetMetadataVR">SetMetadataVR</a> node that lets you define the image projection and stereo display mode metadata for an image. There is a &quot;SetMetadataVR.comp&quot; example that shows how the node works.</p>
+</li>
+<li>
+<p>Added a <a href="scripts.html#send-geometry-to-ac3d">Send Geometry to AC3D</a> script that is used to push Fusion 3D workspace based polygon meshes to the AC3D polygon editing tool. AC3D is primarily used to load OBJ meshes and perform simple editing and UV layout tasks. The new script is accessible using the <strong>Script &gt; KartaVR &gt; Geometry &gt; Send Geometry to AC3D</strong> menu item.</p>
+</li>
+<li>
+<p>Updated the PTGui based scripts to improve the detection of the PTGui Project .pts file extension when there are multiple periods in the selected PTGui filename.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a> script to improve the accuracy of the .pts file based FisheyeCropMask (Center X/Y) and Crop (X/Y Offset) attributes. This allows the importer script to create better results when stitching imagery coming from YI 360VR cameras that have a stacked dual fisheye image layout.</p>
+</li>
+<li>
+<p>Added a PipeRouter macro to the <code>Macros:/KartaVR/Miscellaneous/PipeRouter.setting</code> folder. This makes it easier to add PipeRouter nodes using the Fusion &quot;Select Tool&quot; dialog.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-transform.html#RotateView">RotateView</a> node that simplifies the process of applying view rotations to switch your imagery between landscape and portrait style orientations in 90° rotation increments. The node also keeps the view cropping centered as the image is rotated.</p>
+</li>
+</ul>
+<h3>Version 3.5 - 2017-07-29</h3>
+<ul>
+<li>
+<p>Updated several of the new example Fusion comps so they use the relative <code>Comp:/</code> pathmap on the loader nodes.</p>
+</li>
+<li>
+<p>Updated the &quot;HelpPage&quot; URLs on the new macro nodes.</p>
+</li>
+<li>
+<p>Updated the &quot;Send Media to Photoscan&quot; script. The mask alpha channel image filenames are now wrapped in quotes in the code so spaces in the filenames are handled correctly on macOS/Windows/Linux.</p>
+</li>
+</ul>
+<h3>Version 3.5 Beta 1 - 2017-07-22</h3>
+<ul>
+<li>
+<p>Converted all the KartaVR macro nodes from being MacroOperators into GroupOperators. This means you can easily click on the node's group icon and expand it to tinker with the internal settings.</p>
+</li>
+<li>
+<p>Added an FFMPEG Encoding Intool Script for Fusion that is called the <a href="macros-guide-miscellaneous.html#SaverIntool">SaverIntool</a> macro. It is located in the <code>Macros:/KartaVR/Miscellaneous/SaverIntool.setting</code> folder. This Fusion Intool script is used to FFMPEG encode your saver node rendered image sequences into MP4 H.264 movies. If the Saver node footage is in the EXR format a gamma 1.0 to 2.2 conversion applied automatically.</p>
+</li>
+<li>
+<p>Updated the bundled version of ffmpeg for Windows and macOS to a newer release that supports the <code>-apply_trc iec61966_2_1</code> flag which can be used to create movie encodes with linear workflow gamma 1.0 to 2.2 conversions.</p>
+</li>
+<li>
+<p>Updated the EquirectangularRenderer3D, CubicRenderer3D, DomemasterRenderer3DAdvanced, and CylindricalRenderer3D nodes so you can switch between the &quot;Software Renderer&quot; and the &quot;OpenGL Renderer&quot;. There is a new OpenGL tab in the node's UI and you can now use OpenGL DOF, supersampling, and accumulation effects.</p>
+</li>
+<li>
+<p>The <a href="scripts.html#generate-uv-pass-in-ptgui">Generate UV Pass in PTGui</a> and <a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a> scripts now have the high quality &quot;HiQ&quot; mode automatically enabled when the scripts are run. This will improve the clarity of previews that are rendered in Fusion's viewer windows that better matches what you see when the final rendering is created. It is recommended that you work with &quot;HiQ&quot; enabled, and simply use a higher proxy &quot;Prx&quot; level in your comp if you want to make KartaVR more responsive.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a> script to support a &quot;split view&quot; style of stereo masking. This mode is typically used when working with circular ring shaped panoramic 360° video rigs and the masking technique allows you to define either a &quot;Left&quot;, &quot;Right&quot;, &quot;Top&quot;, &quot;Bottom&quot;, and &quot;Full Frame&quot; part of each image that you want to use when stitching the panoramic footage. This approach lets you use the same source images from the rig and extract either a right or left eye stereo view output as you go around circularly and process/stitch each of the cameras' views in the rig.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-mask.html#SplitViewMaskRectangle">SplitViewMaskRectangle</a> node that allows you to manually apply node based &quot;split view&quot; stereo masking to your live action panoramic camera rig imagery. The Split View control has options for placing the mask in the following positions: &quot;Left&quot;, &quot;Right&quot;, &quot;Top&quot;, &quot;Bottom&quot;, and &quot;Full Frame&quot;. There is an alternate version of this node named <a href="macros-guide-mask.html#SplitViewMaskInline">SplitViewMaskInline</a> that applies the masking effect directly inline in the composite downstream after the loader node. For monoscopic 2D zenith and nadir images you would typically set the Split View setting to &quot;Full Frame&quot;.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-conversions.html#FacebookCubemap3x2Stereo2CubicFacesStereo">FacebookCubemap3x2Stereo2CubicFacesStereo</a> node that makes it possible to extract the footage from an over/under formatted Facebook Cubemap 3x2 stereoscopic 3D panorama into its individual cubic 90° views.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-conversions.html#FacebookCubemap3x2Stereo2EquirectangularStereo">FacebookCubemap3x2Stereo2EquirectangularStereo</a> node that makes it possible to convert an over/under formatted Facebook Cubemap 3x2 stereoscopic 3D panorama into a pair of left and right view equirectangular/LatLong/spherical 360°x180° stereo images.</p>
+</li>
+</ul>
+<h4>YouTube 180 Tools</h4>
+<ul>
+<li>
+<p>Added a new <a href="macros-guide-conversions.html#CubicFaces2YouTube180">CubicFaces2YouTube180</a> node that takes a set of six individual 90° FOV based cubic view source images and merges them into a YouTube 180 based equirectangular 180°x180° horizontally cropped 1:1 aspect ratio frame format.</p>
+</li>
+<li>
+<p>Added new <a href="macros-guide-renderer3d.html#YouTube180Renderer3D">YouTube180Renderer3D</a> and  <a href="macros-guide-renderer3d.html#YouTube180StereoRenderer3D">YouTube180StereoRenderer3D</a> nodes that allow you to render out content from Fusion's 3D system to the YouTube 180 based equirectangular 180°x180° horizontally cropped 1:1 aspect ratio frame format.</p>
+</li>
+<li>
+<p>Added a new &quot;YouTube180 Conversions.comp&quot; example project that shows how to convert imagery into/out of the new YouTube centric panoramic image projection.</p>
+</li>
+</ul>
+<h4>Z360 / Volumetric VR / 6DOF 360VR Stereo Tools</h4>
+<ul>
+<li>
+<p>Added a set of KartaVR Z360 depthmap based <strong>6DOF 360VR Stereo</strong> nodes. The nodes all have names that start with the prefix &quot;Z360&quot; which stands for &quot;Z-depth 360 Degree&quot;. With Z360 workflows you can rotate a stereo 360° image in a full circle on the pitch and roll axis and the stereo depth effect will remain just as detailed and clear without the typical stereo &quot;cross-eyed&quot; view issues you would get when applying XYZ transforms on a regular stereo 360VR image. This provides a huge improvement when rotating or stabilizing stereoscopic imagery.</p>
+<p>The Z360 nodes are used to render, convert, and work with over/under formatted color/depth media and translate them into 6DOF motion capable equirectangular stereo over/under left and right camera views. The new KartaVR Z360 tool additions are:</p>
+<ul>
+<li>
+<p>Added a <a href="macros-guide-z360.html#Z360VRDolly">Z360VRDolly</a> node that applies omni-directional stereo 6DOF compatible XYZ translation and rotation effects using an over/under formatted Z360 color/depthmap image as the source media.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-z360.html#Z360Stereo">Z360Stereo</a> node that works with panoramic color + depthmap formatted over/under stereo media. This node allows you to convert a color + depthmap image into a pair of left and right displaced stereo views. There is also a macro LUT version of the tool called <a href="luts.html#z360-stereo-lut">Z360 Stereo LUT</a> that can be applied directly in the viewer window so you can interactively view Z360 media. Note: The &quot;Enable Stereo Metadata&quot; checkbox tells the Fusion Viewer windows to autodetect the image as a stereoscopic vertically stacked image whenever the Stereo viewing mode glasses icon is activated in the Viewer toolbar. This checkbox works by adding the &quot;Stereo = { Method = vstack }&quot; metadata tag to the footage. You still need to remember to manually enable the &quot;Swap&quot; viewing mode in the View window's stereo viewer settings so Fusion shows the image correctly as an Over/Under stereo image.</p>
+<p>The output from the Z360Stereo node can be connected to a <a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a> or <a href="macros-guide-viewer.html#ViewerOculusDK2StereoOU">ViewerOculusDK2StereoOU</a> node if you want to preview the stereo footage live on your Oculus Rift HMD using Windows/macOS/Linux. You could also use the <a href="google-cardboard-vr-view.html">Publish Media to Google Cardboard VR View</a> script to send the stereo imagery to a Google Cardboard equipped smartphone.</p>
+<p>When working with the Z360Stereo node's over/under style output you can always activate Fusion Studio's native stereo viewer mode in the viewer window. For the best anaglyph preview viewing experience you should right click on the stereo glasses icon and set the following options [x] Stacked Image, [x] Vertical, [x] Swap Eyes, [x] Dubois options. You can also use the <a href="macros-guide-stereoscopic.html#StereoAnaglyphOU">StereoAnaglyphOU</a> node to provide an anaglyph preview if you want to bounce an anaglyph formatted snapshot of the media to an external tool like GoPro VR Player.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-z360.html#Z360Mesh3D">Z360Mesh3D</a> node that takes the color + depthmap image data and creates a new displaced environment sphere that allows you to explore a simulated real-time volumetric VR version of the scene in Fusion's 3D workspace. Since the Z360Mesh3D node creates real geometry in the scene that updates per frame you are able to easily move around with full XYZ rotation and translation controls. With this approach you can also place Fusion based Alembic/FBX/OBJ meshes inside the same 3D scene, or add photogrammetry generated elements, too. There is an example composite named &quot;Z360Mesh3D.comp&quot; that lets you explore the forest Z360 scene interactively in stereo 3D using a Fusion Camera3D node.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-z360.html#Z360Renderer3D">Z360Renderer3D</a> node for creating Equirectangular/LatLong/Spherical 360° FOV style Z360 Over/Under formatted color/depth renderings using Fusion's 3D animation system. When the Z360 rendered output from this node is combined with the &quot;Z360Stereo&quot; node you can create omni-directional stereo 360° mograph style output using models and graphic elements loaded in the Fusion 3D workspace.</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-z360.html#Z360DepthBlur">Z360DepthBlur</a> node that works with panoramic color + depthmap formatted over/under stereo media. This node allows you to apply a simulated &quot;bokeh&quot; like depth of field effect to your imagery using the depthmap data in a Z360 frame.</p>
+</li>
+<li>
+<p>Added a pair of <a href="macros-guide-z360.html#Z360Merge">Z360Merge</a> and <a href="macros-guide-z360.html#Z360Extract">Z360Extract</a> nodes that take separate color and depthmap equirectangular views and converts them in/out of a Z60 style over/under format.</p>
+</li>
+<li>
+<p>Added Z360 example projects called &quot;Z360 Stereo.comp&quot;, &quot;Roller Coaster Ride Z360Renderer3D.comp&quot; and &quot;Boxworld Z360Renderer3D.comp&quot;.</p>
+</li>
+<li>
+<p>Added a Z360 Disparity Depth stitching example project called &quot;West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip&quot;
+to the KartaVR Media examples download page. This project uses stereo panoramic 360° footage filmed on a Nodal Nina based Sony A7SII camera rig. There are six fisheye images that are processed as 3 sets of stereo pairs. The composite shows how to stitch the footage into a final Z360 Over/Under Color + Depthmap equirectangular frame format. Then a 6DOF VR workflow is used with the Z360VRDolly and Z360Stereo nodes that allow for post-produced omni-directional XYZ translations and rotation effects to be applied. It is possible to fully adjust the IPD value in post and a new stereo 3D over/under left/right image is created that is comfortable to view.</p>
+</li>
+<li>
+<p>Added a <a href="scripts.html#convert-pfm-depth-images">Convert PFM Depth Images</a> script that converts a folder full of greyscale depthmap .pfm Portable Float Map images into image formats like exr/tiff/jpg/tga/png/psd/dpx that can be used natively in Fusion. If possible, the converted images will be saved into a 16-bit per channel format. This script is useful if you have a next generation 6DOF camera rig, or a custom OpenCV based computational stereo imagery workflow that outputs .pfm imagery. You can use PFM converted depthmap imagery as part of a Z360 and stereo 3D stitching workflow in KartaVR.</p>
+</li>
+<li>
+<p>If you want to work directly from the command prompt when batch converting .pfm depthmap images/image sequences you can use the underlying <a href="scripts.html#pfmtopsd-command-line-tool">KartaVR pfmtopsd program</a> that powers the <code>Convert PFM Depth Images</code> lua script. It is based upon original proof of concept code by <a href="http://www.paulbourke.net/">Paul Bourke</a>. The &quot;pfmtopsd&quot; command line tool is included in KartaVR's <code>tools</code>, <code>mac_tools</code>, and <code>linux_tools</code> folder. The pfmtopsd tool natively opens and converts a greyscale pfm image into a Photoshop psd image output. With the help of an image pipe and imagemagick, pfmtopsd can output your depthmaps to all of the standard image formats used in VFX.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Added a <a href="macros-guide-stereoscopic.html#StereoAnaglyphOU">StereoAnaglyphOU</a> node that makes it easy to view an over/under left and right stereo image pair as an anaglyph image. This node provides a quick way to check the output of the &quot;Z360Stereo&quot; conversion that works in Fusion Studio and Fusion (Free).</p>
+</li>
+<li>
+<p>Added a <a href="macros-guide-photogrammetry.html#Conditional">Conditional</a> modifier fuse that is used to extract and work with the embedded metadata in an image, or read the system's environment variables. The fuse is applied to a node as a &quot;modifier&quot; by right clicking on a node's attribute and then selecting the <strong>Modify With &gt; Conditional</strong> menu item. This fuse was created by Pieter Van Houte and is from the <a href="https://gitlab.com/WeSuckLess/Fusion">We Suck Less GitLab repository</a> project.</p>
+</li>
+</ul>
+<h4>Photogrammetry Tools</h4>
+<ul>
+<li>
+<p>Added a new <a href="scripts.html#send-media-to-photoscan">Send Media to Photoscan</a> script. This script will send the selected loader/saver node media to the AGI Photoscan photogrammetry software via a new Photoscan .psx project file. With this script you can select as many loader and saver node clips as you want in the Fusion flow area and all of those images will be added to the same &quot;chunk&quot; in the new AGI Photoscan project.</p>
+<p>When a loader node with an image sequence is selected, the full frame range of the footage that is configured in the loader node will be sent to AGI Photoscan as individual images. If a saver node is selected then an image sequence will be sent to AGI Photoscan using the renderable start to end frame range values.</p>
+<p>You can watch a YouTube video tutorial on how the <code>Send Media to Photoscan</code> script works here: <a href="https://www.youtube.com/watch?v=7t0w1Y3tRb8">https://www.youtube.com/watch?v=7t0w1Y3tRb8</a></p>
+</li>
+<li>
+<p>Added a new <code>Photogrammetry Greenscreen Keying</code> example project to the KartaVR Media examples download page. This example pulls a basic greenscreen key using Fusion's Primatte node. The object in the video clip is a wooden mask that is rotated slowly on a turntable. The final keyed output from this composite is used with the KartaVR <a href="scripts.html#send-media-to-photoscan">Send Media to Photoscan</a> script as part of a photogrammetry workflow in AGI Photoscan. The resulting OBJ mesh is then loaded back into a new Fusion composite.</p>
+</li>
+<li>
+<p>Added an <a href="macros-guide-photogrammetry.html#ImageGridCreator">ImageGridCreator</a> node which is used to generate tiled mosaic images from an image sequence. This node is handy if you are working with media coming from photogrammetry or lightfield workflows in Fusion. This fuse is based upon the MIT open source licensed &quot;hos_Tiler&quot; fuse module from the <a href="https://gitlab.com/WeSuckLess/Fusion">We Suck Less GitLab repository</a> project.</p>
+</li>
+<li>
+<p>Added the <a href="macros-guide-photogrammetry.html#ImageGridExtractor">ImageGridExtractor</a> macro that is used to turn a combined image grid layout of photos back into an image sequence. This node is handy if you are working with media coming from photogrammetry or lightfield workflows in Fusion. This Fusion approach is based upon research by <a href="http://www.euqahuba.com/">Theodor Groeneboom (theotheo)</a>.</p>
+</li>
+<li>
+<p>Added a sample image grid style photo called &quot;pikachu_13x10_image_grid.jpg&quot; is included with KartaVR in the <code>Macros:/KartaVR/Images/</code> folder. An image grid is another name for a sprite atlas. This image has a 13 wide by 10 high grid layout of photos that was taken with a regular grid spacing distance when photographed. This sample image is 8320x4270 px in size and has individual 640x427 px image tiles for each of the 130 views that are combined. This image was photographed by <a href="http:www.tobiaschen.com">Tobias Chen</a>.</p>
+</li>
+<li>
+<p>Added a new &quot;Creating Stereo Video Based Disparity Depthmaps&quot; example project to the KartaVR Media examples download page. This composite shows how Fusion Studio can be used to create a greyscale depthmap using a disparity mapping approach. The source footage is a pair of left and right camera views filmed on a pair of syncronised Yi 4K action cameras at 2560x1920px resolution.</p>
+</li>
+</ul>
+<h4>YIVR 360 Camera Stitching Templates</h4>
+<ul>
+<li>
+<p>Added two YIVR 360 camera stitching example projects called &quot;YI360VR-Stitching-Example.zip&quot; and &quot;YIVR-360-Lens-Calibration-Project.zip&quot; to the KartaVR Media examples download page. The first example is an interior scene that shows a simple approach to stitching the footage in Fusion. The other example goes deeper and compares a parametric node based approach vs using a faster to render UV pass warping approach that takes advantage of a custom PTGui .pts project file and YIVR based fisheye lens calibration data as the basis of the warping template.</p>
+</li>
+<li>
+<p>Updated the PanoView script to use the latest GoPro Player v2.3 program launching path on Windows/macOS.</p>
+</li>
+</ul>
+<h3>Version 3.0.2 - 2017-05-11</h3>
+<ul>
+<li>
+<p>A new <strong>Script &gt; KartaVR &gt; Movies</strong> menu has been created. This menu is used to hold the <a href="scripts.html#convert-movies-to-image-sequences">Convert Movies to Image Sequences</a> and <a href="scripts.html#combine-stereo-movies">Combine Stereo Movies</a> tools.</p>
+</li>
+<li>
+<p>Added a pair of <a href="macros-guide-paint.html#PaintHorizontalCross">PaintHorizontalCross</a> and <a href="macros-guide-paint.html#PaintEquirectangular">PaintEquirectangular</a> macros that provide a pre-made structure for applying paint/clone repair work on panoramic images.</p>
+<p>The <strong>PaintHorizontalCross</strong> macro adds a collection of nodes that show how to convert an equirectangular image projection into a horizontal cross image projection, apply painting operations, and then convert the image back into an equirectangular format. The <strong>PaintEquirectangular</strong> macro adds a collection of nodes that show how to easily paint on the zenith and nadir part of a panorama by rotating the view &quot;sideways&quot; with a Rotate X 90 degree transform. After the paint operation is applied the view is transformed back into its original rotation position.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a> script:</p>
+<p>The &quot;Add Camera3D node&quot; checkbox option will show the camera3D viewing vectors by default. This makes it easier to understand the viewing directions that the camera rays are pointing towards.</p>
+<p>Improved the rectilinear image projection code. The vector mask loading function now handles wide aspect ratio images correctly. Fixed several crop node settings to handle edge cases of fisheye and rectilinear lenses.</p>
+<p>The new &quot;Add Intermediate Saver Nodes&quot; checkbox will add inline saver nodes to the composite that allow you to save a snapshot of the warping process from that point in the node flow. This saver node option is useful if you want to be able to do a single frame render and then load those images into the KartaVR &quot;Generate Panoramic Blending Masks&quot; script. The Generate Panoramic Blending Masks tool is handy as it is able to create a seamless blending mask that provides a sharp and crisp border edge. Using a crisp seaming edge (instead of a typical smooth blending method) can be useful in stereo stitching and disparity map / depthmap generation workflows.</p>
+<p><strong>Note:</strong> Fusion does not read in or interpret EXIF image rotation metadata. You need to bake in and flatten the EXIF image rotation value into the image and remove that metadata setting in advance if you want PTGui and Fusion to use the exact same portrait/landscape style rotation setting when importing the imagery into a composite.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#combine-stereo-movies">Combine Stereo Movies</a> script that lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. At the same time you can also transcode the video into MP4 H.264/H.265, MKV H.264/H.265, and MOV H.264, MOV ProRes 422 video formats. If you are using Fusion (free) this script is special in that it can allow you to burst above the standard Fusion frame size limitations by taking the existing left and right stereo videos which can be rendered from Fusion (free) at up to 3840x2160 px in size and then merge them together using the external ffmpeg video tool into an Over Under stereo 3840x3840 px, or Side by Side stereo 7680x1920 px movie.</p>
+<p><strong>Note:</strong> The initial &quot;Combine Stereo Movies&quot; script works on macOS and Linux. A Windows OS compatibility update for this script is coming out shortly that will handle fully escaping the ffmpeg file path strings inside of the Fusion Lua scripting / Windows command prompt environment.</p>
+</li>
+</ul>
+<h3>Version 3.0.1 - 2017-04-30</h3>
+<ul>
+<li>
+<p>Updated the Fusion bin icons</p>
+</li>
+<li>
+<p>Updated the docs</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-conversions.html#RectilinearStereo2EquirectangularStereo">RectilinearStereo2EquirectangularStereo</a> node that projects a pair of left and right perspective images into an Equirectangular/LatLong/Spherical format.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a> node that converts a pair of left and right equirectangular images into the angular fisheye image projection. This node has an FOV control that can be animated along with XYZ rotation support.</p>
+</li>
+<li>
+<p>Updated the <a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a> node's default <strong>Z Rotation</strong> setting to &quot;-90&quot; for a horizontal &quot;front axis&quot; orientation on the fisheye conversion. Setting the Z Rotation control to &quot;0&quot; is the setting to use for a fulldome like vertical &quot;upwards sky&quot; looking orientation on the fisheye conversion.</p>
+</li>
+</ul>
+<h3>Version 3.0 - 2017-04-20</h3>
+<ul>
+<li>
+<p>The Domemaster Fusion Macros toolset has been renamed to KartaVR. This was done to refocus the previous planetarium &quot;fulldome&quot; centric toolset towards a wider VR customer base. This change means existing Fusion comps created in Domemaster Fusion Macros v1 and v2 that used image or mesh assets stored in the &quot;Macros:\Domemaster Fusion Macros\images&quot; folder need to be relinked to point at the new location of &quot;Macros:\KartaVR\images&quot;.</p>
+</li>
+<li>
+<p>Updated the KartaVR hotkeys file. Pressing &quot;Shift + L&quot; will add a new FBXMesh3D node to the Fusion comp. A set of JKL playback hotkeys were added that work in the viewer windows. In the flow area you can use the left and right cursor keys to step the backwards or forwards by one frame. The &quot;Shift + C&quot; hotkey will add a ColorCorrectorMasked node. The &quot;Shift + K&quot; hotkey will now add a Crop node. The &quot;E&quot; hotkey has been changed from adding an &quot;Equirectangular2CubicFaces&quot; node to adding an &quot;Equirectangular2Fisheye&quot; node instead. The &quot;D&quot; hotkey now adds a &quot;ChangeDepth&quot; node. The &quot;Shift + S&quot; hotkey now adds an &quot;ExporterFBX&quot; node.</p>
+</li>
+<li>
+<p>Updated the default state for the <strong>Sound Effects</strong> control in each of the KartaVR Lua scripts to use the option &quot;On Error Only&quot;. This will make for a quieter working environment for users who are just starting out with the scripts for the first time. If you want to have an alert sound effect play when a task completes you can still enable any of the options in the <strong>Sound Effects</strong> popup menu. The &quot;Reset LUA Script Settings to Defaults&quot; script can be used if you would like to reset all of the script's dialog settings to use the initial state values.</p>
+</li>
+<li>
+<p>Added a new script <a href="scripts.html#send-geometry-to-meshlab">Send Geometry to MeshLab</a> that is used to allow Fusion loaded polygon meshes to be loaded and edited in the open source <a href="http://www.meshlab.net/">MeshLab</a> program. If you have MeshLab installed on your system, you simply have to select the mesh nodes in the flow area and run the Send Geometry to MeshLab script and the geometry data will be send to the external tool.</p>
+</li>
+<li>
+<p>Added a new macro called <a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a> that converts an equirectangular image into an angular fisheye image projection. This node has an FOV control that can be animated along with XYZ rotation support.</p>
+</li>
+<li>
+<p>Added a new macro called <a href="macros-guide-conversions.html#Rectilinear2Equirectangular">Rectilinear2Equirectangular</a> that projects a regular perspective 2D flat image into an Equirectangular/LatLong/Spherical panoramic format. This node is useful for positing 2D title graphic elements over a panoramic 360 movie, or for creating matte paintings by manually using a series of  &quot;Rectilinear2Equirectangular&quot; nodes to stitch a series of regular (non-fisheye) images into a seamless panoramic output. You can animate the placement of the image in the frame and control the field of view for how the 2D image is positioned relative to the camera.</p>
+</li>
+<li>
+<p>Updated the <a href="macros-guide-conversions.html#Fisheye2Equirectangular">Fisheye2Equirectangular</a> macro to improve the way the custom field of view control is used. Also the labels on the rotation axis controls now have the words Yaw/Pitch/Roll added which can make it easier to compare the rotations settings used to stitch footage in Fusion vs an external tool like PTGui. The node's internal code had been improved to better match the rotation axis order used by PTGui, and these changes reduce the amount of gimbal lock that occurs on standard fisheye camera rigs. As a tip, it is still a good idea to limit the primary rotation control based placement of the fisheye image in the panoramic frame using mainly two axis of rotations at a time for more predictable warping.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a> script to the <strong>Script &gt; KartaVR &gt; Stitching</strong> menu that will load the project settings from a .pts file into a parametric stitching composite in Fusion. This script can also be run using the &quot;Shift + P&quot; hotkey.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#ptgui-mask-importer">PTGui Mask Importer</a> script that will save the masking information from a PTGui .pts project file into a series of .png images.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-mask.html#PTGuiMatteControl">PTGuiMatteControl</a> macro that is used to process imagery that was generated by the &quot;PTGui Mask Importer&quot; script. This node will isolate the green/red color include and exclude masking information and split it into two separate alpha mask outputs. The macro node has an integrated MatteControl UI for refining the mask edge and applying a garbage mask.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-mask.html#FisheyeCropMask">FisheyeCropMask</a> macro that allows you to create a circular fisheye mask that has special controls for feathering out the top and bottom edge of the frame for lenses that have digital focal length cropping of the fisheye image circle.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#convert-movies-to-image-sequences">Convert Movies to Image Sequences</a> script so the image name control defaults to using
+&quot;<name>/<name>.#.<ext> (In a Subfolder)&quot;.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#batch-builder-extractor">PTGui BatchBuilder Extractor</a> script. The new &quot;File Mode&quot; control allows you to choose how the media is extracted from the BatchBuilder folders. If you choose the &quot;Copy Images&quot; option the original images will still be left in the BatchBuilder folders. If you choose the &quot;Move Images&quot; option then the original images will be removed from the BatchBuilder folder and placed in the &quot;Image Sequence Output Folder&quot;. The &quot;Move Images&quot; option is useful if you want to clean out several PTGui BatchBuilder renderings to try the stitch over again.</p>
+</li>
+<li>
+<p>Updated the <a href="scripts.html#generate-uv-pass-in-ptgui">Generate UV Pass in PTGui</a> script to add a new &quot;Include Masks&quot; checkbox. This control allows you to enable or disable the custom PTGui masking that is applied to the generated UV pass map imagery. Removing the masking from the output makes it possible to resize the input imagery connected to a PTGui file. By default the &quot;Include Masks&quot; checkbox is disabled.</p>
+</li>
+<li>
+<p>Added a set of Oculus Rift DK1 HMD display compatible viewer macro nodes called <a href="macros-guide-viewer.html#ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a>, <a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a>, and <a href="macros-guide-viewer.html#ViewerOculusDK1Mono">ViewerOculusDK1Mono</a>. The <a href="macros-guide-viewer.html#ViewerOculusDK2Stereo">ViewerOculusDK2Stereo</a>, <a href="macros-guide-viewer.html#ViewerOculusDK2StereoOU">ViewerOculusDK2StereoOU</a>, and <a href="macros-guide-viewer.html#ViewerOculusDK2Mono">ViewerOculusDK2Mono</a> nodes work with the Oculus Rift DK2. These nodes allow you to use the Rift as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux. This is done by disabling the &quot;Direct to Rift&quot; option in the Oculus Rift drivers. In Fusion select the &quot;Windows &gt; New Image View&quot;  menu item. Then drag this floating image view onto the Oculus Rift display monitor and then resize the image view to be fullscreen. You can now load an image in Fusion on the new view using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the View window's &quot;Show Controls&quot; (Command+K) and &quot;Show Checker Underlay&quot; options.Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.</p>
+</li>
+<li>
+<p>Added a set of OpenGL based Renderer3D macros called <a href="macros-guide-renderer3d.html#OculusDK1StereoRenderer3D">OculusDK1StereoRenderer3D</a> and <a href="macros-guide-renderer3d.html#OculusDK1MonoRenderer3D">OculusDK1MonoRenderer3D</a> that allows you to use an Oculus Rift DK1 HMD display. The <a href="macros-guide-renderer3d.html#OculusDK2StereoRenderer3D">OculusDK2StereoRenderer3D</a> and <a href="macros-guide-renderer3d.html#OculusDK2MonoRenderer3D">OculusDK2MonoRenderer3D</a> nodes let you use the Oculus Rift DK2 HMD display as a fullscreen stereo output device in Fusion's interactive 3D workspace. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux. This is done by disabling the &quot;Direct to Rift&quot; option in the Oculus Rift drivers. In Fusion select the &quot;Windows &gt; New Image View&quot; menu item. Then drag this floating image view onto the Oculus Rift display monitor and then resize the image view to be fullscreen. You can now load an image in Fusion on the new view using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the View window's &quot;Show Controls&quot; (Command+K) and &quot;Show Checker Underlay&quot; options. Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script to the <strong>Script &gt; KartaVR &gt; Viewers</strong> menu. This is used on macOS to automatically toggle a floating viewer window from being a normal size window to maximizing the viewer to fullscreen. This script was designed to be used with the new Oculus based renderer and viewer nodes. The shortcut for running the script is the Shift+3 hotkey.</p>
+</li>
+<li>
+<p>Added the new <a href="examples.html#wireframe-oculus-rift-stereo">Wireframe Oculus Rift Stereo.comp</a>, <a href="examples.html#roller-coaster-ride-oculus-rift-stereo">Roller Coaster Ride Oculus Rift Stereo.comp</a>, and <a href="examples.html#boxworld-oculus-stereo-renderer3d">Boxworld Oculus Rift Stereo Renderer3D.comp</a> example composites that show how the &quot;OculusDK1StereoRenderer3D&quot; &quot;OculusDK2StereoRenderer3D&quot; nodes allows you to use an Oculus Rift DK1 or DK2 HMD display as the output device from the Fusion 3D system.</p>
+</li>
+<li>
+<p>Added a new &quot;<a href="examples.html#logo-over-tripod">Logo Over Tripod.comp</a>&quot; example that places a flat 2D logo image over the tripod zone in an Equirectangular/LatLong/Spherical panoramic image.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide-viewer.html#ViewerEquirectangularStereoOU">ViewerEquirectangularStereoOU</a> macro acts as an over/under 360 stereo image viewer. For the MacroLUT version of the node named <a href="luts.html#viewerequirectangular-stereo-ou-lut">ViewerEquirectangular Stereo OU LUT</a> the &quot;Proxy Level&quot; control is disabled since it causes a cropping issue and doesn't work as expected since a LUT can't change the active resolution dynamically.</p>
+</li>
+<li>
+<p>Added a pair of meshes named &quot;trackingLocatorCompass.obj&quot; and &quot;trackingLocatorHourglass.obj&quot; that are custom shapes you can place in Fusion's 3D workspace as a tracker marker/stand-in shape to help check the accuracy of a matchmoved camera path. The meshes can be found in the folder &quot;Macros:\KartaVR\images&quot;.</p>
+</li>
+<li>
+<p>Added a new mesh named &quot;domebase.obj&quot; that is a hemispherical dome mesh with a custom handmade Equirectangular/Spherical/LatLong UV layout. This mesh has a flat bottom which makes it easier to do object insertion types of renderings with an HDRI IBL panoramic backdrop image attached. The mesh can be found in the folder &quot;Macros:\KartaVR\images&quot;.</p>
+</li>
+<li>
+<p>A macOS based manual install script named <code>/Applications/KartaVR/mac_tools/kartavr_mac_user_settings_install.command</code> that can be used to copy the KartaVR user specific files (Macros, Hotkey Config, LUTs, and scripts) into the active macOS user account's Fusion preferences folder: <code>/Users/&lt;You User Account Name&gt;/Library/Application Support/Blackmagic Design/Fusion/</code>.</p>
+</li>
+<li>
+<p>A Linux based manual install script named <code>/opt/KartaVR/linux_tools/kartavr_linux_user_settings_install.sh</code> that can be used to copy the KartaVR user specific files (Macros, Hotkey Config, LUTs, and scripts) into the active Linux user account's Fusion preferences folder: <code>~/.fusion/BlackmagicDesign/Fusion/</code>.</p>
+</li>
+<li>
+<p>A pair of Windows based manual install scripts named <code>win_fusion7_user_settings_install.bat</code> and <code>win_fusion8_user_settings_install.bat</code> that can be used to copy the KartaVR user specific files (Macros, Hotkey Config, LUTs, and scripts) into the active user account's Fusion 7/8 specific preferences folders. These KartaVR Windows based .bat install scripts are stored in the folder <code>C:\Program Files\Applications\KartaVR\tools\</code>.</p>
+</li>
+<li>
+<p>A new KartaVR macOS Uninstaller script was added to the KartaVR <code>mac_tools</code> folder. You can run the script from the terminal with the command <code>sudo sh /Applications/KartaVR/mac_tools/kartavr_mac_uninstaller.command</code>. If you are running the admin account you can also double click on the file and it will run in a new terminal window.</p>
+</li>
+<li>
+<p>A new KartaVR Linux Uninstaller script was added to the folder: <code>/Applications/KartaVR/linux_tools/kartavr_linux_uninstaller.sh</code>. There is also a matching double clickable desktop icon in the same folder named &quot;KartaVR Uninstall.desktop&quot; which can be used if you are running from an admin account and have write permissions access to the <code>/opt/KartaVR</code> folder.</p>
+</li>
+<li>
+<p>Added a revised Ricoh Theta S stitching workflow example named <code>Ricoh Theta S Stitch v2.comp</code>. This example shows how combining the new &quot;FisheyeCropMask&quot; node with the integrated XYZ rotation controls in the &quot;Fisheye2Equirectanglar&quot; nodes simplify the process of warping and stitching the raw footage from a Ricoh Theta S panoramic camera.</p>
+</li>
+<li>
+<p>There is a new <a href="tips.html#using-expressions-to-set-the-image-resolution">Using Expressions to set the Image Resolution</a> entry on the Tips &amp; Tricks documentation page. This is a good Fusion skill to know about if you are remapping imagery often and want your composites to automatically adjust the nodes based upon the input image resolution.</p>
+</li>
+</ul>
+<h3>Version 2.4 - 2017-01-04</h3>
+<ul>
+<li>
+<p>A new separate web page with 360° video stitching projects is available to KartaVR customers. This content changes regularly and includes large media files so it is provided separate from the core KartaVR toolset. You can contact <a href="mailto:andrew@andrewhazelden.com">andrew@andrewhazelden.com</a> for access to this learning material.</p>
+</li>
+<li>
+<p>Added a new After Effects centric set of &quot;Mettle SkyBox&quot; options to the 'Send Media to Preferences&quot; dialog window. When the media is sent to After Effects using the &quot;Send Media to After Effects&quot; script a Mettle SkyBox Studio effect can be applied to your footage automatically.</p>
+</li>
+<li>
+<p>The &quot;Mettle SkyBox&quot; control allows you to apply a Mettle SkyBox Studio effect to your footage automatically when the media is sent to After Effects using the &quot;Send Media to After Effects&quot; script. You can choose one of the following options: &quot;None&quot;, &quot;Mettle SkyBox Converter&quot;, &quot;Mettle SkyBox Project 2D&quot;, &quot;Mettle SkyBox Rotate Sphere&quot;, &quot;Mettle SkyBox Viewer&quot;.</p>
+</li>
+<li>
+<p>The &quot;Mettle Input&quot; control allows you to choose a Mettle SkyBox Converter input image projection for your footage when the media is sent to After Effects using the &quot;Send Media to After Effects&quot; script. You can choose one of the following options: &quot;2D Source&quot;, &quot;Horizontal Cross Cube-map 4:3&quot;, &quot;Sphere-map&quot;, &quot;Equirectangular&quot;, &quot;Angular Fisheye (Fulldome)&quot;, &quot;Cube-map Facebook 3:2&quot;, &quot;Cube-map Pano2VR 3:2&quot;, &quot;Cube-map GearVR 6:1&quot;, &quot;Equirectangular 16:9&quot;.</p>
+</li>
+<li>
+<p>The &quot;Mettle Output&quot; control allows you to choose a Mettle SkyBox Converter output image projection for your footage when the media is sent to After Effects using the &quot;Send Media to After Effects&quot; script. You can choose one of the following options: &quot;Horizontal Cross Cube-map 4:3&quot;, &quot;Sphere-map&quot;, &quot;Equirectangular&quot;, &quot;Angular Fisheye (Fulldome)&quot;, &quot;Cube-map Facebook 3:2&quot;, &quot;Cube-map Pano2VR 3:2&quot;, &quot;Cube-map GearVR 6:1&quot;, &quot;Equirectangular 16:9&quot;.</p>
+</li>
+<li>
+<p>Added a pair of <a href="macros-guide.html#FacebookVerticalStrip2CubicFaces">FacebookVerticalStrip2CubicFaces</a>, <a href="macros-guide.html#FacebookVerticalStrip2Equirectangular">FacebookVerticalStrip2Equirectangular</a>, and <a href="macros-guide.html#CubicFaces2FacebookVerticalStrip">CubicFaces2FacebookVerticalStrip</a> macros that are able to convert imagery in the Facebook Vertical Strip cubemap format. There is an example composite named &quot;<code>Facebook Vertical Strip.comp</code>&quot; that shows how these macro conversions work, and a sample image named &quot;<code>facebook_vertical_strip.jpg</code>&quot; that shows what the new image projection looks like.</p>
+</li>
+<li>
+<p>Updated the wording of &quot;Mac OS X&quot; in the code and documentation to the newer &quot;macOS&quot; style.</p>
+</li>
+<li>
+<p>Updated the &quot;Open Containing Folder&quot; script to support AlembicMesh3D nodes. This means you can now select an Alembic .abc file in your composite and use it with this script.</p>
+</li>
+<li>
+<p>Updated the Affinity Photo and Affinity Designer for Windows launching paths for the &quot;Send Media to&quot; scripts.</p>
+</li>
+<li>
+<p>Created two new new UV pass warping Fusion examples that convert an Equirectangular projection into a stereographic Tiny Planet view. These examples show how the &quot;Generate UV Pass in PTGui&quot; script works for this type of panoramic conversion. These files are available separately from the main Domemaster Fusion Macros product download.</p>
+</li>
+<li>
+<p>Renamed the default Amateras Dome Player executable in PanoView from <code>AmaterasDomePlayer.exe</code> to the new filename of <code>AmaterasPlayer.exe</code>.</p>
+</li>
+<li>
+<p>Updated the GoPro VR Player executable in PanoView to use the new v2.1 version paths.</p>
+</li>
+<li>
+<p>Updated the <code>Send Media to</code> scripts to have better error handling when no loader or saver nodes are selected in the Fusion comp.</p>
+</li>
+<li>
+<p>Updated KartaVR's Linux BASH install script <code>KartaVR/linux_tools/linux_user_settings_install.sh</code> to automatically create the intermediate Fusion preferences folders if required.</p>
+</li>
+</ul>
+<h3>Version 2.3 - 2016-11-16</h3>
+<ul>
+<li>
+<p>Fixed the Fusion 8.1-8.2 Domemaster Fusion Macros hotkey compatibility issues that stopped LUA scripts from running when their hotkeys were pressed. This means all of the hotkeys work as expected now and the TAB key can be used to launch the PanoView tool in Fusion 8.1+ now.</p>
+</li>
+<li>
+<p>Added a new &quot;<a href="google-cardboard-vr-view.html">Publish Media to Google Cardboard VR View</a>&quot; script that makes it easy to send panoramic imagery to a web browser, a tablet, or a smartphone with a Google Cardboard HMD. It is recommended you read the documentation on this feature before you use it as you might need to install an Apache web sharing module so your Mac/Windows/Linux system is able to take full advantage of this tool.</p>
+</li>
+<li>
+<p>Added a &quot;<a href="scripts.html#open-vr-view-publishing-folder">Open VR View Publishing Folder</a>&quot; script that makes it easy to open up the current web sharing folder in the Explorer/Finder/Nautilus file browser. This script is designed to work with the &quot;Publish Media to Google Cardboard VR View.lua&quot; script.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#generate-panoramic-blending-masks">Generate Panoramic Blending Masks</a> script that sends your currently selected loader and saver node based images to the enblend tool. A set of seamless blending mask images are then generated which allows you to stitch together your multi-camera panoramic rig footage without the need for drawing manual B-Spline masks for each of the camera views. When the script is run the generated mask image loader nodes are added to the clipboard which lets you easily paste them into your composite. The Layer Order control lets you choose how the blending mask layers are stacked. The Node Layout control in the script GUI allows you to specify how the loader nodes are arranged in the composite flow so they spaced out automatically and positioned horizontally or vertically.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide.html#GearVRStereo2EquirectangularStereo%22">GearVRStereo2EquirectangularStereo</a> node that makes it easy to convert a stereo GearVR/Octane Render/Vray horizontal strip cube map image with a 12:1 aspect ratio into a pair of left and right equirectangular stereo images. There is a new example composite included called <a href="examples.html#gearvr-stereo-to-equirectangular-stereo">GearVR Stereo to Equirectangular Stereo.comp</a>.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide.html#GearVRMono2Equirectangular%22">GearVRMono2Equirectangular</a> node that makes it easy to convert a mono GearVR/Octane Render/Vray horizontal strip cube map image with a 6:1 aspect ratio into an equirectangular image. There is a new example composite included called <a href="examples.html#gearvr-mono-to-equirectangular">GearVR Mono to Equirectangular.comp</a>.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide.html#Fisheye2Equirectangular">Fisheye2Equirectangular</a> node that provides more flexibility by providing an arbitrary FOV (Field of View) control in the fisheye conversion stage along with a built-in XYZ rotation control that allows you to quickly position and &quot;place&quot; the footage inside an equirectangular frame format. There is also a matching stereo 3D version of this node called <a href="macros-guide.html#FisheyeStereo2EquirectangularStereo">FisheyeStereo2EquirectangularStereo</a></p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide.html#RotateGearVRStereo">RotateGearVRStereo</a> node that allows you to apply XYZ rotations to a stereoscopic GearVR/Octane Render/V-Ray horizontal strip cubic image that has a 12:1 aspect ratio.</p>
+</li>
+<li>
+<p>Added a <a href="scripts.html#batch-builder-creator">PTGui BatchBuilder Creator</a> script that converts your currently selected loader and saver node based image sequences into a format that works easily with PTGui's BatchBuilder mode that is used for panoramic sequence stitching.</p>
+</li>
+<li>
+<p>Added a <a href="scripts.html#batch-builder-extractor">PTGui BatchBuilder Extractor</a> script that converts your currently selected loader and saver node based media from inside numbered PTGui BatchBuilder folders into flat image sequences.</p>
+</li>
+<li>
+<p>Updated the Send Media to Preferences script to add a &quot;Use Current Frame&quot; Checkbox. When disabled this checkbox allows you to load the first frame from the image sequence. When the checkbox is enabled the current frame from the timeline will be the frame that is passed along to the external program.</p>
+</li>
+<li>
+<p>Updated the Send Media to Preferences script to add a &quot;Layer Order&quot; setting. The &quot;Layer Order&quot; control allows you to choose the layer stacking order used when sending imagery to another program. The Layer Order menu options are &quot;No Sorting&quot;, &quot;Node X Position&quot;, &quot;Node Y Position&quot;, &quot;Node Name&quot;, &quot;Filename&quot;, &quot;Folder + Filename&quot;.</p>
+</li>
+<li>
+<p>Updated all of the Send Media to scripts to support the &quot;Layer Order&quot; control.</p>
+</li>
+<li>
+<p>Updated the &quot;Send Media to After Effects&quot; script image size code so it will now use the resolution of the currently highlighted in yellow node, or the comp default frame size when creating the new After Effects project. Previously the script would often fall back to a default 1920x1080 resolution.</p>
+</li>
+<li>
+<p>Updated the PanoView default viewing program to use Go Pro VR Player. Previously the initial viewing tool was set to use Kolor Eyes.</p>
+</li>
+<li>
+<p>Updated the Domemaster Fusion Macros pipeline integration scripts to work with the latest Adobe CC 2017 releases. The <a href="scripts.html#edit-send-media-to-preferences">Edit Send Media to Preferences</a> script is now able to work with Adobe Photoshop CC 2017, Adobe After Effects CC 2017, and Adobe Illustrator CC 2017. The items in the Adobe version picker menus were reversed in order to support adding new Adobe CC versions chronologically without breaking future  preference selections. The PanoView Adobe Speedgrade version picker menu order as reversed as well.</p>
+</li>
+<li>
+<p>Revised and simplified the EquirectangularRenderer3D node GUI and created a slower but more powerful <a href="macros-guide.html#EquirectangularRendererAdvanced3D">EquirectangularRendererAdvanced3D</a> node that has improved multi-channel rendering support for outputting Z-depth, World Position, UV Coords, Coverage, Material IDs, Object IDs, and BG Color elements. There is a new example composite included called <a href="examples.html#boxworld-equirectangular-renderer3d-advanced">Boxworld EquirectangularRenderer3D Advanced .comp</a>.</p>
+</li>
+<li>
+<p>Revised and simplified the DomemasterRenderer3D node GUI and created a slower but more powerful <a href="macros-guide.html#DomemasterRenderer3DAdvanced">DomemasterRenderer3DAdvanced</a> node that has improved multi-channel rendering support for outputting Z-depth, World Position, UV Coords, Coverage, Material IDs, Object IDs, and BG Color elements. There is a new example composite included called <a href="examples.html#boxworld-domemaster-renderer3d-advanced">Boxworld DomemasterRenderer3DAdvanced.comp</a>.</p>
+</li>
+<li>
+<p>Revised and simplified the CylindricalRenderer3D node GUI and created a slower but more powerful <a href="macros-guide.html#CylindricalRenderer3DAdvanced">CylindricalRenderer3DAdvanced</a> node that has improved multi-channel rendering support for outputting Z-depth, World Position, UV Coords, Coverage, Material IDs, Object IDs, and BG Color elements. There is a new example composite included called <a href="examples.html#boxworld-domemaster-renderer3d-advanced">Boxworld CylindricalRenderer3DAdvanced.comp</a>.</p>
+</li>
+<li>
+<p>Added a <a href="scripts.html#reset-lua-script-settings-to-defaults">Reset LUA Script Settings to Defaults</a> LUA script that clears all of the custom settings for the scripts included with the Domemaster Fusion Macros. This will reset every LUA script dialog setting back to their original defaults.</p>
+</li>
+<li>
+<p>Added <a href="scripts.html#send-media-to-touchdesigner">Send Media to TouchDesigner</a> support for TouchDesigner099 on macOS.</p>
+</li>
+<li>
+<p>Added new Text+ based title generator example composites that show how editable 360° titles can be created using a node based approach in Fusion:</p>
+<ul>
+<li><a href="examples.html#text-imageplane-stereo">Text+ Imageplane Stereo.comp</a></li>
+<li><a href="examples.html#text-to-domemaster">Text+ to Domemaster.comp</a></li>
+<li><a href="examples.html#text-to-equirectangular">Text+ to Equirectangular.comp</a></li>
+</ul>
+</li>
+<li>
+<p>Updated the <a href="hotkeys.html">Domemaster Fusion Macros Hotkeys</a> entries by adding several new hotkeys that work with the Shift modifier key on your keyboard:</p>
+<ul>
+<li><strong>Shift + Tab</strong> runs the &quot;Edit PanoView Preferences&quot; script.</li>
+<li><strong>Shift + A</strong> runs the &quot;Edit Send Media to Preferences&quot; script.</li>
+<li><strong>Shift + O</strong> runs the &quot;Open Domemaster Fusion Macros Temp Folder&quot; script.</li>
+<li><strong>Shift + R</strong> adds a scale node.</li>
+<li><strong>Shift + U</strong> adds a UVPassFromRGBImageOnDisk macro.</li>
+<li><strong>Shift + V</strong> adds a ViewerEquirectangular macro.</li>
+<li><strong>Shift + X</strong> adds a RotateEquirectangular macro.</li>
+</ul>
+</li>
+<li>
+<p>Added an &quot;Edit Send Media Preferences&quot; script default entry for the new Affinity Photo on Windows Beta version. This means you can now use Fusion with Affinity Photo on Mac and Windows.</p>
+</li>
+<li>
+<p>Updated the &quot;Convert Movies to Image Sequences.lua&quot; and &quot;Generate UV Pass in PTGui.lua&quot; scripts to add quotes around the path of the ffmpeg output log to avoid issues with spaces and other characters in the file path.</p>
+</li>
+<li>
+<p>Updated the &quot;Generate UV Pass in PTGui.lua&quot; script so it can correctly detect the current ImageMagick path on Linux.</p>
+</li>
+</ul>
+<h3>Version 2.2.4 - 2016-09-18</h3>
+<ul>
+<li>Updated the &quot;Edit Send Media to Preferences&quot;, &quot;Send Frame to Hugin&quot;, and &quot;Send Media to Hugin&quot; Lua scripts to use the new Hugin 2016 on macOS installation path of /Applications/Hugin/Hugin.app.</li>
+</ul>
+<h3>Version 2.2.3 - 2016-09-13</h3>
+<ul>
+<li>Added PanoView support for Apple's QuickTime Player on Mac and Windows.</li>
+</ul>
+<h3>Version 2.2.2 - 2016-09-05</h3>
+<ul>
+<li>
+<p>Added a new Samsung Gear 360 panoramic camera stitching example called &quot;Samsung Gear 360 Stitch.comp&quot;.</p>
+</li>
+<li>
+<p>Updated the &quot;Generate UV Pass in PTGui.lua&quot; and &quot;Convert Movies to Image Sequences.lua&quot; scripts to support Fusion path maps in the file brower section of the dialog fields.</p>
+</li>
+<li>
+<p>Added Fusion CustomData HelpPage entries to each of the Domemaster Fusion Macros. This means if you have one of the macro nodes selected in the &quot;Flow&quot; work area and press the F1 hotkey on your keyboard the help documentation for that node will be loaded in your web browser.</p>
+</li>
+<li>
+<p>Added a new topic to the Getting Started Guide documentation on the Add Tool dialog, and an entry that mentioned the &quot;Comp:&quot; path map that can be used to load imagery from the same folder as your current Fusion .comp composite document.</p>
+</li>
+<li>
+<p>Updated the Fusion .comp syntax highlighter modules to add support for more elements.</p>
+</li>
+<li>
+<p>Updated the DisplaceEquirectangular, BlurPanoramicWrap, DefocusPanoramicWrap, DepthBlurPanoramicWrap, GlowPanoramicWrap, SharpenPanoramicWrap, and UnSharpenMaskPanoramicWrap mask inputs on the macros to be the official purple colored &quot;EffectMask&quot; style inputs.</p>
+</li>
+<li>
+<p>Updated the example composite &quot;Equirectangular Tripod Repair.comp&quot; by adding a 2nd node tree that shows how to use the RotateEquirectangular macro to make it easier to apply paint clone based repair work to fix the tripod zone in the frame.</p>
+</li>
+<li>
+<p>Fixed an issue with the visibility of the FisheyeMask node's output connection.</p>
+</li>
+<li>
+<p>Fixed a view flipping issue with the Domemaster2Equirectangular macro.</p>
+</li>
+</ul>
+<h3>Version 2.2.1 - 2016-08-28</h3>
+<ul>
+<li>
+<p>Added the &quot;DepthBlurPanoramicWrap&quot; node that applies a greyscale depthmap driven defocusing effect that is panoramic aware and wraps the effect around the frame border.</p>
+</li>
+<li>
+<p>Updated the macros guide to add entries for each of the PanoramicWrap style of effects macros.</p>
+</li>
+</ul>
+<h3>Version 2.2 - 2016-08-26</h3>
+<ul>
+<li>
+<p>Added Fusion 8.2 on Linux support. Updated the &quot;Panoview&quot; and &quot;Edit Panoview Preferences&quot; LUA scripts to have Linux default values for DJV Viewer, VLC, and RV player.</p>
+</li>
+<li>
+<p>Updated the install documentation to add a Linux manual install topic.</p>
+</li>
+<li>
+<p>Added a new &quot;UVPassVideoStitchingTemplate&quot; macro that is a node template for setting up panoramic 360° video stitching. There is also a matching composite file named &quot;UV Pass Video Stitching Template.comp&quot; that is in the examples folder.</p>
+</li>
+<li>
+<p>Added a new &quot;DisplaceEquirectangular&quot; macro node that can be used to create 2D mono to 3D stereo panoramic image conversions with the help of a z-depth style greyscale map that is created using either a rotoscoping approach, a rendered depthmap AOV from a 3D package, or from another source like a painted map. There is also a matching example composite named &quot;Forest Stereo 3D Roto Conversion.comp&quot; that shows how this roto depth conversion task can be done.</p>
+</li>
+<li>
+<p>Added a set of &quot;BlurPanoramicWrap&quot;, &quot;DefocusPanoramicWrap&quot;, &quot;GlowPanoramicWrap&quot;, &quot;SharpenPanoramicWrap&quot;, and &quot;UnSharpenMaskPanoramicWrap&quot; macro nodes that wrap the filter effects around the left and right frame border seam zones. There is an example file &quot;Defocus Blur Glow Sharpen Unsharpen.comp&quot; that shows how the different effects work.</p>
+</li>
+<li>
+<p>Updated the roller coaster example scenes named &quot;Roller Coaster Ride EquirectangularRenderer3D.comp&quot;,  &quot;Roller Coaster Ride CylindricalRenderer3D.comp&quot;, &quot;Roller Coaster Ride CubicRenderer3D.comp&quot;, and &quot;Roller Coaster Ride DomemasterRenderer3D.comp&quot; to add stereoscopic rendering support with a side by side pair of panoramic cameras that can give you a previz grade stereoscopic 3D rendered result of the scene. The node RightViewTransform3D is used with an expression to apply a stereoscopic camera separation offset type of effect. Note: Fusion doesn't support raytraced lens shaders so it is not possible to render omnidirectional stereo output at this point in time.</p>
+</li>
+<li>
+<p>Added four <a href="luts.html">Fusion Macro LUTs</a> named &quot;Bright LUT.setting&quot;, &quot;ViewerEquirectangular LUT.setting&quot;, &quot;ViewerMesh LUT.setting&quot;, and &quot;ViewerWarp LUT.setting&quot;. The LUT window Edit controls allow you to modify the field of view of the panoramic media viewers, and adjust the Rotate XYZ controls. You may have to toggle the LUT on/off to see the changes of editing the LUT preferences like the rotation controls as the media in the viewer window can be cached into memory.</p>
+<p>The &quot;<a href="luts.html#viewerequirectangular-lut">ViewerEquirectangular LUT</a>&quot; option is an Equirectangular/Spherical/LatLong panoramic 360° media viewer.</p>
+<p>The &quot;<a href="luts.html#viewermesh-lut">ViewerMesh LUT</a>&quot; option allows allows you to view custom format panoramic images in the viewer window using an OBJ or FBX format mesh file for the base geometry. The LUT window Edit controls allow you to select the mesh file.</p>
+<p>The &quot;<a href="luts.html#viewerwarp-lut">ViewerWarp LUT</a>&quot; option allows you to preview UV Pass warping on images that are loaded in the viewer windows. The LUT window Edit controls allow you to select the uv pass warping mesh file and to adjust the Keep Aspect Ratio button.</p>
+<p>The &quot;<a href="luts.html#bright-lut">Bright LUT</a>&quot; tool allows you to use the LUT to preview color correction settings.</p>
+<p>Fusion 7.x and Fusion 8.2 Beta 2+ support Macro LUTs. For more information on Macro LUTs check out the Fusion help documentation file &quot;Fusion 8 User Manual.pdf&quot; in the &quot;Managing Look Up Tables (LUTs)&quot; chapter. Note: This Macro LUT feature is slightly experimental at this point.</p>
+</li>
+<li>
+<p>Added the &quot;ViewerMesh&quot; and &quot;ViewerMeshStereo&quot; panoramic image viewer macros that allow you to view panoramic imagery by loading the footage onto an OBJ or FBX format polygon mesh.</p>
+</li>
+<li>
+<p>Renamed the &quot;defish&quot; panoramic image viewer macros to a simpler naming style that starts with &quot;Viewer&quot; and then adds the panoramic format name:</p>
+<table>
+  <tr><td><strong>Previous Macro Name</strong></td> <td><strong>Updated Macro Name</strong></td></tr>
+  <tr><td>Equirectangular2DefishedRectangular</td> <td>ViewerEquirectangular</td></tr>
+  <tr><td>EquirectangularStereo2DefishedRectangularStereo</td> <td>ViewerEquirectangularStereo</td></tr>
+  <tr><td>CubicFaces2DefishedRectangular</td> <td>ViewerCubicFaces</td></tr>
+  <tr><td>CubicFacesStereo2DefishedRectangularStereo</td> <td>ViewerCubicFacesStereo</td></tr>
+</table>
+</li>
+<li>
+<p>The &quot;PanoView.lua&quot; and &quot;Edit PanoView Preferences.lua&quot; scripts were edited to enable the &quot;Use Current Frame&quot; checkbox by default. This allows you to scrub through the timeline and send the current frame from the loader node to the PanoView supported viewing tools.</p>
+</li>
+<li>
+<p>The LUA scripts were updated to change all calls to the Fusion constant value &quot;<code>TIME_UNDEFINED</code>&quot; to improve the Fusion 8.1-8.2 compatibility with the &quot;<code>fu.TIME_UNDEFINED</code>&quot; constant value instead.</p>
+</li>
+<li>
+<p>Fixed a Mac and Linux based UVRenderer3D node based seam gap issue that would appear on the right hand &quot;UV gutter edge zone&quot; side of the following macros: &quot;CubicFaces2Cylindrical&quot;, &quot;CubicFaces2Equirectangular&quot;,
+&quot;CylindricalRenderer3D&quot;, &quot;Equirectangular2Cylindrical&quot;, and &quot;EquirectangularRenderer3D&quot;.</p>
+</li>
+<li>
+<p>Turned on the &quot;Enable Lighting&quot; and &quot;Enable Shadows&quot; checkboxes by default for the &quot;CylindricalRenderer3D&quot;,&quot;CylindricalRenderer3D&quot;, &quot;DomemasterRenderer3D&quot;, and &quot;EquirectangularRenderer3D&quot; macros.</p>
+</li>
+<li>
+<p>Updated the &quot;CubicRenderer3D&quot; macro to add the Renderer Type control to allow you to choose to use the Software Renderer or the OpenGL Renderer to create the graphics.</p>
+</li>
+<li>
+<p>Fixed a texture sampling seam artifact that would occur on the &quot;Equirectangular2RotatedEquirectangular&quot; macro node when the view was rotated. The solution was changing the texture sampling from Trilinear to Bilinear in the macro to fix an OpenGL UV renderer related rendering issue.</p>
+</li>
+<li>
+<p>The MeshUV nodes were also updated to fix the OpenGL UV renderer Trilinear vs Bilinear texture sampling issue.</p>
+</li>
+<li>
+<p>Added a new &quot;RotateGearVRMono&quot; node that lets you apply panoramic transforms to Gear VR/Octane ORBX/Vray 6:1 cubic images.</p>
+</li>
+<li>
+<p>The &quot;CubicFaces2RotatedCubicFaces&quot; node was renamed to &quot;RotateCubicFaces&quot;.</p>
+</li>
+<li>
+<p>The &quot;Equirectangular2RotatedEquirectangular&quot; node was renamed to &quot;RotateEquirectangular&quot;. The &quot;RotateEquirectangular&quot; macro was updated so it detects the resolution of the input image and matches it on the rotated output image.</p>
+</li>
+<li>
+<p>Added a new example composite file called &quot;Rotate Panoramas.comp&quot; that shows how the &quot;RotateEquirectangular&quot;, &quot;RotateGearVRMono&quot;, and &quot;RotateCubicFaces&quot; nodes work.</p>
+</li>
+<li>
+<p>Added a new <strong>Ricoh Theta S</strong> panoramic 360° geometry OBJ format mesh file to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>ricoh_theta_s.obj</code></li>
+</ul>
+</li>
+<li>
+<p>Added a new <strong>LatLong</strong> panoramic 360&amp;degx180° geometry OBJ format mesh file to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>latlong.obj</code></li>
+</ul>
+</li>
+<li>
+<p>Added a new <strong>Samsung Gear 360</strong> sample panoramic image to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>samsung_gear360.jpg</code></li>
+</ul>
+</li>
+</ul>
+<h3>Version 2.1 - 2016-07-10</h3>
+<ul>
+<li>
+<p>The PanoView tool now supports the GoPro VR Player.</p>
+</li>
+<li>
+<p>Updated the <code>Send Media to</code> LUA scripts to support Adobe's latest Photoshop 2015.5, Illustrator 2015.3, and After Effects 2015.3 releases.</p>
+</li>
+<li>
+<p>Added the new &quot;CylindricalRenderer3D&quot; node for rendering cylindrical panoramic imagery using Fusion's 3D animation system.</p>
+</li>
+<li>
+<p>Added the new &quot;Equirectangular2Cylindrical&quot; node that allows you to convert Equirectangular/LatLong/Spherical imagery into the cylindrical image projection.</p>
+</li>
+<li>
+<p>Added a new &quot;CubicFaces2Cylindrical&quot; macro for converting 6 individual cubemap images into a combined cylindrical image projection.</p>
+</li>
+<li>
+<p>Added a new &quot;Cylindrical2CubicFaces&quot; macro for converting a cylindrical image projection into a set of six independent 90° FOV cubemap faces.</p>
+</li>
+<li>
+<p>Raised the &quot;Generate UV Pass in PTGui&quot; script's soft limit on the width and height GUI controls to 16384 pixels.</p>
+</li>
+<li>
+<p>The &quot;Send Media to Affinity Designer&quot; and &quot;Send Frames to Affinity Designer&quot; scripts have been updated to support the new Affinity Designer for Windows Beta version.</p>
+</li>
+<li>
+<p>The &quot;Send Media to Corel Photo Paint&quot; and &quot;Send Frame to Corel Photo Paint&quot; scripts have had an issue fixed with a preference variable mismatch.</p>
+</li>
+</ul>
+<h3>Version 2.0.1 - 2016-06-11</h3>
+<ul>
+<li>
+<p>Added a new &quot;AlphaMaskMerge&quot; macro node. The AlphaMaskMerge node allows you to merge an external alpha mask image / B-Spline mask with the current image data. Then an Alpha Multiply operation will clean up transparent areas in the image and fill them with black in the RGB channels by pre-multiplying the alpha channel data. This macro cuts down on the node sprawl when creating a Fusion based UV Pass panoramic stitching project file. The AlphaMaskMerge node can be added to your comp by pressing the &quot;i&quot; hotkey when the flow area is active.</p>
+</li>
+<li>
+<p>Updated the &quot;Open Containing Folder&quot; script to support FBXMesh3D nodes. Now you can select an FBXMesh3D node in your comp and the script will open up a new Finder/Explorer folder window and show you where the file is on your hard disk.</p>
+</li>
+<li>
+<p>Added a new Fusion 7 hotkeys file. Now you can use the same custom Domemaster Fusion Macros hotkeys on Fusion 8 and Fusion 7.</p>
+</li>
+</ul>
+<h3>Version 2.0 - 2016-05-30</h3>
+<ul>
+<li>
+<p>Added notes to the <a href="tips.html#defaults">Tips and Tricks sections of the documentation about setting up the Fusion Comp Defaults</a> in the Fusion Preferences. This is essential for having an accurate frame size, frame rate, and bit depth setting used in the Macro nodes.</p>
+</li>
+<li>
+<p>Added a new <a href="scripts.html#convert-movies-to-image-sequences">Convert Movies to Image Sequences</a> script that lets you extract image sequences from a folder of movie files.</p>
+</li>
+<li>
+<p>Updated PanoView tool to add support for the new Whirligig <strong>Samsung Gear 360 Camera</strong> custom format mode. Corrected the Whirligig &quot;fisheye160&quot; mode so it loads properly.</p>
+</li>
+<li>
+<p>Updated PanoView to add a new &quot;Use Current Frame&quot; checkbox control. If the checkbox is enabled then PanoView will load the image sequence frame from the current timeline playhead position. If the checkbox is disabled the first frame from the image sequence will be loaded in PanoView instead.</p>
+</li>
+<li>
+<p>Updated the <strong><a href="scripts.html#open-360-video-metadata-tool">Open 360 Video Metadata Tool</a></strong> script to handle the fact that the &quot;360 Video Metadata Tool.app&quot; program was recently renamed to &quot;Spatial Media Metadata Injector.app&quot;.</p>
+</li>
+<li>
+<p>Added three new <a href="examples.html#roller-coaster-ride">Roller Coaster Ride</a> example composites. A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the EquirectangularRenderer3D/CubicRenderer3D/DomemasterRenderer3D nodes.</p>
+</li>
+<li>
+<p>Added new &quot;Samsung Gear 360 Camera&quot; panoramic 360° geometry OBJ format mesh file to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>samsung_gear_360_camera.obj</code></li>
+</ul>
+</li>
+<li>
+<p>Changed the <a href="hotkeys.html">Fusion Hotkeys file</a> so the &quot;B&quot; key now adds a BSpline Mask, the &quot;C&quot; key adds a ColorCorrector node, the &quot;K&quot; key adds a ColorCorrectorMasked macro, the &quot;U&quot; key adds a UVPassFromRGBImage macro node, the &quot;F&quot; key adds a &quot;CubicFaces2Equirectangular&quot; macro, the &quot;R&quot; key adds a resize node, and the &quot;O&quot; key runs the &quot;Open Containing Folder&quot; script.</p>
+</li>
+<li>
+<p>Added a new <a href="macros-guide.html#UVPassFromRGBImageOnDisk">UVPassFromRGBImageOnDisk</a> node that does the UV pass warping inline by loading the image as an attribute inside of the node instead of using a separate loader node like the regular UVPassFromRGBImage node requires.</p>
+</li>
+<li>
+<p>Updated the ColorCorrectorMasked node to flip the start and end position gradient colors on the ramp. This makes it really easy to apply a graduated neutral density filter effect with only having to change the brightness control.</p>
+</li>
+</ul>
+<h3>Version 2.0 Beta 3 - 2016-05-25</h3>
+<ul>
+<li>
+<p>Added a new <strong><a href="scripts.html#open-360-video-metadata-tool">Open 360 Video Metadata Tool</a></strong> script that will launch the YouTube 360 / Facebook 360 spatial media metadata embedding program. This makes it a quick process to add the required tags to your panoramic 360 ° movie files so you can view them correctly on streaming video sites.</p>
+</li>
+<li>
+<p>Updated PanoView to add support for the new Whirligig <strong>LG360 Camera</strong> custom format mode.</p>
+</li>
+<li>
+<p>Added new <strong>LG360 Camera</strong> panoramic 360° geometry OBJ format mesh file to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>lg360.obj</code></li>
+</ul>
+</li>
+</ul>
+<h3>Version 2.0 Beta 2 - 2016-05-21</h3>
+<ul>
+<li>Updated the <a href="scripts.html#generate-uv-pass-in-ptgui">Generate UV Pass in PTGui</a> script. Added a new &quot;The &quot;Start View Numbering on 1&quot; control that allows you to adjust the camera view numbering of the PTGui rendered UV Pass map. The &quot;Generate UV Pass in PTGui&quot; script will now update the position of the control points based upon remapping any differences between the resolution of the source images in the original PTGui project file vs the generated uv pass map image resolution. The &quot;Skip Batch Alignment&quot; checkbox was removed from the GUI as it was redundant.</li>
+</ul>
+<h3>Version 2.0 Beta 1- 2016-05-12</h3>
+<ul>
+<li>
+<p>The Domemaster Fusion Macros scripts and macros have been updated to work with the new Fusion 8 final release.</p>
+</li>
+<li>
+<p>Created a new Mac and Windows based graphical installer for the Domemaster Fusion Macros. The macOS based graphical installer has been digitally signed. This means you can now install the Domemaster Fusion Macros easily on macOS when Gatekeeper is enabled and the macOS Security and Privacy system preference is set to allow apps downloaded from &quot;Mac App Store and identified developers&quot;.</p>
+</li>
+<li>
+<p>Added a GUI for the PanoView tool that is accessible by running the &quot;Edit PanoView Preferences&quot; script.</p>
+</li>
+<li>
+<p>Added a new GUI for the &quot;Send Media to&quot; and &quot;Send Frame to&quot; tools that is accessible by running the &quot;Edit Send Media to Preferences&quot; script.</p>
+</li>
+<li>
+<p>Fixed a viewport snapshot issue that effected the PanoView and Send Frame to X scripts on Fusion 8. It is now possible to create a live viewport window snapshot of the &quot;on the fly&quot; of any node (other than a loader or saver node) and have that image sent automatically to the external viewing tool.</p>
+</li>
+<li>
+<p>Added a new &quot;Generate UV Pass in PTGui&quot; script that automates the process of generating a set of UV pass warping maps from a PTgui Pro .pts project file. This script and the pre-computed UV pass maps it creates are used to allow Fusion to use a node based workflow to control the final panoramic 360° multi-camera rig stitching process. This means you don't have to use PTGui's Batch Builder UI any more to stitch 360° image sequences and video clips!</p>
+</li>
+<li>
+<p>Added a new set of HDRI environmental 360° panoramic texture baking macros named <a href="macros-guide.html#Angular2MeshUV">Angular2MeshUV</a>, <a href="macros-guide.html#CubicFaces2MeshUV">CubicFaces2MeshUV</a>, and <a href="macros-guide.html#Equirectangular2MeshUV">Equirectangular2MeshUV</a>. These nodes allow you to reformat panoramic imagery from angular fisheye, cubic, and equirectangular/spherical/LatLong projections to an arbitrary image projection of your own design that is defined using an FBX/OBJ/DAE/3DS/Alembic format polygon mesh and a custom UV Layout. The new MeshUV macros are able to support HDRI high dynamic range 16-bit and 32-bit per channel color depth based panoramic image conversions which are essential when dealing with 360° media that will be used as source imagery for an IBL (image based lighting) workflow.</p>
+</li>
+<li>
+<p>Added a new example composite called &quot;MeshUV Conversions.comp&quot;. This example shows how the new environmental 360° panoramic texture baking macros work.</p>
+</li>
+<li>
+<p>Added a new <a href="examples.html">Fusion Compositing Examples</a> section to the documentation to explain what each of the 27 example files do and included a custom screenshot of the node view for every .comp file.</p>
+</li>
+<li>
+<p>Added a new CubicFaces2DefishedRectangular macro to allow you to take a source 90° FOV cubic faces based panoramic image and &quot;defish&quot; it to extract a normal rectangular image (like a typical 16:9 or 4:3 style video frame) that can be displayed on a normal TV or a monitor. This is handy as a panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+</li>
+<li>
+<p>Added a stereo version of the defishing rectangular macro called CubicFacesStereo2DefishedRectangularStereo. You can route the &quot;defished&quot; rectangular left and right eye images (like a typical 16:9 or 4:3 style video frame) output from this node into an anaglyph merging node like &quot;StereoAnaglyphHalfColorMerge&quot;, or the over/under stereoscopic node &quot;StereoOverUnderMerge&quot;, or the side by side stereoscopic node &quot;StereoSideBySideMerge&quot; for a quick and interactive stereo preview of your composite. <strong>Tip:</strong> If you have a stereo 3D capable TV or video projector connected in the Fusion preferences as a Video Monitoring Device, you can view a final stereo extracted video version of your composite on a true color stereo device with shutter glasses or polarizer lenses.</p>
+</li>
+<li>
+<p>Added a new example composite called &quot;Cubic Faces Defish to Rectangular.comp&quot;. This example shows how the cube map based panorama defishing macros work.</p>
+</li>
+<li>
+<p>Added a new &quot;Send Media to TouchDesigner&quot; script that makes it easy to send the selected media files from your Fusion flow area to a new TouchDesigner session.</p>
+</li>
+<li>
+<p>Added new &quot;Send Frame to Affinity Photo&quot; and &quot;Send Media to Affinity Photo&quot; scripts that make it easy to send the selected media files from your Fusion flow area to a new  Affinity Photo session.</p>
+</li>
+<li>
+<p>Added new &quot;Send Frame to Affinity Designer&quot; and &quot;Send Media to Affinity Designer&quot; scripts that make it easy to send the selected media files from your Fusion flow area to a new Affinity Designer session.</p>
+</li>
+<li>
+<p>Added new &quot;Send Frame to Photomatix Pro&quot; and &quot;Send Media to Photomatix Pro&quot; scripts that make it easy to send the selected media files from your Fusion flow area to a new Photomatix Pro 5 session.</p>
+</li>
+<li>
+<p>Added a new &quot;View Help Documentation&quot; script that opens up the local HTML help documentation for the Domemaster Fusion Macros.</p>
+</li>
+<li>
+<p>Updated the PanoView script to be able to send panoramic imagery in the Facebook 360 pyramid based image projection to the Whirligig viewer.</p>
+</li>
+<li>
+<p>Fixed an issue with the PanoView to Live View Rift viewer linking on macOS.</p>
+</li>
+<li>
+<p>Updated all of the LUA scripts to switch from using the function <code>fusion:MapPath()</code> to <code>comp:MapPath()</code>. This means user defined path maps that are set up in the Fusion preferences for an individual Fusion composite .comp file and referenced in Fusion loader and saver nodes are able to be converted into absolute file paths when any of the LUA based scripts are used.</p>
+</li>
+<li>
+<p>Updated the Notepad++/Gedit/BBEdit/TextWrangler <code>Blackmagic Design Fusion</code> syntax highlighter modules to support processing Fusion <code>.fu</code> hotkey preference files, in addition to the existing Fusion Composite <code>.comp</code>, and Fusion Macros <code>.settings</code> syntax highlighting features.</p>
+</li>
+<li>
+<p>Updated the <code>Domemaster2Equirectangular</code> macro to fix a pole zone interpolation artifact.</p>
+</li>
+<li>
+<p>Added a new Domemaster Fusion Macros hotkey preference file for Fusion 8 and Fusion Studio 8. This hotkey file helps simplify the process of working with panoramic media and adding common Fusion nodes to your composite by reducing many operations down to a single key press. Check out the <a href="hotkeys.html">documentation here for more details on how to use the hotkey preference file</a>.</p>
+<p><strong>Domemaster Fusion Macros Hotkeys List:</strong></p>
+  <table>
+  	<tr><td>Hotkey</td> <td>Tool</td>                             <td>Object Type</td></tr>
+  	<tr><td>TAB</td>    <td>PanoView</td>                         <td>Script</td></tr>
+  	<tr><td>A</td>      <td>Send Media to After Effects</td>      <td>Script</td></tr>
+  	<tr><td>B</td>      <td>Blur</td>                             <td>Node</td></tr>
+  	<tr><td>C</td>      <td>CubicFaces to Equirectangular</td>    <td>Macro</td></tr>
+  	<tr><td>D</td>      <td>Domemaster to Equirectangular</td>    <td>Macro</td></tr>
+  	<tr><td>E</td>      <td>Equirectangular to CubicFaces</td>    <td>Macro</td></tr>
+  	<tr><td>F</td>      <td>Open Containing Folder</td>           <td>Script</td></tr>
+  	<tr><td>G</td>      <td>GridWarp</td>                         <td>Node</td></tr>
+  	<tr><td>K</td>      <td>ColorCorrector</td>                   <td>Node</td></tr>
+  	<tr><td>L</td>      <td>Loader</td>                           <td>Node</td></tr>
+  	<tr><td>M</td>      <td>Merge</td>                            <td>Node</td></tr>
+  	<tr><td>N</td>      <td>Note</td>                             <td>Node</td></tr>
+  	<tr><td>O</td>      <td>OCIOFileTransform</td>                <td>Node</td></tr>
+  	<tr><td>P</td>      <td>Paint</td>                            <td>Node</td></tr>
+  	<tr><td>S</td>      <td>Saver</td>                            <td>Node</td></tr>
+  	<tr><td>T</td>      <td>Tracker</td>                          <td>Node</td></tr>
+  	<tr><td>U</td>      <td>UVGradientMap</td>                    <td>Macro</td></tr>
+  	<tr><td>X</td>      <td>Transform</td>                        <td>Node</td></tr>
+  	<tr><td>W</td>      <td>WhiteBalance</td>                     <td>Node</td></tr>
+  </table>
+</li>
+<li>
+<p>Added new panoramic 360° geometry OBJ format meshes and demo files to the <code>Macros:/Domemaster Fusion Macros/Images/</code> folder:</p>
+<ul>
+<li><code>3x2cubemap.obj</code></li>
+<li><code>angular360degree.obj</code></li>
+<li><code>cylinder.obj</code></li>
+<li><code>facebook_cubemap3x2.obj</code></li>
+<li><code>fulldome_grid_shape.obj</code></li>
+<li><code>fulldome_quads_4_3.obj</code></li>
+<li><code>fulldome_quads_16_9.obj</code></li>
+<li><code>fulldome_quads.obj</code></li>
+<li><code>gearvr.obj</code></li>
+<li><code>horizontal_cross.obj</code></li>
+<li><code>horizontal_strip.obj</code></li>
+<li><code>horizontal_tee.obj</code></li>
+<li><code>mentalray_cube1_horizontal_strip</code></li>
+<li><code>spiral_torus.obj</code></li>
+<li><code>starglobe.obj</code></li>
+<li><code>vertical_cross.obj</code></li>
+<li><code>vertical_strip.obj</code></li>
+<li><code>vertical_tee.obj</code></li>
+</ul>
+</li>
+</ul>
+<h3>Version 1.4.2 - 2016-03-12</h3>
+<ul>
+<li>
+<p>Added a new &quot;Equirectangular2DefishedRectangular&quot; macro to allow you take a source LatLong/Equirectangular/Spherical panoramic image and &quot;defish&quot; it to extract a normal rectangular image (like a typical 16:9 or 4:3 style video frame) that can be displayed on a normal TV or a monitor. This is handy as an panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+</li>
+<li>
+<p>Added a stereo version of the defishing rectangular macro called &quot;EquirectangularStereo2DefishedRectangularStereo&quot;. You can route the &quot;defished&quot; rectangular left and right eye images (like a typical 16:9 or 4:3 style video frame) output from this node into an anaglyph merging node like &quot;StereoAnaglyphHalfColorMerge&quot;, or the over/under stereoscopic node &quot;StereoOverUnderMerge&quot;, or the side by side stereoscopic node &quot;StereoSideBySideMerge&quot; for a quick and interactive stereo preview of your composite. <strong>Tip:</strong> If you have a stereo 3D capable TV or video projector connected in the Fusion preferences as a Video Monitoring Device, you can view a final stereo extracted video version of your composite on a true color stereo device with shutter glasses or polarizer lenses.</p>
+</li>
+</ul>
+<h3>Version 1.4.1 - 2016-03-08</h3>
+<ul>
+<li>
+<p>Added a &quot;<a href="macros-guide.html#ColorCorrectorMasked">ColorCorrectorMasked</a>&quot; macro node that is a hybrid color corrector that allows you to use an internal gradient generator to selectively apply color correction to an image. This is useful for example, if you want to target the color correction effect on a specific part of the frame using a linear gradient to fade off the strength of the color correction. This can help target the adjustments to the Zenith/Nadir pole regions, or the left or right seam edge of a LatLong frame.</p>
+<p>The ColorCorrectorMasked node is also good for applying graduated neutral density filter style color corrections that can restore the details in the cloud and sky region of a panorama.</p>
+<p>If you are working with a LatLong image projection you will likely use the Linear mode all of the time. If you are working with an angular fisheye or &quot;Domemaster&quot; image you will probably want to experiment with the radial mode.</p>
+<p>There is a sample Fusion composite named &quot;ColorCorectorMasked.comp&quot; that shows how the gradient start and end position controls can be used to target the color correction to a specific part of the frame.</p>
+<p><strong>Note:</strong> The <a href="macros-guide.html#ColorCorrectorMasked">ColorCorrectorMasked</a> node and the <a href="macros-guide.html#AlphaMaskErode">AlphaMaskErode</a> nodes are primarily designed to work with imagery that was stitched and warped in a program like PTgui with the individual layers mode enabled. This gives you footage that is ready for use with a compositing package and means you can easily refine the stitching and blending on each view from a multi-camera panoramic 360° rig.</p>
+</li>
+<li>
+<p>Updated the PanoView tool to improve compatibility with Adobe SpeedGrade.</p>
+</li>
+<li>
+<p>Updated the PanoView tool to add support for sending media to the HTC Vive HMD / OSVR / SteamVR using the new SteamVR version of the Whirligig media player.</p>
+</li>
+</ul>
+<h3>Version 1.4 - 2016-02-29</h3>
+<ul>
+<li>
+<p>Added an &quot;<a href="macros-guide.html#AlphaMaskErode">AlphaMaskErode</a>&quot; macro node that helps dilate/erode, and blur the edge of an alpha channel. This is useful for smoothly blending together multi-camera panoramic 360° footage that was stitched in PTgui with the &quot;individual layers&quot; or &quot;individual HDR layers&quot; export options. This node is great for contracting the border of an alpha channel when doing masking on tripod removal tasks, or to help smooth the junction of UV pass converted panoramic imagery when you have overlapping hard edges on the image layers you want to composite together.</p>
+</li>
+<li>
+<p>Added a pair of &quot;Send Frame to After Effects&quot; and &quot;Send Media to After Effects&quot; lua scripts that allow you to send your Fusion media files to After Effects. This is useful for taking your Fusion composited images or camera rig footage into After Effects to build a final comp that is able to include After Effects based filters and effects.</p>
+</li>
+<li>
+<p>Added a pair of &quot;Send Frame to Photoshop&quot; and &quot;Send Media to Photoshop&quot; lua scripts. They will transfer the active loader/saver node media from Fusion and load it in Photoshop. On Fusion 7 for Windows the &quot;Send Frame to Photoshop&quot; script is able do more than just send the typical loader or saver nodes to Photoshop. It is able to also take a live snapshot of the selected node in the comp and send that imagery to Photoshop as an EXR frame. (<strong>Note:</strong> You can edit this script to change the default image file format of the live snapshot sent imagery to other formats like PNG/TIF/TGA/JPG)</p>
+</li>
+<li>
+<p>Added a pair of &quot;Send Frame to Illustrator&quot; and &quot;Send Media to Illustrator&quot; lua scripts that allow you to send your Fusion media files to Illustrator. This is useful for taking a Fusion composited image into Illustrator for building new graphic designs.</p>
+</li>
+<li>
+<p>Added a pair of &quot;Send Frame to Autopano Pro&quot; and &quot;Send Media to Autopano Pro&quot; lua scripts. They will transfer the active loader/saver node media from Fusion and load it in Autopano Pro. As a note, you can edit the script options to work with Autopano Giga too.</p>
+</li>
+<li>
+<p>Added a pair of &quot;Send Frame to Corel Photo Paint&quot; and &quot;Send Media to Corel Photo Paint&quot; lua scripts that allow you to send your Fusion media files to Corel Photo Paint. This is useful for taking a Fusion composited image into Corel Photo Paint for final tweaks, or to quickly paint alpha masks and other effects in Corel Photo Paint.</p>
+</li>
+<li>
+<p>Updated the PanoView script to added support for sending raw unstitched panoramic 360° video captured on a <a href="https://theta360.com/en/">Ricoh Theta S</a> from loader/saver nodes in the current Fusion flow area to the <a href="http://www.whirligig.xyz/player2-1-2/">Whirligig panoramic 360° media viewer</a>.</p>
+</li>
+<li>
+<p>Updated the PanoView script to fix string quoting issues on Whirligig custom format meshes.</p>
+</li>
+<li>
+<p>Updated the PanoView script to added support for sending partially cropped LatLong 360°x90° panoramas to Whirligig.</p>
+</li>
+<li>
+<p>Updated the scripts so they can turn Fusion path maps into absolute file paths.</p>
+</li>
+</ul>
+<h3>Version 1.3.7 - 2016-02-14</h3>
+<ul>
+<li>Added a new example composite named &quot;Ricoh Theta S Stitch.comp&quot; that allows Ricoh Theta S camera users to process the raw unstitched imagery and convert it into a panoramic LatLong 360° format output. Fusion based paint nodes are used to clone out the tripod shadows in the final image.</li>
+<li>Updated the &quot;DomemasterCrossbounceSim&quot; macro to add a new &quot;Crossbounce Saturation&quot; control. The &quot;Crossbounce Saturation&quot; control allows you to adjust the color purity of the crossbounced light. A setting of 1 means a fully detailed and saturated color will be used, a value of 0.5 will use 50% color saturation on the crossbounce reflected light, and a value of 0 will use the greyscale luminance intensity value when calculating the crossbounce light effect.</li>
+<li>Updated the &quot;Open Containing Folder&quot; script to improve compatibility with Fusion 7 on Windows by switching from using a LUA based file exists check to a directory exists check on the current node selection.</li>
+<li>Added the new &quot;Send Media to PTgui.lua&quot; script that will send all of the currently selected loader and saver nodes to PTgui. This is useful if you want to prepare a new PTgui stitching project file with footage from your current comp.</li>
+<li>Added the new &quot;Send Media to Hugin.lua&quot; script that will send all of the currently selected loader and saver nodes to Hugin. This is useful if you want to prepare a new Hugin stitching project file with footage from your current comp. <strong>Note:</strong> After Hugin opens up and asks you for the field of view settings for each of the images a &quot;Save changes to the panorama before closing?&quot; dialog will appear. You should click the &quot;Cancel&quot; button and then Hugin will finish importing your imagery into the current Hugin project.</li>
+<li>Added a new <a href="scripts.html">scripts page</a> to the documentation</li>
+</ul>
+<h3>Version 1.3.6 - 2016-02-05</h3>
+<ul>
+<li>Fixed an issue where the Input Height control wasn't visible on the Domemaster2Equirectangular macro.</li>
+<li>Added a fulldome crossbounce lighting sim macro called <a href="macros-guide.html#DomemasterCrossbounceSim">&quot;DomemasterCrossbounceSim&quot;</a> and an example composite called &quot;Fulldome Crossbounce Sim.comp&quot;. The DomemasterCrossbounceSim macro uses fast 2D image operations to mimic the contrast robbing effect of stray light bouncing across the hemisphere in a dome. You can adjust the DomemasterCrossbounceSim node's screen gain control to adjust the reflectivity of the dome projection surface. When the Crossbounce Blend control is set to 0 you get the raw crossbounce light contribution information. When the Crossbounce Blend control is set to 1.0 you get the combination of the crossbounce lighting simulation composited on top of the original imagery.</li>
+<li>Added an all quads polygon based fulldome mesh named &quot;fulldome.fbx&quot; to the &quot;images&quot; folder in the Domemaster Fusion Macros. This mesh can be used to preview your fulldome imagery on a dome shape inside Fusion's 3D workspace. A demonstration of this workflow is visible in the example composite called &quot;Fulldome Crossbounce Lighting Sim.comp&quot;.</li>
+</ul>
+<h3>Version 1.3.5 - 2016-02-02</h3>
+<ul>
+<li>Added a new <a href="macros-guide.html#CubicFaces2Equirectangular">&quot;CubicFaces2Equirectangular&quot;</a> macro for for converting 6 individual cubemap images into a Equirectangular/LatLong/Spherical image.</li>
+<li>Added a new <a href="macros-guide.html#EquirectangularRenderer3D">&quot;EquirectangularRenderer3D&quot;</a> macro for creating Equirectangular/LatLong/Spherical 360° FOV renderings using Fusion's 3D animation system. This is excellent for creating mograph style output using models and elements loaded in the Fusion 3D workspace.</li>
+<li>Added a new &quot;Equirectangular2RotatedEquirectangular&quot; node for doing direct XYZ rotations on an Equirectangular/LatLong/Spherical image. This is useful for helping level tilted horizons on live action 360° footage.</li>
+<li>Added a new demo scene &quot;Boxworld EquirectangularRenderer3D.comp&quot; that shows how to render content to the Equirectangular/LatLong/Spherical format using Fusions 3D animation system.</li>
+<li>Added a new demo scene &quot;CubicFaces2Equirectangular.comp&quot; that shows how to stitch a set of 90° FOV cubic faces into a LatLong image projection.</li>
+<li>Added a new demo scene &quot;Equirectangular Tripod Repair.comp&quot; that shows a simple workflow for painting out the camera tripod in a LatLong frame. This example shows how to extract the bottom &quot;nadir&quot; cubic view from a LatLong panorama, use the paint node to do a tripod rig removal, and then finally re-insert that cubic view image back into the original LatLong frame.</li>
+<li>Added a new demo scene &quot;Facebook Cubemap3x2.comp&quot; that shows how to extract a Facebook Cubemap 3x2 format image and convert it to an equirectangular format. There is also an example that shows how to take an equirectangular image and convert it into a Facebook Cubemap 3x2 format. And there is an example that shows how to take a Gear VR mono cubic image and convert it into a Facebook Cubemap 3x2 format.</li>
+</ul>
+<h3>Version 1.3.4 - 2016-01-30</h3>
+<ul>
+<li>Added a new <a href="macros-guide.html#CubicFaces2FacebookCubemap3x2">&quot;CubicFaces2FacebookCubemap3x2&quot;</a> macro for converting 6 individual cubemap images into a combined Facebook Cubemap 3x2 format.</li>
+<li>Added a new <a href="macros-guide.html#FacebookCubemap3x22CubicFaces">&quot;FacebookCubemap3x22CubicFaces&quot;</a> macro for taking a merged Facebook Cubemap 3x2 format panorama and extracting 6 individual cubemap images.</li>
+<li>Updated the PanoView tool to add support for the Whirligig panoramic media viewers' new &quot;GardenGnome Cubemap 3x2&quot; and &quot;Facebook Cubemap 3x2&quot; custom formats, along with the &quot;Horizontal Tee&quot; and &quot;Vertical Tee&quot; cubemap formats.</li>
+</ul>
+<h3>Version 1.3.3 - 2015-12-28</h3>
+<ul>
+<li>Added a new <a href="macros-guide.html#CubicFaces2RotatedCubicFaces">&quot;CubicFaces2RotatedCubicFaces&quot;</a> macro for doing cubemap view rotations and horizon levelling.</li>
+<li>Updated the &quot;StereoAnaglyphHalfColorMerge&quot; and &quot;StereoAnaglyphMerge&quot; nodes to add stereo convergence, scale, edge wrapping, and rotation controls.</li>
+</ul>
+<h3>Version 1.3.2 - 2015-12-26</h3>
+<ul>
+<li>Added a new <a href="macros-guide.html#CubicFaces2Domemaster180">&quot;CubicFaces2Domemaster180&quot;</a> macro for high speed cubic to fulldome panoramic image conversions.</li>
+<li>Added a new <a href="macros-guide.html#DomemasterRenderer3D">&quot;DomemasterRenderer3D&quot;</a> macro for creating angular fisheye 180° FOV renderings using Fusion's 3D animation system. This is excellent for creating mograph style output using models and elements loaded in the Fusion 3D workspace.</li>
+<li>Updated the &quot;Domemaster2Equirectangular&quot;, &quot;Angular2Equirectangular&quot;, &quot;Equirectangular2Domemaster180&quot;, and &quot;Equirectangular2Domemaster220&quot; macros to improve the texture sampling along the seam line zones.</li>
+<li>Added two demo scenes called &quot;Boxworld DomemasterRenderer3D.comp&quot; and &quot;Boxworld CubicRenderer3D.comp&quot; that show how Fusion's 3D animation system and the panoramic 360° camera rigs work.</li>
+</ul>
+<h3>Version 1.3.1 - 2015-12-21</h3>
+<ul>
+<li>Updated the &quot;Macros Reference Guide&quot; documentation.</li>
+</ul>
+<h3>Version 1.3 - 2015-12-20</h3>
+<ul>
+<li>Added a new help guide section called the <a href="macros-guide.html">Macros Reference Guide</a> that covers each of the nodes in the Domemaster Fusion Macros toolset.</li>
+<li>Added a set of Angular Fisheye 220 degree conversion macros called &quot;Equirectangular2Domemaster220&quot; and &quot;Equirectangular2InverseDomemaster220&quot;. These nodes let you squeeze a slightly wider field of view into your planetarium style domemaster angular fisheye frame and retain imagery below the typical 180° horizon line cutoff which helps in live action filming situations where you would want a bit more of the foreground to be visible.</li>
+<li>Added a new script &quot;Open Containing Folder&quot; that will open a new desktop Explorer/Finder/Nautilus file browser window to show the folder that holds the selected file loader or saver node media from your Fusion comp.</li>
+<li>Added a <a href="install.html#cube-to-latlong-fuse">note to the installation instructions</a> that mentions the Cube to LatLong fuse should be downloaded from <a href="http://www.comp-fu.com/2011/04/cube-map-to-equirectangular-latlong-map/">Stefan Ihringer's Comp-Fu website</a> and installed into your Fusion/Fuses directory. This node helpful for taking cubic formatted imagery and converting it back into a LatLong/Equirectanuglar/Spherical format.</li>
+</ul>
+<h3>Version 1.2 - 2015-11-24</h3>
+<ul>
+<li>Re-organized the macros folder to place all of the Macros in a &quot;Domemaster Fusion Macros&quot; sub-folder.</li>
+<li>Updated the macros' input and output connection orders so you can now use the Fusion replace command to swap between similar macro types and have the cubic face views automatically line up correctly.</li>
+<li>Added a set of Samsung Gear VR centric conversion macros called &quot;GearVRMono2CubicFaces&quot;, &quot;GearVRStereo2CubicFaces&quot;, &quot;CubicFaces2GearVRMono&quot;, &quot;CubicFaces2GearVRStereo&quot;, and &quot;EquirectangularStereo2GearVRStereo&quot;.</li>
+<li>Added a new &quot;UVPassFromRGBImage&quot; macro to simplify the process of applying a UV Pass to an image. The UV Pass map is applied to the &quot;UVPass&quot; input on the node, and the source image to be warped is applied to the &quot;Image&quot; input connection. You can scroll the UV Pass warping effect horizontally with the &quot;Offset U&quot; slider control. Turning on the flip vertical option will correctly rotate the UV Pass panorama 180 degrees upside down, no matter what image projection you are mapping as the UV Pass input.</li>
+<li>Added a set of background gradient macros that simulate the effect of the Autodesk Maya viewport gradient colors in a rectangular, LatLong, and cubic panorama output formats. The gradient macros are named &quot;MayaBackgroundGradient&quot;, &quot;MayaBackgroundGradientCubicFaces&quot;, and &quot;MayaBackgroundGradientEquirectangular&quot;.</li>
+<li>Renamed the macro &quot;UVAngularGradientMap&quot; to &quot;UVEquirectangular2AngularGradientMap&quot;, and the macro &quot;DomemasterGradientMap&quot; to &quot;UVEquirectangular2DomemasterGradientMap&quot;.</li>
+<li>Updated the &quot;Send Frame to PTgui&quot; script to save the viewer window snapshot images in the .exr format. There are options in the script file that allow you to choose .png, .jpg, .tga, or .tiff formats instead by editing the local variable named &quot;viewportSnapshotImageFormat&quot;.</li>
+<li>Updated the CubicRenderer3D node and revised the UI layout and options.</li>
+<li>Updated the PanoView script so it works better with Windows based file paths, and added options in the <code>PanoView.lua</code> script for enabling Whirligig's new cubic GearVR, Vertical Cross, and Horizontal Cross based mono and stereo 3D panoramic display modes.</li>
+</ul>
+<h3>Version 1.1.4 - 2015-09-26</h3>
+<ul>
+<li>Updated the <a href="getting-started.html">Getting Started With Nodes in Fusion</a> section of the help docs. There is now more details on using the viewer window, LUTs, and how to connect nodes.</li>
+<li>Added a new &quot;Angular2CubicFaces&quot; macro for converting angular fisheye 360 degree imagery to a cube map format.</li>
+<li>Added a new &quot;UVAngularGradientMap&quot; macro for generating an angular 360 fisheye format UV Pass texture map. The &quot;Flip Vertical&quot; attribute on the macro node allows you to inverse the &quot;upwards&quot; direction of the UV map to face &quot;downwards&quot;.</li>
+<li>Added a new &quot;UVDomemasterGradientMap&quot; macro for generating a domemaster 180 degree angular fisheye format UV Pass texture map. The &quot;Flip Vertical&quot; attribute on the macro node allows you to inverse the &quot;upwards&quot; direction of the UV map to face &quot;downwards&quot;.</li>
+<li>Added a new example scene &quot;UV Pass LatLongStereo to Cubemap3x2Stereo&quot; that takes the previous UV Pass remapping demo to the next level and shows how the same UV pass remapping approach can be used to do a side-by-side stereo panoramic conversion of LatLong stereoscopic imagery into a cubemap 3x2 stereoscopic style output. This example has two parts to the composite file: The first part is a parametric UV pass generator that allows you to do XYZ based rotations of the LatLong panoramic UV pass map and then convert it into a cubemap based UV pass output. The second part uses only the pre-computed UV Pass texture map data to do the actual panoramic format conversion on a stereo pair side-by-side image.</li>
+</ul>
+<h3>Version 1.1.3 - 2015-09-25</h3>
+<ul>
+<li>Renamed the &quot;LatLong2CubicFaces&quot; macro to &quot;Equirectangular2CubicFaces&quot; to line up more consistently with the existing equirectangular named macros.</li>
+<li>Added bit depth, and XYZ rotation attributes to the &quot;Equirectangular2CubicFaces&quot; macro.</li>
+<li>Added bit depth and extra channel support attributes to the &quot;CubicRenderer3D&quot; macro.</li>
+<li>Fixed a small horizontal offset issue in the &quot;CubicFaces2HorizontalTee&quot; macro.</li>
+<li>Added a new example scene &quot;UV Pass Texture Projection Demo.comp&quot; to shows how to use UV Pass remapping to do image projection conversions. This demo file could be used to save out a single image with the UV Pass data from the results of a LatLong to cubic format conversion or rotational panoramic transform. Then the UV pass image could be reused when processing a large panoramic 360 degree image sequence to accelerate the warping process.</li>
+<li>Added a new &quot;UVGradientMap&quot; macro for making a rectangular shaped Red+Green gradient color texture map that is suitable for use as a base UV Pass texture element. This macro has to be used with a 16-Bit or 32-Bit float color depth to preserve the required &quot;UV Pass&quot; based color precision. This node helps you save time when re-creating the effect demonstrated in the &quot;UV Pass Texture Projection Demo&quot; example comp in your own composites.</li>
+</ul>
+<h3>Version 1.1.2 - 2015-09-24</h3>
+<ul>
+<li>Updated the PanoView script to automatically detect what platform the script is running on, and which version of Fusion is active.</li>
+<li>Updated the PanoView script to properly escape spaces when viewer snapshots are saved.</li>
+<li>Added a pair of &quot;Send Frame to Hugin&quot; and &quot;Send Frame to PTgui&quot; scripts to move media between Fusion and panoramic stitching programs.</li>
+<li>Added a &quot;LatLong2CubicFaces&quot;  macro for converting LatLong/Equirectangular/Spherical imagery into a 6 faced cubic format. This node can be combined with the different cubic2... nodes to convert LatLong imagery into each of the popular cubic formats like cubemap3x2, vertical cross, horizontal cross, horizontal strip, etc...</li>
+<li>Added a new example comp file &quot;LatLong to Cube Macro Demos.comp&quot; that demonstrates the different types of LatLong2CubicFace conversions. This example also has two stereoscopic examples on the far right that show how to take a pair of left and right latlong stereo images and convert them to the cubemap 3x2 stereo and horizontal strip stereo formats.</li>
+<li>Added a new &quot;CubicRenderer3D&quot; macro for creating cubic renderings using the Fusion 3D system. You can wire this node into your Fusion 3D based flow in place of the standard camera and Renderer3D node. There is an example comp file &quot;CubicRenderer3D Demo.comp&quot; that shows a demonstration of how the node can be used.</li>
+</ul>
+<h3>Version 1.1.1 - 2015-09-15</h3>
+<ul>
+<li>Updated the PanoView script to support sending snapshots of imagery in the current Fusion 7 Viewer to the Oculus Rift. This expands the PanoView script to support more nodes than the just the saver and loader nodes in Fusion 7. The current Fusion 8 beta doesn't support the SaveFile method in the Fusion Viewer window so you are still limited to using media in saver and loader nodes there.</li>
+<li>Added Fusion <strong>Path Map</strong> support to the PanoView script so you can use relative file URLs like <code>Macros:\Images\latlong_wide_ar.jpg</code> to load imagery.</li>
+</ul>
+<h3>Version 1.1 - 2015-09-14</h3>
+<ul>
+<li>Added Fusion 8 on macOS and Linux support.</li>
+<li>Updated the docs and example file paths for cross-platform support.</li>
+<li>Added a new PanoView script for sending media clips to an Oculus Rift HMD.</li>
+<li>Added Gedit, TextWrangler and BBEdit based Fusion Composite and Macro Syntax Highlighters.</li>
+</ul>
+<h3>Version 1.0 - 2015-02-14</h3>
+<ul>
+<li>Updated the docs and packed the official release.</li>
+<li>Added the Notepad++ Fusion Comp syntax highlighter module.</li>
+</ul>
+<h3>Version 1.0 Beta 2 - 2015-01-09</h3>
+<ul>
+<li>Added a set of stereo footage merge and extract tools so users with the Fusion Free version can process stereo footage.</li>
+</ul>
+<h3>Version 1.0 Beta 1 - 2014-12-11</h3>
+<ul>
+<li>Initial beta release</li>
+</ul>
+</body>
+</html>

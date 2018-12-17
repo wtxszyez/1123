@@ -1,0 +1,391 @@
+{
+	Tools = ordered() {
+		FacebookCubemap3x2Stereo2CubicFacesStereo = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#FacebookCubemap3x2Stereo2CubicFacesStereo",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "Cubemap3x2Input",
+					Source = "Background",
+					Name = "Input",
+				}
+			},
+			Outputs = {
+				MainOutput7 = InstanceOutput {
+					SourceOp = "RightViewCropBottom",
+					Source = "Output",
+					Name = "RightViewBottom",
+				},
+				MainOutput3 = InstanceOutput {
+					SourceOp = "LeftViewCropBack",
+					Source = "Output",
+					Name = "LeftViewBack",
+				},
+				MainOutput4 = InstanceOutput {
+					SourceOp = "LeftViewCropLeft",
+					Source = "Output",
+					Name = "LeftViewLeft",
+				},
+				MainOutput11 = InstanceOutput {
+					SourceOp = "RightViewCropTop",
+					Source = "Output",
+					Name = "RightViewTop",
+				},
+				MainOutput6 = InstanceOutput {
+					SourceOp = "LeftViewCropRight",
+					Source = "Output",
+					Name = "LeftViewRight",
+				},
+				MainOutput8 = InstanceOutput {
+					SourceOp = "RightViewCropFront",
+					Source = "Output",
+					Name = "RightViewFront",
+				},
+				MainOutput1 = InstanceOutput {
+					SourceOp = "LeftViewCropBottom",
+					Source = "Output",
+					Name = "LeftViewBottom",
+				},
+				MainOutput12 = InstanceOutput {
+					SourceOp = "RightViewCropRight",
+					Source = "Output",
+					Name = "RightViewRight",
+				},
+				MainOutput5 = InstanceOutput {
+					SourceOp = "LeftViewCropTop",
+					Source = "Output",
+					Name = "LeftViewTop",
+				},
+				MainOutput9 = InstanceOutput {
+					SourceOp = "RightViewCropBack",
+					Source = "Output",
+					Name = "RightViewBack",
+				},
+				MainOutput10 = InstanceOutput {
+					SourceOp = "RightViewCropLeft",
+					Source = "Output",
+					Name = "RightViewLeft",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "LeftViewCropFront",
+					Source = "Output",
+					Name = "LeftViewFront",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 686, 83.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 748.99, 262.3, 337.495, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				Cubemap3x2Input = Merge {
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 16.1069 } },
+				},
+				RightViewCropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2560,
+							Expression = "LeftViewCropFront.XSize*2",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 82.5 } },
+				},
+				RightViewCropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Expression = "0", },
+						YOffset = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 82.5 } },
+				},
+				RightViewCropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2560,
+							Expression = "LeftViewCropFront.XSize*2",
+						},
+						YOffset = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 82.5 } },
+				},
+				RightViewCropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YOffset = Input { Expression = "", },
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 82.5 } },
+				},
+				RightViewCropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input { Expression = "0", },
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 82.5 } },
+				},
+				RightViewCropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YOffset = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 82.5 } },
+				},
+				LeftViewCropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YOffset = Input {
+							Value = 1920,
+							Expression = "(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "Cubemap3x2Input.Background.OriginalHeight/3",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "Cubemap3x2Input.Background.OriginalWidth/4",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 148.5 } },
+				},
+				LeftViewCropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 1920,
+							Expression = "(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+				},
+				LeftViewCropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YOffset = Input {
+							Value = 2880,
+							Expression = "LeftViewCropFront.YSize+(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+				},
+				LeftViewCropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2560,
+							Expression = "LeftViewCropFront.XSize*2",
+						},
+						YOffset = Input {
+							Value = 2880,
+							Expression = "LeftViewCropFront.YSize+(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 148.5 } },
+				},
+				LeftViewCropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2560,
+							Expression = "LeftViewCropFront.XSize*2",
+						},
+						YOffset = Input {
+							Value = 1920,
+							Expression = "(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 148.5 } },
+				},
+				LeftViewCropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Expression = "0", },
+						YOffset = Input {
+							Value = 2880,
+							Expression = "LeftViewCropFront.YSize+(LeftViewCropFront.YSize*2)",
+						},
+						XSize = Input {
+							Value = 1280,
+							Expression = "LeftViewCropFront.XSize",
+						},
+						YSize = Input {
+							Value = 960,
+							Expression = "LeftViewCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -275, 148.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "FacebookCubemap3x2Stereo2CubicFacesStereo"
+}

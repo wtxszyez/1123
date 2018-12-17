@@ -1,0 +1,1708 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 143 },
+	GlobalRange = { 0, 143 },
+	CurrentID = 599,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 8.2.1 build 6",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+		"Temp:\\KartaVR\\crossbounce_sim_from_latlong.0000.png",
+		"Temp:\\KartaVR\\crossbounce_sim.0000.png"
+	},
+	Tools = {
+		Loader3 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -220, 148.5 } },
+		},
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/fulldome_2K.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 5,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				Depth = Input { Value = 5, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -220, 82.5 } },
+		},
+		Offset = GroupOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Center",
+					Name = "Offset",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "SlideTransform",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { -110, 148.5 } },
+			Tools = ordered() {
+				SlideTransform = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.866279069767442, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Loader3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				}
+			},
+		},
+		Reflect1 = MtlReflect {
+			Inputs = {
+				BackgroundMaterial = Input {
+					SourceOp = "Saver1",
+					Source = "Output",
+				},
+				["Reflection.StrengthVariability"] = Input { Value = 0, },
+				["Refraction.RefractiveIndex.RGB"] = Input { Value = 1, },
+				MaterialID = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 82.5 } },
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Choose a Fulldome or LatLong image", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -220, 181.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 380.822, 62.3 }
+			},
+		},
+		Saver1_1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:\\KartaVR\\crossbounce_sim_from_latlong.0000.png",
+						FormatID = "PNGFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "PNGFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "MergeBlend",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 220, 148.5 } },
+		},
+		FBXMesh3D2 = SurfaceFBXMesh {
+			NameSet = true,
+			Inputs = {
+				ImportFile = Input { Value = "Macros:/KartaVR/Images/fulldome.fbx", },
+				TransformToWorld = Input { Value = 0, },
+				["Visibility.Nest"] = Input { Value = 1, },
+				["Visibility.CullBackFace"] = Input { Value = 1, },
+				["ObjectID.ObjectID"] = Input { Value = 1, },
+				MaterialInput = Input {
+					SourceOp = "Reflect2",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 148.5 } },
+		},
+		DomemasterCrossbounceSim1 = GroupOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ResizeInput_2",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ResizeInput_2",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ChangeDepth1_2",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "BrightnessBounce1_2",
+					Source = "Gain",
+					Name = "Screen Gain",
+					MaxScale = 2,
+					Default = 0.2,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "BrightnessBounce1_2",
+					Source = "Saturation",
+					Name = "Crossbounce Saturation",
+					MaxScale = 1,
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "MergeBlend_2",
+					Source = "BlendClone",
+					Name = "Crossbounce Blend",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "MergeBlend_2",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 110, 82.5 } },
+			Tools = ordered() {
+				ResizeInput_2 = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Loader2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -934.191, 76.6 } },
+				},
+				ChangeDepth1_2 = ChangeDepth {
+					CtrlWShown = false,
+					Inputs = {
+						Depth = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "ResizeInput_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -825.809, 76.6 } },
+				},
+				PipeRouter3_2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 43.6 } },
+				},
+				PipeRouter2_2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 76.6 } },
+				},
+				PipeRouter1_2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 109.6 } },
+				},
+				BrightnessBounce1_2 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input { Value = 0.2, },
+						Input = Input {
+							SourceOp = "PipeRouter3_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -605.809, 43.6 } },
+				},
+				FisheyeMask1_2 = GroupOperator {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_3",
+							Source = "MaskHeight",
+							Expression = "ResizeInput_2.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_3",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { -495.809, 12.147 } },
+					Tools = ordered() {
+						FisheyeMask_1_3 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput_2.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce1_2 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input { Value = 100, },
+						Input = Input {
+							SourceOp = "BrightnessBounce1_2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_3",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -495.809, 43.6 } },
+				},
+				TransformBounce1_2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce1_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385.809, 43.6 } },
+				},
+				Bounce1LightMerge_2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter2_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce1_2",
+							Source = "Output",
+						},
+						Gain = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -277.283, 76.6 } },
+				},
+				BrightnessBounce2_2 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.1,
+							Expression = "BrightnessBounce1_2.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1_2.Saturation", },
+						Input = Input {
+							SourceOp = "Bounce1LightMerge_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110.809, 43.6 } },
+				},
+				FisheyeMask2_2 = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1_3",
+							Source = "MaskHeight",
+							Expression = "ResizeInput_2.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1_3",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { -0.80896, 10.6 } },
+					Tools = ordered() {
+						FisheyeMask_1_1_3 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput_2.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce2_2 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1_2.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce2_2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1_3",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -0.80896, 43.6 } },
+				},
+				TransformBounce2_2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce2_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 109.191, 43.6 } },
+				},
+				BouncedLight2_2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Bounce1LightMerge_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce2_2",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge_2.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge_2.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 219.191, 76.6 } },
+				},
+				BrightnessBounce3_2 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.05,
+							Expression = "BrightnessBounce2_2.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1_2.Saturation", },
+						Input = Input {
+							SourceOp = "BouncedLight2_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 384.191, 43.6 } },
+				},
+				BlurBounce3_2 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1_2.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce3_2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1_1_2",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 494.191, 43.6 } },
+				},
+				FisheyeMask3_2 = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1_1_2",
+							Source = "MaskHeight",
+							Expression = "ResizeInput_2.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1_1_2",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { 492.641, 10.6 } },
+					Tools = ordered() {
+						FisheyeMask_1_1_1_2 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput_2.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				TransformBounce3_2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce3_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 604.191, 43.6 } },
+				},
+				BouncedLight3_2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BouncedLight2_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce3_2",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge_2.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge_2.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 714.181, 76.6 } },
+				},
+				DifferenceMatting_2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter1_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3_2",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Difference" }, },
+						SubtractiveAdditive = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 824.191, 109.6 } },
+				},
+				MergeBlend_2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "DifferenceMatting_2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3_2",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 934.191, 76.6 } },
+				}
+			},
+		},
+		Note3 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Simulated Dome Viewing Environment", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 385, 181.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 398.218, 63.4558 }
+			},
+		},
+		FBXMesh3D1 = SurfaceFBXMesh {
+			CtrlWZoom = false,
+			Inputs = {
+				ImportFile = Input { Value = "Macros:/KartaVR/Images/fulldome.fbx", },
+				TransformToWorld = Input { Value = 0, },
+				["Visibility.Nest"] = Input { Value = 1, },
+				["Visibility.CullBackFace"] = Input { Value = 1, },
+				["ObjectID.ObjectID"] = Input { Value = 1, },
+				MaterialInput = Input {
+					SourceOp = "Reflect1",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 82.5 } },
+		},
+		Reflect2 = MtlReflect {
+			NameSet = true,
+			Inputs = {
+				BackgroundMaterial = Input {
+					SourceOp = "Saver1_1",
+					Source = "Output",
+				},
+				["Reflection.StrengthVariability"] = Input { Value = 0, },
+				["Refraction.RefractiveIndex.RGB"] = Input { Value = 1, },
+				MaterialID = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 148.5 } },
+		},
+		DomemasterCrossbounceSim2 = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ResizeInput",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ResizeInput",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ChangeDepth1",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "BrightnessBounce1",
+					Source = "Gain",
+					Name = "Screen Gain",
+					MaxScale = 2,
+					Default = 0.2,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "BrightnessBounce1",
+					Source = "Saturation",
+					Name = "Crossbounce Saturation",
+					MaxScale = 1,
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "MergeBlend",
+					Source = "BlendClone",
+					Name = "Crossbounce Blend",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "MergeBlend",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 110, 148.5 } },
+			Tools = ordered() {
+				ResizeInput = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ViewRotate",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -934.191, 76.6 } },
+				},
+				ChangeDepth1 = ChangeDepth {
+					CtrlWShown = false,
+					Inputs = {
+						Depth = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "ResizeInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -825.809, 76.6 } },
+				},
+				PipeRouter3 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 43.6 } },
+				},
+				PipeRouter2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 76.6 } },
+				},
+				PipeRouter1 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -715.809, 109.6 } },
+				},
+				BrightnessBounce1 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input { Value = 0.2, },
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -605.809, 43.6 } },
+				},
+				FisheyeMask1 = GroupOperator {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { -495.809, 12.147 } },
+					Tools = ordered() {
+						FisheyeMask_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce1 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input { Value = 100, },
+						Input = Input {
+							SourceOp = "BrightnessBounce1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -495.809, 43.6 } },
+				},
+				TransformBounce1 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -385.809, 43.6 } },
+				},
+				Bounce1LightMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce1",
+							Source = "Output",
+						},
+						Gain = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -277.283, 76.6 } },
+				},
+				BrightnessBounce2 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.1,
+							Expression = "BrightnessBounce1.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+						Input = Input {
+							SourceOp = "Bounce1LightMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110.809, 43.6 } },
+				},
+				FisheyeMask2 = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { -0.80896, 10.6 } },
+					Tools = ordered() {
+						FisheyeMask_1_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce2 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -0.80896, 43.6 } },
+				},
+				TransformBounce2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 109.191, 43.6 } },
+				},
+				BouncedLight2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Bounce1LightMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce2",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 219.191, 76.6 } },
+				},
+				BrightnessBounce3 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.05,
+							Expression = "BrightnessBounce2.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+						Input = Input {
+							SourceOp = "BouncedLight2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 384.191, 43.6 } },
+				},
+				BlurBounce3 = Blur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce3",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 494.191, 43.6 } },
+				},
+				FisheyeMask3 = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { 492.641, 10.6 } },
+					Tools = ordered() {
+						FisheyeMask_1_1_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				TransformBounce3 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 604.191, 43.6 } },
+				},
+				BouncedLight3 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BouncedLight2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce3",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 714.181, 76.6 } },
+				},
+				DifferenceMatting = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Difference" }, },
+						SubtractiveAdditive = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 824.191, 109.6 } },
+				},
+				MergeBlend = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "DifferenceMatting",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 934.191, 76.6 } },
+				}
+			},
+		},
+		OverViewNote = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "The DomemasterCrossbounceSim node simulates the effect of fulldome crossbounce lighting. Adjust the screen gain control to adjust the reflectivity of the dome screen. A good starting point is a screen gain value between 0.1 to 0.25", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -227.522, -66.3356 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 1095.4, 95.8117 }
+			},
+		},
+		Saver1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:\\KartaVR\\crossbounce_sim.0000.png",
+						FormatID = "PNGFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "PNGFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "MergeBlend_2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 220, 82.5 } },
+		},
+		Equirectangular2Domemaster220 = GroupOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ViewRotate",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 148.5 } },
+			Tools = ordered() {
+				ViewRotate = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "OrientView",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 10.15 } },
+				},
+				OrientView = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						UseSizeAndAspect = Input { Value = 0, },
+						Angle = Input { Value = -90, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "PolarConversion2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 11.15 } },
+				},
+				PolarConversion2 = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Shape = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LatLongReposition2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 11.15 } },
+				},
+				LatLongReposition2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											Center = Input { Value = { 0.5, 0.3571 } },
+											YSize = Input { Value = 0.7 },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											Center = Input { Value = { 0.5, 0.3571 } },
+											YSize = Input { Value = 0.7 },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										Name = "LatLongReposition2",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 0.3535 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						Size = Input { Value = 0.75, },
+						XSize = Input { Value = 1.001, },
+						YSize = Input { Value = 0.707, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rotate180",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 11.15 } },
+				},
+				Rotate180 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "DomemasterCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 11.15 } },
+				},
+				DomemasterCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Input = Input {
+							SourceOp = "DomemasterScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 11.15 } },
+				},
+				DomemasterScale = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 0.1818181818182 },
+							Expression = "Point(0.5, (2-YSize)/2)",
+						},
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 1.636364, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ScaleSquareAspectRatio",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 11.15 } },
+				},
+				ScaleSquareAspectRatio = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 11.15 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "SlideTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 11.15 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 3440,
+			Height = 1238,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.927253,
+						Offset = { 501.302, 115.224 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.306627680311891,
+							OffsetX = -7.05243664717349,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.888500727802038,
+					RatioY = 91.1003236245955,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.595121951219512,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00956284153005465, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.357723577235772, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 381,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					AutoScale = 4,
+				},
+			},
+			AutoSave = {
+				OnRender = true
+			},
+			Memory = {
+				FramesAtOnce = 4,
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.Right.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "OCIOFileTransformViewLUT",
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							FitMarginY = 0,
+							LUTPlugin = "Comp.Views.Left.SideB.",
+							FarZ = -1000,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							ScaleMode = 1,
+							NearZ = 0
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = -3.59999966621399,
+								X = -24.4000015258789,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = -0.522944629192352,
+								X = -0.0464308559894562,
+								Z = 0.109421029686928
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective",
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.View1.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77778,
+			},
+			LastFile = ",
+			Unsorted = {
+				GlobalEnd = 143
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

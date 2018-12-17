@@ -1,0 +1,318 @@
+{
+	Tools = ordered() {
+		CubicFaces2Domemaster180 = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#CubicFaces2Domemaster180",
+      },
+			Inputs = ordered() {
+        MainInput1 = InstanceInput {
+            SourceOp = "Resize_Front",
+            Source = "Input",
+            Name = "Front",
+          },
+        MainInput2 = InstanceInput {
+            SourceOp = "Resize_Right",
+            Source = "Input",
+            Name = "Right",
+          },
+				MainInput3 = InstanceInput {
+					SourceOp = "Resize_Back",
+					Source = "Input",
+					Name = "Back",
+				},
+			  MainInput4 = InstanceInput {
+					SourceOp = "Resize_Left",
+					Source = "Input",
+					Name = "Left",
+				},
+				MainInput5 = InstanceInput {
+					SourceOp = "Resize_Top",
+					Source = "Input",
+					Name = "Top",
+				},
+				MainInput6 = InstanceInput {
+					SourceOp = "Resize_Bottom",
+					Source = "Input",
+					Name = "Bottom",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Resize_Back",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Dome220Renderer3DTop",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "CubeMapTop",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "CubeMapTop",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 180,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "CubeMapTop",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMergeTop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				FisheyeMergeTop = Merge {
+					NameSet = true,
+					Inputs = {
+						ApplyMaskInverted = Input { Value = 1, },
+						MultiplyByMask = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "CropTop",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "FisheyeMask",
+							Source = "Mask",
+						},
+						Operator = Input { Value = FuID { "XOr" }, },
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "FisheyeMask",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 115.5 } },
+				},
+				CropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Value = 77, },
+						YOffset = Input { Value = 77, },
+						XSize = Input {
+							Value = 1024,
+							Expression = "YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "Resize_Back.Height",
+						},
+						KeepCentered = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Dome220Renderer3DTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 115.5 } },
+				},
+				FisheyeMask = EllipseMask {
+					NameSet = true,
+					Inputs = {
+						Invert = Input { Value = 1, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 1024,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input {
+							Value = 1024,
+							Expression = "Resize_Back.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 49.5 } },
+				},
+				Dome220Renderer3DTop = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1178,
+							Expression = "Height",
+						},
+						Height = Input {
+							Value = 1178,
+							Expression = "Resize_Back.Height*1.15",
+						},
+						Overscan = Input { Value = 1.4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+				},
+				Shape3DTop = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+						["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+						["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+						["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapTop",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+				},
+				CubeMapTop = CubeMap {
+					NameSet = true,
+					Inputs = {
+						Orientation = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+						["Rotate.X"] = Input { Value = -90, },
+						["Rotate.Y"] = Input { Value = 180, },
+						Left = Input {
+							SourceOp = "Resize_Left",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "Resize_Right",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "Resize_Top",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "Resize_Bottom",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "Resize_Front",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "Resize_Back",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+				},
+				Resize_Top = BetterResize {
+					NameSet = true,
+					SourceOp = "Resize_Back",
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height"
+						},
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 214.5 } },
+				},
+				Resize_Right = BetterResize {
+					NameSet = true,
+					SourceOp = "Resize_Back",
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height"
+						},
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 181.5 } },
+				},
+				Resize_Left = BetterResize {
+					NameSet = true,
+					SourceOp = "Resize_Back",
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height"
+						},
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+				},
+				Resize_Front = BetterResize {
+					NameSet = true,
+					SourceOp = "Resize_Back",
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height"
+						},
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 115.5 } },
+				},
+				Resize_Bottom = BetterResize {
+					NameSet = true,
+					SourceOp = "Resize_Back",
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height"
+						},
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 82.5 } },
+				},
+				Resize_Back = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height",
+						},
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 49.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "CubicFaces2Domemaster180"
+}

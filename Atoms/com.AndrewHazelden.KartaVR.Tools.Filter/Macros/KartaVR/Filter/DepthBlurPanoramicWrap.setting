@@ -1,0 +1,652 @@
+{
+	Tools = ordered() {
+		DepthBlurPanoramicWrap = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-filters.html#DepthBlurPanoramicWrap",
+      },
+			Inputs = ordered() {
+			  MainInput1 = InstanceInput {
+					SourceOp = "ImageInputResize",
+					Source = "Input",
+					Name = "Image",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "DepthInputResize",
+					Source = "Input",
+					Name = "Depth",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "EffectMaskBackground",
+					Source = "EffectMask",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ImageInputResize",
+					Source = "Width",
+					MaxScale = 16384,
+					Default = 3840,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ImageInputResize",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "BlurChannel",
+					Name = "Depth Blur Channel",
+					Default = 5,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "Filter",
+					Name = "Depth Blur Filter",
+					Default = 2,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "XBlurSize",
+					Name = "Depth Blur Size",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CanvasShrink",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				ImagePipeRouter4 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageCanvasCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2145, 610.5 } },
+				},
+				CanvasShrink = Crop {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CanvasShrink = Crop {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											XOffset = Input {
+												Value = 3840,
+												Expression = "DepthInputResize.Width",
+											},
+											XSize = Input {
+												Value = 3840,
+												Expression = "DepthInputResize.Width",
+											},
+											YSize = Input {
+												Value = 1920,
+												Expression = "DepthInputResize.Height",
+											},
+											Input = Input {
+												SourceOp = "DepthBlur",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 2255, 16.5 } },
+										Name = "CanvasShrink"
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CanvasShrink = Crop {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											XOffset = Input {
+												Value = 3840,
+												Expression = "DepthInputResize.Width",
+											},
+											XSize = Input {
+												Value = 3840,
+												Expression = "DepthInputResize.Width",
+											},
+											YSize = Input {
+												Value = 1920,
+												Expression = "DepthInputResize.Height",
+											},
+											Input = Input {
+												SourceOp = "DepthBlur",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 2255, 16.5 } },
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						XOffset = Input {
+							Value = 3840,
+							Expression = "DepthInputResize.Width",
+						},
+						XSize = Input {
+							Value = 3840,
+							Expression = "DepthInputResize.Width",
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "DepthInputResize.Height",
+						},
+						Input = Input {
+							SourceOp = "DepthBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2255, 16.5 } },
+				},
+				ImageCanvasCrop = Crop {
+					NameSet = true,
+					SourceOp = "CanvasExpand",
+					Inputs = {
+						XOffset = Input {
+							Value = -3840,
+							Expression = "-DepthInputResize.Width"
+						},
+						XSize = Input {
+							Value = 11520,
+							Expression = "DepthInputResize.Width*3"
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "DepthInputResize.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "ImageRightMerge",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1870, 610.5 } },
+				},
+				EffectMaskCanvasExpand = Crop {
+					NameSet = true,
+					SourceOp = "CanvasExpand",
+					Inputs = {
+						XOffset = Input {
+							Value = -3840,
+							Expression = "-DepthInputResize.Width"
+						},
+						XSize = Input {
+							Value = 11520,
+							Expression = "DepthInputResize.Width*3"
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "DepthInputResize.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "EffectMaskRightMerge",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1870, 313.5 } },
+				},
+				DepthBlur = DepthBlur {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									DepthBlur = DepthBlur {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											Filter = Input { Value = 2, },
+											BlurChannel = Input { Value = 5, },
+											Input = Input {
+												SourceOp = "ImagePipeRouter4",
+												Source = "Output",
+											},
+											BlurImage = Input {
+												SourceOp = "CanvasExpand",
+												Source = "Output",
+											},
+											EffectMask = Input {
+												SourceOp = "EffectMaskCanvasExpand",
+												Source = "Output",
+											}
+										},
+										ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+										Name = "DepthBlur"
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									DepthBlur = DepthBlur {
+										CtrlWZoom = false,
+										NameSet = true,
+										CustomData = {
+										},
+										Inputs = {
+											Filter = Input { Value = 2, },
+											BlurChannel = Input { Value = 5, },
+											Input = Input {
+												SourceOp = "ImagePipeRouter4",
+												Source = "Output",
+											},
+											BlurImage = Input {
+												SourceOp = "CanvasExpand",
+												Source = "Output",
+											},
+											EffectMask = Input {
+												SourceOp = "EffectMaskCanvasExpand",
+												Source = "Output",
+											}
+										},
+										ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						Filter = Input { Value = 2.0, },
+						BlurChannel = Input { Value = 5, },
+						Input = Input {
+							SourceOp = "ImagePipeRouter4",
+							Source = "Output",
+						},
+						BlurImage = Input {
+							SourceOp = "CanvasExpand",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "EffectMaskCanvasExpand",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+				},
+				CanvasExpand = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = -3840,
+							Expression = "-DepthInputResize.Width",
+						},
+						XSize = Input {
+							Value = 11520,
+							Expression = "DepthInputResize.Width*3",
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "DepthInputResize.Height",
+						},
+						Input = Input {
+							SourceOp = "RightMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1870, 16.5 } },
+				},
+				EffectMaskRightMerge = Merge {
+					NameSet = true,
+					SourceOp = "RightMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "EffectMaskRightTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "EffectMaskLeftMerge",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 313.5 } },
+				},
+				ImageRightMerge = Merge {
+					NameSet = true,
+					SourceOp = "RightMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "ImageRightTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ImageLeftMerge",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 610.5 } },
+				},
+				ImageLeftMerge = Merge {
+					NameSet = true,
+					SourceOp = "LeftMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "ImagePipeRouter3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ImageInputResize",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 544.5 } },
+				},
+				EffectMaskLeftMerge = Merge {
+					NameSet = true,
+					SourceOp = "LeftMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "EffectMaskPipeRouter3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "EffectMaskInputResize",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 247.5 } },
+				},
+				RightMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "RightTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "LeftMerge",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						ReferenceSize = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 16.5 } },
+				},
+				ImagePipeRouter3 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter3",
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageLeftTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1760, 478.5 } },
+				},
+				EffectMaskPipeRouter3 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter3",
+					Inputs = {
+						Input = Input {
+							SourceOp = "EffectMaskLeftTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1760, 181.5 } },
+				},
+				LeftMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "DepthPipeRouter3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "DepthInputResize",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						ReferenceSize = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, -49.5 } },
+				},
+				ImageLeftTransform = Transform {
+					NameSet = true,
+					SourceOp = "LeftTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "ImagePipeRouter1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 478.5 } },
+				},
+				EffectMaskRightTransform = Transform {
+					NameSet = true,
+					SourceOp = "RightTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "EffectMaskPipeRouter2",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 313.5 } },
+				},
+				RightTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5 }, },
+						Input = Input {
+							SourceOp = "DepthPipeRouter2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 16.5 } },
+				},
+				EffectMaskLeftTransform = Transform {
+					NameSet = true,
+					SourceOp = "LeftTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "EffectMaskPipeRouter1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 181.5 } },
+				},
+				ImageRightTransform = Transform {
+					NameSet = true,
+					SourceOp = "RightTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "ImagePipeRouter2",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 610.5 } },
+				},
+				LeftTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { -0.5, 0.5 }, },
+						Input = Input {
+							SourceOp = "DepthPipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, -115.5 } },
+				},
+				DepthPipeRouter3 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "LeftTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1760, -115.5 } },
+				},
+				EffectMaskPipeRouter1 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter1",
+					Inputs = {
+						Input = Input {
+							SourceOp = "EffectMaskInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, 181.5 } },
+				},
+				DepthPipeRouter1 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "DepthInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, -115.5 } },
+				},
+				ImagePipeRouter1 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter1",
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, 478.5 } },
+				},
+				EffectMaskPipeRouter2 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter2",
+					Inputs = {
+						Input = Input {
+							SourceOp = "EffectMaskInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, 313.5 } },
+				},
+				ImagePipeRouter2 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter2",
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, 610.5 } },
+				},
+				DepthPipeRouter2 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "DepthInputResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1320, 16.5 } },
+				},
+				DepthInputResize = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					SourceOp = "ImageInputResize",
+					Inputs = {
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, -49.5 } },
+				},
+				EffectMaskInputResize = BetterResize {
+					NameSet = true,
+					SourceOp = "DepthInputResize",
+					Inputs = {
+						ResetSize = Input { },
+						Input = Input {
+							SourceOp = "EffectMaskBackground",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 247.5 } },
+				},
+				ImageInputResize = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 544.5 } },
+				},
+				EffectMaskBackground = Background {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "DepthInputResize.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "DepthInputResize.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftRed = Input { Value = 1, },
+						TopLeftGreen = Input { Value = 1, },
+						TopLeftBlue = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 247.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "DepthBlurPanoramicWrap"
+}

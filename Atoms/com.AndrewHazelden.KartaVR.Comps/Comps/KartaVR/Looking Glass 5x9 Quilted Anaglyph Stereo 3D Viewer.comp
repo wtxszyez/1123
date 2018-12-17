@@ -1,0 +1,1082 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 43 },
+	GlobalRange = { 0, 45 },
+	CurrentID = 326,
+	HiQ = true,
+	MotionBlur = false,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader4 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/lg_green_lantern_5x9_quilted.0001.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = 1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 90,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = -45,
+					GlobalEnd = 45
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -495, -15.3109 } },
+		},
+		StereoAnaglyphHalfColorMerge = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				Settings = {
+				},
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoAnaglyphHalfColorMerge"
+			},
+			Inputs = ordered() {
+				Left = InstanceInput {
+					SourceOp = "InputScalingLeft2",
+					Source = "Input",
+					Name = "Left",
+				},
+				Right = InstanceInput {
+					SourceOp = "InputScalingRight2",
+					Source = "Input",
+					Name = "Right",
+				},
+				Width = InstanceInput {
+					SourceOp = "InputScalingLeft2",
+					Source = "Width",
+					Expression = "Height*1.333",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Height = InstanceInput {
+					SourceOp = "InputScalingLeft2",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+				Saturation = InstanceInput {
+					SourceOp = "HalfColorLeft",
+					Source = "Saturation1",
+					Name = "Saturation",
+					Default = 0.5,
+				},
+				Edges = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Edges",
+					Default = 1,
+				},
+				Convergence = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Center",
+					Name = "Convergence",
+				},
+				Size = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Size",
+					Default = 1,
+				},
+				Angle = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Angle",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AnaglyphHalfColorMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -55, 16.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 456, 163.3, 228, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				AnaglyphHalfColorMerge = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 16, },
+						Background = Input {
+							SourceOp = "HalfColorRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "HalfColorLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 109.15 } },
+				},
+				HalfColorRight = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						WheelSaturation1 = Input { Expression = "HalfColorLeft.Saturation1", },
+						Saturation1 = Input { Expression = "HalfColorLeft.Saturation1", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "SlideTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 109.15 } },
+				},
+				SlideTransform = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScalingRight2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55.707, 109.15 } },
+				},
+				HalfColorLeft = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "InputScalingLeft2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+				},
+				InputScalingLeft2 = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1365,
+							Expression = "Height*1.333",
+						},
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ImageGridViewCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 10.15 } },
+				},
+				InputScalingRight2 = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1365,
+							Expression = "InputScalingLeft2.Width",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingLeft2.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ImageGridViewCrop_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 109.15 } },
+				}
+			},
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "This comp will decode a static Looking Glass display 5x9 quilted grid based linear array image and preview it on a desktop monitor as anagyph stereo 3D imagery.\n\nThe comp uses a pair of TimeStretcher + Crop nodes the clip out each of the quilted grid images into their own separate images. The stereo display works by having the right eye stereo view display one image view later in the linear camera array sequence then the left eye sees.\n\nThere are 5x9 quilted views so the timeline starts on frame  \"Gobal In -45\"", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -330, -149.149 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 373.561, 76.0036 }
+			},
+		},
+		StereoSideBySideMerge = GroupOperator {
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoSideBySideMerge",
+			},
+			Inputs = ordered() {
+				Left = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Input",
+					Name = "Left",
+				},
+				Right = InstanceInput {
+					SourceOp = "InputScalingRight",
+					Source = "Input",
+					Name = "Right",
+				},
+				Width = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Width",
+					Expression = "Height*1.333*2",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Height = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OverUnderCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -55, -49.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 566, 163.3, 283, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				OverUnderCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2730,
+							Expression = "InputScalingLeft.Width",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "InputScalingLeft.Height",
+						},
+						Input = Input {
+							SourceOp = "ViewMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 109.15 } },
+				},
+				ViewMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "ViewTransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ViewTransformLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 109.15 } },
+				},
+				ViewTransformRight = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5 }, },
+						Input = Input {
+							SourceOp = "ScaleHalfHeightRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 109.15 } },
+				},
+				ViewTransformLeft = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ScaleHalfHeightLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -1, 10.15 } },
+				},
+				ScaleHalfHeightLeft = Scale {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						XSize = Input { Value = 0.5, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "InputScalingLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -109, 10.15 } },
+				},
+				ScaleHalfHeightRight = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						XSize = Input { Value = 0.5, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Input = Input {
+							SourceOp = "InputScalingRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 109.15 } },
+				},
+				InputScalingLeft = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2730,
+							Expression = "Height*1.333*2",
+						},
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ImageGridViewCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 10.15 } },
+				},
+				InputScalingRight = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2730,
+							Expression = "InputScalingLeft.Width",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingLeft.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ImageGridViewCrop_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 109.15 } },
+				}
+			},
+		},
+		ImageGridExtractorRight = GroupOperator {
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-photogrammetry.html#ImageGridExtractor",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ImageGridTimeStretcher_1",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ImageGridCustomTool_1",
+					Source = "HorizontalTiles",
+					Default = 13,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ImageGridCustomTool_1",
+					Source = "VerticalTiles",
+					Default = 10,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ImageGridViewCrop_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -275, 16.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 346, 64.3, 173, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				ImageGridTimeStretcher_1 = TimeStretcher {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 0,
+							Expression = "floor((time+1)/(ImageGridCustomTool_1.HorizontalTiles*ImageGridCustomTool_1.VerticalTiles))",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				},
+				ImageGridViewCrop_1 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1600,
+							Expression = "((time+1)%ImageGridCustomTool_1.HorizontalTiles)  * (ImageGridCustomTool_1.Image1.Width / ImageGridCustomTool_1.HorizontalTiles) % ImageGridCustomTool_1.Image1.Width",
+						},
+						YOffset = Input { Expression = "(floor((time+1)/(ImageGridCustomTool_1.HorizontalTiles)) * (ImageGridCustomTool_1.Image1.Height / ImageGridCustomTool_1.VerticalTiles)) % ImageGridCustomTool_1.Image1.Height", },
+						XSize = Input {
+							Value = 800,
+							Expression = "ImageGridCustomTool_1.Image1.Width / ImageGridCustomTool_1.HorizontalTiles",
+						},
+						YSize = Input {
+							Value = 600,
+							Expression = "ImageGridCustomTool_1.Image1.Height / ImageGridCustomTool_1.VerticalTiles",
+						},
+						Input = Input {
+							SourceOp = "ImageGridCustomTool_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 111, 10.15 } },
+				},
+				ImageGridCustomTool_1 = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "ImageGridCustomTool_1LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "ImageGridCustomTool_1LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "ImageGridCustomTool_1LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "ImageGridCustomTool_1LUTIn4",
+							Source = "Value",
+						},
+						Intermediate4 = Input { Value = "Width\n", },
+						Image1 = Input {
+							SourceOp = "ImageGridTimeStretcher_1",
+							Source = "Output",
+						},
+						HorizontalTiles = Input { Value = 5, },
+						VerticalTiles = Input { Value = 9, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+					UserControls = ordered() {
+						HorizontalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "HorizontalTiles",
+						},
+						VerticalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "VerticalTiles",
+						}
+					}
+				},
+				ImageGridCustomTool_1LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomTool_1LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomTool_1LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomTool_1LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				}
+			},
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader4",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { -385, -16.5 } },
+		},
+		ImageGridExtractorLeft = GroupOperator {
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-photogrammetry.html#ImageGridExtractor",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ImageGridTimeStretcher",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "HorizontalTiles",
+					Default = 13,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "VerticalTiles",
+					Default = 10,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ImageGridViewCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -275, -49.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 346, 64.3, 173, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				ImageGridCustomTool = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "ImageGridCustomToolLUTIn4",
+							Source = "Value",
+						},
+						Intermediate4 = Input { Value = "Width\n", },
+						Image1 = Input {
+							SourceOp = "ImageGridTimeStretcher",
+							Source = "Output",
+						},
+						HorizontalTiles = Input { Value = 5, },
+						VerticalTiles = Input { Value = 9, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+					UserControls = ordered() {
+						HorizontalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "HorizontalTiles",
+						},
+						VerticalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "VerticalTiles",
+						}
+					}
+				},
+				ImageGridCustomToolLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomToolLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomToolLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ImageGridCustomToolLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ImageGridViewCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2400,
+							Expression = "(time%ImageGridCustomTool.HorizontalTiles)  * (ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles) % ImageGridCustomTool.Image1.Width",
+						},
+						YOffset = Input {
+							Value = 1200,
+							Expression = "(floor(time/(ImageGridCustomTool.HorizontalTiles)) * (ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles)) % ImageGridCustomTool.Image1.Height",
+						},
+						XSize = Input {
+							Value = 800,
+							Expression = "ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles",
+						},
+						YSize = Input {
+							Value = 600,
+							Expression = "ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles",
+						},
+						Input = Input {
+							SourceOp = "ImageGridCustomTool",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 111, 10.15 } },
+				},
+				ImageGridTimeStretcher = TimeStretcher {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 0,
+							Expression = "floor(time/(ImageGridCustomTool.HorizontalTiles*ImageGridCustomTool.VerticalTiles))",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1440,
+			Height = 734,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.54055,
+						Offset = { 431.504, 104.977 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.0964912280701755,
+							OffsetX = 42.4561403508772,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = 20,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.660627177700348,
+					RatioY = 99.75,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.581267217630854,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00710900473933649, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.338842975206612, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 485,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.624142661179698, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.375857338820302, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					AutoScale = 1,
+					Auto = false
+				},
+			},
+			Memory = {
+				Render = {
+					SimultaneousBranching = true
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			NumberStyles = {
+				ClipFrame = 1
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ShowControls = false,
+						ScaleMode = 1
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ShowControls = false,
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					FullScreen = false,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					AlwaysOnTop = true,
+					PrevCtrlActiveColor = 0,
+					PickH = 1
+				},
+				View2 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View5 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View3 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				},
+				View4 = {
+					PickH = 1,
+					FullScreen = false,
+					PickW = 1,
+					AlwaysOnTop = true
+				}
+			},
+			FrameFormat = {
+				Name = "DSI HD",
+				Rate = 24,
+				GuideRatio = 1,
+				DepthFull = 3,
+				DepthPreview = 3,
+				DepthInteractive = 3,
+			},
+			Unsorted = {
+				GlobalEnd = 45
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			},
+			Paths = {
+				EnableReverseMapping = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

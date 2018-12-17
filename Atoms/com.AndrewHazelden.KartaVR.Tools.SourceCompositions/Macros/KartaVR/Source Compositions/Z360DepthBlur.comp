@@ -1,0 +1,1255 @@
+Composition {
+	CurrentTime = 4,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 144 },
+	CurrentID = 9939,
+	HiQ = true,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.2.1 build 6",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader36 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/z360_stereo.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 2095.5 } },
+		},
+		ZDepthColorCorrector = ColorCorrector {
+			NameSet = true,
+			CurrentSettings = 2,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							ZDepthColorCorrector = ColorCorrector {
+								Inputs = {
+									HistogramIgnoreTransparent = Input { Value = 1 },
+									ColorRanges = Input {
+										Value = ColorCurves {
+											Curves = {
+												{
+													Points = {
+														{ 0, 1 },
+														{ 0.4, 0.2 },
+														{ 0.6, 0 },
+														{ 1, 0 }
+													}
+												},
+												{
+													Points = {
+														{ 0, 0 },
+														{ 0.4, 0 },
+														{ 0.6, 0.2 },
+														{ 1, 1 }
+													}
+												}
+											}
+										}
+									},
+									Input = Input {
+										SourceOp = "RGBCropTop",
+										Source = "Output"
+									}
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2805, 2293.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				MasterRGBContrast = Input { Value = 2.2, },
+				MasterRGBGamma = Input { Value = 0.6, },
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				PreDividePostMultiply = Input { Value = 1, },
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "ZDepthCropTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2805, 2293.5 } },
+		},
+		DepthPipeRouter2 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3465, 1732.5 } },
+		},
+		DepthPipeRouter3 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "LeftTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3905, 1600.5 } },
+		},
+		ViewMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "ViewTransformRight",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "ViewTransformLeft",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 4950, 2029.5 } },
+		},
+		ImagePipeRouter3 = PipeRouter {
+			NameSet = true,
+			SourceOp = "DepthPipeRouter3",
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageLeftTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3905, 1831.5 } },
+		},
+		Note4 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "These nodes take a set of over/under arranged stitched Color + Depth equirectangular 360° images and process them using a stereo 3D displacement workflow. The left view controls are expression linked to the right view controls.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1705, 874.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 1458.78, 305.478 }
+			},
+		},
+		CanvasExpand = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = -6144,
+					Expression = "-PanoMerge.Background.OriginalWidth",
+				},
+				XSize = Input {
+					Value = 18432,
+					Expression = "PanoMerge.Background.OriginalWidth*3",
+				},
+				YSize = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2",
+				},
+				Input = Input {
+					SourceOp = "RightMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4015, 1732.5 } },
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3300, 1666.5 } },
+		},
+		DepthChannelBlur = Blur {
+			NameSet = true,
+			CurrentSettings = 2,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							DepthBlur = Blur {
+								Inputs = {
+									XBlurSize = Input { Value = 0 },
+									Input = Input {
+										SourceOp = "CanvasExpand",
+										Source = "Output"
+									}
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 4125, 1732.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				XBlurSize = Input { Value = 8, },
+				Input = Input {
+					SourceOp = "CanvasExpand",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4125, 1732.5 } },
+		},
+		ImageRightMerge = Merge {
+			NameSet = true,
+			SourceOp = "RightMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "ImageRightTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "ImageLeftMerge",
+					Source = "Output",
+				},
+				ReferenceSize = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 3905, 1963.5 } },
+		},
+		ImagePipeRouterLeft = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageCanvasCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 4290, 1963.5 } },
+		},
+		Note3 = Note {
+			Inputs = {
+				Comments = Input { Value = "Apply a pair of isolated color correctors for the RGB color and greyscale depthmap channel saturation/gamma/gain/contrast", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2640, 1402.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 510.34, 170.842 }
+			},
+		},
+		ImagePipeRouter2 = PipeRouter {
+			NameSet = true,
+			SourceOp = "DepthPipeRouter2",
+			Inputs = {
+				Input = Input {
+					SourceOp = "PipeRouter1Left",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3465, 1963.5 } },
+		},
+		RightMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "RightTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "LeftMerge",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				ReferenceSize = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 3905, 1732.5 } },
+		},
+		PipeRouter3 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "PanoMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 2585, 2095.5 } },
+		},
+		RGBColorCorrector = ColorCorrector {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							RGBColorCorrector = ColorCorrector {
+								Inputs = {
+									WheelSaturation1 = Input { Value = 1.3 },
+									ColorRanges = Input {
+										Value = ColorCurves {
+											Curves = {
+												{
+													Points = {
+														{ 0, 1 },
+														{ 0.4, 0.2 },
+														{ 0.6, 0 },
+														{ 1, 0 }
+													}
+												},
+												{
+													Points = {
+														{ 0, 0 },
+														{ 0.4, 0 },
+														{ 0.6, 0.2 },
+														{ 1, 1 }
+													}
+												}
+											}
+										}
+									},
+									Input = Input {
+										SourceOp = "ZDepthCropBottom",
+										Source = "Output"
+									},
+									HistogramIgnoreTransparent = Input { Value = 1 }
+								},
+								Name = "RGBColorCorrector",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							RGBColorCorrector = ColorCorrector {
+								Inputs = {
+									WheelSaturation1 = Input { Value = 1.3 },
+									ColorRanges = Input {
+										Value = ColorCurves {
+											Curves = {
+												{
+													Points = {
+														{ 0, 1 },
+														{ 0.4, 0.2 },
+														{ 0.6, 0 },
+														{ 1, 0 }
+													}
+												},
+												{
+													Points = {
+														{ 0, 0 },
+														{ 0.4, 0 },
+														{ 0.6, 0.2 },
+														{ 1, 1 }
+													}
+												}
+											}
+										}
+									},
+									Input = Input {
+										SourceOp = "ZDepthCropBottom",
+										Source = "Output"
+									},
+									HistogramIgnoreTransparent = Input { Value = 1 }
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				PreDividePostMultiply = Input { Value = 1, },
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "RGBCropTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+		},
+		LeftMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "DepthPipeRouter3",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				ReferenceSize = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 3905, 1666.5 } },
+		},
+		ImageRightTransform = Transform {
+			NameSet = true,
+			SourceOp = "RightTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "ImagePipeRouter2",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 3685, 1963.5 } },
+		},
+		PipeRouter1Left = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "RGBColorCorrector",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3300, 1897.5 } },
+		},
+		ImageCanvasCrop = Crop {
+			NameSet = true,
+			SourceOp = "CanvasExpand",
+			Inputs = {
+				XOffset = Input {
+					Value = -6144,
+					Expression = "-PanoMerge.Background.OriginalWidth"
+				},
+				XSize = Input {
+					Value = 18432,
+					Expression = "PanoMerge.Background.OriginalWidth*3"
+				},
+				YSize = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2"
+				},
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "ImageRightMerge",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 4015, 1963.5 } },
+		},
+		ViewTransformRight = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 0.5, 1.5 }, },
+				Input = Input {
+					SourceOp = "CanvasShrink",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4950, 1732.5 } },
+		},
+		ImagePipeRouter1 = PipeRouter {
+			NameSet = true,
+			SourceOp = "DepthPipeRouter1",
+			Inputs = {
+				Input = Input {
+					SourceOp = "PipeRouter1Left",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3465, 1831.5 } },
+		},
+		RGBCropTop = Crop {
+			NameSet = true,
+			Inputs = {
+				YOffset = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2",
+				},
+				XSize = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalWidth",
+				},
+				YSize = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2",
+				},
+				Input = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2640, 1897.5 } },
+		},
+		ImageLeftTransform = Transform {
+			NameSet = true,
+			SourceOp = "LeftTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "ImagePipeRouter1",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 3685, 1831.5 } },
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "Apply a panoramic edge of frame aware stereoscopic depth blur effect.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 3355, 1402.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 1143.43, 170.911 }
+			},
+		},
+		ZDepthCropTop = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalWidth",
+				},
+				YSize = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2",
+				},
+				Input = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2640, 2293.5 } },
+		},
+		OverUnderCrop = Crop {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalWidth",
+				},
+				YSize = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalHeight",
+				},
+				Input = Input {
+					SourceOp = "ViewMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 5115, 2029.5 } },
+		},
+		RightTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 1.5, 0.5 }, },
+				Input = Input {
+					SourceOp = "DepthPipeRouter2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 3685, 1732.5 } },
+		},
+		ViewTransformLeft = Transform {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4950, 2293.5 } },
+		},
+		PanoMerge = Merge {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "Loader36",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2475, 2095.5 } },
+		},
+		DepthBlur = DepthBlur {
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							DepthBlur = DepthBlur {
+								Inputs = {
+									Filter = Input { Value = 1 },
+									Input = Input {
+										SourceOp = "ImagePipeRouter4",
+										Source = "Output"
+									},
+									EffectMask = Input {
+										SourceOp = "EffectMaskCanvasExpand",
+										Source = "Output"
+									},
+									BlurChannel = Input { Value = 5 },
+									BlurImage = Input {
+										SourceOp = "CanvasExpand",
+										Source = "Output"
+									}
+								},
+								Name = "DepthBlur",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							DepthBlur = DepthBlur {
+								Inputs = {
+									Filter = Input { Value = 1 },
+									Input = Input {
+										SourceOp = "ImagePipeRouter4",
+										Source = "Output"
+									},
+									EffectMask = Input {
+										SourceOp = "EffectMaskCanvasExpand",
+										Source = "Output"
+									},
+									BlurChannel = Input { Value = 5 },
+									BlurImage = Input {
+										SourceOp = "CanvasExpand",
+										Source = "Output"
+									}
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				Filter = Input { Value = 2, },
+				BlurChannel = Input { Value = 5, },
+				Input = Input {
+					SourceOp = "ImagePipeRouterLeft",
+					Source = "Output",
+				},
+				BlurImage = Input {
+					SourceOp = "DepthChannelBlur",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4290, 1732.5 } },
+		},
+		CanvasShrink = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalWidth",
+				},
+				XSize = Input {
+					Value = 6144,
+					Expression = "PanoMerge.Background.OriginalWidth",
+				},
+				YSize = Input {
+					Value = 3072,
+					Expression = "PanoMerge.Background.OriginalHeight/2",
+				},
+				Input = Input {
+					SourceOp = "DepthBlur",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 4400, 1732.5 } },
+		},
+		LeftTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { -0.5, 0.5 }, },
+				Input = Input {
+					SourceOp = "DepthPipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 3685, 1600.5 } },
+		},
+		DepthPipeRouter1 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3465, 1600.5 } },
+		},
+		ImageLeftMerge = Merge {
+			NameSet = true,
+			SourceOp = "LeftMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "ImagePipeRouter3",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "PipeRouter1Left",
+					Source = "Output",
+				},
+				ReferenceSize = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 3905, 1897.5 } },
+		},
+		Note2 = Note {
+			Inputs = {
+				Comments = Input { Value = "This section applies a final stereo convergence \"offset\" effect and then merges the left and right views into an Over/Under Stereo 3D layout", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 4785, 1402.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 680.57, 173.955 }
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 3440,
+			Height = 1169,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 288, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Orthogonal",
+						Scale = 0.696461,
+						Offset = { -1754.31, -1450.33 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 439 },
+							ScaleX = 0.308771929824561,
+							OffsetX = -7.10175438596491,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = TimeView { VisibleRange = { 4, 144 } }
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.857933042212518,
+					RatioY = 1,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.403100775193798,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00854700854700855, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.546942291128338, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 486,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 2,
+				},
+			},
+			Memory = {
+				FramesAtOnce = 1,
+				Render = {
+					SimultaneousBranching = true
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+						Channel = 4294967295
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.Right.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 0,
+								X = 30,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				Left = {
+					Viewer = {
+						LUTPlugin = "Fuse.sRGB_VSFuse",
+						Channel = 4294967295,
+						ShowControls = false,
+						LUTSelected = "sRGB",
+						Normalise = true,
+						ScaleMode = 1,
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					SubView = {
+						Enabled = false,
+						GLHistogramViewer = {
+							AutoBounds = true
+						},
+					},
+					Controls = {
+						SnapPixel = false,
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								sRGB = ViewOperator {
+									NameSet = true
+								}
+							},
+							ID = "Fuse.sRGB_VSFuse"
+						},
+						SelectedPlugin = "Fuse.sRGB_VSFuse",
+						SelectedName = "sRGB",
+						Recent = {
+							SelectedPlugin = "Fuse.sRGB_VSFuse",
+							FusionViewLUT = {
+								Tools = ordered() {
+									FusionViewLUT = ViewLUTOp {
+										NameSet = true,
+										Inputs = {
+										}
+									}
+								}
+							},
+							SelectedName = "sRGB"
+						}
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							FitMarginY = 0,
+							LUTPlugin = "Comp.Views.Left.SideB.",
+							ScaleMode = 1,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					Stereo = {
+						Enabled = false,
+						Swap = true,
+						DisplayMethod = "Right Eye Only",
+						ABSource = false,
+						AnaglyphMethod = "Monochrome",
+						StackMethod = "Vertical",
+						Stack = true,
+						AnaglyphColor = "Red/Cyan"
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 0,
+								X = 30,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					FullScreen = false,
+					PickW = 1,
+					PickH = 1,
+					AlwaysOnTop = true,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.View1.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				Width = 3840,
+				Height = 1920,
+				Rate = 24,
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "Comp:/Media/color.pts",
+			PolyKeyListDlg = {
+				Window = {
+					Left = 979,
+					Top = 360
+				}
+			},
+			Unsorted = {
+				GlobalEnd = 144,
+				RenderSettings = {
+					Configs = {
+						Preview = {
+							StepRender = false,
+							PriorityClasses = "all",
+							CustomAspect = true,
+							StepSize = 5,
+							SizeType = 1,
+							CustomHeight = 240,
+							ShowSlaves = false,
+							CustomWidth = 320,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = false
+						},
+						Final = {
+							StepRender = false,
+							PriorityClasses = "all",
+							CustomAspect = true,
+							StepSize = 5,
+							SizeType = 1,
+							CustomHeight = 240,
+							ShowSlaves = false,
+							CustomWidth = 320,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = true
+						}
+					},
+					PreviewConfig = "Preview",
+					CurrentConfig = "Final"
+				}
+			},
+			Paths = {
+				Map = {
+				}
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

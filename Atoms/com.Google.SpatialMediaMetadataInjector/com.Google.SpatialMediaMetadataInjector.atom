@@ -1,0 +1,97 @@
+Atom {
+	Name = "Spatial Media Metadata Injector",
+	Category = "Bin",
+	Author = "Google",
+	Version = 2.1,
+	Date = {2018, 8, 27},
+	Description = [[<p>The Google Spatial Media Metadata Injector tool adds 360&deg; panoramic metadata to MP4 and Quicktime .mov video files.</p>
+
+<h2>For More Information</h2>
+<p>https://github.com/google/spatial-media</p>
+
+]],
+	Deploy = {
+		"Bin/360VideosMetadata/README.md",
+		"Bin/360VideosMetadata/docs/coordinate.png",
+		"Bin/360VideosMetadata/docs/equirect.jpg",
+		"Bin/360VideosMetadata/docs/fisheye.jpg",
+		"Bin/360VideosMetadata/docs/motion1.jpg",
+		"Bin/360VideosMetadata/docs/motion2.jpg",
+		"Bin/360VideosMetadata/docs/motion3.jpg",
+		"Bin/360VideosMetadata/docs/spatial-audio-rfc.md",
+		"Bin/360VideosMetadata/docs/spherical-video-rfc.md",
+		"Bin/360VideosMetadata/docs/spherical-video-v2-rfc.md",
+		"Bin/360VideosMetadata/docs/vr180.md",
+		"Bin/360VideosMetadata/legacyscripts/360VideosMetadata.py",
+		"Bin/360VideosMetadata/legacyscripts/LICENSE",
+		"Bin/360VideosMetadata/legacyscripts/README.md",
+		"Bin/360VideosMetadata/legacyscripts/__init__.py",
+		"Bin/360VideosMetadata/setup.py",
+		"Bin/360VideosMetadata/spatial-audio/LICENSE",
+		"Bin/360VideosMetadata/spatial-audio/NOTICE",
+		"Bin/360VideosMetadata/spatial-audio/README.md",
+		"Bin/360VideosMetadata/spatial-audio/ambisonic-correction-filters/correction_filter_0.wav",
+		"Bin/360VideosMetadata/spatial-audio/ambisonic-correction-filters/correction_filter_1.wav",
+		"Bin/360VideosMetadata/spatial-audio/ambisonic-correction-filters/correction_filter_2.wav",
+		"Bin/360VideosMetadata/spatial-audio/ambisonic-correction-filters/correction_filter_3.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E-35_A-135.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E-35_A-45.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E-35_A135.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E-35_A45.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E35_A-135.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E35_A-45.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E35_A135.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/E35_A45.wav",
+		"Bin/360VideosMetadata/spatial-audio/raw-symmetric-cube-hrirs/cube.config",
+		"Bin/360VideosMetadata/spatial-audio/symmetric-ambisonic-binaural-decoder/binaural_decoder_0.wav",
+		"Bin/360VideosMetadata/spatial-audio/symmetric-ambisonic-binaural-decoder/binaural_decoder_1.wav",
+		"Bin/360VideosMetadata/spatial-audio/symmetric-ambisonic-binaural-decoder/binaural_decoder_2.wav",
+		"Bin/360VideosMetadata/spatial-audio/symmetric-ambisonic-binaural-decoder/binaural_decoder_3.wav",
+		"Bin/360VideosMetadata/spatial-audio/third_party/LICENSE",
+		"Bin/360VideosMetadata/spatial-audio/third_party/azi_135_ele_-35_DFC.wav",
+		"Bin/360VideosMetadata/spatial-audio/third_party/azi_135_ele_35_DFC.wav",
+		"Bin/360VideosMetadata/spatial-audio/third_party/azi_45_ele_-35_DFC.wav",
+		"Bin/360VideosMetadata/spatial-audio/third_party/azi_45_ele_35_DFC.wav",
+		"Bin/360VideosMetadata/spatialmedia/LICENSE",
+		"Bin/360VideosMetadata/spatialmedia/README.md",
+		"Bin/360VideosMetadata/spatialmedia/__init__.py",
+		"Bin/360VideosMetadata/spatialmedia/__main__.py",
+		"Bin/360VideosMetadata/spatialmedia/gui.py",
+		"Bin/360VideosMetadata/spatialmedia/metadata_utils.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/__init__.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/box.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/constants.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/container.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/mpeg4_container.py",
+		"Bin/360VideosMetadata/spatialmedia/mpeg/sa3d.py",
+		"Bin/360VideosMetadata/spatialmedia/spatial_media_metadata_injector.spec",
+		"com.Google.SpatialMediaMetadataInjector copy.atom.bak",
+
+		Windows = {
+			"Bin/360VideosMetadata/LICENSE",
+			"Bin/360VideosMetadata/bin/Spatial Media Metadata Injector.exe",
+		},
+
+		Mac = {
+			"Bin/360VideosMetadata/LICENSE",
+			"Bin/360VideosMetadata/bin/Spatial Media Metadata Injector.app/Contents/Info.plist",
+			"Bin/360VideosMetadata/bin/Spatial Media Metadata Injector.app/Contents/MacOS/Spatial Media Metadata Injector",
+			"Bin/360VideosMetadata/bin/Spatial Media Metadata Injector.app/Contents/Resources/icon-windowed.icns",
+		},
+
+		Linux = {
+			"Bin/360VideosMetadata/LICENSE",
+		},
+	},
+	InstallScript = {
+		Mac = {
+			[[-- Turn on executable permissions for the MacOS program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/360VideosMetadata/bin/') .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end
+			]],
+		},
+	},
+}

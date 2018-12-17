@@ -1,0 +1,26 @@
+[PTGuiMatteControl]
+
+The PTGuiMatteControl node is used to extract the include/exclude masking data from a red/green/black indexed color PTGui mask image. This information is copied out of a PTGui .pts file using the KartaVR "PTGui Mask Extractor" script.
+
+  [MaskPipeRouter]
+    Input=Image
+        
+  [GarbageMattePipeRouter]
+    Input=Garbage Matte
+  
+  [IncludeMatteControl]
+    Output=Include
+
+  [ExcludeMatteControl]
+    Output=Exclude
+
+Macro GUI Control Order:
+  [IncludeMatteControl]
+    Filter
+    Matte Blur
+    Invert Matte
+    Invert Garbage Matte
+    Garbage Matte Mode
+    Post multiply image
+    Multiply Garbage Matte
+

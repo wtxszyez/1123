@@ -1,0 +1,79 @@
+[DisplaceEquirectangular]
+
+This node allows you to use a greyscale shaded depth map to displace an Equirectangular 2D monoscopic image into a stereoscopic 3D output.
+
+  [ImageInputResize]
+    Input = Image
+    Width = 3840 Max=16384
+    Height = 1920 Max=8192
+
+  [StereoDisplace]
+    X Channel = Depth Input Channel (RED/Green/Blue/Alpha/Luma) = Luma
+
+    X Offset = Stereo Convergence = 0 Max=2.0 Min=-2.0
+    X Refraction = Stereo Depth Displacement = 0
+
+  [DepthBlur]
+    Input = Depth
+    Filter = Depth Blur Filter = Gaussian
+    Blur Size = Depth Blur Size = 0.0
+
+  [EffectMaskBackground]
+    Effect_Mask = Effect Mask (EffectMask = InstanceInput {})
+
+  [CanvasShrink]
+    Output = Output
+  
+
+Macro GUI Control Order:
+[ImageInputResize]
+  Image
+  
+[DepthBlur]
+  Depth
+
+[EffectMaskBackground]
+  EffectMask
+  
+[ImageInputResize]
+  Width
+  Height
+  
+  Depth Input Channel
+  Stereo Convergence
+  Stereo Depth Displacement
+  Depth Blur Filter
+  Depth Blur Size
+
+
+Tile Repeat Pattern
+--------------------------
+S1
+
+ImageCanvasCrop - 2x2 tile repeat (50% edge offset)
+-ImageInputResize.Width*0.5
+-ImageInputResize.Height*0.5
+ImageInputResize.Width*2
+ImageInputResize.Height*2
+
+CanvasShrink - 2x2 tile crop:
+ImageInputResize.Width*0.5
+ImageInputResize.Height*0.5
+ImageInputResize.Width
+ImageInputResize.Height
+
+--------------------------
+
+S2
+
+ImageCanvasCrop - 3x3 tile repeat
+-ImageInputResize.Width
+-ImageInputResize.Height
+ImageInputResize.Width*3
+ImageInputResize.Height*3
+
+CanvasShrink - 3x3 tile crop:
+ImageInputResize.Width
+ImageInputResize.Height
+ImageInputResize.Width
+ImageInputResize.Height

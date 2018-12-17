@@ -1,0 +1,424 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 1000 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 58,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.2.1 build 6",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			CtrlWZoom = false,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 115.5 } },
+		},
+		SplitViewMaskInline = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide.html#SplitViewMaskRectangle",
+			},
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "ChannelBooleansMatte",
+					Source = "Background",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "SpitView",
+					Page = "Controls",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "MaskWidth",
+					Default = 3840,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "MaskHeight",
+					Default = 2160,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Level",
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Invert",
+				},
+				Input8 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Solid",
+					Default = 1,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Filter",
+				},
+				Input10 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "SoftEdge",
+					Default = 0.04,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "CornerRadius",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "AlphaMultiplyMask",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 550, 115.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 236, 95.8563, 118, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -495, -106.244 }
+			},
+			Tools = ordered() {
+				ChannelBooleansMatte = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 30, },
+						EnableExtraChannels = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "Loader1",
+							Source = "Output",
+						},
+						Matte = Input {
+							SourceOp = "SplitViewMask",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 148.5 } },
+				},
+				SplitViewMask = RectangleMask {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input { Value = 0.04, },
+						BorderWidth = Input {
+							Value = -0.04,
+							Expression = "SoftEdge*-1",
+						},
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input { Value = 3840, },
+						MaskHeight = Input { Value = 2160, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Center = Input {
+							Value = { 0.25, 0.5 },
+							Expression = "Point(iif(SplitViewMask.SpitView == 4, 0.5,iif(SplitViewMask.SpitView >= 2, 0.5, iif(SplitViewMask.SpitView == 1, 0.75, 0.25))), iif(SplitViewMask.SpitView == 4, 0.5,iif(SplitViewMask.SpitView <= 1, 0.5, iif(SplitViewMask.SpitView == 2, 0.75, 0.25))))",
+						},
+						Width = Input { Expression = "iif(SplitViewMask.SpitView == 4, 1,iif(SplitViewMask.SpitView >= 2, 1, 0.5))", },
+						Height = Input {
+							Value = 1,
+							Expression = "iif(SplitViewMask.SpitView == 4, 1, iif(SplitViewMask.SpitView >= 2, 0.5, 1))",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 115.5 } },
+					UserControls = ordered() {
+						SpitView = {
+							{ CCS_AddString = "Left" },
+							{ CCS_AddString = "Right" },
+							{ CCS_AddString = "Top" },
+							{ CCS_AddString = "Bottom" },
+							{ CCS_AddString = "Full Frame" },
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							CC_LabelPosition = "Horizontal",
+							INPID_InputControl = "ComboControl",
+							LINKS_Name = "Spit View"
+						}
+					}
+				},
+				AlphaMultiplyMask = AlphaMultiply {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChannelBooleansMatte",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+				}
+			},
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "The \"SplitViewMaskInline\" node allows you to apply split view stereo masking to your live action panoramic camera imagery. You can use the Split View control to place the mask in four positions: Left/Right/Top/Bottom.\n\nLeft X=0.25 Y=0.5\nRight X=0.75 Y=0.5\nTop X=0.5 Y=0.75\nBottom X=0.5 Y=0.25\n\nThe Border Width control is linked to the soft edge so there is no clipping when edge feathering is used.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 385, -16.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 299.879, 99.9209 }
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1680,
+			Height = 857,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 2.04084,
+						Offset = { -179.778, -40.6586 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.794626865671642,
+					RatioY = 0.0105263157894737,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.46643109540636,
+						{ ID = "Left", RatioX = 1, RatioY = 99, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.465253239104829, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 342,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 0
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 1
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					AlwaysOnTop = true,
+					FullScreen = false
+				},
+				View3 = {
+					PickH = 1,
+					AlwaysOnTop = true,
+					FullScreen = false,
+					PickW = 1
+				},
+				View2 = {
+					PickH = 1,
+					AlwaysOnTop = true,
+					FullScreen = false,
+					PickW = 1
+				}
+			},
+			FrameFormat = {
+				Width = 3840,
+				Height = 1920,
+				Rate = 24,
+				GuideRatio = 1.77777777777778,
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

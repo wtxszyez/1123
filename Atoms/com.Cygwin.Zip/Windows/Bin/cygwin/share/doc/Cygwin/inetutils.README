@@ -1,0 +1,273 @@
+inetutils  
+========================================================================
+Common networking clients and servers, including the inetd super-server,
+telnetd and telnet, ftpd and ftp, talkd and talk, uucpd (but no uucp
+client), and syslogd.
+
+Most of these utilities are security nightmares, dating from a time when
+the internet was a more innocent place. It is NOT recommended that you
+enable or use ANY of these utilities -- except inetd and syslogd --
+unless you have a VERY good reason [1].
+
+With regards to telnet and telnetd, the cygwin 'openssh' package
+provides a full replacement that is secure.
+
+The ftp protocol is fundamentally flawed, but if you must use it, the
+cygwin 'proftpd' is a more modern and "secure" replacement for the
+server.  ncftp, lftp, curl, and a myriad of other cygwin packages may
+satisfy your needs for an ftp client.
+
+Does anybody use talk anymore, in these days of IRC and IM?
+
+uucp is all-but-dead, having been formally shut down in 2000:
+http://en.wikipedia.org/wiki/UUCP#Decline
+This cygwin port of the uucpd server is completely untested.
+
+Concerning inetd and syslogd, more modern, secure, and flexible
+replacements are available from the cygwin packages 'xinetd' and
+'syslog-ng'.
+
+So why is this package present?  Because as insecure and flawed as they
+are, the telnet and ftp tools, servers, and protocols are still in
+wide use, and their conspicuous absence would be viewed as a flaw, not
+a feature.
+
+
+
+[1] and even then, employ firewall protection and the tcpd tool from
+    the tcp_wrappers package: see /etc/defaults/etc/inetd.conf for more
+    information.
+========================================================================
+
+Build requirements
+  cygwin-1.7.25-1
+  cygport-0.14.0-1
+  terminfo
+  libncursesw-devel
+  readline
+  crypt
+  gcc-core
+  binutils
+  bison
+  autoconf2.5
+  automake1.14
+  texinfo
+
+Canonical homepage:
+  http://www.gnu.org/software/inetutils/
+
+Canonical download:
+  http://ftp.gnu.org/gnu/inetutils/
+
+License:
+  GPL v3
+
+Language:
+  C
+
+========================================================================
+
+Port Notes:
+
+This port supports only cygwin-1.7 or newer, and only Windows NT 4.0
+and above (as that version of cygwin only supoorts these newer OSs).
+
+By default, all services are disabled. You must manually edit
+/etc/inetd.conf to activate any services.
+
+The r* clients and servers:
+	rsh rcp rlogin rexec
+	rshd rlogind rexecd
+are now provided by the 'rsh' and 'rsh-server' packages.
+
+The tftp client and server:
+	tftp tftpd
+are now provided by the 'tftp' and 'tftp-server' packages.
+
+inetd can no longer run as a service on its own. It can be run as
+a service via cygrunsrv, which is how iu-config now and for the past
+two years, has installed it.
+
+In some cases, client applications may experience long delays during
+authentication.  There are two possible explanations:
+
+  1) Poor DNS configuration; make sure the client can do both forward
+     and reverse DNS lookups of the server, and that the server can
+     do both forward and reverse DNS lookups of the client.
+
+  2) In some cases, the *client* machine must be running an identd
+     server, so that the *server* daemon can do an auth callback.
+     Cygwin does not yet have a ported identd daemon, but the following
+        http://rndware.info/products/windows-ident-server.html
+     works pretty well. It's a free-as-in-beer, but closed-source,
+     identd service for Win32.  You'll need to open a hole in your
+     firewall at port 113, for any identd service you install. On
+     Windows Vista, enter the following command from an Administrator
+     cmd prompt (or use the Control Panel GUI):
+        netsh advfirewall firewall add rule name="ident" action=allow protocol=TCP dir=in localport=113
+
+Also, the inetutils-server package no longer installs the server programs
+as `in.telnetd' and similar.  Instead they are are installed as `telnetd'.
+If you have an existing /etc/inetd.conf file (or ./etc/xinetd.conf) you
+should manually update these references, or run the 'iu-config' script
+and allow it to update your inetd.conf file for you.
+
+Be sure to read /usr/share/doc/inetutils/inetutils.OLD-README
+Eventually the relevant information will be moved to this file, but for
+now, be SURE to read that one...
+
+
+-------------------- inetd --------------------
+see inetutils-server.README
+
+-------------------- syslogd --------------------
+see inetutils-server.README
+
+-------------------- slave servers --------------------
+  This section contains a few notes concerning the requirements
+  of the various slave servers, and any known issues.
+
+  ++++++++++++ telnetd ++++++++++++
+  See inetutils-server.README
+
+  ++++++++++++++ ftpd ++++++++++++++
+  See inetutils-server.README
+
+  +++++++++++++ rlogind +++++++++++++
+  See rsh-server.README
+
+  +++++++++++++  rshd   +++++++++++++
+  See rsh-server.README
+
+  +++++++++++++ rexecd  +++++++++++++
+  See rsh-server.README
+
+  ++++++++++++++ tftpd ++++++++++++++
+  See tftp.README
+
+  ++++++++++++++ talkd ++++++++++++++
+  See inetutils-server.README
+
+  ++++++++++++++ uucpd ++++++++++++++
+  See inetutils-server.README
+
+========================================================================
+User reports:
+
+Achuth Sankar A 
+http://www.mail-archive.com/bug-inetutils@gnu.org/msg01170.html
+and private email. Not sure yet whether OP is using cygwin port
+of server or client or both (seems likely it is both, but...)
+    | 1)  Backspace won't work if we do telnet localhost. Or terminal in 
+    |     which TERM=cygwin is set.
+
+[csw]: Still present in this release. Will look into it later
+
+    | 2)  When I start inetd service as SYSTEM user in win xp 64 bit,
+    |     set UID error is shown when the inetd.conf file is updated
+    |     to start telnet/ftp as admin user.
+
+[csw]: Win XP 64 bit is actually closely related to Windows NT Server
+       2003 (same kernel).  Therefore, it shares the "SYSTEM user can't
+       change UID" restrictions that NT2003, Vista, and newer do.  The
+       solution is to run inetd under special privileged account (e.g.
+       cyg_server) rather than SYSTEM.
+
+========================================================================
+
+Change History
+----------  inetutils-1.9.1-1 -- 23 Oct 2013 -----------
+* Updated to latest upstream release
+* Rely on cygport to autogenerate setup.hints
+* Split package into client and server components.
+* Added debuginfo package
+* First cygwin64 release
+
+----------  inetutils-1.7-2 -- 20 Nov 2010 -----------
+* Removed tftp client and server; now provided by 'tftp'
+  and 'tftp-server' packages.
+* Updated wording of iu-config and syslogd-config scripts to
+  eliminate confusion related to Windows XP 64bit behavior,
+  and to remove any checks for legacy win9x (csih itself will
+  abort if legacy).
+
+----------  inetutils-1.7-1 -- 27 Mar 2010 -----------
+* Update to latest upstream release
+* Port to cygwin-1.7
+* Removed r* clients and servers; now provided by 'rsh'
+  and 'rsh-server' packages.
+* Removed support for running inetd as a service on its own. You
+  can still run inetd as a service; you just have to use cygrunsrv
+  to do it.
+* Added xinetd.d/ startup scripts for remaining servers.
+
+----------  inetutils-1.5-6 -- 29 Mar 2009 -----------
+* packaging update -- uses new csih 0.1.9.
+  + exploit new csih_select_privileged_username '-f' option
+    when iu-config invoked with either -y or -n.
+  + add new --service-account NAME option to iu-config; uses
+    new 'csih_select_privileged_username -u NAME' feature to
+    override the *default* default cyg_server account.
+* Fix regression in ftpd in which, when in active mode, the
+  server opens a data connection back to the client from the
+  wrong port (on the server). It was historically the control
+  port - 1, which in most cases was port 21-1=20.  In 
+  inetutils-1.5 it became instead the next available
+  unprivileged port. Reported by Curt Gran; fixed upstream. 
+
+----------  inetutils-1.5-5 -- 21 Aug 2008 -----------
+* packaging update -- uses new csih 0.1.8. better support
+  for using domain account as 'privileged' (root) user.
+* Rely solely on _update-info-dir package to install info files,
+  rather than explicitly adding/removing them manually, 
+  and then having _update-info-dir redo the work anyway.
+
+----------  inetutils-1.5-4 -- 29 Apr 2008 -----------
+* no longer requires custom cygport
+* fixed bug in ftpd that prevented large file transfers
+  with recent 1.5.x cygwin kernels. Reported by antony baxter.
+* fixed info file's index and internal navigation menus.
+  Reported by Rodrigo Medina.
+* Use readline (links statically)
+
+----------  inetutils-1.5-3 -- 17 Apr 2008 -----------
+* fixed bug in ftpd server that prevented authentication
+* fixed bug in rsh client that prevented operation in any mode
+  other than 'rlogin-like'
+* fixed WinServ2003/Vista bug in rlogind where ROOT id was
+  hardcoded to LocalSystem (18). However, this also exposed
+  a bug in the login package (not yet fixed).
+* removed erroneous warning message from rshd.
+* Added support for parsing DOS-style paths in tftpd, recieved
+  from tftp clients. (The tftpd command-line arguments must be
+  in unix form, as always).
+* silence warning in talkd when user has no ~/.talkrc file
+* Lots of documentation updates
+
+----------  inetutils-1.5-2 -- 29 Feb 2008 -----------
+* disabled all services in the default inetd.conf
+* updated default motd
+* imported fix for rshd (and rexecd) from 1.3.2-40 release
+* updated documentation
+* fixed packaging bug
+* inetd:
+  + new macro CYGWIN_INETD_INSTALL_AS_SERVICE will eventually
+    be used to disable --install-as-service option, but not yet.
+  + check and use ...\\inetd\\Parameters\\ConfigFilePath registry
+    key as a backup, if ConfigFilePaths is not found.  Also,
+    warn if both are present but differ.
+* use the new csih package to assist with service installation.
+
+----------  inetutils-1.5-1 -- 21 Feb 2008 -----------
+* Update to current release
+* Based on 1.3.2-37 port, by Corinna Vinschen -- which was
+  itself based on Sergey Okhapkin's original port to cygwin.
+* Use cygport build framework
+* Added startup script for use with sysvinit package if desired
+* Added new command line option -T/--traditional-daemon for
+  use with sysvinit-style control of inetd.
+* New maintainer
+
+
+Cygwin port maintained by:  Charles Wilson  <cygwin@cygwin.com>
+

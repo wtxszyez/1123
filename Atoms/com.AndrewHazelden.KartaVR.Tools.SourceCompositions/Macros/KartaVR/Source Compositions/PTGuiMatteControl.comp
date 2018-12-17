@@ -1,0 +1,912 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 0 },
+	CurrentID = 154,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.2.1 build 6",
+	SavedOutputs = 1,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Macros:/KartaVR/PTGuiMatteControl.bmp"
+	},
+	Tools = {
+		Loader1_1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Temp:/KartaVR/masking_mask.0001.png",
+					FormatID = "PNGFormat",
+					StartFrame = 1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 346.5 } },
+		},
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Temp:/KartaVR/masking_mask.0001.png",
+					FormatID = "PNGFormat",
+					StartFrame = 1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			CtrlWZoom = false,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 379.5 } },
+		},
+		Background1 = Background {
+			Inputs = {
+				GlobalOut = Input { Value = 0, },
+				Width = Input { Value = 130, },
+				Height = Input { Value = 100, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2477.26, 579.608 } },
+		},
+		GreenEllipse = EllipseMask {
+			NameSet = true,
+			Inputs = {
+				MaskWidth = Input { Value = 1920, },
+				MaskHeight = Input { Value = 1080, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.669184290030212, 0.5 }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2475, 478.5 } },
+		},
+		GreenBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 0, },
+				Width = Input { Value = 130, },
+				Height = Input { Value = 100, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftGreen = Input { Value = 1, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+				EffectMask = Input {
+					SourceOp = "GreenEllipse",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 2585, 478.5 } },
+		},
+		RedEllipse = EllipseMask {
+			NameSet = true,
+			Inputs = {
+				MaskWidth = Input { Value = 1920, },
+				MaskHeight = Input { Value = 1080, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.324773413897281, 0.5 }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2475, 412.5 } },
+		},
+		RedBackground = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 0, },
+				Width = Input { Value = 130, },
+				Height = Input { Value = 100, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftRed = Input { Value = 1, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+				EffectMask = Input {
+					SourceOp = "RedEllipse",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 2585, 412.5 } },
+		},
+		MaskEllipse_1 = EllipseMask {
+			NameSet = true,
+			Inputs = {
+				BorderWidth = Input { Value = 0.118297872340426, },
+				Invert = Input { Value = 1, },
+				MaskWidth = Input { Value = 1920, },
+				MaskHeight = Input { Value = 1080, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.669184290030212, 0.5 }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2471.97, 521.351 } },
+		},
+		Merge1 = Merge {
+			Inputs = {
+				Background = Input {
+					SourceOp = "GreenBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "RedBackground",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				EffectMask = Input {
+					SourceOp = "MaskEllipse_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 2750, 478.5 } },
+		},
+		Note3 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Create the PTGuiMatteControl icon.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2365, 214.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 505.446, 85.3752 }
+			},
+		},
+		ExcludeColorCorrector2 = ColorCorrector {
+			NameSet = true,
+			Inputs = {
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "ExcludeMatteControl_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 412.5 } },
+		},
+		GarbageMatteBSpline_1 = BSplineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			NameSet = true,
+			Inputs = {
+				MaskWidth = Input { Value = 1920, },
+				MaskHeight = Input { Value = 1080, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.470496894409938, 0.513592233009709 }, },
+				Polyline = Input {
+					SourceOp = "GarbageMatteBSpline_1Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = BSplinePolyline {
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { }
+					},
+					Disabled = true,
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 412.5 } },
+		},
+		GarbageMatteBSpline_1Polyline = BezierSpline {
+			SplineColor = { Red = 173, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 0, Flags = { Linear = true, LockedY = true }, Value = BSplinePolyline {
+						Closed = true,
+						Points = {
+							{ X = 0.202746361494064, Y = 0.192929297685623 },
+							{ X = -0.0266558974981308, Y = 0.148484855890274 },
+							{ X = -0.207592889666557, Y = -0.0131313130259514 },
+							{ X = -0.0735056549310684, Y = -0.29595959186554 },
+							{ X = 0.268982231616974, Y = -0.190909087657928 },
+							{ X = 0.304523438215256, Y = 0.0757575780153275 }
+						},
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+					} }
+			}
+		},
+		IncludeColorCorrector1 = ColorCorrector {
+			NameSet = true,
+			Inputs = {
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 346.5 } },
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Test out the PTGuiMatteControl node.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1540, 214.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 505.446, 85.3752 }
+			},
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "The PTGuiMatteControl node is used to extract the include/exclude masking data from a red/green/black indexed color PTGui mask image. This information is copied out of a PTGui .pts file using the KartaVR \"PTGui Mask Extractor\" script.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 825, 214.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 505.446, 85.3752 }
+			},
+		},
+		GreenInclude = ChannelBoolean {
+			NameSet = true,
+			Inputs = {
+				ToRed = Input { Value = 6, },
+				ToGreen = Input { Value = 6, },
+				ToBlue = Input { Value = 6, },
+				ToAlpha = Input { Value = 6, },
+				Background = Input {
+					SourceOp = "MaskPipeRouter",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 412.5 } },
+		},
+		IncludeMatteControl = MatteControl {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "GreenInclude",
+					Source = "Output",
+				},
+				GarbageMatte = Input {
+					SourceOp = "GarbageMattePipeRouter",
+					Source = "Output",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 1100, 412.5 } },
+		},
+		MaskPipeRouter = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 880, 379.5 } },
+		},
+		RedExclude = ChannelBoolean {
+			NameSet = true,
+			Inputs = {
+				ToRed = Input { Value = 5, },
+				ToGreen = Input { Value = 5, },
+				ToBlue = Input { Value = 5, },
+				ToAlpha = Input { Value = 5, },
+				Background = Input {
+					SourceOp = "MaskPipeRouter",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 346.5 } },
+		},
+		GarbageMatteBSpline = BSplineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			NameSet = true,
+			Inputs = {
+				MaskWidth = Input { Value = 1920, },
+				MaskHeight = Input { Value = 1080, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.470496894409938, 0.513592233009709 }, },
+				Polyline = Input {
+					SourceOp = "GarbageMatteBSplinePolyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = BSplinePolyline {
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { }
+					},
+					Disabled = true,
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 445.5 } },
+		},
+		GarbageMatteBSplinePolyline = BezierSpline {
+			SplineColor = { Red = 173, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 0, Flags = { Linear = true, LockedY = true }, Value = BSplinePolyline {
+						Closed = true,
+						Points = {
+							{ X = 0.202746361494064, Y = 0.192929297685623 },
+							{ X = -0.0266558974981308, Y = 0.148484855890274 },
+							{ X = -0.207592889666557, Y = -0.0131313130259514 },
+							{ X = -0.0735056549310684, Y = -0.29595959186554 },
+							{ X = 0.268982231616974, Y = -0.190909087657928 },
+							{ X = 0.304523438215256, Y = 0.0757575780153275 }
+						},
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+					} }
+			}
+		},
+		GarbageMattePipeRouter = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "GarbageMatteBSpline",
+					Source = "Mask",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 880, 445.5 } },
+		},
+		ExcludeMatteControl = MatteControl {
+			NameSet = true,
+			SourceOp = "IncludeMatteControl",
+			Inputs = {
+				Background = Input {
+					SourceOp = "RedExclude",
+					Source = "Output",
+				},
+				Foreground = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { },
+				GarbageMatte = Input {
+					SourceOp = "GarbageMattePipeRouter",
+					Source = "Output",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 1100, 346.5 } },
+		},
+		PTGuiMatteControl = GroupOperator {
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide.html#PTGuiMatteControl"
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "MaskPipeRouter_1",
+					Source = "Input",
+					Name = "Image",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "GarbageMattePipeRouter_1",
+					Source = "Input",
+					Name = "Garbage Matte",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "Filter",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "MatteBlur",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "InvertMatte",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "InvertGarbageMatte",
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "GarbageMatteMode",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "PostMultiplyImage",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "MultiplyGarbageMatte",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "IncludeMatteControl_1",
+					Source = "Output",
+					Name = "Include",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "ExcludeMatteControl_1",
+					Source = "Output",
+					Name = "Exclude",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1760, 379.5 } },
+			Tools = ordered() {
+				IncludeMatteControl_1 = MatteControl {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "GreenInclude_1",
+							Source = "Output",
+						},
+						GarbageMatte = Input {
+							SourceOp = "GarbageMattePipeRouter_1",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 76.6 } },
+				},
+				GreenInclude_1 = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 6, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 6, },
+						ToAlpha = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "MaskPipeRouter_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 76.6 } },
+				},
+				ExcludeMatteControl_1 = MatteControl {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "IncludeMatteControl_1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "RedExclude_1",
+							Source = "Output",
+						},
+						Foreground = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+						GarbageMatte = Input {
+							SourceOp = "GarbageMattePipeRouter_1",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 10.6 } },
+				},
+				GarbageMattePipeRouter_1 = PipeRouter {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "GarbageMatteBSpline_1",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -110, 109.6 } },
+				},
+				MaskPipeRouter_1 = PipeRouter {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Loader1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -110, 43.6 } },
+				},
+				RedExclude_1 = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 5, },
+						ToBlue = Input { Value = 5, },
+						ToAlpha = Input { Value = 5, },
+						Background = Input {
+							SourceOp = "MaskPipeRouter_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.6 } },
+				}
+			},
+		},
+		BGMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "Background1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Merge1",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2869.06, 580.583 } },
+		},
+		Saver1 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Macros:/KartaVR/PTGuiMatteControl.bmp",
+						FormatID = "BMPFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				OutputFormat = Input { Value = FuID { "BMPFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "BGMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2997.18, 580.583 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1877,
+			Height = 1148,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.88299,
+						Offset = { -1430.06, -117.043 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.816239316239316,
+					RatioY = 104.1815008726,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.474561403508772,
+						{ ID = "Left", RatioX = 0.500327868852459, RatioY = 0.00924214417744917, Pop = true },
+						{ ID = "Right", RatioX = 0.499672131147541, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.474561403508772, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 342,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1
+					},
+				},
+				Left = {
+					Viewer = {
+						CheckerUnderlay = true,
+						ScaleMode = 0,
+						Channel = 4294967295,
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 0,
+								X = 30,
+								Z = 0
+							},
+							Scale = 0.027520801872015,
+							Position = {
+								Y = 1.18523645401001,
+								X = 0,
+								Z = -0.684296607971191
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						}
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "",
+			PolyKeyListDlg = {
+				Window = {
+					Left = 885,
+					Top = 350
+				}
+			},
+			Unsorted = {
+				GlobalEnd = 0,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							Quality = true,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "all",
+							ShowSlaves = false
+						},
+						Preview = {
+							Quality = false,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "all",
+							ShowSlaves = false
+						}
+					},
+					CurrentConfig = "Final",
+					PreviewConfig = "Preview"
+				}
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

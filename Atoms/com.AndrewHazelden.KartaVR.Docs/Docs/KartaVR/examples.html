@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>Fusion Compositing Examples</h1>
+<p>This page lists the example Fusion .comp files that come built-in with the KartaVR product download.</p>
+<p><strong>Note:</strong> A separate web page with 360° video stitching projects is available to KartaVR customers. This content changes regularly and includes large media files so it is provided separate from the core KartaVR toolset. You can contact <a href="mailto:andrew@andrewhazelden.com">andrew@andrewhazelden.com</a> for access to this learning material.</p>
+<h2>Example Projects</h2>
+<ul>
+<li><a href="examples.html#angular-to-cube">Angular to Cube.comp</a></li>
+<li><a href="examples.html#boxworld-cubic-renderer3d">Boxworld CubicRenderer3D.comp</a></li>
+<li><a href="examples.html#boxworld-cylindrical-renderer3d-advanced">Boxworld CylindricalRenderer3DAdvanced.comp</a></li>
+<li><a href="examples.html#boxworld-domemaster-renderer3d">Boxworld DomemasterRenderer3D.comp</a></li>
+<li><a href="examples.html#boxworld-domemaster-renderer3d-advanced">Boxworld DomemasterRenderer3DAdvanced.comp</a></li>
+<li><a href="examples.html#boxworld-equirectangular-renderer3d">Boxworld EquirectangularRenderer3D.comp</a></li>
+<li><a href="examples.html#boxworld-equirectangular-renderer3d-advanced">Boxworld EquirectangularRenderer3D Advanced.comp</a></li>
+<li><a href="examples.html#boxworld-oculus-stereo-renderer3d">Boxworld Oculus Rift Stereo Renderer3D.comp</a></li>
+<li><a href="examples.html#colorcorrector-masked">ColorCorectorMasked.comp</a></li>
+<li><a href="examples.html#conversions">Conversions.comp</a></li>
+<li><a href="examples.html#cubic-to-domeaster180">Cubic to Domemaster180.comp</a></li>
+<li><a href="examples.html#cubic-faces-to-equirectangular">CubicFaces2Equirectangular.comp</a></li>
+<li><a href="examples.html#cubic-renderer3d">CubicRenderer3D.comp</a></li>
+<li><a href="examples.html#cylindrical-conversions">Cylindrical Conversions.comp</a></li>
+<li><a href="examples.html#cylindrical-renderer3d">CylindricalRenderer3D.comp</a></li>
+<li><a href="examples.html#defocus-blur-glow-sharpen">Defocus Blur Glow Sharpen Unsharpen.comp</a></li>
+<li><a href="examples.html#domemaster-renderer3d">DomemasterRenderer3D.comp</a></li>
+<li><a href="examples.html#equirectangular-tripod-repair">Equirectangular Tripod Repair.comp</a></li>
+<li><a href="examples.html#equirectangular-to-fisheye">Equirectangular2Fisheye.comp</a></li>
+<li><a href="examples.html#equirectangular-stereo-to-fisheye-stereo">EquirectangularStereo2FisheyeStereo.comp</a></li>
+<li><a href="examples.html#equirectangular-renderer3d">EquirectangularRenderer3D.comp</a></li>
+<li><a href="examples.html#equirectangular-renderer3d-advanced">EquirectangularRenderer3DAdvanced.comp</a></li>
+<li><a href="examples.html#facebook-cubemap3x2">Facebook Cubemap3x2.comp</a></li>
+<li><a href="examples.html#facebook-vertical-strip">Facebook Vertical Strip.comp</a></li>
+<li><a href="examples.html#fulldome-crossbounce-sim">Fulldome Crossbounce Sim.comp</a></li>
+<li><a href="examples.html#gearvr-mono-to-equirectangular">GearVR Mono to Equirectangular.comp</a></li>
+<li><a href="examples.html#gearvr-stereo-to-equirectangular-stereo">GearVR Stereo to Equirectangular Stereo.comp</a></li>
+<li><a href="examples.html#latlong-to-cube-macro">LatLong to Cube.comp</a></li>
+<li><a href="examples.html#latlong-to-gearvr-stereo">LatLong to GearVRStereo.comp</a></li>
+<li><a href="examples.html#logo-over-tripod">Logo Over Tripod.comp</a></li>
+<li><a href="examples.html#meshuv-conversions">MeshUV Conversions.comp</a></li>
+<li><a href="examples.html#ricoh-theta-s-stitch">Ricoh Theta S Stitch.comp</a></li>
+<li><a href="examples.html#roller-coaster-ride-cubic">Roller Coaster Ride CubicRenderer3D</a></li>
+<li><a href="examples.html#roller-coaster-ride-cylindrical">Roller Coaster Ride CylindricalRenderer3D</a></li>
+<li><a href="examples.html#roller-coaster-ride-dome">Roller Coaster Ride DomemasterRenderer3D</a></li>
+<li><a href="examples.html#roller-coaster-ride-latlong">Roller Coaster Ride EquirectangularRenderer3D</a></li>
+<li><a href="examples.html#roller-coaster-ride-oculus-rift-stereo">Roller Coaster Ride Oculus Rift Stereo.comp</a></li>
+<li><a href="examples.html#rotate-panorama">Rotate Panoramas.comp</a></li>
+<li><a href="examples.html#samsung-gear-360-stitch">Samsung Gear 360 Stitch.comp</a></li>
+<li><a href="examples.html#stereo-3d-roto-conversion">Stereo 3D Roto Conversion.comp</a></li>
+<li><a href="examples.html#stereo">Stereo.comp</a></li>
+<li><a href="examples.html#text-imageplane-stereo">Text+ Imageplane Stereo.comp</a></li>
+<li><a href="examples.html#text-matrix-domemasterrender3d">Text+ Matrix DomemasterRender3D.comp</a></li>
+<li><a href="examples.html#text-to-domemaster">Text+ to Domemaster.comp</a></li>
+<li><a href="examples.html#text-to-equirectangular">Text+ to Equirectangular.comp</a></li>
+<li><a href="examples.html#uv-pass-latlong-stereo-to-cubemap-3x2-stereo">UV Pass LatLongStereo to Cubemap3x2Stereo.comp</a></li>
+<li><a href="examples.html#uv-pass-texture-projection">UV Pass Texture Projection.comp</a></li>
+<li><a href="examples.html#uv-pass-video-stitching">UV Pass Video Stitching Template.comp</a></li>
+<li><a href="examples.html#viewer-cubic-faces">Viewer Cubic Faces.comp</a></li>
+<li><a href="examples.html#viewer-equirectangular">Viewer Equirectangular.comp</a></li>
+<li><a href="examples.html#viewer-equirectangular-stereo">Viewer Equirectangular Stereo.comp</a></li>
+<li><a href="examples.html#viewer-mesh-stereo">Viewer Mesh Stereo.comp</a></li>
+<li><a href="examples.html#viewer-mesh">ViewerMesh.comp</a></li>
+<li><a href="examples.html#wireframe-oculus-rift-stereo">Wireframe Oculus Rift Stereo.comp</a></li>
+</ul>
+<h2>Example Lightfield Projects</h2>
+<ul>
+<li><a href="examples.html#looking-glass-renderer-3d">LookingGlassRenderer3D.comp</a></li>
+<li><a href="examples.html#looking-glass-4x4-quilted-anaglyph-stereo-3d-viewer">Looking Glass 4x4 Quilted Anaglyph Stereo 3D Viewer.comp</a></li>
+<li><a href="examples.html#looking-glass-4x4-quilted-to-image-sequence">Looking Glass 4x4 Quilted to Image Sequence.comp</a></li>
+<li><a href="examples.html#looking-glass-5x9-quilted-anaglyph-stereo-3d-viewer">Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp</a></li>
+<li><a href="examples.html#looking-glass-5x9-quilted-to-image-sequence">Looking Glass 5x9 Quilted to Image Sequence.comp</a></li>
+</ul>
+<p><a name="angular-to-cube"></a></p>
+<h2>Angular to Cube.comp</h2>
+<p>This example shows how to convert an angular fisheye image into each of the cubic panorama formats.</p>
+<p><img src="images/examples-angular-to-cube.png" alt="Angular to Cube" /></p>
+<p><a name="boxworld-cubic-renderer3d"></a></p>
+<h2>Boxworld CubicRenderer3D.comp</h2>
+<p><img src="images/examples-boxworld-cubic-renderer3d-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render elements from Fusion's 3D animation system to a cubic panorama format output.</p>
+<p><img src="images/examples-boxworld-cubic-renderer3d.png" alt="Boxworld CubicRenderer3D" /></p>
+<p><a name="boxworld-cylindrical-renderer3d-advanced"></a></p>
+<h2>Boxworld CylindricalRenderer3DAdvanced.comp</h2>
+<p><img src="images/examples-boxworld-cylindrical-renderer3d-advanced-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render elements from Fusion's 3D animation system to a cylindrical 360 x 90 degree format output.</p>
+<p><img src="images/examples-boxworld-cylindrical-renderer3d-advanced.png" alt="Boxworld CylindricalRenderer3DAdvanced" /></p>
+<p><a name="boxworld-domemaster-renderer3d"></a></p>
+<h2>Boxworld DomemasterRenderer3D.comp</h2>
+<p><img src="images/examples-boxworld-domemaster-renderer3d-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render elements from Fusion's 3D animation system to an angular fisheye based domemaster 180 degree format output.</p>
+<p><img src="images/examples-boxworld-domemaster-renderer3d.png" alt="Boxworld DomemasterRenderer3D" /></p>
+<p><a name="boxworld-domemaster-renderer3d-advanced"></a></p>
+<h2>Boxworld DomemasterRenderer3DAdvanced.comp</h2>
+<p><img src="images/examples-boxworld-domemaster-renderer3d-advanced-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render multi-channel elements from Fusion's 3D animation system to an angular fisheye based domemaster 180 degree format output.</p>
+<p><img src="images/examples-boxworld-domemaster-renderer3d-advanced.png" alt="Boxworld DomemasterRenderer3DAdvanced" /></p>
+<p><a name="boxworld-equirectangular-renderer3d"></a></p>
+<h2>Boxworld EquirectangularRenderer3D.comp</h2>
+<p><img src="images/examples-boxworld-equirectangular-renderer3d-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical format output.</p>
+<p><img src="images/examples-boxworld-equirectangular-renderer3d.png" alt="Boxworld EquirectangularRenderer3D" /></p>
+<p><a name="boxworld-equirectangular-renderer3d-advanced"></a></p>
+<h2>Boxworld EquirectangularRenderer3DAdvanced.comp</h2>
+<p><img src="images/examples-boxworld-equirectangular-renderer3d-advanced-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to render out multi-channel elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical format output.</p>
+<p><img src="images/examples-equirectangular-renderer3d-advanced.png" alt="Boxworld EquirectangularRenderer3DAdvancecd" /></p>
+<p><a name="boxworld-oculus-stereo-renderer3d"></a></p>
+<h2>Boxworld Oculus Rift Stereo Renderer3D.comp</h2>
+<p>This example shows how to use an Oculus Rift DK1 or DK2 HMD display as the output device from the Fusion 3D system using the Boxworld example scene.</p>
+<p><img src="images/examples-boxworld-oculus-rift-stereo-renderer3d-screenshot.png" alt="Boxworld Oculus Rift Stereo Renderer3D" /></p>
+<p>To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux. This is done by disabling the &quot;Direct to Rift&quot; option in the Oculus Rift drivers.</p>
+<p>In Fusion select the &quot;Windows  &gt; New Image View&quot;  menu item. Then drag this floating image view onto the Oculus Rift display monitor and then resize the image view to be fullscreen.  You can now load the rendered image in Fusion on the new view using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the View window's &quot;Show Controls&quot; (Command+K) and &quot;Show Checker Underlay&quot; options.</p>
+<p>Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.</p>
+<p><img src="images/examples-boxworld-oculus-rift-stereo-renderer3d-nodes.png" alt="Boxworld Oculus Rift Stereo Renderer3D Nodes" /></p>
+<p><a name="colorcorrector-masked"></a></p>
+<h2>ColorCorectorMasked.comp</h2>
+<p><img src="images/examples-colorcorrector-masked-screenshot1.jpg" alt="Screenshot" /></p>
+<p>The first example shows a vertical gradient effect that is used to fade off the saturation on the image at a certain point. This vertical gradient effect would typically be used to fix a brightness or contrast effect in the sky or tripod zone, or to apply a graduated neutral density filter type effect.</p>
+<p><img src="images/examples-colorcorrector-masked-screenshot2.jpg" alt="Screenshot" /></p>
+<p>The second example shows a horizontal gradient effect that is used to fade off the saturation on the image at a certain point. This horizontal gradient effect would typically be used to fix seam issues where the contrast might not line up on the left and right frame edge on a LatLong panorama.</p>
+<p><img src="images/examples-colorcorrector-masked-screenshot3.jpg" alt="Screenshot" /></p>
+<p>The third example shows a horizontal gradient effect that has three control handles added to the gradient. These controls are used to fade off the saturation on the image at a certain point. This horizontal gradient effect would typically be used to fix a contrast issue with one part of a stitched camera view in a LatLong image.</p>
+<p><img src="images/examples-colorcorrector-masked.png" alt="ColorCorectorMasked" /></p>
+<p><a name="conversions"></a></p>
+<h2>Conversions.comp</h2>
+<p><img src="images/examples-conversions1-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows several of the most common panoramic conversions you would typically do with the KartaVR toolset.</p>
+<p><img src="images/examples-conversions2-screenshot.jpg" alt="Screenshot" /></p>
+<p><img src="images/examples-conversions1.png" alt="Conversions 1" /></p>
+<p><img src="images/examples-conversions2.png" alt="Conversions 2" /></p>
+<p><a name="cubic-to-domeaster180"></a></p>
+<h2>Cubic to Domemaster180.comp</h2>
+<p><img src="images/examples-cubic-domeaster180-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to convert a set of six cubic 90 degree FOV images into a domemaster 180 degree angular fisheye image.</p>
+<p><img src="images/examples-cubic-to-domeaster180.png" alt="Cubic to Domemaster180" /></p>
+<p><a name="cubic-faces-to-equirectangular"></a></p>
+<h2>CubicFaces2Equirectangular.comp</h2>
+<p><img src="images/examples-cubic-faces-to-equirectangular-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to take a set of six cube map images and merge them into an equirectangular/LatLong/spherical format panorama.</p>
+<p><img src="images/examples-cubic-faces-to-equirectangular.png" alt="CubicFaces2Equirectangular" /></p>
+<p><a name="cubic-renderer3d"></a></p>
+<h2>CubicRenderer3D.comp</h2>
+<p>This example shows how to render elements from Fusion's 3D animation system to cubic panorama format outputs.</p>
+<p><img src="images/examples-cubic-renderer3d-screenshot1.jpg" alt="Screenshot" /></p>
+<p><img src="images/examples-cubic-renderer3d-screenshot2.jpg" alt="Screenshot" /></p>
+<p><img src="images/examples-cubic-renderer3d.png" alt="CubicRenderer3D" /></p>
+<p><a name="cylindrical-conversions"></a></p>
+<h2>Cylindrical Conversions.comp</h2>
+<p><img src="images/examples-cylindrical-conversions-screenshot.jpg" alt="Screenshot" /></p>
+<p>This example shows how to convert equirectangular/spherical/latlong format imagery into a cylindrical projection. There is also an example that takes cubic imagery into a cylindrical projection and then goes back to cubic again.</p>
+<p><img src="images/examples-cylindrical-conversions.png" alt="Cylindrical Conversions" /></p>
+<p><a name="cylindrical-renderer3d"></a></p>
+<h2>CylindricalRenderer3D.comp</h2>
+<p>This example shows how to render elements from Fusion's 3D animation system to a cylindrical panorama format output.</p>
+<p><img src="images/examples-cylindrical-render3d-screenshot1.jpg" alt="Screenshot" /></p>
+<p>This example shows one of the extra render channels that the CylindricalRenderer3DAdvanced node can output. In this case the UV pass channel is displayed.</p>
+<p><img src="images/examples-cylindrical-render3d-screenshot2.jpg" alt="Screenshot" /></p>
+<p><img src="images/examples-cylindrical-renderer3d.png" alt="CylindricalRenderer3D" /></p>
+<p><a name="defocus-blur-glow-sharpen"></a></p>
+<h2>Defocus Blur Glow Sharpen Unsharpen.comp</h2>
+<p><img src="images/examples-defocus-blur-glow-sharpen.png" alt="Defocus Blur Glow Sharpen Unsharpen" /></p>
+<p>This example shows a quick demo of the new filter effects in the KartaVR. The filters wrap around the left/right frame boundaries of a panoramic image. Note: The gradient controls in the macros let you selectively fade out the effect of the filters.</p>
+<p><img src="images/examples-defocus-blur-glow-sharpen-blurpanoramicwrap-screenshot1.jpg" alt="Screenshot" /></p>
+<p>The BlurPanoramicWrap macro is used to create a title graphic with the Text+ character generator applied as an effects mask. The alpha channel on the text is inverted so it results in the background of the image being filled with a soft blurry effect while the text is clear.</p>
+<p><img src="images/examples-defocus-blur-glow-sharpen-glowpanoramicwrap-screenshot2.jpg" alt="Screenshot" /></p>
+<p>The GlowPanoramicWrap macro nicely wraps the effect around the frame border so incandescent glow effects don't get clipped if the object source is on the edge of a rendered image.</p>
+<p><img src="images/examples-defocus-blur-glow-sharpen-glowpanoramicwrap-screenshot3.jpg" alt="Screenshot" /></p>
+<p>The BlurPanoramicWrap macro can use the built-in gradient controls to fade the effect out in parts of the frame to create looks like a foggy/hazy effect.</p>
+<p><img src="images/examples-defocus-blur-glow-sharpen-blurpanoramicwrap-screenshot4.jpg" alt="Screenshot" /></p>
+<p>The BlurPanoramicWrap macro can used to easily blur out the tripod zone.</p>
+<p><img src="images/examples-defocus-blur-glow-sharpen-blurpanoramicwrap-screenshot5.jpg" alt="Screenshot" /></p>
+<p><a name="domemaster-renderer3d"></a></p>
+<h2>DomemasterRenderer3D.comp</h2>
+<p>This example shows how to render elements from Fusion's 3D animation system to an angular fisheye based domemaster 180 degree format output.</p>
+<p><img src="images/examples-domemaster-renderer3d.png" alt="DomemasterRenderer3D" /></p>
+<p><a name="equirectangular-tripod-repair"></a></p>
+<h2>Equirectangular Tripod Repair.comp</h2>
+<p>The top example shows tripod rig removal by taking an LatLong/Equirectangular/Spherical image, extracting the bottom &quot;nadir&quot; camera view, applying a paint node to do clone patching, and then finally bringing the cubic view back into the LatLong format and merging it with the original panorama.</p>
+<p>The lower example shows tripod rig removal by taking an LatLong/Equirectangular/Spherical image, rotating the view by 90° on the X axis to make it easier to work with the ground and sky pole zones, applying a paint node to do clone patching, and then finally bringing the view back into an upright LatLong format and merging it with the original panorama.</p>
+<p><img src="images/examples-equirectangular-tripod-repair.png" alt="Equirectangular Tripod Repair" /></p>
+<p><a name="equirectangular-to-fisheye"></a></p>
+<h2>Equirectangular2Fisheye.comp</h2>
+<p><img src="images/macro-equirectangular-to-fisheye.jpg" alt="Equirectangular2Fisheye" /></p>
+<p>The Equirectangular2Fisheye macro converts an equirectangular image into an angular fisheye image projection. This node has an FOV control that can be animated along with XYZ rotation support.</p>
+<p><img src="images/examples-equirectangular-to-fisheye.png" alt="Equirectangular2Fisheye" /></p>
+<p><a name="equirectangular-stereo-to-fisheye-stereo"></a></p>
+<h2>EquirectangularStereo2FisheyeStereo.comp</h2>
+<p><img src="images/examples-equirectangular-to-fisheye-screenshot.jpg" alt="EquirectangularStereo2FisheyeStereo Screenshot" /></p>
+<p>The EquirectangularStereo2FisheyeStereo macro converts a pair of left and right equirectangular images into the angular fisheye image projection. This node has an FOV control that can be animated along with XYZ rotation support.</p>
+<p><img src="images/examples-equirectangular-stereo-to-fisheye-stereo.png" alt="EquirectangularStereo2FisheyeStereo" /></p>
+<p><a name="equirectangular-renderer3d"></a></p>
+<h2>EquirectangularRenderer3D.comp</h2>
+<p>This example shows how to render elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical format output.</p>
+<p><img src="images/examples-equirectangular-renderer3d.png" alt="EquirectangularRenderer3D" /></p>
+<p><a name="equirectangular-renderer3d-advanced"></a></p>
+<h2>EquirectangularRenderer3DAdvanced.comp</h2>
+<p>This example shows how to render out multi-channel elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical format output.</p>
+<p><img src="images/examples-equirectangular-renderer3d-advanced.png" alt="EquirectangularRenderer3D" /></p>
+<p><a name="facebook-cubemap3x2"></a></p>
+<h2>Facebook Cubemap3x2.comp</h2>
+<p>The first example shows how to convert a Facebook Cubemap 3x2 format panorama to an equirectangular/LatLong/spherical format image.</p>
+<p>The second example shows how to convert a Facebook Cubemap 3x2 format panorama to a Gear VR Mono Cubemap format image.</p>
+<p>The third example shows how to convert an equirectangular/LatLong/spherical format panorama to a Facebook Cubemap 3x2 format image.</p>
+<p>The fourth example shows how to convert a Gear VR format panorama to a Facebook Cubemap 3x2 format image.</p>
+<p><img src="images/examples-facebook-cubemap3x2.png" alt="Facebook Cubemap3x2" /></p>
+<p><a name="facebook-vertical-strip"></a></p>
+<h2>Facebook Vertical Strip.comp</h2>
+<p>The first example shows how to convert a set of six cubemap face images into the Facebook Vertical Strip cubemap format.</p>
+<p>The second example shows how to convert a Facebook Vertical Strip cubemap into an Equirectangular/LatLong/Spherical image projection.</p>
+<p>The third example shows how to convert a Facebook Vertical Strip cubemap into a GearVR/Vray/Octane Render horizontal strip cubic image projection.</p>
+<p><img src="images/examples-facebook-vertical-strip.png" alt="Facebook Vertical Strip" /></p>
+<p><a name="fulldome-crossbounce-sim"></a></p>
+<h2>Fulldome Crossbounce Sim.comp</h2>
+<p><img src="images/examples-fulldome-crossbounce-sim.png" alt="Fulldome Crossbounce Sim" /></p>
+<p>This comp is a demo that simulates the rough effect of fulldome crossbounce lighting. Adjust the screen gain control to adjust the reflectivity of the dome screen. A good starting point is a screen gain value between 0.1 to 0.25</p>
+<p>Here is a view of a raw crossbounce lighting simulation that was created with the &quot;Crossbounce Blend&quot; control set to 0:</p>
+<p><img src="images/macro-domemaster-crossbounce-sim-raw.png" alt="DomemasterCrossbounceSim Fullcolor Macro" /></p>
+<p>Here is a view of a raw crossbounce lighting simulation that was created with the &quot;Crossbounce Blend&quot; control set to 0, and the &quot;Crossbounce Saturation&quot; was set to 0 to create a desaturated greyscale / luminance style output:</p>
+<p><img src="images/macro-domemaster-crossbounce-sim-greyscale.png" alt="DomemasterCrossbounceSim Greyscale Macro" /></p>
+<p>This is a view of a crossbounce lighting simulation where the simulation data was automatically composited over the original fulldome plate footage. This was created by setting the &quot;Crossbounce Blend&quot; control to 1:</p>
+<p><img src="images/macro-domemaster-crossbounce-sim-comped.png" alt="DomemasterCrossbounceSim Comped Macro" /></p>
+<p><a name="gearvr-mono-to-equirectangular"></a></p>
+<h2>GearVR Mono to Equirectangular.comp</h2>
+<p>This example shows how to convert a  GearVR/Octane Render/Vray horizontal strip cube map into an Equirectangular image.</p>
+<p><img src="images/examples-gearvr-mono-to-equirectangular.png" alt="GearVR Mono to Equirectangular" /></p>
+<p><a name="gearvr-stereo-to-equirectangular-stereo"></a></p>
+<h2>GearVR Stereo to Equirectangular Stereo.comp</h2>
+<p>This example shows how to convert a stereo GearVR/Octane Render/Vray horizontal strip cube map into an Equirectangular Stereo Over/Under image.</p>
+<p><img src="images/examples-gearvr-stereo-to-equirectangular-stereo.png" alt="GearVR Stereo to Equirectangular Stereo" /></p>
+<p><a name="latlong-to-cube"></a></p>
+<h2>LatLong to Cube.comp</h2>
+<p>This example shows how to convert a LatLong/Equirectangular/Spherical image into each of the cubic panorama formats.</p>
+<p><img src="images/examples-latlong-to-cube.png" alt="LatLong to Cube 1" /></p>
+<p><img src="images/examples-latlong-to-cube2.png" alt="LatLong to Cube 2" /></p>
+<p><a name="latlong-to-gearvr-stereo"></a></p>
+<h2>LatLong to GearVRStereo.comp</h2>
+<p>This example shows how to convert a pair of LatLong/Equirectangular/Spherical images to the GearVR stereo format. Then the comp shows how to extract that Gear VR stereo image and convert it into a stereoscopic horizontal cross image.</p>
+<p><img src="images/examples-latlong-to-gearvr-stereo.png" alt="LatLong to GearVRStereo" /></p>
+<p><a name="logo-over-tripod"></a></p>
+<h2>Logo Over Tripod.comp</h2>
+<p><img src="images/examples-logo-over-tripod-screenshot.jpg" alt="Logo Over Tripod" /></p>
+<p>This example places a flat logo image over the tripod zone in an Equirectangular/LatLong/Spherical panoramic image.</p>
+<p><img src="images/examples-logo-over-tripod-nodes.png" alt="Logo Over Tripod" /></p>
+<p><a name="meshuv-conversions"></a></p>
+<h2>MeshUV Conversions.comp</h2>
+<p>The first example shows how to convert a Pyramid image projection into an LatLong/Equirectangular/Spherical image.</p>
+<p>The second example shows how to convert a LatLong/Equirectangular/Spherical image into a Pyramid Mesh UV baked texture map.</p>
+<p>The third example shows how to convert a LatLong/Equirectangular/Spherical image into a Facebook Cubemap 3x2 Mesh UV baked texture map.</p>
+<p>The fourth example shows how to convert an Angular Fisheye 360 degree image into a Facebook Cubemap 3x2 Mesh UV baked texture map.</p>
+<p>The fifth example shows how to convert a set of Cubic Face panoramic images into a Facebook Cubemap 3x2 Mesh UV baked texture map.</p>
+<p><img src="images/examples-meshuv-conversions.png" alt="MeshUV Conversions" /></p>
+<p><a name="ricoh-theta-s-stitch"></a></p>
+<h2>Ricoh Theta S Stitch.comp</h2>
+<p>This is a KartaVR example that warps and stitches the raw footage from a Ricoh Theta S panoramic camera.</p>
+<p><img src="images/examples-ricoh-theta-s-stitch.png" alt="Ricoh Theta S Stitch" /></p>
+<p><a name="roller-coaster-ride-cubic"></a></p>
+<h2>Roller Coaster Ride CubicRenderer3D</h2>
+<p>This roller coaster ride example shows how to render elements from Fusion's 3D animation system to a cubic format output.</p>
+<p>A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the CubicRenderer3D node.</p>
+<p>The example has a side by side pair of CubicRenderer3D cameras that can give you a previz grade stereoscopic 3D rendered result of the scene. The node RightViewTransform3D is used with an expression to apply a stereoscopic camera separation offset type of effect.</p>
+<p>The output from the stereo pair of CubicRenderer3D cameras is then routed into a Gear VR cubic image format with the help of the &quot;CubicFaces2GearVRStereo&quot; node.</p>
+<p>Note: Fusion doesn't support raytraced lens shaders so it is not possible to render omnidirectional stereo output at this point in time.</p>
+<p><img src="images/examples-roller-coaster-ride-cubic.jpg" alt="Roller Coaster Ride Cubic" /></p>
+<p><img src="images/examples-roller-coaster-ride-cubic-nodes.png" alt="Roller Coaster Ride Cubic Nodes" /></p>
+<p><a name="roller-coaster-ride-cylindrical"></a></p>
+<h2>Roller Coaster Ride CylindricalRenderer3D</h2>
+<p>This roller coaster ride example shows how to render elements from Fusion's 3D animation system to a cylindrical format output.</p>
+<p>A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the CylindricalRenderer3D node.</p>
+<p>The example has a side by side pair of CylindricalRenderer3D cameras that can give you a previz grade stereoscopic 3D rendered result of the scene. The node RightViewTransform3D is used with an expression to apply a stereoscopic camera separation offset type of effect. Note: Fusion doesn't support raytraced lens shaders so it is not possible to render omnidirectional stereo output at this point in time.</p>
+<p><img src="images/examples-roller-coaster-ride-cylindrical.jpg" alt="Roller Coaster Ride Cubic" /></p>
+<p><img src="images/examples-roller-coaster-ride-cylindrical-nodes.png" alt="Roller Coaster Ride Nodes" /></p>
+<p><a name="roller-coaster-ride-domemaster"></a></p>
+<h2>Roller Coaster Ride DomemasterRenderer3D</h2>
+<p>This roller coaster ride example shows how to render elements from Fusion's 3D animation system to a domemaster angular fisheye format output.</p>
+<p>A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the DomemasterRenderer3D node.</p>
+<p>The example has a side by side pair of DomemasterRenderer3D cameras that can give you a previz grade stereoscopic 3D rendered result of the scene. The node RightViewTransform3D is used with an expression to apply a stereoscopic camera separation offset type of effect. Note: Fusion doesn't support raytraced lens shaders so it is not possible to render omnidirectional stereo output at this point in time.</p>
+<p><img src="images/examples-roller-coaster-ride-dome.jpg" alt="Roller Coaster Ride Domemaster" /></p>
+<p><img src="images/examples-roller-coaster-ride-dome-nodes.png" alt="Roller Coaster Ride Domemaster Nodes" /></p>
+<p><a name="roller-coaster-ride-latlong"></a></p>
+<h2>Roller Coaster Ride EquirectangularRenderer3D</h2>
+<p>This roller coaster ride example shows how to render elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical format output.</p>
+<p>A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the EquirectangularRenderer3D node.</p>
+<p>The example has a side by side pair of EquirectangularRenderer3D cameras that can give you a previz grade stereoscopic 3D rendered result of the scene. The node RightViewTransform3D is used with an expression to apply a stereoscopic camera separation offset type of effect. Note: Fusion doesn't support raytraced lens shaders so it is not possible to render omnidirectional stereo output at this point in time.</p>
+<p><img src="images/examples-roller-coaster-ride-latlong.jpg" alt="Roller Coaster Ride" /></p>
+<p><img src="images/examples-roller-coaster-ride-equirectangular-renderer-3d-nodes.png" alt="Roller Coaster Ride Nodes" /></p>
+<p><a name="roller-coaster-ride-oculus-rift-stereo"></a></p>
+<h2>Roller Coaster Ride Oculus Rift Stereo.comp</h2>
+<p>This roller coaster ride example shows how the &quot;OculusDK1StereoRenderer3D&quot; macro that allows you to use an Oculus Rift DK1 HMD display as the output device from the Fusion 3D system.</p>
+<p><img src="images/examples-roller-coaster-ride-oculus-rift-stereo-screenshot.png" alt="Roller Coaster Ride Oculus Rift Stereo" /></p>
+<p>A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the &quot;Invert Transform&quot; checkbox to prepare the scene for easy rendering with the OculusDK1StereoRenderer3D and OculusDK2StereoRenderer3D nodes.</p>
+<p>To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux. This is done by disabling the &quot;Direct to Rift&quot; option in the Oculus Rift drivers.</p>
+<p>In Fusion select the &quot;Windows &gt; New Image View&quot; menu item. Then drag this floating image view onto the Oculus Rift display monitor and then resize the image view to be fullscreen. You can now load the rendered image in Fusion on the new view using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the View window's &quot;Show Controls&quot; (Command+K) and &quot;Show Checker Underlay&quot; options.</p>
+<p>Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.</p>
+<p><img src="images/examples-roller-coaster-ride-oculus-rift-stereo-nodes.png" alt="Roller Coaster Ride Oculus Rift Stereo Nodes" /></p>
+<p><a name="rotate-panorama"></a></p>
+<h2>Rotate Panoramas.comp</h2>
+<p>This example shows how to use the RotateEquirectangular, RotateGearVRMono, and RotateCubicFaces macros to adjust the XYZ rotation of your panoramic imagery.</p>
+<p><img src="images/examples-rotate-panorama-nodes.png" alt="Rotate Panoramas Nodes" /></p>
+<p><a name="samsung-gear-360-stitch"></a></p>
+<h2>Samsung Gear 360 Stitch.comp</h2>
+<p>This example stitches the raw footage from a Samsung Gear 360 panoramic camera into an equirectangular/LatLong/spherical format panorama.</p>
+<p><img src="images/examples-samsung-gear-360-stitch.jpg" alt="Samsung Gear 360 Stitch" /></p>
+<p><img src="images/examples-samsung-gear-360-stitch-nodes.png" alt="Samsung Gear 360 Stitch Nodes" /></p>
+<p><a name="stereo-3d-roto-conversion"></a></p>
+<h2>Stereo 3D Roto Conversion.comp</h2>
+<p>This example shows how a 2D monoscopic panoramic 360° image can be displaced into an omni-directional 3D stereoscopic image using the &quot;DisplaceEquirectangular&quot; macro node with a greyscale depthmap that was created using rotoscoping.</p>
+<p><img src="images/examples-stereo-3d-roto-conversion-1.png" alt="Stereo 3D Roto Conversion 1" /></p>
+<p><img src="images/examples-stereo-3d-roto-conversion-2.png" alt="Stereo 3D Roto Conversion 2" /></p>
+<p>The composite starts with loading a 2D forest panorama image.</p>
+<p>A series of BSpline rotoshapes are added to trace the depth of each of the major trees, bushes, and objects in the image. Then each of the rotosplines are give a specific greyscale shaded depth value from 0-1 which represents the depth from the back of the world to the front of the scene.</p>
+<p><img src="images/macro-displace-equirectangular-rotoscoped-depthmap.png" alt="DisplaceEquirectangular Depth map" /></p>
+<p>Finally, the &quot;DisplaceEquirectangular&quot; macro node pushes and pulls the pixels in the scene to turn the 2D panorama into a stereosopic 3D output. The composite has a stereo over/under output, an anaglyph stereoscopic live preview output, a depthmap output that is previewed as an anaglyph stereo image so you can see the results interactively as you are drawing the rotoshapes, and an animated &quot;wiggle&quot; stereo preview to check the depth in the scene.</p>
+<p>The wiggle format GIF animation is helpful as it shows the generated &quot;in between&quot; stereoscopic camera views that are possible to create from an original 2D mono panorama.</p>
+<p><img src="images/macro-displace-equirectangular.gif" alt="DisplaceEquirectangular Wiggle Animation" /></p>
+<p>At the bottom of the comp is an example of the DepthBlurPanoramicWrap node that is applying a defocusing effect that varies based upon the distance from the camera.</p>
+<p><img src="images/macro-depth-blur-panoramic-wrap.jpg" alt="DepthBlurPanoramicWrap" /></p>
+<p><a name="stereo"></a></p>
+<h2>Stereo.comp</h2>
+<p>This example shows the most common panoramic 360° stereo format conversions that are done with the KartaVR.</p>
+<p><img src="images/examples-stereo.png" alt="Stereo" /></p>
+<p><a name="text-imageplane-stereo"></a></p>
+<h2>Text+ Imageplane Stereo.comp</h2>
+<p>This example shows how to create text in Fusion that can be mapped onto a polygon image plane using Fusion's 3D system.</p>
+<p>As a bonus a parallel stereo camera rig is created that allows you to render out equirectangular stereo imagery that can be viewed using the stereo side by side merge node, or the stereo anaglyph nodes in the composite.</p>
+<p><img src="images/examples-text-imageplane-stereo.png" alt="Text+ Imageplane Stereo" /></p>
+<p><a name="text-matrix-domemasterrender3d"></a></p>
+<h2>Text+ Matrix DomemasterRender3D.comp</h2>
+<p>This example shows how to create a fulldome version of The Matrix &quot;raining text&quot;.</p>
+<p><img src="images/examples-text-matrix-domemasterrenderer3d.jpg" alt="Text+ Matrix DomemasterRender3D" /></p>
+<p>A Text+ node is used to generate a tall hexadecimal text string. Then an offset node animates the text scrolling upwards continuously using an expression driven by the current frame value.</p>
+<p>This texture map is applied to a polygon plane that is then duplicated into a grid like layout using two duplicate nodes.</p>
+<p>The final scene is then rendered out to a 180° fulldome angular fisheye image prjoection using a DomemasterRenderer3D node. A rays node is used to create light streaks and a subtle color correction effect is applied to adjust the HDR lighting look from the rays.</p>
+<p>A background node is used to add a solid black background color to the composite.</p>
+<p><img src="images/examples-text-matrix-domemasterrenderer3d-node.png" alt="Text+ Matrix DomemasterRender3D Node" /></p>
+<p><a name="text-to-domemaster"></a></p>
+<h2>Text+ to Domemaster.comp</h2>
+<p>This example shows a quick and easy way to create text in Fusion that can be placed anywhere in a domemaster 180 degree image.</p>
+<p>A Text+ node is created with a 1:1 aspect ratio. This Text+ node is connected to the &quot;front&quot; input on a CubicFaces2Domemaster180 node. You can use the XYZ Rotation controls on the CubicFaces2Domemaster180 node to place the text element anywhere in the angular fisheye frame.</p>
+<p><img src="images/examples-text-to-domemaster.png" alt="Text+ to Domemaster" /></p>
+<p><a name="text-to-equirectangular"></a></p>
+<h2>Text+ to Equirectangular.comp</h2>
+<p>This example shows a quick and easy way to create text in Fusion that can be placed anywhere in a 360° panoramic image.</p>
+<p>A Text+ node is created with a 1:1 aspect ratio. This Text+ node is connected to the &quot;front&quot; input on a CubicFaces2Equirectangular node. You can use the <strong>XYZ Rotation</strong> controls on the CubicFaces2Equirectangular node to place the text element anywhere in the panorama.</p>
+<p>As a bonus the output from the CubicFaces2Equirectangular node is connected to an Offset macro and a Stereo Merge node that allows you to create a simulated stereo depth value for the text.</p>
+<p><img src="images/examples-text-to-equirectangular.png" alt="Text+ to Equirectangular" /></p>
+<h2>UV Pass LatLongStereo to Cubemap3x2Stereo.comp</h2>
+<p>This example shows how to use a UV pass map to reformat a pair of LatLong/Equirectangular/Spherical stereo images into the cubemap 3x2 stereo image projections.</p>
+<p><img src="images/examples-uv-pass-latlong-stereo-to-cubemap-3x2-stereo.png" alt="UV Pass LatLongStereo to Cubemap3x2Stereo" /></p>
+<p><a name="uv-pass-texture-projection"></a></p>
+<h2>UV Pass Texture Projection.comp</h2>
+<p>This example shows how to perform UV pass based panoramic 360° image transformations.</p>
+<p><img src="images/examples-uv-pass-texture-projection.png" alt="UV Pass Texture Projection" /></p>
+<p><a name="uv-pass-video-stitching"></a></p>
+<h2>UV Pass Video Stitching Template.comp</h2>
+<p>This is a starting template for UV pass based panoramic 360° video stitching. The final stitched panoramic video is written to disk using the saver node on the bottom right of the composite named &quot;PanoramaSaver&quot;.</p>
+<p>You can duplicate and modify this structure to support stitching any number of panoramic cameras in your video rig. As you modify this node graph, you can connect each panoramic 360° video camera view together in the composite using the merge nodes on the right named &quot;ViewMerge&quot;.</p>
+<p><img src="images/examples-uv-pass-video-stitching-template.png" alt="UV Pass Video Stitching Template" /></p>
+<p>To prepare your footage for use with this video stitching template the KartaVR &quot;Generate UV Pass in PTGui&quot; script should be used to turn your PTGui stitching .pts project file into a set of UV pass based panoramic warping images (ST Maps) that allow you to warp your video into the final panoramic image projection.</p>
+<p>The node named &quot;CameraLoader&quot; is used to load in the footage from one of your panoramic video rig cameras. The &quot;UVPassLoader&quot; node is used to load in a matching uv pass warping image for that specific camera view.</p>
+<p>The &quot;BSplineMask&quot; node is used along with an &quot;AlphaMaskMerge&quot; node to draw a custom rotoshape to select the part of a camera view you want to keep in the composite.</p>
+<p>The &quot;AlphaMaskMerge&quot; node is disabled by default with the Fusion &quot;pass through&quot; mode as it can only be used when you have created an acutal mask shape in the BSplineMask node.</p>
+<p>The saver nodes on the right hand side of the composite named &quot;CameraMaskSaver&quot; are used to allow you to export each of the camera view's custom BSpline alpha masks to disk if you want to use them later with an external compositing tool.</p>
+<p>The &quot;ColorCorrector&quot; node is used to apply the primary color correction. Then the &quot;ColorCorrectorMasked&quot; node is used with the built-in gradient controls to adjust the masking of the color adjustments that will allow you to fine tune the brightness and color falloff in different regions in the frame like the pole area.</p>
+<p>The &quot;ViewerEquirectangular&quot; node is used as a panoramic 360° media viewer tool that simulates the playback of LatLong format media on an flat monitor view.</p>
+<p><a name="viewer-cubic-faces"></a></p>
+<h2>Viewer Cubic Faces.comp</h2>
+<p>This comp shows a process for easily extracting 16:9 rectangular video frames from panoramic cubic map based imagery.</p>
+<p><img src="images/examples-viewer-cubic-faces.png" alt="Viewer Cubic Faces" /></p>
+<p><a name="viewer-equirectangular"></a></p>
+<h2>Viewer Equirectangular.comp</h2>
+<p>This comp shows a process for easily extracting a 16:9 rectangular video frame from a 360x180 degree LatLong/Equirectangular/Spherical immersive image.</p>
+<p><img src="images/examples-viewer-equirectangular.png" alt="Viewer Equirectangular" /></p>
+<p><a name="viewer-equirectangular-stereo"></a></p>
+<h2>Viewer Equirectangular Stereo.comp</h2>
+<p>This comp shows a process for easily extracting stereoscopic 16:9 rectangular video frames from a 360x180 degree LatLong/Equirectangular/Spherical stereo immersive image.</p>
+<p><img src="images/examples-viewer-equirectangular-stereo.png" alt="Viewer Equirectangular Stereo" /></p>
+<p><a name="viewer-mesh-stereo"></a></p>
+<h2>Viewer Mesh Stereo.comp</h2>
+<p>This ViewerMeshStereo example takes two LatLong/Equirectangular/Spherical images and does a panoramic defishing operation to turn them into a pair of left and right view images in a regular rectangular image format.</p>
+<p><img src="images/examples-viewer-mesh-stereo.png" alt="Viewer Mesh Stereo" /></p>
+<p><a name="viewer-mesh"></a></p>
+<h2>ViewerMesh.comp</h2>
+<p>This example shows the result of displaying panoramic 360° imagery with the ViewerMesh macro.</p>
+<p>Each row of nodes in this document loads a different panoramic format into the compsite and displays them by using the appropriate custom format OBJ mesh file in the ViewerMesh macro.</p>
+<p><img src="images/examples-viewer-mesh.png" alt="Viewer Mesh" /></p>
+<p><a name="wireframe-oculus-rift-stereo"></a></p>
+<h2>Wireframe Oculus Rift Stereo.comp</h2>
+<p>This example shows how the  &quot;OculusDK1StereoRenderer3D&quot;  and &quot;OculusDK2StereoRenderer3D&quot; node allows you to use an Oculus Rift HMD display as the output device from the Fusion 3D system. A wireframe version of the boxworld scene is rendered as a stereo image in the Oculus Rift output format.</p>
+<p><img src="images/examples-wireframe-oculus-rift-stereo-screenshot.png" alt="Wireframe Oculus Rift Stereo" /></p>
+<p>To use this node you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux. This is done by disabling the &quot;Direct to Rift&quot; option in the Oculus Rift drivers.</p>
+<p>In Fusion select the &quot;Windows  &gt; New Image View&quot;  menu item. Then drag the floating viewer onto the Oculus Rift display monitor and resize the viewer to be fullscreen.  You can now load the imagery in the viewer using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the viewer's &quot;Show Controls&quot; (Command+K) and &quot;Show Checker Underlay&quot; options.</p>
+<p>Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.</p>
+<p><img src="images/examples-wireframe-oculus-rift-stereo-nodes.png" alt="Wireframe Oculus Rift Stereo Nodes" /></p>
+<p><a name="looking-glass-renderer-3d"></a></p>
+<h3>LookingGlassRenderer3D.comp</h3>
+<p>This comp will render Fusion 3D system based content into a Looking Glass display 4x4 quilted grid format that can be displayed using the native Looking Glass display playback tools. You can expand the &quot;LookingGlassRenderer3D&quot; macro node's group to adjust any setting you want.</p>
+<p>This is the node view in its regular compact form:</p>
+<p><img src="images/examples-lookingglassrenderer3d-nodes-1.png" alt="LookingGlassRenderer3D.comp" /></p>
+<p>If you want to tinker with the nodes inside the LookingGlassRenderer3D macro you can expand the group node by clicking on the little &quot;line&quot; icon on the top right side of the collapsed node shape.</p>
+<p>When the group is expanded you will see all of the Camera3D and Renderer3D nodes that are packed inside of the macro that are used to render out the grid view.</p>
+<p><img src="images/examples-lookingglassrenderer3d-nodes-2.png" alt="LookingGlassRenderer3D.comp" /></p>
+<p>If you select the SceneMerge3D node inside the macro and view it on the right viewer window you will see the stereo camera rig and the model that is being rendered.</p>
+<p><img src="images/16-camera-linear-array.png" alt="16 Camera array" /></p>
+<p><a name="looking-glass-4x4-quilted-anaglyph-stereo-3d-viewer"></a></p>
+<h3>Looking Glass 4x4 Quilted Anaglyph Stereo 3D Viewer.comp</h3>
+<p>This comp will decode a static Looking Glass display 4x4 quilted grid based linear array image and preview it on a desktop monitor as anagyph stereo 3D imagery.</p>
+<p>The comp uses a pair of TimeStretcher + Crop nodes the clip out each of the quilted grid images into their own separate images. The stereo display works by having the right eye stereo view display one image view later in the linear camera array sequence then the left eye sees.</p>
+<p><img src="images/examples-looking-glass-quilted-anaglyph-stereo-3d-viewer-nodes.png" alt="LookingGlass Quilted Anaglyph Stereo 3D Viewer.comp" /></p>
+<p>To view the anaglyph output select the StereoAnaglyphHalfColorMerge node at the bottom left of the flow area. Then press the &quot;1&quot; or &quot;2&quot; keys to target the node's output at either the left or right viewer window in Fusion.</p>
+<p><img src="images/anaglyph-viewer-output.png" alt="anaglyph-viewer-output.png Node" /></p>
+<p>This composite allows you to convert the quilted multi-view image into a 16 frame long anaglyph stereo preview of the scene. When you hit play on the timeline it will automatically track the viewer window in stereo through the linear array footage.</p>
+<p><img src="images/anaglyph-stereo-preview.png" alt="LookingGlass Quilted Anaglyph Stereo 3D Viewer.comp" /></p>
+<p>You can change Fusion's timeline playback mode from &quot;looped&quot; playback to A &quot;ping-pong&quot; playback MODE that goes forwards and backwards in Fusion's timeline by clicking on this control in the bottom timeline area in Fusion's UI:</p>
+<p><img src="images/playback-control.png" alt="Fusion Looped Playback" /></p>
+<p><img src="images/playback-control-pingpong.png" alt="Fusion PingPong Playback" /></p>
+<p><a name="looking-glass-4x4-quilted-to-image-sequence"></a></p>
+<h3>Looking Glass 4x4 Quilted to Image Sequence.comp</h3>
+<p>This comp will decode a static Looking Glass display 4x4 quilted grid based linear array image and turn it into an image sequence.</p>
+<p>Due to the way the timeStretcher node works inside of the &quot;ImageGridExtractor&quot; macro, you have to start the in-point in the timeline at the total number of quilted views. In this case there are 4x4 quilted views so the timeline starts on frame 16.</p>
+<p><img src="images/examples-looking-glass-quilted-to-image-Sequence" alt="LookingGlass Quilted to Image Sequence.comp" /></p>
+<p><a name="looking-glass-5x9-quilted-anaglyph-stereo-3d-viewer"></a></p>
+<h3>Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp</h3>
+<p><img src="images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer.png" alt="Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp" /></p>
+<p><a name="looking-glass-5x9-quilted-to-image-sequence"></a></p>
+<h3>Looking Glass 5x9 Quilted to Image Sequence.comp</h3>
+<p><img src="images/examples-looking_glass_5x9_quilted_to_image_sequence.png" alt="Looking Glass 5x9 Quilted to Image Sequence.comp" /></p>
+</body>
+</html>

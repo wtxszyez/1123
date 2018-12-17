@@ -1,0 +1,315 @@
+{
+	Tools = ordered() {
+		CubicFaces2Cubemap3x2 = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#CubicFaces2Cubemap3x2",
+      },
+			Inputs = ordered() {
+        MainInput1 = InstanceInput {
+					SourceOp = "InputScalingFront",
+					Source = "Input",
+					Name = "Front",
+				},
+        MainInput2 = InstanceInput {
+					SourceOp = "InputScalingRight",
+					Source = "Input",
+					Name = "Right",
+				},
+        MainInput3 = InstanceInput {
+					SourceOp = "InputScalingBack",
+					Source = "Input",
+					Name = "Back",
+				},
+        MainInput4 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Input",
+					Name = "Left",
+				},
+        MainInput5 = InstanceInput {
+					SourceOp = "InputScalingTop",
+					Source = "Input",
+					Name = "Top",
+				},
+				MainInput6 = InstanceInput {
+					SourceOp = "InputScalingBottom",
+					Source = "Input",
+					Name = "Bottom",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScalingFront",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Crop2Cubemap",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				Crop2Cubemap = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = -1024,
+							Expression = "-(InputScalingFront.Height)",
+						},
+						XSize = Input {
+							Value = 3072,
+							Expression = "InputScalingFront.Height*3",
+						},
+						YSize = Input {
+							Value = 2048,
+							Expression = "InputScalingFront.Height*2",
+						},
+						Input = Input {
+							SourceOp = "MergeRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, 82.5, }, },
+				},
+				MergeRight = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeLeft",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformRight",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 82.5, }, },
+				},
+				MergeLeft = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeTop",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 82.5, }, },
+				},
+				MergeTop = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeBack",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformTop",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 82.5, }, },
+				},
+				TransformRight = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "InputScalingRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, -49.5, }, },
+				},
+				TransformLeft = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.5, -0.5, }, },
+						Input = Input {
+							SourceOp = "InputScalingLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, -49.5, }, },
+				},
+				TransformTop = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, -0.5, }, },
+						Input = Input {
+							SourceOp = "InputScalingTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, -49.5, }, },
+				},
+				MergeBack = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeBottom",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBack",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 82.5, }, },
+				},
+				TransformBack = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 2.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "InputScalingBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -49.5, }, },
+				},
+				MergeBottom = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformFront",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBottom",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 82.5, }, },
+				},
+				TransformBottom = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 2.5, -0.5, }, },
+						Input = Input {
+							SourceOp = "InputScalingBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, -49.5, }, },
+				},
+				TransformFront = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScalingFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 82.5, }, },
+				},
+				InputScalingBottom = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 494, -167.5, }, },
+				},
+				InputScalingBack = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 604, -167.5, }, },
+				},
+				InputScalingTop = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 714, -167.5, }, },
+				},
+				InputScalingLeft = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 824, -167.5, }, },
+				},
+				InputScalingRight = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 934, -167.5, }, },
+				},
+				InputScalingFront = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height",
+						},
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 384, -168.914, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "CubicFaces2Cubemap3x2",
+}

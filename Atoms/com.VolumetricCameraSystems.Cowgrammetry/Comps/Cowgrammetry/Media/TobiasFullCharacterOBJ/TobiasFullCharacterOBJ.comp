@@ -1,0 +1,460 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 24 },
+	GlobalRange = { 0, 24 },
+	CurrentID = 65,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 10.0.1 build 6",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Comp:/tobias_character.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -55, 148.5 } },
+		},
+		TobiasReplaceNormals3D = ReplaceNormals3D {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "TobiasMesh3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+		},
+		TobiasMesh3D = SurfaceFBXMesh {
+			NameSet = true,
+			CustomData = {
+				NumMtlSlots = 1
+			},
+			Inputs = {
+				ImportFile = Input { Value = "Comp:/tobias_character.obj", },
+				ObjName = Input { Value = "tobias_character", },
+				TransformToWorld = Input { Value = 0, },
+				EnableAxisConversion = Input { Value = 1, },
+				EnableUnitConversion = Input { Value = 1, },
+				["Lighting.Nest"] = Input { Value = 1, },
+				["Lighting.IsAffectedByLights"] = Input { Value = 0, },
+				["Lighting.IsShadowReceiver"] = Input { Value = 0, },
+				["ObjectID.ObjectID"] = Input { Value = 2, },
+				["Materials.tobias_characterSG_mat0"] = Input {
+					SourceOp = "TobiasTex2D",
+					Source = "MaterialOutput",
+					CustomData = {
+						MtlSlotIndex = 0
+					},
+				},
+				["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+				["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 4, },
+				MultiMaterial = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+		},
+		TobiasTransform3D = Transform3D {
+			NameSet = true,
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "TobiasReplaceNormals3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+		},
+		VCSNote = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "This is Digital Tobias. He was captured by VolumetricCameraSystems live-action portable videogrammetry scanning system on Aug 2018. You can get 30 FPS mesh sequences and point clouds from the VCS \"Multi Planar Grid Array\" and \"Planar Dome Grid Array\" Volumetric Camera Rigs.\n\n3D Model License Terms:\nAttribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)\n\nFor more information:\nhttp://www.VolumetricCameraSystems.com\n(Volumetric Camera Hardware) by Tobias Chen <me@TobiasChen.com>\n(Volumetric Software Pipeline) by Andrew Hazelden <andrew@AndrewHazelden.com>", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -67.8336, -140.098 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 755.305, 234.731 }
+			},
+		},
+		TobiasTex2D = Texture2DOperator {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader2",
+					Source = "Output",
+				},
+				WrapMode = Input { Value = FuID { "Wrap" }, },
+				MaterialID = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 55, 148.5 } },
+		},
+		Camera3D1 = Camera3D {
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = 225.266674448453, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 110.300660480245, },
+				["Transform3DOp.Translate.Z"] = Input { Value = 150.810383367878, },
+				["Transform3DOp.Rotate.X"] = Input { Value = -3.63903797743842, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = 56.6841215784661, },
+				["Transform3DOp.Rotate.Z"] = Input { Value = 0.0896385055966675, },
+				FLength = Input { Value = 14.3404285604962, },
+				["Stereo.Mode"] = Input { Value = FuID { "OffAxis" }, },
+				FilmGate = Input { Value = FuID { "BMD_URSA_4K_16x9" }, },
+				ApertureW = Input { Value = 0.831496062992126, },
+				ApertureH = Input { Value = 0.467716535433071, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 214.5 } },
+		},
+		Renderer3D1 = Renderer3D {
+			CtrlWZoom = false,
+			CustomData = {
+				ToolVersion = 2,
+			},
+			Inputs = {
+				GlobalOut = Input { Value = 24, },
+				Width = Input { Value = 1920, },
+				Height = Input { Value = 1080, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraMerge3D",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3D1" }, },
+				RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+				["RendererOpenGL.Channels.Z"] = Input { Value = 1, },
+				["RendererOpenGL.Channels.Normal"] = Input { Value = 1, },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Value = 1, },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 148.5 } },
+		},
+		CameraMerge3D = Merge3D {
+			NameSet = true,
+			Inputs = {
+				SceneInput1 = Input {
+					SourceOp = "Camera3D1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "TobiasTransform3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 148.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1767,
+			Height = 860,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.935048,
+						Offset = { 194.654, 187.754 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 359 },
+							ScaleX = 0.0514619883040936,
+							OffsetX = -1.23508771929825,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				ConsoleView = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.622020431328036,
+					RatioY = 0.0104895104895105,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.465962441314554,
+						{ ID = "Left", RatioX = 1, RatioY = 99.2493702770781, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.465962441314554, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 664,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.671345029239766, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.328654970760234, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 239.399978637695,
+								X = 2.40000224113464,
+								Z = 0
+							},
+							Scale = 0.00319190276786685,
+							Position = {
+								Y = -88.111213684082,
+								X = -15.5968790054321,
+								Z = -5.87450456619263
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "",
+			Unsorted = {
+				GlobalEnd = 24
+			},
+			Tweaks = {
+				OpenCL = {
+					Enable = 0,
+					Caching = 0
+				}
+			},
+			Paths = {
+				EnableReverseMapping = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

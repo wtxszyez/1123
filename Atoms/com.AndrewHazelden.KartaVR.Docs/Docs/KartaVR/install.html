@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><ul>
+<li><a href="#install">Install</a>
+<ul>
+<li><a href="#standard">Standard Install</a></li>
+<li><a href="#win-install">Windows Manual Install</a></li>
+<li><a href="#mac-install">macOS Manual Install</a></li>
+<li><a href="#linux-install">Linux Manual Install</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="install"></a>KartaVR Installation</h2>
+<h3><a name="standard"></a>Standard Install</h3>
+<p>The KartaVR for Reactor atom packages dramatically simplify the process of setting up the panoramic 360° compositing toolset in Fusion. You can now do the full installation process without leaving Fusion once.</p>
+<p><img src="images/reactor-atom-package.png" alt="Reactor Atom Package" /></p>
+<h3><a name="win-install"></a>Windows 64-bit Install</h3>
+<h4>Step 1.</h4>
+<p>Windows users need to install the 64-bit version of the Microsoft Visual C++ Redistributable for Visual Studio 2015 library:<br />
+<a href="https://www.microsoft.com/en-us/download/details.aspx?id=48145">https://www.microsoft.com/en-us/download/details.aspx?id=48145</a></p>
+<p><strong>Note:</strong> Windows 7 users will have to update to Windows 7 SP 1 in order to install the Visual Studio 2015 library correctly.</p>
+<p><strong>Step 2.</strong><br />
+Use Reactor to install the content found in the <code>Tools/VR/KartaVR</code> category.</p>
+<p><strong>Step 3.</strong><br />
+Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:</p>
+<pre><code>	Reactor:/Deploy/Macros/KartaVR/
+	Reactor:/Deploy/Scripts/Comp/KartaVR/
+	Reactor:/Deploy/Scripts/Tools/KartaVR/
+	Reactor:/Deploy/Bin/KartaVR/
+	Reactor:/Deploy/Docs/KartaVR/
+</code></pre>
+<p><a name="win-env-variables"></a>
+<strong>Step 4.</strong></p>
+<p>You need to add the KartaVR &quot;Cygwin&quot; bin folder to your Windows %PATH% environment variable. This is a required step if you want to use the KartaVR &quot;Import PTGui Masks&quot; lua script.</p>
+<p>Editing the Windows OS <code>%PATH%</code> environment variable is done by opening your Windows <strong>System</strong> Control Panel. Click on the <strong>Advanced system settings</strong> button on the left side of the window.</p>
+<p><img src="images/windows-env-var-advanced-system-settings.png" alt="Advanced system settings" /></p>
+<p>The &quot;System Properties&quot; window will appear. Click on the <strong>Environment Variables...</strong> button.</p>
+<p><img src="images/windows-env-var-system-properties-window.png" alt="System Properties" /></p>
+<p>In the &quot;Environment Variable&quot; window you need to scroll down in the &quot;System variables&quot; section of the view and select the <strong>Path</strong> entry. Click the <strong>Edit...</strong> button.</p>
+<p><img src="images/windows-env-var-environment-variable-window.png" alt="Environment Variable Window" /></p>
+<p>On Windows 10 a visual &quot;Edit environment variable&quot; editor window will appear. This UI  has separate path entry text fields that makes it easy to add/remove and re-order each of the environment %Path% variable items:</p>
+<p><img src="images/windows-env-var-add-a-new-variable.png" alt="Add a new Environment Variable" /></p>
+<p>To add the new &quot;cygwin&quot; environment variable item to this window you have to copy/paste the following text into the bottom text field of the &quot;Edit environment variable&quot; list:</p>
+<p><strong>Fusion on Windows Cygwin Path:</strong></p>
+<p><code>C:\ProgramData\Blackmagic Design\Fusion\Reactor\Deploy\Bin\cygwin\bin</code></p>
+<p><strong>Resolve on Windows Cygwin Path:</strong></p>
+<p><code>C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\Deploy\Bin\cygwin\bin</code></p>
+<p><strong>Note:</strong> On Windows 7 the &quot;Edit environment variable&quot; window looks a bit different as the dialog is basically a single super long text field where you have to manually add each PATH entry and use semi-colon <code>;</code> characters as separators between each of the folder paths.</p>
+<p><strong>Step 5.</strong><br />
+Launch Fusion and open the Bins window.</p>
+<p><img src="images/show-bin-window.png" alt="Show the Bin Window" /></p>
+<p><strong>Step 6.</strong><br />
+Click on the <code>Library on localhost</code> tab on the left side of the Bins window. This is the root folder in the bin.</p>
+<p><img src="images/switch-to-bin-library-tab.png" alt="Switch to the Library Tab in the Bin window" /></p>
+<p><strong>Step 7.</strong><br />
+Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option.</p>
+<p><img src="images/library-tab-new-folder.png" alt="Fusion Bin Screenshot" /></p>
+<p>Let's name the new folder <code>KartaVR</code>. After you type in the new name, press the <code>Enter</code> key to accept the changes.</p>
+<p><img src="images/library-tab-name-the-new-folder.png" alt="Fusion Bin Screenshot" /></p>
+<p>The Fusion Bins window now lists the <code>KartaVR</code> folder on the left side bar. Select this entry to show the folder contents.</p>
+<p><img src="images/library-karatavr-empty-folder.png" alt="Select the KartaVR folder" /></p>
+<p>Using the same folder creation approach we need to add sub-folders for each of the following entries: &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, &quot;Viewer&quot;. This is what the Bin folder will look like when when have successfully completed the task:</p>
+<p><img src="images/dfm-bin-folder.gif" alt="Bin Folder" /></p>
+<p><strong>Step 8.</strong><br />
+The next step will take a few minutes to carry out. You need to navigate into each of the sub-folders and repeat the process as you add the .settings files to each folder.</p>
+<p>Click in the folder view. In the contextual menu, select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item.png" alt="Add an item to the Bin" /></p>
+<p>An <code>Open File</code> window will appear that allows you to select and add items to the current Fusion Bin.</p>
+<p>Use the file path selector at the top of the window to navigate to the new &quot;KartaVR&quot; folder that was copied into the Fusion macros folder in step 2. If you want to get to this folder easily, try the PathMap section in the dialog and choose &quot;<code>Reactor:</code>&quot;.</p>
+<p>Fusion 9 Macros Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\Fusion\Reactor\Deploy\Macros\KartaVR\</code></p>
+<p>Resolve 15 Macros Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\Deploy\Macros\KartaVR\</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Open up the sub-folder in the file dialog with the matching name like &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, and &quot;Viewer&quot;.</p>
+<p>To make it easier to select the correct files, click on the <code>Type</code> heading to sort all of the files by their file extension. Scroll down until you see the list of files that have a <code>.setting</code> extension. The <code>.setting</code> files are Fusion macros.</p>
+<p>You can select the group of KartaVR macros by clicking on the first setting at the top of the view with a .setting file name extension like <code>Angular2Equirectangular.setting</code>. Then hold down the SHIFT key and select the last .setting file in the list. This will select the whole group of macros at the same time.</p>
+<p>Clicking the <code>Open</code> button will add the macros to the Bin window.</p>
+<p>After you have added each set of macros to the bin view it will be easier to access in the future.</p>
+<p>The macros are now ready to be used in your Fusion composites. To use a macro, drag it from the  Bin window into your Flow view.</p>
+<p><strong>Step 9.</strong><br />
+To make it easy to access the sample panoramic images that come with the KartaVR, you can add an &quot;Images&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Images</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Images</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the folder path:</p>
+<p>Fusion 9 Images Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\Fusion\Reactor\Deploy\Macros\KartaVR\Images\</code></p>
+<p>Resolve 15 Images Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\Deploy\Macros\KartaVR\Images\</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Uncheck the &quot;Gather Sequences&quot; checkbox in the open <code>Open File</code> window. This will allow the dialog to list the single frame duration images in the folder correctly.</p>
+<p>Use the SHIFT key and select all of the images in the folder. Click the <code>Open</code> button to load the images into the new Bin.</p>
+<p><img src="images/library-add-images.png" alt="Add the images" /></p>
+<p>You now have a collection of sample images that can be quickly dropped into an active Fusion composite document. This makes it a lot faster to build a simple comp with the sample images compared to manually adding a loader node for each image.</p>
+<p>As a note, in Fusion you can only drop one image at a time from the Bin window into your comp. If you try to &quot;group select&quot; multiple images at once the loader nodes are overwritten in the Flow view.</p>
+<p><img src="images/library-sample-images-bin.png" alt="Sample Panoramic Images" /></p>
+<p><strong>Step 10.</strong><br />
+To make it quicker to access the example Fusion composite files that come with the KartaVR, you can add a &quot;Demos&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Demos</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Examples</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the <code>Reactor:/Comps/KartaVR/</code> PathMap folder:</p>
+<p>Fusion 9 Examples Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\Fusion\Reactor\Comps\KartaVR\</code></p>
+<p>Resolve 15 Examples Directory:</p>
+<p><code>C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\Deploy\Comps\KartaVR\</code></p>
+<p>Use the SHIFT key and select all of the files in the folder. Click the <code>Open</code> button to load the example fusion composite files into the new Bin.</p>
+<p><img src="images/fusion-examples-tab.png" alt="Fusion Examples Tab" /></p>
+<p>At this point we have finished setting up Fusion's Bin window.</p>
+<p><strong>Step 11.</strong><br />
+The KartaVR includes a panoramic media playback script called PanoView that supports the Oculus Rift/HTC VIVE/OSVR HMD. You should run the <strong>Script &gt; KartaVR &gt; Viewers &gt; Edit PanoView Preferences</strong> script menu item to configure your viewing tools <a href="pano-view.html">using the PanoView instructions here.</a></p>
+<p>It is also a good idea to set up your <strong><a href="scripts.html#edit-send-media-to-preferences">Send Media to </a></strong> scripts using the <strong>Script &gt; KartaVR &gt; Send Media to &gt; Edit Send Media to Preferences</strong> script menu item to finish configuring the rest of the pipeline scripts.</p>
+<p>If you are using Fusion 9 you will likely want to use the built-in 360 viewer mode for displaying images live on an Oculus Rift CV1 and HTC VIVE HMD screen.</p>
+<p><strong>Step 12. Hotkeys Customization</strong></p>
+<p>There is a Fusion 9/Resolve 15 Hotkey file included with the KartaVR. <a href="hotkeys.html">For more details check out the  Hotkeys documentation page here</a>.</p>
+<p>The <code>KartaVR Hotkeys.fu</code> file can be found in the <code>Reactor:/Deploy/Config/</code> folder.</p>
+<p>If you want to use the StatixVFX provided &quot;nuke2fusion&quot; toolset from Reactor, then you will need to edit some of the hotkey bindings in <code>KartaVR Hotkeys.fu</code>.</p>
+<p><strong>Step 13. Google VR View Web Sharing Option</strong></p>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script you will need to install a web sharing program. On Windows and macOS the MAMP program is the easiest Apache server module to use. You can find out how to <a href="google-cardboard-vr-view.html#mamp-setup">set up the MAMP web sharing settings here</a>.</p>
+<h2><a name="mac-install"></a>macOS Install</h2>
+<p><strong>Prerequisites</strong></p>
+<p>After installing KartaVR using Reactor, make sure to also install the &quot;Bin/Imagemagick&quot; Reactor package. Open up the zipped copy of ImageMagick and run the ImageMagick macOS installer pkg file which can be found at
+&quot;Reactor:/Deploy/Bin/imagemagick/ImageMagick-6.9.1-0.pkg.zip&quot;.</p>
+<p>Alternatively you can use ImageMagick from one of these sources:</p>
+<p>The Cactus Lab website has an ImageMagick for macOS build that works with macOS X 10.5 to 10.13. You want the first download item <code>ImageMagick 6.9.1-0 for Mac OS X 10.5 – 10.10</code> listed on the Cactus Lab webpage:</p>
+<p><a href="http://cactuslab.com/imagemagick/">http://cactuslab.com/imagemagick/</a></p>
+<p>The ImageMagick Project also hosts a macOS build version of the library:</p>
+<p><a href="http://www.imagemagick.org/script/binary-releases.php#macosx">http://www.imagemagick.org/script/binary-releases.php#macosx</a></p>
+<p>You can install ImageMagick using <a href="http://brew.sh">homebrew</a>:</p>
+<pre><code>brew install ImageMagick
+</code></pre>
+<p>For the technically inclined macOS user you can install ImageMagick using Xcode and the <a href="https://www.macports.org/">Mac Ports tool</a> with the terminal command:</p>
+<pre><code>sudo ports install ImageMagick
+</code></pre>
+<p><strong>Step 1.</strong><br />
+Use Reactor to install the content found in the <code>Tools/VR/KartaVR</code> category.</p>
+<p><strong>Step 2.</strong><br />
+Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:</p>
+<pre><code>	Reactor:/Deploy/Macros/KartaVR/
+	Reactor:/Deploy/Scripts/Comp/KartaVR/
+	Reactor:/Deploy/Scripts/Tools/KartaVR/
+	Reactor:/Deploy/Bin/KartaVR/
+	Reactor:/Deploy/Docs/KartaVR/
+</code></pre>
+<p><strong>Fusion on Mac Reactor Path:</strong></p>
+<p><code>/Library/Application Support/Blackmagic Design/Fusion/Reactor/</code></p>
+<p><strong>Resolve on Mac Reactor Path:</strong></p>
+<p><code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/</code></p>
+<p><strong>Step 3.</strong><br />
+Launch Fusion and open the Bins window.</p>
+<p><img src="images/show-bin-window-mac.png" alt="Show the Bin Window" /></p>
+<p><strong>Step 4.</strong><br />
+Click on the <code>Library on localhost</code> tab on the left side of the Bins window. This is the root folder in the bin.</p>
+<p><img src="images/switch-to-bin-library-tab-mac.png" alt="Switch to the Library Tab in the Bin window" /></p>
+<p><strong>Step 5.</strong><br />
+Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option.</p>
+<p><img src="images/library-tab-new-folder-mac.png" alt="Fusion Bin Screenshot" /></p>
+<p>Let's name the new folder <code>KartaVR</code>. After you type in the new name, press the <code>Enter</code> key to accept the changes.</p>
+<p><img src="images/library-tab-name-the-new-folder-mac.png" alt="Fusion Bin Screenshot" /></p>
+<p>The Fusion Bins window now lists the <code>KartaVR</code> folder on the left side bar. Select this entry to show the folder contents.</p>
+<p><img src="images/library-kartavr-empty-folder-mac.png" alt="Select the KartaVR folder" /></p>
+<p>Using the same folder creation approach we need to add sub-folders for each of the following entries: &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, &quot;Viewer&quot;. This is what the Bin folder will look like when when have successfully completed the task:</p>
+<p><img src="images/dfm-bin-folder.gif" alt="Bin Folder" /></p>
+<p><strong>Step 6.</strong></p>
+<p>The next step will take a few minutes to carry out. You need to navigate into each of the sub-folders and repeat the process as you add the .settings files to each folder.</p>
+<p>Right click in the <code>KartaVR</code> folder view. In the contextual menu, select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>An <code>Open File</code> window will appear that allows you to select and add items to the current Fusion Bin.</p>
+<p>Use the file path selector at the top of the window to navigate to the new &quot;KartaVR&quot; folder that was copied into the Fusion macros folder in step 2. If you want to get to this folder easily, try the PathMap section in the dialog and choose &quot;<code>Reactor:</code>&quot;.</p>
+<p>Fusion 9 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/Macros/KartaVR/</code></p>
+<p>Resolve 15 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/Deploy/Macros/KartaVR/</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Open up the sub-folder in the file dialog with the matching name like &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, and &quot;Viewer&quot;.</p>
+<p>To make it easier to select the correct files, click on the <code>Kind</code> heading to sort all of the files by their file extension. Scroll down until you see the list of files that have a <code>.setting</code> extension. The <code>.setting</code> files are Fusion macros.</p>
+<p>You can select the group of KartaVR macros by clicking on the first setting at the top of the view with a .setting file name extension like <code>Angular2Equirectangular.setting</code>. Then hold down the SHIFT key and select the last .setting file in the list. This will select the whole group of macros at the same time.</p>
+<p>Clicking the <code>Open</code> button will add the macros to the Bin window.</p>
+<p><img src="images/library-add-settings-files-mac.png" alt="Select the settings files" /></p>
+<p>After you have added each set of macros to the bin view it will be easier to access in the future.</p>
+<p>The macros are now ready to be used in your Fusion composites. To use a macro, drag it from the  Bin window into your Flow view.</p>
+<p><img src="images/fusion-bin-mac.png" alt="Fusion Bin Screenshot" /></p>
+<p><strong>Step 7.</strong></p>
+<p>If you want to make it easy to access the sample panoramic images that come with the KartaVR, you can add an &quot;Images&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Images</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Images</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the folder path:</p>
+<p>Fusion 9 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/Macros/KartaVR/Images/</code></p>
+<p>Resolve 15 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/Deploy/Macros/KartaVR/Images/</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Uncheck the &quot;Gather Sequences&quot; checkbox in the open <code>Open File</code> window. This will allow the dialog to list the single frame duration images in the folder correctly.</p>
+<p>Use the SHIFT key and select all of the images in the folder. Click the <code>Open</code> button to load the images into the new Bin.</p>
+<p><img src="images/library-add-images-mac.png" alt="Add the images" /></p>
+<p>You now have a collection of sample images that can be quickly dropped into an active Fusion composite document. This makes it a lot faster to build a simple comp with the sample images compared to manually adding a loader node for each image.</p>
+<p>As a note, in Fusion you can only drop one image at a time from the Bin window into your comp. If you try to &quot;group select&quot; multiple images at once the loader nodes are overwritten in the Flow view.</p>
+<p><img src="images/library-sample-images-bin-mac.png" alt="Sample Panoramic Images" /></p>
+<p><strong>Step 8.</strong><br />
+To make it quicker to access the example Fusion composite files that come with the KartaVR, you can add a &quot;Demos&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Demos</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Demos</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the folder path <code>Reactor:/Deploy/Comp/KartaVR/</code>:</p>
+<p>Fusion 9 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/Comp/KartaVR/</code></p>
+<p>Resolve 15 Macros Directory:</p>
+<p><code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/Deploy/Comp/KartaVR/</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Use the SHIFT key and select all of the files in the folder. Click the <code>Open</code> button to load the example fusion composite files into the new Bin.</p>
+<p><img src="images/fusion-bin-mac.png" alt="Fusion Examples Tab" /></p>
+<p>At this point we have finished setting up Fusion's Bin window.</p>
+<p><strong>Step 9.</strong><br />
+The KartaVR includes a panoramic media playback script called PanoView that supports the Oculus Rift/HTC VIVE/OSVR HMD. You should run the <strong>Script &gt; KartaVR &gt; Viewers &gt; Edit PanoView Preferences</strong> script menu item to configure your viewing tools <a href="pano-view.html">using the PanoView instructions here.</a></p>
+<p>It is also a good idea to set up your <strong><a href="scripts.html#edit-send-media-to-preferences">Send Media to </a></strong> scripts using the <strong>Script &gt; KartaVR &gt; Send Media to &gt; Edit Send Media to Preferences</strong> script menu item to finish configuring the rest of the pipeline scripts.</p>
+<p>If you are using Fusion 9 you will likely want to use the built-in 360 viewer mode for displaying images live on an Oculus Rift CV1 and HTC VIVE HMD screen.</p>
+<p><strong>Step 10. Hotkeys Customization</strong></p>
+<p>There is a Fusion 9/Resolve 15 Hotkey file included with the KartaVR. <a href="hotkeys.html">For more details check out the  Hotkeys documentation page here</a>.</p>
+<p>The <code>KartaVR Hotkeys.fu</code> file can be found in the <code>Reactor:/Deploy/Config/</code> folder.</p>
+<p>If you want to use the StatixVFX provided &quot;nuke2fusion&quot; toolset from Reactor, then you will need to edit some of the hotkey bindings in <code>KartaVR Hotkeys.fu</code>.</p>
+<p><strong>Step 14. Google VR View Web Sharing Option</strong></p>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script you will need to install a web sharing program. On Windows and macOS the MAMP program is the easiest Apache server module to use. You can find out how to <a href="google-cardboard-vr-view.html#mamp-setup">set up the MAMP web sharing settings here</a>.</p>
+<h3><a name="linux-install"></a>Linux Manual Install</h3>
+<p><strong>Prerequisites</strong></p>
+<p>Install the Linux versions of the Imagemagick graphics library, and FFmpeg.</p>
+<h4>YUM Installations</h4>
+<p>Install the Imagemagick library using YUM:</p>
+<pre><code>yum install ImageMagick
+</code></pre>
+<p>Install the FFmpeg library using YUM with a 3rd party repository:</p>
+<pre><code>yum install ffmpeg
+</code></pre>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script you will need to install the clipboard tool xclip, along with the Apache (httpd) server modules for web sharing:</p>
+<pre><code>yum install xclip httpd
+</code></pre>
+<p>You can start Apache (httpd) using:</p>
+<pre><code>systemctl start httpd.service
+systemctl enable httpd.service
+</code></pre>
+<p>On CentOS 7 if you want to make the Apache HTTP port 80 accessible external to the machine you can open that port up on the firewall rules:</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --reload
+</code></pre>
+<p><strong>Note:</strong> You will have to make the /var/www/html/ folder writable for the users that are running the Fusion based VR View publishing script. You can either use <strong>chmod</strong> to change the folder permissions to do this, or you can use <strong>chown</strong> to add the user to a group with write permissions. The various Apache setup guides on the internet can provide details on this step.</p>
+<p><strong>Note:</strong> Redhat / Fedora / Centos Linux users will have to add a repository like <strong><a href="http://li.nux.ro/download/nux/dextop/el7/x86_64/">nux-desktop</a></strong> for Hugin or <strong><a href="http://rpmfusion.org/">RPM Fusion</a></strong> for ffmpeg if it isn't available in your standard yum distribution. On the RPM Fusion website you want the add the <a href="http://rpmfusion.org/Configuration">RPM Fusion free</a> repository to yum.</p>
+<h4>APT-GET Installations</h4>
+<p>Install the Imagemagick library using apt-get:</p>
+<pre><code>sudo apt-get -y install ImageMagick
+</code></pre>
+<p>Install the FFmpeg library using apt-get with a 3rd party repository:</p>
+<pre><code>sudo add-apt-repository ppa:mc3man/trusty-media
+sudo apt-get update
+sudo apt-get dist-upgrade
+sudo apt-get -y install ffmpeg 
+</code></pre>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script you will need to install the clipboard tool xclip, along with the Apache (apache2) server modules for web sharing:</p>
+<pre><code>sudo apt-get -y install xclip apache2
+</code></pre>
+<p>Ubuntu / Debian Linux users can also use the pre-compiled <a href="https://www.ffmpeg.org/download.html#build-linux">ffmpeg package from the ffmpeg website directly</a>.</p>
+<p><strong>Step 1.</strong><br />
+Use Reactor to install the content found in the <code>Tools/VR/KartaVR</code> category.</p>
+<p><strong>Step 2.</strong><br />
+Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:</p>
+<pre><code>	Reactor:/Deploy/Macros/KartaVR/
+	Reactor:/Deploy/Scripts/Comp/KartaVR/
+	Reactor:/Deploy/Scripts/Tools/KartaVR/
+	Reactor:/Deploy/Bin/KartaVR/
+	Reactor:/Deploy/Docs/KartaVR/
+</code></pre>
+<p><strong>Step 3.</strong><br />
+Launch Fusion and open the Bins window.</p>
+<p><img src="images/show-bin-window-mac.png" alt="Show the Bin Window" /></p>
+<p><strong>Step 4.</strong><br />
+Click on the <code>Library on localhost</code> tab on the left side of the Bins window. This is the root folder in the bin.</p>
+<p><img src="images/switch-to-bin-library-tab-mac.png" alt="Switch to the Library Tab in the Bin window" /></p>
+<p><strong>Step 5.</strong><br />
+Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option.</p>
+<p><img src="images/library-tab-new-folder-mac.png" alt="Fusion Bin Screenshot" /></p>
+<p>Let's name the new folder <code>KartaVR</code>. After you type in the new name, press the <code>Enter</code> key to accept the changes.</p>
+<p><img src="images/library-tab-name-the-new-folder-mac.png" alt="Fusion Bin Screenshot" /></p>
+<p>The Fusion Bins window now lists the <code>KartaVR</code> folder on the left side bar. Select this entry to show the folder contents.</p>
+<p><img src="images/library-kartavr-empty-folder-mac.png" alt="Select the KartaVR folder" /></p>
+<p>Using the same folder creation approach we need to add sub-folders for each of the following entries: &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, &quot;Viewer&quot;. This is what the Bin folder will look like when when have successfully completed the task:</p>
+<p><img src="images/dfm-bin-folder.gif" alt="Bin Folder" /></p>
+<p><strong>Step 6.</strong></p>
+<p>The next step will take a few minutes to carry out. You need to navigate into each of the sub-folders and repeat the process as you add the .settings files to each folder.</p>
+<p>Right click in the <code>KartaVR</code> folder view. In the contextual menu, select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>An <code>Open File</code> window will appear that allows you to select and add items to the current Fusion Bin.</p>
+<p>Use the file path selector at the top of the window to navigate to the new &quot;KartaVR&quot; folder that was copied into the Fusion macros folder in step 2. If you want to get to this folder easily, try the PathMap section in the dialog and choose &quot;<code>Reactor:</code>&quot;.</p>
+<p>Fusion 9 Macros Directory:</p>
+<p><code>/var/BlackmagicDesign/Fusion/Reactor/Deploy/Macros/KartaVR/</code></p>
+<p>Resolve 15 Macros Directory:</p>
+<p><code>/var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/Deploy/Macros/KartaVR/</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Open up the sub-folder in the file dialog with the matching name like &quot;Conversion&quot;, &quot;Filter&quot;, &quot;Mask&quot;, &quot;Miscellaneous&quot;, &quot;Renderer3D&quot;, &quot;Stereoscopic&quot;, &quot;Transform&quot;, &quot;UV Pass&quot;, and &quot;Viewer&quot;.</p>
+<p>To make it easier to select the correct files, click on the <code>Kind</code> heading to sort all of the files by their file extension. Scroll down until you see the list of files that have a <code>.setting</code> extension. The <code>.setting</code> files are Fusion macros.</p>
+<p>You can select the group of KartaVR macros by clicking on the first setting at the top of the view with a .setting file name extension like <code>Angular2Equirectangular.setting</code>. Then hold down the SHIFT key and select the last .setting file in the list. This will select the whole group of macros at the same time.</p>
+<p>Clicking the <code>Open</code> button will add the macros to the Bin window.</p>
+<p><img src="images/library-add-settings-files-linux.png" alt="Select the settings files" /></p>
+<p>After you have added each set of macros to the bin view it will be easier to access in the future.</p>
+<p>The macros are now ready to be used in your Fusion composites. To use a macro, drag it from the Bin window into your Flow view.</p>
+<p><strong>Step 7.</strong></p>
+<p>If you want to make it easy to access the sample panoramic images that come with the KartaVR, you can add an &quot;Images&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Images</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Images</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the folder path:</p>
+<p>Fusion 9 Images Directory:</p>
+<p><code>/var/BlackmagicDesign/Fusion/Reactor/Deploy/Macros/KartaVR/Images/</code></p>
+<p>Resolve 15 Images Directory:</p>
+<p><code>/var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/Deploy/Macros/KartaVR/Images/</code></p>
+<p>Uncheck the &quot;Gather Sequences&quot; checkbox in the open <code>Open File</code> window. This will allow the dialog to list the single frame duration images in the folder correctly.</p>
+<p>Use the SHIFT key and select all of the images in the folder. Click the <code>Open</code> button to load the images into the new Bin.</p>
+<p><img src="images/library-add-images-linux.png" alt="Add the images" /></p>
+<p>You now have a collection of sample images that can be quickly dropped into an active Fusion composite document. This makes it a lot faster to build a simple comp with the sample images compared to manually adding a loader node for each image.</p>
+<p>As a note, in Fusion it looks like you can only drop one image at a time from the Bin window into your comp. If you try to &quot;group select&quot; multiple images at once the loader nodes are overwritten in the Flow view.</p>
+<p><img src="images/library-sample-images-bin-linux.png" alt="Sample Panoramic Images" /></p>
+<p><strong>Step 8.</strong><br />
+If you want to make it easy to access the example conversion and stereo demo comp files that come with the KartaVR, you can add a &quot;Demos&quot; sub-folder to the Bins window.</p>
+<p>Select the <code>KartaVR</code> folder on the left side of the Bins window.</p>
+<p>Right click in the folder view area on the right side of the Bins window. In the contextual menu select the <code>New Folder</code> option. Name this folder <code>Demos</code> and double click on it to open it up.</p>
+<p>Let's add the sample panoramic imagery to the images folder. Right click in the <code>Demos</code> folder and select the <code>Add Item...</code> menu option.</p>
+<p><img src="images/library-tab-add-item-mac.png" alt="Add an item to the Bin" /></p>
+<p>In the <code>Open File</code> window, navigate to the folder path:</p>
+<p>Fusion 9 Examples Directory:</p>
+<p><code>/var/BlackmagicDesign/Fusion/Reactor/Deploy/Comps/KartaVR/</code></p>
+<p>Resolve 15 Examples Directory:</p>
+<p><code>/var/BlackmagicDesign/DaVinci Resolve/Fusion/Reactor/Deploy/Comps/KartaVR/</code></p>
+<p>(You can access this folder by expanding the Path Maps section in the file dialog and then selecting the <strong>Reactor:</strong> item.)</p>
+<p>Use the SHIFT key and select all of the files in the folder. Click the <code>Open</code> button to load the example fusion composite files into the new Bin.</p>
+<p><img src="images/fusion-examples-tabs-linux.png" alt="Fusion Examples Tab" /></p>
+<p>At this point we have finished setting up Fusion's Bin window.</p>
+<p><strong>Step 9.</strong><br />
+The KartaVR includes a panoramic media playback script called PanoView that supports the Oculus Rift/HTC VIVE/OSVR HMD. You should run the <strong>Script &gt; KartaVR &gt; Viewers &gt; Edit PanoView Preferences</strong> script menu item to configure your viewing tools <a href="pano-view.html">using the PanoView instructions here.</a></p>
+<p>It is also a good idea to set up your <strong><a href="scripts.html#edit-send-media-to-preferences">Send Media to </a></strong> scripts using the <strong>Script &gt; KartaVR &gt; Send Media to &gt; Edit Send Media to Preferences</strong> script menu item to finish configuring the rest of the pipeline scripts.</p>
+<p>If you are using Fusion 9 you will likely want to use the built-in 360 viewer mode for displaying images live on an Oculus Rift CV1 and HTC VIVE HMD screen.</p>
+<p><strong>Step 10. Hotkeys Customization</strong></p>
+<p>There is a Fusion 9/Resolve 15 Hotkey file included with the KartaVR. <a href="hotkeys.html">For more details check out the  Hotkeys documentation page here</a>.</p>
+<p>The <code>KartaVR Hotkeys.fu</code> file can be found in the <code>Reactor:/Deploy/Config/</code> folder.</p>
+<p>If you want to use the StatixVFX provided &quot;nuke2fusion&quot; toolset from Reactor, then you will need to edit some of the hotkey bindings in <code>KartaVR Hotkeys.fu</code>.</p>
+<p><strong>Step 14. Google VR View Web Sharing Option</strong></p>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script you will need to install a web sharing program like Apache (httpd). On Windows and macOS the MAMP program is the easiest Apache server module to use. You can find out how to <a href="google-cardboard-vr-view.html#mamp-setup">set up the MAMP web sharing settings here</a>.</p>
+</body>
+</html>

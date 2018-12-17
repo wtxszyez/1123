@@ -1,0 +1,356 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 143 },
+	GlobalRange = { 0, 143 },
+	CurrentID = 16,
+	HiQ = true,
+	Proxy = true,
+	Version = "Fusion 8.0 build 23",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/angular360degree.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				EffectMask = Input {
+					SourceOp = "FisheyeMask",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { -55, 16.5 } },
+		},
+		FisheyeMask2 = GroupOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "FisheyeMask",
+					Source = "MaskHeight",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMask",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { -165, 16.5 } },
+			Tools = ordered() {
+				FisheyeMask = EllipseMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 2048,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 34.2625 } },
+				}
+			},
+		},
+		AlphaDivideMask = AlphaDivide {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 16.5 } },
+		},
+		BlurMask = Blur {
+			NameSet = true,
+			Inputs = {
+				Red = Input { Value = 0, },
+				Green = Input { Value = 0, },
+				Blue = Input { Value = 0, },
+				Input = Input {
+					SourceOp = "ErodeDilateMask",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 16.5 } },
+		},
+		ErodeDilateMask = ErodeDilate {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Red = Input { Value = 0, },
+				Green = Input { Value = 0, },
+				Blue = Input { Value = 0, },
+				XAmount = Input { Value = -0.16, },
+				Input = Input {
+					SourceOp = "AlphaDivideMask",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 383.84, 16.5 } },
+		},
+		AlphaMultiplyMask = AlphaMultiply {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "BlurMask",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 16.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1920,
+			Height = 903,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							ForceAll = true,
+							ForceActive = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.862025,
+						Offset = { 157.313, 132.015 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.306627680311891,
+							OffsetX = -7.05243664717349,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.833420365535248,
+					RatioY = 0.00998890122086571,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.468156424581006,
+						{ ID = "Left", RatioX = 0.501569365976146, RatioY = 0.00954653937947494, Pop = true },
+						{ ID = "Right", RatioX = 0.498430634023854, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.467039106145251, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 317,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 5,
+				},
+			},
+			AutoSave = {
+				OnRender = true
+			},
+			Memory = {
+				FramesAtOnce = 8,
+				Render = {
+					SimultaneousBranching = true
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.Right.SideB.",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "OCIOFileTransformViewLUT",
+						ScaleMode = 1,
+						Channel = 4294967295
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.Left.SideB.",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					PrevCtrlActiveColor = 0,
+					PickH = 1,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.View1.SideB.",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					AlwaysOnTop = true,
+					FullScreen = false
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77778,
+			},
+			LastFile = "C:/Program Files/WarpStitch/examples/TouchDesigner Example/Image/",
+			Unsorted = {
+				GlobalEnd = 143
+			},
+			Paths = {
+			},
+			FlowView = {
+				ForceActive = true,
+				ForceAll = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

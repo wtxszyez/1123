@@ -1,0 +1,522 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 1000 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 237,
+	HiQ = true,
+	MotionBlur = false,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.2.1 build 6",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			CtrlWZoom = false,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 346.5 } },
+		},
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/kartavr_circle_logo.png",
+					FormatID = "PNGFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 313.5 } },
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "This example places a flat 2D logo image over the tripod zone in an Equirectangular/LatLong/Spherical panoramic image.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 317.243, 190.141 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 444.265, 64.8126 }
+			},
+		},
+		OverlayLogoMerge = Merge {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "BackgroundColorMerge_1",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 346.5 } },
+		},
+		Rectilinear2Equirectangular = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "ProjectiveImage",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1_1",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1_1",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1_1",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Angle",
+					Name = "FOV",
+					Default = 90,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Fit",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input7 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Transform3DOp.Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Transform3DOp.Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1_1",
+					Source = "Transform3DOp.Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "BackgroundColor_1",
+					Source = "TopLeftRed",
+					Name = "Color",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "BackgroundColor_1",
+					Source = "TopLeftGreen",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "BackgroundColor_1",
+					Source = "TopLeftBlue",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "BackgroundColor_1",
+					Source = "TopLeftAlpha",
+					ControlGroup = 1,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BackgroundColorMerge_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 550, 313.5 } },
+			Tools = ordered() {
+				BackgroundColor_1 = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "RectilinearUVRenderer3D1_1.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "RectilinearUVRenderer3D1_1.Height",
+						},
+						Depth = Input {
+							Value = 1,
+							Expression = "RectilinearUVRenderer3D1_1.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftAlpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 247.5, 142.15 } },
+				},
+				BackgroundColorMerge_1 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RectilinearFlipTransform_1",
+							Source = "Output",
+						},
+						FlattenTransform = Input { Value = 1, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 247.5, 76.15 } },
+				},
+				RectilinearFlipTransform_1 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "RectilinearUVRenderer3D1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 82.5, 76.15 } },
+				},
+				RectilinearUVRenderer3D1_1 = Renderer3D {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "RectilinearSphereShape3D1_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.LightingEnabled"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -27.5, 76.15 } },
+				},
+				RectilinearSphereShape3D1_1 = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						SceneInput = Input {
+							SourceOp = "RectilinearProjector3D1_1",
+							Source = "Output",
+						},
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "RectilinearCatcher1_1",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.StartSweep"] = Input { Value = 90, },
+						["SurfaceSphereInputs.EndSweep"] = Input { Value = 450, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 2, }
+					},
+					ViewInfo = OperatorInfo { Pos = { -137.5, 76.15 } },
+				},
+				RectilinearProjector3D1_1 = LightProjector {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						Angle = Input { Value = 40.3549266247379, },
+						ProjectiveImage = Input {
+							SourceOp = "Loader2",
+							Source = "Output",
+						},
+						Fit = Input { Value = FuID { "Width" }, },
+						ProjectionMode = Input { Value = 2, },
+						["ShadowLightInputs3D.Nest"] = Input { Value = 1, },
+						["ShadowLightInputs3D.ShadowsEnabled"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -247.5, 76.15 } },
+				},
+				RectilinearCatcher1_1 = TexCatcher {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ColorAccumulationMode = Input { Value = FuID { "Blend" }, },
+						AlphaAccumulationMode = Input { Value = FuID { "Blend" }, },
+						MaterialIDNest = Input { Value = 1, },
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -137.5, 10.15 } },
+				}
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 3440,
+			Height = 1218,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.62109,
+						Offset = { 191.125, -44.7736 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.829403202328966,
+					RatioY = 0.00986031224322103,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.383980181668043,
+						{ ID = "Left", RatioX = 0.903021784961349, RatioY = 0.00860215053763441, Pop = true },
+						{ ID = "Right", RatioX = 0.0969782150386507, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.568125516102395, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 584,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+						Channel = 4294967295,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			Unsorted = {
+				RenderSettings = {
+					Configs = {
+					}
+				}
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

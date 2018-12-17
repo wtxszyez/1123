@@ -1,0 +1,81 @@
+[ViewerMeshStereo]
+
+  A stereoscopic panoramic media viewer that works with a user defined mesh.
+
+  Test Meshes:
+      Macros:/KartaVR/Images/ricoh_theta_s.obj
+    
+  [ReplaceMaterial3DLeft]
+    MaterialInput = Left
+    
+  [ReplaceMaterial3DRight]
+    MaterialInput = Right
+     
+  [FBXMesh3DCenter]
+    Import File = FBX File = Mesh File(Empty)
+    Scale X  1000/1000/1000  max:10000
+
+  [Renderer3DLeft]
+    Output=LeftOutput
+    RendererType Default:RendererOpenGL
+    Width Default=3840 Max=16384
+    Height Default=1920 Max=8192
+  
+  [Renderer3DRight]
+    Output=RightOutput
+    RendererType (Hidden) Expression = "Renderer3DLeft.Width",
+    
+  [Camera3DCenter]
+    Rotation Order
+    X Rotation
+    Y Rotation
+    Z Rotation
+    
+    Angle of View Type
+    Angle Of View Default=90
+    Focal Length (mm)
+    FilmGate
+    ApertureW
+    ApertureH
+    LensShiftX
+    LensShiftY
+
+[Macro Node GUI]
+  [ReplaceMaterial3DLeft]
+    MaterialInput = Left
+    
+  [ReplaceMaterial3DRight]
+    MaterialInput = Right
+   
+  [FBXMesh3DCenter]
+    ImportFile
+     
+  [Renderer3DLeft]
+    Width
+    Height
+    RendererType
+  
+  [Camera3DCenter]
+    AOVType
+    AoV
+    FLength
+    FilmGate
+    ApertureW
+    ApertureH
+    LensShiftX
+    LensShiftY
+    Rotate.RotOrder
+    Rotate.X
+    Rotate.Y
+    Rotate.Z
+    
+  [FBXMesh3DLoaderLeft]
+    Scale.X
+
+  [Renderer3DLeft]
+    Output=LeftOutput
+    
+  [Renderer3DRight]
+    Output=RightOutput
+    
+    

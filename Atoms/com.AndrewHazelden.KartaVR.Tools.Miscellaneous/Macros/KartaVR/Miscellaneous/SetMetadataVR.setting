@@ -1,0 +1,90 @@
+{
+	Tools = ordered() {
+		SetMetadataVR = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-miscellaneous.html#SetMetadataVR",
+			},
+			Inputs = ordered() {
+				Stereo = Input { Value = 0, },
+				Input1 = InstanceInput {
+					SourceOp = "SetMetadataStereo",
+					Source = "Input",
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "SetMetadataPano",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1108.22, 214.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 236, 63.9712, 118, 21.6712 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -1100, -203.8 }
+			},
+			Tools = ordered() {
+				SetMetadataStereo = Fuse.SetMetaData {
+					NameSet = true,
+					Inputs = {
+						FieldName = Input { Value = "Stereo", },
+						FieldValue = Input { Expression = "iif(SetMetadataVR.Stereo == 0, \"\", iif(SetMetadataVR.Stereo == 1,\"{Method  = \\\"vstack\\\"}\", \"{Method  = \\\"hstack\\\"}\"))", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1045, 214.5 } },
+				},
+				SetMetadataPano = Fuse.SetMetaData {
+					NameSet = true,
+					Inputs = {
+						FieldName = Input { Value = "Pano", },
+						FieldValue = Input { Expression = "iif(SetMetadataVR.Projection == 0, \"\", iif(SetMetadataVR.Projection == 1, \"{Format = \\\"LatLong\\\"}\", iif(SetMetadataVR.Projection == 2, \"{Format = \\\"VCross\\\"}\", iif(SetMetadataVR.Projection == 3, \"{Format = \\\"HCross\\\"}\", iif(SetMetadataVR.Projection == 4, \"{Format = \\\"VStrip\\\"}\", iif(SetMetadataVR.Projection == 5, \"{Format = \\\"HStrip\\\"}\", \"\"))))))", },
+						Input = Input {
+							SourceOp = "SetMetadataStereo",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 214.5 } },
+				}
+			},
+			UserControls = ordered() {
+				Stereo = {
+					{ CCS_AddString = "Mono 2D" },
+					{ CCS_AddString = "Stereo 3D Over Under" },
+					{ CCS_AddString = "Stereo 3D Side By Side" },
+					INP_Integer = true,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Stereo",
+					CC_LabelPosition = "Horizontal",
+					INPID_InputControl = "ComboControl",
+					INP_Default = 1,
+				},
+				Projection = {
+					{ CCS_AddString = "None" },
+					{ CCS_AddString = "LatLong" },
+					{ CCS_AddString = "Vertical Cross" },
+					{ CCS_AddString = "Horizontal Cross" },
+					{ CCS_AddString = "Vertical Strip" },
+					{ CCS_AddString = "Horizontal Strip" },
+					INP_MaxAllowed = 10,
+					INP_Integer = true,
+					INPID_InputControl = "ComboControl",
+					CC_LabelPosition = "Horizontal",
+					INP_MaxScale = 10,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					LINKS_Name = "Projection",
+				}
+			}
+		}
+	},
+	ActiveTool = "SetMetadataVR"
+}

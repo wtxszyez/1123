@@ -1,0 +1,57 @@
+[SplitViewMaskInline]
+
+The "SplitViewMaskInline" node allows you to apply split view stereo masking to your live action panoramic camera imagery. You can use the Split View control to place the mask in four positions: Left/Right/Top/Bottom.
+
+The macro internally uses a rectangle node with custom UserControls based expressions to control the placement.
+
+Left X=0.25 Y=0.5
+Right X=0.75 Y=0.5
+Top X=0.5 Y=0.75
+Bottom X=0.5 Y=0.25
+
+The Border Width control is linked to the soft edge so there is no clipping when edge feathering is used.
+
+  [SplitViewMaskInline]
+  
+    Split View Default=Left
+      
+    MaskHeight=Height Default=3840 Max=8192
+    MaskWidth=Width Default=2160 Max=8192
+    Depth Default=Default
+    
+    Level Default=1.0
+
+    Filter Default=Gaussian
+
+    Invert
+    
+    Solid
+
+    Soft Edge  Default=0.02 
+    Corner Radius Default=0
+
+    Center Expression:
+    Point(iif(SplitMaskRectangle.SpitView >= 2, 0.5, iif(SplitMaskRectangle.SpitView == 1, 0.75, 0.25)), iif(SplitMaskRectangle.SpitView <= 1, 0.5, iif(SplitMaskRectangle.SpitView == 2, 0.75, 0.25)))
+    
+    BorderWidth Expression:
+    SoftEdge*-1
+
+    Width Expression:
+    iif(SplitMaskRectangle.SpitView >= 2, 1, 0.5)
+    
+    Height Expression:
+    iif(SplitMaskRectangle.SpitView >= 2, 0.5, 1)
+    
+UI Layout:
+[SplitViewMaskInline]
+  Split View
+  
+  Width
+  Height
+  
+  Level
+  Filter
+  Invert
+  Solid
+  Soft Edge
+  Corner Radius

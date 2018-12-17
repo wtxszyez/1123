@@ -1,0 +1,128 @@
+{
+	Tools = ordered() {
+		AlphaMaskErode = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#AlphaMaskErode",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "AlphaDivideMask",
+					Source = "Input",
+				},
+			  Input1 = InstanceInput {
+					SourceOp = "ErodeDilateMask",
+					Source = "Filter",
+					Name = "Erode Filter",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ErodeDilateMask",
+					Source = "LockXY",
+					Name = "Erode Lock X/Y",
+					Default = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ErodeDilateMask",
+					Source = "XAmount",
+					Name = "Amount",
+					MinScale = -0.2,
+					MaxScale = 0.2,
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ErodeDilateMask",
+					Source = "YAmount",
+					MinScale = -0.2,
+					MaxScale = 0.2,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "BlurMask",
+					Source = "Filter",
+					Name = "Blur Filter",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "BlurMask",
+					Source = "LockXY",
+					Name = "Blur Lock X/Y",
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "BlurMask",
+					Source = "XBlurSize",
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BlurMask",
+					Source = "YBlurSize",
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "BlurMask",
+					Source = "BlendClone",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AlphaMultiplyMask",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				BlurMask = Blur {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						XBlurSize = Input { Value = 0, },
+						YBlurSize = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "ErodeDilateMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 16.5 } },
+				},
+				AlphaMultiplyMask = AlphaMultiply {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "BlurMask",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 15.3399 } },
+				},
+				ErodeDilateMask = ErodeDilate {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Red = Input { Value = 0, },
+						Green = Input { Value = 0, },
+						Blue = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "AlphaDivideMask",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 382.68, 16.5 } },
+				},
+				AlphaDivideMask = AlphaDivide {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { 275, 16.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "AlphaMaskErode"
+}

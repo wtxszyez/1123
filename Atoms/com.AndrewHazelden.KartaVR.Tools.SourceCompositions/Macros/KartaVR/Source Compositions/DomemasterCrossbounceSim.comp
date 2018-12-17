@@ -1,0 +1,1448 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 1 },
+	CurrentID = 501,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.0 build 18",
+	SavedOutputs = 1,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Temp:/crossbounce_sim.0000.png"
+	},
+	Tools = {
+		Loader3 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -495, 214.5 } },
+		},
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/fulldome_2K.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -495, 181.5 } },
+		},
+		TransformBounce1 = Transform {
+			NameSet = true,
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				FlipVert = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "BlurBounce1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+		},
+		TransformBounce2 = Transform {
+			NameSet = true,
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				FlipVert = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "BlurBounce2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 148.5 } },
+		},
+		FisheyeMask1 = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "FisheyeMask_1",
+					Source = "MaskHeight",
+					Expression = "ResizeInput.Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMask_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 275, 117.047 } },
+			Tools = ordered() {
+				FisheyeMask_1 = EllipseMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 2048,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input {
+							Value = 2048,
+							Expression = "ResizeInput.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+				}
+			},
+		},
+		FisheyeMask2 = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "FisheyeMask_1_1",
+					Source = "MaskHeight",
+					Expression = "ResizeInput.Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMask_1_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 770, 115.5 } },
+			Tools = ordered() {
+				FisheyeMask_1_1 = EllipseMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 2048,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input {
+							Value = 2048,
+							Expression = "ResizeInput.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+				}
+			},
+		},
+		BlurBounce1 = Blur {
+			NameSet = true,
+			Inputs = {
+				XBlurSize = Input { Value = 100, },
+				Input = Input {
+					SourceOp = "BrightnessBounce1",
+					Source = "Output",
+				},
+				EffectMask = Input {
+					SourceOp = "FisheyeMask_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+		},
+		Note3_1 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Simulated Dome Viewing Environment", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1872.93, 245.763 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 398.218, 63.4558 }
+			},
+		},
+		Equirectangular2Domemaster220 = GroupOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ViewRotate",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { -275, 214.5 } },
+			Tools = ordered() {
+				ViewRotate = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "OrientView",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 10.15 } },
+				},
+				OrientView = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						UseSizeAndAspect = Input { Value = 0, },
+						Angle = Input { Value = -90, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "PolarConversion2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 11.15 } },
+				},
+				PolarConversion2 = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Shape = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LatLongReposition2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 11.15 } },
+				},
+				LatLongReposition2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											Center = Input { Value = { 0.5, 0.3571 } },
+											YSize = Input { Value = 0.7 },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											Center = Input { Value = { 0.5, 0.3571 } },
+											YSize = Input { Value = 0.7 },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										Name = "LatLongReposition2",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 0.3535 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						Size = Input { Value = 0.75, },
+						XSize = Input { Value = 1.001, },
+						YSize = Input { Value = 0.707, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rotate180",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 11.15 } },
+				},
+				Rotate180 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "DomemasterCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 11.15 } },
+				},
+				DomemasterCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Input = Input {
+							SourceOp = "DomemasterScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 11.15 } },
+				},
+				DomemasterScale = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 0.1818181818182 },
+							Expression = "Point(0.5, (2-YSize)/2)",
+						},
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 1.636364, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ScaleSquareAspectRatio",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 11.15 } },
+				},
+				ScaleSquareAspectRatio = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 11.15 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "SlideTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -440, 11.15 } },
+				}
+			},
+		},
+		TransformBounce3 = Transform {
+			NameSet = true,
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				FlipVert = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "BlurBounce3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1375, 148.5 } },
+		},
+		Note1_1_1 = Note {
+			Inputs = {
+				Comments = Input { Value = "Choose a Fulldome or LatLong image", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { -505.402, 257.831 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 380.822, 62.3 }
+			},
+		},
+		FisheyeMask3 = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "FisheyeMask_1_1_1",
+					Source = "MaskHeight",
+					Expression = "ResizeInput.Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMask_1_1_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1263.45, 115.5 } },
+			Tools = ordered() {
+				FisheyeMask_1_1_1 = EllipseMask {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 2048,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input {
+							Value = 2048,
+							Expression = "ResizeInput.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+				}
+			},
+		},
+		Note3 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Third Crossbounce Light Addition Stage", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 1144.04, 252.877 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 329, 62.3 }
+			},
+		},
+		BrightnessBounce3 = BrightnessContrast {
+			NameSet = true,
+			Inputs = {
+				Gain = Input {
+					Value = 0.05,
+					Expression = "BrightnessBounce2.Gain/2",
+				},
+				Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+				Input = Input {
+					SourceOp = "BouncedLight2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+		},
+		OverViewNote = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "This comp is a simple demo that simulates the rough effect of fulldome crossbounce lighting. Adjust the BrightnessContrastBounce1 node's gain control to simulate the screen gain effect with cross bounce. A good starting point is a gain value between 0.1 to 0.25", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 220, -49.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 1095.4, 95.8117 }
+			},
+		},
+		PipeRouter2 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ChangeDepth1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 55, 181.5 } },
+		},
+		PipeRouter3 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ChangeDepth1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 55, 148.5 } },
+		},
+		ResizeInput = BetterResize {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Width = Input {
+					Value = 2048,
+					Expression = "Height",
+				},
+				Height = Input { Value = 2048, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "Loader2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { -163.382, 181.5 } },
+		},
+		ChangeDepth1 = ChangeDepth {
+			Inputs = {
+				Depth = Input { Value = 3, },
+				Input = Input {
+					SourceOp = "ResizeInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { -55, 181.5 } },
+		},
+		BrightnessBounce2 = BrightnessContrast {
+			NameSet = true,
+			Inputs = {
+				Gain = Input {
+					Value = 0.1,
+					Expression = "BrightnessBounce1.Gain/2",
+				},
+				Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+				Input = Input {
+					SourceOp = "Bounce1LightMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 660, 148.5 } },
+		},
+		Note1_1 = Note {
+			Inputs = {
+				Comments = Input { Value = "First Crossbounce Light Addition Stage", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 155.863, 258.359 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 329, 62.3 }
+			},
+		},
+		BouncedLight3 = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "BouncedLight2",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "TransformBounce3",
+					Source = "Output",
+				},
+				SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+				Gain = Input {
+					Value = 0,
+					Expression = "Bounce1LightMerge.Gain",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1484.99, 181.5 } },
+		},
+		Offset = GroupOperator {
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Center",
+					Name = "Offset",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "SlideTransform",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { -385, 214.5 } },
+			Tools = ordered() {
+				SlideTransform = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.866279069767442, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Loader3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				}
+			},
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Second Crossbounce Light Addition Stage", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 649.035, 252.877 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 329, 62.3 }
+			},
+		},
+		FBXMesh3D1 = SurfaceFBXMesh {
+			CtrlWZoom = false,
+			Inputs = {
+				ImportFile = Input { Value = "macros:/KartaVR/Images/fulldome.fbx", },
+				TransformToWorld = Input { Value = 0, },
+				["Visibility.Nest"] = Input { Value = 1, },
+				["Visibility.CullBackFace"] = Input { Value = 1, },
+				["ObjectID.ObjectID"] = Input { Value = 1, },
+				MaterialInput = Input {
+					SourceOp = "Reflect1",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 181.5 } },
+		},
+		Reflect1 = MtlReflect {
+			Inputs = {
+				BackgroundMaterial = Input {
+					SourceOp = "Saver1",
+					Source = "Output",
+				},
+				["Reflection.StrengthVariability"] = Input { Value = 0, },
+				["Refraction.RefractiveIndex.RGB"] = Input { Value = 1, },
+				MaterialID = Input { Value = 2, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 181.5 } },
+		},
+		BrightnessBounce1 = BrightnessContrast {
+			NameSet = true,
+			Inputs = {
+				Gain = Input { Value = 0.2, },
+				Input = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+		},
+		BlurBounce2 = Blur {
+			NameSet = true,
+			Inputs = {
+				XBlurSize = Input {
+					Value = 100,
+					Expression = "BlurBounce1.XBlurSize",
+				},
+				Input = Input {
+					SourceOp = "BrightnessBounce2",
+					Source = "Output",
+				},
+				EffectMask = Input {
+					SourceOp = "FisheyeMask_1_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, 148.5 } },
+		},
+		Bounce1LightMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "PipeRouter2",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "TransformBounce1",
+					Source = "Output",
+				},
+				Gain = Input { Value = 0, },
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 493.526, 181.5 } },
+		},
+		BouncedLight2 = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "Bounce1LightMerge",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "TransformBounce2",
+					Source = "Output",
+				},
+				SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+				Gain = Input {
+					Value = 0,
+					Expression = "Bounce1LightMerge.Gain",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 181.5 } },
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ChangeDepth1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 55, 214.5 } },
+		},
+		MergeBlend = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "DifferenceMatting",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "BouncedLight3",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1705, 181.5 } },
+		},
+		DifferenceMatting = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "BouncedLight3",
+					Source = "Output",
+				},
+				ApplyMode = Input { Value = FuID { "Difference" }, },
+				SubtractiveAdditive = Input { Value = 0, },
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1595, 214.5 } },
+		},
+		Saver1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:/crossbounce_sim.0000.png",
+						FormatID = "PNGFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				OutputFormat = Input { Value = FuID { "PNGFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "MergeBlend",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 181.5 } },
+		},
+		BlurBounce3 = Blur {
+			NameSet = true,
+			Inputs = {
+				XBlurSize = Input {
+					Value = 100,
+					Expression = "BlurBounce1.XBlurSize",
+				},
+				Input = Input {
+					SourceOp = "BrightnessBounce3",
+					Source = "Output",
+				},
+				EffectMask = Input {
+					SourceOp = "FisheyeMask_1_1_1",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 148.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1443,
+			Height = 873,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.618097,
+						Offset = { -657.031, 192.064 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.00214424951267057,
+							OffsetX = -0.0514619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.778164116828929,
+					RatioY = 98.4443168771527,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.460115606936416,
+						{ ID = "Left", RatioX = 1, RatioY = 0.0100502512562814, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.472832369942197, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 317,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 4,
+					AutoScale = 5,
+				},
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					View3D = {
+						Options = {
+							Shadows = false,
+							ShowFastLabel = false,
+							ShowVertexNormals = false,
+							Lighting = true,
+							DefaultLight = false,
+							Wireframe = true,
+							Grid = true
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 359.599975585938,
+								X = -39.0000076293945,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = -0.540374875068665,
+								X = -0.0121076703071594,
+								Z = -0.0540861710906029
+							}
+						},
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						SortMethod = "ZBuffer",
+						TextureDepth = "float32",
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+					View2 = {
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CameraName = "Front"
+						}
+					},
+					View3 = {
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CameraName = "Right"
+						}
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							NearZ = 0,
+							LUTPlugin = "Comp.Views.Right.SideB.",
+							ScaleMode = 1,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					},
+					View1 = {
+						View3D = {
+							CamFront = {
+								Rotation = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamLeft = {
+								Rotation = {
+									Y = 90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamRight = {
+								Rotation = {
+									Y = -90,
+									X = 0,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamPersp = {
+								Rotation = {
+									Y = 0,
+									X = 30,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CamTop = {
+								Rotation = {
+									Y = 0,
+									X = 90,
+									Z = 0
+								},
+								Scale = 1,
+								Position = {
+									Y = 0,
+									X = 0,
+									Z = 0
+								}
+							},
+							CameraName = "Top"
+						}
+					},
+					QuadView = false,
+				},
+				Left = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "OCIOFileTransformViewLUT",
+						ScaleMode = 1,
+						ShowControls = true,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							ScaleMode = 1,
+							FitMarginY = 0,
+							LUTPlugin = "Comp.Views.Left.SideB.",
+							Channel = 4294967295,
+							NearZ = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginX = 0
+						}
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -100.599990844727,
+								X = -12.600001335144,
+								Z = 0
+							}
+						}
+					},
+					View3D = {
+						Options = {
+							Wireframe = false,
+						},
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = -0.799999475479126,
+								X = -44.4000053405762,
+								Z = 0
+							},
+							Scale = 0.70710676908493,
+							Position = {
+								Y = -0.558632910251617,
+								X = -0.0324110761284828,
+								Z = 0.0763772875070572
+							}
+						},
+						CameraName = "Perspective",
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.View1.SideB.",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77778,
+			},
+			LastFile = "Macros:/KartaVR/Images/3x2cubemap.jpg",
+			Unsorted = {
+				GlobalEnd = 1
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

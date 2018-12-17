@@ -1,0 +1,858 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 1000 },
+	GlobalRange = { 0, 1000 },
+	CurrentID = 189,
+	HiQ = true,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.0 build 18",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		LoaderLatLong = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:\\KartaVR\\Images\\latlong_wide_ar.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			NameSet = true,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 274.263, 44.877 } },
+		},
+		LoaderLatLong_1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:\\KartaVR\\Images\\latlong_wide_ar.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			NameSet = true,
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 732.413, 13.564 } },
+		},
+		UVGradientMap1 = GroupOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "GradientFlipTransform_3",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontally",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "GradientFlipTransform_3",
+					Source = "FlipVert",
+					Name = "Flip Vertically",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "RedGradBackground_3",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "RedGradBackground_3",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "RedGradBackground_3",
+					Source = "Depth",
+					Default = 3,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "GradientFlipTransform_3",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 854.533, -65.9655 } },
+			Tools = ordered() {
+				UVGradientMerge_3 = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "RedGradBackground_3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "GreenGradBackground_3",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Screen" }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1.724, 64.55 } },
+				},
+				GradientFlipTransform_3 = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "UVGradientMerge_3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1.724, 110.05 } },
+				},
+				GreenGradBackground_3 = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "RedGradBackground_3.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "RedGradBackground_3.Height",
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "RedGradBackground_3.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Vertical" }, },
+						TopLeftGreen = Input { Value = 1, },
+						TopRightGreen = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -46.98, 10.461 } },
+				},
+				RedGradBackground_3 = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Horizontal" }, },
+						TopLeftRed = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 46.98, 10.15 } },
+				}
+			},
+		},
+		UVTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "viewRotate",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 551.089, -22.1368 } },
+		},
+		UVLatLong2AngularGradientMap1 = GroupOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "GradientFlipTransform",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontally",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "GradientFlipTransform",
+					Source = "FlipVert",
+					Name = "Flip Vertically",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "RedGradBackground",
+					Source = "Width",
+					Name = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "RedGradBackground",
+					Source = "Depth",
+					Default = 3,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "viewRotate",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 551.184, -88.3588 } },
+			Tools = ordered() {
+				GreenGradBackground = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "RedGradBackground.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "RedGradBackground.Width",
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "RedGradBackground.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Vertical" }, },
+						TopLeftGreen = Input { Value = 1, },
+						TopRightGreen = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -46.98, 10.461 } },
+				},
+				GradientFlipTransform = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVGradientMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.14, 116.757 } },
+				},
+				UVGradientMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "RedGradBackground",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "GreenGradBackground",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Screen" }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.433, 70.7571 } },
+				},
+				RedGradBackground = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 1920, },
+						Height = Input {
+							Value = 1920,
+							Expression = "Width",
+						},
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Horizontal" }, },
+						TopLeftRed = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 46.98, 10.15 } },
+				},
+				Rotate180 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "GradientFlipTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.375, 282 } },
+				},
+				LatLongReposition2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										Name = "LatLongReposition2",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 0.3535 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						Size = Input { Value = 0.75, },
+						XSize = Input { Value = 1, },
+						YSize = Input { Value = 0.707, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rotate180",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.375, 314.75 } },
+				},
+				PolarConversion2 = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Shape = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LatLongReposition2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.375, 347.5 } },
+				},
+				orientView = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						UseSizeAndAspect = Input { Value = 0, },
+						Angle = Input { Value = -90, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "PolarConversion2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.625, 380.75 } },
+				},
+				viewRotate = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "orientView",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -2.875, 414 } },
+				}
+			},
+		},
+		UVPassFromRGBImage_1 = GroupOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "Texture_2",
+					Source = "Texture",
+					Name = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Texture_2",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontal",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Texture_2",
+					Source = "FlipVert",
+					Name = "Flip Vertical",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Texture_2",
+					Source = "UOffset",
+					Default = 0,
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "UVTransform_2",
+					Source = "Input",
+					Name = "UV Pass",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Texture_2",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 854.533, 13.4647 } },
+			Tools = ordered() {
+				Texture_2 = Texture {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						UOffset = Input { Value = 1.3426791, },
+						Input = Input {
+							SourceOp = "UVPassChannelBoolean_2",
+							Source = "Output",
+						},
+						Texture = Input {
+							SourceOp = "LoaderLatLong_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "UVTransform_2",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -66.5445, 141.166 } },
+				},
+				UVPassChannelBoolean_2 = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "UVTransform_2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -66.5085, 77.9939 } },
+				},
+				UVTransform_2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "GradientFlipTransform_3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 66.5445, 10.15 } },
+				}
+			},
+		},
+		UVPassChannelBoolean = ChannelBoolean {
+			NameSet = true,
+			Inputs = {
+				ToRed = Input { Value = 5, },
+				ToGreen = Input { Value = 6, },
+				ToBlue = Input { Value = 7, },
+				ToAlpha = Input { Value = 8, },
+				EnableExtraChannels = Input { Value = 1, },
+				ToUTexture = Input { Value = 5, },
+				ToVTexture = Input { Value = 6, },
+				Background = Input {
+					SourceOp = "UVTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 418.036, 45.7071 } },
+		},
+		Texture = Texture {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "UVPassChannelBoolean",
+					Source = "Output",
+				},
+				Texture = Input {
+					SourceOp = "LoaderLatLong",
+					Source = "Output",
+				},
+				EffectMask = Input {
+					SourceOp = "UVTransform",
+					Source = "Output",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 418, 108.879 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1920,
+			Height = 953,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.23972,
+						Offset = { -67.001, 119.302 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 327 },
+							ScaleX = 2.14424951267057,
+							OffsetX = -51.4619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.774412532637076,
+					RatioY = 103.778128286015,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.574603174603175,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00917431192660551, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.364021164021164, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 430,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 2,
+				},
+			},
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "Fuse.sRGB_VSFuse",
+						ScaleMode = 1,
+						LUTSelected = "sRGB"
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								sRGB1 = ViewOperator {
+									NameSet = true
+								}
+							},
+							ID = "Fuse.sRGB_VSFuse"
+						},
+						SelectedPlugin = "Fuse.sRGB_VSFuse",
+						SelectedName = "sRGB"
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						ViewLUT = {
+							{
+								Tools = ordered() {
+									sRGB2 = ViewOperator {
+										NameSet = true
+									}
+								},
+								ID = "Fuse.sRGB_VSFuse"
+							},
+							SelectedPlugin = "Fuse.sRGB_VSFuse",
+							SelectedName = "sRGB"
+						},
+						PickH = 1,
+						Viewer = {
+							EnableLUTs = true,
+							LUTSelected = "sRGB",
+							ScaleMode = 0,
+							NearZ = 0,
+							LUTPlugin = "Fuse.sRGB_VSFuse",
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						},
+						PrevCtrlActiveColor = 255
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 0
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 0
+					},
+				},
+				Left = {
+					Viewer = {
+						LUTPlugin = "Fuse.sRGB_VSFuse",
+						LUTSelected = "sRGB",
+						ScaleMode = 1,
+						Channel = 4294967295,
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								sRGB = ViewOperator {
+									NameSet = true
+								}
+							},
+							ID = "Fuse.sRGB_VSFuse"
+						},
+						SelectedPlugin = "Fuse.sRGB_VSFuse",
+						SelectedName = "sRGB"
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						ViewLUT = {
+							{
+								Tools = ordered() {
+									sRGB3 = ViewOperator {
+										NameSet = true
+									}
+								},
+								ID = "Fuse.sRGB_VSFuse"
+							},
+							SelectedPlugin = "Fuse.sRGB_VSFuse",
+							SelectedName = "sRGB"
+						},
+						PickH = 1,
+						Viewer = {
+							EnableLUTs = true,
+							LUTSelected = "sRGB",
+							ScaleMode = 0,
+							NearZ = 0,
+							LUTPlugin = "Fuse.sRGB_VSFuse",
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						},
+						PrevCtrlActiveColor = 255
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 0
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 0
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				Name = "2K Full Aperture (Super 35)",
+				Width = 2048,
+				Height = 1556,
+				Rate = 24,
+				PerFeet = 16,
+				GuideRatio = 1.31619537275064,
+			},
+			LastFile = "Macros:\\KartaVR\\Source Compositions\\Demos\\UV Pass Texture Projection Demo.comp",
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

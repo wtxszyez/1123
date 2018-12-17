@@ -1,0 +1,140 @@
+{
+	Tools = ordered() {
+		PTGuiMatteControl = GroupOperator {
+		  CustomData = {
+			 HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#PTGuiMatteControl",
+			},
+			Inputs = ordered() {
+			  MainInput1 = InstanceInput {
+					SourceOp = "MaskPipeRouter",
+					Source = "Input",
+					Name = "Image",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "GarbageMattePipeRouter",
+					Source = "Input",
+					Name = "Garbage Matte",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "Filter",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "MatteBlur",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "InvertMatte",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "InvertGarbageMatte",
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "GarbageMatteMode",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "PostMultiplyImage",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "IncludeMatteControl",
+					Source = "MultiplyGarbageMatte",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ExcludeMatteControl",
+					Source = "Output",
+					Name = "Exclude",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "IncludeMatteControl",
+					Source = "Output",
+					Name = "Include",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				IncludeMatteControl = MatteControl {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "GreenInclude",
+							Source = "Output",
+						},
+						GarbageMatte = Input {
+							SourceOp = "GarbageMattePipeRouter",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, 412.5 } },
+				},
+				GreenInclude = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 6, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 6, },
+						ToAlpha = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "MaskPipeRouter",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 990, 412.5 } },
+				},
+				ExcludeMatteControl = MatteControl {
+					CtrlWZoom = false,
+					NameSet = true,
+					SourceOp = "IncludeMatteControl",
+					Inputs = {
+						Background = Input {
+							SourceOp = "RedExclude",
+							Source = "Output",
+						},
+						Foreground = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+						GarbageMatte = Input {
+							SourceOp = "GarbageMattePipeRouter",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, 346.5 } },
+				},
+				GarbageMattePipeRouter = PipeRouter {
+					NameSet = true,
+					ViewInfo = PipeRouterInfo { Pos = { 880, 445.5 } },
+				},
+				MaskPipeRouter = PipeRouter {
+					NameSet = true,
+					ViewInfo = PipeRouterInfo { Pos = { 880, 379.5 } },
+				},
+				RedExclude = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 5, },
+						ToBlue = Input { Value = 5, },
+						ToAlpha = Input { Value = 5, },
+						Background = Input {
+							SourceOp = "MaskPipeRouter",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 990, 346.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "PTGuiMatteControl"
+}

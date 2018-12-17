@@ -1,0 +1,127 @@
+{
+	Tools = ordered() {
+		Domemaster2Equirectangular = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Domemaster2Equirectangular",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "HemirectTransform",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				HemirectTransform = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 1.001 }, },
+						Pivot = Input { Value = { 0.5, 0.333332 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 0.5, },
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "ResizeAspectRatio",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+				},
+				ResizeAspectRatio = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "Width/2",
+						},
+						HiQOnly = Input { Value = 0, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 8, },
+						Input = Input {
+							SourceOp = "CropConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+				},
+				CropConversion = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 1440,
+							Expression = "CropConversion.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "HemirectViewSlide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 115.5 } },
+				},
+				HemirectViewSlide = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 8, },
+						Input = Input {
+							SourceOp = "Rect2PolarConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 115.5 } },
+				},
+				Rect2PolarConversion = CoordSpace {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 115.5 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						HiQOnly = Input { Value = 0, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 115.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Domemaster2Equirectangular"
+}

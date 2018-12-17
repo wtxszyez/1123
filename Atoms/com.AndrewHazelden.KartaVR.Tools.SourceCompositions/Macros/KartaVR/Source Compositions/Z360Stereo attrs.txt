@@ -1,0 +1,98 @@
+Z360 Stereo
+
+This node allows you to take a color + depthmap over/under panoramic image and convert it into a stereoscopic left and right image pair. The greyscale shaded depth map is displaces the Equirectangular 2D monoscopic color image into a stereoscopic 3D output.
+
+
+Possibly add integrated view rotations:
+
+	[ColorCubicFaces2Equirectangular]
+		Rotation Order
+		XYZ Rotation
+
+Todo: Possibly add a ChangeDepth node for 16bit vs 32bit output
+
+  [PanoMerge]
+		Background=Input
+
+	[RGBColorCorrector]
+		masterRGBSaturation=RGB Saturation Default=1.3
+		masterRGBContrast=RGB - Contrast Default=1.0
+		masterRGBGain=RGB - Gain Default=1
+		masterRGBGain=RGB - Lift Default=1
+		masterRGBGamma=RGB - Gamma Default=1.0
+
+	[ZDepthColorCorrector]
+		masterRGBContrast=ZDepth - Contrast Default=2.2
+		masterRGBGain=ZDepth - Gain Default=1
+		masterRGBGain=ZDepth - Lift Default=1
+		masterRGBGamma=ZDepth - Gamma Default=0.6
+
+	[StereoDisplaceRight]
+		X Channel=Depth Input Channel (RED/Green/Blue/Alpha/Luma) Default=Luma
+		X Offset=Stereo Displace Convergence Default=0 Max=2.0 Min=-2.0
+		X Refraction=Stereo Depth Displacement Default=0  (Guessed range Max=0.1 Min=-1.0)
+
+	[StereoDisplaceLeft]
+		Node Expressions:
+
+		Depth Input Channel
+		StereoDisplaceRight_1.XChannel
+
+		Stereo Pre-Displace Convergence: (0.2 default)
+		StereoDisplaceRight_1.XOffset
+	
+		Stereo Depth Displacement (-0.003 default)
+		-StereoDisplaceRight_1.XRefraction
+
+  [DepthBlur]
+    Filter=ZDepth - Blur Filter = Gaussian
+    BlurSize=ZDepth - Blur Size = 0.0  (Default 8.0)
+
+  [CustomToolOffsetControl]
+    NumberIn1=Stereo Offset Convergence (Default=0.495, Min=0, Max=1)
+    
+    Name for Number 1=Stereo Offset Convergence 
+
+	[SlideTransformRight]
+	  Expression: Center=Point(CustomToolOffsetControl.NumberIn1, 0.5)
+
+	[SlideTransformLeft]
+		Expression: Center=Point(-CustomToolOffsetControl.NumberIn1, 0.5)
+
+	[OverUnderCrop]
+		Output=Output
+
+
+Macro GUI Control Order:
+	[PanoMerge]
+		Input
+	
+	[StereoDisplaceRight]
+		Depth Input Channel
+		Stereo Displace Convergence
+		Stereo Depth Displacement
+	
+	[CustomToolOffsetControl]
+  	Stereo Offset Convergence
+  	
+  [DepthBlur]
+		Depth Blur Filter
+		Depth Blur Size
+		
+	[RGBColorCorrector]
+		RGB Saturation
+		RGB Contrast
+		RGB Gain
+		RGB Lift
+		RGB Gamma
+
+	[ZDepthColorCorrector]
+		Depth Contrast
+		ZDepth
+		ZDepth Lift
+		ZDepth Gamma
+	
+  [OverUnderCrop]
+		Output=Output
+  
+  

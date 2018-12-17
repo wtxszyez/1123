@@ -1,0 +1,1302 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 130 },
+	GlobalRange = { 0, 130 },
+	CurrentID = 399,
+	HiQ = true,
+	MotionBlur = false,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 1,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Temp:/KartaVR/generated_image_grid.0000.jpg",
+		"Temp:/KartaVR/extracted_image_grid.0000.jpg"
+	},
+	Tools = {
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 25,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 25
+				}
+			},
+			Inputs = {
+				MissingFrames = Input { Value = 1, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 770, 313.5 } },
+		},
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/pikachu_13x10_image_grid.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 181.5 } },
+		},
+		Background1 = Background {
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							Background1 = Background {
+								Inputs = {
+									["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+									GlobalOut = Input { Value = 130 },
+									Gradient = Input {
+										Value = Gradient {
+											Colors = {
+												[0] = { 0, 0, 0, 1 },
+												[1] = { 1, 1, 1, 1 }
+											}
+										}
+									},
+									Height = Input {
+										Value = 3840,
+										Expression = "Scale.Output.OriginalWidth*sqrt(ImageGridCreator.Frames)"
+									},
+									Width = Input {
+										Value = 3840,
+										Expression = "Scale.Output.OriginalWidth*sqrt(ImageGridCreator.Frames)"
+									}
+								},
+								Name = "Background1",
+								CtrlWZoom = false,
+								ViewInfo = OperatorInfo { Pos = { 1155, 346.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							Background1 = Background {
+								Inputs = {
+									["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+									GlobalOut = Input { Value = 130 },
+									Gradient = Input {
+										Value = Gradient {
+											Colors = {
+												[0] = { 0, 0, 0, 1 },
+												[1] = { 1, 1, 1, 1 }
+											}
+										}
+									},
+									Height = Input {
+										Value = 1920,
+										Expression = "Scale.Output.OriginalWidth*sqrt(ImageGridCreator.Frames)*0.5"
+									},
+									Width = Input {
+										Value = 7680,
+										Expression = "Scale.Output.OriginalWidth*sqrt(ImageGridCreator.Frames)*2"
+									}
+								},
+								CtrlWZoom = false,
+								ViewInfo = OperatorInfo { Pos = { 1155, 346.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				GlobalOut = Input { Value = 130, },
+				Width = Input {
+					Value = 3840,
+					Expression = "Scale.Output.OriginalWidth*ceil(sqrt(ImageGridCreator.Frames))",
+				},
+				Height = Input {
+					Value = 3840,
+					Expression = "Scale.Output.OriginalWidth*ceil(sqrt(ImageGridCreator.Frames))",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 346.5 } },
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "The \"ImageGridExtractor\" macro is used to turn a combined image grid layout of photos back into an image sequence. This is handy if you are working with media coming from photogrammetry or lightfield workflows in Fusion.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 770, 82.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 649.973, 70.3098 }
+			},
+		},
+		Scale = Scale {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 0.333333333333333,
+					Expression = "1/sqrt(ImageGridCreator.Frames)",
+				},
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Input = Input {
+					SourceOp = "Loader2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 935, 313.5 } },
+		},
+		Equirectangular2Fisheye = GroupOperator {
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide.html#Equirectangular2Fisheye"
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge_1",
+					Source = "Background",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVRenderer3D_1",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "FOVCustomTool",
+					Source = "NumberIn1",
+					MinScale = 2,
+					MaxScale = 360,
+					Default = 180,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.RotOrder",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.Y",
+					Expression = "(360/ImageGridCreator.Frames)*time",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftRed",
+					Name = "Color",
+					ControlGroup = 8,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftGreen",
+					ControlGroup = 8,
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftBlue",
+					ControlGroup = 8,
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftAlpha",
+					ControlGroup = 8,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FOVMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1045, 313.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 1515.74, 229.3, 757.871, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				InputScaling = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1280,
+							Expression = "PanoMerge_1.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1280,
+							Expression = "PanoMerge_1.Background.OriginalWidth",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "UVRenderer3D_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -184.055, 109.15 } },
+				},
+				UVRenderer3D_1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						GlobalOut = Input { Value = 130, },
+						Width = Input {
+							Value = 1280,
+							Expression = "PanoMerge_1.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 640,
+							Expression = "PanoMerge_1.Background.OriginalHeight",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3D_1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -363.692, 109.15 } },
+				},
+				Shape3D_1 = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Shape3D = Shape3D {
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "SphereMap",
+												Source = "MaterialOutput"
+											},
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "SphereMap_1",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { -473.692, 109.15 } },
+				},
+				PanoMerge_1 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Scale",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -694.871, 108.215 } },
+				},
+				SphereMap_1 = SphereMap {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+											["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+										},
+										Name = "SphereMap",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YZX" }, },
+						["Rotate.Y"] = Input {
+							Value = 320,
+							Expression = "(360/ImageGridCreator.Frames)*time",
+						},
+						["Rotate.Z"] = Input { Value = -90, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "PanoMerge_1",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -583.692, 109.15 } },
+				},
+				DomemasterScale = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 0.25 },
+							Expression = "Point(0.5, (2-YSize)/2)",
+						},
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input {
+							Value = 1.5,
+							Expression = "1/(FOVCustomTool.NumberIn1*(1/360))",
+						},
+						Edges = Input { Value = 3, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -75.1288, 109.15 } },
+				},
+				FOVCustomTool = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						NumberIn1 = Input { Value = 200, },
+						LUTIn1 = Input {
+							SourceOp = "FOVCustomToolLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "FOVCustomToolLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "FOVCustomToolLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "FOVCustomToolLUTIn4",
+							Source = "Value",
+						},
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "FOV", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 34.8712, 10.15 } },
+				},
+				FOVCustomToolLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				FOVCustomToolLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				FOVCustomToolLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				FOVCustomToolLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				DomemasterCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1280,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 1280,
+							Expression = "InputScaling.Width",
+						},
+						Input = Input {
+							SourceOp = "DomemasterScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 35.8552, 109.15 } },
+				},
+				Rotate180 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "DomemasterCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 144.871, 109.15 } },
+				},
+				LatLongReposition2 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										Name = "LatLongReposition2",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 0.3535 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						Size = Input { Value = 0.75, },
+						XSize = Input { Value = 1.001, },
+						YSize = Input { Value = 0.707, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rotate180",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 254.871, 109.15 } },
+				},
+				PolarConversion2 = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Shape = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LatLongReposition2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 364.871, 109.15 } },
+				},
+				OrientView = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						UseSizeAndAspect = Input { Value = 0, },
+						Angle = Input { Value = -90, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "PolarConversion2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 474.871, 109.15 } },
+				},
+				ViewRotate = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "OrientView",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 584.871, 109.15 } },
+				},
+				FOVMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ViewRotate",
+							Source = "Output",
+						},
+						FlattenTransform = Input { Value = 1, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 694.871, 109.15 } },
+				},
+				BackgroundColor = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 130, },
+						Width = Input {
+							Value = 1280,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 1280,
+							Expression = "InputScaling.Width",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftAlpha = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 694.871, 175.15 } },
+				}
+			},
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "The \"ImageGridCreator\" fuse generates a tiled mosaic like grid of images from an image sequence. \n\nThis example uses an expression that reads the \"ImageGridCreator.Frames\" attribute  to automate the input image scaling and animation of a fisheye lens view that is layed out in a tiled grid format.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 770, 214.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 646.668, 71.6316 }
+			},
+		},
+		ImageGridExtractor = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-photogrammetry.html#ImageGridExtractor",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ImageGridTimeStretcher",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "HorizontalTiles",
+					Default = 13,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ImageGridCustomTool",
+					Source = "VerticalTiles",
+					Default = 10,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ImageGridViewCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1045, 181.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 346, 64.3, 173, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				ImageGridCustomTool = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "ct1LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "ct1LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "ct1LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "ct1LUTIn4",
+							Source = "Value",
+						},
+						Intermediate4 = Input { Value = "Width\n", },
+						Image1 = Input {
+							SourceOp = "ImageGridTimeStretcher",
+							Source = "Output",
+						},
+						HorizontalTiles = Input { Value = 13, },
+						VerticalTiles = Input { Value = 10, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+					UserControls = ordered() {
+						HorizontalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "HorizontalTiles",
+						},
+						VerticalTiles = {
+							INP_MaxAllowed = 256,
+							INP_Integer = true,
+							INP_MinAllowed = 1,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 1,
+							INP_MaxScale = 32,
+							LINKS_Name = "VerticalTiles",
+						}
+					}
+				},
+				ct1LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				ct1LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				ct1LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ct1LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				ImageGridViewCrop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Expression = "(time%ImageGridCustomTool.HorizontalTiles)  * (ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles) % ImageGridCustomTool.Image1.Width", },
+						YOffset = Input { Expression = "(floor(time/(ImageGridCustomTool.HorizontalTiles)) * (ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles)) % ImageGridCustomTool.Image1.Height", },
+						XSize = Input {
+							Value = 640,
+							Expression = "ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles",
+						},
+						YSize = Input {
+							Value = 427,
+							Expression = "ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles",
+						},
+						Input = Input {
+							SourceOp = "ImageGridCustomTool",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 10.15 } },
+				},
+				ImageGridTimeStretcher = TimeStretcher {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SourceTime = Input {
+							Value = 0,
+							Expression = "floor(time/(ImageGridCustomTool.HorizontalTiles*ImageGridCustomTool.VerticalTiles))",
+						},
+						InterpolateBetweenFrames = Input { Value = 0, },
+						SampleSpread = Input { Disabled = true, },
+						Input = Input {
+							SourceOp = "Loader1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				}
+			},
+		},
+		Saver1_1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:/KartaVR/generated_image_grid.0000.jpg",
+						FormatID = "JpegFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "JpegFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "ImageGridCreator",
+					Source = "Output",
+				},
+				["JpegFormat.Quality"] = Input { Value = 97, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1320, 313.5 } },
+		},
+		ImageGridCreator = Fuse.ImageGridCreator {
+			NameSet = true,
+			CurrentSettings = 3,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							ImageGridCreator = Fuse.ImageGridCreator {
+								Inputs = {
+									Foreground = Input {
+										SourceOp = "FOVMerge",
+										Source = "Output"
+									},
+									Background = Input {
+										SourceOp = "Background1",
+										Source = "Output"
+									},
+									Frames = Input { Value = 4 }
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 1155, 312.839 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							ImageGridCreator = Fuse.ImageGridCreator {
+								Inputs = {
+									Foreground = Input {
+										SourceOp = "FOVMerge",
+										Source = "Output"
+									},
+									Background = Input {
+										SourceOp = "Background1",
+										Source = "Output"
+									},
+									Frames = Input { Value = 16 }
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 1155, 312.839 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[3] = {
+						Tools = ordered() {
+							ImageGridCreator = Fuse.ImageGridCreator {
+								Inputs = {
+									Foreground = Input {
+										SourceOp = "FOVMerge",
+										Source = "Output"
+									},
+									Background = Input {
+										SourceOp = "Background1",
+										Source = "Output"
+									},
+									Frames = Input { Value = 25 }
+								},
+								Name = "ImageGridCreator",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 1155, 313.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[4] = {
+						Tools = ordered() {
+							ImageGridCreator = Fuse.ImageGridCreator {
+								Inputs = {
+									Foreground = Input {
+										SourceOp = "FOVMerge",
+										Source = "Output"
+									},
+									ReverseYOrder = Input { Value = 1 },
+									Frames = Input { Value = 16 },
+									Background = Input {
+										SourceOp = "Background1",
+										Source = "Output"
+									}
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 1155, 312.839 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				Frames = Input { Value = 9, },
+				Background = Input {
+					SourceOp = "Background1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "FOVMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 313.5 } },
+		},
+		Saver1 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:/KartaVR/extracted_image_grid.0000.jpg",
+						FormatID = "JpegFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "JpegFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "ImageGridViewCrop",
+					Source = "Output",
+				},
+				["JpegFormat.Quality"] = Input { Value = 97, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1210, 181.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1839,
+			Height = 1199,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.5131,
+						Offset = { -606.804, -96.4092 }
+					},
+					Timeline = TimelineView {
+						SnapGuides = {
+							[100] = {
+								Name = "",
+								SplinesView = true,
+								TimelineView = true
+							}
+						},
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 615 },
+							ScaleX = 0.278752436647173,
+							OffsetX = -6.41130604288499,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.726281352235551,
+					RatioY = 0.0100250626566416,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.537363560033585,
+						{ ID = "Left", RatioX = 1, RatioY = 0.0109375, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.413937867338371, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 500,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "ùÝº ’#",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "ùÝºÀ½c",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					SubView = {
+						Enabled = true,
+						Navigator = false,
+						Magnifier = false,
+						ID = "GLImageInfo",
+						GLImageInfo = {
+							AutoBounds = true
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "ùÝº ‘#",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				Name = "Equirectangular 4K UHD",
+				Width = 3840,
+				Height = 1920,
+				Rate = 1,
+				GuideRatio = 1,
+			},
+			Unsorted = {
+				GlobalEnd = 130
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

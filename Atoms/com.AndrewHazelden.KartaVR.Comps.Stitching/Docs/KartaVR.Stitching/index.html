@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>KartaVR Example 360VR Stitching Comps</h1>
+<p>This webpage lists the KartaVR example compositing projects that include large media files and Fusion .comp files. This media will get you up to speed with node based live action panoramic 360° video stitching and photogrammetry workflows in Fusion.</p>
+<p>These files are designed to show several different workflows for stitching and editing 360° panoramic imagery. There is approximately 16 GB of panoramic video stitching and photogrammetry project files available for download from the web when you view the &quot;<code>Rector:/Deploy/Docs/KartaVR.Stitching/index.html</code>&quot; webpage. You can access this example stitching footage resource page from inside Fusion by opening the &quot;<code>Scripts &gt; KartaVR &gt; View KartaVR Example 360VR Stitching Comps</code>&quot; menu item.</p>
+<p>There is a <strong>real cost</strong> to keep this media online and to create new learning materials in the future. Please consider making a small donation to help offset the server hosting costs if this media was useful to your Fusion VR learning efforts: <a href="http://www.paypal.me/andrewhazelden">http://www.paypal.me/andrewhazelden</a></p>
+<p>Cheers,<br />
+Andrew Hazelden</p>
+<p>Email: <a href="mailto:andrew@andrewhazelden.com">andrew@andrewhazelden.com</a><br />
+Web: <a href="http://www.andrewhazelden.com">www.andrewhazelden.com</a></p>
+<h1>Example Footage License</h1>
+<p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="images/cc-by-sa-4-88x31.png" /></a><br />This content is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+<h1>Table of Contents</h1>
+<h2>Panoramic Stitching</h2>
+<h3>Panoramic Stitching Download Links</h3>
+<ul>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/KartaVR-Stitching-Demo.zip">KartaVR-Stitching-Demo.zip (4.18GB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/YI360VR-Stitching-Example.zip">YI360VR-Stitching-Example.zip (175MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/YIVR-360-Lens-Calibration-Project.zip">YIVR-360-Lens-Calibration-Project.zip (410MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Ellershouse-Nova-Scotia-Cliff.zip">Ellershouse-Nova-Scotia-Cliff.zip (49MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Elmo-4-Camera-Rig.zip">Elmo-4-Camera-Rig.zip (12MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Freedom360-6-Camera-Rig.zip">Freedom360-6-Camera-Rig.zip (21MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night.zip">iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night.zip (465 MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo.zip">Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo.zip (30.5MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Powers-Lake-3603D-Fusion-9.zip">Powers-Lake-3603D-Fusion-9.zip (3.2GB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/z360/West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip">West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip (73MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Tiny-Planet-UV-Pass-Warp.zip">Tiny-Planet-UV-Pass-Warp.zip (59.8MB)</a></li>
+</ul>
+<h3>Panoramic Stitching Example Projects</h3>
+<ul>
+<li><a href="#kartavr-stitching-demo">KartaVR Stitching Demo</a></li>
+<li><a href="#yi360vr-stitching-demo">YI360VR Stitching Example</a></li>
+<li><a href="#yi360vr-lens-calibration-project">YI360VR Lens Calibration Project</a></li>
+<li><a href="#ellershouse-nova-scotia-cliff">Ellershouse Nova Scotia Cliff</a></li>
+<li><a href="#elmo-4-camera-rig">Elmo 4 Camera Rig</a></li>
+<li><a href="#freedom360-6-camera-rig">Freedom360 6 Camera Rig</a></li>
+<li><a href="#izugar-z3x-3-camera-rig-indoor-room-night">iZugar Z3X 3 Camera Rig Indoor Room Night</a></li>
+<li><a href="#sony-a7sii-rig-powers-lake-3603d-stereo">Sony A7Sii Rig Powers Lake 3603D Stereo</a></li>
+<li><a href="#west-dover-forest-z360-disparity-depth-stitch">West Dover Forest Z360 Disparity Depth Stitch</a></li>
+<li><a href="#tiny-planet-uv-pass-warp">Tiny Planet UV Pass Warp</a></li>
+</ul>
+<h2>Stereo</h2>
+<h3>Stereo Download Links</h3>
+<ul>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Creating-Stereo-Video-Based-Disparity-Depthmaps.zip">Creating-Stereo-Video-Based-Disparity-Depthmaps.zip (54 MB)</a></li>
+</ul>
+<h3>Stereo Example Projects</h3>
+<ul>
+<li><a href="#creating-stereo-video-based-disparity-depthmaps">Creating Stereo Video Based Disparity Depthmaps</a></li>
+</ul>
+<h2>Photogrammetry</h2>
+<h3>Photogrammetry Download Links</h3>
+<ul>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/photogrammetry-giraffe.zip">photogrammetry-giraffe.zip (33 MB)</a></li>
+<li><a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Photogrammetry-Greenscreen-Keying.zip">Photogrammetry-Greenscreen-Keying.zip (79 MB)</a></li>
+</ul>
+<h2>Photogrammetry Example Projects</h2>
+<ul>
+<li><a href="#photogrammetry-giraffe">Photogrammetry Giraffe</a></li>
+<li><a href="#photogrammetry-greenscreen-keying">Photogrammetry Greenscreen Keying</a></li>
+</ul>
+<h1><a name="panoramic-stitching"></a>Panoramic Stitching Example Projects</h1>
+<h2><a name="kartavr-stitching-demo"></a>KartaVR Stitching Demo</h2>
+<p><img src="images/Sony-A7Sii-Rig-Under-the-Bridge.jpg" alt="Sony A7Sii Rig Under the Bridge" /></p>
+<p>This comp imports a set of three fisheye camera views shot on a Sony A7Sii 4K camera using a Peleng 8mm circular fisheye lens. The footage was originally recorded on location to an Atomos Ninja Flame SSD Video recorder.</p>
+<p>A Sony SLOG3.Cine color profile LUT is applied to the footage and the media is converted into a REC709 color space. The fisheye footage is then stitched into an Equirectangular/Spherical/LatLong panoramic image projection and the tripod is removed from the shot. The final image sequence is then color corrected and written to disk. The ViewerEquirectangular node at the end of the comp tree allows us to preview the look of the panoramic 360° imagery inside of Fusion with several handy &quot;view bookmarks&quot; saved using the node's S1, S2, S3, S4, and S5 preset slots.</p>
+<p>This project includes three still images from the Atomos 4K video recordings, along with a 20 second long image sequence that has the three camera views packed together in a side by side format.</p>
+<p><a href="https://www.youtube.com/watch?v=25FjDEOFPes">Under the Bridge Example on YT360</a></p>
+<p><strong>April 2017 Note:</strong> The example file <a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/KartaVR-Stitching-Demo.zip">KartaVR-Stitching-Demo.zip</a> has been updated and simplified to use the newer nodes available in KartaVR. If you want to follow along with the exact steps in the original &quot;Under the Bridge&quot; tutorial, then you can also download this example as well: <a href="https://andrewhazelden.com/projects/kartavr/examples/downloads/Sony-A7Sii-Rig-Under-the-Bridge.zip">Sony-A7Sii-Rig-Under-the-Bridge.zip</a></p>
+<p>This image shows what it looks like when the Atomos video recorder is capturing a 4K HDMI video stream from the Sony A7Sii based Nodal Ninja camera rig:</p>
+<p><img src="images/Sony-A7Sii-Rig-Under-the-Bridge-Camera.jpg" alt="Sony A7Sii Rig CAMRA" /></p>
+<p>The example footage was filmed on a Sony A7Sii camera by <a href="http://www.andrewhazelden.com/blog/">Andrew Hazelden</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Sony-A7Sii-Rig-Under-the-Bridge-Fisheye-Views.jpg" alt="Sony A7Sii Rig Under the Bridge Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Sony-A7Sii-Rig-Under-the-Bridge-Node.png" alt="Sony A7Sii Rig Under the Bridge Node" /></p>
+<h2><a name="yi360vr-stitching-demo"></a> YI360VR Stitching Example</h2>
+<p><img src="images/YI360VR-Stitching-Example-View.jpg" alt="YI360VR" /></p>
+<p>This example shows how to process YI360VR camera footage.</p>
+<p>The stitching template starts by adding two &quot;FisheyeCropMask&quot; nodes that are applied to the front and back circular fisheye camera views. The FisheyeCropMask node is used to smoothly feather out the border of the images. You will need to modify the &quot;FisheyeCropMask&quot; node's width and height value to match the resolution of your 2048px or 2880px resolution Yi camera fisheye footage.</p>
+<p>The front and back video files are added to the Fusion composite using a pair of loader nodes named &quot;FrontLoader1&quot; and &quot;BackLoader1&quot;.</p>
+<p>The circular fisheye footage is converted into an Equirectangular/LatLong/Spherical image projection using a pair of &quot;Fisheye2Equirectangular&quot; nodes. The fisheye image has an approximate 197 degree field of view once the fisheye masking is applied so the &quot;Fisheye2Equirectangular&quot; node's &quot;FOV&quot; control is set to 197 degrees. On the back camera view the &quot;Yaw (Y Rotation)&quot; control is set to 180 degrees to position the clip at the back part of the equirectangular frame.</p>
+<p>A merge node is used to blend the final warped front and back camera views. If you want to look at the edge seaming to check the overlap region you can change the merge node's &quot;Apply Mode&quot; control from the default &quot;Normal&quot; setting to &quot;Difference&quot; for a quality control check. The difference mode is handy as the blending areas will be shown clearly in black.</p>
+<p>A &quot;ColorCorrector&quot; node has been added that can be used to adjust the final blended image. In this example the source imager looks nice so no manual color correction is required.</p>
+<p>A &quot;ChangeDepth&quot; node is used to convert the footage to an 8 bit per channel color depth which is a good setting to use when encoding an MP4 movie.</p>
+<p>A &quot;Saver&quot; node is used to write the final output from the composite to disk. The saver node's &quot;S1&quot; preset will save out a TIFF image sequence, and the &quot;S2&quot; preset will save out an MP4 H.264 movie.</p>
+<p>Here is a link to a short YouTube 360 video rendering output created by the YI360VR example:</p>
+<p><a href="https://www.youtube.com/watch?v=s_VoJhqOki8">YI360VR Example on YT360</a></p>
+<h3>Source Footage</h3>
+<p><img src="images/YI360VR-Stitching-Example-Footage.jpg" alt="YI360VR Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/YI360VR-Stitching-Example-Node.jpg" alt="YI360VR Node" /></p>
+<h2><a name="yi360vr-lens-calibration-project"></a> YI360VR Lens Calibration Project</h2>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-Lower-View-Lens-Stitched.jpg" alt="YI360VR Parking Lot" /></p>
+<p>This project uses PTGui Pro and KartaVR to create a set of YIVR 360 fisheye lens calibration settings and a pre-computed set of UV pass stitching template images. A node based stitch was created from the PTGui .pts file along with a UV pass based stitch so the two approaches could be compared.</p>
+<p>If you are going to process YIVR 360° MP4 video footage that is 2880x5760 px in size it is a good idea to run the KartaVR for Fusion based <strong>Script &gt; KartaVR &gt; Movies &gt; Convert Movies to Image Sequences</strong> menu item to batch process the video footage into flat images. This allows you to get a faster and higher quality stitched output in Fusion and makes it possible to create the PTGui stitching template too. You can also use KartaVR's BatchBuilder scripts to send the converted image sequences into the PTGui BatchBuilder module for image sequence based stitching.</p>
+<h3>Source Footage</h3>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-YIVR-Fisheye-Views.jpg" alt="YI360VR Footage" /></p>
+<h3>YouTube 360 Rendered Examples</h3>
+<p><strong>KartaVR Stitching a YIVR 360 Parking Lot Scene</strong></p>
+<p><a href="https://www.youtube.com/watch?v=2dsklVQKLFk">https://www.youtube.com/watch?v=2dsklVQKLFk</a></p>
+<p>This video shows the results of KartaVR for Fusion parametrically stitching the raw front and back fisheye lens footage from a YIVR 360 camera. The footage was filmed in a parking lot and the YIVR 360 camera is rotated slowly around the nodal point.</p>
+<p><strong>KartaVR UV Pass Stitching a YIVR 360 Parking Lot Scene</strong></p>
+<p><a href="https://www.youtube.com/watch?v=kBylx2GVJJo">https://www.youtube.com/watch?v=kBylx2GVJJo</a></p>
+<p>This video shows the results of KartaVR for Fusion using a UV pass approach to stitch the raw front and back fisheye lens footage from a YIVR 360 camera. The footage was filmed in a parking lot and the YIVR 360 camera is rotated slowly around the nodal point.</p>
+<h3>PTGui Based Stitching</h3>
+<p>PTGui was used to calculate the fisheye lens field of view and to work out the basic lens distortion settings for the Yi360 VR camera. This was done by placing the camera on a tripod and doing a slow nodal pan while recording a raw unstitched fisheye video clip. The fisheye video clip was then converted into an image sequence at 1 frame per second using the KartaVR &quot;Convert Movies to Image Sequences&quot; script.</p>
+<p>The nodal pan footage was loaded into a pair of PTGui project files and custom circular cropping was applied to extract the top and lower view fisheye images. PTGui then analyzed the footage and created a seamless panoramic stitch.</p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Nodal-Pan.jpg" alt="PTGui Nodal Pan" /></p>
+<h4>360VR Lens Paramaters</h4>
+<p><strong>Top Fisheye View</strong></p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Top-View-Cropping.png" alt="PTGui View Cropping" /></p>
+<p>Crop:</p>
+<ul>
+<li>Left: 18</li>
+<li>Right: 2862</li>
+<li>Top: 0</li>
+<li>Bottom: 2844</li>
+<li>(Computed) Width: 2844</li>
+<li>(Computed) Height: 2844</li>
+</ul>
+<p>Lens Settings:</p>
+<ul>
+<li>Lens Type: Circular Fisheye</li>
+<li>Focal Length 6.366 mm</li>
+<li>Computed Horizontal Field of View 194.5°</li>
+<li>Lens Correction Parameters:</li>
+<li>a: 0</li>
+<li>b: 0.025</li>
+<li>c: 0</li>
+</ul>
+<p>Image Shift:</p>
+<ul>
+<li>d:0</li>
+<li>e:0</li>
+</ul>
+<p>Image Parameters (Manually Positioned):</p>
+<ul>
+<li>Yaw: 159</li>
+<li>Pitch: 2</li>
+<li>Roll: -2</li>
+</ul>
+<p><strong>Lower Fisheye View</strong></p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Lower-View-Cropping.png" alt="PTGui View Cropping" /></p>
+<p>Crop:</p>
+<ul>
+<li>Left: 18</li>
+<li>Right: 2862</li>
+<li>Top: 2904</li>
+<li>Bottom: 5748</li>
+<li>(Computed) Width: 2844</li>
+<li>(Computed) Height: 2844</li>
+</ul>
+<p>Lens Settings:</p>
+<ul>
+<li>Lens Type: Circular Fisheye</li>
+<li>Focal Length 6.366 mm</li>
+<li>Computed Horizontal Field of View 194.5°</li>
+<li>Lens Correction Parameters:</li>
+<li>a: 0</li>
+<li>b: 0.026</li>
+<li>c: 0</li>
+</ul>
+<p>Image Shift:</p>
+<ul>
+<li>d:0</li>
+<li>e:0</li>
+</ul>
+<p>Image Parameters (Manually Positioned):</p>
+<ul>
+<li>Yaw: -21</li>
+<li>Pitch: 0.5</li>
+<li>Roll: 0.5</li>
+</ul>
+<p>YIVR Panoramic 360° Nodal Rotation based PTGui Stitching Project:</p>
+<ul>
+<li><code>PTGui Panoramic Stitched Calibration/YIVR_360_Top_View.pts</code></li>
+<li><code>PTGui Panoramic Stitched Calibration/YIVR_360_Lower_View.pts</code></li>
+</ul>
+<p>YIVR Single Frame Front/Back Lens based PTGui Stitching Project:</p>
+<ul>
+<li><code>PTGui Single Frame Stitch/YIVR_360 Single Frame.pts</code></li>
+</ul>
+<p>KartaVR imported PTGui .pts file based stitching project:</p>
+<ul>
+<li><code>PTGui Single Frame Stitch/YIVR_360 Single Frame KartaVR.comp</code></li>
+</ul>
+<h3>KartaVR Node Based Stitch</h3>
+<p>KartaVR's PTGui Project Importer tool was used to do a node based stitch. Since the top and lower fisheye views are being pulled from the same cropped over/under style image layout a &quot;FisheyeCropMask&quot; node based feathered mask is used on the fisheye views.</p>
+<p>To get the best results possible after the PTGui .pts file was imported an X/Y placement adjustment was done to better fit the mask to the center of each fisheye view, and an edge softening adjustment was done to maximize the amount of blending overlap available on the two fisheye views.</p>
+<h4>Fisheye Views With Alpha Masking</h4>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Importer-Fisheye-Views-Masked.jpg" alt="Fisheye Alpha Masks" /></p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Importer-Fisheye-Alpha-Masks.png" alt="Fisheye Alpha Masks" /></p>
+<h4>Fusion Node View</h4>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-PTGui-Importer-Node-Stitch.png" alt="Node Based Stitch" /></p>
+<h3>KartaVR Based UV Pass Stitching</h3>
+<p>KartaVR has a UV pass map creation tool that allows the stitching artist to quickly and easily convert a PTGui Pro .pts project file into a set of ready to use uv pass warping template images. It is possible to use the KartaVR generated UV pass warping template images in After Effects with the RE Vision Effects RE: Map plugin, in Nuke with the ST Map node, or in TouchDesiger for live realtime panoramic video stitching.</p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-Generate-UV-Pass-in-PTGui.png" alt="Generate UV Pass in PTGui Script" /></p>
+<p>Example Fusion UV pass stitching composite:</p>
+<ul>
+<li><code>UV Pass Stitching/UV Pass Stitching Project.comp</code></li>
+</ul>
+<p>This example project uses KartaVR created UV pass warping template images to stitch the YIVR 360 dual fisheye footage into a final equirectangular output. In the example Fusion project a gridwarper was applied to the uv pass images to further clean up the frame blending zone and reduce any of the remaining lens distortion artifacts.</p>
+<p>This gridwarping stage resulted in the creation of the following UV Pass template images:</p>
+<ul>
+<li><code>UV Pass Stitching/YIVR_360 Single Frame_uvpass_gridwarped_0001.0000.tif</code></li>
+<li><code>UV Pass Stitching/YIVR_360 Single Frame_uvpass_gridwarped_0002.0000.tif</code></li>
+</ul>
+<p>A set of alpha blending masks was also created by the &quot;UV Pass Stitching Project.comp&quot; file:</p>
+<ul>
+<li><code>YIVR_360 Single Frame_uvpass_mask_0002.0000.tif</code></li>
+<li><code>YIVR_360 Single Frame_uvpass_mask_0001.0000.tif</code></li>
+</ul>
+<h4>UV Pass Maps</h4>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-UV-Pass-Stitch-Lower.jpg" alt="UV Pass Stitch Lower" /></p>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-UV-Pass-Stitch-Top.jpg" alt="UV Pass Stitch Top" /></p>
+<h4>Fusion Node View</h4>
+<p><img src="images/YIVR-360-Lens-Calibration-Project-UV-Pass-Stitch-Nodes.png" alt="UV Pass Stitch Nodes" /></p>
+<h4>KartaVR - Generate UV Pass in PTGui Script Settings</h4>
+<p>In order to create the YIVR camera based UV Pass template images the following settings were used in the &quot;Generate UV Pass in PTGui&quot; script.</p>
+<ul>
+<li>PTGui Project File: <code>PTGui Single Frame Stitch/YIVR_360 Single Frame.pts</code></li>
+<li>Projection: Equirectangular</li>
+<li>Horizontal FOV: 360</li>
+<li>Pano Width: 3840</li>
+<li>Pano Height: 1920</li>
+<li>Pano Format: TIFF</li>
+<li>UV Pass Width: 2880</li>
+<li>UV Pass Height: 5760</li>
+<li>Image Format: TIFF</li>
+<li>Compression: LZW</li>
+<li>[x] Oversample the UV Pass Map</li>
+<li>[x] Start View Numbering on 1</li>
+<li>[x] Batch Render in PTGui</li>
+</ul>
+<p>UV Pass Map Output:</p>
+<ul>
+<li>Top Fisheye = <code>YIVR_360 Single Frame_uvpass_0001.0000.tif</code></li>
+<li>Lower Fisheye = <code>YIVR_360 Single Frame_uvpass_0002.0000.tif</code></li>
+</ul>
+<p>UV Pass Generator PTGui Project Output:</p>
+<ul>
+<li><code>YIVR_360 Single Frame_uvpass.pts</code></li>
+</ul>
+<p>UV Pass Generator Source Gradient Rectangle:</p>
+<ul>
+<li><code>uvpass_5760x11520.0000.tif</code></li>
+</ul>
+<h2><a name="ellershouse-nova-scotia-cliff"></a> Ellershouse Nova Scotia Cliff</h2>
+<p><img src="images/Ellershouse-Nova-Scotia-Cliff-Tiny-Planet.jpg" alt="Ellershouse Nova Scotia Cliff Tiny Planet" /></p>
+<p><img src="images/Ellershouse-Nova-Scotia-Cliff-Equirectangular.jpg" alt="Ellershouse Nova Scotia Cliff Equirectangular" /></p>
+<p>This example stitches fisheye camera rig footage into the equirectangular image projection. Then the composite converts the stitched footage into a <a href="https://en.wikipedia.org/wiki/Stereographic_projection">stereographic</a> format of image projection that is also known as a &quot;Tiny Planet&quot; image due to the way the scene is warped to look like a small mini version of earth. With a &quot;Tiny Planet&quot; format panorama, anything in the photo that is positioned above the horizon line is pushed outwards into the sky.</p>
+<p>The source media was captured using 8 photos taken with a Peleng 8mm circular fisheye lens on a Canon 10D camera body. This camera has an APS sized sensor with a 1.6 FOV sensor crop ratio that cuts out most of the circular border area from the fisheye image.</p>
+<p>The &quot;Generate UV Pass in PTGui&quot; script helped make the UV pass warping templates that were used to stitch the fisheye footage into an equirectangular projection.</p>
+<p>A color correction pass was applied to boost the vividness of the stitched imagery. The next step was to use a &quot;ColorCorrectorMasked&quot; node to add a vertically positioned &quot;graduated neutral density&quot; filter style sky darkening effect to restore detail in the sky.</p>
+<p>The final equirectangular image was then converted to a tiny planet image projection using another UV pass warping operation. This tiny planet output was created with a UV pass map that was generated from a PTGui .pts project file that was set to &quot;Stereographic&quot; output.</p>
+<p>The example footage was filmed on a Canon 10D by <a href="http://www.andrewhazelden.com/blog/">Andrew Hazelden</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Ellershouse-Nova-Scotia-Cliff-Fisheye-Views.jpg" alt="Ellershouse Nova Scotia Cliff Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Ellershouse-Nova-Scotia-Cliff-Node.png" alt="Ellershouse Nova Scotia Cliff Node" /></p>
+<h2><a name="elmo-4-camera-rig"></a> Elmo 4 Camera Rig</h2>
+<p><img src="images/Elmo-4-Camera-Rig.jpg" alt="Elmo 4 Camera Rig" /></p>
+<p>This example shows how an Elmo 4 camera based PTGui .pts project is converted into UV pass maps using the new Fusion script <strong>Generate UV Pass in PTGui</strong>. These UV pass maps are used to finish the shot by warping and stitching the panoramic imagery inside your Fusion comp. GridWarp nodes were used to apply subtle corrections to each of the images to result in a more seamless stitch.</p>
+<p>The example footage was filmed on an Elmo QBiC MS-1 rig by <a href="https://sites.google.com/site/k1n0fiction/">Kino Gil</a> from the Agatha VR short film.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Elmo-4-Camera-Rig-Fisheye-Views.jpg" alt="Elmo 4 Camera Rig Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Elmo-4-Camera-Rig-Node.png" alt="Elmo 4 Camera Rig Node" /></p>
+<h2><a name="freedom360-6-camera-rig"></a> Freedom360 6 Camera Rig</h2>
+<p><img src="images/Freedom360-6-Camera-Rig.jpg" alt="Freedom360 6 Camera Rig" /></p>
+<p>This example shows how a Freedom360 6 camera based PTGui .pts project is converted into UV pass maps using the new Fusion script <strong>Generate UV Pass in PTGui</strong>. These UV pass maps are used to finish the shot by warping and stitching the panoramic imagery inside your Fusion comp.</p>
+<p>ColorCorrector nodes were used extensively to help adjust for the fact each of the GoPro cameras in the Freedom360 rig were running with the auto exposure mode enabled.</p>
+<p>This example footage was provided by Fabien Soudière of <a href="http://making360.com/">Making 360</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Freedom360-6-Camera-Rig-Fisheye-Views.jpg" alt="Freedom360 6 Camera Rig Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Freedom360-6-Camera-Rig-Node.png" alt="Freedom360 6 Camera Rig Node" /></p>
+<h2><a name="izugar-z3x-3-camera-rig-indoor-room-night"></a> iZugar Z3X 3 Camera Rig Indoor Room Night</h2>
+<p><img src="images/iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night.jpg" alt="iZugar Z3X 3 Camera Rig Indoor Room Night" /></p>
+<p>This example shows how an iZugar Z3X 3 camera based PTGui .pts project is converted into UV pass maps using the new Fusion script <strong>Generate UV Pass in PTGui</strong>. These UV pass maps are used to finish the shot by warping and stitching the panoramic imagery inside your Fusion comp.</p>
+<p>A GridWarp node is used to clean up a stitching artifact on the right side of the blue sofa to create a more seamless stitch.</p>
+<p>The example footage was filmed on an iZugar Z3X rig by Fabien Soudière of <a href="http://making360.com/">Making 360</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night-Fisheye-Views.jpg" alt="iZugar Z3X 3 Camera Rig Indoor Room Night Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night-Node.png" alt="iZugar Z3X 3 Camera Rig Indoor Room Night Node" /></p>
+<h2><a name="sony-a7sii-rig-powers-lake-3603d-stereo"></a> Sony A7Sii Rig Powers Lake 3603D Stereo</h2>
+<p><img src="images/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo-Anaglyph.jpg" alt="Sony A7Sii Rig Powers Lake 3603D Stereo  Anaglyph" /></p>
+<p><img src="images/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo-OverUnder.jpg" alt="Sony A7Sii Rig Powers Lake 3603D Stereo OverUnder" /></p>
+<p>This example shows how 6 images (3 left eye view, and 3 right eye view) 180° fisheye images are stitched into a final stereoscopic 3D 360° panoramic output.</p>
+<p>The images were captured using a <a href="http://shop.nodalninja.com/">Nodal Ninja 3</a> indexed panoramic camera head with a stereo slide bar. The stereoscopic filming approach used a Nodal Ninja Advanced Rotator RD16-11 camera head that was rotated to the 0°, 120°, and 240° positions when photographing the left and right stereocopic 3D fisheye images. Each of the left and right fisheye stereo view pairs were captured with a 6.5 cm eye separation distance using a <a href="http://www.stereoscopy.com/jasper/slide-bars.html">Jasper Engineering Stereo Slide Bar</a>.</p>
+<p><strong>Note:</strong> The &quot;Powers-Lake-3603D-Fusion-9.zip&quot; example file is a modified version of this Fusion project that uses some of the new VR features in Fusion 9 to perform the tripod repair patching work.</p>
+<p>The procedure for capturing the six fisheye images required for a successful single camera shot &quot;omnidirectional&quot; 3603D panoramic image looks like this:</p>
+<p><img src="images/animated_panoramic_3603D_rig.gif" alt="Stereo 3603D Photography Technique" /></p>
+<p>The example footage was filmed on a Sony A7Sii camera by <a href="http://www.andrewhazelden.com/blog/">Andrew Hazelden</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo-Fisheye-Views.jpg" alt="Sony A7Sii Rig Powers Lake Raw Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo-Node.png" alt="Sony A7Sii Rig Powers Lake 3603D Stereo Node" /></p>
+<h2><a name="west-dover-forest-z360-disparity-depth-stitch"></a> West Dover Forest Z360 Disparity Depth Stitch</h2>
+<p><img src="images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Z360-Left.jpg" alt="West Dover Forest Z360 Disparity Depth Stitch Over/Under" /></p>
+<p>This example demonstrates a KartaVR workflow for stiching panoramic 360° stereo footage using color + disparity generated depthmap data.</p>
+<p>There are macros present in the example comp that show a new &quot;Z360 Stereo&quot; (Z-depth based omni-directional stereo 360°) workflow. Z360 Stereo is a term for converting an over/under style color + depthmap equirectangular image into a regular Over/Under left and right equirectangular stereo view using a depth displacement approach.</p>
+<p>This approach provides the freedom to change the IPD value (camera separation) in post so you can completely remap the stereo footage and tune it to have the exact amount of depth you want.</p>
+<p><img src="images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Stereo-OU-Left.jpg" alt="West Dover Forest Z360 Disparity Depth Stitch Over/Under" /></p>
+<p>A set of three stereo pairs of circular fisheye 180° images are imported into the comp using 6 loader nodes</p>
+<p>A &quot;FisheyeCropMask&quot; node is applied to each of the loader nodes to smoothly feather the border edges of the fisheye frames so they can be easily blended together. This node has controls for handling the cropped border frame area on the fisheye images where the circular frame of the fisheye image data is clipped by the top and bottom edges of the 16:9 video sensor. This is important to feather out if you want to have an effortless stitch.</p>
+<p>Next the images are rotated upright and cropped/padded to a 1:1 aspect ratio.</p>
+<p>A panoramic transform is provided by the standard KartaVR &quot;FisheyeStereo2EquirectangularStereo&quot; node to remap the circular fisheye images into a 360x180 equirectangular frame layout. The footage was filmed by rotating the camera on a Nodal Ninja head to three viewing positions using a 120° Y axis (Yaw) rotation values per view. The CameraA footage uses a &quot;FisheyeStereo2EquirectangularStereo&quot; node with a X Rotation value of 0, the CameraB footage has a 240° X Rotation value, and the CameraC footage has a 120° X Rotation value.</p>
+<p>Then a set of Disparity &gt; DisparityToZ &gt; CopyAux nodes are used to generate a disparity based z-depth channel for the left and right camera views in each fisheye stereo pair. The output is a set of left and right views that have RGBA, and Z-Depth data.</p>
+<p>The depthmap data is merged using a series of ChannelBoolean nodes set to use the Minimum transfer mode which will layer the images so the darkest pixels from the foregound or background input are the elements that are kept when the views are blended together.</p>
+<p>The color images are combined using a series of Merge nodes.</p>
+<p>To create a high quality stitch the color and depth images have a tripod patching job applied. This paint work is done on a Horizontal Cross cubic image layout.</p>
+<p>Finally the footage is stacked into an equirectangular projection based Over/Under frame layout. The color imagery is placed on the top of the frame, and the depth data placed on the bottom of the frame. This frame layout is called &quot;Z360 Stereo&quot; to refer to a z-depth based stereo 360° VR image.</p>
+<p>The output from this composite is: a over/under color + depth based z360 image, and an over/under stereo 3D left and right view image generated by the &quot;Z360Stereo&quot; node.</p>
+<p>For convenience there is also an anaglpyh preview created using the KartaVR provided &quot;StereoAnaglyphOU&quot; node which can be viewed in a stereo using a 360° media player like GoPro VR Player with red/cyan based anaglyph 3D glasses on.</p>
+<p>The 360VRDolly node can be used to create post-produced omni-directional stereo 3D compatible XYZ translation and rotation effects.</p>
+<p>The example footage was filmed on a Sony A7Sii camera by <a href="http://www.andrewhazelden.com/blog/">Andrew Hazelden</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-2x3-Grid.jpg" alt="Sony A7SIi Camera Views" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/West-Dover-Forest-Z360-Disparity-Depth-Stitch.png" alt="West Dover Forest Z360 Disparity Depth Stitch" /></p>
+<h2><a name="tiny-planet-uv-pass-warp"></a> Tiny Planet UV Pass Warp</h2>
+<p><img src="images/Tiny-Planet-UV-Pass-Warp.jpg" alt="Tiny Planet UV Pass Warp" /></p>
+<p>This Fusion example project shows an approach for creating &quot;Tiny Planet&quot; style <a href="https://en.wikipedia.org/wiki/Stereographic_projection">stereographic</a> projection imagery. The project starts with an equirectangular image that is loaded into a PTGui Pro .pts file that has the stereographic output projection enabled.</p>
+<p>This .pts file is converted into a UV pass warping map using the <strong>Scripts &gt; Stitching &gt; Generate UV Pass in PTGui</strong> menu item in Fusion.</p>
+<p>In the script the Projection is set to &quot;Stereographic&quot;. The UV Pass Width is set to 3840, and the UV Pass Height is set to 1920. The Over Sample UV Pass Map checkbox is enabled. Pressing the <strong>OK</strong> button will start the process of generating the UV pass warping map image which is saved to the same &quot;Comp:/&quot; path map folder on disk as the current Fusion compositing file.</p>
+<p>You will need to load the new stereographic projection warping map image named <code>Stereographic Night_uvpass_0001.0000.tif</code> into the comp. The UV pass warping map is connected to the &quot;UV Pass&quot; input on a &quot;<a href="http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide.html#UVPassFromRGBImage">UVPassFromRGBImage</a>&quot; macro node.</p>
+<p>The original equirectangular format imagery is loaded into the &quot;image&quot; input on the &quot;UVPassFromRGBImage&quot; macro. You can animate the placement of the tiny planet effect by adjusting the U Offset control on the &quot;UVPassFromRGBImage&quot; macro node and the Tiny Planet view will rotate.</p>
+<p>The composite then applies a vignetting effect to the tiny planet image, and crops the output to the final frame size.</p>
+<p>The example footage was filmed on a Sony A7Sii camera by <a href="http://www.andrewhazelden.com/blog/">Andrew Hazelden</a>.</p>
+<h3>Source Footage</h3>
+<p><img src="images/Tiny-Planet-UV-Pass-Warp-Equirectangular-View.jpg" alt="Tiny Planet UV Pass Warp Footage" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Tiny-Planet-UV-Pass-Warp-Node.png" alt="Tiny Planet UV Pass Warp Node" /></p>
+<h1><a name="stereo"></a>Stereo Example Projects</h1>
+<h2><a name="creating-stereo-video-based-disparity-depthmaps"></a>Creating Stereo Video Based Disparity Depthmaps</h2>
+<p><img src="images/creating-stereo-video-based-disparity-depthmaps-views.jpg" alt="Creating Stereo Video Based Disparity Depthmaps Project" /></p>
+<p>This example composite shows how Fusion Studio can be used to create a greyscale depthmap using a disparity mapping approach. The source footage is a pair of left and right camera views filmed on a pair of syncronised Yi 4K action cameras at 2560x1920px resolution.</p>
+<p>The left and right views are loaded into Fusion using a pair of Loader nodes.</p>
+<p>A &quot;Combiner&quot; node is used to merge the left and right camera views in to a side by side stereo video clip.</p>
+<p>Then the &quot;Disparity&quot; node generates the Disparity X/Y channels.</p>
+<p>The &quot;DisparityToZ&quot; node converts the Disparity X/Y channels into a Z-Depth channel.</p>
+<p>The side by side video is then cropped down to just the left camera view using a Crop node. An expression is used to set the image size on the Crop node where the X Size value is set to the width of the Loader1 node, and the Y Size value is set to the height of the Loader1 node.</p>
+<p>A &quot;CopyAux&quot; node is used to remap the Z-Depth distance range so it is placed in the RGB color channel and fits exactly inside of a 0-1 color range.</p>
+<p>The greyscale depthmap output is then rendered to a TIFF image sequence with LZW compression.</p>
+<h3>Fusion Node View</h3>
+<p><img src="images/creating-stereo-video-based-disparity-depthmaps-node.jpg" alt="Creating Stereo Video Based Disparity Depthmaps Node" /></p>
+<h1><a name="photogrammetry"></a>Photogrammetry</h1>
+<h2><a name="photogrammetry-giraffe"></a>Photogrammetry Giraffe</h2>
+<p><img src="images/photogrammetry-giraffe.png" alt="Photogrammetry Giraffe Project" /></p>
+<p>This example loads a fully processed photogrammetry model of a wooden giraffe carving into the Fusion comp and renders it out into Equirectangular 2D mono, and Equirectangular Over/Under stereo 3D animations. Photogrammetry based mesh data data renders quickly and efficiently in Fusion and works with the Fusion Renderer3D node's &quot;software renderer&quot; and the &quot;OpenGL renderer&quot; modes.</p>
+<p>Having access to a live Oculus Rift based HMD output from Fusion + KartaVR makes it quite enjoyable to load in and explore these types of high resolution assets inside of Fusion's 3D workspace.</p>
+<p>The source polygon model data that was used to make this demo was created in AGI Photoscan from a series of photographs of a wooden giraffe carving that was rotated on a turntable with a greenscreen background. This specific Fusion based &quot;Photogrammetry Giraffe&quot; example project is focusing on the task of rendering a finished photogrammetry model data in Fusion since using 3rd party tools like AGI Photoscan is outside of the scope of the KartaVR examples page.</p>
+<p><img src="images/photogrammetry-giraffe-greenscreen.jpg" alt="Greenscreen Turntable" /></p>
+<p>For this example project the Fusion comp starts by loading in a <code>giraffe.jpg</code> texture map, and a <code>giraffe.obj</code> polygon mesh.</p>
+<p>The model is rotated slowly by applying an expression to the <strong>FBXMesh3D</strong> node's Y Rotation axis. The expression <code>(time * 2) + 180</code> was used so the <code>time</code> based frame count variable from Fusion's timeline drives the rotation motion. A value of 180 was added to the end of the expression so the starting viewing angle on frame 0 of the project would have the model positioned with an initial rotation of 180° which causes the model to face the camera.</p>
+<p>Next a <strong>Transform3D</strong> node was used to position the giraffe model in the scene moved back from the origin. This meant the multiple cameras added to the scene wouldn't have to be animated or adjusted.</p>
+<p>Finally, a series of renderer3D node based panoramic cameras from KartaVR were used to render the photogrammetry model into various output formats. There is a version of the new OculusDK1StereoRenderer3D, and OculusDK1StereoRenderer3D nodes present in the example comp, along with the standard EquirectanglarRenderer3D node.</p>
+<h3>Fusion Node View</h3>
+<p><img src="images/photogrammetry-giraffe-nodes.png" alt="Photogrammetry Giraffe Node" /></p>
+<h3>Rendered Movie</h3>
+<p>Here is a link to a short YouTube 360 video rendering from the over/under stereo equirectangular output created by the giraffe example:</p>
+<p><a href="https://www.youtube.com/watch?v=kyYWeY-fYu4">Giraffe Photogrammetry YT360</a></p>
+<p><a href="https://www.youtube.com/watch?v=kyYWeY-fYu4"><img src="images/photogrammetry-giraffe-youtube.png" alt="Giraffe Photogrammetry YT360" /></a></p>
+<h2><a name="photogrammetry-greenscreen-keying"></a>Photogrammetry Greenscreen Keying</h2>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-Footage-vs-Keyed.jpg" alt="Photogrammetry Greenscreen Keying Project" /></p>
+<p>There is a <a href="https://www.youtube.com/watch?v=7t0w1Y3tRb8">KartaVR Send to Photoscan Script</a> video tutorial that accompanies this project.</p>
+<p>The <code>Photogrammetry Greenscreen Keying.comp</code> example pulls a basic greenscreen key using Fusion's Primatte node. The object in the video clip is a wooden mask that is rotated slowly on a turntable. The final keyed output from this composite will be used as part of a photogrammetry workflow in AGI Photoscan.</p>
+<p>The primatte node is used to generate an alpha mask that is combined with the original footage using a ChannelBoolean node set to copy the AlphaFG data. Then an AlphaMultiply node is used to pre-multiply the transparent areas in the image. Finally a WhiteBalance and ColorCorrector are used to adjust the lighting in the keyed image.</p>
+<p>The footage is saved to disk as a TIFF image sequence at 8 bits per channel with LZW compression. The Save Alpha option enabled in the Saver node so AGI Photoscan will be able to use the transparent background information from the footage as a geometry mask when a photogramemtry based polygon mesh is generated.</p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-Nodes.png" alt="Photogrammetry Greenscreen Keying Node" /></p>
+<h3>Send to Photoscan Script</h3>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-Send-Media-to-Photoscan-Script.png" alt="Send Media to Photoscan" /></p>
+<p>Next the Primatte keyed footage was then pushed into an AGI Photoscan .psx project file by selecting the saver node footage in the flow area and then running the new <strong>Send to Photoscan</strong> tool that can be run using the <strong>Script &gt; KartaVR &gt; Photogrammetry &gt; Send Media to Photoscan</strong> menu item.</p>
+<p>In the Send Media to PhotoScan script Gui the Layer Order is set to &quot;Folder + Filename&quot;. The View Chunks option is set to &quot;All Media in One Chunk&quot;.</p>
+<p>The Image Width and Height is set automatically based upon your Fusion flow are selected loader/saver node's resolution.</p>
+<p>The <strong>Use Alpha Masks</strong> checkbox was enabled so a matching alpha channel image was generated automatically for each of the photos added to the AGI Photoscan project file.</p>
+<p>Finally the &quot;OK&quot; button was clicked.</p>
+<p>The Send Media to Photoscan script then saved out a project file called <code>Photogrammetry Greenscreen Keying.psx</code>.</p>
+<p>Since the &quot;Open Output Folder&quot; checkbox was active the new .psx format project file was displayed in a new desktop file browser window. This .psx project was double clicked on and opened up in a new AGI Photoscan session.</p>
+<p>Using AGI Photoscan the greenscreen keyed turntable photos were aligned, a dense point cloud was calculated from the views, a mesh was created, and then a final texture map was generated. With the photogrammetry process complete AGI Photoscan was used to exported an OBJ format polygon mesh and a texture map for the mask.</p>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-AGI-Photoscan.jpg" alt="AGI Photoscan" /></p>
+<h3>Loading the AGI Photoscan Mesh</h3>
+<p>The <code>Loading the Mask Mesh.comp</code> composite loads in the AGI Photoscan generated &quot;Mask.obj&quot; polygon mesh and applies the &quot;Mask.obj&quot; texture map.  If you load the &quot;FBXMesh3D1&quot; node into Fusion's viewer window you can explore the 3D model inside of Fusion's 3D workspace.</p>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-Mesh.jpg" alt="Loading the Mesh" /></p>
+<h3>Fusion Node View</h3>
+<p><img src="images/Photogrammetry-Greenscreen-Keying-Mesh-Nodes.png" alt="Photogrammetry Greenscreen Keying Node" /></p>
+</body>
+</html>

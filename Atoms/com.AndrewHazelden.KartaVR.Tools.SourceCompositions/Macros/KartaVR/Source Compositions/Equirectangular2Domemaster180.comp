@@ -1,0 +1,462 @@
+Composition {
+	CurrentTime = 30,
+	RenderRange = { 0, 143 },
+	GlobalRange = { 0, 143 },
+	CurrentID = 299,
+	HiQ = true,
+	Version = "Fusion 8.0 build 23",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	AutoRenderRange = true,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1_1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:\\KartaVR\\Images\\latlong_wide_ar.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 220, 148.5 } },
+		},
+		ViewRotate = Transform {
+			NameSet = true,
+			Inputs = {
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "OrientView",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 148.5 } },
+		},
+		OrientView = Transform {
+			NameSet = true,
+			Inputs = {
+				UseSizeAndAspect = Input { Value = 0, },
+				Angle = Input { Value = -90, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "PolarConversion2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+		},
+		InputScaling = BetterResize {
+			NameSet = true,
+			Inputs = {
+				Width = Input {
+					Value = 4096,
+					Expression = "Height*2",
+				},
+				Height = Input { Value = 2048, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "Loader1_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+		},
+		DomemasterScale = Transform {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Center = Input {
+					Value = { 0.5, 0.185 },
+					Expression = "Point(0.5, (2-YSize)/2)",
+				},
+				UseSizeAndAspect = Input { Value = 0, },
+				YSize = Input { Value = 2, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "ScaleSquareAspectRatio",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 148.5 } },
+		},
+		Rotate180 = Transform {
+			NameSet = true,
+			Inputs = {
+				Angle = Input { Value = 180, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "DomemasterCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 825, 148.5 } },
+		},
+		DomemasterCrop = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 4096,
+					Expression = "InputScaling.Width",
+				},
+				YSize = Input {
+					Value = 4096,
+					Expression = "InputScaling.Width",
+				},
+				Input = Input {
+					SourceOp = "DomemasterScale",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 714.364, 148.5 } },
+		},
+		PolarConversion2 = CoordSpace {
+			NameSet = true,
+			Inputs = {
+				Shape = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "LatLongReposition2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1045, 148.5 } },
+		},
+		LatLongReposition2 = Transform {
+			NameSet = true,
+			CurrentSettings = 2,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							LatLongReposition2 = Transform {
+								Inputs = {
+									YSize = Input { Value = 0.7 },
+									Center = Input { Value = { 0.5, 0.3571 } },
+									UseSizeAndAspect = Input { Value = 0 },
+									Input = Input {
+										SourceOp = "Resize2kx2k2",
+										Source = "Output"
+									},
+									XSize = Input { Value = 1 },
+									FlipHoriz = Input { Value = 1 },
+									Size = Input { Value = 0.75 }
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							LatLongReposition2 = Transform {
+								Inputs = {
+									YSize = Input { Value = 0.7 },
+									Center = Input { Value = { 0.5, 0.3571 } },
+									UseSizeAndAspect = Input { Value = 0 },
+									Input = Input {
+										SourceOp = "Resize2kx2k2",
+										Source = "Output"
+									},
+									XSize = Input { Value = 1 },
+									FlipHoriz = Input { Value = 1 },
+									Size = Input { Value = 0.75 }
+								},
+								Name = "LatLongReposition2",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+				}
+			},
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				Center = Input { Value = { 0.5, 0.3535 }, },
+				UseSizeAndAspect = Input { Value = 0, },
+				Size = Input { Value = 0.75, },
+				XSize = Input { Value = 1.001, },
+				YSize = Input { Value = 0.707, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "Rotate180",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 935, 148.5 } },
+		},
+		ScaleSquareAspectRatio = BetterResize {
+			NameSet = true,
+			Inputs = {
+				Width = Input {
+					Value = 4096,
+					Expression = "InputScaling.Width",
+				},
+				Height = Input {
+					Value = 4096,
+					Expression = "InputScaling.Width",
+				},
+				PixelAspect = Input { Value = { 1, 1 }, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "InputScaling",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 495, 148.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1358,
+			Height = 876,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							ForceSource = true,
+							ForceMask = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.60228,
+						Offset = { -278.672, 12.4898 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 391 },
+							ScaleX = 0.306627680311891,
+							OffsetX = -7.05243664717349,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -3.8,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = true,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.764227642276423,
+					RatioY = 109.25057208238,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.706221198156682,
+						{ ID = "Left", RatioX = 1, RatioY = 0.0114192495921697, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.226958525345622, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 317,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Auto = false
+				},
+				SelectiveUpdate = 0
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						One2One = false,
+						ScaleMode = 1,
+						Channel = 4294967295
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							ScaleMode = 1,
+							NearZ = 0,
+							LUTPlugin = "FusionViewLUT",
+							Channel = 4294967295,
+							FitMarginY = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginX = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+						Channel = 4294967295,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			FrameFormat = {
+				Name = "2K Full Aperture (Super 35)",
+				Width = 2048,
+				Height = 1556,
+				Rate = 24,
+				PerFeet = 16,
+				GuideRatio = 1.31619537275064,
+			},
+			LastFile = "Macros:\\KartaVR\\Images\\angular360.jpg",
+			Unsorted = {
+				GlobalEnd = 143
+			},
+			AVI = {
+				Preview = {
+					Handler = 4294967295,
+				},
+			},
+			SplineEditor = {
+				AutoSnap = {
+					Keys = 18,
+				},
+			},
+			Paths = {
+			},
+			FlowView = {
+				ForceActive = true,
+				ForceSource = true,
+				ForceMask = true,
+				ForceAll = true,
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

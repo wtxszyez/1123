@@ -1,0 +1,433 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0, },
+	GlobalRange = { 0, 0, },
+	CurrentID = 19,
+	Version = "Fusion 7.7 build 0",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Temp:\\UVGradientMap.0.exr",
+	},
+	Tools = {
+		RedGradBackground = Background {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 0, },
+				Width = Input { Value = 2048, },
+				Height = Input { Value = 1024, },
+				Depth = Input { Value = 3, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+				Type = Input { Value = FuID { "Horizontal", }, },
+				TopLeftRed = Input { Value = 1, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1, },
+							[1] = { 1, 1, 1, 1, },
+						},
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 266.256, -88.9, }, },
+		},
+		GreenGradBackground = Background {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 0, },
+				Width = Input {
+					Value = 2048,
+					Expression = "RedGradBackground.Width",
+				},
+				Height = Input {
+					Value = 1024,
+					Expression = "RedGradBackground.Height",
+				},
+				Depth = Input {
+					Value = 3,
+					Expression = "RedGradBackground.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+				Type = Input { Value = FuID { "Vertical", }, },
+				TopLeftGreen = Input { Value = 1, },
+				TopRightGreen = Input { Value = 1, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1, },
+							[1] = { 1, 1, 1, 1, },
+						},
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 172.296, -88.589, }, },
+		},
+		UVGradientMerge = Merge {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "RedGradBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "GreenGradBackground",
+					Source = "Output",
+				},
+				ApplyMode = Input { Value = FuID { "Screen", }, },
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 221, -34.5, }, },
+		},
+		GradientFlipTransform = Transform {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "UVGradientMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 221, 11, }, },
+		},
+		Saver1 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:\\UVGradientMap.0.exr",
+						FormatID = "OpenEXRFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0,
+					},
+				},
+				OutputFormat = Input { Value = FuID { "OpenEXRFormat", }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+				Input = Input {
+					SourceOp = "GradientFlipTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 220.515, 53.743, }, },
+		},
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 50,
+			Top = 50,
+			Width = 1620,
+			Height = 652,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView",
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true,
+						},
+						NavigatorSize = { 100, 100, },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 2,
+						Offset = { 80.4852, 107.257, },
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 130, Bottom = 431, },
+							ScaleX = 0.75187969924812,
+							OffsetX = -49.6240601503759,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = true,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none",
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false, },
+					},
+					Spline = SplineEditorView {
+						LeftPos = 225,
+						ScaleX = 0.2,
+						ScaleY = 0.00343642611683849,
+						OffsetX = -3.6,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = true,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All",
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView",
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.678328981723238,
+					RatioY = 0.0105263157894737,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.471398305084746,
+						{ ID = "Left", RatioX = 0.500771604938272, RatioY = 0.00898876404494382, Pop = true, },
+						{ ID = "Right", RatioX = 0.499228395061728, Pop = true, },
+						Pop = true,
+					},
+					{ ID = "Main", RatioY = 0.471398305084746, Pop = true, },
+					{ ID = "Time", SnapY = 52, Flat = true, },
+				},
+				{
+					Rows = 2,
+					PixelX = 614,
+					{ ID = "Controls", RatioX = 1, RatioY = 1, },
+					{ ID = "Transport", FixedY = -2, },
+				},
+			},
+		},
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 1,
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "Fuse.sRGB_VSFuse",
+						LUTSelected = "sRGB",
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								sRGB = ViewOperator {
+									NameSet = true,
+								},
+							},
+							ID = "Fuse.sRGB_VSFuse",
+						},
+						SelectedPlugin = "Fuse.sRGB_VSFuse",
+						SelectedName = "sRGB",
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						ViewLUT = {
+							{
+								Tools = ordered() {
+									sRGB2 = ViewOperator {
+										NameSet = true,
+									},
+								},
+								ID = "Fuse.sRGB_VSFuse",
+							},
+							SelectedPlugin = "Fuse.sRGB_VSFuse",
+							SelectedName = "sRGB",
+						},
+						PickH = 1,
+						Viewer = {
+							EnableLUTs = true,
+							LUTSelected = "sRGB",
+							ScaleMode = 0,
+							NearZ = 0,
+							LUTPlugin = "Fuse.sRGB_VSFuse",
+							FitMarginY = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginX = 0,
+						},
+						PrevCtrlActiveColor = 255,
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 0,
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 0,
+					},
+				},
+				Left = {
+					Viewer = {
+						EnableLUTs = true,
+						LUTPlugin = "Fuse.sRGB_VSFuse",
+						ScaleMode = 1,
+						LUTSelected = "sRGB",
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								sRGB_1 = ViewOperator {
+									NameSet = true,
+								},
+							},
+							ID = "Fuse.sRGB_VSFuse",
+						},
+						SelectedPlugin = "Fuse.sRGB_VSFuse",
+						SelectedName = "sRGB",
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						ViewLUT = {
+							{
+								Tools = ordered() {
+									sRGB3 = ViewOperator {
+										NameSet = true,
+									},
+								},
+								ID = "Fuse.sRGB_VSFuse",
+							},
+							SelectedPlugin = "Fuse.sRGB_VSFuse",
+							SelectedName = "sRGB",
+						},
+						PickH = 1,
+						Viewer = {
+							EnableLUTs = true,
+							LUTSelected = "sRGB",
+							ScaleMode = 0,
+							NearZ = 0,
+							LUTPlugin = "Fuse.sRGB_VSFuse",
+							FitMarginY = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginX = 0,
+						},
+						PrevCtrlActiveColor = 255,
+					},
+					Toolbar = {
+						Style = 0,
+						Size = 0,
+					},
+					OpToolbar = {
+						Style = 0,
+						Size = 0,
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0,
+						},
+					},
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.31619537275064,
+			},
+			LastFile = "Macros:\\KartaVR\\Source Compositions\\Demos\\Stereo Demos.comp",
+			Unsorted = {
+				GlobalEnd = 0,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							Quality = true,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "all",
+							ShowSlaves = false,
+						},
+						Preview = {
+							Quality = false,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							SizeType = 1,
+							CustomWidth = 200,
+							CustomHeight = 160,
+							CustomAspect = true,
+							StepRender = false,
+							StepSize = 5,
+							PriorityClasses = "all",
+							ShowSlaves = false,
+						},
+					},
+					CurrentConfig = "Final",
+					PreviewConfig = "Preview",
+				},
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		},
+	},
+}
+
+ 

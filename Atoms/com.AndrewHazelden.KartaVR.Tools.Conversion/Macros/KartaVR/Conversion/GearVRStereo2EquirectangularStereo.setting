@@ -1,0 +1,643 @@
+{
+	Tools = ordered() {
+		GearVRStereo2EquirectangularStereo = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#GearVRStereo2EquirectangularStereo",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "LeftUVRenderer3D",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "LeftUVRenderer3D",
+					Source = "Depth",
+					Default = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "LeftCubeMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "LeftCubeMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "LeftCubeMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "LeftCubeMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "LeftUVRenderer3D",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "RightUVRenderer3D",
+					Source = "Output",
+					Name = "Right",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				PanoMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -122.403, 247.831 } },
+				},
+				CropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 9216,
+							Expression = "PanoMerge.Background.OriginalWidth/2",
+						},
+						XSize = Input {
+							Value = 9216,
+							Expression = "PanoMerge.Background.OriginalWidth/2",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 181.5 } },
+				},
+				LeftGearVRHorizontalStripInput = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 16.5 } },
+				},
+				LeftCamCropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 3072,
+							Expression = "LeftCamCropFront.YSize*2",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 49.5 } },
+				},
+				LeftCamCropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 181.5 } },
+				},
+				RightCamCropFront = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropFront",
+					Inputs = {
+						XOffset = Input {
+							Value = 7680,
+							Expression = "LeftCamCropFront.YSize*5"
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalHeight"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 606.17, 247.5 } },
+				},
+				LeftCamCropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 7680,
+							Expression = "LeftCamCropFront.YSize*5",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -148.5 } },
+				},
+				CropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 9216,
+							Expression = "PanoMerge.Background.OriginalWidth/2",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 313.5 } },
+				},
+				LeftCamCropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 4608,
+							Expression = "LeftCamCropFront.YSize*3",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -82.5 } },
+				},
+				LeftCamCropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 6144,
+							Expression = "LeftCamCropFront.YSize*4",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -16.5 } },
+				},
+				RightCamCropBottom = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropBottom",
+					Inputs = {
+						XOffset = Input {
+							Value = 4608,
+							Expression = "LeftCamCropFront.YSize*3"
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 313.5 } },
+				},
+				LeftCamCropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "LeftGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 115.5 } },
+				},
+				RightCamTransformBottom = Transform {
+					NameSet = true,
+					SourceOp = "LeftCamTransformBottom",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamCropBottom",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 313.5 } },
+				},
+				RightCamCropBack = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropBack",
+					Inputs = {
+						XOffset = Input {
+							Value = 6144,
+							Expression = "LeftCamCropFront.YSize*4"
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 379.5 } },
+				},
+				Instance_RightGearVRHorizontalStripInput = Merge {
+					NameSet = true,
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Inputs = {
+						Background = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+						Foreground = Input { },
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 412.5 } },
+				},
+				LeftCamTransformTop = Transform {
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "LeftCamCropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 49.5 } },
+				},
+				LeftCamTransformBottom = Transform {
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "LeftCamCropBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, -82.5 } },
+				},
+				RightCamCropTop = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropTop",
+					Inputs = {
+						XOffset = Input {
+							Value = 3072,
+							Expression = "LeftCamCropFront.YSize*2"
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 445.5 } },
+				},
+				RightCamTransformTop = Transform {
+					NameSet = true,
+					SourceOp = "LeftCamTransformTop",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamCropTop",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 445.5 } },
+				},
+				LeftCubeMap = CubeMap {
+					NameSet = true,
+					Inputs = {
+						Orientation = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Left = Input {
+							SourceOp = "LeftCamCropLeft",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "LeftCamCropRight",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "LeftCamTransformTop",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "LeftCamTransformBottom",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "LeftCamCropFront",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "LeftCamCropBack",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, -16.5 } },
+				},
+				RightCamCropLeft = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropLeft",
+					Inputs = {
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 511.5 } },
+				},
+				RightCubeMap = CubeMap {
+					NameSet = true,
+					Inputs = {
+						Orientation = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Expression = "LeftCubeMap.Rotate.RotOrder", },
+						["Rotate.X"] = Input { Expression = "LeftCubeMap.Rotate.X", },
+						["Rotate.Y"] = Input { Expression = "LeftCubeMap.Rotate.Y", },
+						["Rotate.Z"] = Input { Expression = "LeftCubeMap.Rotate.Z", },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Left = Input {
+							SourceOp = "RightCamCropLeft",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "RightCamCropRight",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "RightCamTransformTop",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "RightCamTransformBottom",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "RightCamCropFront",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "RightCamCropBack",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1114.74, 411.333 } },
+				},
+				LeftShape3D = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = -90, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "LeftCubeMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 1000, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, -16.5 } },
+				},
+				RightShape3D = Shape3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = -90, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "RightCubeMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 1000, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1224.74, 411.333 } },
+				},
+				LeftUVRenderer3D = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 2048,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "LeftShape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1320, -16.5 } },
+				},
+				RightCamCropRight = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCropRight",
+					Inputs = {
+						XOffset = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "LeftCamCropFront.YSize"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_RightGearVRHorizontalStripInput",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 577.5 } },
+				},
+				RightUVRenderer3D = Renderer3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 2048,
+							Expression = "LeftUVRenderer3D.Height*2",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftUVRenderer3D.Height",
+						},
+						Depth = Input {
+							Value = 1,
+							Expression = "LeftUVRenderer3D.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "RightShape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1334.74, 411.333 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "GearVRStereo2EquirectangularStereo"
+}

@@ -1,0 +1,2492 @@
+{
+	Tools = ordered() {
+		LookingGlassRenderer3D = GroupOperator {
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com",
+			},
+			Inputs = ordered() {
+				SceneInput2 = InstanceInput {
+					SourceOp = "SceneMerge3D",
+					Source = "SceneInput2",
+				},
+				Height = InstanceInput {
+					SourceOp = "Renderer3DArrayView3",
+					Source = "Height",
+					Name = "Image Height",
+					MinScale = 32,
+					MaxScale = 2048,
+					Default = 960,
+				},
+				Depth = InstanceInput {
+					SourceOp = "Renderer3DArrayView3",
+					Source = "Depth",
+					Name = "Bit Depth",
+					Default = 3,
+				},
+				StereoViewOffset = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "StereoViewOffset",
+					Name = "Interaxial Cam Separation",
+					MinScale = 0.0065,
+					Page = "Controls",
+					Default = 0.065,
+				},
+				View1XOffset = InstanceInput {
+					SourceOp = "CropArrayView1",
+					Source = "XOffset",
+					Name = "View 1 X Offset",
+					Default = 85,
+				},
+				View16XOffset = InstanceInput {
+					SourceOp = "CropArrayView16",
+					Source = "XOffset",
+					Name = "View 16 X Offset",
+					Default = -95,
+				},
+				BGColor = InstanceInput {
+					SourceOp = "QuiltBackground",
+					Source = "TopLeftRed",
+					Name = "Background Color",
+					ControlGroup = 58,
+					Default = 0,
+				},
+				Green = InstanceInput {
+					SourceOp = "QuiltBackground",
+					Source = "TopLeftGreen",
+					ControlGroup = 58,
+					Default = 0,
+				},
+				Blue = InstanceInput {
+					SourceOp = "QuiltBackground",
+					Source = "TopLeftBlue",
+					ControlGroup = 58,
+					Default = 0.4,
+				},
+				Alpha = InstanceInput {
+					SourceOp = "QuiltBackground",
+					Source = "TopLeftAlpha",
+					ControlGroup = 58,
+					Default = 0.25,
+				},
+				ProjectionType = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "ProjectionType",
+				},
+				PerspNearClip = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspNearClip",
+					ControlGroup = 41,
+					Default = 0.1,
+				},
+				PerspFarClip = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspFarClip",
+					ControlGroup = 41,
+					Default = 1000,
+				},
+				PerspAdaptiveClip = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspAdaptiveClip",
+					Default = 1,
+				},
+				AovType = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "AovType",
+					Default = 0,
+				},
+				AoV = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "AoV",
+					Default = 90,
+				},
+				FLength = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				PlaneOfFocus = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PlaneOfFocus",
+					Default = 4,
+				},
+				ShowViewControls = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "ShowViewControls",
+					Default = 1,
+				},
+				FrustumVis = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "FrustumVis",
+					Default = 1,
+				},
+				ViewVectorVis = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "ViewVectorVis",
+					Default = 1,
+				},
+				PerspNearClipVis = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspNearClipVis",
+					Default = 0,
+				},
+				PerspNearClipSub = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspNearClipSub",
+					Default = 1,
+				},
+				PerspFarClipVis = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspFarClipVis",
+					Default = 1,
+				},
+				PerspFarClipSub = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PerspFarClipSub",
+					Default = 1,
+				},
+				PlaneOfFocusVis = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PlaneOfFocusVis",
+					Default = 0,
+				},
+				PlaneOfFocusSub = InstanceInput {
+					SourceOp = "Camera3DArrayView1",
+					Source = "PlaneOfFocusSub",
+					Default = 1,
+				},
+				TranslateX = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Translate.X",
+					Default = -0.07,
+				},
+				TranslateY = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Translate.Y",
+					Default = 0.08,
+				},
+				TranslateZ = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Translate.Z",
+					MinScale = -2,
+					MaxScale = 2,
+					Default = 1.36,
+				},
+				RotOrder = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				RotateX = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Rotate.X",
+					Default = 0,
+				},
+				RotateY = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Rotate.Y",
+					Default = 0,
+				},
+				RotateZ = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Rotate.Z",
+					Default = 0,
+				},
+				PivotX = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Pivot.X",
+					Default = 0,
+				},
+				PivotY = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Pivot.Y",
+					Default = 0,
+				},
+				PivotZ = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Pivot.Z",
+					Default = 0,
+				},
+				ScaleLock = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.ScaleLock",
+					Default = 1,
+				},
+				ScaleX = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Scale.X",
+					Name = "Scale",
+					Default = 1,
+				},
+				ScaleY = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Scale.Y",
+					Name = "",
+					Default = 1,
+				},
+				ScaleZ = InstanceInput {
+					SourceOp = "ArrayTransform3D",
+					Source = "Transform3DOp.Scale.Z",
+					Name = "",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "MergeView16",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 494.289, 82.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 896, 625.3, 448, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				MergeView16 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView15",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView16",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.875, 0.875 },
+							Expression = "Point((1/8)*7, (1/8)*7)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 577.5 } },
+				},
+				MergeView15 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView14",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView15",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*5, (1/8)*7)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 544.5 } },
+				},
+				MergeView14 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView13",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView14",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*3, (1/8)*7)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 511.5 } },
+				},
+				MergeView13 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView12",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView13",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*1, (1/8)*7)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 478.5 } },
+				},
+				MergeView12 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView11",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView12",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*7, (1/8)*5)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 445.5 } },
+				},
+				MergeView11 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView10",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView11",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*5, (1/8)*5)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 412.5 } },
+				},
+				MergeView10 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView9",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView10",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*3, (1/8)*5)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 379.5 } },
+				},
+				MergeView9 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView8",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView9",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*1, (1/8)*5)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 346.5 } },
+				},
+				CropArrayView10 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -23,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*9"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView10",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 379.5 } },
+				},
+				CropArrayView16 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input { Value = -95, },
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView16",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 577.5 } },
+				},
+				CropArrayView15 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -83,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*14"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView15",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 544.5 } },
+				},
+				CropArrayView14 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -71,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*13"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView14",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 511.5 } },
+				},
+				CropArrayView13 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -59,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*12"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView13",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 478.5 } },
+				},
+				CropArrayView12 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -47,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*11"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView12",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 445.5 } },
+				},
+				CropArrayView11 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -35,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*10"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView11",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 412.5 } },
+				},
+				CropArrayView9 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = -11,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*8"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView9",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 346.5 } },
+				},
+				MergeView8 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView7",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView8",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*7, (1/8)*3)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 313.5 } },
+				},
+				CropArrayView8 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 1,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*7"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView8",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 313.5 } },
+				},
+				MergeView7 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView6",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView7",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*5, (1/8)*3)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 280.5 } },
+				},
+				CropArrayView7 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 13,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*6"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView7",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 280.5 } },
+				},
+				MergeView6 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView5",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView6",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*3, (1/8)*3)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 247.5 } },
+				},
+				CropArrayView6 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 25,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*5"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView6",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 247.5 } },
+				},
+				Renderer3DArrayView15 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView15" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 544.5 } },
+				},
+				Renderer3DArrayView16 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView16" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 577.5 } },
+				},
+				Renderer3DArrayView7 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView7" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 280.5 } },
+				},
+				Renderer3DArrayView8 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView8" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 313.5 } },
+					Colors = { TileColor = { R = 0.364705882352941, G = 0.592156862745098, B = 0.184313725490196 }, }
+				},
+				Renderer3DArrayView9 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView9" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 346.5 } },
+				},
+				Renderer3DArrayView12 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView12" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 445.5 } },
+				},
+				Renderer3DArrayView6 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView6" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 247.5 } },
+				},
+				Renderer3DArrayView10 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView10" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 379.5 } },
+				},
+				Renderer3DArrayView13 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView13" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 478.5 } },
+				},
+				Renderer3DArrayView11 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView11" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 412.5 } },
+				},
+				Renderer3DArrayView14 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView14" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 511.5 } },
+				},
+				CropArrayView5 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 37,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*4"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView5",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 214.5 } },
+				},
+				Renderer3DArrayView5 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView5" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 214.5 } },
+				},
+				MergeView5 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView4",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView5",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.125, 0.125 },
+							Expression = "Point((1/8)*1, (1/8)*3)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 214.5 } },
+				},
+				Renderer3DArrayView4 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView4" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 181.5 } },
+				},
+				MergeView4 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView4",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.125, 0.125 },
+							Expression = "Point((1/8)*7, (1/8)*1)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 181.5 } },
+				},
+				CropArrayView4 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 49,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*3"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView4",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 181.5 } },
+				},
+				MergeView3 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView3",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.125, 0.125 },
+							Expression = "Point((1/8)*5, (1/8)*1)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+				},
+				CropArrayView3 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 61,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*2"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView3",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+				},
+				Renderer3DArrayView3 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView3" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+				},
+				CropArrayView2 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "CropArrayView1",
+					Inputs = {
+						XOffset = Input {
+							Value = 73,
+							Expression = "CropArrayView1.XOffset-(CropArrayView1.XOffset-CropArrayView16.XOffset)/15*1"
+						},
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Renderer3DArrayView2",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 115.5 } },
+				},
+				Renderer3DArrayView2 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "Renderer3DArrayView1",
+					Inputs = {
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView2" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
+						["RendererSoftware.Lighting"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 115.5 } },
+				},
+				MergeView2 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "MergeView1",
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeView1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView2",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.126884422110553, 0.125628140703522 },
+							Expression = "Point((1/8)*3, (1/8)*1)"
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 115.5 } },
+				},
+				MergeView1 = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "QuiltBackground",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CropArrayView1",
+							Source = "Output",
+						},
+						Center = Input {
+							Value = { 0.125, 0.125 },
+							Expression = "Point((1/8)*1, (1/8)*1)",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 82.5 } },
+				},
+				CropArrayView1 = Crop {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Value = 85, },
+						XSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height",
+						},
+						YSize = Input {
+							Value = 540,
+							Expression = "Renderer3DArrayView1.Height",
+						},
+						Input = Input {
+							SourceOp = "Renderer3DArrayView1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 82.5 } },
+				},
+				Renderer3DArrayView1 = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						["RendererSoftware.ShadowsEnabled"] = Input { Value = 1, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						["RendererSoftware.Channels.Z"] = Input { Value = 1, },
+						GlobalIn = Input { Value = 1, },
+						GlobalOut = Input { Value = 2, },
+						Width = Input {
+							Value = 720,
+							Expression = "Height*1.333",
+						},
+						Height = Input { Value = 540, },
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "SceneMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DArrayView1" }, },
+						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						["RendererOpenGL.Channels.Z"] = Input { Value = 1, },
+						["RendererOpenGL.LightingEnabled"] = Input { Value = 1, },
+						["RendererOpenGL.ShadowsEnabled"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 82.5 } },
+				},
+				SceneMerge3D = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Value = -0.213511366492067, },
+						SceneInput1 = Input {
+							SourceOp = "ArrayTransform3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 82.5 } },
+				},
+				ArrayTransform3D = Transform3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "ArrayViewInput",
+							Source = "Output",
+						},
+						["Transform3DOp.Translate.X"] = Input { Value = -0.28, },
+						["Transform3DOp.Translate.Y"] = Input { Value = 0.5, },
+						["Transform3DOp.Translate.Z"] = Input { Value = 1.4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 82.5 } },
+				},
+				ArrayViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Value = 0.129154323033108, },
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "Camera3DArrayView1",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DArrayView2",
+							Source = "Output",
+						},
+						SceneInput10 = Input {
+							SourceOp = "Camera3DArrayView10",
+							Source = "Output",
+						},
+						SceneInput14 = Input {
+							SourceOp = "Camera3DArrayView14",
+							Source = "Output",
+						},
+						SceneInput9 = Input {
+							SourceOp = "Camera3DArrayView9",
+							Source = "Output",
+						},
+						SceneInput6 = Input {
+							SourceOp = "Camera3DArrayView6",
+							Source = "Output",
+						},
+						SceneInput5 = Input {
+							SourceOp = "Camera3DArrayView5",
+							Source = "Output",
+						},
+						SceneInput3 = Input {
+							SourceOp = "Camera3DArrayView3",
+							Source = "Output",
+						},
+						SceneInput13 = Input {
+							SourceOp = "Camera3DArrayView13",
+							Source = "Output",
+						},
+						SceneInput12 = Input {
+							SourceOp = "Camera3DArrayView12",
+							Source = "Output",
+						},
+						SceneInput15 = Input {
+							SourceOp = "Camera3DArrayView15",
+							Source = "Output",
+						},
+						SceneInput8 = Input {
+							SourceOp = "Camera3DArrayView8",
+							Source = "Output",
+						},
+						SceneInput16 = Input {
+							SourceOp = "Camera3DArrayView16",
+							Source = "Output",
+						},
+						SceneInput11 = Input {
+							SourceOp = "Camera3DArrayView11",
+							Source = "Output",
+						},
+						SceneInput7 = Input {
+							SourceOp = "Camera3DArrayView7",
+							Source = "Output",
+						},
+						SceneInput4 = Input {
+							SourceOp = "Camera3DArrayView4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 82.5 } },
+				},
+				Camera3DArrayView1 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.065,
+							Expression = "1*Camera3DArrayView1.StereoViewOffset",
+						},
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+						StereoViewOffset = Input { Value = 0.065, }
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 82.5 } },
+					UserControls = ordered() {
+						StereoViewOffset = {
+							INP_MaxAllowed = 6500,
+							INP_Integer = false,
+							INPID_InputControl = "ScrewControl",
+							INP_MaxScale = 6500,
+							INP_Default = 0.0649999976158142,
+							INP_MinScale = 0,
+							INP_MinAllowed = 0,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							ICD_Center = 0.0649999976158142,
+							LINKS_Name = "StereoViewOffset"
+						}
+					}
+				},
+				Camera3DArrayView2 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.13,
+							Expression = "2*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 115.5 } },
+				},
+				Camera3DArrayView15 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.975,
+							Expression = "15*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 544.5 } },
+				},
+				Camera3DArrayView14 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.91,
+							Expression = "14*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 511.5 } },
+				},
+				Camera3DArrayView12 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.78,
+							Expression = "12*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 445.5 } },
+				},
+				Camera3DArrayView3 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.195,
+							Expression = "3*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 148.5 } },
+				},
+				Camera3DArrayView13 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.845,
+							Expression = "13*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 478.5 } },
+				},
+				Camera3DArrayView5 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.325,
+							Expression = "5*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 214.5 } },
+				},
+				Camera3DArrayView16 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 1.04,
+							Expression = "16*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 577.5 } },
+				},
+				Camera3DArrayView7 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.455,
+							Expression = "7*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 280.5 } },
+				},
+				Camera3DArrayView11 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.715,
+							Expression = "11*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 412.5 } },
+				},
+				Camera3DArrayView4 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.26,
+							Expression = "4*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 181.5 } },
+				},
+				Camera3DArrayView8 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.52,
+							Expression = "8*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 313.5 } },
+				},
+				Camera3DArrayView10 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.65,
+							Expression = "10*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 379.5 } },
+				},
+				Camera3DArrayView9 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.585,
+							Expression = "9*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 346.5 } },
+				},
+				Camera3DArrayView6 = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "Camera3DArrayView1",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Translate.X"] = Input {
+							Value = 0.39,
+							Expression = "6*Camera3DArrayView1.StereoViewOffset"
+						},
+						["Transform3DOp.Translate.Y"] = Input { },
+						["Transform3DOp.Translate.Z"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 247.5 } },
+				},
+				QuiltBackground = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalIn = Input { Value = 1, },
+						GlobalOut = Input { Value = 2, },
+						Width = Input {
+							Value = 2160,
+							Expression = "Height",
+						},
+						Height = Input {
+							Value = 2160,
+							Expression = "Renderer3DArrayView1.Height*4",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftAlpha = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 16.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "LookingGlassRenderer3D"
+}

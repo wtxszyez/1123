@@ -1,0 +1,61 @@
+[CubicFaces2Domemaster180]
+
+  [Resize_Back]
+    Input=Back
+    Height=Input Height Default=512 Max=8192
+    
+    Width=Height
+
+  [Resize_Bottom] (Instance)
+    Input=Bottom
+  
+  [Resize_Front] (Instance)
+    Input=Front
+  
+  [Resize_Left] (Instance)
+    Input=Left
+
+  [Resize_Right] (Instance)
+    Input=Right
+  
+  [Resize_Top] (Instance)
+    Input=Top
+      
+  [CubeMapTop]  Allow X/Y roll only
+    X Rotation  Default=-90 Min-360 Max=360
+    Y Rotation  Default=180 Min-360 Max=360
+    Z Rotation  Default=0 Min-360 Max=360    (Unlinked/Not Exposed)
+  
+  
+  [Dome220Renderer3DTop]
+    Depth=Depth
+    
+    Height=Resize_Back.Height*1.15  (Pre-scaling to crop off fisheye at 180)
+
+
+  [CropTop]
+  
+    Keep Centered Default=1
+    Y Size=Resize_Back.Height
+    X Size=YSize
+  
+  [FisheyeMask]
+  
+    MaskHeight=Resize_Back.Height
+    MaskWidth=MaskHeight
+    Invert=1
+    Solid=1
+
+  [FisheyeMergeTop]
+    Output=Output
+    
+    Operator=XOr
+    Red=1
+    Green=1
+    Blue=1
+    Alpha=1
+  
+    Apply Mask Inverted=1
+    Multiply by Mask = 1
+  
+  

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>Viewer Macros</h1>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1Mono">ViewerOculusDK1Mono</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2Mono">ViewerOculusDK2Mono</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2Stereo">ViewerOculusDK2Stereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2StereoOU">ViewerOculusDK2StereoOU</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerCubicFaces">ViewerCubicFaces</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerCubicFacesStereo">ViewerCubicFacesStereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangular">ViewerEquirectangular</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangularStereo">ViewerEquirectangularStereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangularStereoOU">ViewerEquirectangularStereoOU</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerMesh">ViewerMesh</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerMeshStereo">ViewerMeshStereo</a></li>
+  </ul></td>
+</tr>
+</table>
+<h2><a name="ViewerOculusDK1Mono">ViewerOculusDK1Mono</a></h2>
+<p>This node allows you to use the Oculus Rift DK1 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular mono 2D imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk1-mono-gui.png" alt="ViewerOculusDK1Mono GUI" /></p>
+<h2><a name="ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a></h2>
+<p>This node allows you to use the Oculus Rift DK1 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular stereo 3D imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk1-stereo-gui.png" alt="ViewerOculusDK1StereoOU GUI" /></p>
+<h2><a name="ViewerOculusDK1StereoOU"></a>ViewerOculusDK1StereoOU</h2>
+<p>This node allows you to use the Oculus Rift DK1 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular stereo 3D over/under imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk1-stereo-ou-gui.png" alt="ViewerOculusDK2Mono GUI" /></p>
+<h2><a name="ViewerOculusDK2Mono">ViewerOculusDK2Mono</a></h2>
+<p>This node allows you to use the Oculus Rift DK2 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular mono 2D imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk2-mono-gui.png" alt="ViewerOculusDK2Mono GUI" /></p>
+<h2><a name="ViewerOculusDK2Stereo">ViewerOculusDK2Stereo</a></h2>
+<p>This node allows you to use th  Oculus Rift DK2 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based stereo equirectangular stereo 3D imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk2-stereo-gui.png" alt="ViewerOculusDK2Stereo GUI" /></p>
+<h2><a name="ViewerOculusDK2StereoOU">ViewerOculusDK2StereoOU</a></h2>
+<p>This node allows you to use the Oculus Rift DK2 HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based stereo equirectangular stereo 3D over/under imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Oculus Rift DK1 or DK2 HMD as a regular monitor on Mac/Windows/Linux.</p>
+<p>Check out the <a href="scripts.html#zoom-new-image-view">Zoom New Image View</a> script documentation for tips on how to display this node on an Oculus Rift DK1 or DK2 HMD using a floating Viewer Windows.</p>
+<p><img src="images/macro-viewer-oculus-dk2-stereo-ou-gui.png" alt="ViewerOculusDK2StereoOU GUI" /></p>
+<h2><a name="ViewerCubicFaces"></a>ViewerCubicFaces</h2>
+<p><img src="images/macro-viewer-cubic-faces-gui.png" alt="ViewerCubic GUI" /></p>
+<p>This macro takes a set of six individual 90° FOV based cubic view source images and &quot;defishes&quot; it to extract a normal rectangular image (like a typical 16:9 or 4:3 style video frame) that can be displayed on a regular TV or a monitor.</p>
+<p>This is handy as an panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p><img src="images/macro-viewer-cubic-faces.png" alt="ViewerCubic Macro" /></p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Pixel Aspect&quot; control can be used to create anamorphic stretching look if you want to go with a non square pixel format.</p>
+<p>The &quot;Depth&quot; control allows you to specify the bit depth for the panoramic output. The &quot;8bit int&quot; option is for PNG/TGA/JPG outputs, and the &quot;16bit float&quot; or &quot;32bit float&quot; options are perfect for floating point EXR based outputs that have HDR (high dynamic range) based color values that exceed the standard 0.0-1.0 color range.</p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control changes the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>If you have a TV or video projector connected in the Fusion preferences as a &quot;Video Monitoring Device&quot;, you can view a final extracted 16:9 rectangular video version of your composite on a full screen video display.</p>
+<p><img src="images/fusion-prefs-video-monitoring-device.png" alt="Fusion Video Monitoring preferences" /></p>
+<p>To use this node, individual 90° FOV based cubic view source images are connected to the node's colored inputs named <code>Front</code>, <code>Right</code>, <code>Back</code>, <code>Left</code>, <code>Top</code>, and <code>Bottom</code> attributes. There is a single image output from the node called &quot;Output&quot;.</p>
+<p>The image below shows an example conversion from the composite file <code>Viewer Cubic Faces.comp</code>.</p>
+<p><img src="images/macro-viewer-cubic-faces-node.png" alt="ViewerCubic Node" /></p>
+<p><strong>Note:</strong> If you hover your cursor over each of the colored triangle inputs on the node you will see a tool tip appear that indicates what the currently selected input is called.</p>
+<h2><a name="ViewerCubicFacesStereo"></a>ViewerCubicFacesStereo</h2>
+<p><img src="images/macro-viewer-cubic-faces-stereo-gui.png" alt="ViewerCubicFacesStereo GUI" /></p>
+<p>This macro takes a set of six individual 90° FOV based cubic view source images for the left and right eye and &quot;defishes&quot; it to extract a stereoscopic rectangular image (like a typical 16:9 or 4:3 style video frame) that can be displayed on a stereo TV or a monitor.</p>
+<p>This is handy as an panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p>The image below shows an example conversion from the composite file <code>Viewer Cubic Faces.comp</code> that has a Gear VR horizontal strip stereo cubemap image (on the left) that is run through the <code>ViewerCubicFacesStereo</code> macro and extracted into a pair of left and right rectangular stereo views. Those two images are then merged into an anagylph stereo output with the help of a StereoAnaglyphHalfColorMerge macro. This kind of approach allows you to quickly and cost effectively preview the stereo imagery on your monitor as you work on building a 360° stereo composite.</p>
+<p><img src="images/macro-viewer-cubic-faces-stereo.png" alt="ViewerCubicFacesStereo Macro" /></p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Pixel Aspect&quot; control can be used to create anamorphic stretching look if you want to go with a non square pixel format.</p>
+<p>The &quot;Depth&quot; control allows you to specify the bit depth for the panoramic output. The &quot;8bit int&quot; option is for PNG/TGA/JPG outputs, and the &quot;16bit float&quot; or &quot;32bit float&quot; options are perfect for floating point EXR based outputs that have HDR (high dynamic range) based color values that exceed the standard 0.0-1.0 color range.</p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control allows you to change the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>If you have a stereo 3D capable TV or video projector connected in the Fusion preferences as a &quot;Video Monitoring Device&quot;, you can view a final stereo extracted 16:9 rectangular video version of your composite on a true color stereo device with shutter glasses or polarizer lenses.</p>
+<p><img src="images/fusion-prefs-video-monitoring-device.png" alt="Fusion Video Monitoring preferences" /></p>
+<p>This is a snapshot of the example composite &quot;Cubic Faces Defish to Rectangular.comp&quot; that shows how to extract a perspective stereo camera view from a Gear VR horizontal strip cubic stereo panorama and convert it into a 16:9 rectangular format.</p>
+<p><img src="images/macro-viewer-cubic-faces-stereo-node.png" alt="ViewerCubicFacesStereo Node" /></p>
+<p>To use this node, individual 90° FOV based cubic view source images are connected to the node's colored inputs named <code>LeftCam_Front</code>, <code>LeftCam_Right</code>, <code>LeftCam_Back</code>, <code>LeftCam_Left</code>, <code>LeftCam_Top</code>, <code>LeftCam_Bottom</code>,  <code>RightCam_Front</code>, <code>RightCam_Right</code>, <code>RightCam_Back</code>, <code>RightCam_Left</code>, <code>RightCam_Top</code>, and <code>RightCam_Bottom</code> attributes. There are two image outputs from the node called &quot;LetOutput&quot; and &quot;RightOutput&quot; that hold the left and right extracted and defished image views.</p>
+<p><strong>Note:</strong> If you hover your cursor over each of the colored triangle inputs on the node you will see a tool tip appear that indicates what the currently selected input is called.</p>
+<h2><a name="ViewerEquirectangular"></a>ViewerEquirectangular</h2>
+<p><img src="images/macro-viewer-equirectangular-gui.png" alt="ViewerEquirectangular GUI" /></p>
+<p>This macro takes a 360° x 180° equirectangular/LatLong/spherical panorama and &quot;defishes&quot; it to extract a normal rectangular image (like a typical 16:9 or 4:3 style video frame) that can be displayed on a normal TV or a monitor.</p>
+<p>This is handy as an panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p><img src="images/macro-viewer-equirectangular.png" alt="ViewerEquirectangular Macro" /></p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Pixel Aspect&quot; control can be used to create anamorphic stretching look if you want to go with a non square pixel format.</p>
+<p>The &quot;Depth&quot; control allows you to specify the bit depth for the panoramic output. The &quot;8bit int&quot; option is for PNG/TGA/JPG outputs, and the &quot;16bit float&quot; or &quot;32bit float&quot; options are perfect for floating point EXR based outputs that have HDR (high dynamic range) based color values that exceed the standard 0.0-1.0 color range.</p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control allows you to change the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>If you have a TV or video projector connected in the Fusion preferences as a &quot;Video Monitoring Device&quot;, you can view a final extracted 16:9 rectangular video version of your composite on a full screen video display.</p>
+<p><img src="images/fusion-prefs-video-monitoring-device.png" alt="Fusion Video Monitoring preferences" /></p>
+<p>This is a snapshot of the example composite &quot;LatLong Defish to Rectangular.comp&quot; that shows how to extract a perspective view from a LatLong panorama and convert it into a 16:9 rectangular format.</p>
+<p><img src="images/macro-viewer-equirectangular-node.png" alt="ViewerEquirectangular Node" /></p>
+<h2><a name="ViewerEquirectangularStereo"></a>ViewerEquirectangularStereo</h2>
+<p><img src="images/macro-viewer-equirectangular-stereo-gui.png" alt="ViewerEquirectangularStereo GUI" /></p>
+<p>This macro takes a pair of separate left and right eye stereo 360° x 180° equirectangular/LatLong/spherical stereo panoramas and &quot;defishes&quot; them to extract a normal rectangular left and right eye images (like a typical 16:9 or 4:3 style video frame) that can be displayed on a normal TV or a monitor.</p>
+<p>This is handy as a panoramic 360° stereo image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p>The left and right image outputs from this node can be routed into an anaglyph merging node like &quot;StereoAnaglyphHalfColorMerge&quot;, or the over/under stereoscopic node &quot;StereoOverUnderMerge&quot;, or the side by side stereoscopic node &quot;StereoSideBySideMerge&quot; for a quick and interactive stereo preview of your composite.</p>
+<p><img src="images/macro-viewer-equirectangular-stereo.png" alt="ViewerEquirectangularStereo Macro" /></p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Pixel Aspect&quot; control can be used to create anamorphic stretching look if you want to go with a non square pixel format.</p>
+<p>The &quot;Depth&quot; control allows you to specify the bit depth for the panoramic output. The &quot;8bit int&quot; option is for PNG/TGA/JPG outputs, and the &quot;16bit float&quot; or &quot;32bit float&quot; options are perfect for floating point EXR based outputs that have HDR (high dynamic range) based color values that exceed the standard 0.0-1.0 color range.</p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control allows you to change the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>If you have a stereo 3D capable TV or video projector connected in the Fusion preferences as a &quot;Video Monitoring Device&quot;, you can view a final stereo extracted 16:9 rectangular video version of your composite on a true color stereo device with shutter glasses or polarizer lenses.</p>
+<p><img src="images/fusion-prefs-video-monitoring-device.png" alt="Fusion Video Monitoring preferences" /></p>
+<p>This is a snapshot of the example composite &quot;LatLong Stereo Defish to Rectangular.comp&quot; that shows how to extract a perspective view from a pair of left and right eye stereo LatLong panoramas and convert them into a 16:9 rectangular anaglyph stereo format.</p>
+<p><img src="images/macro-viewer-equirectangular-stereo-node.png" alt="ViewerEquirectangularStereo Node" /></p>
+<h2><a name="ViewerEquirectangularStereoOU"></a>ViewerEquirectangularStereoOU</h2>
+<p>This macro takes an over/under formatted pair of left and right eye stereo 360° x 180° equirectangular/LatLong/spherical stereo panoramas and &quot;defishes&quot; them to extract a normal rectangular left and right eye images (like a typical 16:9 or 4:3 style video frame) that can be displayed on a normal TV or a monitor.</p>
+<p>This is handy as a panoramic 360° stereo image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p><img src="images/macro-viewer-equirectangular-stereo-ou-gui.png" alt="ViewerEquirectangularStereoOU" /></p>
+<h2><a name="ViewerMesh"></a>ViewerMesh</h2>
+<p><img src="images/macro-viewer-mesh-gui.png" alt="ViewerMesh GUI" /></p>
+<p>This node allows you to reformat panoramic imagery to an arbitrary image projection of your own design that is defined using an FBX/OBJ/DAE/3DS/Alembic format polygon mesh and a custom UV Layout.</p>
+<p>This macro is also handy as a multi-purpose panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p>The following image shows the result of a fulldome image (on the left) being defished into a regular rectangular image projection format (on the right) using the <code>ViewerMesh</code> macro node with sample mesh file <code>Macros:/KartaVR/Images/fulldome.fbx</code> loaded in the macro node's &quot;Mesh File&quot; text field.</p>
+<p><img src="images/macro-viewer-mesh.png" alt="ViewerMesh Macro" /></p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Pixel Aspect&quot; control can be used to create anamorphic stretching look if you want to go with a non square pixel format.</p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control allows you to change the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>The &quot;Lock X/Y/Z&quot; checkbox will link together the &quot;Scale&quot; control into a single unified slider. When this slider is un-checked you will have direct control over the Scale X/Scale Y/Scale Z controls which allow for non-proportional scaling.</p>
+<p>The Scale control allows you to change the size of the mesh used in the texture baking operation. If the model is extremely large or small it can be helpful to change the scale setting control so the model fits within Fusion's default near and far clipping plane regions.</p>
+<p>If you disable the &quot;Lock X/Y/Z&quot; checkbox you can create cartoon like squash and stretch distortions in the environment map imagery by doubling the Scale value on a single axis in relation to the other scale controls.</p>
+<p>If you have a TV or video projector connected in the Fusion preferences as a &quot;Video Monitoring Device&quot;, you can view a final extracted 16:9 rectangular video version of your composite on a full screen video display.</p>
+<p><img src="images/fusion-prefs-video-monitoring-device.png" alt="Fusion Video Monitoring preferences" /></p>
+<p>The node has one input which is labelled &quot;Input&quot;. The node has a single output called &quot;Output&quot;.</p>
+<p><img src="images/macro-viewer-mesh-node.png" alt="ViewerMesh Node" /></p>
+<p><strong>Note:</strong> If the ViewerMesh texture baking operation doesn't seem to have the correct &quot;infinite&quot; like look to the panoramic image conversion it is usually an indication the scale control needs to be adjusted to fix the issue.</p>
+<h2><a name="ViewerMeshStereo"></a>ViewerMeshStereo</h2>
+<p><img src="images/macro-viewer-mesh-stereo-gui.png" alt="ViewerMeshStereo GUI" /></p>
+<p>This node allows is a stereoscopic version of the standard ViewerMesh node. It allows you to reformat a pair of left and right panoramic images to an arbitrary image projection of your own design that is defined using an FBX/OBJ/DAE/3DS/Alembic format polygon mesh and a custom UV Layout.</p>
+<p>This macro is also handy as a multi-purpose panoramic 360° image viewer that works in the Fusion node based environment. You can animate the XYZ rotation and field of view settings to explore different parts of the frame as you do the panoramic conversion.</p>
+<p>The &quot;Width&quot; and &quot;Height&quot; controls are used to specify the vertical and horizontal resolution of the extracted camera view.</p>
+<p>The &quot;Renderer Type&quot; options menu allows you to choose if you want to use the Fusion Software Renderer or the OpenGL Renderer to drive the panoramic 360° media viewer graphics context. You can compare the performance of both options to see which one works best with your GPU or CPU and delivers the fastest interactive performance.</p>
+<p><img src="images/macro-luts-renderer-type.png" alt="Renderer Type" /></p>
+<p>The &quot;Angle of View Type&quot; control allows you to choose which axis is used on the lens when the Focal Length and Angle of View value is computed.</p>
+<p>The &quot;Angle of View&quot; control allows you to change the camera field of view setting in degrees used for the panoramic view extraction. The &quot;Focal Length (mm)&quot; control is linked together with the Angle of View control so you can use either slider and achieve the same field of view result.</p>
+<p>The &quot;Film Gate&quot;, &quot;Aperture Width&quot;, &quot;Aperture Height&quot;, and &quot;Lens Shift X&quot; and Y values are used to match your Fusion macro based extracted camera view against a traditional photographic lens based camera parameter.</p>
+<p>The &quot;Lens Shift X&quot; and &quot;Lens Shift Y&quot; parameters allow you to adjust the 2D filmback based centering of the lens compared to the origin of a theoretical film back on the camera.</p>
+<p>The &quot;Rotation Order&quot; control allows you to control the precedence for each of the rotation axis. This is helpful when you need to solve gimbal lock by selecting the most important rotation channel for your camera animation and making it the first of the three axes listed in the Rotation Order settings.</p>
+<p>The X Rotation/Y Rotation/Z Rotation sliders are used to spin the orientation of the view around and can be used to level the horizon. The &quot;Z Rotation&quot; slider lets you perform a horizontal panning effect on the camera view which can be used to adjust and re-center the front facing part of the panoramic image.</p>
+<p>The &quot;Lock X/Y/Z&quot; checkbox will link together the &quot;Scale&quot; control into a single unified slider. When this slider is un-checked you will have direct control over the Scale X/Scale Y/Scale Z controls which allow for non-proportional scaling.</p>
+<p>The Scale control allows you to change the size of the mesh used in the texture baking operation. If the model is extremely large or small it can be helpful to change the scale setting control so the model fits within Fusion's default near and far clipping plane regions.</p>
+<p>If you disable the &quot;Lock X/Y/Z&quot; checkbox you can create cartoon like squash and stretch distortions in the environment map imagery by doubling the Scale value on a single axis in relation to the other scale controls.</p>
+<p>The node has two inputs which are labelled &quot;Left&quot; and &quot;Right&quot;. The node has a two outputs called &quot;LeftOutput&quot; and &quot;RightOutput&quot;.</p>
+<p><img src="images/macro-viewer-mesh-stereo-node.png" alt="ViewerMeshStereo Node" /></p>
+<p><strong>Note:</strong> If the ViewerMesh texture baking operation doesn't seem to have the correct &quot;infinite&quot; like look to the panoramic image conversion it is usually an indication the scale control needs to be adjusted to fix the issue.</p>
+</body>
+</html>

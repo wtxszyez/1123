@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1><a name="macros-guide"></a>Macros Reference Guide</h1>
+<p>This document is a handy reference guide that acts as the official table of contents summary of each of the macro nodes in the <a href="index.html">KartaVR</a> toolset.</p>
+<h2>Table of Contents</h2>
+<h3>Conversion Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-conversions.html#Angular2CubicFaces">Angular2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#Angular2Equirectangular">Angular2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#Angular2MeshUV">Angular2MeshUV</a></li>
+    <li><a href="macros-guide-conversions.html#Cubemap3x22CubicFaces">Cubemap3x22CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2Cubemap3x2">CubicFaces2Cubemap3x2</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2Cylindrical">CubicFaces2Cylindrical</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2Domemaster180">CubicFaces2Domemaster180</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2Equirectangular">CubicFaces2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2FacebookCubemap3x2">CubicFaces2FacebookCubemap3x2</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2FacebookVerticalStrip">CubicFaces2FacebookVerticalStrip</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2GearVRMono">CubicFaces2GearVRMono</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2GearVRStereo">CubicFaces2GearVRStereo</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2HorizontalCross">CubicFaces2HorizontalCross</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2HorizontalStrip">CubicFaces2HorizontalStrip</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2HorizontalTee">CubicFaces2HorizontalTee</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2MeshUV">CubicFaces2MeshUV</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2MrCube1Map">CubicFaces2MrCube1Map</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2VerticalCross">CubicFaces2VerticalCross</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2VerticalStrip">CubicFaces2VerticalStrip</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2VerticalTee">CubicFaces2VerticalTee</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2YouTube180">CubicFaces2YouTube180</a></li>
+    <li><a href="macros-guide-conversions.html#Cylindrical2CubicFaces">Cylindrical2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#Domemaster2Equirectangular">Domemaster2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Angular">Equirectangular2Angular</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2CubicFaces">Equirectangular2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
+    <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2InverseDomemaster180">Equirectangular2InverseDomemaster180</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2InverseDomemaster220">Equirectangular2InverseDomemaster220</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2MeshUV">Equirectangular2MeshUV</a></li>
+    <li><a href="macros-guide-conversions.html#EquirectangularStereo2GearVRStereo">EquirectangularStereo2GearVRStereo</a></li>
+    <li><a href="macros-guide-conversions.html#FacebookCubemap3x22CubicFaces">FacebookCubemap3x22CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#FacebookCubemap3x2Stereo2CubicFacesStereo">FacebookCubemap3x2Stereo2CubicFacesStereo</a></li>
+    <li><a href="macros-guide-conversions.html#FacebookCubemap3x2Stereo2EquirectangularStereo">FacebookCubemap3x2Stereo2EquirectangularStereo</a></li>
+    <li><a href="macros-guide-conversions.html#FacebookVerticalStrip2Equirectangular">FacebookVerticalStrip2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#FacebookVerticalStrip2CubicFaces">FacebookVerticalStrip2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#Fisheye2Equirectangular">Fisheye2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#FisheyeStereo2EquirectangularStereo">FisheyeStereo2EquirectangularStereo</a></li>
+    <li><a href="macros-guide-conversions.html#GearVRMono2CubicFaces">GearVRMono2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#GearVRStereo2CubicFaces">GearVRStereo2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#GearVRMono2Equirectangular">GearVRMono2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#GearVRStereo2EquirectangularStereo">GearVRStereo2EquirectangularStereo</a></li>
+    <li><a href="macros-guide-conversions.html#HorizontalCross2CubicFaces">HorizontalCross2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#HorizontalStrip2CubicFaces">HorizontalStrip2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#HorizontalTee2CubicFaces">HorizontalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#MRCube1HorizontalStrip2CubicFaces">MRCube1HorizontalStrip2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#Rectilinear2Equirectangular">Rectilinear2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#RectilinearStereo2EquirectangularStereo">RectilinearStereo2EquirectangularStereo</a></li>
+    <li><a href="macros-guide-conversions.html#VerticalCross2CubicFaces">VerticalCross2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#VerticalStrip2CubicFaces">VerticalStrip2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#VerticalTee2CubicFaces">VerticalTee2CubicFaces</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Filter Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-filters.html#BlurPanoramicWrap">BlurPanoramicWrap</a></li>
+    <li><a href="macros-guide-filters.html#ColorCorrectorMasked">ColorCorrectorMasked</a></li>
+    <li><a href="macros-guide-filters.html#DefocusPanoramicWrap">DefocusPanoramicWrap</a></li>
+    <li><a href="macros-guide-filters.html#DepthBlurPanoramicWrap">DepthBlurPanoramicWrap</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-filters.html#DisplaceEquirectangular">DisplaceEquirectangular</a></li>
+    <li><a href="macros-guide-filters.html#GlowPanoramicWrap">GlowPanoramicWrap</a></li>
+    <li><a href="macros-guide-filters.html#SharpenPanoramicWrap">SharpenPanoramicWrap</a></li>
+    <li><a href="macros-guide-filters.html#UnSharpenMaskPanoramicWrap">UnSharpenMaskPanoramicWrap</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>LookingGlass Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-looking-glass.html#LookingGlassRenderer3D">LookingGlassRenderer3D</a></li>
+    </ul>
+  <td>
+  </tr>
+</tr>
+</table>
+<h3>Mask Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-mask.html#AlphaMaskErode">AlphaMaskErode</a></li>
+    <li><a href="macros-guide-mask.html#AlphaMaskMerge">AlphaMaskMerge</a></li>
+    <li><a href="macros-guide-mask.html#FisheyeCropMask">FisheyeCropMask</a></li>
+    <li><a href="macros-guide-mask.html#FisheyeMask">FisheyeMask</a></li>
+    <li><a href="macros-guide-mask.html#PTGuiMatteControl">PTGuiMatteControl</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-mask.html#SplitViewMaskInline">SplitViewMaskInline</a></li>
+    <li><a href="macros-guide-mask.html#SplitViewMaskRectangle">SplitViewMaskRectangle</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Miscellaneous Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-miscellaneous.html#DomemasterCrossbounceSim">DomemasterCrossbounceSim</a></li>
+    <li><a href="macros-guide-miscellaneous.html#MayaBackgroundGradient">MayaBackgroundGradient</a></li>
+    <li><a href="macros-guide-miscellaneous.html#MayaBackgroundGradientCubicFaces">MayaBackgroundGradientCubicFaces</a></li>
+    <li><a href="macros-guide-miscellaneous.html#MayaBackgroundGradientEquirectangular">MayaBackgroundGradientEquirectangular</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-miscellaneous.html#SaverIntool">SaverIntool</a></li>
+    <li><a href="macros-guide-miscellaneous.html#SetMetadataVR">SetMetadataVR</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Paint Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-paint.html#PaintEquirectangular">PaintEquirectangular</a></li>
+    <li><a href="macros-guide-paint.html#PaintHorizontalCross">PaintHorizontalCross</a></li>
+  </ul></td>
+  <td><ul>
+  </ul></td>
+</tr>
+</table>
+<h3>Photogrammetry</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-photogrammetry.html#Conditional">Conditional</a></li>
+    <li><a href="macros-guide-photogrammetry.html#ImageGridCreator">ImageGridCreator</a></li>
+    <li><a href="macros-guide-photogrammetry.html#ImageGridExtractor">ImageGridExtractor</a></li>
+  </ul></td>
+  <td><ul>
+  </ul></td>
+</tr>
+</table>
+<h3>Renderer3D Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-renderer3d.html#CubicRenderer3D">CubicRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3D">CylindricalRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3DAdvanced">CylindricalRenderer3DAdvanced</a></li>
+    <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3D">DomemasterRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3DAdvanced">DomemasterRenderer3DAdvanced</a></li>
+    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3D">EquirectangularRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced">EquirectangularRenderer3DAdvanced</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-renderer3d.html#OculusDK1MonoRenderer3D">OculusDK1MonoRenderer3D</a></li>
+	  <li><a href="macros-guide-renderer3d.html#OculusDK1StereoRenderer3D">OculusDK1StereoRenderer3D</a></li>
+	  <li><a href="macros-guide-renderer3d.html#OculusDK2MonoRenderer3D">OculusDK2MonoRenderer3D</a></li>
+	  <li><a href="macros-guide-renderer3d.html#OculusDK2StereoRenderer3D">OculusDK2StereoRenderer3D</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Stereoscopic Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-stereoscopic.html#StereoAnaglyphHalfColorMerge">StereoAnaglyphHalfColorMerge</a></li>
+    <li><a href="macros-guide-stereoscopic.html#StereoAnaglyphMerge">StereoAnaglyphMerge</a></li>
+    <li><a href="macros-guide-stereoscopic.html#StereoAnaglyphOU">StereoAnaglyphOU</a></li>
+    <li><a href="macros-guide-stereoscopic.html#StereoOverUnderExtract">StereoOverUnderExtract</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-stereoscopic.html#StereoOverUnderMerge">StereoOverUnderMerge</a></li>
+    <li><a href="macros-guide-stereoscopic.html#StereoSideBySideExtract">StereoSideBySideExtract</a></li>
+    <li><a href="macros-guide-stereoscopic.html#StereoSideBySideMerge">StereoSideBySideMerge</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Transform Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-transform.html#Offset">Offset</a></li>
+    <li><a href="macros-guide-transform.html#RotateCubicFaces">RotateCubicFaces</a></li>
+    <li><a href="macros-guide-transform.html#RotateEquirectangular">RotateEquirectangular</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-transform.html#RotateGearVRMono">RotateGearVRMono</a></li>
+    <li><a href="macros-guide-transform.html#RotateGearVRStereo">RotateGearVRStereo</a></li>
+    <li><a href="macros-guide-transform.html#RotateView">RotateView</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>UV Pass Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-uvpass.html#UVAngular2EquirectangularGradientMap">UVAngular2EquirectangularGradientMap</a></li>
+    <li><a href="macros-guide-uvpass.html#UVDomemaster2EquirectangularGradientMap">UVDomemaster2EquirectangularGradientMap</a></li>
+    <li><a href="macros-guide-uvpass.html#UVEquirectangular2AngularGradientMap">UVEquirectangular2AngularGradientMap</a></li>
+    <li><a href="macros-guide-uvpass.html#UVEquirectangular2DomemasterGradientMap">UVEquirectangular2DomemasterGradientMap</a></li>
+    <li><a href="macros-guide-uvpass.html#UVGradientMap">UVGradientMap</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-uvpass.html#UVPassFromRGBImage">UVPassFromRGBImage</a></li>
+    <li><a href="macros-guide-uvpass.html#UVPassFromRGBImageOnDisk">UVPassFromRGBImageOnDisk</a></li>
+    <li><a href="macros-guide-uvpass.html#UVPassVideoStitchingTemplate">UVPassVideoStitchingTemplate</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Viewer Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1Mono">ViewerOculusDK1Mono</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2Mono">ViewerOculusDK2Mono</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2Stereo">ViewerOculusDK2Stereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerOculusDK2StereoOU">ViewerOculusDK2StereoOU</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerCubicFaces">ViewerCubicFaces</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerCubicFacesStereo">ViewerCubicFacesStereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangular">ViewerEquirectangular</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangularStereo">ViewerEquirectangularStereo</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerEquirectangularStereoOU">ViewerEquirectangularStereoOU</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerMesh">ViewerMesh</a></li>
+    <li><a href="macros-guide-viewer.html#ViewerMeshStereo">ViewerMeshStereo</a></li>
+  </ul></td>
+</tr>
+</table>
+<h3>Z360 Macros</h3>
+<table>
+<tr>
+  <td><ul>
+    <li><a href="macros-guide-z360.html#Z360DepthBlur">Z360DepthBlur</a></li>
+    <li><a href="macros-guide-z360.html#Z360Extract">Z360Extract</a></li>
+    <li><a href="macros-guide-z360.html#Z360Merge">Z360Merge</a></li>
+    <li><a href="macros-guide-z360.html#Z360Mesh3D">Z360Mesh3D</a></li>
+  </ul></td>
+  <td><ul>
+    <li><a href="macros-guide-z360.html#Z360Renderer3D">Z360Renderer3D</a></li>
+    <li><a href="macros-guide-z360.html#Z360Stereo">Z360Stereo</a></li>
+    <li><a href="macros-guide-z360.html#Z360VRDolly">Z360VRDolly</a></li>
+  </ul></td>
+</tr>
+</table>
+</body>
+</html>

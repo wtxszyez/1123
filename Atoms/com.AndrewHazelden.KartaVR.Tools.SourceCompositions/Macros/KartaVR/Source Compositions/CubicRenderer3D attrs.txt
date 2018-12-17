@@ -1,0 +1,55 @@
+[CubicRenderer3D]
+
+This node uses a Transform3D node placed after the CameraViewInput node to allow for rotating the camera rigs XYZ and offset XYZ values without causing issues or gimbal lock.
+
+The Renderer Type option was added as there is no use of the UV renderer module at play in this macro.
+
+  [CameraViewInput]
+    SceneInput1=SceneInput1
+    
+  [Renderer3DFront]
+    Output=Front
+    Height=Height Default=512 Max=8192
+    Depth=Depth
+    
+    [Controls]
+      Renderer Type
+      RGBA
+      Z
+      Coverage
+      BgColor
+      Normal
+      TexCoord0
+      ObjectID
+      materialID
+      WorldCoord
+      Vector
+      BackVector
+      Enable Lighting
+      Enable Shadows
+      
+  [CameraTransform3D]
+    X Offset Default=0 Min=-1000 Max=1000
+    Y Offset Default=0 Min=-1000 Max=1000
+    Z Offset Default=0 Min=-1000 Max=1000
+    
+    Rotation Order
+    X Rotation Default=0 Min-360 Max=360
+    Y Rotation Default=0 Min-360 Max=360
+    Z Rotation Default=0 Min-360 Max=360
+  
+  [Renderer3DRight]
+    Output=Right
+  
+  [Renderer3DBack]
+    Output=Back
+  
+  [Renderer3DLeft]
+    Output=Left
+  
+  [Renderer3DTop]
+    Output=Top
+  
+  [Renderer3DBottom]
+    Output=Bottom
+  

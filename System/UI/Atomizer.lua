@@ -1,4 +1,4 @@
-_VERSION = [[Version 2.0.1 - July 4, 2018]]
+_VERSION = [[Version 2.1 - December 16, 2018]]
 --[[
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -138,6 +138,17 @@ or
 - Added a new "Tools/Metadata" category.
 - Added a new "Tools/Position" category.
 - Added a new "Tools/Stereo" category.
+
+### 2.1 2018-12-16 ###
+
+- Added a new "KartaVR" category.
+- Added a new "KartaVR/Comps" category.
+- Added a new "KartaVR/Docs" category.
+- Added a new "KartaVR/Hotkeys" category.
+- Added a new "KartaVR/Scripts" category.
+- Added a new "KartaVR/Tools" category.
+- Added a new "KartaVR/Viewshaders" category.
+
 
 ## Todos ##
 
@@ -667,6 +678,13 @@ function AtomWin()
 		{text = 'Tools/Filter'},
 		{text = 'Tools/Flow'},
 		{text = 'Tools/IO'},
+		{text = 'KartaVR'},
+		{text = 'KartaVR/Comps'},
+		{text = 'KartaVR/Docs'},
+		{text = 'KartaVR/Hotkeys'},
+		{text = 'KartaVR/Scripts'},
+		{text = 'KartaVR/Tools'},
+		{text = 'KartaVR/Viewshaders'},
 		{text = 'Tools/Mask'},
 		{text = 'Tools/Matte'},
 		{text = 'Tools/Metadata'},

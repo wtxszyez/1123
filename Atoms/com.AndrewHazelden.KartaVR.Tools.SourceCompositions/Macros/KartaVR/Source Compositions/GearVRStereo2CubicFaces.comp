@@ -1,0 +1,630 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0, },
+	GlobalRange = { 0, 143, },
+	CurrentID = 175,
+	Version = "Fusion 7.7 build 0",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:\\KartaVR\\Images\\gearvr_stereo.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0,
+				},
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { -320.388, 244.916, }, },
+		},
+		LeftCamCropLeft = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 594.028, 111.571, }, },
+		},
+		LeftCamCropTop = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 2048,
+					Expression = "LeftCamCropFront.YSize*2",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.836, 44.8525, }, },
+		},
+		LeftCamTransformBottom = Transform {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Angle = Input { Value = 180, },
+				Input = Input {
+					SourceOp = "LeftCamCropBottom",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 759.16, -86.4596, }, },
+		},
+		LeftCamCropBack = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 4096,
+					Expression = "LeftCamCropFront.YSize*4",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 594.145, -20.511, }, },
+		},
+		RightCamCropBottom = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropBottom",
+			Inputs = {
+				XOffset = Input { Expression = "LeftCamCropFront.YSize*3", },
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "LeftCamCropFront.YSize", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.634, 321.984, }, },
+		},
+		LeftGearVRHorizontalStripInput = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "CropRight",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 427.98, 13.0947, }, },
+		},
+		RightCamTransformTop = Transform {
+			NameSet = true,
+			SourceOp = "LeftCamTransformTop",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "RightCamCropTop",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 758.333, 454.498, }, },
+		},
+		RightCamCropLeft = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropLeft",
+			Inputs = {
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "LeftCamCropFront.YSize", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.415, 520.474, }, },
+		},
+		RightCamCropTop = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropTop",
+			Inputs = {
+				XOffset = Input { Expression = "LeftCamCropFront.YSize*2", },
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "LeftCamCropFront.YSize", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.223, 453.756, }, },
+		},
+		LeftCamCropFront = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 5120,
+					Expression = "LeftCamCropFront.YSize*5",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "InputScaling.Height",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 594.362, -152.581, }, },
+		},
+		LeftCamCropBottom = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 3072,
+					Expression = "LeftCamCropFront.YSize*3",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 594.247, -86.919, }, },
+		},
+		RightCamCropRight = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropRight",
+			Inputs = {
+				XOffset = Input { Expression = "LeftCamCropFront.YSize", },
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "LeftCamCropFront.YSize", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.667, 585.985, }, },
+		},
+		RightCamCropFront = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropFront",
+			Inputs = {
+				XOffset = Input { Expression = "LeftCamCropFront.YSize*5", },
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "InputScaling.Height", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.75, 256.323, }, },
+		},
+		RightCamTransformBottom = Transform {
+			NameSet = true,
+			SourceOp = "LeftCamTransformBottom",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "RightCamCropBottom",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 758.547, 322.444, }, },
+		},
+		RightCamCropBack = Crop {
+			NameSet = true,
+			SourceOp = "LeftCamCropBack",
+			Inputs = {
+				XOffset = Input { Expression = "LeftCamCropFront.YSize*4", },
+				XSize = Input { Expression = "LeftCamCropFront.YSize", },
+				YSize = Input { Expression = "LeftCamCropFront.YSize", },
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "Instance_RightGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 593.532, 388.393, }, },
+		},
+		CropLeft = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 6144,
+					Expression = "InputScaling.Width/2",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "InputScaling.Height",
+				},
+				Input = Input {
+					SourceOp = "InputScaling",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 44.3897, 306.135, }, },
+		},
+		LeftCamCropRight = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "LeftCamCropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "LeftGearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 594.28, 177.082, }, },
+		},
+		InputScaling = BetterResize {
+			NameSet = true,
+			Inputs = {
+				Width = Input { Value = 12288, },
+				Height = Input { Value = 1024, },
+				PixelAspect = Input { Value = { 1, 1, }, },
+				FilterMethod = Input { Value = 6, },
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { -122.61, 244.135, }, },
+		},
+		Instance_RightGearVRHorizontalStripInput = Merge {
+			NameSet = true,
+			SourceOp = "LeftGearVRHorizontalStripInput",
+			Inputs = {
+				Background = Input {
+					SourceOp = "CropLeft",
+					Source = "Output",
+				},
+				Foreground = Input { },
+				ReferenceSize = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 427.368, 421.998, }, },
+		},
+		CropRight = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 6144,
+					Expression = "InputScaling.Width/2",
+				},
+				XSize = Input {
+					Value = 6144,
+					Expression = "InputScaling.Width/2",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "InputScaling.Height",
+				},
+				Input = Input {
+					SourceOp = "InputScaling",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 44.3897, 175.135, }, },
+		},
+		LeftCamTransformTop = Transform {
+			NameSet = true,
+			Inputs = {
+				Angle = Input { Value = 180, },
+				Input = Input {
+					SourceOp = "LeftCamCropTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 758.945, 45.5942, }, },
+		},
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 208,
+			Top = 208,
+			Width = 1018,
+			Height = 607,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView",
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							PipesAlways = true,
+							AutoSnap = true,
+							Thumbnails = false,
+							RemoveRouters = true,
+						},
+						NavigatorSize = { 100, 100, },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.707106,
+						Offset = { 506.846, 313.657, },
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 130, Bottom = 655, },
+							ScaleX = 0.185714285714286,
+							OffsetX = -58.3142857142858,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = true,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none",
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false, },
+					},
+					Spline = SplineEditorView {
+						LeftPos = 225,
+						ScaleX = 0.2,
+						ScaleY = 0.00343642611683849,
+						OffsetX = -3.6,
+						OffsetY = 0.134020618556701,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = true,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All",
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView",
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.833420365535248,
+					RatioY = 0.00992282249173098,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.200887902330744,
+						{ ID = "Left", RatioX = 0.50125, RatioY = 113.497237569061, Pop = true, },
+						{ ID = "Right", RatioX = 0.49875, Pop = true, },
+						Pop = true,
+					},
+					{ ID = "Main", RatioY = 0.739178690344062, Pop = true, },
+					{ ID = "Time", SnapY = 52, Flat = true, },
+				},
+				{
+					Rows = 2,
+					PixelX = 317,
+					{ ID = "Controls", RatioX = 1, RatioY = 1, },
+					{ ID = "Transport", FixedY = -2, },
+				},
+			},
+		},
+	},
+	Prefs = {
+		Comp = {
+			Memory = {
+				FramesAtOnce = 4,
+				Render = {
+					SimultaneousBranching = true,
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				},
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							ScaleMode = 1,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 0,
+					PickH = 0,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+			},
+			FrameFormat = {
+				Width = 3840,
+				Height = 1920,
+				GuideRatio = 1.31619537275064,
+			},
+			LastFile = "C:\\Users\\Administrator\\Desktop\\GearVR Stereo tests\\StrangeCo_Environments_1_GearVR\\AuldReekie1.png",
+			Unsorted = {
+				GlobalEnd = 143,
+			},
+			AVI = {
+				Preview = {
+					Handler = 541215044,
+				},
+			},
+			SplineEditor = {
+				AutoSnap = {
+					Keys = 18,
+				},
+			},
+			Paths = {
+			},
+			FlowView = {
+				PipesOnTop = true,
+				ShowThumbnails = false,
+			},
+			QuickTime = {
+			},
+		},
+	},
+}
+
+ 

@@ -1,0 +1,35 @@
+[RotateGearVRStereo]
+
+This macro takes the height value from the PanoMerge (Merge) node background input and uses it for every stage of the panoramic transform.
+
+Macro Expressions:
+Width  (PanoMerge.Background.OriginalWidth)
+Height (PanoMerge.Background.OriginalHeight)
+
+The cubic cameras were custom rotated to re-align the env map so the native CubeMapRotate node XYZ rotations are zeroed out.
+
+  [PanoMerge]
+    Background=Image
+
+  [LeftCubeMapRotate]
+    Rotation Order = XYZ axis
+    X Rotation  Default=-90 Min-360 Max=360
+    Y Rotation  Default=0 Min-360 Max=360
+    Z Rotation  Default=180 Min-360 Max=360
+  
+  [SideBySideCrop]
+    Output=Output
+
+Macro GUI Controls:
+  [PanoMerge]
+    Background=Input
+    
+  [LeftCubeMapRotate]
+    Rotation Order
+    X Rotation
+    Y Rotation
+    Z Rotation
+  
+  [SideBySideCrop]
+    Output=Output
+  

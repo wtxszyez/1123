@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>Publish Media to Google Cardboard VR View</h1>
+<hr />
+<p>by Andrew Hazelden</p>
+<p>Email: <a href="mailto:andrew@andrewhazelden.com">andrew@andrewhazelden.com</a><br />
+Web: <a href="http://www.andrewhazelden.com">www.andrewhazelden.com</a></p>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="google-cardboard-vr-view.html">Publish Media to Google Cardboard VR View</a>
+<ul>
+<li><a href="google-cardboard-vr-view.html#support">Support</a></li>
+<li><a href="google-cardboard-vr-view.html#overview">Overview</a></li>
+<li><a href="google-cardboard-vr-view.html#mamp-setup">Setting up the MAMP Web Sharing Settings</a></li>
+<li><a href="google-cardboard-vr-view.html#apache-setup">Setting up Apache httpd on Linux</a></li>
+<li><a href="google-cardboard-vr-view.html#finding-your-ipaddress">Finding Your IP Address</a></li>
+<li><a href="google-cardboard-vr-view.html#how-to-use">How to use the &quot;Publish Media to Google Cardboard VR View&quot; Script</a>
+<ul>
+<li><a href="google-cardboard-vr-view.html#script-gui-controls">Script GUI Controls</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><a name="overview"></a></p>
+<h2>Overview</h2>
+<p><img src="images/vrview-screenshot.jpg" alt="Google Cardboard VR View Script" /></p>
+<p>The &quot;Publish Media to Google Cardboard VR View&quot; script is a module from the <a href="http://www.andrewhazelden.com/blog/downloads/kartavr/">KartaVR</a> that lets you customize the settings and generate a Google Cardboard VR View webpage that can be viewed locally or pushed via Apache web sharing and WiFi to a smartphone with a Google Cardboard HMD.</p>
+<p>For more details on the Google VR View technology itself check out the <a href="https://developers.google.com/vr/concepts/vrview-web">Google VR View Developers</a> page.</p>
+<p>This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system.</p>
+<p>Recommended Apache Web sharing modules:</p>
+<ul>
+<li><a href="https://www.mamp.info/en/downloads/">MAMP for macOS and Windows</a></li>
+<li><a href="http://www.uniformserver.com/">Uniform Server for Windows</a></li>
+<li><a href="http://bit.ly/2dfYqd0">LAMP for Linux on Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_Apache%E2%80%93MySQL%E2%80%93PHP_packages">Apache AMP on Wikipedia</a></li>
+</ul>
+<p><a name="mamp-setup"></a></p>
+<h2>Setting up the MAMP Web Sharing Settings</h2>
+<p>If you are using macOS or Windows the easiest Apache web sharing module to set up and install is <a href="https://www.mamp.info/en/downloads/">MAMP</a>. When using the VR View publishing features the free MAMP program is all you need and you can skip running MAMP Pro.</p>
+<p>No discussion of web sharing programs would be complete without a brief suggestion that you talk with your system administrator about network security and firewalls before enabling an <a href="http://httpd.apache.org/docs/2.4/">Apache web sharing</a> mode on your system. You may also want to research <a href="https://httpd.apache.org/docs/2.2/howto/htaccess.html">Apache .htaccess files</a> to learn how to lock down the htdocs sharing folder to only allow access from users with a specific realm login account and password.</p>
+<p><strong>Step 1.</strong> Start by downloading and installing <a href="https://www.mamp.info/en/downloads/">MAMP</a>.</p>
+<p>On Windows MAMP is installed on your hard disk at: <code>C:\MAMP\MAMP.exe</code></p>
+<p>On macOS MAMP is installed on your hard disk at: <code>/Applications/MAMP/MAMP.app</code></p>
+<p>When you are using MAMP with the &quot;Publish Media to Google Cardboard VR View&quot; script, the VR View webpage content is saved to the &quot;htdocs&quot; folder in the MAMP program directory. The Fusion script &quot;<a href="scripts.html#open-vr-view-publishing-folder">Open VR View Publishing Folder</a>&quot; will open up the MAMP htdocs folder for you in an Explorer/Finder folder browsing window and make it easy to access this directory quickly in the future.</p>
+<p><strong>Step 2.</strong> Start MAMP for the first time. An easy to use GUI will appear.</p>
+<p><img src="images/mamp-window.png" alt="MAMP Loading Screen" /></p>
+<p>On the right side of the MAMP window is a button with a circular &quot;power&quot; icon that lets you Start and Stop the MAMP server. Click the <strong>Start Servers</strong> button if the MAMP server is not running yet.</p>
+<p>On the left side of the MAMP window is a &quot;Preferences&quot; button that will open up the Apache server controls. Click the <strong>Preferences</strong> button.</p>
+<p><strong>Step 3.</strong> The Preferences window allows you to control the Apache server settings without having to manually edit any configuration files.</p>
+<p>Enable the &quot;Start Servers when starting MAMP&quot; and &quot;Stop Servers when quitting MAMP&quot; checkboxes in the Start/Stop tab. Turning on these two controls means you can easily use MAMP when you want to view panoramic Google VR View content. Then when you have finished with that task you can quit the MAMP GUI, and MAMP will then immediately stop the Apache web sharing background system service.</p>
+<p><img src="images/mamp-preferences.png" alt="MAMP Preferences" /></p>
+<p>There are several other settings in the MAMP preferences window you could adjust if you wanted to.</p>
+<p><strong>Step 4.</strong> Click on the Ports tab in the MAMP preferences window. The Ports tab allows you to change the default server port settings for the Apache web sharing.</p>
+<p><img src="images/mamp-preferences-ports.png" alt="MAMP Ports Tab" /></p>
+<p>On Windows the Apache Port is set to 80 by default. This is the typical port used for all HTTP based web servers. The MAMP localhost address for your Windows system would be: <strong>http://localhost/</strong></p>
+<p>On macOS the Apache Port is set to 8888 by default to avoid conflicts with the macOS built-in web sharing modes. In your web browser a custom port is defined in the URL by typing a colon and then the port number like :8888 after the website server address. The MAMP localhost address for your macOS system would be: <strong>http://localhost:8888/</strong></p>
+<p><strong>Step 5.</strong> Click on the Web Server tab in the MAMP preferences window. This tab allows you to change the &quot;Document Root&quot; folder that is shared by the Apache server module. By default this &quot;Document Root&quot; directory path is set to the &quot;htdocs&quot; directory in the MAMP program folder.</p>
+<p><img src="images/mamp-preferences-webserver.png" alt="MAMP Web Server Tab" /></p>
+<p>Unless you have a very specific technical reason to adjust the &quot;Document Root&quot; setting in MAMP it is a good idea to leave this text field at the default value in the MAMP preferences dialog.</p>
+<p><a name="apache-setup"></a></p>
+<h2>Setting up Apache httpd on Linux</h2>
+<p>If you are going to be using the &quot;Publish Media to Google Cardboard VR View&quot; script on Linux you will need to install the clipboard tool xclip, along with the Apache (httpd) server modules for web sharing:</p>
+<pre><code>yum install xclip httpd
+</code></pre>
+<p>You can start Apache (httpd) using:</p>
+<pre><code>systemctl start httpd.service
+systemctl enable httpd.service
+</code></pre>
+<p>On CentOS 7 if you want to make the Apache HTTP port 80 accessible external to the machine you can open that port up on the firewall rules:</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --reload
+</code></pre>
+<p>On Linux the Apache Port is set to 80 by default. This is the typical port used for all HTTP based web servers. The httpd localhost address for your Linux system would be: <strong>http://localhost/</strong></p>
+<p>The Apache &quot;Document Root&quot; path is the <code>/var/www/html/</code>directory. This is where the Fusion VR View Publishing script will save the VR view webpage exports.</p>
+<p><strong>Note:</strong> You will have to make the /var/www/html/ folder writable for the users that are running the Fusion based VR View publishing script. You can either use <strong>chmod</strong> to change the folder permissions to do this, or you can use <strong>chown</strong> to add the user to a group with write permissions. The various Apache setup guides on the internet can provide details on this step.</p>
+<p><a name="finding-your-ipaddress"></a></p>
+<h2>Finding Your IP Address</h2>
+<p>If you don't know the current IP address for your computer you can check in your operating system's &quot;Network&quot; control panel for more details.</p>
+<h2>Mac Network Preferences</h2>
+<p><img src="images/mac-network-control-panel.png" alt="macOS Network Control Panel" /></p>
+<p>On macOS you need to click on the <strong>System Preferences</strong> icon in your Dock. Then open the <strong>Network</strong> control panel. On the left side of the Network control panel is a listing of each of the network adapters on your computer with entries for things like WiFi, and Ethernet devices.</p>
+<p>Select the network adapter you are currently using to access the internet. This network connection will have a green circle icon next to it. With the network adapter selected, the main part of the control panel displays your local IP address next to the words &quot;IP Address:&quot;.</p>
+<p>You will also see information about this network adapter at the top of the network view next to the words <strong>Status: Connected</strong>   [Device] is currently active and has the IP Address of [address].</p>
+<h2>Windows Network Control Panel</h2>
+<p><img src="images/windows-network-settings.png" alt="Windows Network Connection" /></p>
+<p>On Windows you need to open the <strong>Control Panel &gt; Network and Internet &gt; Network Connections</strong> window. Right click on your active network connection. Then select the &quot;Status&quot; item in the popup menu.</p>
+<p>A status window will open. Click on the <strong>Details...</strong> button to find out more information about this network device. Then a &quot;Network Connection Details&quot; window will appear. Your current local IP address is listed next to the IPv4 Address line.</p>
+<h2>Linux Network Settings</h2>
+<p>The easiest way to find out your IP address visually on Linux is to load the Network settings window.</p>
+<p>Open the triangle shaped menu at the top right of the screen and select the <strong>Settings</strong> icon. This will load the &quot;All Settings&quot; window that is used to configure the Linux system.</p>
+<p><img src="images/linux-menu.png" alt="Linux Menu" /></p>
+<p>Look in the &quot;All Settings&quot; window for the Hardware section. Then click on the <strong>Network</strong> icon on the far right side of the window.</p>
+<p><img src="images/linux-all-settings.png" alt="Linux Settings" /></p>
+<p>On the left side of the Network settings window is a listing of each of the network adapters on your computer with entries for things like WiFi, Bluetooth, and Wired Ethernet devices.</p>
+<p>Select the network adapter you are currently using to access the internet.</p>
+<p>This network connection will probably be called &quot;Wired&quot; on a Linux workstation. With the network adapter selected, the main part of the Network window displays your local IP address next to the words &quot;IPv4 Address&quot;.</p>
+<p>If you have multiple network adapters on your Linux system the active interface will have the word &quot;Connected&quot; displayed next to in the main part of the Network window to the left of the ON/OFF button.</p>
+<p><img src="images/linux-network-settings.png" alt="Linux Network Settings" /></p>
+<h3>Finding your External IP Address Using your Web Browser</h3>
+<p>A quick and easy way to find out your external ip address is to visit a website like <a href="http://ipecho.net">ipecho.net</a> or <a href="http://www.whatsmyip.org/">whatsmyip.org</a>.</p>
+<p>This external IP address is only reachable if your computer is directly connected to the internet and your IP address is not hidden by NAT (Network Address Translation) from your computer existing behind a router or hardware firewall.</p>
+<p>If you are behind a router that has NAT enabled then you may have to set up a port forward to route port 80 from your cable modem/router and map it to your computer's manually configured local IP address. This is something that your system administrator or ISP (internet service provider) can assist you with.</p>
+<h3>Finding your External IP Address on Mac and Linux</h3>
+<p>Your current external internet facing IP address can be also found out on Mac and Linux systems using this terminal command:</p>
+<p><code>curl ipecho.net/plain; echo</code></p>
+<h3>ifconfig on Mac and Linux</h3>
+<p>On Mac and Linux systems your local IP address can be found using the ifconfig program from the terminal:</p>
+<p><code>ifconfig</code></p>
+<p>You have to scroll through the output to look for an &quot;en&quot; network entry like <code>net 192.168.0.100 netmask 0xffffff00 broadcast 192.168.0.255</code></p>
+<h3>hostname on Linux</h3>
+<p>On CentOS 7 and Redhat 7 Linux systems your local IP address can often be found using the hostname program from the terminal:</p>
+<p><code>hostname -i</code></p>
+<h3>ipconfig on Windows</h3>
+<p>On Windows your local IP address can be found using the ipconfig program from the command prompt:</p>
+<p><code>ipconfig</code></p>
+<p>You have to scroll through the output to look for a network entry like: <code>IPv4 Address. . . . . . . . . . . : 192.168.0.100</code></p>
+<h3>get-wmiobject on Windows</h3>
+<p>On Windows you could also use the get-wmiobject program from the command prompt to look up the local IP address:</p>
+<p><code>powershell -Command &quot;&amp; {get-wmiobject -class Win32_NetworkAdapterConfiguration -Filter IPEnabled=true | select ipaddress}&quot;</code></p>
+<p>This command will return the IP Address and network MAC address details in a long string of text like:</p>
+<p><code>{192.168.0.100, fe80::e5cd:fce8:700d:1b4e, fdb2:2c26:f4e4:0:54d2:4949:9f22:c62b, fdb2:2c26:f4e4:0:e5cd:fce8:700d:1b4e}</code></p>
+<p>The first <code>192.168.0.100</code> entry in this block of text is your computer's local network IP address.</p>
+<p><a name="how-to-use"></a></p>
+<h2>How to use the &quot;Publish Media to Google Cardboard VR View&quot; Script</h2>
+<p>The &quot;Publish Media to Google Cardboard VR View&quot; script for Fusion 7 and Fusion 8 supports sending loader and saver node media or a snapshot of any kind of node from the flow view to a custom Google VR View compatible webpage that can be viewed as a panorama in a desktop web browser or via WiFi on a smartphone with a Google Cardboard HMD.</p>
+<p><strong>Step 1.</strong> Install an HTTP based web sharing program like Apache, LAMP (LINUX), MAMP (Mac/Windows), or Uniform Server (Windows). You can still use the VR View feature without a webserver module if you set the &quot;Web Sharing Folder&quot; output to a folder with write permissions and then you view the index.html page in a web browser like Firefox.</p>
+<p><strong>Step 2.</strong> Start Fusion and open a new comp. Select a saver or loader node in the flow area. If you select a node other than a loader or saver node a left viewport window snapshot will be created automatically.</p>
+<p><strong>Step 3.</strong> Run the <strong>Script &gt; KartaVR &gt; Publish Media to Google Cardboard VR View</strong> menu item. You can also run this script when the flow area is active with the &quot;V&quot; hotkey on your keyboard.</p>
+<p><img src="images/vrview-script-menu-item.png" alt="Run the Script" /></p>
+<p><strong>Step 4.</strong> In the &quot;Publish Media to Google Cardboard VR View&quot; dialog window you need to define the initial paths and settings for the script. Choose the &quot;Web Sharing Folder&quot;, and enable the required checkbox if your panoramic images are Over/Under stereo 3D or not. Then click the &quot;OK&quot; button.</p>
+<p><img src="images/publish_vr_view_dialog.png" alt="Google Cardboard VR View Script" /></p>
+<p><a name="script-gui-controls"></a></p>
+<h3>Script GUI Controls</h3>
+<p>When the Publish Media to Google Cardboard VR View script is run you are presented with several settings that let you customize the generated VR View webpage.</p>
+<h4>Image Format</h4>
+<p>The &quot;Image Format&quot; control allows you to customize the snapshot image format used when a node other than a loader or saver is selected and a temporary image is saved to disk. This temporary image is saved using the left viewer window. You can choose one of the following options: &quot;JPEG&quot; or &quot;PNG&quot;.</p>
+<h4>Sound Effect</h4>
+<p>The &quot;Sound Effect&quot; control allows you to choose if you want to have an audio alert played when an error occurs or when the script task completes. You can choose one of the following audio playback options: &quot;None&quot;, &quot;On Error Only&quot;, &quot;Steam Train Whistle Sound&quot;, &quot;Trumpet Sound&quot;, or &quot;Braam Sound&quot;.</p>
+<h4>Web Template</h4>
+<p>The Web Template options menu provides the choice of three different web page themes named &quot;Custom Template&quot;, &quot;Charcoal Template&quot;, and &quot;Midnight Template&quot;.</p>
+<p>The <strong>Custom Template</strong> creates a VR View webpage with a white background color and a simple layout.</p>
+<p><img src="images/vrview-custom-template.jpg" alt="Custom Template" /></p>
+<p>The <strong>Charcoal Template</strong> creates a VR View webpage with a dark grey background color.</p>
+<p><img src="images/vrview-charcoal-template.jpg" alt="Charcoal Template" /></p>
+<p>The <strong>Midnight Template</strong> creates a VR View webpage with an even darker background color.</p>
+<p>The resources for the original VR View webpage assets and the HTML/CSS templates are stored in the folder:</p>
+<p><strong>Windows:</strong></p>
+<p><code>C:\Program Files\KartaVR\vr_view\</code></p>
+<p><strong>Mac:</strong></p>
+<p><code>/Applications/KartaVR/vr_view/</code></p>
+<p><strong>Linux:</strong></p>
+<p><code>/opt/KartaVR/vr_view/</code></p>
+<p>The Custom Template is created using the HTML/CSS files <code>custom_template.html</code> and <code>custom_template.css</code>. When the script is run and the VR View webpage is generated the <code>custom_template.html</code> file is renamed to <code>index.html</code> and saved into your active &quot;Web Sharing&quot; folder path.</p>
+<p>The Charcoal Template is created using the HTML/CSS files <code>charcoal_template.html</code> and <code>charcoal_template.css</code>. When the script is run and the VR View webpage is generated the <code>charcoal_template.html</code> file is renamed to <code>index.html</code> and saved into your active &quot;Web Sharing&quot; folder path.</p>
+<p>The Midnight Template is created using the HTML/CSS files <code>midnight_template.html</code> and <code>midnight_template.css</code>. When the script is run and the VR View webpage is generated the <code>midnight_template.html</code> file is renamed to <code>index.html</code> and saved into your active &quot;Web Sharing&quot; folder path.</p>
+<p>If you want to override the default panoramic image viewer dimensions in the VR View webpage this setting is controlled in the &quot;Publish Media to Google Cardboard VR View.lua&quot; script near the top of the document on the lines:</p>
+<pre><code>vrviewWidth = '100%%'  
+vrviewHeight = '300px'
+</code></pre>
+<p><strong>Note:</strong> If you want to use a percent based size you need to use double <code>%%</code> characters to escape the <code>%</code> symbol in the variable.</p>
+<p>You can change the opening paragraph for the VR View webpage by editing the &quot;Publish Media to Google Cardboard VR View.lua&quot; script near the top of the document on the <code>vrviewIntroParagraph</code> variable line.</p>
+<h4>Web Sharing</h4>
+<p>The &quot;Web Sharing&quot; text field and folder browsing button allows you to specify the location of your APACHE/WAMP/LAMP/MAMP webserver htdocs/www folder on your hard disk.</p>
+<p>Linux Apache Sharing folder:
+<code>/var/www/html/</code></p>
+<p>MAMP macOS Sharing Folder:
+<code>/Applications/MAMP/htdocs/</code></p>
+<p>MAMP Windows Sharing Folder:
+<code>C:\MAMP\htdocs\</code></p>
+<p>Uniform Server Windows Folder:
+<code>C:\UniServerZ\www</code></p>
+<p>macOS Built-in Sharing Folder:
+<code>/Library/WebServer/Documents/</code></p>
+<p>macOS Built-in User Account Sharing Folder:
+<code>/Users/&lt;Your Account Name&gt;/Sites/</code></p>
+<h5>Creating a Web Sharing SubFolder</h5>
+<p>If you would like to manage your VR View rendered content for a specific Fusion composite you can place the VR View webpage elements in a project specific subfolder in the web server sharing location.</p>
+<p>The standard MAMP Windows Sharing Folder is:</p>
+<p><code>C:\MAMP\htdocs\</code></p>
+<p>If my Fusion compositing project was called &quot;parachute&quot; I could modify the Web Sharing folder location so the webpage is saved in a subfolder named &quot;parachute&quot; by changing the &quot;Web Sharing&quot; folder to:</p>
+<p><code>C:\MAMP\htdocs\parachute\</code></p>
+<p>Since the Web Sharing folder was modified to have the &quot;parachute&quot; project entry, the corresponding &quot;Web URL&quot; address would also need to have the same subfolder name like &quot;parachute&quot; added to the URL address as well like this:</p>
+<p><code>http://localhost/parachute/</code></p>
+<p>You can write in any custom address for the &quot;Web Sharing&quot; folder that is valid on your system and the script will save that setting in its preferences. You also have the option of writing in a network mounted hard disk location in the web sharing field as well. This would let you run the Apache web server on a different system than Fusion and the KartaVR are running on.</p>
+<h6>Working Locally in Firefox</h6>
+<p>If you are working on a VR project by yourself you can still use the VR View publishing feature with a program like Firefox by opening the .html files from your local hard disk without having to activate and use an HTTP based web server.</p>
+<p>This would let you skip installing an Apache based web server module.</p>
+<p>You can simply use this Web Sharing Folder location as the path where you want the webpage elements to be saved on your hard disk. You could make a custom folder on your Desktop or in your personal Documents folder and manually view the exported HTML webpages.</p>
+<p>In this situation you would uncheck the &quot;Open Webpage&quot; option since you aren't working from an HTTP based URL address.</p>
+<h4>Web URL</h4>
+<p>The &quot;Web URL&quot; text field allows you to specify the current internet IP address or domain name address for your Apache web server. This is the HTTP or HTTPS based URL location where a web browser should look for the VR View webpage.</p>
+<p>This &quot;Web URL&quot; is the HTTP address that a smartphone with a Google Cardboard HMD would connect to using WiFi.</p>
+<p>The main purpose of the &quot;Web URL&quot; setting is to tell the &quot;Open Webpage&quot; checkbox were it can find the generated VR View webpage.</p>
+<p>If you are using the MAMP webserver module then the default localhost Web URL for macOS is <code>http://localhost:8888/</code> and the localhost web URL for windows is <code>http://localhost/</code>.</p>
+<p>This Web URL address can be set manually to your local WAN IP address (with a format like <code>192.168.1.100</code> or <code>10.20.30.100</code>) or if your firewall &quot;port forwarding&quot; rules and system admin allows it to use your external internet facing IP address or DNS (domain name) address.</p>
+<p>If your computer has a dynamic DNS service like <a href="http://dyn.com/dns/">dyn.com</a> active on it you could also write that address in the &quot;Web URL&quot; text field. This would make it easier to share the VR View webpage with a co-worker that is located outside of your local network.</p>
+<h4>Starting Yaw Angle</h4>
+<p>The &quot;Starting Yaw Angle&quot; control is a numeric input field that lets you specify the initial viewing angle of the panoramic image. The control range goes from -360 degrees to 360 degrees.</p>
+<h4>Use Current Frame</h4>
+<p>The &quot;Use Current Frame&quot; control allows you to choose how image sequences are loaded.</p>
+<p>If the checkbox is enabled then the script will load the image sequence frame from the current timeline playhead position. If the checkbox is disabled the first frame from the image sequence will be loaded instead.</p>
+<p>Sometimes you may have to manually disable the &quot;Use Current Frame&quot; checkbox when you are working with still images that have a number as the last element in the filename before the file extension like <code>domemaster180.jpg</code> or <code>domemaster220.jpg</code>. In these cases Fusion will sometimes confuse this as frame 180 and frame 220 from an image sequence.</p>
+<h4>Media is Over/Under Stereo 3D</h4>
+<p>When the &quot;Media is Over/Under Stereo 3D&quot; checkbox is enabled the VR View script will be set to load the video and images as stereo imagery. When the checkbox is disabled the media is loaded as 2D monoscopic imagery.</p>
+<h4>Copy URL to Clipboard</h4>
+<p>When the &quot;Copy URL to Clipboard&quot; checkbox is enabled the script will take the current settings from the Web URL text field and copy the website address into the operating system's clipboard.</p>
+<p>This control makes it easy to be able to paste the current webpage link for the active VR View webpage into an email or instant messenger window so you can view the media on a smartphone with a Google Cardboard HMD.</p>
+<h4>Open Publishing Folder</h4>
+<p>When the &quot;Open Publishing Folder&quot; checkbox is enabled an Explorer/Finder/Nautilus file browser window will be opened up and the directory where the VR View webpage is saved will be displayed.</p>
+<p><img src="images/vrview-open-publishing-folder.png" alt="Publishing Folder" /></p>
+<h4>Open Webpage</h4>
+<p>When the &quot;Open Webpage&quot; checkbox is enabled your web browser will be opened up and the most recent VR View exported webpage will be displayed.</p>
+<p>It is important to make sure you have a valid website address specified in the &quot;Web URL&quot; text field as this is the location that is loaded in your web browser when the &quot;Open Webpage&quot; control is used.</p>
+<h4>OK and Cancel Buttons</h4>
+<p>The &quot;OK&quot; button will save the revised preferences and generate the VR View webpage.</p>
+<p>The &quot;Cancel&quot; button will close the script GUI and stop the script.</p>
+</body>
+</html>

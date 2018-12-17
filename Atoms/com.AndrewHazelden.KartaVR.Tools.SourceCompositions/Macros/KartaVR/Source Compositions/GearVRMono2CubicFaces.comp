@@ -1,0 +1,416 @@
+Composition {
+	CurrentTime = 30,
+	RenderRange = { 0, 0, },
+	GlobalRange = { 0, 143, },
+	CurrentID = 161,
+	Version = "Fusion 7.7 build 0",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader7 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:\\KartaVR\\Images\\mentalray_cube1_horizontal_strip.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0,
+				},
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 685.808, 125.457, }, },
+		},
+		CropFront = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 5120,
+					Expression = "CropFront.YSize*5",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input { Value = 1024, },
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 407.627, 374.784, }, },
+		},
+		TransformTop = Transform {
+			NameSet = true,
+			Inputs = {
+				Angle = Input { Value = 180, },
+				Input = Input {
+					SourceOp = "CropTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 738.334, 493.612, }, },
+		},
+		CropBack = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 4096,
+					Expression = "CropFront.YSize*4",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 631.163, 378.32, }, },
+		},
+		GearVRHorizontalStripInput = Merge {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "Loader7",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 685.808, 224.457, }, },
+		},
+		CropLeft = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 848.335, 376.198, }, },
+		},
+		CropTop = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 2048,
+					Expression = "CropFront.YSize*2",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 738.334, 378.319, }, },
+		},
+		CropRight = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 963.992, 376.198, }, },
+		},
+		CropBottom = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input {
+					Value = 3072,
+					Expression = "CropFront.YSize*3",
+				},
+				XSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				YSize = Input {
+					Value = 1024,
+					Expression = "CropFront.YSize",
+				},
+				Input = Input {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 518.335, 376.198, }, },
+		},
+		TransformBottom = Transform {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Angle = Input { Value = 180, },
+				Input = Input {
+					SourceOp = "CropBottom",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 517.726, 492.373, }, },
+		},
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 0,
+			Width = 1616,
+			Height = 630,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView",
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							ForceAll = true,
+							ForceSource = true,
+							ForceMask = true,
+							ForceActive = true,
+							AutoSnap = true,
+							RemoveRouters = true,
+						},
+						NavigatorSize = { 100, 100, },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.707105,
+						Offset = { 259.103, -22.8262, },
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 130, Bottom = 527, },
+							ScaleX = 0.107518796992481,
+							OffsetX = -7.20375939849623,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = true,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none",
+						},
+						Spreadsheet = { LeftPos = 130, Visible = false, },
+					},
+					Spline = SplineEditorView {
+						LeftPos = 225,
+						ScaleX = 0.2,
+						ScaleY = 0.00348432055749129,
+						OffsetX = -3.6,
+						OffsetY = 3.99303135888502,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = true,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All",
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView",
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.754426481909161,
+					RatioY = 0.0101010101010101,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.325423728813559,
+						{ ID = "Left", RatioX = 0.609007164790174, RatioY = 0.0104166666666667, Pop = true, },
+						{ ID = "Right", RatioX = 0.390992835209826, Pop = true, },
+						Pop = true,
+					},
+					{ ID = "Main", RatioY = 0.613559322033898, Pop = true, },
+					{ ID = "Time", SnapY = 52, Flat = true, },
+				},
+				{
+					Rows = 2,
+					PixelX = 317,
+					{ ID = "Controls", RatioX = 1, RatioY = 1, },
+					{ ID = "Transport", FixedY = -2, },
+				},
+			},
+		},
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					PickH = 1,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 65280,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 255,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "FusionViewLUT",
+							NearZ = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							FitMarginY = 0,
+						},
+					},
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.31619537275064,
+			},
+			LastFile = "Macros:\\KartaVR\\Images\\angular360.jpg",
+			Unsorted = {
+				GlobalEnd = 143,
+			},
+			AVI = {
+				Preview = {
+					Handler = 4294967295,
+				},
+			},
+			SplineEditor = {
+				AutoSnap = {
+					Keys = 18,
+				},
+			},
+			Paths = {
+			},
+			FlowView = {
+				ForceActive = true,
+				ForceSource = true,
+				ForceMask = true,
+				ForceAll = true,
+			},
+			QuickTime = {
+			},
+		},
+	},
+}
+
+ 

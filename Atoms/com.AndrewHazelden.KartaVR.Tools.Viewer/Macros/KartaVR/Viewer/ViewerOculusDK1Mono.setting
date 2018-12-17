@@ -1,0 +1,889 @@
+{
+	Tools = ordered() {
+		ViewerOculusDK1Mono = GroupOperator {
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-viewer.html#ViewerOculusDK1Mono",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMergeInput",
+					Source = "Background",
+					Name = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 800,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "PixelAspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "AovType",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "AoV",
+					Default = 90,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "FilmGate",
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "ApertureW",
+					Default = 1,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "ApertureH",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "LensShiftX",
+					Default = 0.105,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Camera3DLeft",
+					Source = "LensShiftY",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input13 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "LeftSphereMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftRed",
+					Name = "Background Color",
+					ControlGroup = 6,
+					Default = 0,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftGreen",
+					ControlGroup = 6,
+					Default = 0,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftBlue",
+					ControlGroup = 6,
+					Default = 0,
+				},
+				Input19 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftAlpha",
+					ControlGroup = 6,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OculusBackgroundMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 605, 82.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 1287.39, 477.11, 279.166, 19.9966 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -49.9673, 0 }
+			},
+			Tools = ordered() {
+				Renderer3DRight = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 640,
+							Expression = "Renderer3DLeft.Width",
+						},
+						Height = Input {
+							Value = 800,
+							Expression = "Renderer3DLeft.Height",
+						},
+						Depth = Input {
+							Value = 1,
+							Expression = "Renderer3DLeft.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "RightMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DRight" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.Z", },
+						["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.Coverage", },
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.TexCoord0", },
+						["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.ObjectID", },
+						["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.MaterialID", },
+						["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.WorldCoord", },
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DLeft.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input { Expression = "Renderer3DLeft.RendererSoftware.LightingEnabled", },
+						["RendererSoftware.ShadowsEnabled"] = Input { Expression = "Renderer3DLeft.RendererSoftware.ShadowsEnabled", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 379.5 } },
+				},
+				RightMerge3D = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "LeftMerge3D",
+					Inputs = {
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						PassThroughLights = Input {
+							Value = 1,
+							Expression = "LeftCameraViewInput.PassThroughLights"
+						},
+						SceneInput1 = Input {
+							SourceOp = "RightCameraViewInput",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DRight",
+							Source = "Output",
+						},
+						SceneInput3 = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 313.5 } },
+				},
+				Camera3DRight = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Camera3DRight = Camera3D {
+										Inputs = {
+											PerspNearClip = Input { Expression = "Camera3DLeft.PerspNearClip" },
+											FLength = Input {
+												Value = 5.26051,
+												Expression = "Camera3DLeft.FLength"
+											},
+											["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.Z" },
+											["Stereo.Nest"] = Input { Value = 1 },
+											["Transform3DOp.Target.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.Y" },
+											FilmGate = Input {
+												Value = FuID { "User" },
+												Expression = "Camera3DLeft.FilmGate"
+											},
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1 },
+											ResolutionGateFit = Input { Expression = "Camera3DLeft.ResolutionGateFit" },
+											LensShiftY = Input { Expression = "Camera3DLeft.LensShiftY" },
+											AoV = Input {
+												Value = 135.000017267999,
+												Expression = "Camera3DLeft.AoV"
+											},
+											["MtlStdInputs.MaterialID"] = Input { Value = 1 },
+											["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Rotate.Y" },
+											ApertureH = Input {
+												Value = 1,
+												Expression = "Camera3DLeft.ApertureW"
+											},
+											["Transform3DOp.Target.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.X" },
+											ApertureW = Input {
+												Value = 1,
+												Expression = "Camera3DLeft.ApertureW"
+											},
+											["Transform3DOp.Rotate.X"] = Input {
+												Value = -90,
+												Expression = "Camera3DLeft.Transform3DOp.Rotate.X"
+											},
+											["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.X" },
+											["Transform3DOp.Target.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.Z" },
+											LensShiftX = Input {
+												Value = -0.105,
+												Expression = "-Camera3DLeft.LensShiftX"
+											},
+											FilmBack = Input { Expression = "Camera3DLeft.FilmBack" },
+											["Transform3DOp.UseTarget"] = Input { Expression = "Camera3DLeft.Transform3DOp.UseTarget" },
+											["Transform3DOp.Pivot.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.Y" },
+											PerspFarClip = Input { Expression = "Camera3DLeft.PerspFarClip" },
+											["Transform3DOp.Pivot.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.Z" },
+											PlaneOfFocus = Input { Expression = "Camera3DLeft.PlaneOfFocus" },
+											PerspAdaptiveClip = Input { Expression = "Camera3DLeft.PerspAdaptiveClip" },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" } },
+											["Transform3DOp.Pivot.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.X" },
+											["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.Y" },
+											["Transform3DOp.PivotNest"] = Input { Expression = "Camera3DLeft.Transform3DOp.PivotNest" },
+											["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Rotate.Z" }
+										},
+										Name = "Camera3DRight",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 247.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -90,
+							Expression = "Camera3DLeft.Transform3DOp.Rotate.X",
+						},
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Rotate.Z", },
+						["Transform3DOp.PivotNest"] = Input { Expression = "Camera3DLeft.Transform3DOp.PivotNest", },
+						["Transform3DOp.Pivot.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.X", },
+						["Transform3DOp.Pivot.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.Y", },
+						["Transform3DOp.Pivot.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Pivot.Z", },
+						["Transform3DOp.UseTarget"] = Input { Expression = "Camera3DLeft.Transform3DOp.UseTarget", },
+						["Transform3DOp.Target.X"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.X", },
+						["Transform3DOp.Target.Y"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.Y", },
+						["Transform3DOp.Target.Z"] = Input { Expression = "Camera3DLeft.Transform3DOp.Target.Z", },
+						PerspNearClip = Input { Expression = "Camera3DLeft.PerspNearClip", },
+						PerspFarClip = Input { Expression = "Camera3DLeft.PerspFarClip", },
+						PerspAdaptiveClip = Input { Expression = "Camera3DLeft.PerspAdaptiveClip", },
+						AoV = Input {
+							Value = 135.000017267999,
+							Expression = "Camera3DLeft.AoV",
+						},
+						FLength = Input {
+							Value = 5.26051,
+							Expression = "Camera3DLeft.FLength",
+						},
+						PlaneOfFocus = Input { Expression = "Camera3DLeft.PlaneOfFocus", },
+						["Stereo.Nest"] = Input { Value = 1, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Expression = "Camera3DLeft.FilmBack", },
+						FilmGate = Input {
+							Value = FuID { "User" },
+							Expression = "Camera3DLeft.FilmGate",
+						},
+						ApertureW = Input {
+							Value = 1,
+							Expression = "Camera3DLeft.ApertureW",
+						},
+						ApertureH = Input {
+							Value = 1,
+							Expression = "Camera3DLeft.ApertureW",
+						},
+						LensShiftX = Input {
+							Value = -0.105,
+							Expression = "-Camera3DLeft.LensShiftX",
+						},
+						LensShiftY = Input { Expression = "Camera3DLeft.LensShiftY", },
+						ResolutionGateFit = Input { Expression = "Camera3DLeft.ResolutionGateFit", },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 247.5 } },
+				},
+				Renderer3DLeft = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 640,
+							Expression = "Height*0.8",
+						},
+						Height = Input { Value = 800, },
+						Depth = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "LeftMerge3D",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DLeft" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+				},
+				RightCameraViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "LeftCameraViewInput",
+					Inputs = {
+						SceneInput3 = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						SceneInput1 = Input {
+							SourceOp = "RightShape3D",
+							Source = "Output",
+						},
+						SceneInput2 = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 313.5 } },
+				},
+				LeftMerge3D = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input {
+							Value = 1,
+							Expression = "LeftCameraViewInput.PassThroughLights",
+						},
+						SceneInput1 = Input {
+							SourceOp = "LeftCameraViewInput",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 82.5 } },
+				},
+				LeftCameraViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "LeftShape3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 82.5 } },
+				},
+				Camera3DLeft = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						AoV = Input { Value = 135.000017267999, },
+						FLength = Input { Value = 5.26051, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						LensShiftX = Input { Value = 0.105, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 16.5 } },
+				},
+				LeftShape3D = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+						["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+						["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+						["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "LeftSphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 82.5 } },
+				},
+				RightShape3D = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "LeftShape3D",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						MaterialInput = Input {
+							SourceOp = "RightSphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						["SurfacePlaneInputs.Nest"] = Input { },
+						["SurfacePlaneInputs.SizeLock"] = Input { },
+						["SurfacePlaneInputs.Width"] = Input { },
+						["SurfacePlaneInputs.Height"] = Input { },
+						["SurfacePlaneInputs.SubdivisionWidth"] = Input { },
+						["SurfacePlaneInputs.SubdivisionHeight"] = Input { },
+						["SurfacePlaneInputs.Wireframe"] = Input { },
+						["SurfacePlaneInputs.IsWireframeAntialiased"] = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Visibility.IsVisible"] = Input { },
+						["SurfacePlaneInputs.Visibility.IsUnseenByCameras"] = Input { },
+						["SurfacePlaneInputs.Visibility.CullFrontFace"] = Input { },
+						["SurfacePlaneInputs.Visibility.CullBackFace"] = Input { },
+						["SurfacePlaneInputs.Visibility.IgnoreTransparentPixelsInAuxChannels"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsAffectedByLights"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsShadowCaster"] = Input { },
+						["SurfacePlaneInputs.Lighting.IsShadowReceiver"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.IsMatte"] = Input { },
+						["SurfacePlaneInputs.Matte.OpaqueAlpha"] = Input { },
+						["SurfacePlaneInputs.Matte.InfiniteZ"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.GL.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.GL.BlendMode"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.BlendMode"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Operator"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.SubtractiveAdditive"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.Gain"] = Input { },
+						["SurfacePlaneInputs.BlendMode.SW.BurnIn"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Normals.Scale"] = Input { },
+						["SurfacePlaneInputs.Controls.Normals.Show"] = Input { },
+						["SurfacePlaneInputs.Controls.Tangents.Show"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.BlendMode.Nest"] = Input { },
+						["SurfaceSphereInputs.Controls.Nest"] = Input { },
+						["SurfaceSphereInputs.ObjectID.Nest"] = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 315.018 } },
+				},
+				RightSphereMap = SphereMap {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "LeftSphereMap",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						Image = Input {
+							SourceOp = "PanoMergeInput",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 313.5 } },
+				},
+				LeftSphereMap = SphereMap {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+						["Rotate.X"] = Input { Value = -90, },
+						["Rotate.Y"] = Input { Value = -90, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.GL.LowQ"] = Input { Value = FuID { "SAT" }, },
+						["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" }, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "PanoMergeInput",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 82.5 } },
+				},
+				LeftEyeAlphaMaskMerge = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-viewer.html#AlphaMaskMerge"
+					},
+					Inputs = ordered() {
+						MainInput1 = InstanceInput {
+							SourceOp = "LeftChannelBooleansMatte",
+							Source = "Background",
+							Name = "Image",
+						},
+						EffectMask = InstanceInput {
+							SourceOp = "LeftChannelBooleansMatte",
+							Source = "Matte",
+							Name = "EffectMask",
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "LeftAlphaMultiplyMask",
+							Source = "Output",
+						}
+					},
+					ViewInfo = GroupInfo {
+						Pos = { 715, 148.5 },
+						Flags = {
+							AllowPan = false,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						Size = { 238.383, 66.8724, 119.191, 22 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1,
+						Offset = { -6.07104, 0 }
+					},
+					Tools = ordered() {
+						LeftChannelBooleansMatte = ChannelBoolean {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								ToRed = Input { Value = 5, },
+								ToGreen = Input { Value = 6, },
+								ToBlue = Input { Value = 7, },
+								ToAlpha = Input { Value = 30, },
+								EnableExtraChannels = Input { Value = 1, },
+								Background = Input {
+									SourceOp = "Renderer3DLeft",
+									Source = "Output",
+								},
+								Matte = Input {
+									SourceOp = "LeftEyeMask",
+									Source = "Mask",
+								}
+							},
+							ViewInfo = OperatorInfo { Pos = { -56.1915, 10.15 } },
+						},
+						LeftAlphaMultiplyMask = AlphaMultiply {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Input = Input {
+									SourceOp = "LeftChannelBooleansMatte",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 56.1915, 12.7224 } },
+						}
+					},
+				},
+				RightEyeAlphaMaskMerge = GroupOperator {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-viewer.html#AlphaMaskMerge"
+					},
+					Inputs = ordered() {
+						MainInput1 = InstanceInput {
+							SourceOp = "RightChannelBooleansMatte",
+							Source = "Background",
+							Name = "Image",
+						},
+						EffectMask = InstanceInput {
+							SourceOp = "RightChannelBooleansMatte",
+							Source = "Matte",
+							Name = "EffectMask",
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "RightAlphaMultiplyMask",
+							Source = "Output",
+						}
+					},
+					ViewInfo = GroupInfo {
+						Pos = { 715, 379.5 },
+						Flags = {
+							AllowPan = false,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						Size = { 238.383, 66.8724, 119.191, 22 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1,
+						Offset = { 3.03552, 0 }
+					},
+					Tools = ordered() {
+						RightChannelBooleansMatte = ChannelBoolean {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								ToRed = Input { Value = 5, },
+								ToGreen = Input { Value = 6, },
+								ToBlue = Input { Value = 7, },
+								ToAlpha = Input { Value = 30, },
+								EnableExtraChannels = Input { Value = 1, },
+								Background = Input {
+									SourceOp = "Renderer3DRight",
+									Source = "Output",
+								},
+								Matte = Input {
+									SourceOp = "RightEyeMask",
+									Source = "Mask",
+								}
+							},
+							ViewInfo = OperatorInfo { Pos = { -56.1915, 10.15 } },
+						},
+						RightAlphaMultiplyMask = AlphaMultiply {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Input = Input {
+									SourceOp = "RightChannelBooleansMatte",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 56.1915, 12.7224 } },
+						}
+					},
+				},
+				OculusViewCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1280,
+							Expression = "Renderer3DLeft.Width*2",
+						},
+						YSize = Input {
+							Value = 800,
+							Expression = "Renderer3DLeft.Height",
+						},
+						Input = Input {
+							SourceOp = "OculusViewMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 248.5 } },
+				},
+				OculusViewMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "LeftAlphaMultiplyMask",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RightAlphaMultiplyMask",
+							Source = "Output",
+						},
+						Center = Input { Value = { 1.5, 0.5 }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 247.5 } },
+				},
+				RightEyeMask = BSplineMask {
+					DrawMode = "ModifyOnly",
+					DrawMode2 = "InsertAndModify",
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input { Value = 0.05, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input { Value = 640, },
+						MaskHeight = Input { Value = 800, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Polyline = Input {
+							Value = BSplinePolyline {
+								Closed = true,
+								Points = {
+									{ X = -0.261877447366714, Y = 0.415048569440842 },
+									{ X = -0.312741726636887, Y = 0.400938600301743 },
+									{ X = -0.373834729194641, Y = 0.346092313528061 },
+									{ X = -0.518632292747498, Y = 0.0487702786922455 },
+									{ X = -0.444837063550949, Y = -0.246193215250969 },
+									{ X = -0.335486531257629, Y = -0.383931994438171 },
+									{ X = -0.298354953527451, Y = -0.412386685609818 },
+									{ X = -0.201346963644028, Y = -0.443851113319397 },
+									{ X = 0.0865104496479034, Y = -0.438778281211853 },
+									{ X = 0.296704858541489, Y = -0.368462771177292 },
+									{ X = 0.352735549211502, Y = -0.342977315187454 },
+									{ X = 0.390521317720413, Y = -0.287912607192993 },
+									{ X = 0.525798320770264, Y = -0.0313915610313416 },
+									{ X = 0.397112637758255, Y = 0.283673197031021 },
+									{ X = 0.345398396253586, Y = 0.342831820249557 },
+									{ X = 0.299046367406845, Y = 0.369223326444626 },
+									{ X = 0.0348878800868988, Y = 0.459409445524216 }
+								},
+								Order = 4,
+								Type = "Tensioned",
+								Knots = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 }
+							},
+						},
+						Polyline2 = Input {
+							Value = BSplinePolyline {
+								Order = 4,
+								Type = "Tensioned",
+								Knots = { }
+							},
+							Disabled = true,
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 412.5 } },
+				},
+				LeftEyeMask = BSplineMask {
+					DrawMode = "ModifyOnly",
+					DrawMode2 = "InsertAndModify",
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input { Value = 0.05, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input { Value = 640, },
+						MaskHeight = Input { Value = 800, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Polyline = Input {
+							Value = BSplinePolyline {
+								Closed = true,
+								Points = {
+									{ X = 0.25848713517189, Y = 0.415048509836197 },
+									{ X = 0.309608906507492, Y = 0.400938540697098 },
+									{ X = 0.371011167764664, Y = 0.346092253923416 },
+									{ X = 0.516541719436646, Y = 0.0487702190876007 },
+									{ X = 0.44237294793129, Y = -0.246193245053291 },
+									{ X = 0.332468837499619, Y = -0.383932024240494 },
+									{ X = 0.295149296522141, Y = -0.41238671541214 },
+									{ X = 0.197650223970413, Y = -0.443851143121719 },
+									{ X = -0.0916643738746643, Y = -0.438778311014175 },
+									{ X = -0.302922815084457, Y = -0.368462800979614 },
+									{ X = -0.359237194061279, Y = -0.342977344989777 },
+									{ X = -0.397214204072952, Y = -0.287912636995316 },
+									{ X = -0.533176004886627, Y = -0.0313915908336639 },
+									{ X = -0.403838932514191, Y = 0.283673137426376 },
+									{ X = -0.351862877607346, Y = 0.342831760644913 },
+									{ X = -0.305276185274124, Y = 0.369223266839981 },
+									{ X = -0.0397804975509644, Y = 0.459409385919571 }
+								},
+								Order = 4,
+								Type = "Tensioned",
+								Knots = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 }
+							},
+						},
+						Polyline2 = Input {
+							Value = BSplinePolyline {
+								Order = 4,
+								Type = "Tensioned",
+								Knots = { }
+							},
+							Disabled = true,
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 82.5 } },
+				},
+				PanoMergeInput = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 82.5 } },
+				},
+				BackgroundColor = Background {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1280,
+							Expression = "Renderer3DLeft.Width*2",
+						},
+						Height = Input {
+							Value = 800,
+							Expression = "Renderer3DLeft.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 997, 295.5 } },
+				},
+				OculusBackgroundMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "OculusViewCrop",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 999, 249.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "ViewerOculusDK1Mono"
+}

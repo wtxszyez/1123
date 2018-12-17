@@ -1,0 +1,67 @@
+[RectilinearStereo2EquirectangularStereo]
+
+The RectilinearStereo2EquirectangularStereo macro projects a pair of left and right perspective images into an Equirectangular/LatLong/Spherical format.
+
+Todo: Possibly add a multi-channel version of this node that does RGB + Z + extra channel boolean outputs
+
+Todo: Look into customizing the Projector ID/Material ID if required
+
+[RectilinearStereo2EquirectangularStereo]
+  
+  [LeftRectilinearUVRenderer3D1]
+    Width Default=3840 Max=16384
+    Height Default=1920 Max=8192
+    Depth=Depth
+    
+    (Adjust the TextureDepth attribute to use "Source")
+    
+  [LeftRectilinearProjector3D1]
+    ProjectiveImage=Input
+    Angle=FOV Default=90
+    
+    Fit Method Default=Height
+    
+    Rotation Order Default=XYZ
+    X Rotation Default=0 Min-360 Max=360
+    Y Rotation Default=0 Min-360 Max=360
+    Z Rotation Default=0 Min-360 Max=360
+  
+    Set all texture sampling to Bilinear or you will get rendering artifacts.
+
+  [BackgroundColor]
+    TopLeftRed=Color
+    TopLeftGreen
+    TopLeftBlue
+    TopLeftAlpha
+    
+  [LeftBackgroundColorMerge]
+    Left
+    
+  [RightBackgroundColorMerge]
+    Right
+    
+Macro GUI Order:
+  [LeftUVRenderer3D]
+    Width
+    Height
+    Depth=Depth 
+    
+  [LeftRectilinearProjector3D1]
+    FOV
+    Fit Method
+    Rotation Order
+    X Rotation
+    Y Rotation
+    Z Rotation
+
+  [BackgroundColor]
+    TopLeftRed=Color
+    TopLeftGreen
+    TopLeftBlue
+    TopLeftAlpha
+
+  [LeftBackgroundColorMerge]
+    Left
+    
+  [RightBackgroundColorMerge]
+    Right

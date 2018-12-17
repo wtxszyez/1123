@@ -1,0 +1,1138 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 24 },
+	CurrentID = 974,
+	HiQ = true,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 8.2 build 2",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/latlong_fall_colors_with_tripod.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 715, 544.5 } },
+		},
+		EffectMaskMatteControl = MatteControl {
+			NameSet = true,
+			Inputs = {
+				MatteCombine = Input { Value = 1, },
+				CombineOp = Input { Value = 5, },
+				Background = Input {
+					SourceOp = "EffectMaskBackground",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "EffectMaskPoleFadeBackground",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 247.5 } },
+		},
+		EffectMaskRightMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "EffectMaskRightTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "EffectMaskLeftMerge",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				ReferenceSize = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 313.5 } },
+		},
+		ImageBottomTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				FlipVert = Input { Value = 1, },
+				Center = Input { Value = { 0.5, -0.5 }, },
+				Input = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 676.5 } },
+		},
+		ImageInputResize = BetterResize {
+			NameSet = true,
+			Inputs = {
+				Width = Input { Value = 3840, },
+				Height = Input { Value = 1920, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				Input = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 544.5 } },
+		},
+		EffectMaskPipeRouter3 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "EffectMaskLeftTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1760, 181.5 } },
+		},
+		ImagePipeRouter3 = PipeRouter {
+			NameSet = true,
+			SourceOp = "EffectMaskPipeRouter3",
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageLeftTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1760, 478.5 } },
+		},
+		ImageBottomMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "ImageBottomTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "ImageTopMerge",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 676.5 } },
+		},
+		PipeRouter1 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 935, 544.5 } },
+		},
+		ImageRightMerge = Merge {
+			NameSet = true,
+			SourceOp = "EffectMaskRightMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "ImageRightTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "ImageLeftMerge",
+					Source = "Output",
+				},
+				ReferenceSize = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 610.5 } },
+		},
+		EffectMaskTopTransform = Transform {
+			NameSet = true,
+			SourceOp = "ImageTopTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "Instance_PipeRouter3",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 247.5 } },
+		},
+		EffectMaskPoleFadeBackground = Background {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							EffectMaskPoleFadeBackground = Background {
+								CtrlWZoom = false,
+								NameSet = true,
+								CustomData = {
+								},
+								Inputs = {
+									GlobalOut = Input { Value = 24, },
+									Width = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width",
+									},
+									Height = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height",
+									},
+									Depth = Input { Value = 2, },
+									["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+									Type = Input { Value = FuID { "Gradient" }, },
+									GradientType = Input { Value = FuID { "Reflect" }, },
+									Start = Input { Value = { 0.5, 0.5 }, },
+									End = Input { Value = { 0.5, 0 }, },
+									Gradient = Input {
+										Value = Gradient {
+											Colors = {
+												[0] = { 1, 1, 1, 1 },
+												[1] = { 1, 1, 1, 1 }
+											}
+										},
+									},
+								},
+								ViewInfo = OperatorInfo { Pos = { 1155, 181.5 } },
+								Name = "EffectMaskPoleFadeBackground"
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							EffectMaskPoleFadeBackground = Background {
+								CtrlWZoom = false,
+								NameSet = true,
+								CustomData = {
+								},
+								Inputs = {
+									GlobalOut = Input { Value = 24, },
+									Width = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width",
+									},
+									Height = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height",
+									},
+									Depth = Input { Value = 2, },
+									["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+									Type = Input { Value = FuID { "Gradient" }, },
+									GradientType = Input { Value = FuID { "Reflect" }, },
+									Start = Input { Value = { 0.5, 0.5 }, },
+									End = Input { Value = { 0.5, 0 }, },
+									Gradient = Input {
+										Value = Gradient {
+											Colors = {
+												[0.9] = { 1, 1, 1, 1 },
+												[1] = { 0.5, 0.5, 0.5, 1 }
+											}
+										},
+									},
+								},
+								ViewInfo = OperatorInfo { Pos = { 1155, 181.5 } },
+							}
+						}
+					},
+					[3] = {
+						Tools = ordered() {
+							EffectMaskPoleFadeBackground_1 = Background {
+								Inputs = {
+									Type = Input { Value = FuID { "Gradient" } },
+									GradientType = Input { Value = FuID { "Reflect" } },
+									Width = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width"
+									},
+									["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+									Height = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height"
+									},
+									End = Input { Value = { 0.5, 0 } },
+									GlobalOut = Input { Value = 24 },
+									Gradient = Input {
+										Value = Gradient {
+											Colors = {
+												[0.9] = { 1, 1, 1, 1 },
+												[1] = { 0.5, 0.5, 0.5, 1 }
+											}
+										}
+									},
+									Start = Input { Value = { 0.5, 0.5 } },
+									Depth = Input { Value = 2 }
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 1100, 181.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+				}
+			},
+			Inputs = {
+				GlobalOut = Input { Value = 24, },
+				Width = Input {
+					Value = 3840,
+					Expression = "ImageInputResize.Width",
+				},
+				Height = Input {
+					Value = 1920,
+					Expression = "ImageInputResize.Height",
+				},
+				Depth = Input { Value = 2, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Type = Input { Value = FuID { "Gradient" }, },
+				GradientType = Input { Value = FuID { "Reflect" }, },
+				Start = Input { Value = { 0.5, 0.5 }, },
+				End = Input { Value = { 0.5, 0 }, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 1, 1, 1, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 181.5 } },
+		},
+		EffectMaskBottomTransform = Transform {
+			NameSet = true,
+			SourceOp = "ImageBottomTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "Instance_PipeRouter3",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 379.5 } },
+		},
+		ImageTopTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				FlipHoriz = Input { Value = 1, },
+				FlipVert = Input { Value = 1, },
+				Center = Input { Value = { 0.5, 1.5 }, },
+				Input = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1980, 544.5 } },
+		},
+		ImagePipeRouter2 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageInputResize",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1320, 610.5 } },
+		},
+		BSpline2 = BSplineMask {
+			DrawMode = "InsertAndModify",
+			DrawMode2 = "InsertAndModify",
+			Inputs = {
+				SoftEdge = Input { Value = 0.0364312267657993, },
+				MaskWidth = Input { Value = 3840, },
+				MaskHeight = Input { Value = 1920, },
+				PixelAspect = Input { Value = { 1, 1 }, },
+				ClippingMode = Input { Value = FuID { "None" }, },
+				Center = Input { Value = { 0.564075484290758, 0.377926532069251 }, },
+				ZRotation = Input { Value = -88.4029417906894, },
+				Polyline = Input {
+					SourceOp = "BSpline2Polyline",
+					Source = "Value",
+				},
+				Polyline2 = Input {
+					Value = BSplinePolyline {
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { }
+					},
+					Disabled = true,
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 715, 247.5 } },
+		},
+		PipeRouter2 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageTopTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 2090, 544.5 } },
+		},
+		EffectMaskLeftMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "EffectMaskPipeRouter3",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "EffectMaskInputResize",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				ReferenceSize = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 247.5 } },
+		},
+		PipeRouter3 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageRightMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1870, 610.5 } },
+		},
+		ImagePipeRouter4 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageCanvasCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 2530, 676.5 } },
+		},
+		EffectMaskPipeRouter2 = PipeRouter {
+			NameSet = true,
+			SourceOp = "ImagePipeRouter2",
+			Inputs = {
+				Input = Input {
+					SourceOp = "EffectMaskInputResize",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1320, 313.5 } },
+		},
+		BSpline2Polyline = BezierSpline {
+			SplineColor = { Red = 173, Green = 255, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[16] = { 0, Flags = { Linear = true, LockedY = true }, Value = BSplinePolyline {
+						Closed = true,
+						Points = {
+							{ X = -0.317945195272437, Y = -0.494022686546459 },
+							{ X = -0.0573503369036243, Y = -0.238027334165235 },
+							{ X = 0.179584251202996, Y = -0.525558005209873 },
+							{ X = 0.00215179385965055, Y = -0.000433005041359505 },
+							{ X = 0.195140832583225, Y = 0.460552579615923 },
+							{ X = -0.0612801324487201, Y = 0.267883373780356 },
+							{ X = -0.298473951662591, Y = 0.491029879371153 },
+							{ X = -0.0908653351748022, Y = 0.0160490344535941 }
+						},
+						Order = 4,
+						Type = "Tensioned",
+						Knots = { 0, 0.449, 1, 2, 3, 3.514, 4, 5, 6, 6.449, 7, 8, 9, 9.514, 10 }
+					} }
+			}
+		},
+		ImageCanvasCrop = Crop {
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							ImageCanvasCrop = Crop {
+								Inputs = {
+									YSize = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Height*2"
+									},
+									XOffset = Input {
+										Value = -1920,
+										Expression = "-ImageInputResize.Width*0.5"
+									},
+									XSize = Input {
+										Value = 7680,
+										Expression = "ImageInputResize.Width*2"
+									},
+									Input = Input {
+										SourceOp = "ImageBottomMerge",
+										Source = "Output"
+									},
+									YOffset = Input {
+										Value = -960,
+										Expression = "-ImageInputResize.Height*0.5"
+									}
+								},
+								Name = "ImageCanvasCrop",
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2310, 676.5 } },
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							ImageCanvasCrop = Crop {
+								Inputs = {
+									YSize = Input {
+										Value = 5760,
+										Expression = "ImageInputResize.Height*3"
+									},
+									XOffset = Input {
+										Value = -3840,
+										Expression = "-ImageInputResize.Width"
+									},
+									XSize = Input {
+										Value = 11520,
+										Expression = "ImageInputResize.Width*3"
+									},
+									Input = Input {
+										SourceOp = "ImageBottomMerge",
+										Source = "Output"
+									},
+									YOffset = Input {
+										Value = -1920,
+										Expression = "-ImageInputResize.Height"
+									}
+								},
+								CtrlWZoom = false,
+								NameSet = true,
+								ViewInfo = OperatorInfo { Pos = { 2310, 676.5 } },
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			Inputs = {
+				XOffset = Input {
+					Value = -1920,
+					Expression = "-ImageInputResize.Width*0.5",
+				},
+				YOffset = Input {
+					Value = -960,
+					Expression = "-ImageInputResize.Height*0.5",
+				},
+				XSize = Input {
+					Value = 7680,
+					Expression = "ImageInputResize.Width*2",
+				},
+				YSize = Input {
+					Value = 3840,
+					Expression = "ImageInputResize.Height*2",
+				},
+				Input = Input {
+					SourceOp = "ImageBottomMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2255, 676.5 } },
+		},
+		Instance_PipeRouter2 = PipeRouter {
+			SourceOp = "PipeRouter2",
+			Inputs = {
+				Input = Input {
+					SourceOp = "EffectMaskTopTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 2090, 247.5 } },
+		},
+		ImagePipeRouter1 = PipeRouter {
+			NameSet = true,
+			SourceOp = "EffectMaskPipeRouter1",
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImageInputResize",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1320, 478.5 } },
+		},
+		ImageLeftTransform = Transform {
+			NameSet = true,
+			SourceOp = "EffectMaskLeftTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "ImagePipeRouter1",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 478.5 } },
+		},
+		ImageTopMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "PipeRouter2",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 610.5 } },
+		},
+		ImageRightTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 1.5, 0.5 }, },
+				Input = Input {
+					SourceOp = "ImagePipeRouter2",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 610.5 } },
+		},
+		ImageLeftMerge = Merge {
+			NameSet = true,
+			SourceOp = "EffectMaskLeftMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "ImagePipeRouter3",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "ImageInputResize",
+					Source = "Output",
+				},
+				ReferenceSize = Input { Value = 1, },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1760, 544.5 } },
+		},
+		EffectMaskRightTransform = Transform {
+			NameSet = true,
+			SourceOp = "ImageRightTransform",
+			Inputs = {
+				ReferenceSize = Input { },
+				Input = Input {
+					SourceOp = "EffectMaskPipeRouter2",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 313.5 } },
+		},
+		EffectMaskBackground = Background {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 24, },
+				Width = Input {
+					Value = 3840,
+					Expression = "ImageInputResize.Width",
+				},
+				Height = Input {
+					Value = 1920,
+					Expression = "ImageInputResize.Height",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				TopLeftRed = Input { Value = 1, },
+				TopLeftGreen = Input { Value = 1, },
+				TopLeftBlue = Input { Value = 1, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 990, 247.5 } },
+		},
+		Instance_PipeRouter3 = PipeRouter {
+			SourceOp = "PipeRouter3",
+			Inputs = {
+				Input = Input {
+					SourceOp = "EffectMaskRightMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1870, 313.5 } },
+		},
+		EffectMaskBottomMerge = Merge {
+			NameSet = true,
+			SourceOp = "ImageBottomMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "EffectMaskBottomTransform",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "EffectMaskTopMerge",
+					Source = "Output",
+				},
+				ReferenceSize = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 379.5 } },
+		},
+		EffectMaskTopMerge = Merge {
+			NameSet = true,
+			SourceOp = "ImageTopMerge",
+			Inputs = {
+				Background = Input {
+					SourceOp = "Instance_PipeRouter2",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "Instance_PipeRouter3",
+					Source = "Output",
+				},
+				ReferenceSize = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2090, 313.5 } },
+		},
+		EffectMaskInputResize = BetterResize {
+			NameSet = true,
+			SourceOp = "ImageInputResize",
+			Inputs = {
+				ResetSize = Input { },
+				Input = Input {
+					SourceOp = "EffectMaskMatteControl",
+					Source = "Output",
+				},
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1265, 247.5 } },
+		},
+		EffectMaskCanvasCrop = Crop {
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							Instance_ImageCanvasCrop = Crop {
+								ViewInfo = OperatorInfo { Pos = { 2257.05, 378.697 } },
+								Inputs = {
+									ResetOffset = Input {
+									},
+									AutoCrop = Input {
+									},
+									XOffset = Input { Expression = "-ImageInputResize.Width*0.5" },
+									YOffset = Input { Expression = "-ImageInputResize.Height*0.5" },
+									YSize = Input { Expression = "ImageInputResize.Height*2" },
+									Input = Input {
+										SourceOp = "EffectMaskBottomMerge",
+										Source = "Output"
+									},
+									XSize = Input { Expression = "ImageInputResize.Width*2" },
+									StartEndRenderScripts = Input {
+									},
+									ResetSize = Input {
+									}
+								},
+								Name = "Instance_ImageCanvasCrop",
+								CtrlWZoom = false,
+								NameSet = true,
+								SourceOp = "ImageCanvasCrop",
+								CustomData = {
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							Instance_ImageCanvasCrop = Crop {
+								Inputs = {
+									ResetOffset = Input {
+									},
+									AutoCrop = Input {
+									},
+									XOffset = Input { Expression = "-ImageInputResize.Width" },
+									YOffset = Input { Expression = "-ImageInputResize.Height" },
+									YSize = Input { Expression = "ImageInputResize.Height*3" },
+									Input = Input {
+										SourceOp = "EffectMaskBottomMerge",
+										Source = "Output"
+									},
+									XSize = Input { Expression = "ImageInputResize.Width*3" },
+									StartEndRenderScripts = Input {
+									},
+									ResetSize = Input {
+									}
+								},
+								ViewInfo = OperatorInfo { Pos = { 2257.05, 378.697 } },
+								CtrlWZoom = false,
+								NameSet = true,
+								SourceOp = "ImageCanvasCrop",
+								CustomData = {
+								}
+							}
+						}
+					}
+				}
+			},
+			SourceOp = "ImageCanvasCrop",
+			Inputs = {
+				XOffset = Input {
+					Value = -1920,
+					Expression = "-ImageInputResize.Width*0.5"
+				},
+				YOffset = Input {
+					Value = -960,
+					Expression = "-ImageInputResize.Height*0.5"
+				},
+				XSize = Input {
+					Value = 7680,
+					Expression = "ImageInputResize.Width*2"
+				},
+				YSize = Input {
+					Value = 3840,
+					Expression = "ImageInputResize.Height*2"
+				},
+				ResetSize = Input { },
+				ResetOffset = Input { },
+				Input = Input {
+					SourceOp = "EffectMaskBottomMerge",
+					Source = "Output",
+				},
+				AutoCrop = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2255, 379.5 } },
+		},
+		CanvasShrink = Crop {
+			NameSet = true,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							CanvasShrink = Crop {
+								CtrlWZoom = false,
+								NameSet = true,
+								CustomData = {
+								},
+								Inputs = {
+									XOffset = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Width*0.5",
+									},
+									YOffset = Input {
+										Value = 960,
+										Expression = "ImageInputResize.Height*0.5",
+									},
+									XSize = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width",
+									},
+									YSize = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height",
+									},
+									Input = Input {
+										SourceOp = "PanoramicUnsharpMask",
+										Source = "Output",
+									},
+								},
+								ViewInfo = OperatorInfo { Pos = { 2640, 379.5 } },
+								Name = "CanvasShrink"
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							CanvasShrink = Crop {
+								CtrlWZoom = false,
+								NameSet = true,
+								CustomData = {
+								},
+								Inputs = {
+									XOffset = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width",
+									},
+									YOffset = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height",
+									},
+									XSize = Input {
+										Value = 3840,
+										Expression = "ImageInputResize.Width",
+									},
+									YSize = Input {
+										Value = 1920,
+										Expression = "ImageInputResize.Height",
+									},
+									Input = Input {
+										SourceOp = "PanoramicUnsharpMask",
+										Source = "Output",
+									},
+								},
+								ViewInfo = OperatorInfo { Pos = { 2640, 379.5 } },
+							}
+						}
+					},
+				}
+			},
+			Inputs = {
+				XOffset = Input {
+					Value = 1920,
+					Expression = "ImageInputResize.Width*0.5",
+				},
+				YOffset = Input {
+					Value = 960,
+					Expression = "ImageInputResize.Height*0.5",
+				},
+				XSize = Input {
+					Value = 3840,
+					Expression = "ImageInputResize.Width",
+				},
+				YSize = Input {
+					Value = 1920,
+					Expression = "ImageInputResize.Height",
+				},
+				Input = Input {
+					SourceOp = "PanoramicUnsharpMask",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2640, 379.5 } },
+		},
+		PanoramicUnsharpMask = UnsharpMask {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "ImagePipeRouter4",
+					Source = "Output",
+				},
+				EffectMask = Input {
+					SourceOp = "EffectMaskCanvasCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 2530, 379.5 } },
+		},
+		EffectMaskPipeRouter1 = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "EffectMaskInputResize",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1320, 181.5 } },
+		},
+		EffectMaskLeftTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { -0.5, 0.5 }, },
+				Input = Input {
+					SourceOp = "EffectMaskPipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 181.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1589,
+			Height = 936,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.530593,
+						Offset = { -806.51, -17.8673 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 231 },
+							ScaleX = 0.0514619883040936,
+							OffsetX = -1.18362573099415,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.689393939393939,
+					RatioY = 116.750535331906,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.46551724137931,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00925925925925926, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.47198275862069, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 490,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			AutoSave = {
+				Enabled = false,
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ShowControls = false,
+						ScaleMode = 1
+					},
+				},
+				Left = {
+					Viewer = {
+						ShowControls = true,
+						ScaleMode = 1,
+						Channel = 4294967295,
+					},
+					SideB = {
+						Viewer = {
+							ScaleMode = 1,
+						},
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				Width = 3840,
+				Height = 1920,
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "/Pano Stitch Examples/robin_horizontal_fisheye2latlong/UnionKitchen_3840px_uvpass_0001.0000.tif",
+			PolyKeyListDlg = {
+				Window = {
+					Left = 667,
+					Top = 142
+				}
+			},
+			Unsorted = {
+				GlobalEnd = 24,
+				RenderSettings = {
+					Configs = {
+					}
+				}
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

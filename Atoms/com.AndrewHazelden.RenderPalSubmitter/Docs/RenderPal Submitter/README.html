@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* Stylesheet for Markdown */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/SourceCodePro-Regular.ttf');
+}
+
+@import url("fonts/font-awesome.min.css");
+
+body {
+  font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #1C1C1C;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+  color: #AAAAAA;
+  /* color: #7D8686; */
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  border-bottom: 2px solid #D0D0D0;
+  color: #D0D0D0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #D0D0D0;
+}
+
+h4 {
+  font-size: 16px;
+  color: #D0D0D0;
+}
+
+h5 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h6 {
+  font-size: 14px;
+  color: #D0D0D0;
+}
+
+h7 {
+  font-size: 14px;
+  color: #D0D0D0;
+  /* color: #277BA5; */
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+  color: #C4C4C4;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: "Source Code Pro", monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #262626;
+  background-color: #363636;
+  color: #D0D0D0;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #363636;
+  border: 1px solid #262626;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Source Sans Pro", Helvetica, arial, sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
+}
+
+table tr {
+  /* border-top: 1px solid #ccc; */
+  /* background-color: #363636; */
+  /* color: #D0D0D0; */
+}
+
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 80%;
+  /* max-width: 100%; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body><h1>Submit to RenderPal - v1.0 2018-08-18 09.01 AM</h1>
+<hr />
+<p>By Andrew Hazelden<br />
+Email: <a href="mailto:andrew@andrewhazelden.com">&lt;andrew@andrewhazelden.com&gt;</a><br />
+Web: <a href="https://www.andrewhazelden.com">https://www.andrewhazelden.com</a></p>
+<h2>Overview</h2>
+<p><img src="images/fusion_9_submit_to_renderpal_menu.png" alt="Fusion Menu Item" /></p>
+<p>The Fusion 9 based <code>Submit to RenderPal.fu</code> menu entry will submit a Fusion 9 comp to the RenderPal client app running on the current system.</p>
+<p>This allows Fusion Free v9 and Fusion Studio v9 to both submit jobs for rendering via RenderPal. If you are a Fusion free user this script is especially nice as it will allow to submit your comp render jobs and render them elsewhere on a Fusion Render Node 9 based render farm.</p>
+<h2>Installation</h2>
+<p>Step 1. Copy the <code>Config/Submit to RenderPal.fu</code> file into your Fusion Free/Fusion Studio 9 <code>Config:/</code> PathMap folder.</p>
+<p>Step 2. Edit the <code>Submit to RenderPal.fu</code> file and change the <code>renderpalAccount</code>, <code>renderpalServer</code>, and <code>renderpalPool</code> variables to use the current settings that were defined in the RenderPal server.</p>
+<p>Step 3. Open <code>RenderPal Server</code> and edit the <code>Server &gt; User Management &gt; User Accounts &gt; Admin &gt; Pool access</code> settings so all the pools are assigned as being accessible to the Admin user.</p>
+<p>Step 4. Open <code>RenderPal Server</code> and edit the <code>Renderer &gt; Renderer Management</code>&quot; settings to remove the old Fusion renderer description.</p>
+<p><img src="images/renderpal-renderer-management.png" alt="RenderPal Renderer Management" /></p>
+<p>Import the <code>RenderPal Renderer Management/Fusion.rren</code> preset file for Fusion 9 on Windows/macOS/Linux support. This render preset file has the correct dash prefix based command line arguments for macOS and Linux users, along with the traditional Windows slash based command line arguments.</p>
+<p><img src="images/renderpal-renderer-preset.png" alt="RenderPal Fusion Render Preset" /></p>
+<p>Step 5. Restart Fusion 9 and open a new comp. Select the <code>RenderPal &gt; Submit to RenderPal</code> menu item to submit this Fusion composite to your render farm.</p>
+<p><img src="images/fusion_9_submit_to_renderpal_menu.png" alt="Fusion Menu Item" /></p>
+<p>After you run the menu item the Fusion Console tab will print out the resulting message that comes back from RenderPal rprcmd:</p>
+<p><img src="images/fusion_9_console_output.png" alt="Fusion Console" /></p>
+<p>This is the type of Fusion Console result you will see from a successful job submission:</p>
+<pre><code>	[Submit to RenderPal] [App] &quot;/Applications/rprccmd/rprccmd&quot; [Document] &quot;/VFX/MediaProjects/RenderPal.comp&quot;
+	
+	[Launch Command] &quot;/Applications/rprccmd/rprccmd&quot;  -login &quot;Admin:Passsword&quot;  -server &quot;YourServerName&quot;  -nj_pools &quot;Linux&quot;  -nj_renderer &quot;Fusion/macOS and Linux&quot;  -nj_name &quot;RenderPal&quot;  -nj_splitmode  &quot;2,10&quot;  -frames &quot;1-144&quot;  -fstep &quot;1&quot;  -nj_notes &quot;Fusion comp: /VFX/MediaProjects/RenderPal.comp&quot;  -nj_paused  -nj_color &quot;193,246,44&quot; &quot;/VFX/MediaProjects/RenderPal.comp&quot;  &amp;
+	
+	RenderPal V2 Remote Controller - Copyright (c) Shoran Software
+	Version 2.15.1.2007 (Built: 12.02.2018)
+	===========================================================================
+	
+	Preparing remote controller...
+	Initializing remote controller core...
+	Initializing NUC...
+	
+	===========================================================================
+	
+	Initialization done, connecting to server...
+	Connecting to remote server...
+	Network: Connection established to 10.20.30.97
+	Network: [Tamarack:7506] Connection established
+	Challenging remote server...
+	Logging in as Admin...
+	Downloading renderers...
+	Requesting user data...
+	Logged on to server Tamarack:7506
+	===========================================================================
+	Connection established, submitting net job...
+	
+	===========================================================================
+	Network: Disconnected from server
+	Network: [YourServerName/YourServerName:7506] Disconnected (Logged off)
+	Logged off from server
+	
+	Job submission succeeded [ID=0111]
+	
+	===========================================================================
+	Cleaning up...
+	Shutting down NUC...
+	Destroying remote controller core...
+	
+	[Submit to RenderPal] [App] &quot;/Applications/rprccmd/rprccmd&quot; [Document] &quot;/VFX/MediaProjects/RenderPal.comp&quot;
+	
+	[Launch Command] &quot;/Applications/rprccmd/rprccmd&quot;  -login &quot;Admin:Password&quot;  -server &quot;YourServerName&quot;  -nj_pools &quot;Linux&quot;  -nj_renderer &quot;Fusion/macOS and Linux&quot;  -nj_name &quot;RenderPal&quot;  -nj_splitmode  &quot;2,10&quot;  -frames &quot;1-144&quot;  -fstep &quot;1&quot;  -nj_notes &quot;Fusion comp: /VFX/MediaProjects/RenderPal.comp&quot;  -nj_paused  -nj_color &quot;193,246,44&quot; &quot;/VFX/MediaProjects/RenderPal.comp&quot;  &amp;
+	
+	RenderPal V2 Remote Controller - Copyright (c) Shoran Software
+</code></pre>
+<p>Step 6. Your new RenderPal job has been be added to the queue as a paused item. In RenderPal Server or RenderPal Remote Controller you can check the job settings and then &quot;un-pause&quot; the job to start rendering the Fusion composite on your render farm.</p>
+<p><img src="images/renderpal-new-paused-job.png" alt="RenderPal New Paused Job" /></p>
+<h2>Command Line Options</h2>
+<p><strong>Tip:</strong> Every single RenderPal job submitter parameter can be defined from the command line with a dash. The frames parameter would be defined using: -frames &quot;1-144&quot;</p>
+<pre><code>	# Submit a Fusion comp to RenderPal from macOS
+	# (You will need to edit the login name and password, server, pool and Fusion .comp filepath settings)
+	&quot;/Applications/rprccmd/rprccmd&quot;  -login &quot;Admin:Password&quot;  -server &quot;YourServerName&quot;  -nj_pools &quot;YourPoolName1;YourPoolName2;YourPoolName3&quot;  -nj_renderer &quot;Fusion/macOS and Linux&quot;  -nj_name &quot;RenderPal-comp&quot;  -nj_splitmode  &quot;2,10&quot;  -frames &quot;1-144&quot;  -fstep &quot;1&quot;  -nj_notes &quot;Fusion comp: /VFX/Media/RenderPal.comp&quot;  -nj_paused  -nj_color &quot;193,246,44&quot; &quot;/VFX/Media/RenderPal.comp&quot;  &amp;
+
+	# Check for available pools
+	# &quot;/Applications/rprccmd/rprccmd&quot; -server &quot;YourServerName&quot; -login &quot;Admin:Password&quot; -listpools
+
+	# Check the Fusion renderer for parameters
+	# &quot;/Applications/rprccmd/rprccmd&quot; -server &quot;YourServerName&quot; -login &quot;Admin:Password&quot; -listparams &quot;Fusion&quot;
+
+	# Check an existing job
+	# &quot;/Applications/rprccmd/rprccmd&quot; -server &quot;YourServerName&quot; -login &quot;Admin:Password&quot; -query &quot;netjob:80&quot;
+
+	# Check for available renderers
+	&quot;/Applications/rprccmd/rprccmd&quot; -listrenderers
+	
+	Renderer list (Group: Renderer/Version):
+	----------------------------------------
+	Fusion: Fusion/Windows *
+	Fusion: Fusion/macOS and Linux
+
+	# Check the available flags
+	&quot;/Applications/rprccmd/rprccmd&quot;
+
+	Available options (70):
+	-nj_preset *
+		Specifies a net job preset to load
+
+	-nj_name
+		Sets the net job name
+
+	-nj_priority
+		Sets the net job priority (1-10, priority limit might be capped)
+
+	-nj_urgent
+	Marks the net job as urgent (requires proper userpermissions)
+
+	-nj_renderer
+		Sets the net job renderer; for a complete list of all available renderers, use -listrenderers
+
+	-nj_render32bit
+		Enables the use of 32 bit renderers (if neither -nj_render32bit nor -nj_render64bit are specified, both will be used)
+
+	-nj_render64bit
+		Enables the use of 64 bit renderers (if neither -nj_render32bit nor -nj_render64bit are specified, both will be used)
+
+	-nj_noemails
+		If specified, email notifications for this net job will be disabled
+
+	-nj_emailrecpt
+		Specifies additional email recipient emails (separated by semicolons) for the net job
+
+	-nj_emailusers
+		Specifies additional email recipient user names (separated by semicolons) for the net job
+
+	-nj_splitmode
+		Sets the net job frame splitting mode; Syntax: &quot;Mode,Count&quot;. Available modes: 1 = Total pieces, 2 = Frames per job
+
+	-nj_slicemode
+		Sets the net job image slicing mode; Syntax: &quot;Mode,X,Y,[Overlap],[Format]&quot;. Available modes: 1 = Rows/Cols, 2 = Piece sizes
+
+	-nj_extsplitting
+		Specifies parameters used for additional splitting (separated by semicolons)
+
+	-nj_project
+		Sets the net job project name
+
+	-nj_notes
+		Sets the net job notes
+
+	-nj_tags
+		Sets the net job tags (separated by commas or semicolons)
+
+	-nj_pools
+		Assigns the specified client pools to the net job separated by semicolons); if no pools are specified, all available will be used
+
+	-nj_paused
+		If specified, the net job will be started paused
+
+	-nj_startdate
+		Sets the scheduled start date and time of the net job (supports various formats)
+
+	-nj_clientlimit
+		Sets the client limit (0 = unlimited)
+
+	-nj_minclientpriority
+		Sets the minimum client priority (1-10)
+
+	-nj_minclientmemory
+		Sets the minimum client memory (4, 8, 12, 16, 24 or 32 GB)
+
+	-nj_mindispatchdelay
+		Sets the minimum dispatching delay between chunks of this jobs in seconds
+
+	-nj_lowerth
+		Sets the lower rendering time threshold (minutes)
+
+	-nj_lowerth_sec
+		Sets the lower rendering time threshold (seconds)
+
+	-nj_lowerth_action
+		Sets the lower rendering time action (0 = restart chunk; 1 = cancel chunk)
+
+	-nj_upperth
+		Sets the upper rendering time threshold (minutes)
+
+	-nj_upperth_sec
+		Sets the upper rendering time threshold (seconds)
+
+	-nj_upperth_action
+		Sets the upper rendering time action (0 = restart chunk; 1 = cancel chunk; 2 = skip chunk)
+
+	-nj_dependency *
+		Sets the ID of the net job to render the new job after
+
+	-nj_deptype
+		Sets the net job dependency type (0 = Job, 1 = Chunk IDs, 2 = Frames, 3 = Image slices)
+
+	-nj_depunfinishedasdone
+		If specified, unfinished jobs will be treated as done when checking net job dependencies
+
+	-nj_framechecking
+		Sets the frame checking method; Syntax: &quot;Mode,[Image name],[Image dir],[Filesize threshold],[Recurse subdirs],[Exact match],[Disable subsequent checking]&quot;. Available modes: 1 = Job, 2 = Chunk
+
+	-nj_rendercores
+		Sets the number of parallel renderings on each client (0 = one per CPU core)
+
+	-nj_dispatchorder
+		Sets the chunk dispatch order (0 = Forward, 1 = Backward, 2 = Evenly distributed, 3 = Random)
+
+	-nj_firstlastfirst
+		If specified, the first and last chunk of the job will be rendered first
+
+	-nj_color
+		Sets the net job color; Syntax: &quot;Red,Green,Blue&quot;. Values for RGB range from 0-255
+
+	-nj_blockedclients
+		Specifies a list of blocked clients (separated by semicolons)
+
+	-nj_clients
+		Specifies a list of admitted clients (separated by semicolons); all other clients will be blocked
+
+	-nj_errorhandling
+		Sets the error handling; Syntax: &quot;Mode,Tolerance,[Include recreated chunks]&quot;. Available modes: 0 = off, 1 = Cancel job, 2 = Pause job
+
+	-nj_setfield *
+		Sets the value of a custom net job field; Syntax: &quot;Name=Value&quot; (for flags, use 'true' or 'false' as the value)
+
+	-nj_caching_mode
+		Sets the project files caching mode (0 = Off; 1 = On using renderer settings; 2 = On using job-specific settings)
+
+	-nj_caching_scope
+		Sets which parts of a job to cache (1 = scenes; 2 = project directory; 3 = both)
+
+	-nj_caching_addparams
+		Adds additional file/path parameters for caching (separated by commas or semicolons)
+
+	-nj_caching_usescenedir
+		Specifies whether to use the scene directory if no project directory is specified for caching (Syntax: &quot;Enable,Uplevel&quot;)
+
+	-nj_caching_incfilter *
+		Adds an include file caching filter (Syntax: &quot;Dir,Patterns,IncludeSubdirs,CreateSymLinks&quot; where patterns is a comma/semicolon-separated list)
+
+	-nj_caching_excfilter *
+		Adds an exclude file caching filter (Syntax: &quot;Dir,Patterns,IncludeSubdirs,CreateSymLinks&quot; where patterns is a comma/semicolon-separated list)
+
+	-nj_caching_erraction
+		Sets the action to take if rendering using cached files fails (0 = None; 1 = Recache; 2 = Disable; 3 = Both)
+
+	-server
+		Specifies the RenderPal V2 server address; overrides the server specified in the configuration file (Syntax: &quot;IP[:Port]&quot;)
+
+	-login
+		Specifies the user account to use for logging in; overrides the login specified in the configuration file (Syntax: &quot;Username[:Password]&quot;)
+
+	-userdir
+		Overrides the user directory (the directory where all log files and temporary files will be located)
+
+	-defsection
+		Sets the name of the defaults section (RpRcDefaults.conf) to use
+
+	-importset
+		Imports all render settings from the specified render set file
+
+	-listrenderers
+		Shows a list of all available renderers; a group name can be optionally passed to list only renderers of that group
+
+	-listpools
+		Shows a list of all available client pools
+
+	-listparams
+		Lists the available render settings for the specified renderer
+
+	-query *
+		Queries data from the server; see the RenderPal V2 manual for details
+
+	-control_nj *
+		Sends control commands to one or more net jobs; see the RenderPal V2 manual for details
+
+	-control_chunk *
+		Sends control commands to one or more net job chunks;see the RenderPal V2 manual for details
+
+	-control_pool *
+		Sends control commands to one or more client pools; see the RenderPal V2 manual for details
+
+	-execute
+		Executes a command on a list of clients and pools; see the RenderPal V2 manual for details
+
+	-execute_idleonly
+		executed on idle clients
+
+	-nodefaults
+		If specified, no renderer defaults for parameters will be used
+
+	-compact
+		Strips all extra information from the output (makes parsing the output easier)
+
+	-retnjid
+		When specified, the RC will return the ID of the new net job instead of an error code
+
+	-log
+		Enables logging of all output to a log file (RpRcCmd.log)
+
+	-help
+		Shows this help
+</code></pre>
+</body>
+</html>

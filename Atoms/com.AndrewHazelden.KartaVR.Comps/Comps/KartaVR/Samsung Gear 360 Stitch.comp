@@ -1,0 +1,6026 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 1 },
+	CurrentID = 3591,
+	HiQ = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.0 build 18",
+	SavedOutputs = 1,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Temp:\\KartaVR\\Samsung_Gear_360_stitched.0000.tif"
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/samsung_gear360.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = 360,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 605, 181.5 } },
+		},
+		CropRight = Crop {
+			NameSet = true,
+			Inputs = {
+				XOffset = Input { Value = 1920, },
+				XSize = Input { Value = 1920, },
+				YSize = Input { Value = 1920, },
+				Input = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 214.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		ColorCorrectorFinal = ColorCorrector {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				Channel = Input { Value = 2, },
+				MasterRGBContrast = Input { Value = 1.042194092827, },
+				MidTonesRGBContrast = Input { Value = 0.970464135021097, },
+				MidTonesRGBGain = Input { Value = 1.38818565400844, },
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "WhiteBalance",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1925, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.0862745098039216, G = 0.0862745098039216, B = 0.498039215686275 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		Domemaster2EquirectangularRight = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling_1",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling_1",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "HemirectTransform_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 990, 214.5 } },
+			Tools = ordered() {
+				HemirectTransform_1 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.5, 0.75 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 0.5, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "RotateUpright_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 10.15 } },
+				},
+				RotateUpright_1 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ResizeAspectRatio_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 10.15 } },
+				},
+				ResizeAspectRatio_1 = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "InputScaling_1.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "Width/2",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropConversion_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 10.15 } },
+				},
+				CropConversion_1 = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 3840,
+							Expression = "InputScaling_1.Width",
+						},
+						YSize = Input {
+							Value = 2700,
+							Expression = "CropConversion_1.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "HemirectViewSlide_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				},
+				HemirectViewSlide_1 = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rect2PolarConversion_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				},
+				Rect2PolarConversion_1 = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScaling_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 10.15 } },
+				},
+				InputScaling_1 = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "Height",
+						},
+						Height = Input { Value = 3840, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 10.15 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		WhiteBalance = WhiteBalance {
+			NameSet = true,
+			Inputs = {
+				RedInMid = Input { Value = 0.654901960784314, },
+				GreenInMid = Input { Value = 0.701960784313725, },
+				BlueInMid = Input { Value = 0.717647058823529, },
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				Input = Input {
+					SourceOp = "UVRenderer3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.0862745098039216, G = 0.0862745098039216, B = 0.498039215686275 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		ColorCorrectorMaskedRight = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input251 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Width",
+					Default = 3840,
+				},
+				Input252 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Height",
+					Default = 1920,
+				},
+				Input253 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input254 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Type",
+				},
+				Input255 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopLeftRed",
+					Name = "Top Left",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input256 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopLeftGreen",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input257 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopLeftBlue",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input258 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopLeftAlpha",
+					ControlGroup = 164,
+					Default = 1,
+				},
+				Input259 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopRightRed",
+					Name = "Top Right",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input260 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopRightGreen",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input261 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopRightBlue",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input262 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "TopRightAlpha",
+					ControlGroup = 165,
+					Default = 1,
+				},
+				Input263 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomLeftRed",
+					Name = "Bottom Left",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input264 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomLeftGreen",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input265 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomLeftBlue",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input266 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomLeftAlpha",
+					ControlGroup = 166,
+					Default = 1,
+				},
+				Input267 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomRightRed",
+					Name = "Bottom Right",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input268 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomRightGreen",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input269 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomRightBlue",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input270 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "BottomRightAlpha",
+					ControlGroup = 167,
+					Default = 1,
+				},
+				Input271 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "GradientType",
+				},
+				Input272 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Start",
+					DefaultX = 0.5,
+					DefaultY = 1,
+				},
+				Input273 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "End",
+					DefaultX = 0.5,
+					DefaultY = 0.5,
+				},
+				Input274 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Gradient",
+				},
+				Input275 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "GradientInterpolationMethod",
+				},
+				Input276 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Offset",
+					Default = 0,
+				},
+				Input277 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Repeat",
+				},
+				Input278 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "SubPixel",
+				},
+				Input279 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "MotionBlur",
+					Default = 0,
+				},
+				Input280 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1_1",
+					Source = "Quality",
+					Default = 2,
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "AlphaDivideMask_1_1",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Menu",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "CorrectionRange",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelHue1",
+					ControlGroup = 3,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelSaturation1",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintAngle1",
+					ControlGroup = 3,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintLength1",
+					ControlGroup = 3,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelRangeDummy1",
+					ControlGroup = 3,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelHue2",
+					ControlGroup = 3,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelSaturation2",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintAngle2",
+					ControlGroup = 3,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintLength2",
+					ControlGroup = 3,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelHue3",
+					ControlGroup = 3,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelSaturation3",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintAngle3",
+					ControlGroup = 3,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintLength3",
+					ControlGroup = 3,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelHue4",
+					ControlGroup = 3,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelSaturation4",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintAngle4",
+					ControlGroup = 3,
+				},
+				Input19 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "WheelTintLength4",
+					ControlGroup = 3,
+				},
+				Input20 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "TintMode",
+					Default = 2,
+				},
+				Input21 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Hue1",
+				},
+				Input22 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Saturation1",
+					Default = 1,
+				},
+				Input23 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Hue2",
+				},
+				Input24 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Saturation2",
+					Default = 1,
+				},
+				Input25 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Hue3",
+				},
+				Input26 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Saturation3",
+					Default = 1,
+				},
+				Input27 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Hue4",
+				},
+				Input28 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Saturation4",
+					Default = 1,
+				},
+				Input29 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Channel",
+				},
+				Input30 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Histogram",
+					ControlGroup = 14,
+				},
+				Input31 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HistogramReference",
+					ControlGroup = 14,
+				},
+				Input32 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HistogramOutput",
+					ControlGroup = 14,
+				},
+				Input33 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HistogramCurve",
+					ControlGroup = 14,
+				},
+				Input34 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HistogramType",
+				},
+				Input35 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "EqualizeLuminance",
+					Default = 0,
+				},
+				Input36 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "LockRedGreenBlue",
+					Default = 1,
+				},
+				Input37 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "EqualizeRed",
+					Default = 1,
+				},
+				Input38 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "EqualizeGreen",
+					Default = 1,
+				},
+				Input39 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "EqualizeBlue",
+					Default = 1,
+				},
+				Input40 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Precision",
+					Default = 2,
+				},
+				Input41 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SmoothOutCorrectionCurve",
+					Default = 0,
+				},
+				Input42 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SnapshotMatch",
+				},
+				Input43 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ReleaseMatch",
+				},
+				Input44 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MatchShow",
+					Default = 0,
+				},
+				Input45 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MatchCenter",
+					DefaultX = 0.5,
+					DefaultY = 0.5,
+				},
+				Input46 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MatchWidth",
+					Default = 1,
+				},
+				Input47 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MatchHeight",
+					Default = 1,
+				},
+				Input48 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ResetAllHistogramChanges",
+				},
+				Input49 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBContrast",
+					Default = 1,
+				},
+				Input50 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBGain",
+					Default = 1,
+				},
+				Input51 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBLift",
+					Default = 0,
+				},
+				Input52 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBGamma",
+					Default = 1,
+				},
+				Input53 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBBrightness",
+					Default = 0,
+				},
+				Input54 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBLow",
+					ControlGroup = 35,
+					Default = 0,
+				},
+				Input55 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBMid",
+					ControlGroup = 35,
+					Default = 1,
+				},
+				Input56 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBHigh",
+					ControlGroup = 35,
+					Default = 1,
+				},
+				Input57 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBOutputLow",
+					ControlGroup = 36,
+					Default = 0,
+				},
+				Input58 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRGBOutputHigh",
+					ControlGroup = 36,
+					Default = 1,
+				},
+				Input59 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedContrast",
+					Default = 1,
+				},
+				Input60 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedGain",
+					Default = 1,
+				},
+				Input61 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedLift",
+					Default = 0,
+				},
+				Input62 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedGamma",
+					Default = 1,
+				},
+				Input63 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedBrightness",
+					Default = 0,
+				},
+				Input64 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedLow",
+					ControlGroup = 42,
+					Default = 0,
+				},
+				Input65 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedMid",
+					ControlGroup = 42,
+					Default = 1,
+				},
+				Input66 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedHigh",
+					ControlGroup = 42,
+					Default = 1,
+				},
+				Input67 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedOutputLow",
+					ControlGroup = 43,
+					Default = 0,
+				},
+				Input68 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterRedOutputHigh",
+					ControlGroup = 43,
+					Default = 1,
+				},
+				Input69 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenContrast",
+					Default = 1,
+				},
+				Input70 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenGain",
+					Default = 1,
+				},
+				Input71 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenLift",
+					Default = 0,
+				},
+				Input72 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenGamma",
+					Default = 1,
+				},
+				Input73 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenBrightness",
+					Default = 0,
+				},
+				Input74 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenLow",
+					ControlGroup = 49,
+					Default = 0,
+				},
+				Input75 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenMid",
+					ControlGroup = 49,
+					Default = 1,
+				},
+				Input76 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenHigh",
+					ControlGroup = 49,
+					Default = 1,
+				},
+				Input77 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenOutputLow",
+					ControlGroup = 50,
+					Default = 0,
+				},
+				Input78 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterGreenOutputHigh",
+					ControlGroup = 50,
+					Default = 1,
+				},
+				Input79 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueContrast",
+					Default = 1,
+				},
+				Input80 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueGain",
+					Default = 1,
+				},
+				Input81 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueLift",
+					Default = 0,
+				},
+				Input82 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueGamma",
+					Default = 1,
+				},
+				Input83 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueBrightness",
+					Default = 0,
+				},
+				Input84 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueLow",
+					ControlGroup = 56,
+					Default = 0,
+				},
+				Input85 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueMid",
+					ControlGroup = 56,
+					Default = 1,
+				},
+				Input86 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueHigh",
+					ControlGroup = 56,
+					Default = 1,
+				},
+				Input87 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueOutputLow",
+					ControlGroup = 57,
+					Default = 0,
+				},
+				Input88 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MasterBlueOutputHigh",
+					ControlGroup = 57,
+					Default = 1,
+				},
+				Input89 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBContrast",
+					Default = 1,
+				},
+				Input90 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBGain",
+					Default = 1,
+				},
+				Input91 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBLift",
+					Default = 0,
+				},
+				Input92 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBGamma",
+					Default = 1,
+				},
+				Input93 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBBrightness",
+					Default = 0,
+				},
+				Input94 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBLow",
+					ControlGroup = 63,
+					Default = 0,
+				},
+				Input95 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBMid",
+					ControlGroup = 63,
+					Default = 1,
+				},
+				Input96 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBHigh",
+					ControlGroup = 63,
+					Default = 1,
+				},
+				Input97 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBOutputLow",
+					ControlGroup = 64,
+					Default = 0,
+				},
+				Input98 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRGBOutputHigh",
+					ControlGroup = 64,
+					Default = 1,
+				},
+				Input99 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedContrast",
+					Default = 1,
+				},
+				Input100 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedGain",
+					Default = 1,
+				},
+				Input101 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedLift",
+					Default = 0,
+				},
+				Input102 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedGamma",
+					Default = 1,
+				},
+				Input103 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedBrightness",
+					Default = 0,
+				},
+				Input104 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedLow",
+					ControlGroup = 70,
+					Default = 0,
+				},
+				Input105 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedMid",
+					ControlGroup = 70,
+					Default = 1,
+				},
+				Input106 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedHigh",
+					ControlGroup = 70,
+					Default = 1,
+				},
+				Input107 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedOutputLow",
+					ControlGroup = 71,
+					Default = 0,
+				},
+				Input108 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsRedOutputHigh",
+					ControlGroup = 71,
+					Default = 1,
+				},
+				Input109 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenContrast",
+					Default = 1,
+				},
+				Input110 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenGain",
+					Default = 1,
+				},
+				Input111 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenLift",
+					Default = 0,
+				},
+				Input112 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenGamma",
+					Default = 1,
+				},
+				Input113 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenBrightness",
+					Default = 0,
+				},
+				Input114 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenLow",
+					ControlGroup = 77,
+					Default = 0,
+				},
+				Input115 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenMid",
+					ControlGroup = 77,
+					Default = 1,
+				},
+				Input116 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenHigh",
+					ControlGroup = 77,
+					Default = 1,
+				},
+				Input117 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenOutputLow",
+					ControlGroup = 78,
+					Default = 0,
+				},
+				Input118 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsGreenOutputHigh",
+					ControlGroup = 78,
+					Default = 1,
+				},
+				Input119 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueContrast",
+					Default = 1,
+				},
+				Input120 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueGain",
+					Default = 1,
+				},
+				Input121 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueLift",
+					Default = 0,
+				},
+				Input122 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueGamma",
+					Default = 1,
+				},
+				Input123 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueBrightness",
+					Default = 0,
+				},
+				Input124 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueLow",
+					ControlGroup = 84,
+					Default = 0,
+				},
+				Input125 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueMid",
+					ControlGroup = 84,
+					Default = 1,
+				},
+				Input126 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueHigh",
+					ControlGroup = 84,
+					Default = 1,
+				},
+				Input127 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueOutputLow",
+					ControlGroup = 85,
+					Default = 0,
+				},
+				Input128 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ShadowsBlueOutputHigh",
+					ControlGroup = 85,
+					Default = 1,
+				},
+				Input129 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBContrast",
+					Default = 1,
+				},
+				Input130 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBGain",
+					Default = 1,
+				},
+				Input131 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBLift",
+					Default = 0,
+				},
+				Input132 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBGamma",
+					Default = 1,
+				},
+				Input133 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBBrightness",
+					Default = 0,
+				},
+				Input134 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBLow",
+					ControlGroup = 91,
+					Default = 0,
+				},
+				Input135 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBMid",
+					ControlGroup = 91,
+					Default = 1,
+				},
+				Input136 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBHigh",
+					ControlGroup = 91,
+					Default = 1,
+				},
+				Input137 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBOutputLow",
+					ControlGroup = 92,
+					Default = 0,
+				},
+				Input138 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRGBOutputHigh",
+					ControlGroup = 92,
+					Default = 1,
+				},
+				Input139 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedContrast",
+					Default = 1,
+				},
+				Input140 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedGain",
+					Default = 1,
+				},
+				Input141 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedLift",
+					Default = 0,
+				},
+				Input142 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedGamma",
+					Default = 1,
+				},
+				Input143 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedBrightness",
+					Default = 0,
+				},
+				Input144 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedLow",
+					ControlGroup = 98,
+					Default = 0,
+				},
+				Input145 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedMid",
+					ControlGroup = 98,
+					Default = 1,
+				},
+				Input146 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedHigh",
+					ControlGroup = 98,
+					Default = 1,
+				},
+				Input147 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedOutputLow",
+					ControlGroup = 99,
+					Default = 0,
+				},
+				Input148 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesRedOutputHigh",
+					ControlGroup = 99,
+					Default = 1,
+				},
+				Input149 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenContrast",
+					Default = 1,
+				},
+				Input150 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenGain",
+					Default = 1,
+				},
+				Input151 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenLift",
+					Default = 0,
+				},
+				Input152 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenGamma",
+					Default = 1,
+				},
+				Input153 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenBrightness",
+					Default = 0,
+				},
+				Input154 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenLow",
+					ControlGroup = 105,
+					Default = 0,
+				},
+				Input155 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenMid",
+					ControlGroup = 105,
+					Default = 1,
+				},
+				Input156 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenHigh",
+					ControlGroup = 105,
+					Default = 1,
+				},
+				Input157 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenOutputLow",
+					ControlGroup = 106,
+					Default = 0,
+				},
+				Input158 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesGreenOutputHigh",
+					ControlGroup = 106,
+					Default = 1,
+				},
+				Input159 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueContrast",
+					Default = 1,
+				},
+				Input160 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueGain",
+					Default = 1,
+				},
+				Input161 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueLift",
+					Default = 0,
+				},
+				Input162 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueGamma",
+					Default = 1,
+				},
+				Input163 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueBrightness",
+					Default = 0,
+				},
+				Input164 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueLow",
+					ControlGroup = 112,
+					Default = 0,
+				},
+				Input165 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueMid",
+					ControlGroup = 112,
+					Default = 1,
+				},
+				Input166 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueHigh",
+					ControlGroup = 112,
+					Default = 1,
+				},
+				Input167 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueOutputLow",
+					ControlGroup = 113,
+					Default = 0,
+				},
+				Input168 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "MidTonesBlueOutputHigh",
+					ControlGroup = 113,
+					Default = 1,
+				},
+				Input169 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBContrast",
+					Default = 1,
+				},
+				Input170 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBGain",
+					Default = 1,
+				},
+				Input171 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBLift",
+					Default = 0,
+				},
+				Input172 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBGamma",
+					Default = 1,
+				},
+				Input173 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBBrightness",
+					Default = 0,
+				},
+				Input174 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBLow",
+					ControlGroup = 119,
+					Default = 0,
+				},
+				Input175 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBMid",
+					ControlGroup = 119,
+					Default = 1,
+				},
+				Input176 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBHigh",
+					ControlGroup = 119,
+					Default = 1,
+				},
+				Input177 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBOutputLow",
+					ControlGroup = 120,
+					Default = 0,
+				},
+				Input178 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRGBOutputHigh",
+					ControlGroup = 120,
+					Default = 1,
+				},
+				Input179 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedContrast",
+					Default = 1,
+				},
+				Input180 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedGain",
+					Default = 1,
+				},
+				Input181 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedLift",
+					Default = 0,
+				},
+				Input182 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedGamma",
+					Default = 1,
+				},
+				Input183 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedBrightness",
+					Default = 0,
+				},
+				Input184 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedLow",
+					ControlGroup = 126,
+					Default = 0,
+				},
+				Input185 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedMid",
+					ControlGroup = 126,
+					Default = 1,
+				},
+				Input186 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedHigh",
+					ControlGroup = 126,
+					Default = 1,
+				},
+				Input187 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedOutputLow",
+					ControlGroup = 127,
+					Default = 0,
+				},
+				Input188 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsRedOutputHigh",
+					ControlGroup = 127,
+					Default = 1,
+				},
+				Input189 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenContrast",
+					Default = 1,
+				},
+				Input190 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenGain",
+					Default = 1,
+				},
+				Input191 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenLift",
+					Default = 0,
+				},
+				Input192 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenGamma",
+					Default = 1,
+				},
+				Input193 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenBrightness",
+					Default = 0,
+				},
+				Input194 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenLow",
+					ControlGroup = 133,
+					Default = 0,
+				},
+				Input195 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenMid",
+					ControlGroup = 133,
+					Default = 1,
+				},
+				Input196 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenHigh",
+					ControlGroup = 133,
+					Default = 1,
+				},
+				Input197 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenOutputLow",
+					ControlGroup = 134,
+					Default = 0,
+				},
+				Input198 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsGreenOutputHigh",
+					ControlGroup = 134,
+					Default = 1,
+				},
+				Input199 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueContrast",
+					Default = 1,
+				},
+				Input200 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueGain",
+					Default = 1,
+				},
+				Input201 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueLift",
+					Default = 0,
+				},
+				Input202 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueGamma",
+					Default = 1,
+				},
+				Input203 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueBrightness",
+					Default = 0,
+				},
+				Input204 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueLow",
+					ControlGroup = 140,
+					Default = 0,
+				},
+				Input205 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueMid",
+					ControlGroup = 140,
+					Default = 1,
+				},
+				Input206 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueHigh",
+					ControlGroup = 140,
+					Default = 1,
+				},
+				Input207 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueOutputLow",
+					ControlGroup = 141,
+					Default = 0,
+				},
+				Input208 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "HighlightsBlueOutputHigh",
+					ControlGroup = 141,
+					Default = 1,
+				},
+				Input209 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ResetAllColorChanges",
+				},
+				Input210 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ResetAllLevels",
+				},
+				Input211 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Red1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input212 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Yellow1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input213 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Green1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input214 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Cyan1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input215 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Blue1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input216 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Magenta1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input217 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Red2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input218 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Yellow2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input219 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Green2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input220 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Cyan2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input221 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Blue2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input222 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Magenta2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input223 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Red3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input224 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Yellow3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input225 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Green3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input226 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Cyan3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input227 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Blue3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input228 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Magenta3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input229 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Red4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input230 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Yellow4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input231 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Green4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input232 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Cyan4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input233 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Blue4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input234 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Magenta4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input235 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SuppressionRangeDummy",
+					ControlGroup = 144,
+				},
+				Input236 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SuppressionAngle1",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input237 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SuppressionAngle2",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input238 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SuppressionAngle3",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input239 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "SuppressionAngle4",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input240 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ResetAllSuppression",
+				},
+				Input241 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "RangesRange",
+					Name = "Range",
+				},
+				Input242 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "RangesChannel",
+				},
+				Input243 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ColorRanges",
+				},
+				Input244 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "RenderOutputRange",
+					Default = 0,
+				},
+				Input245 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "PresetSimpleRanges",
+				},
+				Input246 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "PresetSmoothRanges",
+				},
+				Input247 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "Blend",
+					Default = 1,
+				},
+				Input248 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+				},
+				Input249 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+				},
+				Input250 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1_1",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AlphaMultiplyMask_1_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1430, 214.5 } },
+			Tools = ordered() {
+				AlphaMultiplyMask_1_1 = AlphaMultiply {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorCorrectorMask_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 109.646, 72.6145 } },
+				},
+				ColorCorrectorMask_1_1 = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MasterRGBGain = Input { Value = 3.07594936708861, },
+						MasterRGBBrightness = Input { Value = -0.0632911392405063, },
+						ShadowsRGBContrast = Input { Value = 0.98, },
+						ShadowsRGBGain = Input { Value = 0.945147679324895, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "AlphaDivideMask_1_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "GradientMaskBackground_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0.3535, 73.3216 } },
+				},
+				GradientMaskBackground_1_1 = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Gradient" }, },
+						Start = Input { Value = { 0.5, 0.6674764595103 }, },
+						End = Input { Value = { 0.5, 0.3207721280603 }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 1, 1, 1, 1 },
+									[1] = { 0, 0, 0, 0 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 7.7325, 10.15 } },
+				},
+				AlphaDivideMask_1_1 = AlphaDivide {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorCorrectorSkyRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -109.646, 74.0287 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.0862745098039216, G = 0.0862745098039216, B = 0.501960784313725 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		SaverTIF = Saver {
+			NameSet = true,
+			Inputs = {
+				["QuickTimeMovies.Compression"] = Input { Value = FuID { "Apple ProRes 422 HQ_apch" }, },
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Temp:\\KartaVR\\Samsung_Gear_360_stitched.0000.tif",
+						FormatID = "TiffFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "TiffFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "PipeRouter2",
+					Source = "Output",
+				},
+				["TiffFormat.Depth"] = Input { Value = 1, },
+				["TiffFormat.SaveAlpha"] = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2255, 148.5 } },
+		},
+		ColorCorrectorSkyLeft = ColorCorrector {
+			NameSet = true,
+			Inputs = {
+				MasterRGBGain = Input { Value = 1.05063291139241, },
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "GridWarpLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1320, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		BgMask = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 1, },
+				Width = Input {
+					Value = 3840,
+					Expression = "MergeViews.Background.OriginalWidth",
+				},
+				Height = Input {
+					Value = 1920,
+					Expression = "MergeViews.Background.OriginalHeight",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Type = Input { Value = FuID { "Gradient" }, },
+				Start = Input { Value = { 0.5, 0.52 }, },
+				End = Input { Value = { 0.5, 0.49 }, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 0 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 82.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		PipeRouter2 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ColorCorrectorFinal",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 2090, 148.5 } },
+		},
+		GridWarpLeft = GridWarp {
+			SrcDrawMode = 1,
+			DestDrawMode = 1,
+			NameSet = true,
+			Inputs = {
+				MagnetDistance = Input { Value = 0.05, },
+				DstPointTolerance = Input { Value = 0.00999999977648258, },
+				DstOverSizeAmount = Input { Value = 0.0500000007450581, },
+				DstSnapDistance = Input { Value = 0.0199999995529652, },
+				SrcGridChange = Input {
+					Value = Mesh {
+						Count = 81,
+						Col = 9,
+						DeltaR = 0.125,
+						DeltaC = 0.125,
+						P1X = -0.5,
+						P1Y = -0.5,
+						Points = {
+							{ X = -0.5, Y = -0.5, L_CX = 0, T_CY = 0, },
+							{ X = -0.375, Y = -0.5, T_CY = 0, },
+							{ X = -0.25, Y = -0.5, T_CY = 0, },
+							{ X = -0.125, Y = -0.5, T_CY = 0, },
+							{ X = 0, Y = -0.5, T_CY = 0, },
+							{ X = 0.125, Y = -0.5, T_CY = 0, },
+							{ X = 0.25, Y = -0.5, T_CY = 0, },
+							{ X = 0.375, Y = -0.5, T_CY = 0, },
+							{ X = 0.5, Y = -0.5, T_CY = 0, R_CX = 0, },
+							{ X = -0.5, Y = -0.375, L_CX = 0, },
+							{ X = -0.375, Y = -0.375, },
+							{ X = -0.25, Y = -0.375, },
+							{ X = -0.125, Y = -0.375, },
+							{ X = 0, Y = -0.375, },
+							{ X = 0.125, Y = -0.375, },
+							{ X = 0.25, Y = -0.375, },
+							{ X = 0.375, Y = -0.375, },
+							{ X = 0.5, Y = -0.375, R_CX = 0, },
+							{ X = -0.5, Y = -0.25, L_CX = 0, },
+							{ X = -0.375, Y = -0.25, },
+							{ X = -0.25, Y = -0.25, },
+							{ X = -0.125, Y = -0.25, },
+							{ X = 0, Y = -0.25, },
+							{ X = 0.125, Y = -0.25, },
+							{ X = 0.25, Y = -0.25, },
+							{ X = 0.375, Y = -0.25, },
+							{ X = 0.5, Y = -0.25, R_CX = 0, },
+							{ X = -0.5, Y = -0.125, L_CX = 0, },
+							{ X = -0.375, Y = -0.125, },
+							{ X = -0.25, Y = -0.125, },
+							{ X = -0.125, Y = -0.125, },
+							{ X = 0, Y = -0.125, },
+							{ X = 0.125, Y = -0.125, },
+							{ X = 0.25, Y = -0.125, },
+							{ X = 0.375, Y = -0.125, },
+							{ X = 0.5, Y = -0.125, R_CX = 0, },
+							{ X = -0.5, Y = 0, L_CX = 0, },
+							{ X = -0.375, Y = 0, },
+							{ X = -0.25, Y = 0, },
+							{ X = -0.125, Y = 0, },
+							{ X = 0, Y = 0, },
+							{ X = 0.125, Y = 0, },
+							{ X = 0.25, Y = 0, },
+							{ X = 0.375, Y = 0, },
+							{ X = 0.5, Y = 0, R_CX = 0, },
+							{ X = -0.5, Y = 0.125, L_CX = 0, },
+							{ X = -0.375, Y = 0.125, },
+							{ X = -0.25, Y = 0.125, },
+							{ X = -0.125, Y = 0.125, },
+							{ X = 0, Y = 0.125, },
+							{ X = 0.125, Y = 0.125, },
+							{ X = 0.25, Y = 0.125, },
+							{ X = 0.375, Y = 0.125, },
+							{ X = 0.5, Y = 0.125, R_CX = 0, },
+							{ X = -0.5, Y = 0.25, L_CX = 0, },
+							{ X = -0.375, Y = 0.25, },
+							{ X = -0.25, Y = 0.25, },
+							{ X = -0.125, Y = 0.25, },
+							{ X = 0, Y = 0.25, },
+							{ X = 0.125, Y = 0.25, },
+							{ X = 0.25, Y = 0.25, },
+							{ X = 0.375, Y = 0.25, },
+							{ X = 0.5, Y = 0.25, R_CX = 0, },
+							{ X = -0.5, Y = 0.375, L_CX = 0, },
+							{ X = -0.375, Y = 0.375, },
+							{ X = -0.25, Y = 0.375, },
+							{ X = -0.125, Y = 0.375, },
+							{ X = 0, Y = 0.375, },
+							{ X = 0.125, Y = 0.375, },
+							{ X = 0.25, Y = 0.375, },
+							{ X = 0.375, Y = 0.375, },
+							{ X = 0.5, Y = 0.375, R_CX = 0, },
+							{ X = -0.5, Y = 0.5, L_CX = 0, B_CY = 0, },
+							{ X = -0.375, Y = 0.5, B_CY = 0, },
+							{ X = -0.25, Y = 0.5, B_CY = 0, },
+							{ X = -0.125, Y = 0.5, B_CY = 0, },
+							{ X = 0, Y = 0.5, B_CY = 0, },
+							{ X = 0.125, Y = 0.5, B_CY = 0, },
+							{ X = 0.25, Y = 0.5, B_CY = 0, },
+							{ X = 0.375, Y = 0.5, B_CY = 0, },
+							{ X = 0.5, Y = 0.5, R_CX = 0, B_CY = 0, }
+						},
+						SavePoints = {
+						}
+					},
+				},
+				SrcPolyline = Input {
+					Value = Polyline {
+					},
+				},
+				DstGridChange = Input {
+					Value = Mesh {
+						Count = 81,
+						Col = 9,
+						DeltaR = 0.125,
+						DeltaC = 0.125,
+						P1X = -0.5,
+						P1Y = -0.5,
+						Points = {
+							{ X = -0.5, Y = -0.5, L_CX = 0, T_CY = 0, },
+							{ X = -0.375, Y = -0.5, T_CY = 0, },
+							{ X = -0.25, Y = -0.5, T_CY = 0, },
+							{ X = -0.125, Y = -0.5, T_CY = 0, },
+							{ X = 0, Y = -0.5, T_CY = 0, },
+							{ X = 0.125, Y = -0.5, T_CY = 0, },
+							{ X = 0.25, Y = -0.5, T_CY = 0, },
+							{ X = 0.375, Y = -0.5, T_CY = 0, },
+							{ X = 0.5, Y = -0.5, T_CY = 0, R_CX = 0, },
+							{ X = -0.5, Y = -0.375, L_CX = 0, },
+							{ X = -0.375, Y = -0.375, },
+							{ X = -0.25, Y = -0.375, },
+							{ X = -0.125, Y = -0.375, },
+							{ X = 0, Y = -0.375, },
+							{ X = 0.125, Y = -0.375, },
+							{ X = 0.25, Y = -0.375, },
+							{ X = 0.375, Y = -0.375, },
+							{ X = 0.5, Y = -0.375, R_CX = 0, },
+							{ X = -0.5, Y = -0.25, L_CX = 0, },
+							{ X = -0.375, Y = -0.25, },
+							{ X = -0.25, Y = -0.25, },
+							{ X = -0.125, Y = -0.25, },
+							{ X = 0, Y = -0.25, },
+							{ X = 0.125, Y = -0.25, B_CY = 0.0413634456867973, },
+							{ X = 0.25, Y = -0.25, B_CY = 0.0416794816789472, },
+							{ X = 0.375, Y = -0.25, },
+							{ X = 0.5, Y = -0.25, R_CX = 0, },
+							{ X = -0.5, Y = -0.125, L_CX = 0, B_CY = 0.0481068640242864, },
+							{ X = -0.375, Y = -0.125, Z = 9.74424648250777e-05, B_CY = 0.0419834063306622, },
+							{ X = -0.25, Y = -0.125, B_CY = 0.0448959226241466, },
+							{ X = -0.125, Y = -0.125, B_CY = 0.0359341145661177, },
+							{ X = 0, Y = -0.125, R_CX = 0.0413684446716411, B_CY = 0.04363238900258, },
+							{ X = 0.124104206756013, Y = -0.125922590387686, Z = 9.55570370913296e-05, U = 0.125, V = -0.125, L_CX = -0.0413684446716411, T_CY = -0.0413634456867973, R_CX = 0.0424823694651785, B_CY = 0.0530089702746719, },
+							{ X = 0.251550220728739, Y = -0.125, Z = 9.31372613826309e-05, U = 0.25, L_CX = -0.0424823694651785, T_CY = -0.0416794816789472, R_CX = 0.0411499264527044, B_CY = 0.0491988419759314, },
+							{ X = 0.375, Y = -0.125, Z = 9.56130048714054e-05, L_CX = -0.0411499264527044, B_CY = 0.0461102398024192, },
+							{ X = 0.5, Y = -0.125, R_CX = 0, B_CY = 0.0488735522534171, },
+							{ X = -0.5, Y = 0.0193205920728596, Z = 9.15234601770368e-05, V = 0, L_CX = 0, T_CY = -0.0481068640242864, R_CX = 0.0407896699118473, R_CY = -0.00616009875110751, B_CY = 0.0352264693090468, },
+							{ X = -0.377630990264458, Y = 0.000840295819536814, Z = 9.90192652020599e-05, U = -0.375, V = 0, L_CX = -0.0409057901619682, T_CY = -0.0419834063306622, R_CX = 0.0419560447108599, B_CY = 0.041397192180295, },
+							{ X = -0.25183805473801, Y = 0.00963779109635894, Z = 9.6418308413505e-05, U = -0.25, V = 0, L_CX = -0.0419560447108599, T_CY = -0.0448959226241466, R_CX = 0.0437529952858164, B_CY = 0.0384736484035148, },
+							{ X = -0.121278086392997, Y = -0.017455116769704, Z = 8.82025776021939e-05, U = -0.125, V = 0, L_CX = -0.0437529952858164, T_CY = -0.0359341145661177, R_CX = 0.0414805497312277, B_CY = 0.0475497519758624, },
+							{ X = 0.00262063184821836, Y = 0.00579219991620333, Z = 9.57900774003922e-05, U = 0, V = 0, L_CX = -0.0414805497312277, T_CY = -0.04363238900258, R_CX = 0.040465123166141, B_CY = 0.0397743219359929, },
+							{ X = 0.123256629429065, Y = 0.0330954478225483, Z = 9.67837923077832e-05, U = 0.125, V = 0, L_CX = -0.040465123166141, T_CY = -0.0530089702746719, R_CX = 0.0415675859214023, B_CY = 0.0306570409758142, },
+							{ X = 0.247845253486392, Y = 0.0224103864453325, Z = 9.77749783957233e-05, U = 0.25, V = 0, L_CX = -0.0415675859214023, T_CY = -0.0491988419759314, R_CX = 0.042316319014523, B_CY = 0.0342267054806967, },
+							{ X = 0.374712265184594, Y = 0.0133295163114421, Z = 9.64488156801227e-05, U = 0.375, V = 0, L_CX = -0.042316319014523, T_CY = -0.0461102398024192, R_CX = 0.041785716752471, B_CY = 0.0372239920556099, },
+							{ X = 0.5, Y = 0.0216206567602511, Z = 9.70195944046997e-05, V = 0, L_CX = -0.041762587974885, L_CY = -0.0027637142389882, T_CY = -0.0488735522534171, R_CX = 0, B_CY = 0.0344597810799163, },
+							{ X = -0.5, Y = 0.125, L_CX = 0, T_CY = -0.0352264693090468, R_CX = 0.0412587462022783, },
+							{ X = -0.376223761393165, Y = 0.125, Z = 9.18677677848993e-05, U = -0.375, L_CX = -0.0412587462022783, T_CY = -0.041397192180295, R_CX = 0.0420745871310549, B_CY = 0.0416746509578764, },
+							{ X = -0.25, Y = 0.125, L_CX = -0.0420745871310549, T_CY = -0.0384736484035148, },
+							{ X = -0.125, Y = 0.125, T_CY = -0.0475497519758624, },
+							{ X = 0, Y = 0.125, T_CY = -0.0397743219359929, },
+							{ X = 0.125, Y = 0.125, T_CY = -0.0306570409758142, },
+							{ X = 0.25, Y = 0.125, T_CY = -0.0342267054806967, },
+							{ X = 0.375, Y = 0.125, T_CY = -0.0372239920556099, },
+							{ X = 0.5, Y = 0.125, T_CY = -0.0344597810799163, R_CX = 0, },
+							{ X = -0.5, Y = 0.25, L_CX = 0, },
+							{ X = -0.375, Y = 0.25, T_CY = -0.0416746509578764, },
+							{ X = -0.25, Y = 0.25, },
+							{ X = -0.125, Y = 0.25, },
+							{ X = 0, Y = 0.25, },
+							{ X = 0.125, Y = 0.25, },
+							{ X = 0.25, Y = 0.25, },
+							{ X = 0.375, Y = 0.25, },
+							{ X = 0.5, Y = 0.25, R_CX = 0, },
+							{ X = -0.5, Y = 0.375, L_CX = 0, },
+							{ X = -0.375, Y = 0.375, },
+							{ X = -0.25, Y = 0.375, },
+							{ X = -0.125, Y = 0.375, },
+							{ X = 0, Y = 0.375, },
+							{ X = 0.125, Y = 0.375, },
+							{ X = 0.25, Y = 0.375, },
+							{ X = 0.375, Y = 0.375, },
+							{ X = 0.5, Y = 0.375, R_CX = 0, },
+							{ X = -0.5, Y = 0.5, L_CX = 0, B_CY = 0, },
+							{ X = -0.375, Y = 0.5, B_CY = 0, },
+							{ X = -0.25, Y = 0.5, B_CY = 0, },
+							{ X = -0.125, Y = 0.5, B_CY = 0, },
+							{ X = 0, Y = 0.5, B_CY = 0, },
+							{ X = 0.125, Y = 0.5, B_CY = 0, },
+							{ X = 0.25, Y = 0.5, B_CY = 0, },
+							{ X = 0.375, Y = 0.5, B_CY = 0, },
+							{ X = 0.5, Y = 0.5, R_CX = 0, B_CY = 0, }
+						},
+						SavePoints = {
+						}
+					},
+				},
+				DstPolyline = Input {
+					Value = Polyline {
+					},
+				},
+				Input = Input {
+					SourceOp = "TransformLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1210, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		Domemaster2EquirectangularLeft = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "HemirectTransform",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 990, 148.5 } },
+			Tools = ordered() {
+				HemirectTransform = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.5, 0.75 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 0.5, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "RotateUpright",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 10.15 } },
+				},
+				RotateUpright = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ResizeAspectRatio",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 10.15 } },
+				},
+				ResizeAspectRatio = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "Width/2",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 10.15 } },
+				},
+				CropConversion = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 3840,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 2700,
+							Expression = "CropConversion.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "HemirectViewSlide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				},
+				HemirectViewSlide = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rect2PolarConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 10.15 } },
+				},
+				Rect2PolarConversion = CoordSpace {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 10.15 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "Height",
+						},
+						Height = Input { Value = 3840, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -330, 10.15 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "This example stitches the raw footage from a Samsung Gear 360 panoramic camera into an equirectangular/LatLong/spherical format panorama.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 880, -17.8958 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 967.447, 64.2581 }
+			},
+		},
+		ColorCorrectorSkyRight = ColorCorrector {
+			NameSet = true,
+			Inputs = {
+				WheelSaturation1 = Input { Value = 1.07172995780591, },
+				MasterRGBContrast = Input { Value = 0.911392405063291, },
+				MasterRGBGain = Input { Value = 0.877637130801688, },
+				MasterRGBGamma = Input { Value = 0.886075949367089, },
+				MasterRGBBrightness = Input { Value = -0.00421940928270037, },
+				ColorRanges = Input {
+					Value = ColorCurves {
+						Curves = {
+							{
+								Points = {
+									{ 0, 1 },
+									{ 0.4, 0.2 },
+									{ 0.6, 0 },
+									{ 1, 0 }
+								}
+							},
+							{
+								Points = {
+									{ 0, 0 },
+									{ 0.4, 0 },
+									{ 0.6, 0.2 },
+									{ 1, 1 }
+								}
+							}
+						}
+					},
+				},
+				HistogramIgnoreTransparent = Input { Value = 1, },
+				Input = Input {
+					SourceOp = "TransformRight",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1320, 214.5 } },
+			Colors = {
+				TileColor = { R = 0.12156862745098, G = 0.109803921568627, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		TransformLeft = Transform {
+			NameSet = true,
+			Inputs = {
+				Pivot = Input { Value = { 0.5, 1 }, },
+				UseSizeAndAspect = Input { Value = 0, },
+				YSize = Input { Value = 1.069, },
+				Input = Input {
+					SourceOp = "HemirectTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1100, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		Stitch_Samsung_Gear_360_Footage = Underlay {
+			NameSet = true,
+			ViewInfo = UnderlayInfo {
+				Pos = { 1210, 49.5 },
+				Size = { 994.25, 200.251 }
+			},
+		},
+		Final_Color_Correct = Underlay {
+			NameSet = true,
+			ViewInfo = UnderlayInfo {
+				Pos = { 1870, 49.5 },
+				Size = { 287.38, 202.356 }
+			},
+		},
+		CropLeft = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input { Value = 1920, },
+				YSize = Input { Value = 1920, },
+				Input = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		ViewerEquirectangular = GroupOperator {
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							ViewerEquirectangular = GroupOperator {
+								CtrlWZoom = false,
+								CustomData = {
+								},
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Image",
+									},
+									Input1 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Width",
+										MaxScale = 8192,
+										Default = 3840,
+									},
+									Input2 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Height",
+										MaxScale = 8192,
+										Default = 1920,
+									},
+									Input3 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "PixelAspect",
+										DefaultX = 1,
+										DefaultY = 1,
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Depth",
+										Default = 3,
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AovType",
+									},
+									Input6 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AoV",
+										Default = 90,
+									},
+									Input7 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FLength",
+										Default = 12.7,
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FilmGate",
+									},
+									Input9 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureW",
+										Default = 1,
+									},
+									Input10 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureH",
+										Default = 1,
+									},
+									Input11 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftX",
+										Default = 0,
+									},
+									Input12 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftY",
+										Default = 0,
+									},
+									Input13 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.RotOrder",
+									},
+									Input14 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.X",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input15 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Y",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input16 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Z",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = 0,
+									}
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										SourceOp = "Renderer3DFront",
+										Source = "Output",
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 2253.66, 80.9175 } },
+								Tools = ordered() {
+									Renderer3DFront = Renderer3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											GlobalOut = Input { Value = 1, },
+											Width = Input { Value = 1920, },
+											Height = Input { Value = 1080, },
+											Depth = Input { Value = 1, },
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+											SceneInput = Input {
+												SourceOp = "Merge3DFront",
+												Source = "Output",
+											},
+											CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+											["RendererSoftware.Lighting"] = Input { Value = 0, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 142.15 } },
+										Name = "Renderer3DFront"
+									},
+									Merge3DFront = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input {
+												Value = 1,
+												Expression = "CameraViewInput.PassThroughLights",
+											},
+											SceneInput1 = Input {
+												SourceOp = "CameraViewInput",
+												Source = "Output",
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DFront",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 76.15 } },
+										Name = "Merge3DFront"
+									},
+									Camera3DFront = Camera3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+											AoV = Input { Value = 90, },
+											FLength = Input { Value = 12.7, },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+											FilmBack = Input { Value = 1, },
+											FilmGate = Input { Value = FuID { "User" }, },
+											ApertureW = Input { Value = 1, },
+											ApertureH = Input { Value = 1, },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+										Name = "Camera3DFront"
+									},
+									CameraViewInput = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input { Value = 1, },
+											SceneInput1 = Input {
+												SourceOp = "Shape3D_1",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 55, 76.15 } },
+										Name = "CameraViewInput"
+									},
+									Shape3D_1 = Shape3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+											["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+											["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+											["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "SphereMap_1",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+											["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+											["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+											["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+											["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+											["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+										},
+										ViewInfo = OperatorInfo { Pos = { -55, 76.15 } },
+										Name = "Shape3D_1"
+									},
+									SphereMap_1 = SphereMap {
+										CtrlWZoom = false,
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											Rotation = Input { Value = 1, },
+											["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+											["Rotate.X"] = Input { Value = -80, },
+											["Rotate.Y"] = Input { Value = -70, },
+											["FilterMode.Nest"] = Input { Value = 1, },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+											Image = Input {
+												SourceOp = "PipeRouter2",
+												Source = "Output",
+											},
+											MaterialID = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { -165, 76.15 } },
+										Name = "SphereMap_1"
+									}
+								},
+								Name = "ViewerEquirectangular"
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							ViewerEquirectangular = GroupOperator {
+								CtrlWZoom = false,
+								CustomData = {
+								},
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Image",
+									},
+									Input1 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Width",
+										MaxScale = 8192,
+										Default = 3840,
+									},
+									Input2 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Height",
+										MaxScale = 8192,
+										Default = 1920,
+									},
+									Input3 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "PixelAspect",
+										DefaultX = 1,
+										DefaultY = 1,
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Depth",
+										Default = 3,
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AovType",
+									},
+									Input6 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AoV",
+										Default = 90,
+									},
+									Input7 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FLength",
+										Default = 12.7,
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FilmGate",
+									},
+									Input9 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureW",
+										Default = 1,
+									},
+									Input10 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureH",
+										Default = 1,
+									},
+									Input11 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftX",
+										Default = 0,
+									},
+									Input12 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftY",
+										Default = 0,
+									},
+									Input13 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.RotOrder",
+									},
+									Input14 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.X",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input15 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Y",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input16 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Z",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = 0,
+									}
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										SourceOp = "Renderer3DFront",
+										Source = "Output",
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 2253.66, 80.9175 } },
+								Tools = ordered() {
+									Renderer3DFront = Renderer3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											GlobalOut = Input { Value = 1, },
+											Width = Input { Value = 1920, },
+											Height = Input { Value = 1080, },
+											Depth = Input { Value = 1, },
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+											SceneInput = Input {
+												SourceOp = "Merge3DFront",
+												Source = "Output",
+											},
+											CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+											["RendererSoftware.Lighting"] = Input { Value = 0, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 142.15 } },
+									},
+									Merge3DFront = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input {
+												Value = 1,
+												Expression = "CameraViewInput.PassThroughLights",
+											},
+											SceneInput1 = Input {
+												SourceOp = "CameraViewInput",
+												Source = "Output",
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DFront",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 76.15 } },
+									},
+									Camera3DFront = Camera3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+											AoV = Input { Value = 115.584604054282, },
+											FLength = Input { Value = 8, },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+											FilmBack = Input { Value = 1, },
+											FilmGate = Input { Value = FuID { "User" }, },
+											ApertureW = Input { Value = 1, },
+											ApertureH = Input { Value = 1, },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+									},
+									CameraViewInput = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input { Value = 1, },
+											SceneInput1 = Input {
+												SourceOp = "Shape3D_1",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 55, 76.15 } },
+									},
+									Shape3D_1 = Shape3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+											["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+											["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+											["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "SphereMap_1",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+											["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+											["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+											["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+											["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+											["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+										},
+										ViewInfo = OperatorInfo { Pos = { -55, 76.15 } },
+									},
+									SphereMap_1 = SphereMap {
+										CtrlWZoom = false,
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											Rotation = Input { Value = 1, },
+											["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+											["Rotate.X"] = Input { Value = -90, },
+											["Rotate.Y"] = Input { Value = 47.8723404, },
+											["FilterMode.Nest"] = Input { Value = 1, },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+											Image = Input {
+												SourceOp = "PipeRouter2",
+												Source = "Output",
+											},
+											MaterialID = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { -165, 76.15 } },
+									}
+								},
+							}
+						}
+					},
+					[3] = {
+						Tools = ordered() {
+							ViewerEquirectangular = GroupOperator {
+								CtrlWZoom = false,
+								CustomData = {
+								},
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Image",
+									},
+									Input1 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Width",
+										MaxScale = 8192,
+										Default = 3840,
+									},
+									Input2 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Height",
+										MaxScale = 8192,
+										Default = 1920,
+									},
+									Input3 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "PixelAspect",
+										DefaultX = 1,
+										DefaultY = 1,
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Depth",
+										Default = 3,
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AovType",
+									},
+									Input6 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AoV",
+										Default = 90,
+									},
+									Input7 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FLength",
+										Default = 12.7,
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FilmGate",
+									},
+									Input9 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureW",
+										Default = 1,
+									},
+									Input10 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureH",
+										Default = 1,
+									},
+									Input11 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftX",
+										Default = 0,
+									},
+									Input12 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftY",
+										Default = 0,
+									},
+									Input13 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.RotOrder",
+									},
+									Input14 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.X",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input15 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Y",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input16 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Z",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = 0,
+									}
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										SourceOp = "Renderer3DFront",
+										Source = "Output",
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 2253.66, 80.9175 } },
+								Tools = ordered() {
+									Renderer3DFront = Renderer3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											GlobalOut = Input { Value = 1, },
+											Width = Input { Value = 1920, },
+											Height = Input { Value = 1080, },
+											Depth = Input { Value = 1, },
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+											SceneInput = Input {
+												SourceOp = "Merge3DFront",
+												Source = "Output",
+											},
+											CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+											["RendererSoftware.Lighting"] = Input { Value = 0, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 142.15 } },
+									},
+									Merge3DFront = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input {
+												Value = 1,
+												Expression = "CameraViewInput.PassThroughLights",
+											},
+											SceneInput1 = Input {
+												SourceOp = "CameraViewInput",
+												Source = "Output",
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DFront",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 76.15 } },
+									},
+									Camera3DFront = Camera3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+											AoV = Input { Value = 90, },
+											FLength = Input { Value = 12.7, },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+											FilmBack = Input { Value = 1, },
+											FilmGate = Input { Value = FuID { "User" }, },
+											ApertureW = Input { Value = 1, },
+											ApertureH = Input { Value = 1, },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+									},
+									CameraViewInput = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input { Value = 1, },
+											SceneInput1 = Input {
+												SourceOp = "Shape3D_1",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 55, 76.15 } },
+									},
+									Shape3D_1 = Shape3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+											["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+											["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+											["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "SphereMap_1",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+											["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+											["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+											["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+											["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+											["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+										},
+										ViewInfo = OperatorInfo { Pos = { -55, 76.15 } },
+									},
+									SphereMap_1 = SphereMap {
+										CtrlWZoom = false,
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											Rotation = Input { Value = 1, },
+											["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+											["Rotate.X"] = Input { Value = -132.893617, },
+											["Rotate.Y"] = Input { Value = 179.6170212, },
+											["FilterMode.Nest"] = Input { Value = 1, },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+											Image = Input {
+												SourceOp = "PipeRouter2",
+												Source = "Output",
+											},
+											MaterialID = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { -165, 76.15 } },
+									}
+								},
+							}
+						}
+					},
+					[4] = {
+						Tools = ordered() {
+							ViewerEquirectangular = GroupOperator {
+								CtrlWZoom = false,
+								CustomData = {
+								},
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Image",
+									},
+									Input1 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Width",
+										MaxScale = 8192,
+										Default = 3840,
+									},
+									Input2 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Height",
+										MaxScale = 8192,
+										Default = 1920,
+									},
+									Input3 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "PixelAspect",
+										DefaultX = 1,
+										DefaultY = 1,
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DFront",
+										Source = "Depth",
+										Default = 3,
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AovType",
+									},
+									Input6 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "AoV",
+										Default = 90,
+									},
+									Input7 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FLength",
+										Default = 12.7,
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "FilmGate",
+									},
+									Input9 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureW",
+										Default = 1,
+									},
+									Input10 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "ApertureH",
+										Default = 1,
+									},
+									Input11 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftX",
+										Default = 0,
+									},
+									Input12 = InstanceInput {
+										SourceOp = "Camera3DFront",
+										Source = "LensShiftY",
+										Default = 0,
+									},
+									Input13 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.RotOrder",
+									},
+									Input14 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.X",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input15 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Y",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = -90,
+									},
+									Input16 = InstanceInput {
+										SourceOp = "SphereMap_1",
+										Source = "Rotate.Z",
+										MinScale = -360,
+										MaxScale = 360,
+										Default = 0,
+									}
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										SourceOp = "Renderer3DFront",
+										Source = "Output",
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 2253.66, 80.9175 } },
+								Tools = ordered() {
+									Renderer3DFront = Renderer3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											GlobalOut = Input { Value = 1, },
+											Width = Input { Value = 1920, },
+											Height = Input { Value = 1080, },
+											Depth = Input { Value = 1, },
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+											SceneInput = Input {
+												SourceOp = "Merge3DFront",
+												Source = "Output",
+											},
+											CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+											["RendererSoftware.Lighting"] = Input { Value = 0, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 142.15 } },
+									},
+									Merge3DFront = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input {
+												Value = 1,
+												Expression = "CameraViewInput.PassThroughLights",
+											},
+											SceneInput1 = Input {
+												SourceOp = "CameraViewInput",
+												Source = "Output",
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DFront",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 76.15 } },
+									},
+									Camera3DFront = Camera3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+											AoV = Input { Value = 90, },
+											FLength = Input { Value = 12.7, },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+											FilmBack = Input { Value = 1, },
+											FilmGate = Input { Value = FuID { "User" }, },
+											ApertureW = Input { Value = 1, },
+											ApertureH = Input { Value = 1, },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+									},
+									CameraViewInput = Merge3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											PassThroughLights = Input { Value = 1, },
+											SceneInput1 = Input {
+												SourceOp = "Shape3D_1",
+												Source = "Output",
+											},
+										},
+										ViewInfo = OperatorInfo { Pos = { 55, 76.15 } },
+									},
+									Shape3D_1 = Shape3D {
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+											["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+											["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+											["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+											["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+											MaterialInput = Input {
+												SourceOp = "SphereMap_1",
+												Source = "MaterialOutput",
+											},
+											["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+											["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+											["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+											["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+											["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+											["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+											["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+										},
+										ViewInfo = OperatorInfo { Pos = { -55, 76.15 } },
+									},
+									SphereMap_1 = SphereMap {
+										CtrlWZoom = false,
+										CtrlWShown = false,
+										NameSet = true,
+										Inputs = {
+											Rotation = Input { Value = 1, },
+											["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+											["Rotate.X"] = Input { Value = -25, },
+											["Rotate.Y"] = Input { Value = -70, },
+											["Rotate.Z"] = Input { Value = 3, },
+											["FilterMode.Nest"] = Input { Value = 1, },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+											Image = Input {
+												SourceOp = "PipeRouter2",
+												Source = "Output",
+											},
+											MaterialID = Input { Value = 1, },
+										},
+										ViewInfo = OperatorInfo { Pos = { -165, 76.15 } },
+									}
+								},
+							}
+						}
+					},
+				}
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "PixelAspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "AovType",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "AoV",
+					Default = 90,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "FilmGate",
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "ApertureW",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "ApertureH",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "LensShiftX",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "LensShiftY",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.RotOrder",
+				},
+				Input14 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "SphereMap_1",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Renderer3DFront",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 2253.66, 80.9175 } },
+			Tools = ordered() {
+				Renderer3DFront = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input { Value = 1920, },
+						Height = Input { Value = 1080, },
+						Depth = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Merge3DFront",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 142.15 } },
+				},
+				Merge3DFront = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input {
+							Value = 1,
+							Expression = "CameraViewInput.PassThroughLights",
+						},
+						SceneInput1 = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 76.15 } },
+				},
+				Camera3DFront = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+				},
+				CameraViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "Shape3D_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 76.15 } },
+				},
+				Shape3D_1 = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+						["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+						["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+						["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "SphereMap_1",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, }
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 76.15 } },
+				},
+				SphereMap_1 = SphereMap {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YXZ" }, },
+						["Rotate.X"] = Input { Value = -80, },
+						["Rotate.Y"] = Input { Value = -70, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 76.15 } },
+				}
+			},
+		},
+		RotateEquirectangular = GroupOperator {
+			CurrentSettings = 2,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							RotateEquirectangular = GroupOperator {
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										Name = "Image",
+										SourceOp = "PanoMerge",
+										Source = "Background"
+									},
+									Input1 = InstanceInput {
+										Default = 0,
+										SourceOp = "UVRenderer3D",
+										Source = "Depth"
+									},
+									Input2 = InstanceInput {
+										SourceOp = "SphereMap",
+										Source = "Rotate.RotOrder"
+									},
+									Input3 = InstanceInput {
+										Source = "Rotate.X",
+										MaxScale = 360,
+										MinScale = -360,
+										SourceOp = "SphereMap",
+										Default = 0
+									},
+									Input4 = InstanceInput {
+										Source = "Rotate.Y",
+										MaxScale = 360,
+										MinScale = -360,
+										SourceOp = "SphereMap",
+										Default = 0
+									},
+									Input5 = InstanceInput {
+										Source = "Rotate.Z",
+										MaxScale = 360,
+										MinScale = -360,
+										SourceOp = "SphereMap",
+										Default = 0
+									}
+								},
+								Colors = {
+									TextColor = { B = 1, G = 1, R = 1 },
+									TileColor = { B = 0.631372549019608, G = 0.168627450980392, R = 0.180392156862745 }
+								},
+								CtrlWZoom = false,
+								Tools = ordered() {
+									UVRenderer3D = Renderer3D {
+										CtrlWShown = false,
+										ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+										NameSet = true,
+										Inputs = {
+											SceneInput = Input {
+												SourceOp = "Shape3D",
+												Source = "Output"
+											},
+											Width = Input {
+												Value = 1920,
+												Expression = "PanoMerge.Background.OriginalWidth"
+											},
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+											Height = Input {
+												Value = 960,
+												Expression = "PanoMerge.Background.OriginalHeight"
+											},
+											RendererType = Input { Value = FuID { "RendererOpenGLUV" } },
+											GlobalOut = Input { Value = 1 },
+											["RendererOpenGLUV.Texturing"] = Input { Value = 1 },
+											["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0 },
+											["RendererOpenGLUV.TextureDepth"] = Input { Value = 0 }
+										}
+									},
+									Shape3D = Shape3D {
+										CtrlWShown = false,
+										Inputs = {
+											["Transform3DOp.ScaleLock"] = Input { Value = 0 },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+											["Transform3DOp.Scale.X"] = Input { Value = -1000 },
+											MaterialInput = Input {
+												SourceOp = "SphereMap",
+												Source = "MaterialOutput"
+											},
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500 },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+											["Transform3DOp.Scale.Y"] = Input { Value = 1000 },
+											["Transform3DOp.Scale.Z"] = Input { Value = 1000 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 180 }
+										},
+										ViewInfo = OperatorInfo { Pos = { 55, 10.15 } },
+										NameSet = true,
+										CustomData = {
+											Settings = {
+												[1] = {
+													Tools = ordered() {
+														Shape3D = Shape3D {
+															Inputs = {
+																MaterialInput = Input {
+																	SourceOp = "SphereMap",
+																	Source = "MaterialOutput"
+																},
+																["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+																["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+																["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+																["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+																["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+																Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+																["SurfaceSphereInputs.Radius"] = Input { Value = 500 }
+															},
+															CtrlWZoom = false,
+															NameSet = true,
+															ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+															CustomData = {
+															}
+														}
+													}
+												}
+											}
+										},
+										CurrentSettings = 2
+									},
+									SphereMap = SphereMap {
+										CtrlWShown = false,
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "PanoMerge",
+												Source = "Output"
+											},
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["Rotate.Z"] = Input { Value = 90 },
+											["Rotate.X"] = Input { Value = 89 }
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+										CustomData = {
+											Settings = {
+												[1] = {
+													Tools = ordered() {
+														SphereMap = SphereMap {
+															Inputs = {
+																Rotation = Input { Value = 1 },
+																["FilterMode.Nest"] = Input { Value = 1 },
+																Image = Input {
+																	SourceOp = "Loader1",
+																	Source = "Output"
+																},
+																["Rotate.Y"] = Input { Value = 90 },
+																MaterialID = Input { Value = 1 },
+																["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+																["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+																["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+															},
+															Name = "SphereMap",
+															CtrlWZoom = false,
+															NameSet = true,
+															ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+															CustomData = {
+															}
+														}
+													}
+												},
+												[2] = {
+													Tools = ordered() {
+														SphereMap = SphereMap {
+															Inputs = {
+																Rotation = Input { Value = 1 },
+																["FilterMode.Nest"] = Input { Value = 1 },
+																["Rotate.Y"] = Input { Value = 90 },
+																MaterialID = Input { Value = 1 },
+																["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+																Image = Input {
+																	SourceOp = "Loader1",
+																	Source = "Output"
+																}
+															},
+															CtrlWZoom = false,
+															NameSet = true,
+															ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+															CustomData = {
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									PanoMerge = Merge {
+										CtrlWShown = false,
+										Inputs = {
+											PerformDepthMerge = Input { Value = 0 },
+											Background = Input {
+												SourceOp = "MergeViews",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { -165, 10.15 } }
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 1430, 148.5 } },
+								CustomData = {
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										SourceOp = "UVRenderer3D",
+										Source = "Output"
+									}
+								}
+							}
+						}
+					},
+				}
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "UVRenderer3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1650, 149.836 } },
+			Tools = ordered() {
+				UVRenderer3D = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input {
+							Value = 3840,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+				},
+				Shape3D = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Shape3D = Shape3D {
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "SphereMap",
+												Source = "MaterialOutput"
+											},
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "SphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 10.15 } },
+				},
+				SphereMap = SphereMap {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+											["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+										},
+										Name = "SphereMap",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.X"] = Input { Value = 70, },
+						["Rotate.Z"] = Input { Value = 90, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+				},
+				PanoMerge = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "MergeViews",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 10.15 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.12156862745098, G = 0.109803921568627, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "Loader1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 770, 181.5 } },
+		},
+		TransformRight = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 0.5, -0.5 }, },
+				Pivot = Input { Value = { 0.5, 1 }, },
+				UseSizeAndAspect = Input { Value = 0, },
+				YSize = Input {
+					Value = 1.069,
+					Expression = "TransformLeft.YSize",
+				},
+				Angle = Input { Value = 180, },
+				Input = Input {
+					SourceOp = "HemirectTransform_1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1100, 214.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		},
+		ColorCorrectorMaskedLeft = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				Input251 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Width",
+					Default = 3840,
+				},
+				Input252 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Height",
+					Default = 1920,
+				},
+				Input253 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input254 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Type",
+				},
+				Input255 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopLeftRed",
+					Name = "Top Left",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input256 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopLeftGreen",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input257 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopLeftBlue",
+					ControlGroup = 164,
+					Default = 0,
+				},
+				Input258 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopLeftAlpha",
+					ControlGroup = 164,
+					Default = 1,
+				},
+				Input259 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopRightRed",
+					Name = "Top Right",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input260 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopRightGreen",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input261 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopRightBlue",
+					ControlGroup = 165,
+					Default = 0,
+				},
+				Input262 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "TopRightAlpha",
+					ControlGroup = 165,
+					Default = 1,
+				},
+				Input263 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomLeftRed",
+					Name = "Bottom Left",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input264 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomLeftGreen",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input265 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomLeftBlue",
+					ControlGroup = 166,
+					Default = 0,
+				},
+				Input266 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomLeftAlpha",
+					ControlGroup = 166,
+					Default = 1,
+				},
+				Input267 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomRightRed",
+					Name = "Bottom Right",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input268 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomRightGreen",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input269 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomRightBlue",
+					ControlGroup = 167,
+					Default = 0,
+				},
+				Input270 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "BottomRightAlpha",
+					ControlGroup = 167,
+					Default = 1,
+				},
+				Input271 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "GradientType",
+				},
+				Input272 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Start",
+					DefaultX = 0.5,
+					DefaultY = 1,
+				},
+				Input273 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "End",
+					DefaultX = 0.5,
+					DefaultY = 0.5,
+				},
+				Input274 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Gradient",
+				},
+				Input275 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "GradientInterpolationMethod",
+				},
+				Input276 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Offset",
+					Default = 0,
+				},
+				Input277 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Repeat",
+				},
+				Input278 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "SubPixel",
+				},
+				Input279 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "MotionBlur",
+					Default = 0,
+				},
+				Input280 = InstanceInput {
+					SourceOp = "GradientMaskBackground_1",
+					Source = "Quality",
+					Default = 2,
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "AlphaDivideMask_1",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Menu",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "CorrectionRange",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelHue1",
+					ControlGroup = 3,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelSaturation1",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintAngle1",
+					ControlGroup = 3,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintLength1",
+					ControlGroup = 3,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelRangeDummy1",
+					ControlGroup = 3,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelHue2",
+					ControlGroup = 3,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelSaturation2",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintAngle2",
+					ControlGroup = 3,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintLength2",
+					ControlGroup = 3,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelHue3",
+					ControlGroup = 3,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelSaturation3",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintAngle3",
+					ControlGroup = 3,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintLength3",
+					ControlGroup = 3,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelHue4",
+					ControlGroup = 3,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelSaturation4",
+					ControlGroup = 3,
+					Default = 1,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintAngle4",
+					ControlGroup = 3,
+				},
+				Input19 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "WheelTintLength4",
+					ControlGroup = 3,
+				},
+				Input20 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "TintMode",
+					Default = 2,
+				},
+				Input21 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Hue1",
+				},
+				Input22 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Saturation1",
+					Default = 1,
+				},
+				Input23 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Hue2",
+				},
+				Input24 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Saturation2",
+					Default = 1,
+				},
+				Input25 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Hue3",
+				},
+				Input26 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Saturation3",
+					Default = 1,
+				},
+				Input27 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Hue4",
+				},
+				Input28 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Saturation4",
+					Default = 1,
+				},
+				Input29 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Channel",
+				},
+				Input30 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Histogram",
+					ControlGroup = 14,
+				},
+				Input31 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HistogramReference",
+					ControlGroup = 14,
+				},
+				Input32 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HistogramOutput",
+					ControlGroup = 14,
+				},
+				Input33 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HistogramCurve",
+					ControlGroup = 14,
+				},
+				Input34 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HistogramType",
+				},
+				Input35 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "EqualizeLuminance",
+					Default = 0,
+				},
+				Input36 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "LockRedGreenBlue",
+					Default = 1,
+				},
+				Input37 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "EqualizeRed",
+					Default = 1,
+				},
+				Input38 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "EqualizeGreen",
+					Default = 1,
+				},
+				Input39 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "EqualizeBlue",
+					Default = 1,
+				},
+				Input40 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Precision",
+					Default = 2,
+				},
+				Input41 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SmoothOutCorrectionCurve",
+					Default = 0,
+				},
+				Input42 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SnapshotMatch",
+				},
+				Input43 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ReleaseMatch",
+				},
+				Input44 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MatchShow",
+					Default = 0,
+				},
+				Input45 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MatchCenter",
+					DefaultX = 0.5,
+					DefaultY = 0.5,
+				},
+				Input46 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MatchWidth",
+					Default = 1,
+				},
+				Input47 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MatchHeight",
+					Default = 1,
+				},
+				Input48 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ResetAllHistogramChanges",
+				},
+				Input49 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBContrast",
+					Default = 1,
+				},
+				Input50 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBGain",
+					Default = 1,
+				},
+				Input51 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBLift",
+					Default = 0,
+				},
+				Input52 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBGamma",
+					Default = 1,
+				},
+				Input53 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBBrightness",
+					Default = 0,
+				},
+				Input54 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBLow",
+					ControlGroup = 35,
+					Default = 0,
+				},
+				Input55 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBMid",
+					ControlGroup = 35,
+					Default = 1,
+				},
+				Input56 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBHigh",
+					ControlGroup = 35,
+					Default = 1,
+				},
+				Input57 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBOutputLow",
+					ControlGroup = 36,
+					Default = 0,
+				},
+				Input58 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRGBOutputHigh",
+					ControlGroup = 36,
+					Default = 1,
+				},
+				Input59 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedContrast",
+					Default = 1,
+				},
+				Input60 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedGain",
+					Default = 1,
+				},
+				Input61 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedLift",
+					Default = 0,
+				},
+				Input62 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedGamma",
+					Default = 1,
+				},
+				Input63 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedBrightness",
+					Default = 0,
+				},
+				Input64 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedLow",
+					ControlGroup = 42,
+					Default = 0,
+				},
+				Input65 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedMid",
+					ControlGroup = 42,
+					Default = 1,
+				},
+				Input66 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedHigh",
+					ControlGroup = 42,
+					Default = 1,
+				},
+				Input67 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedOutputLow",
+					ControlGroup = 43,
+					Default = 0,
+				},
+				Input68 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterRedOutputHigh",
+					ControlGroup = 43,
+					Default = 1,
+				},
+				Input69 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenContrast",
+					Default = 1,
+				},
+				Input70 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenGain",
+					Default = 1,
+				},
+				Input71 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenLift",
+					Default = 0,
+				},
+				Input72 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenGamma",
+					Default = 1,
+				},
+				Input73 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenBrightness",
+					Default = 0,
+				},
+				Input74 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenLow",
+					ControlGroup = 49,
+					Default = 0,
+				},
+				Input75 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenMid",
+					ControlGroup = 49,
+					Default = 1,
+				},
+				Input76 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenHigh",
+					ControlGroup = 49,
+					Default = 1,
+				},
+				Input77 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenOutputLow",
+					ControlGroup = 50,
+					Default = 0,
+				},
+				Input78 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterGreenOutputHigh",
+					ControlGroup = 50,
+					Default = 1,
+				},
+				Input79 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueContrast",
+					Default = 1,
+				},
+				Input80 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueGain",
+					Default = 1,
+				},
+				Input81 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueLift",
+					Default = 0,
+				},
+				Input82 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueGamma",
+					Default = 1,
+				},
+				Input83 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueBrightness",
+					Default = 0,
+				},
+				Input84 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueLow",
+					ControlGroup = 56,
+					Default = 0,
+				},
+				Input85 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueMid",
+					ControlGroup = 56,
+					Default = 1,
+				},
+				Input86 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueHigh",
+					ControlGroup = 56,
+					Default = 1,
+				},
+				Input87 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueOutputLow",
+					ControlGroup = 57,
+					Default = 0,
+				},
+				Input88 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MasterBlueOutputHigh",
+					ControlGroup = 57,
+					Default = 1,
+				},
+				Input89 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBContrast",
+					Default = 1,
+				},
+				Input90 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBGain",
+					Default = 1,
+				},
+				Input91 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBLift",
+					Default = 0,
+				},
+				Input92 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBGamma",
+					Default = 1,
+				},
+				Input93 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBBrightness",
+					Default = 0,
+				},
+				Input94 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBLow",
+					ControlGroup = 63,
+					Default = 0,
+				},
+				Input95 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBMid",
+					ControlGroup = 63,
+					Default = 1,
+				},
+				Input96 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBHigh",
+					ControlGroup = 63,
+					Default = 1,
+				},
+				Input97 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBOutputLow",
+					ControlGroup = 64,
+					Default = 0,
+				},
+				Input98 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRGBOutputHigh",
+					ControlGroup = 64,
+					Default = 1,
+				},
+				Input99 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedContrast",
+					Default = 1,
+				},
+				Input100 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedGain",
+					Default = 1,
+				},
+				Input101 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedLift",
+					Default = 0,
+				},
+				Input102 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedGamma",
+					Default = 1,
+				},
+				Input103 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedBrightness",
+					Default = 0,
+				},
+				Input104 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedLow",
+					ControlGroup = 70,
+					Default = 0,
+				},
+				Input105 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedMid",
+					ControlGroup = 70,
+					Default = 1,
+				},
+				Input106 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedHigh",
+					ControlGroup = 70,
+					Default = 1,
+				},
+				Input107 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedOutputLow",
+					ControlGroup = 71,
+					Default = 0,
+				},
+				Input108 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsRedOutputHigh",
+					ControlGroup = 71,
+					Default = 1,
+				},
+				Input109 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenContrast",
+					Default = 1,
+				},
+				Input110 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenGain",
+					Default = 1,
+				},
+				Input111 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenLift",
+					Default = 0,
+				},
+				Input112 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenGamma",
+					Default = 1,
+				},
+				Input113 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenBrightness",
+					Default = 0,
+				},
+				Input114 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenLow",
+					ControlGroup = 77,
+					Default = 0,
+				},
+				Input115 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenMid",
+					ControlGroup = 77,
+					Default = 1,
+				},
+				Input116 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenHigh",
+					ControlGroup = 77,
+					Default = 1,
+				},
+				Input117 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenOutputLow",
+					ControlGroup = 78,
+					Default = 0,
+				},
+				Input118 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsGreenOutputHigh",
+					ControlGroup = 78,
+					Default = 1,
+				},
+				Input119 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueContrast",
+					Default = 1,
+				},
+				Input120 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueGain",
+					Default = 1,
+				},
+				Input121 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueLift",
+					Default = 0,
+				},
+				Input122 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueGamma",
+					Default = 1,
+				},
+				Input123 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueBrightness",
+					Default = 0,
+				},
+				Input124 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueLow",
+					ControlGroup = 84,
+					Default = 0,
+				},
+				Input125 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueMid",
+					ControlGroup = 84,
+					Default = 1,
+				},
+				Input126 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueHigh",
+					ControlGroup = 84,
+					Default = 1,
+				},
+				Input127 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueOutputLow",
+					ControlGroup = 85,
+					Default = 0,
+				},
+				Input128 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ShadowsBlueOutputHigh",
+					ControlGroup = 85,
+					Default = 1,
+				},
+				Input129 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBContrast",
+					Default = 1,
+				},
+				Input130 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBGain",
+					Default = 1,
+				},
+				Input131 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBLift",
+					Default = 0,
+				},
+				Input132 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBGamma",
+					Default = 1,
+				},
+				Input133 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBBrightness",
+					Default = 0,
+				},
+				Input134 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBLow",
+					ControlGroup = 91,
+					Default = 0,
+				},
+				Input135 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBMid",
+					ControlGroup = 91,
+					Default = 1,
+				},
+				Input136 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBHigh",
+					ControlGroup = 91,
+					Default = 1,
+				},
+				Input137 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBOutputLow",
+					ControlGroup = 92,
+					Default = 0,
+				},
+				Input138 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRGBOutputHigh",
+					ControlGroup = 92,
+					Default = 1,
+				},
+				Input139 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedContrast",
+					Default = 1,
+				},
+				Input140 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedGain",
+					Default = 1,
+				},
+				Input141 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedLift",
+					Default = 0,
+				},
+				Input142 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedGamma",
+					Default = 1,
+				},
+				Input143 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedBrightness",
+					Default = 0,
+				},
+				Input144 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedLow",
+					ControlGroup = 98,
+					Default = 0,
+				},
+				Input145 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedMid",
+					ControlGroup = 98,
+					Default = 1,
+				},
+				Input146 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedHigh",
+					ControlGroup = 98,
+					Default = 1,
+				},
+				Input147 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedOutputLow",
+					ControlGroup = 99,
+					Default = 0,
+				},
+				Input148 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesRedOutputHigh",
+					ControlGroup = 99,
+					Default = 1,
+				},
+				Input149 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenContrast",
+					Default = 1,
+				},
+				Input150 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenGain",
+					Default = 1,
+				},
+				Input151 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenLift",
+					Default = 0,
+				},
+				Input152 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenGamma",
+					Default = 1,
+				},
+				Input153 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenBrightness",
+					Default = 0,
+				},
+				Input154 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenLow",
+					ControlGroup = 105,
+					Default = 0,
+				},
+				Input155 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenMid",
+					ControlGroup = 105,
+					Default = 1,
+				},
+				Input156 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenHigh",
+					ControlGroup = 105,
+					Default = 1,
+				},
+				Input157 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenOutputLow",
+					ControlGroup = 106,
+					Default = 0,
+				},
+				Input158 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesGreenOutputHigh",
+					ControlGroup = 106,
+					Default = 1,
+				},
+				Input159 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueContrast",
+					Default = 1,
+				},
+				Input160 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueGain",
+					Default = 1,
+				},
+				Input161 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueLift",
+					Default = 0,
+				},
+				Input162 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueGamma",
+					Default = 1,
+				},
+				Input163 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueBrightness",
+					Default = 0,
+				},
+				Input164 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueLow",
+					ControlGroup = 112,
+					Default = 0,
+				},
+				Input165 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueMid",
+					ControlGroup = 112,
+					Default = 1,
+				},
+				Input166 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueHigh",
+					ControlGroup = 112,
+					Default = 1,
+				},
+				Input167 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueOutputLow",
+					ControlGroup = 113,
+					Default = 0,
+				},
+				Input168 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "MidTonesBlueOutputHigh",
+					ControlGroup = 113,
+					Default = 1,
+				},
+				Input169 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBContrast",
+					Default = 1,
+				},
+				Input170 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBGain",
+					Default = 1,
+				},
+				Input171 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBLift",
+					Default = 0,
+				},
+				Input172 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBGamma",
+					Default = 1,
+				},
+				Input173 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBBrightness",
+					Default = 0,
+				},
+				Input174 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBLow",
+					ControlGroup = 119,
+					Default = 0,
+				},
+				Input175 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBMid",
+					ControlGroup = 119,
+					Default = 1,
+				},
+				Input176 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBHigh",
+					ControlGroup = 119,
+					Default = 1,
+				},
+				Input177 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBOutputLow",
+					ControlGroup = 120,
+					Default = 0,
+				},
+				Input178 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRGBOutputHigh",
+					ControlGroup = 120,
+					Default = 1,
+				},
+				Input179 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedContrast",
+					Default = 1,
+				},
+				Input180 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedGain",
+					Default = 1,
+				},
+				Input181 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedLift",
+					Default = 0,
+				},
+				Input182 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedGamma",
+					Default = 1,
+				},
+				Input183 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedBrightness",
+					Default = 0,
+				},
+				Input184 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedLow",
+					ControlGroup = 126,
+					Default = 0,
+				},
+				Input185 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedMid",
+					ControlGroup = 126,
+					Default = 1,
+				},
+				Input186 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedHigh",
+					ControlGroup = 126,
+					Default = 1,
+				},
+				Input187 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedOutputLow",
+					ControlGroup = 127,
+					Default = 0,
+				},
+				Input188 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsRedOutputHigh",
+					ControlGroup = 127,
+					Default = 1,
+				},
+				Input189 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenContrast",
+					Default = 1,
+				},
+				Input190 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenGain",
+					Default = 1,
+				},
+				Input191 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenLift",
+					Default = 0,
+				},
+				Input192 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenGamma",
+					Default = 1,
+				},
+				Input193 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenBrightness",
+					Default = 0,
+				},
+				Input194 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenLow",
+					ControlGroup = 133,
+					Default = 0,
+				},
+				Input195 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenMid",
+					ControlGroup = 133,
+					Default = 1,
+				},
+				Input196 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenHigh",
+					ControlGroup = 133,
+					Default = 1,
+				},
+				Input197 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenOutputLow",
+					ControlGroup = 134,
+					Default = 0,
+				},
+				Input198 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsGreenOutputHigh",
+					ControlGroup = 134,
+					Default = 1,
+				},
+				Input199 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueContrast",
+					Default = 1,
+				},
+				Input200 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueGain",
+					Default = 1,
+				},
+				Input201 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueLift",
+					Default = 0,
+				},
+				Input202 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueGamma",
+					Default = 1,
+				},
+				Input203 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueBrightness",
+					Default = 0,
+				},
+				Input204 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueLow",
+					ControlGroup = 140,
+					Default = 0,
+				},
+				Input205 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueMid",
+					ControlGroup = 140,
+					Default = 1,
+				},
+				Input206 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueHigh",
+					ControlGroup = 140,
+					Default = 1,
+				},
+				Input207 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueOutputLow",
+					ControlGroup = 141,
+					Default = 0,
+				},
+				Input208 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "HighlightsBlueOutputHigh",
+					ControlGroup = 141,
+					Default = 1,
+				},
+				Input209 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ResetAllColorChanges",
+				},
+				Input210 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ResetAllLevels",
+				},
+				Input211 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Red1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input212 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Yellow1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input213 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Green1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input214 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Cyan1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input215 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Blue1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input216 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Magenta1",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input217 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Red2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input218 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Yellow2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input219 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Green2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input220 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Cyan2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input221 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Blue2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input222 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Magenta2",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input223 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Red3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input224 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Yellow3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input225 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Green3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input226 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Cyan3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input227 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Blue3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input228 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Magenta3",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input229 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Red4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input230 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Yellow4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input231 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Green4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input232 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Cyan4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input233 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Blue4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input234 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Magenta4",
+					ControlGroup = 144,
+					Default = 1,
+				},
+				Input235 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SuppressionRangeDummy",
+					ControlGroup = 144,
+				},
+				Input236 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SuppressionAngle1",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input237 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SuppressionAngle2",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input238 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SuppressionAngle3",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input239 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "SuppressionAngle4",
+					MaxScale = 0.1666666666667,
+					Default = 0,
+				},
+				Input240 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ResetAllSuppression",
+				},
+				Input241 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "RangesRange",
+					Name = "Range",
+				},
+				Input242 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "RangesChannel",
+				},
+				Input243 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ColorRanges",
+				},
+				Input244 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "RenderOutputRange",
+					Default = 0,
+				},
+				Input245 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "PresetSimpleRanges",
+				},
+				Input246 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "PresetSmoothRanges",
+				},
+				Input247 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "Blend",
+					Default = 1,
+				},
+				Input248 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+				},
+				Input249 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+				},
+				Input250 = InstanceInput {
+					SourceOp = "ColorCorrectorMask_1",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AlphaMultiplyMask_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 1430, 148.5 } },
+			Tools = ordered() {
+				AlphaMultiplyMask_1 = AlphaMultiply {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorCorrectorMask_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 109.646, 72.6145 } },
+				},
+				ColorCorrectorMask_1 = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						MasterRGBContrast = Input { Value = 0.9957805907173, },
+						MasterRGBGain = Input { Value = 1.35443037974684, },
+						MasterRGBGamma = Input { Value = 1.09282700421941, },
+						MasterRGBBrightness = Input { Value = 0.0548523206751055, },
+						ShadowsRGBContrast = Input { Value = 0.98, },
+						ShadowsRGBGain = Input { Value = 0.89, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "AlphaDivideMask_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "GradientMaskBackground_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0.3535, 73.3216 } },
+				},
+				GradientMaskBackground_1 = Background {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Type = Input { Value = FuID { "Gradient" }, },
+						Start = Input { Value = { 0.5, 0.435781544256121 }, },
+						End = Input { Value = { 0.5, 0.700790960452 }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 1, 1, 1, 1 },
+									[1] = { 0, 0, 0, 0 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 7.7325, 10.15 } },
+				},
+				AlphaDivideMask_1 = AlphaDivide {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorCorrectorSkyLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -109.646, 74.0287 } },
+				}
+			},
+			Colors = {
+				TileColor = { R = 0.0862745098039216, G = 0.0862745098039216, B = 0.501960784313725 },
+				TextColor = { R = 0.996078431372549, G = 0.984313725490196, B = 1 },
+			}
+		},
+		MergeViews = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "AlphaMultiplyMask_1",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "AlphaMultiplyMask_1_1",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+				EffectMask = Input {
+					SourceOp = "BgMask",
+					Source = "Output",
+				}
+			},
+			ViewInfo = OperatorInfo { Pos = { 1540, 148.5 } },
+			Colors = {
+				TileColor = { R = 0.105882352941176, G = 0.0941176470588235, B = 0.631372549019608 },
+				TextColor = { R = 1, G = 1, B = 1 },
+			}
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 1920,
+			Height = 953,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.748601,
+						Offset = { -511.693, 130.483 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 247 },
+							ScaleX = 0.00214424951267057,
+							OffsetX = -0.0514619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "none"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.826631853785901,
+					RatioY = 97.5552050473186,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.531216931216931,
+						{ ID = "Left", RatioX = 0.499367088607595, RatioY = 0.0099601593625498, Pop = true },
+						{ ID = "Right", RatioX = 0.500632911392405, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.407407407407407, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 330,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 2,
+				},
+			},
+			AutoSave = {
+				OnRender = true
+			},
+			Memory = {
+				FramesAtOnce = 10,
+				Render = {
+					SimultaneousBranching = true
+				},
+				Interactive = {
+					SimultaneousBranching = true,
+				}
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1,
+						ShowControls = false
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.Right.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						LUTPlugin = "OCIOFileTransformViewLUT",
+						LUTSelected = "OCIO File Transform ViewLUT",
+						ShowControls = true,
+						CheckerUnderlay = true,
+						ScaleMode = 1,
+						Channel = 4294967295,
+					},
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							FitMarginY = 0,
+							LUTPlugin = "Comp.Views.Left.SideB.",
+							ScaleMode = 1,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					},
+					ViewLUT = {
+						{
+							Tools = ordered() {
+								OCIOFileTransformViewLUT = ViewOperator {
+									NameSet = true
+								}
+							},
+							ID = "OCIOFileTransformViewLUT"
+						},
+						SelectedPlugin = "OCIOFileTransformViewLUT",
+						SelectedName = "OCIO File Transform ViewLUT"
+					},
+				},
+				View1 = {
+					PrevCtrlInactiveColor = 0,
+					PickW = 1,
+					FullScreen = false,
+					PickH = 1,
+					AlwaysOnTop = true,
+					PrevCtrlActiveColor = 0,
+					SideB = {
+						PrevCtrlInactiveColor = 4278255360,
+						PickW = 1,
+						PickH = 1,
+						PrevCtrlActiveColor = 4278190335,
+						Viewer = {
+							EnableLUTs = false,
+							LUTPlugin = "Comp.Views.View1.SideB.",
+							FitMarginY = 0,
+							FitMarginX = 0,
+							FitMarginType = 0,
+							FarZ = -1000,
+							NearZ = 0
+						}
+					}
+				},
+			},
+			Network = {
+				DoNetworkRenders = true
+			},
+			FrameFormat = {
+				Name = "2K Full Aperture (Super 35)",
+				Width = 2048,
+				Height = 1556,
+				PerFeet = 16,
+				GuideRatio = 1.77777777777778,
+			},
+			PolyKeyListDlg = {
+				Window = {
+					Left = 0,
+					Top = 42
+				}
+			},
+			Unsorted = {
+				GlobalEnd = 1,
+				RenderSettings = {
+					Configs = {
+						Final = {
+							StepRender = false,
+							PriorityClasses = "local",
+							SizeType = 1,
+							MotionBlur = true,
+							CustomAspect = true,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							StepSize = 5,
+							UpdateMode = "Some",
+							UseNetwork = true,
+							Quality = true
+						},
+						Preview = {
+							StepRender = false,
+							PriorityClasses = "local",
+							SizeType = 1,
+							MotionBlur = true,
+							CustomAspect = true,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							StepSize = 5,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = false
+						}
+					},
+					PreviewConfig = "Preview",
+					CurrentConfig = "Final"
+				}
+			},
+			Paths = {
+				Map = {
+				}
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

@@ -1,0 +1,297 @@
+{
+	Tools = ordered() {
+		Angular2MeshUV = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Angular2MeshUV",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+					Name = "Image",
+				},
+				Input23 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "ImportFile",
+				},
+				Input19 = InstanceInput {
+					SourceOp = "MeshUVRenderer3D",
+					Source = "Width",
+					Name = "Render Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input20 = InstanceInput {
+					SourceOp = "MeshUVRenderer3D",
+					Source = "Height",
+					Name = "Render Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input21 = InstanceInput {
+					SourceOp = "MeshUVRenderer3D",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Visibility.CullFrontFace",
+					Default = 0,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Visibility.CullBackFace",
+					Default = 0,
+				},
+				Input22 = InstanceInput {
+					SourceOp = "MeshUVRenderer3D",
+					Source = "RendererOpenGLUV.UVGutterSize",
+					Default = 0,
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Translate.X",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Translate.Y",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Translate.Z",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Rotate.X",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Rotate.Y",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Rotate.Z",
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Pivot.X",
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Pivot.Y",
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Pivot.Z",
+					Default = 0,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.ScaleLock",
+					Default = 1,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Scale.X",
+					Name = "Scale",
+					MaxScale = 10000,
+					Default = 1000,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Scale.Y",
+					Name = "",
+					MaxScale = 10000,
+					Default = 1000,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.Scale.Z",
+					Name = "",
+					MaxScale = 10000,
+					Default = 1000,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "Transform3DOp.InvertTransform",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "MeshUVRenderer3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				Mesh3DLoader = SurfaceFBXMesh {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Scale.X"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						ImportFile = Input { Value = "", },
+						TransformToWorld = Input { Value = 0, },
+						["Visibility.Nest"] = Input { Value = 1, },
+						["Lighting.Nest"] = Input { Value = 1, },
+						["Matte.Nest"] = Input { Value = 1, },
+						["BlendMode.Nest"] = Input { Value = 1, },
+						["Controls.Nest"] = Input { Value = 1, },
+						["ObjectID.Nest"] = Input { Value = 1, },
+						["ObjectID.ObjectID"] = Input { Value = 1, },
+						MaterialInput = Input {
+							SourceOp = "SphereMapEnvironment",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 16.5 } },
+				},
+				MeshUVRenderer3D = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 2048, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Mesh3DLoader",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input {
+							Value = 0,
+							Expression = "Depth",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 16.5 } },
+				},
+				SphereMapEnvironment = SphereMap {
+					NameSet = true,
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.Y"] = Input { Value = 270, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						Image = Input {
+							SourceOp = "ViewRotate",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { Value = 1, },
+						MaterialID = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 16.5 } },
+				},
+				ViewRotate = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ViewResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 16.5 } },
+				},
+				ViewResize = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "EquirectConversionCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 16.5 } },
+				},
+				EquirectConversionCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						YSize = Input {
+							Value = 1440,
+							Expression = "EquirectConversionCrop.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "ViewSlide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 16.5 } },
+				},
+				ViewSlide = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "EquirectConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 16.5 } },
+				},
+				EquirectConversion = CoordSpace {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 16.5 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 16.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Angular2MeshUV"
+}

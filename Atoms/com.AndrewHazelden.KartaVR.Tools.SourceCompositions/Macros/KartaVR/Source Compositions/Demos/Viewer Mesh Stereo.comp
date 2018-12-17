@@ -1,0 +1,1276 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 1 },
+	CurrentID = 143,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 8.2.1 build 6",
+	SavedOutputs = 0,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+		"Macros:/KartaVR/rectangle_video_right.0000.exr",
+		"Macros:/KartaVR/rectangle_video_left.0000.exr",
+		"Macros:/KartaVR/rectangle_video_anaglyph_stereo.0000.png"
+	},
+	Tools = {
+		Loader2 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubeX_right.exr",
+					FormatID = "OpenEXRFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				["Clip1.OpenEXRFormat.RedName"] = Input { Value = FuID { "R" }, },
+				["Clip1.OpenEXRFormat.GreenName"] = Input { Value = FuID { "G" }, },
+				["Clip1.OpenEXRFormat.BlueName"] = Input { Value = FuID { "B" }, },
+				["Clip1.OpenEXRFormat.AlphaName"] = Input { Value = FuID { "A" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 330, 115.5 } },
+		},
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/cubeX_left.exr",
+					FormatID = "OpenEXRFormat",
+					StartFrame = -1,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				["Clip1.OpenEXRFormat.RedName"] = Input { Value = FuID { "R" }, },
+				["Clip1.OpenEXRFormat.GreenName"] = Input { Value = FuID { "G" }, },
+				["Clip1.OpenEXRFormat.BlueName"] = Input { Value = FuID { "B" }, },
+				["Clip1.OpenEXRFormat.AlphaName"] = Input { Value = FuID { "A" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 330, 82.5 } },
+		},
+		StereoAnaglyphHalfColorMerge = GroupOperator {
+			NameSet = true,
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Input",
+					Name = "Left",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "InputScalingRight",
+					Source = "Input",
+					Name = "Right",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Width",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "HalfColorLeft",
+					Source = "Saturation1",
+					Name = "Saturation",
+					Default = 0.5,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Edges",
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Center",
+					Name = "Convergence",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Size",
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Angle",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AnaglyphHalfColorMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 440, 148.5 } },
+			Tools = ordered() {
+				AnaglyphHalfColorMerge = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 16, },
+						Background = Input {
+							SourceOp = "HalfColorRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "HalfColorLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 109.15 } },
+				},
+				HalfColorRight = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						WheelSaturation1 = Input {
+							Value = 0.5,
+							Expression = "HalfColorLeft.Saturation1",
+						},
+						Saturation1 = Input { Expression = "HalfColorLeft.Saturation1", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "SlideTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 109.15 } },
+				},
+				SlideTransform = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScalingRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55.707, 109.15 } },
+				},
+				HalfColorLeft = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						WheelSaturation1 = Input { Value = 0.5, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "InputScalingLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+				},
+				InputScalingLeft = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Renderer3DLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 10.15 } },
+				},
+				InputScalingRight = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "InputScalingLeft.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "InputScalingLeft.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Renderer3DRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 109.15 } },
+				}
+			},
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "This ViewerMeshStereo example takes two LatLong/Equirectangular/Spherical images and applies a panoramic defishing operation to turn them into a pair of left and right view images in a regular rectangular image format.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 330, 49.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 291.297, 25.2695 }
+			},
+		},
+		ViewerMeshStereo = GroupOperator {
+			CurrentSettings = 2,
+			CustomData = {
+				Settings = {
+					[1] = {
+						Tools = ordered() {
+							ViewerMeshStereo = GroupOperator {
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										Source = "MaterialInput",
+										SourceOp = "ReplaceMaterial3DLeft",
+										Name = "Left"
+									},
+									MainInput2 = InstanceInput {
+										Source = "MaterialInput",
+										SourceOp = "ReplaceMaterial3DRight",
+										Name = "Right"
+									},
+									Input1 = InstanceInput {
+										Source = "ImportFile",
+										SourceOp = "FBXMesh3DCenter",
+										Name = "Mesh File"
+									},
+									Input2 = InstanceInput {
+										Source = "Width",
+										SourceOp = "Renderer3DLeft",
+										MaxScale = 16384,
+										Default = 3840
+									},
+									Input3 = InstanceInput {
+										Source = "Height",
+										SourceOp = "Renderer3DLeft",
+										MaxScale = 8192,
+										Default = 1920
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DLeft",
+										Source = "RendererType"
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "AovType"
+									},
+									Input6 = InstanceInput {
+										Source = "AoV",
+										SourceOp = "Camera3DCenter",
+										Default = 90
+									},
+									Input7 = InstanceInput {
+										Source = "FLength",
+										SourceOp = "Camera3DCenter",
+										Default = 12.7
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "FilmGate"
+									},
+									Input9 = InstanceInput {
+										Source = "ApertureW",
+										SourceOp = "Camera3DCenter",
+										Default = 1
+									},
+									Input10 = InstanceInput {
+										Source = "ApertureH",
+										SourceOp = "Camera3DCenter",
+										Default = 1
+									},
+									Input11 = InstanceInput {
+										Source = "LensShiftX",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input12 = InstanceInput {
+										Source = "LensShiftY",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input13 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "Transform3DOp.Rotate.RotOrder"
+									},
+									Input14 = InstanceInput {
+										Source = "Transform3DOp.Rotate.X",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input15 = InstanceInput {
+										Source = "Transform3DOp.Rotate.Y",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input16 = InstanceInput {
+										Source = "Transform3DOp.Rotate.Z",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input17 = InstanceInput {
+										Source = "Transform3DOp.Scale.X",
+										Name = "Scale",
+										MaxScale = 10000,
+										SourceOp = "FBXMesh3DCenter",
+										Default = 1000
+									}
+								},
+								CtrlWZoom = false,
+								Tools = ordered() {
+									Renderer3DLeft = Renderer3D {
+										CtrlWShown = false,
+										Inputs = {
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1 },
+											GlobalOut = Input { Value = 1 },
+											CameraSelector = Input { Value = FuID { "Camera3DCenter" } },
+											Height = Input { Value = 1920 },
+											SceneInput = Input {
+												SourceOp = "ReplaceMaterial3DLeft",
+												Source = "Output"
+											},
+											Width = Input { Value = 3840 }
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 110, 142.15 } }
+									},
+									Renderer3DRight = Renderer3D {
+										CtrlWShown = false,
+										Inputs = {
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1 },
+											RendererType = Input { Expression = "Renderer3DLeft.RendererType" },
+											GlobalOut = Input { Value = 1 },
+											Height = Input {
+												Value = 1920,
+												Expression = "Renderer3DLeft.Height"
+											},
+											SceneInput = Input {
+												SourceOp = "ReplaceMaterial3DRight",
+												Source = "Output"
+											},
+											Width = Input {
+												Value = 3840,
+												Expression = "Renderer3DLeft.Width"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 110, 175.15 } }
+									},
+									ReplaceMaterial3DRight = ReplaceMaterial3D {
+										CtrlWShown = false,
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "Loader2",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2 },
+											SceneInput = Input {
+												SourceOp = "CameraCenterViewInput",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0 }
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 175.15 } }
+									},
+									ReplaceMaterial3DLeft = ReplaceMaterial3D {
+										CtrlWShown = false,
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2 },
+											SceneInput = Input {
+												SourceOp = "CameraCenterViewInput",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0 }
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 142.15 } }
+									},
+									CameraCenterViewInput = Merge3D {
+										CtrlWShown = false,
+										Inputs = {
+											PassThroughLights = Input { Value = 1 },
+											SceneInput1 = Input {
+												SourceOp = "FBXMesh3DCenter",
+												Source = "Output"
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DCenter",
+												Source = "Output"
+											}
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 76.15 } }
+									},
+									FBXMesh3DCenter = SurfaceFBXMesh {
+										CtrlWShown = false,
+										Inputs = {
+											["ObjectID.ObjectID"] = Input { Value = 2 },
+											["Transform3DOp.Scale.Y"] = Input { Value = 1000 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 4 },
+											["Transform3DOp.Scale.Z"] = Input { Value = 1000 },
+											TransformToWorld = Input { Value = 0 },
+											ImportFile = Input { Value = "Macros:/KartaVR/Images/latlong.obj" },
+											["Transform3DOp.Scale.X"] = Input { Value = 1000 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { -110, 76.15 } }
+									},
+									Camera3DCenter = Camera3D {
+										CtrlWShown = false,
+										Inputs = {
+											FLength = Input { Value = 12.7 },
+											FilmBack = Input { Value = 1 },
+											ApertureW = Input { Value = 1 },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" } },
+											AoV = Input { Value = 90 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1 },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 90 },
+											ApertureH = Input { Value = 1 },
+											FilmGate = Input { Value = FuID { "User" } },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1 }
+										},
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 10.15 } }
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 440, 82.5 } },
+								CustomData = {
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										Source = "Output",
+										SourceOp = "Renderer3DLeft",
+										Name = "LeftOutput"
+									},
+									MainOutput2 = InstanceOutput {
+										Source = "Output",
+										SourceOp = "Renderer3DRight",
+										Name = "RightOutput"
+									}
+								}
+							}
+						}
+					},
+					[2] = {
+						Tools = ordered() {
+							ViewerMeshStereo = GroupOperator {
+								Inputs = ordered() {
+									MainInput1 = InstanceInput {
+										Source = "MaterialInput",
+										SourceOp = "ReplaceMaterial3DLeft",
+										Name = "Left"
+									},
+									MainInput2 = InstanceInput {
+										Source = "MaterialInput",
+										SourceOp = "ReplaceMaterial3DRight",
+										Name = "Right"
+									},
+									Input1 = InstanceInput {
+										Source = "ImportFile",
+										SourceOp = "FBXMesh3DCenter",
+										Name = "Mesh File"
+									},
+									Input2 = InstanceInput {
+										Source = "Width",
+										SourceOp = "Renderer3DLeft",
+										MaxScale = 16384,
+										Default = 3840
+									},
+									Input3 = InstanceInput {
+										Source = "Height",
+										SourceOp = "Renderer3DLeft",
+										MaxScale = 8192,
+										Default = 1920
+									},
+									Input4 = InstanceInput {
+										SourceOp = "Renderer3DLeft",
+										Source = "RendererType"
+									},
+									Input5 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "AovType"
+									},
+									Input6 = InstanceInput {
+										Source = "AoV",
+										SourceOp = "Camera3DCenter",
+										Default = 90
+									},
+									Input7 = InstanceInput {
+										Source = "FLength",
+										SourceOp = "Camera3DCenter",
+										Default = 12.7
+									},
+									Input8 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "FilmGate"
+									},
+									Input9 = InstanceInput {
+										Source = "ApertureW",
+										SourceOp = "Camera3DCenter",
+										Default = 1
+									},
+									Input10 = InstanceInput {
+										Source = "ApertureH",
+										SourceOp = "Camera3DCenter",
+										Default = 1
+									},
+									Input11 = InstanceInput {
+										Source = "LensShiftX",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input12 = InstanceInput {
+										Source = "LensShiftY",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input13 = InstanceInput {
+										SourceOp = "Camera3DCenter",
+										Source = "Transform3DOp.Rotate.RotOrder"
+									},
+									Input14 = InstanceInput {
+										Source = "Transform3DOp.Rotate.X",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input15 = InstanceInput {
+										Source = "Transform3DOp.Rotate.Y",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input16 = InstanceInput {
+										Source = "Transform3DOp.Rotate.Z",
+										SourceOp = "Camera3DCenter",
+										Default = 0
+									},
+									Input17 = InstanceInput {
+										Source = "Transform3DOp.Scale.X",
+										Name = "Scale",
+										MaxScale = 10000,
+										SourceOp = "FBXMesh3DCenter",
+										Default = 1000
+									}
+								},
+								Name = "ViewerMeshStereo",
+								CtrlWZoom = false,
+								Tools = ordered() {
+									Renderer3DLeft = Renderer3D {
+										CtrlWShown = false,
+										Inputs = {
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1 },
+											GlobalOut = Input { Value = 1 },
+											CameraSelector = Input { Value = FuID { "Camera3DCenter" } },
+											Height = Input { Value = 1920 },
+											SceneInput = Input {
+												SourceOp = "ReplaceMaterial3DLeft",
+												Source = "Output"
+											},
+											Width = Input { Value = 3840 }
+										},
+										Name = "Renderer3DLeft",
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 110, 142.15 } }
+									},
+									Renderer3DRight = Renderer3D {
+										CtrlWShown = false,
+										Inputs = {
+											["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" } },
+											["RendererSoftware.Channels.Nest"] = Input { Value = 1 },
+											RendererType = Input { Expression = "Renderer3DLeft.RendererType" },
+											GlobalOut = Input { Value = 1 },
+											Height = Input {
+												Value = 1920,
+												Expression = "Renderer3DLeft.Height"
+											},
+											SceneInput = Input {
+												SourceOp = "ReplaceMaterial3DRight",
+												Source = "Output"
+											},
+											Width = Input {
+												Value = 3840,
+												Expression = "Renderer3DLeft.Width"
+											}
+										},
+										Name = "Renderer3DRight",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 110, 175.15 } }
+									},
+									ReplaceMaterial3DRight = ReplaceMaterial3D {
+										CtrlWShown = false,
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "Loader2",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2 },
+											SceneInput = Input {
+												SourceOp = "CameraCenterViewInput",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0 }
+										},
+										Name = "ReplaceMaterial3DRight",
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 175.15 } }
+									},
+									ReplaceMaterial3DLeft = ReplaceMaterial3D {
+										CtrlWShown = false,
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesShadows"] = Input { Value = 0 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 2 },
+											SceneInput = Input {
+												SourceOp = "CameraCenterViewInput",
+												Source = "Output"
+											},
+											["MtlStdInputs.ReceivesLighting"] = Input { Value = 0 }
+										},
+										Name = "ReplaceMaterial3DLeft",
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 142.15 } }
+									},
+									CameraCenterViewInput = Merge3D {
+										CtrlWShown = false,
+										Inputs = {
+											PassThroughLights = Input { Value = 1 },
+											SceneInput1 = Input {
+												SourceOp = "FBXMesh3DCenter",
+												Source = "Output"
+											},
+											SceneInput2 = Input {
+												SourceOp = "Camera3DCenter",
+												Source = "Output"
+											}
+										},
+										Name = "CameraCenterViewInput",
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 76.15 } }
+									},
+									FBXMesh3DCenter = SurfaceFBXMesh {
+										CtrlWShown = false,
+										Inputs = {
+											["ObjectID.ObjectID"] = Input { Value = 2 },
+											["Transform3DOp.Scale.Y"] = Input { Value = 1000 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 4 },
+											["Transform3DOp.Scale.Z"] = Input { Value = 1000 },
+											TransformToWorld = Input { Value = 0 },
+											ImportFile = Input { Value = "Macros:/KartaVR/Images/latlong.obj" },
+											["Transform3DOp.Scale.X"] = Input { Value = 1000 }
+										},
+										Name = "FBXMesh3DCenter",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { -110, 76.15 } }
+									},
+									Camera3DCenter = Camera3D {
+										CtrlWShown = false,
+										Inputs = {
+											FLength = Input { Value = 12.7 },
+											FilmBack = Input { Value = 1 },
+											ApertureW = Input { Value = 1 },
+											["Stereo.Mode"] = Input { Value = FuID { "Mono" } },
+											AoV = Input { Value = 90 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 1 },
+											["Transform3DOp.Rotate.Y"] = Input { Value = 190 },
+											ApertureH = Input { Value = 1 },
+											FilmGate = Input { Value = FuID { "User" } },
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1 }
+										},
+										Name = "Camera3DCenter",
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 0, 10.15 } }
+									}
+								},
+								ViewInfo = GroupInfo { Pos = { 440, 82.5 } },
+								CustomData = {
+								},
+								Outputs = {
+									MainOutput1 = InstanceOutput {
+										Source = "Output",
+										SourceOp = "Renderer3DLeft",
+										Name = "LeftOutput"
+									},
+									MainOutput2 = InstanceOutput {
+										Source = "Output",
+										SourceOp = "Renderer3DRight",
+										Name = "RightOutput"
+									}
+								}
+							}
+						}
+					},
+				}
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ReplaceMaterial3DLeft",
+					Source = "MaterialInput",
+					Name = "Left",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "ReplaceMaterial3DRight",
+					Source = "MaterialInput",
+					Name = "Right",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "FBXMesh3DCenter",
+					Source = "ImportFile",
+					Name = "Mesh File",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Width",
+					MaxScale = 16384,
+					Default = 3840,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "RendererType",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "AovType",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "AoV",
+					Default = 90,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "FilmGate",
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "ApertureW",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "ApertureH",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "LensShiftX",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "LensShiftY",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input14 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.X",
+					Default = 0,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.Y",
+					Default = 0,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.Z",
+					Default = 0,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "FBXMesh3DCenter",
+					Source = "Transform3DOp.Scale.X",
+					Name = "Scale",
+					MaxScale = 10000,
+					Default = 1000,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Output",
+					Name = "LeftOutput",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "Renderer3DRight",
+					Source = "Output",
+					Name = "RightOutput",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 440, 82.5 } },
+			Tools = ordered() {
+				Renderer3DLeft = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "ReplaceMaterial3DLeft",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DCenter" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 142.15 } },
+				},
+				Renderer3DRight = Renderer3D {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input {
+							Value = 3840,
+							Expression = "Renderer3DLeft.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "Renderer3DLeft.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "ReplaceMaterial3DRight",
+							Source = "Output",
+						},
+						RendererType = Input { Expression = "Renderer3DLeft.RendererType", },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 175.15 } },
+				},
+				ReplaceMaterial3DRight = ReplaceMaterial3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "CameraCenterViewInput",
+							Source = "Output",
+						},
+						MaterialInput = Input {
+							SourceOp = "Loader2",
+							Source = "Output",
+						},
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 175.15 } },
+				},
+				ReplaceMaterial3DLeft = ReplaceMaterial3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "CameraCenterViewInput",
+							Source = "Output",
+						},
+						MaterialInput = Input {
+							SourceOp = "Loader1",
+							Source = "Output",
+						},
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 142.15 } },
+				},
+				CameraCenterViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "FBXMesh3DCenter",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DCenter",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 76.15 } },
+				},
+				FBXMesh3DCenter = SurfaceFBXMesh {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Scale.X"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						ImportFile = Input { Value = "Macros:/KartaVR/Images/latlong.obj", },
+						TransformToWorld = Input { Value = 0, },
+						["ObjectID.ObjectID"] = Input { Value = 2, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 76.15 } },
+				},
+				Camera3DCenter = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.Y"] = Input { Value = 190, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 10.15 } },
+				}
+			},
+		},
+		Saver1_1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Macros:/KartaVR/rectangle_video_right.0000.exr",
+						FormatID = "OpenEXRFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				OutputFormat = Input { Value = FuID { "OpenEXRFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "Renderer3DRight",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 115.889 } },
+		},
+		Saver1 = Saver {
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Macros:/KartaVR/rectangle_video_left.0000.exr",
+						FormatID = "OpenEXRFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				OutputFormat = Input { Value = FuID { "OpenEXRFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "Renderer3DLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 82.111 } },
+		},
+		Saver2 = Saver {
+			CtrlWZoom = false,
+			Inputs = {
+				ProcessWhenBlendIs00 = Input { Value = 0, },
+				Clip = Input {
+					Value = Clip {
+						Filename = "Macros:/KartaVR/rectangle_video_anaglyph_stereo.0000.png",
+						FormatID = "PNGFormat",
+						Length = 0,
+						Saving = true,
+						TrimIn = 0,
+						ExtendFirst = 0,
+						ExtendLast = 0,
+						Loop = 1,
+						AspectMode = 0,
+						Depth = 0,
+						TimeCode = 0,
+						GlobalStart = -2000000000,
+						GlobalEnd = 0
+					},
+				},
+				CreateDir = Input { Value = 1, },
+				OutputFormat = Input { Value = FuID { "PNGFormat" }, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Input = Input {
+					SourceOp = "AnaglyphHalfColorMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 3440,
+			Height = 1238,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 2.57092,
+						Offset = { -143.451, -13.9012 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 343 },
+							ScaleX = 0.00214424951267057,
+							OffsetX = -0.0514619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.786317321688501,
+					RatioY = 0.0105177993527508,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.589430894308943,
+						{ ID = "Left", RatioX = 1, RatioY = 92.200328407225, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.363414634146341, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 732,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+					Viewer = {
+						ScaleMode = 1
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				GuideRatio = 1.77777777777778,
+			},
+			LastFile = "Macros:/KartaVR/Images/cubeX_left.exr",
+			Unsorted = {
+				GlobalEnd = 1
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

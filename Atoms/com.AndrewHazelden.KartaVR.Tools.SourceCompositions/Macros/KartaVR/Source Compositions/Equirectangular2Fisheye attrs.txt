@@ -1,0 +1,66 @@
+[Equirectangular2Fisheye]
+
+The Equirectangular2Fisheye macro converts an equirectangular image into an angular fisheye image projection. This node has an FOV control that can be animated along with XYZ rotation support.
+
+[Equirectangular2Fisheye]
+
+  [PanoMerge]
+    Background=Input
+    PanoMerge.Background.OriginalHeight
+    PanoMerge.Background.OriginalWidth
+  
+  [SphereMap]
+    Rotation Order Default=XYZ
+    X Rotation Default=0 Min-360 Max=360
+    Y Rotation Default=0 Min-360 Max=360
+    Z Rotation Default=-90 Min-360 Max=360
+  
+    Set all texture sampling to Bilinear or you will get rendering artifacts.
+  
+  [UVRenderer3D]
+    Depth=Depth 
+  
+  [FOVCustomTool]
+    NumberIn1=FOV   Default=180 Min=2 Max=360
+
+    FOV 360 = ScaleY 1
+    FOV 180 = ScaleY 2
+    FOV 90  = ScaleY 4
+
+  [DomemasterScale]
+    Center=Point(0.5, (2-YSize)/2)
+    YSize=1/(FOVCustomTool.NumberIn1*(1/360))
+    Edges Default=Mirror (This allows wider than 360° FOV to be used)
+  
+  [BackgroundColor]
+    TopLeftRed=Color
+    TopLeftGreen
+    TopLeftBlue
+    TopLeftAlpha
+    
+Macro GUI Order:
+  [PanoMerge]
+    Background=Input
+   
+  [UVRenderer3D]
+    Depth=Depth 
+    
+  [FOVCustomTool]
+    NumberIn1=FOV
+    
+  [SphereMap]
+    Rotation Order
+    X Rotation
+    Y Rotation
+    Z Rotation
+
+  [BackgroundColor]
+    TopLeftRed=Color
+    TopLeftGreen
+    TopLeftBlue
+    TopLeftAlpha
+
+  [FOVMerge]
+    Output
+    
+    

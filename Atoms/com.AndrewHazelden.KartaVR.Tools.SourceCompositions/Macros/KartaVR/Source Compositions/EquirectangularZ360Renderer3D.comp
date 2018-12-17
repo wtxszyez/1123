@@ -1,0 +1,1728 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 64 },
+	GlobalRange = { 0, 64 },
+	CurrentID = 2904,
+	HiQ = true,
+	Proxy = true,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion Studio 8.2.1 build 6",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		SkyMerge3D = Merge3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = 8.63457423928764, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 32.5640361436439, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -18.7989914433103, },
+				PassThroughLights = Input { Value = 1, },
+				SceneInput1 = Input {
+					SourceOp = "LightMerge3D",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "SkyEnvrionment",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 440, 181.5 } },
+		},
+		Camera3DBottom = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+				["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+				["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+				["Transform3DOp.Rotate.X"] = Input {
+					Value = -180,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.X-90",
+				},
+				["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+				["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Z", },
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, 82.5 } },
+		},
+		ZDepthCustomToolLeft = Custom {
+			NameSet = true,
+			SourceOp = "ZDepthCustomToolFront",
+			Inputs = {
+				LUTControlsNest = Input { },
+				AuxChannelNest = Input { Value = 1, },
+				Randomize = Input { },
+				NumberControls = Input { },
+				PointControls = Input { },
+				LUTControls = Input { },
+				Image1 = Input {
+					SourceOp = "ChangeDepthLeft",
+					Source = "Output",
+				},
+				Image2 = Input { },
+				Image3 = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 280.5 } },
+		},
+		ZDepthCustomToolFrontLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+			NameSet = true,
+		},
+		PipeRouter1 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "Transform3D1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1320, 181.5 } },
+		},
+		ZDepthCustomToolTop = Custom {
+			NameSet = true,
+			SourceOp = "ZDepthCustomToolFront",
+			Inputs = {
+				LUTControlsNest = Input { },
+				AuxChannelNest = Input { Value = 1, },
+				Randomize = Input { },
+				NumberControls = Input { },
+				PointControls = Input { },
+				LUTControls = Input { },
+				Image1 = Input {
+					SourceOp = "ChangeDepthTop",
+					Source = "Output",
+				},
+				Image2 = Input { },
+				Image3 = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 313.5 } },
+		},
+		Transform3D1ZOffset = BezierSpline {
+			SplineColor = { Red = 254, Green = 207, Blue = 46 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { -44, RH = { 21.3333333333333, -68.2239185666667 }, Flags = { Linear = true } },
+				[64] = { -116.6717557, LH = { 42.6666666666667, -92.4478371333333 }, Flags = { Linear = true } }
+			}
+		},
+		PipeRouterFront = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DFront",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 181.5 } },
+		},
+		LightMerge3D = Merge3D {
+			NameSet = true,
+			Inputs = {
+				PassThroughLights = Input { Value = 1, },
+				SceneInput1 = Input {
+					SourceOp = "FBXMesh3D1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "WarmDirectionalLight",
+					Source = "Output",
+				},
+				SceneInput3 = Input {
+					SourceOp = "CoolDirectionalLight",
+					Source = "Output",
+				},
+				SceneInput4 = Input {
+					SourceOp = "PointLight1",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 181.5 } },
+		},
+		PipeRouterRight = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DRight",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 214.5 } },
+		},
+		ZDepthCustomToolBack = Custom {
+			NameSet = true,
+			SourceOp = "ZDepthCustomToolFront",
+			Inputs = {
+				LUTControlsNest = Input { },
+				AuxChannelNest = Input { Value = 1, },
+				Randomize = Input { },
+				NumberControls = Input { },
+				PointControls = Input { },
+				LUTControls = Input { },
+				Image1 = Input {
+					SourceOp = "ChangeDepthBack",
+					Source = "Output",
+				},
+				Image2 = Input { },
+				Image3 = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 247.5 } },
+		},
+		Camera3DRight = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+				["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+				["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+				["Transform3DOp.Rotate.X"] = Input {
+					Value = -90,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+				},
+				["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+				["Transform3DOp.Rotate.Z"] = Input {
+					Value = 90,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.Z+90",
+				},
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, -49.5 } },
+		},
+		ZDepthCustomToolFrontLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+			NameSet = true,
+		},
+		Shape3DSphereDepth = Shape3D {
+			NameSet = true,
+			Inputs = {
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+				["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+				["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+				["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+				["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+				Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+				MaterialInput = Input {
+					SourceOp = "CubeMapDepth",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+				["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+				["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+				["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+				["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2750, 346.5 } },
+		},
+		UVRenderer3DDepth = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 3840,
+					Expression = "UVRenderer3DColor.Height*2",
+				},
+				Height = Input {
+					Value = 1920,
+					Expression = "UVRenderer3DColor.Height",
+				},
+				Depth = Input { Value = 4, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "Shape3DSphereDepth",
+					Source = "Output",
+				},
+				RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+				["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+				["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+				["RendererOpenGLUV.TextureDepth"] = Input { Value = 4, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2860, 346.5 } },
+		},
+		ViewTransformRight = Transform {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "UVRenderer3DDepth",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 3190, 346.5 } },
+		},
+		ChangeDepthLeft = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 280.5 } },
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "This example shows how to render elements from Fusion's 3D animation system to an Equirectangular/LatLong/spherical Z360 format output.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 605, 49.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 619.498, 68.6028 }
+			},
+		},
+		Camera3DFront = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, -82.5 } },
+		},
+		Renderer3DLeft = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.LightingEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.LightingEnabled", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.ShadowsEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.ShadowsEnabled", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input {
+					Value = 4,
+					Expression = "UVRenderer3DColor.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DLeft" }, },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+				["RendererSoftware.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+				},
+				["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage", },
+				["RendererSoftware.Channels.BgColor"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor", },
+				["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+				["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0", },
+				["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID", },
+				["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID", },
+				["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord", },
+				["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+				["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+				["RendererSoftware.Lighting"] = Input { Value = 0, },
+				["RendererSoftware.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+				},
+				["RendererSoftware.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 280.5 } },
+		},
+		PipeRouterBottom = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DBottom",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 346.5 } },
+		},
+		ZDepthCustomToolBottom = Custom {
+			NameSet = true,
+			SourceOp = "ZDepthCustomToolFront",
+			Inputs = {
+				LUTControlsNest = Input { },
+				AuxChannelNest = Input { Value = 1, },
+				Randomize = Input { },
+				NumberControls = Input { },
+				PointControls = Input { },
+				LUTControls = Input { },
+				Image1 = Input {
+					SourceOp = "ChangeDepthBottom",
+					Source = "Output",
+				},
+				Image2 = Input { },
+				Image3 = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 346.5 } },
+		},
+		ChangeDepthFront = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterFront",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 181.5 } },
+		},
+		Camera3DBack = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+				["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+				["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+				["Transform3DOp.Rotate.X"] = Input {
+					Value = -90,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+				},
+				["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+				["Transform3DOp.Rotate.Z"] = Input {
+					Value = 180,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.Z+180.0",
+				},
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, -16.5 } },
+		},
+		ViewMerge = Merge {
+			NameSet = true,
+			Inputs = {
+				Background = Input {
+					SourceOp = "ViewTransformRight",
+					Source = "Output",
+				},
+				Foreground = Input {
+					SourceOp = "PipeRouter3",
+					Source = "Output",
+				},
+				PerformDepthMerge = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 3300, 346.5 } },
+		},
+		SkyGradient = Background {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 64, },
+				Width = Input { Value = 640, },
+				Height = Input { Value = 640, },
+				Depth = Input { Value = 4, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				Type = Input { Value = FuID { "Vertical" }, },
+				TopLeftRed = Input { Value = 0.16078431372549, },
+				TopLeftGreen = Input { Value = 0.294117647058824, },
+				TopLeftBlue = Input { Value = 0.423529411764706, },
+				BottomLeftRed = Input { Value = 0.858823529411765, },
+				BottomLeftGreen = Input { Value = 0.882352941176471, },
+				BottomLeftBlue = Input { Value = 0.898039215686275, },
+				Gradient = Input {
+					Value = Gradient {
+						Colors = {
+							[0] = { 0, 0, 0, 1 },
+							[1] = { 1, 1, 1, 1 }
+						}
+					},
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 55, 49.5 } },
+		},
+		ZDepthCustomToolFrontLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+			NameSet = true,
+		},
+		CubeMapColor = CubeMap {
+			NameSet = true,
+			Inputs = {
+				Orientation = Input { Value = 0, },
+				Rotation = Input { Value = 1, },
+				["FilterMode.Nest"] = Input { Value = 1, },
+				["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+				Left = Input {
+					SourceOp = "PipeRouterLeft",
+					Source = "Output",
+				},
+				Right = Input {
+					SourceOp = "PipeRouterRight",
+					Source = "Output",
+				},
+				Up = Input {
+					SourceOp = "PipeRouterTop",
+					Source = "Output",
+				},
+				Down = Input {
+					SourceOp = "PipeRouterBottom",
+					Source = "Output",
+				},
+				Front = Input {
+					SourceOp = "PipeRouterFront",
+					Source = "Output",
+				},
+				Back = Input {
+					SourceOp = "PipeRouterBack",
+					Source = "Output",
+				},
+				MaterialID = Input { Value = 3, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2640, 49.5 } },
+		},
+		ChangeDepthBottom = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterBottom",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 346.5 } },
+		},
+		Transform3D1XRotation = BezierSpline {
+			SplineColor = { Red = 255, Green = 128, Blue = 128 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 90, RH = { 21.3333333333333, 90 }, Flags = { Linear = true } },
+				[64] = { 90, LH = { 42.6666666666667, 90 }, Flags = { Linear = true } }
+			}
+		},
+		ChangeDepthBack = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterBack",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 247.5 } },
+		},
+		OverUnderCrop = Crop {
+			NameSet = true,
+			Inputs = {
+				XSize = Input {
+					Value = 3840,
+					Expression = "UVRenderer3DColor.Width",
+				},
+				YSize = Input {
+					Value = 3840,
+					Expression = "UVRenderer3DColor.Height*2",
+				},
+				Input = Input {
+					SourceOp = "ViewMerge",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 3410, 346.5 } },
+		},
+		Transform3D1XOffset = BezierSpline {
+			SplineColor = { Red = 250, Green = 59, Blue = 49 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 0, RH = { 21.3333333333333, 0 }, Flags = { Linear = true } },
+				[64] = { 0, LH = { 42.6666666666667, 0 }, Flags = { Linear = true } }
+			}
+		},
+		PipeRouterLeft = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 280.5 } },
+		},
+		Camera3DLeft = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+				["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+				["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+				["Transform3DOp.Rotate.X"] = Input {
+					Value = -90,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+				},
+				["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+				["Transform3DOp.Rotate.Z"] = Input {
+					Value = -90,
+					Expression = "Camera3DFront.Transform3DOp.Rotate.Z-90.0",
+				},
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, 16.5 } },
+		},
+		Transform3D1YOffset = BezierSpline {
+			SplineColor = { Red = 252, Green = 131, Blue = 47 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 54, RH = { 21.3333333333333, 54 }, Flags = { Linear = true } },
+				[64] = { 54, LH = { 42.6666666666667, 54 }, Flags = { Linear = true } }
+			}
+		},
+		PipeRouter3 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "ViewTransformLeft",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 3300, 49.5 } },
+		},
+		FBXMesh3D1 = SurfaceFBXMesh {
+			CtrlWZoom = false,
+			Inputs = {
+				ImportFile = Input { Value = "Macros:\\KartaVR\\Images\\boxworld.fbx", },
+				TransformToWorld = Input { Value = 0, },
+				["ObjectID.Nest"] = Input { Value = 1, },
+				["ObjectID.ObjectID"] = Input { Value = 4, },
+				MaterialInput = Input {
+					SourceOp = "CookTorrance1",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 5, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 115.5 } },
+		},
+		PipeRouterTop = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 313.5 } },
+		},
+		Camera3DTop = Camera3D {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+				["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+				["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+				["Transform3DOp.Rotate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.X+90", },
+				["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+				["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Z", },
+				AoV = Input { Value = 90, },
+				FLength = Input { Value = 12.7, },
+				["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+				FilmBack = Input { Value = 1, },
+				FilmGate = Input { Value = FuID { "User" }, },
+				ApertureW = Input { Value = 1, },
+				ApertureH = Input { Value = 1, },
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1430, 49.5 } },
+		},
+		PointLight1 = LightPoint {
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = -161.856563476427, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 347.254927143773, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -32.0346642872779, },
+				Intensity = Input { Value = 0.243373493975904, },
+				DecayRate = Input { Value = 25000, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 214.5 } },
+		},
+		CookTorrance1 = MtlCookTorrance {
+			Inputs = {
+				MaterialIDNest = Input { Value = 1, },
+				MaterialID = Input { Value = 6, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 55, 115.5 } },
+		},
+		CoolDirectionalLight = LightDirectional {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = 58.3879784519737, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 95.1104338268553, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -26.3166398889364, },
+				["Transform3DOp.Rotate.X"] = Input { Value = 137.656114007812, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = 31.7768835327588, },
+				["Transform3DOp.Rotate.Z"] = Input { Value = 130.256588513497, },
+				Red = Input { Value = 0.811764705882353, },
+				Green = Input { Value = 0.917647058823529, },
+				Intensity = Input { Value = 0.8, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 181.5 } },
+		},
+		ZDepthCustomToolRight = Custom {
+			NameSet = true,
+			SourceOp = "ZDepthCustomToolFront",
+			Inputs = {
+				LUTControlsNest = Input { },
+				AuxChannelNest = Input { Value = 1, },
+				Randomize = Input { },
+				NumberControls = Input { },
+				PointControls = Input { },
+				LUTControls = Input { },
+				Image1 = Input {
+					SourceOp = "ChangeDepthRight",
+					Source = "Output",
+				},
+				Image2 = Input { },
+				Image3 = Input { },
+				StartEndRenderScripts = Input { },
+				EffectMask = Input { }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 214.5 } },
+		},
+		ZDepthCustomToolFrontLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+			NameSet = true,
+		},
+		Renderer3DTop = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.LightingEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.LightingEnabled", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.ShadowsEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.ShadowsEnabled", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input {
+					Value = 4,
+					Expression = "UVRenderer3DColor.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DTop" }, },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+				["RendererSoftware.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+				},
+				["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage", },
+				["RendererSoftware.Channels.BgColor"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor", },
+				["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+				["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0", },
+				["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID", },
+				["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID", },
+				["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord", },
+				["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+				["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+				["RendererSoftware.Lighting"] = Input { Value = 0, },
+				["RendererSoftware.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+				},
+				["RendererSoftware.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 313.5 } },
+		},
+		Note2 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "The ZDepthCustomToolFront node's RGB expressions set the visible range for the depth data", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 2090, -49.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 504.111, 69.0964 }
+			},
+		},
+		SkyMirrorTransform = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 0.5, 0.9 }, },
+				Pivot = Input { Value = { 0.5, 0 }, },
+				UseSizeAndAspect = Input { Value = 0, },
+				YSize = Input { Value = 0.6, },
+				Edges = Input { Value = 3, },
+				Input = Input {
+					SourceOp = "SkyGradient",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 49.5 } },
+		},
+		Renderer3DBottom = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.LightingEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.LightingEnabled", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.ShadowsEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.ShadowsEnabled", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input {
+					Value = 4,
+					Expression = "UVRenderer3DColor.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DBottom" }, },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+				["RendererSoftware.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+				},
+				["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage", },
+				["RendererSoftware.Channels.BgColor"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor", },
+				["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+				["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0", },
+				["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID", },
+				["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID", },
+				["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord", },
+				["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+				["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+				["RendererSoftware.Lighting"] = Input { Value = 0, },
+				["RendererSoftware.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+				},
+				["RendererSoftware.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 346.5 } },
+		},
+		WarmDirectionalLight = LightDirectional {
+			NameSet = true,
+			Inputs = {
+				["Transform3DOp.Translate.X"] = Input { Value = -37, },
+				["Transform3DOp.Translate.Y"] = Input { Value = 96, },
+				["Transform3DOp.Translate.Z"] = Input { Value = -27, },
+				["Transform3DOp.Rotate.X"] = Input { Value = 58.1650225943886, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = -64.8353715026751, },
+				["Transform3DOp.Rotate.Z"] = Input { Value = -91.4079946666025, },
+				Green = Input { Value = 0.925490196078431, },
+				Blue = Input { Value = 0.776470588235294, },
+				Intensity = Input { Value = 0.8, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+		},
+		ChangeDepthTop = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterTop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 313.5 } },
+		},
+		ViewTransformLeft = Transform {
+			NameSet = true,
+			Inputs = {
+				Center = Input { Value = { 0.5, 1.5 }, },
+				Input = Input {
+					SourceOp = "UVRenderer3DColor",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 3190, 49.5 } },
+		},
+		ZDepthCustomToolFront = Custom {
+			NameSet = true,
+			Inputs = {
+				LUTIn1 = Input {
+					SourceOp = "ZDepthCustomToolFrontLUTIn1",
+					Source = "Value",
+				},
+				LUTIn2 = Input {
+					SourceOp = "ZDepthCustomToolFrontLUTIn2",
+					Source = "Value",
+				},
+				LUTIn3 = Input {
+					SourceOp = "ZDepthCustomToolFrontLUTIn3",
+					Source = "Value",
+				},
+				LUTIn4 = Input {
+					SourceOp = "ZDepthCustomToolFrontLUTIn4",
+					Source = "Value",
+				},
+				RedExpression = Input { Value = "(z1*0.002)*-1", },
+				GreenExpression = Input { Value = "(z1*0.002)*-1", },
+				BlueExpression = Input { Value = "(z1*0.002)*-1", },
+				AuxChannelNest = Input { Value = 1, },
+				Image1 = Input {
+					SourceOp = "ChangeDepthFront",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2310, 181.5 } },
+		},
+		SkyEnvrionment = Shape3D {
+			NameSet = true,
+			Inputs = {
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+				Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+				MaterialInput = Input {
+					SourceOp = "SkyWard",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.141728395061728, },
+				["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.262716049382716, },
+				["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.373333333333333, },
+				["MtlStdInputs.MaterialID"] = Input { Value = 4, },
+				["SurfaceSphereInputs.Radius"] = Input { Value = 400, },
+				["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+				["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+				["SurfaceSphereInputs.ObjectID.Nest"] = Input { Value = 1, },
+				["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 5, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 440, 49.5 } },
+		},
+		CubeMapDepth = CubeMap {
+			NameSet = true,
+			SourceOp = "CubeMapColor",
+			Inputs = {
+				Rotation = Input { Value = 1, },
+				["FilterMode.Nest"] = Input { Value = 1, },
+				CrossImage = Input { },
+				Left = Input {
+					SourceOp = "ZDepthCustomToolLeft",
+					Source = "Output",
+				},
+				Right = Input {
+					SourceOp = "ZDepthCustomToolRight",
+					Source = "Output",
+				},
+				Up = Input {
+					SourceOp = "ZDepthCustomToolTop",
+					Source = "Output",
+				},
+				Down = Input {
+					SourceOp = "ZDepthCustomToolBottom",
+					Source = "Output",
+				},
+				Front = Input {
+					SourceOp = "ZDepthCustomToolFront",
+					Source = "Output",
+				},
+				Back = Input {
+					SourceOp = "ZDepthCustomToolBack",
+					Source = "Output",
+				},
+				MaterialIDNest = Input { },
+				StartEndRenderScripts = Input { },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2640, 346.5 } },
+		},
+		Note3 = Note {
+			NameSet = true,
+			Inputs = {
+				Comments = Input { Value = "Z-Depth Channel Merge", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 3135, -49.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 317.376, 63.6531 }
+			},
+		},
+		PipeRouter2 = PipeRouter {
+			Inputs = {
+				Input = Input {
+					SourceOp = "SkyMerge3D",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 550, 181.5 } },
+		},
+		Renderer3DFront = Renderer3D {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.ShadowsEnabled"] = Input { Value = 1, },
+				["RendererOpenGL.LightingEnabled"] = Input { Value = 1, },
+				["RendererOpenGL.Channels.Z"] = Input { Value = 1, },
+				["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input { Value = 4, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.Z"] = Input { Value = 1, },
+				["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+				["RendererSoftware.ShadowsEnabled"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 181.5 } },
+		},
+		Transform3D1YRotation = BezierSpline {
+			SplineColor = { Red = 128, Green = 255, Blue = 128 },
+			NameSet = true,
+			KeyFrames = {
+				[0] = { 180, RH = { 21.3333333333333, 180 }, Flags = { Linear = true } },
+				[64] = { 180, LH = { 42.6666666666667, 180 }, Flags = { Linear = true } }
+			}
+		},
+		ChangeDepthRight = ChangeDepth {
+			NameSet = true,
+			Inputs = {
+				Depth = Input { Value = 4, },
+				Input = Input {
+					SourceOp = "PipeRouterRight",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 2200, 214.5 } },
+		},
+		CameraViewInput = Merge3D {
+			NameSet = true,
+			Inputs = {
+				PassThroughLights = Input { Value = 1, },
+				SceneInput1 = Input {
+					SourceOp = "PipeRouter1",
+					Source = "Output",
+				},
+				SceneInput2 = Input {
+					SourceOp = "Camera3DFront",
+					Source = "Output",
+				},
+				SceneInput3 = Input {
+					SourceOp = "Camera3DRight",
+					Source = "Output",
+				},
+				SceneInput5 = Input {
+					SourceOp = "Camera3DLeft",
+					Source = "Output",
+				},
+				SceneInput6 = Input {
+					SourceOp = "Camera3DTop",
+					Source = "Output",
+				},
+				SceneInput7 = Input {
+					SourceOp = "Camera3DBottom",
+					Source = "Output",
+				},
+				SceneInput4 = Input {
+					SourceOp = "Camera3DBack",
+					Source = "Output",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1595, 181.5 } },
+		},
+		SkyWard = MtlWard {
+			NameSet = true,
+			Inputs = {
+				["Diffuse.Color.Material"] = Input {
+					SourceOp = "SkyMirrorTransform",
+					Source = "Output",
+				},
+				["Specular.Nest"] = Input { Value = 1, },
+				["Specular.Intensity"] = Input { Value = 0, },
+				["Transmittance.Nest"] = Input { Value = 1, },
+				ReceivesLighting = Input { Value = 0, },
+				ReceivesShadows = Input { Value = 0, },
+				MaterialIDNest = Input { Value = 1, },
+				MaterialID = Input { Value = 7, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 275, 49.5 } },
+		},
+		Renderer3DBack = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.LightingEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.LightingEnabled", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.ShadowsEnabled"] = Input { Expression = "Renderer3DFront.RendererOpenGL.ShadowsEnabled", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input {
+					Value = 4,
+					Expression = "UVRenderer3DColor.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DBack" }, },
+				RendererType = Input { Expression = "Renderer3DFront.RendererType", },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+				["RendererSoftware.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+				},
+				["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage", },
+				["RendererSoftware.Channels.BgColor"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor", },
+				["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+				["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0", },
+				["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID", },
+				["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID", },
+				["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord", },
+				["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+				["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+				["RendererSoftware.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+				},
+				["RendererSoftware.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 247.5 } },
+		},
+		Renderer3DRight = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererOpenGL.Channels.Z",
+				},
+				["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererOpenGL.LightingEnabled",
+				},
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererOpenGL.ShadowsEnabled",
+				},
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Height = Input {
+					Value = 960,
+					Expression = "UVRenderer3DColor.Height*0.5",
+				},
+				Depth = Input {
+					Value = 4,
+					Expression = "UVRenderer3DColor.Depth",
+				},
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "CameraViewInput",
+					Source = "Output",
+				},
+				CameraSelector = Input { Value = FuID { "Camera3DRight" }, },
+				["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+				["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+				["RendererSoftware.Channels.Z"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+				},
+				["RendererSoftware.Channels.Coverage"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage", },
+				["RendererSoftware.Channels.BgColor"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor", },
+				["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+				["RendererSoftware.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0", },
+				["RendererSoftware.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID", },
+				["RendererSoftware.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID", },
+				["RendererSoftware.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord", },
+				["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+				["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+				["RendererSoftware.LightingEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+				},
+				["RendererSoftware.ShadowsEnabled"] = Input {
+					Value = 1,
+					Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+				},
+			},
+			ViewInfo = OperatorInfo { Pos = { 1815, 214.5 } },
+		},
+		PipeRouterBack = PipeRouter {
+			NameSet = true,
+			Inputs = {
+				Input = Input {
+					SourceOp = "Renderer3DBack",
+					Source = "Output",
+				},
+			},
+			ViewInfo = PipeRouterInfo { Pos = { 1925, 247.5 } },
+		},
+		Shape3DSphereColor = Shape3D {
+			NameSet = true,
+			Inputs = {
+				["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+				["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+				["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+				["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+				["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+				["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+				Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+				MaterialInput = Input {
+					SourceOp = "CubeMapColor",
+					Source = "MaterialOutput",
+				},
+				["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+				["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+				["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+				["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+				["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+			},
+			ViewInfo = OperatorInfo { Pos = { 2750, 49.5 } },
+		},
+		UVRenderer3DColor = Renderer3D {
+			NameSet = true,
+			Inputs = {
+				GlobalOut = Input { Value = 64, },
+				Width = Input {
+					Value = 3840,
+					Expression = "Height*2",
+				},
+				Height = Input { Value = 1920, },
+				Depth = Input { Value = 4, },
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+				SceneInput = Input {
+					SourceOp = "Shape3DSphereColor",
+					Source = "Output",
+				},
+				RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+				["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+				["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+				["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 2860, 49.5 } },
+		},
+		Transform3D1 = Transform3D {
+			Inputs = {
+				SceneInput = Input {
+					SourceOp = "PipeRouter2",
+					Source = "Output",
+				},
+				["Transform3DOp.Translate.X"] = Input {
+					SourceOp = "Transform3D1XOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Translate.Y"] = Input {
+					SourceOp = "Transform3D1YOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Translate.Z"] = Input {
+					SourceOp = "Transform3D1ZOffset",
+					Source = "Value",
+				},
+				["Transform3DOp.Rotate.X"] = Input {
+					SourceOp = "Transform3D1XRotation",
+					Source = "Value",
+				},
+				["Transform3DOp.Rotate.Y"] = Input {
+					SourceOp = "Transform3D1YRotation",
+					Source = "Value",
+				},
+				["Transform3DOp.InvertTransform"] = Input { Value = 1, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 1155, 181.5 } },
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 2662,
+			Height = 1313,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Console = "ConsoleView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							Navigator = true,
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 0.652787,
+						Offset = { -1040.38, 393.971 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 279 },
+							ScaleX = 0.137231968810916,
+							OffsetX = -3.29356725146199,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.761572052401747,
+					RatioY = 1,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.459770114942529,
+						{ ID = "Left", RatioX = 1, RatioY = 0.00988875154511743, Pop = true },
+						{ ID = "Right", RatioX = -2, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.495785440613027, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 817,
+					{ ID = "Controls", RatioX = 1, RatioY = 1 },
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Interactive = {
+				Proxy = {
+					Scale = 4,
+					AutoScale = 4,
+				},
+			},
+			Views = {
+				Right = {
+					Viewer = {
+						Normalise = false,
+						ScaleMode = 1
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 0,
+								X = 30,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						}
+					},
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1,
+						Normalise = false,
+						Channel = 4294967295,
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					SubView = {
+						Enabled = false,
+						GLHistogramViewer = {
+							AutoBounds = true
+						},
+					},
+					Controls = {
+						SnapPixel = false,
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						Options = {
+							Lighting = true,
+							Shadows = false,
+							Wireframe = false
+						},
+						SortMethod = "QuickBSP",
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 86.7999572753906,
+								X = 18.4000244140625,
+								Z = 0
+							},
+							Scale = 0.00213574361987412,
+							Position = {
+								Y = 184.447494506836,
+								X = -553.604309082031,
+								Z = 30.9517059326172
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				View1 = {
+				},
+			},
+			FrameFormat = {
+				Name = "2K Full Aperture (Super 35)",
+				Width = 2048,
+				Height = 1556,
+				Rate = 24,
+				PerFeet = 16,
+				GuideRatio = 1.77778,
+			},
+			LastFile = "",
+			Unsorted = {
+				GlobalEnd = 64,
+				RenderSettings = {
+					Configs = {
+						Preview = {
+							StepRender = false,
+							PriorityClasses = "all",
+							CustomAspect = true,
+							StepSize = 5,
+							SizeType = 1,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = false
+						},
+						Final = {
+							StepRender = false,
+							PriorityClasses = "all",
+							CustomAspect = true,
+							StepSize = 5,
+							SizeType = 1,
+							CustomHeight = 160,
+							ShowSlaves = false,
+							CustomWidth = 200,
+							MotionBlur = true,
+							UpdateMode = "Some",
+							UseNetwork = false,
+							Quality = true
+						}
+					},
+					PreviewConfig = "Preview",
+					CurrentConfig = "Final"
+				}
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 

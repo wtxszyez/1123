@@ -1,0 +1,329 @@
+{
+	Tools = ordered() {
+		UVAngular2EquirectangularGradientMap = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-uvpass.html#UVAngular2EquirectangularGradientMap",
+      },
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "UVGradientMap",
+					Source = "Input3",
+					MinAllowed = -1000000,
+					MaxAllowed = 1000000,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "UVGradientMap",
+					Source = "Input5",
+					MinAllowed = -1000000,
+					MaxAllowed = 1000000,
+					MaxScale = 1,
+					Default = 3,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "UVChannelBooleans",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "UVAngular2EquirectangularGradientMap",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				UVChannelBooleans = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "WideAspectViewScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 373.5, 42, }, },
+				},
+				Angular2Equirectangular = GroupOperator {
+					CtrlWShown = false,
+					Inputs = ordered() {
+						MainInput1 = InstanceInput {
+							SourceOp = "InputScaling",
+							Source = "Input",
+						},
+						Input1 = InstanceInput {
+							SourceOp = "InputScaling",
+							Source = "Height",
+							Expression = "UVGradientMap.Input3",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						},
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "WideAspectViewScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = GroupInfo { Pos = { 208, 43, }, },
+					Tools = ordered() {
+						WideAspectViewScale = Scale {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								LockXY = Input { Value = 0, },
+								XSize = Input { Value = 2, },
+								PixelAspect = Input { Value = { 1, 1, }, },
+								FilterMethod = Input { Value = 6, },
+								Input = Input {
+									SourceOp = "ViewSlide",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 330, 10.15, }, },
+						},
+						ViewSlide = Transform {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Center = Input { Value = { 0.75, 0.5, }, },
+								Edges = Input { Value = 1, },
+								Input = Input {
+									SourceOp = "ViewRotate",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 220, 10.15, }, },
+						},
+						ViewRotate = Transform {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								FlipHoriz = Input { Value = 1, },
+								Angle = Input { Value = 180, },
+								Input = Input {
+									SourceOp = "ViewResize",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 110, 10.15, }, },
+						},
+						ViewResize = BetterResize {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Width = Input {
+									Value = 1920,
+									Expression = "InputScaling.Height",
+								},
+								Height = Input {
+									Value = 1920,
+									Expression = "InputScaling.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1, }, },
+								FilterMethod = Input { Value = 6, },
+								Input = Input {
+									SourceOp = "EquirectConversionCrop",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 10.15, }, },
+						},
+						EquirectConversionCrop = Crop {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								XSize = Input {
+									Value = 1920,
+									Expression = "InputScaling.Height",
+								},
+								YSize = Input {
+									Value = 1350,
+									Expression = "EquirectConversionCrop.XSize/1.422222222222222",
+								},
+								Input = Input {
+									SourceOp = "EquirectConversion",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { -110, 10.15, }, },
+						},
+						EquirectConversion = CoordSpace {
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Input = Input {
+									SourceOp = "InputScaling",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { -220, 10.15, }, },
+						},
+						InputScaling = BetterResize {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Width = Input {
+									Value = 1920,
+									Expression = "Height",
+								},
+								Height = Input {
+									Value = 1920,
+									Expression = "UVGradientMap.Input3",
+								},
+								PixelAspect = Input { Value = { 1, 1, }, },
+								FilterMethod = Input { Value = 6, },
+								Input = Input {
+									SourceOp = "GradientFlipTransform",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { -330, 10.15, }, },
+						},
+					},
+				},
+				UVGradientMap = GroupOperator {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "GradientFlipTransform",
+							Source = "FlipHoriz",
+							Name = "Flip Horizontally",
+							Default = 0,
+						},
+						Input2 = InstanceInput {
+							SourceOp = "GradientFlipTransform",
+							Source = "FlipVert",
+							Name = "Flip Vertically",
+							Default = 0,
+						},
+						Input3 = InstanceInput {
+							SourceOp = "RedGradBackground",
+							Source = "Width",
+							MaxScale = 8192,
+							Default = 3840,
+						},
+						Input4 = InstanceInput {
+							SourceOp = "RedGradBackground",
+							Source = "Height",
+							Expression = "Width",
+							MaxScale = 8192,
+							Default = 1920,
+						},
+						Input5 = InstanceInput {
+							SourceOp = "RedGradBackground",
+							Source = "Depth",
+							Default = 3,
+						},
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "GradientFlipTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = GroupInfo { Pos = { 67, 42.5, }, },
+					Tools = ordered() {
+						UVGradientMerge = Merge {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Background = Input {
+									SourceOp = "RedGradBackground",
+									Source = "Output",
+								},
+								Foreground = Input {
+									SourceOp = "GreenGradBackground",
+									Source = "Output",
+								},
+								ApplyMode = Input { Value = FuID { "Screen", }, },
+								PerformDepthMerge = Input { Value = 0, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 1.724, 64.55, }, },
+						},
+						GradientFlipTransform = Transform {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								Input = Input {
+									SourceOp = "UVGradientMerge",
+									Source = "Output",
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 1.724, 110.05, }, },
+						},
+						GreenGradBackground = Background {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								GlobalOut = Input { Value = 143, },
+								Width = Input {
+									Value = 1920,
+									Expression = "RedGradBackground.Width",
+								},
+								Height = Input {
+									Value = 1920,
+									Expression = "RedGradBackground.Height",
+								},
+								Depth = Input {
+									Value = 3,
+									Expression = "RedGradBackground.Depth",
+								},
+								["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+								Type = Input { Value = FuID { "Vertical", }, },
+								TopLeftGreen = Input { Value = 1, },
+								TopRightGreen = Input { Value = 1, },
+								Gradient = Input {
+									Value = Gradient {
+										Colors = {
+											[0] = { 0, 0, 0, 1, },
+											[1] = { 1, 1, 1, 1, },
+										},
+									},
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { -46.98, 10.461, }, },
+						},
+						RedGradBackground = Background {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								GlobalOut = Input { Value = 143, },
+								Width = Input { Value = 1920, },
+								Height = Input {
+									Value = 1920,
+									Expression = "Width",
+								},
+								Depth = Input { Value = 3, },
+								["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+								Type = Input { Value = FuID { "Horizontal", }, },
+								TopLeftRed = Input { Value = 1, },
+								Gradient = Input {
+									Value = Gradient {
+										Colors = {
+											[0] = { 0, 0, 0, 1, },
+											[1] = { 1, 1, 1, 1, },
+										},
+									},
+								},
+							},
+							ViewInfo = OperatorInfo { Pos = { 46.98, 10.15, }, },
+						},
+					},
+				},
+			},
+		},
+	},
+	ActiveTool = "UVAngular2EquirectangularGradientMap",
+}
