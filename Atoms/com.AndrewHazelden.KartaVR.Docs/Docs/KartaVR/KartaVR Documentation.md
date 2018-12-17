@@ -1,7 +1,7 @@
 # KartaVR 4.0 for Reactor Documentation #
 
 -------------------------
-**Version 4.0** - Released 2018-12-15  
+**Version 4.0** - Released 2018-12-17  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -11,13 +11,25 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## <a name="pricing"></a>Pricing and Availability ##
 
-KartaVR was discontinued on Sept 2017 when Blackmagic Design released Fusion 9 with an integrated VR toolset. As a gift to the "Steak Under Water" Fusion community, an exclusive "KartaVR v4" release has been prepared as a WSL Reactor package manager based install.
+The commercial paid version of KartaVR was discontinued back on Sept 2017 when Blackmagic Design released Fusion 9 with an integrated VR toolset. As a gift to the "Steak Underwater" Fusion community, an exclusive "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159).
 
-The KartaVR for Reactor atom packages dramatically simplify the process of setting up the panoramic 360&deg; compositing toolset in Fusion. You can now do the full installation process without leaving Fusion.
+The KartaVR for Reactor atom packages dramatically improves the panoramic 360&deg; compositing toolset available to Fusion (Free) and Fusion Studio customers who want to create their own immersive content. And with the WSL Reactor package manager, You can now do the full KartaVR installation process without leaving Fusion.
 
 ![Reactor Atom Package](images/reactor-atom-package.png)
 
-This version of KartaVR is freeware that can be downloaded and installed at no cost to the end user as long as Reactor is used to deploy the software.
+
+KartaVR v4 is freeware distributed exclusivly through the WSL Reactor package manager. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed for free on an unlimited number of computers and render nodes via the Reactor package manager.
+
+KartaVR v9 works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
+
+KartaVR technical support is available through the "Steak Underwater" user community:  
+[https://www.steakunderwater.com/wesuckless/index.php](https://www.steakunderwater.com/wesuckless/index.php)
+
+KartaVR Example 360VR Stitching Comps:  
+[http://www.andrewhazelden.com/projects/kartavr/examples/](http://www.andrewhazelden.com/projects/kartavr/examples/)
+
+![Reactor Atom Package - Supporting 360VR Stitching Project Files](images/reactor-atom-package-stitching-media.png)
+
 
 KartaVR is (C) Copyright Andrew Hazelden 2014-2018. All rights reserved.
 
@@ -46,9 +58,12 @@ KartaVR was formerly known as the "Domemaster Fusion Macros". With the release o
 
 ## <a name="new-features"></a>New Features in KartaVR 4 ##
 
-Steak Under Water "Reactor" package manager suppport was added, along with a freeware license term. 
+- Steak Underwater "Reactor" package manager suppport was added, along with new full-featured KartaVR freeware license that allows commercial use of the VR tools for $0.
 
-Looking Glass Display based lightfield rendering support.
+- Looking Glass Display based lightfield rendering support.
+
+- macOS based users of KartaVR can run the new "Video Snapshot" tool that allows Fusion to capture live action footage from HDMI/SDI/USB video sources to a disk. This video captured media is accessed inside of Fusion using a loader node that can be added to the foreground comp in a single click. The video snapshot tool could be used for stop motion animation work. Or a VFX supervisor could use it to grab footage from a video camera to help with on-set production comp-viz work. Or an XR media producer could do a fast node based 360VR stitching test in Fusion to make sure the footage being captured on location is going to be able to be fine-stitched in post without any show-stooping issues.
+
 
 ## <a name="new-features"></a>New Features in KartaVR 3.5 ##
 

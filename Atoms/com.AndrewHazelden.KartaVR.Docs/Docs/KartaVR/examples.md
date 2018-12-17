@@ -2,7 +2,15 @@
 
 This page lists the example Fusion .comp files that come built-in with the KartaVR product download.
 
-**Note:** A separate web page with 16GB of 360&deg; video stitching projects is available to KartaVR users. This content changes regularly and includes large media files so it is provided separate from the core KartaVR toolset in a "KartaVR/Comps/KartaVR Example Stitching Comps" Reactor package.
+
+## Large Example Projects ##
+
+![Reactor Atom Package - Supporting 360VR Stitching Project Files](images/reactor-atom-package-stitching-media.png)
+
+A separate KartaVR web page hosts 16 GB+ of 360&deg; video stitching projects for KartaVR v4 users to download and enjoy. This content changes regularly and includes large 4K resolution media files so it is provided separate from the core KartaVR toolset using a "KartaVR/Comps/KartaVR Example 360VR Stitching Comps" Reactor package.
+
+You can view an online version of the "KartaVR Example 360VR Stitching Comps" content here":  
+[http://www.andrewhazelden.com/projects/kartavr/examples/](http://www.andrewhazelden.com/projects/kartavr/examples/)
 
 ## Example Projects ##
 
