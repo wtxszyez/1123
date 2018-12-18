@@ -1,7 +1,7 @@
 # KartaVR 4.0 for Reactor Documentation #
 
 -------------------------
-**Version 4.0** - Released 2018-12-17  
+**Version 4.0** - Released 2018-12-18  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -11,14 +11,14 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## <a name="pricing"></a>Pricing and Availability ##
 
-The commercial paid version of KartaVR was discontinued back on Sept 2017 when Blackmagic Design released Fusion 9 with an integrated VR toolset. As a gift to the "Steak Underwater" Fusion community, an exclusive "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159).
-
-The KartaVR for Reactor atom packages dramatically improves the panoramic 360&deg; compositing toolset available to Fusion (Free) and Fusion Studio customers who want to create their own immersive content. And with the WSL Reactor package manager, You can now do the full KartaVR installation process without leaving Fusion.
-
 ![Reactor Atom Package](images/reactor-atom-package.png)
 
+As a small 🎄 Christmas timed gift to the "[Steak Underwater](url=https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor package manager.
 
-KartaVR v4 is freeware distributed exclusivly through the WSL Reactor package manager. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed for free on an unlimited number of computers and render nodes via the Reactor package manager.
+The commercial paid version of KartaVR was discontinued and withdrawn from the market when at SIGGRAPH 2017 [Blackmagic Design released Fusion 9](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=62288) with an integrated VR toolset as a free update for all Fusion (Free) and Fusion Studio users. It's more than 500 days since that point in 2017 when Fu 9 VR came out, and [BMD has not come back](https://forum.blackmagicdesign.com/viewtopic.php?f=21&t=75617&p=424663#p425311) to fix *any* of the deep issues that users have brought up for months with Fusion 9 and now Resolve 15's initial VR tool offerings. 🙄 Issues such as a [flawed (IMO 100% broken) omni-stereo 360&deg;rendering system](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=69212&p=386629&#p386487), no fulldome rendering tools, a lack of any mono or stereo 3D based fisheye image processing nodes, and a [general lack of stitching tools](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=69212&p=386629&#p386487) to help people finish live-action based immersive VR content creation inside of Fusion.
+
+The KartaVR for Reactor atom package dramatically improves the panoramic 360&deg; compositing toolset available to Fusion (Free) and Fusion Studio based artists who want to create their own immersive content. And with the WSL Reactor package manager, you can now do a KartaVR install without even leaving Fusion. 😀
+
 
 KartaVR v9 works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
 
@@ -35,9 +35,7 @@ KartaVR is (C) Copyright Andrew Hazelden 2014-2018. All rights reserved.
 
 ## <a name="overview"></a>Overview ##
 
-"Karta" is the Swedish word for map. With KartaVR you can easily stitch, composite, retouch, and remap any kind of panoramic video: from any projection to any projection.
-
-The KartaVR plug-in works inside of Blackmagic Design's powerful node based [Fusion Standalone 9](https://www.blackmagicdesign.com/products/fusion) and [Resolve 15](https://www.blackmagicdesign.com/products/davinciresolve/) software. KartaVR provides the essential tools for VR, panoramic 360&deg; video stitching, and image editing workflows.
+"Karta" is the Swedish word for map. With KartaVR you can easily stitch, composite, retouch, and remap any kind of panoramic video: from any projection to any projection. The KartaVR plug-in works inside of Blackmagic Design's powerful node based [Fusion Standalone 9](https://www.blackmagicdesign.com/products/fusion) and [Resolve 15](https://www.blackmagicdesign.com/products/davinciresolve/) software. KartaVR provides the essential tools for VR, panoramic 360&deg; video stitching, and image editing workflows.
 
 
 ![Create Amazing VR Content](images/create-amazing-vr-content.jpg)
