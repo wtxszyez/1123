@@ -22,7 +22,7 @@ Windows users need to install the 64-bit version of the Microsoft Visual C++ Red
 **Note:** Windows 7 users will have to update to Windows 7 SP 1 in order to install the Visual Studio 2015 library correctly.
 
 **Step 2.**  
-Use Reactor to install the content found in the `Tools/VR/KartaVR` category.
+Use Reactor to install the content found in the `KartaVR` category.
 
 **Step 3.**  
 Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:
@@ -242,7 +242,7 @@ For the technically inclined macOS user you can install ImageMagick using Xcode 
     sudo ports install ImageMagick
 
 **Step 1.**  
-Use Reactor to install the content found in the `Tools/VR/KartaVR` category.
+Use Reactor to install the content found in the `KartaVR` category.
 
 **Step 2.**  
 Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:
@@ -281,8 +281,6 @@ Let's name the new folder `KartaVR`. After you type in the new name, press the `
 ![Fusion Bin Screenshot](images/library-tab-name-the-new-folder-mac.png)
 
 The Fusion Bins window now lists the `KartaVR` folder on the left side bar. Select this entry to show the folder contents.
-
-![Select the KartaVR folder](images/library-kartavr-empty-folder-mac.png)
 
 Using the same folder creation approach we need to add sub-folders for each of the following entries: "Conversion", "Filter", "Mask", "Miscellaneous", "Renderer3D", "Stereoscopic", "Transform", "UV Pass", "Viewer". This is what the Bin folder will look like when when have successfully completed the task:
 
@@ -472,7 +470,7 @@ Ubuntu / Debian Linux users can also use the pre-compiled [ffmpeg package from t
 
 
 **Step 1.**  
-Use Reactor to install the content found in the `Tools/VR/KartaVR` category.
+Use Reactor to install the content found in the `KartaVR` category.
 
 **Step 2.**  
 Open up the newly created KartaVR Macros, Scripts, Bin, and Docs folders to become accustomed to the new KartaVR toolset and what it offers:
@@ -504,8 +502,6 @@ Let's name the new folder `KartaVR`. After you type in the new name, press the `
 ![Fusion Bin Screenshot](images/library-tab-name-the-new-folder-mac.png)
 
 The Fusion Bins window now lists the `KartaVR` folder on the left side bar. Select this entry to show the folder contents.
-
-![Select the KartaVR folder](images/library-kartavr-empty-folder-mac.png)
 
 Using the same folder creation approach we need to add sub-folders for each of the following entries: "Conversion", "Filter", "Mask", "Miscellaneous", "Renderer3D", "Stereoscopic", "Transform", "UV Pass", "Viewer". This is what the Bin folder will look like when when have successfully completed the task:
 

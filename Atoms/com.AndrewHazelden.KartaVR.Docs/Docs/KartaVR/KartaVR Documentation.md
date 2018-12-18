@@ -13,7 +13,7 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ![Reactor Atom Package](images/reactor-atom-package.png)
 
-As a small 🎄 Christmas timed gift to the "[Steak Underwater](url=https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor package manager.
+As a small 🎄 Christmas timed gift to the "[Steak Underwater](https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor package manager.
 
 The commercial paid version of KartaVR was discontinued and withdrawn from the market when at SIGGRAPH 2017 [Blackmagic Design released Fusion 9](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=62288) with an integrated VR toolset as a free update for all Fusion (Free) and Fusion Studio users. It's more than 500 days since that point in 2017 when Fu 9 VR came out, and [BMD has not come back](https://forum.blackmagicdesign.com/viewtopic.php?f=21&t=75617&p=424663#p425311) to fix *any* of the deep issues that users have brought up for months with Fusion 9 and now Resolve 15's initial VR tool offerings. 🙄 Issues such as a [flawed (IMO 100% broken) omni-stereo 360&deg;rendering system](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=69212&p=386629&#p386487), no fulldome rendering tools, a lack of any mono or stereo 3D based fisheye image processing nodes, and a [general lack of stitching tools](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=55488&p=425748&hilit=ptgui#p425748) to help people finish live-action based immersive VR content creation inside of Fusion.
 
@@ -430,7 +430,7 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 
 ## Table of Contents ##
 
-- [Support](#support)
+- [Pricing and Availability](#pricing)
 - [Overview](#overview)
 - [Install](install.html#install)
   - [Standard Install](install.html#standard)
