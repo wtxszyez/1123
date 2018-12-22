@@ -2,7 +2,7 @@
 
 This page lists the example Fusion .comp files that come built-in with the KartaVR product download.
 
-
+<a name="large-example-projects"></a>
 ## Large Example Projects ##
 
 ![Reactor Atom Package - Supporting 360VR Stitching Project Files](images/reactor-atom-package-stitching-media.png)
@@ -12,6 +12,7 @@ A separate KartaVR web page hosts 16 GB+ of 360&deg; video stitching projects fo
 You can view an online version of the "KartaVR Example 360VR Stitching Comps" content here":  
 [http://www.andrewhazelden.com/projects/kartavr/examples/](http://www.andrewhazelden.com/projects/kartavr/examples/)
 
+<a name="example-projects"></a>
 ## Example Projects ##
 
   - [Angular to Cube.comp](examples.html#angular-to-cube)
@@ -69,6 +70,7 @@ You can view an online version of the "KartaVR Example 360VR Stitching Comps" co
   - [ViewerMesh.comp](examples.html#viewer-mesh)
   - [Wireframe Oculus Rift Stereo.comp](examples.html#wireframe-oculus-rift-stereo)
 
+<a name="example-lightfield-projects"></a>
 ## Example Lightfield Projects ##
 
   - [LookingGlassRenderer3D.comp](examples.html#looking-glass-renderer-3d)
