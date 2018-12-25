@@ -1,0 +1,51 @@
+-----------------------------------------------------
+-- kartavr.scriptlib
+--
+-- 4.0
+-- Last Modified : 2018-12-16
+-- Description   : Ultra kartavr tools
+-- Created By    : Andrew Hazelden <andrew@andrewhazelden.com>
+-----------------------------------------------------
+
+kartavr = kartavr or {}  -- namespace that things should be put in
+kartavr.version = 4.0
+
+-----------------------------------------------------
+-- ReloadAlembic
+-- Example : /Volumes/VFX/Fusion/sphere.abc
+-----------------------------------------------------
+function kartavr.ReloadAlembic()
+	print('[Reloading Alembic Scene]\n')
+	
+	local command = [[osascript -e 'tell app "Keyboard Maestro Engine" to do script "A0 Alembic - Super Macro"' &]]
+	print('[Launch Command] ' .. command)
+	os.execute(command)
+end
+
+-----------------------------------------------------
+-- ReloadFBX
+-- Example : /Volumes/VFX/Fusion/sphere.fbx
+-----------------------------------------------------
+function kartavr.ReloadFBX()
+	print('[Reloading FBX Scene]\n')
+	local command = [[osascript -e 'tell app "Keyboard Maestro Engine" to do script "B0 FBX - Super Macro"' &]]
+	print('[Launch Command] ' .. command)
+	os.execute(command)
+end
+
+-----------------------------------------------------
+-- ReloadPSD
+-- Example : /Volumes/VFX/Fusion/sphere.psd
+-----------------------------------------------------
+function kartavr.ReloadPSD()
+	print('[Reloading PSD Layered Image]\n')
+	local command = [[osascript -e 'tell app "Keyboard Maestro Engine" to do script "C0 PSD - Super Macro"' &]]
+	print('[Launch Command] ' .. command)
+	os.execute(command)
+end
+
+-- Expose our namespace
+globals.kartavr = kartavr
+globals.ReloadAlembic = kartavr.ReloadAlembic
+globals.ReloadFBX = kartavr.ReloadFBX
+globals.ReloadPSD = kartavr.ReloadPSD

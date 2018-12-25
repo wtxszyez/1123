@@ -1,5 +1,5 @@
 --[[---
-Submit to RenderPal - v1.0 2018-08-18 09.01 AM
+Submit to RenderPal - v1.1 2018-12-25
 By Andrew Hazelden <andrew@andrewhazelden.com>
 https://www.andrewhazelden.com
 
@@ -300,7 +300,64 @@ Marks the net job as urgent (requires proper userpermissions)
 
 --]]--
 
+
 {
+	Action
+	{
+		ID = "RenderPal_EditSettings",
+		Category = "RenderPal",
+		Name = "Edit RenderPal Settings...",
+		-- Name = "Edit Settings...",
+		
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+function OpenDocument(title, appPath, docPath)
+	if platform == 'Windows' then
+		-- Running on Windows
+		command = 'start "" "' .. appPath .. '" "' .. docPath .. '" &'
+	elseif platform == 'Mac' then
+		-- Running on Mac
+		command = 'open -a "' .. appPath .. '" "' .. docPath .. '" &'
+	 elseif platform == "Linux" then
+		-- Running on Linux
+		command = '"' .. appPath .. '" "' .. docPath .. '" &'
+	else
+		print('[Error] There is an invalid Fusion platform detected')
+		return
+	end
+
+	obj:Comp():Print('[' .. title .. '] [App] "' .. appPath .. '" [Document] "' .. docPath .. '"\n')
+	-- obj:Comp():Print('[Launch Command] ' .. tostring(command) .. '\n')
+	os.execute(command)
+end
+
+editorPath = fu:GetPrefs('Global.Script.EditorPath')
+if editorPath == nil or editorPath == "" then
+	obj:Comp():Print('[Edit RenderPal Settings...] The "Editor Path" is empty. Please choose a text editor in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.\n')
+	app:ShowPrefs("PrefsScript")
+else
+	-- Save the existing comp
+	obj:Comp():Save()
+
+	-- Get the active comp filename
+	sourceComp = app:MapPath('Config:/Submit to RenderPal.fu')
+
+	-- Send the comp to the ScriptEditor
+	if sourceComp ~= '' then
+		OpenDocument('Edit RenderPal Settings', editorPath, sourceComp)
+	else
+		obj:Comp():Print('[Edit RenderPal Settings] Please save the untitled comp to disk first.\n')
+	end
+end
+				]=],
+			},
+		},
+	},
 	Action
 	{
 		ID = "RenderPal_Submit",
@@ -447,6 +504,7 @@ end
 			Sub "RenderPal"
 			{
 				"RenderPal_Submit{}",
+				"RenderPal_EditSettings{}",
 			},
 		},
 	},

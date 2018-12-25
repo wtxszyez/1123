@@ -733,7 +733,7 @@ This comp will decode a static Looking Glass display 5x9 quilted grid based line
 
 The comp uses a pair of TimeStretcher + Crop nodes the clip out each of the quilted grid images into their own separate images. The stereo display works by having the right eye stereo view display one image view later in the linear camera array sequence then the left eye sees.
 
-There are 5x9 quilted views so the timeline starts on frame  "Gobal In -45"
+There are 5x9 quilted views so the timeline starts on frame  "Global In -45".
 
 ![Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp](images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer.png)
 
@@ -742,6 +742,6 @@ There are 5x9 quilted views so the timeline starts on frame  "Gobal In -45"
 
 This comp will decode a static Looking Glass display quilted grid based linear array image and turn it into an image sequence.
 
-Due to the way the timeStretcher node works inside of the "ImageGridExtractor" macro, you have to start the in-point in the timeline at Global In (zero minus the total number of quilted views). In this case there are 5x9 quilted views so the timeline starts on frame  "Gobal In -45"
+Due to the way the timeStretcher node works inside of the "ImageGridExtractor" macro, you have to start the in-point in the timeline at Global In (zero minus the total number of quilted views). In this case there are 5x9 quilted views so the timeline starts on frame  "Global In -45".
 
 ![Looking Glass 5x9 Quilted to Image Sequence.comp](images/examples-looking_glass_5x9_quilted_to_image_sequence.png)
