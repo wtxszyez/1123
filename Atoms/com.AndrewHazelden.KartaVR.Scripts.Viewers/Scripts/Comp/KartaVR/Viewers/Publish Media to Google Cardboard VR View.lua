@@ -1,25 +1,28 @@
-------------------------------------------------------------------------------
--- Publish Media to Google Cardboard VR View v4.0 for Fusion - 2018-12-10
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
--- 
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Publish Media to Google Cardboard VR View v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Publish Media to Google Cardboard VR View script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the settings and generate a Google Cardboard VR View webpage.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- How to use the Script:
+The Publish Media to Google Cardboard VR View script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the settings and generate a Google Cardboard VR View webpage.
 
--- Step 1. Install a HTTP based web sharing program like Apache, LAMP (LINUX), MAMP (Mac/Windows), or Uniform Server (Windows). You can still use the VR View feature without a webserver module if you set the "Web Sharing Folder" output to a folder with write permissions and then you view the index.html page in a web browser like Firefox.
+How to use the Script:
 
--- Step 2. Start Fusion and open a new comp. Select saver or loader node based media in the flow area. If you select a node other than a loader or saver node a left viewport window snapshot will be created automatically.
+Step 1. Install a HTTP based web sharing program like Apache, LAMP (LINUX), MAMP (Mac/Windows), or Uniform Server (Windows). You can still use the VR View feature without a webserver module if you set the "Web Sharing Folder" output to a folder with write permissions and then you view the index.html page in a web browser like Firefox.
 
--- Step 3. Run the Script > KartaVR > Publish Media to Google Cardboard VR View menu item. You can also run this script when the flow area is active with the "V" hotkey on your keyboard.
+Step 2. Start Fusion and open a new comp. Select saver or loader node based media in the flow area. If you select a node other than a loader or saver node a left viewport window snapshot will be created automatically.
 
--- Step 3. In the "Publish Media to Google Cardboard VR View" dialog window you need to define the initial paths and settings for the script. Choose the "Web Sharing Folder", and enable the required checkbox if your panoramic images are Over/Under stereo 3D or not. Then click the "Ok" button.
+Step 3. Run the Script > KartaVR > Publish Media to Google Cardboard VR View menu item. You can also run this script when the flow area is active with the "V" hotkey on your keyboard.
+
+Step 3. In the "Publish Media to Google Cardboard VR View" dialog window you need to define the initial paths and settings for the script. Choose the "Web Sharing Folder", and enable the required checkbox if your panoramic images are Over/Under stereo 3D or not. Then click the "Ok" button.
+
+--]]--
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
@@ -54,39 +57,11 @@ local printStatus = false
 -- Find out if we are running Fusion 6, 7, or 8
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
--- Find out the current operating system platform. The platform local variable should be set to either 'Windows', 'Mac', or 'Linux'.
-local platform = ''
-if string.find(comp:MapPath('Fusion:\\'), 'Program Files', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'PROGRA~1', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'Applications', 1) then
-	-- Check if the OS is Mac by searching for the Applications folder
-	platform = 'Mac'
-else
-	platform = 'Linux'
-end
+-- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
+local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
--- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
-function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	sep = ''
-	
-	if platform == 'Windows' then
-		sep = '\\'
-	elseif platform == 'Mac' then
-		sep = '/'
-	else
-		-- Linux
-		sep = '/'
-	end
-	
-	return mediaDirName:match('(.*'..sep..')')
-end
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
 
 
 -- Set a fusion specific preference value
@@ -94,7 +69,7 @@ end
 function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
-
+	
 	-- List the preference value
 	if status == 1 or status == true then
 		if value == nil then
@@ -139,6 +114,16 @@ function getPreferenceData(pref, defaultValue, status)
 end
 
 
+-- Find out the current directory from a file path
+-- Example: print(dirname("/Users/Shared/file.txt"))
+function dirname(mediaDirName)
+	-- LUA dirname command inspired by Stackoverflow code example:
+	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
+	
+	return mediaDirName:match('(.*' .. osSeparator .. ')')
+end
+
+
 -- Escape the spaces and extended characters in a HTTP based URL string
 -- Based upon the LUA example code: http://www.lua.org/pil/20.3.html
 function encodeURL(textString)
@@ -155,31 +140,31 @@ function openBrowser()
 	
 	webpage = ''
 	
-	if platform == "Windows" then
+	if platform == 'Windows' then
 		-- Running on Windows
 		webpage = webURL .. 'index.html'
 		command = 'explorer "' .. webpage .. '"'
 		-- command = '"' .. webpage .. '"'
 		
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
-	elseif platform == "Mac" then
+	elseif platform == 'Mac' then
 		-- Running on Mac
 		webpage = webURL .. 'index.html'
 		command = 'open "' .. webpage .. '" &'
 					
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
-	elseif platform == "Linux" then
+	elseif platform == 'Linux' then
 		-- Running on Linux
 		webpage = webURL .. 'index.html'
 		command = 'xdg-open "' .. webpage .. '" &'
 		
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
 	else
-		print("[Platform] ", platform)
-		print("There is an invalid platform defined in the local platform variable at the top of the code.")
+		print('[Platform] ', platform)
+		print('There is an invalid platform defined in the local platform variable at the top of the code.')
 	end
 end
 
@@ -190,27 +175,27 @@ function openDirectory(mediaDirName)
 	
 	dir = dirname(mediaDirName)
 	
-	if platform == "Windows" then
+	if platform == 'Windows' then
 		-- Running on Windows
 		command = 'explorer "' .. dir .. '"'
 		
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
-	elseif platform == "Mac" then
+	elseif platform == 'Mac' then
 		-- Running on Mac
 		command = 'open "' .. dir .. '" &'
 		
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == "Linux" then
 		-- Running on Linux
 		command = 'nautilus "' .. dir .. '" &'
 		
-		print("[Launch Command] ", command)
+		print('[Launch Command] ', command)
 		os.execute(command)
 	else
-		print("[Platform] ", platform)
-		print("There is an invalid platform defined in the local platform variable at the top of the code.")
+		print('[Platform] ', platform)
+		print('There is an invalid platform defined in the local platform variable at the top of the code.')
 	end
 end
 
@@ -233,7 +218,7 @@ function regexFile(inFilepath, searchString, replaceString)
 	-- Open up the file pointer for the output textfile
 	outFile, err = io.open(tempFile,'w')
 	if err then 
-		print("[Error Opening File for Writing]")
+		print('[Error Opening File for Writing]')
 		return
 	end
 	
@@ -304,7 +289,7 @@ function CopyToClipboard(textString)
 	-- Open up the file pointer for the output textfile
 	outClipFile, err = io.open(clipboardTempFile,'w')
 	if err then 
-		print("[Error Opening Clipboard Temporary File for Writing]")
+		print('[Error Opening Clipboard Temporary File for Writing]')
 		return
 	end
 	
@@ -343,19 +328,7 @@ function processTemplate()
 	-- Todo: Copy the data folder, and the vr_view.html file
 	-- Todo: Process the template file and render out the media files
 	
-	if platform == 'Windows' then
-		osSeparator = '\\'
-		-- vrviewTemplatePath = 'C:\\Program Files\\KartaVR\\vr_view\\'
-		vrviewTemplatePath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/vr_view/')
-	elseif platform == 'Mac' then
-		osSeparator = '/'
-		-- vrviewTemplatePath = '/Applications/KartaVR/vr_view/'
-		vrviewTemplatePath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/vr_view/')
-	elseif platform == 'Linux' then
-		osSeparator = '/'
-		-- vrviewTemplatePath = '/opt/KartaVR/vr_view/'
-		vrviewTemplatePath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/vr_view/')
-	end
+	vrviewTemplatePath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/vr_view/')
 	
 	-- Create the Web Sharing folder if required
 	os.execute('mkdir "' .. webSharingFolder..'"')
@@ -428,7 +401,6 @@ function processTemplate()
 	-- Web Page VR View Header Block Elements
 	webpageString = vrviewHeader
 	webpageString = webpageString .. vrviewIntroParagraph
-	
 	webpageString = webpageString .. '		<!-- Start of VR View Media Elements -->\n\n'
 	
 	-- Check if the media file is in stereo 3D
@@ -473,10 +445,10 @@ function processTemplate()
 		selectedNode = comp.ActiveTool
 		
 		if selectedNode then
-			print("[Selected Node] ", selectedNode.Name)
+			print('[Selected Node] ', selectedNode.Name)
 			
 			-- Create the final web publishing media filename
-			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. 'dfm_'	.. selectedNode.Name .. "." .. viewportSnapshotImageFormat
+			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. 'kvr_'	.. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
 			
 			if fu_major_version >= 8 then
 				-- Fusion 8 workflow for saving an image
@@ -491,7 +463,7 @@ function processTemplate()
 			mediaFilename = eyeon.getfilename(destinationMediaFile)
 			
 			-- Everything worked fine and an image was saved
-			print("[Saved Image] ", destinationMediaFile ," [Selected Node] ", selectedNode.Name)
+			print('[Saved Image] ', destinationMediaFile, ' [Selected Node] ', selectedNode.Name)
 			
 			mediaExtension = eyeon.getextension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
@@ -671,11 +643,11 @@ function playDFMWaveAudio(filename, status)
 end
 
 
-print("Publish Media to Google Cardboard VR View is running on " .. platform .. " with Fusion " .. eyeon._VERSION)
+print('Publish Media to Google Cardboard VR View is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then
-	print("This is a Blackmagic Fusion lua script, it should be run from within Fusion.")
+	print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 end
 
 -- Lock the comp flow area
@@ -688,13 +660,13 @@ comp:Lock()
 msg = 'Customize the Google Cardboard VR View settings.'
 
 -- Image format List
-formatList = {"JPEG", "PNG"}
+formatList = {'JPEG', 'PNG'}
 
 -- Sound Effect List
-soundEffectList = {"None", "On Error Only", "Steam Train Whistle Sound", "Trumpet Sound", "Braam Sound"}
+soundEffectList = {'None', 'On Error Only', 'Steam Train Whistle Sound', 'Trumpet Sound', 'Braam Sound'}
 
 -- Web Template List
-webTemplateList = {"Custom Template", "Charcoal Template", "Midnight Template"}
+webTemplateList = {'Custom Template', 'Charcoal Template', 'Midnight Template'}
 
 -- Find out the Machine's local IP address
 -- localhostIP = "127.0.0.1"
@@ -702,6 +674,10 @@ webTemplateList = {"Custom Template", "Charcoal Template", "Midnight Template"}
 
 if platform == 'Windows' then
 	-- webURL = 'http://localhost:8888/'
+	-- webURL = 'http://localhost:8080/'
+	-- webURL = 'http://localhost:8081/'
+	-- webURL = 'http://localhost:80/'
+	-- webURL = 'http://localhost:81/'
 	webURL = 'http://localhost/'
 	
 	webSharingFolder = comp:MapPath('C:\\MAMP\\htdocs\\')
@@ -738,7 +714,7 @@ end
 imageFormat = getPreferenceData('KartaVR.PublishVRView.Format', 0, printStatus)
 soundEffect = getPreferenceData('KartaVR.PublishVRView.SoundEffect', 1, printStatus)
 useCurrentFrame = getPreferenceData('KartaVR.PublishVRView.UseCurrentFrame', 1, printStatus)
---scaleImageRatio = getPreferenceData('KartaVR.PublishVRView.ScaleImageRatio', 1, printStatus)
+-- scaleImageRatio = getPreferenceData('KartaVR.PublishVRView.ScaleImageRatio', 1, printStatus)
 copyURLToClipboard = getPreferenceData('KartaVR.PublishVRView.CopyURLToClipboard', 1, printStatus)
 mediaIsStereo = getPreferenceData('KartaVR.PublishVRView.MediaIsStereo', 0, printStatus)
 webTemplate = getPreferenceData('KartaVR.PublishVRView.WebTemplate', 2, printStatus)
@@ -750,26 +726,26 @@ webSharingFolder = getPreferenceData('KartaVR.PublishVRView.WebSharingFolder', w
 startYawAngle = getPreferenceData('KartaVR.PublishVRView.StartYawAngle', 0, printStatus)
 
 d = {}
-d[1] = {"Msg", Name = "Warning", "Text", ReadOnly = true, Lines = 3, Wrap = true, Default = msg}
-d[2] = {"Format", Name = "Image Format", "Dropdown", Default = imageFormat, Options = formatList }
-d[3] = {"SoundEffect", Name = "Sound Effect", "Dropdown", Default = soundEffect, Options = soundEffectList}
--- d[4] = {"LocalhostIP", Name = "Localhost IP (Read Only)", "Text", ReadOnly = true, Lines = 1, Default = localhostIP}
--- d[5] = {"LocalhostDNS", Name = "Localhost DNS (Read Only)", "Text", ReadOnly = true, Lines = 1, Default = localhostDNS}
-d[4] = {"WebSharingFolder", Name = "Web Sharing Folder", browseMode, Lines = 1, Default = webSharingFolder}
-d[5] = {"WebURL", Name = "Web URL", "Text", Lines = 1, Default = webURL}
-d[6] = {"WebTemplate", Name = "Web Template", "Dropdown", Default = webTemplate, Options = webTemplateList}
-d[7] = {"StartYawAngle", Name = "Starting Yaw Angle", "Screw", Default = startYawAngle, Min = -360, Max = 360}
-d[8] = {"UseCurrentFrame", Name = "Use Current Frame", "Checkbox", Default = useCurrentFrame, NumAcross = 1}
-d[9] = {"MediaIsStereo", Name = "Media is Over/Under Stereo 3D", "Checkbox", Default = mediaIsStereo, NumAcross = 1}
--- d[12] = {"ScaleImageRatio", Name = "Scale Image Ratio to 1:1", "Checkbox", Default = scaleImageRatio, NumAcross = 1}
-d[10] = {"CopyURLToClipboard", Name = "Copy URL to Clipboard", "Checkbox", Default = copyURLToClipboard, NumAcross = 1}
-d[11] = {"OpenPublishingFolder", Name = "Open Publishing Folder", "Checkbox", Default = openPublishingFolder, NumAcross = 1}
-d[12] = {"OpenWebpage", Name = "Open Webpage", "Checkbox", Default = openWebpage, NumAcross = 0}
+d[1] = {'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 3, Wrap = true, Default = msg}
+d[2] = {'Format', Name = 'Image Format', 'Dropdown', Default = imageFormat, Options = formatList }
+d[3] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect, Options = soundEffectList}
+-- d[4] = {'LocalhostIP', Name = 'Localhost IP (Read Only)', 'Text', ReadOnly = true, Lines = 1, Default = localhostIP}
+-- d[5] = {'LocalhostDNS', Name = 'Localhost DNS (Read Only)', 'Text', ReadOnly = true, Lines = 1, Default = localhostDNS}
+d[4] = {'WebSharingFolder', Name = 'Web Sharing Folder', browseMode, Lines = 1, Default = webSharingFolder}
+d[5] = {'WebURL', Name = 'Web URL', 'Text', Lines = 1, Default = webURL}
+d[6] = {'WebTemplate', Name = 'Web Template', 'Dropdown', Default = webTemplate, Options = webTemplateList}
+d[7] = {'StartYawAngle', Name = 'Starting Yaw Angle', 'Screw', Default = startYawAngle, Min = -360, Max = 360}
+d[8] = {'UseCurrentFrame', Name = 'Use Current Frame', 'Checkbox', Default = useCurrentFrame, NumAcross = 1}
+d[9] = {'MediaIsStereo', Name = 'Media is Over/Under Stereo 3D', 'Checkbox', Default = mediaIsStereo, NumAcross = 1}
+-- d[12] = {'ScaleImageRatio', Name = 'Scale Image Ratio to 1:1', 'Checkbox', Default = scaleImageRatio, NumAcross = 1}
+d[10] = {'CopyURLToClipboard', Name = 'Copy URL to Clipboard', 'Checkbox', Default = copyURLToClipboard, NumAcross = 1}
+d[11] = {'OpenPublishingFolder', Name = 'Open Publishing Folder', 'Checkbox', Default = openPublishingFolder, NumAcross = 1}
+d[12] = {'OpenWebpage', Name = 'Open Webpage', 'Checkbox', Default = openWebpage, NumAcross = 0}
 
 
-dialog = comp:AskUser("Publish Media to Google Cardboard VR View", d)
+dialog = comp:AskUser('Publish Media to Google Cardboard VR View', d)
 if dialog == nil then
-	print("You cancelled the dialog!")
+	print('You cancelled the dialog!')
 	
 	-- Unlock the comp flow area
 	comp:Unlock()
@@ -823,10 +799,10 @@ processTemplate()
 
 -- Open a web browser window up with the webpage
 if openWebpage == 1 then
-	print("Opening the webpage in your web browser.: " .. openWebpage)
+	print('Opening the webpage in your web browser: ' .. openWebpage)
 	openBrowser()
 else
-	print("Skipping the loading of the webpage in your web browser: " .. openWebpage)
+	print('Skipping the loading of the webpage in your web browser: ' .. openWebpage)
 end
 
 
@@ -838,7 +814,7 @@ if openPublishingFolder == 1 then
 			if eyeon.fileexists(webSharingFolder) then
 				openDirectory(webSharingFolder)
 			else
-				print("[Web Sharing Directory Missing] ", webSharingFolder)
+				print('[Web Sharing Directory Missing] ', webSharingFolder)
 				err = true
 			end
 		else
@@ -846,7 +822,7 @@ if openPublishingFolder == 1 then
 			if eyeon.direxists(webSharingFolder) then
 				openDirectory(webSharingFolder)
 			else
-				print("[Web Sharing Directory Missing] ", webSharingFolder)
+				print('[Web Sharing Directory Missing] ', webSharingFolder)
 				err = true
 			end
 		end

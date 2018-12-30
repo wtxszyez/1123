@@ -1,26 +1,26 @@
-------------------------------------------------------------------------------
--- Send Geometry to CloudCompare Viewer v4.0 for Fusion - 2018-12-19
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Send Geometry to CloudCompare v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Send Geometry to CloudCompare Viewer script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- Note: CloudCompare is primarily used to examine meshes and point clouds
+The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
 
--- How to use the Script:
+Note: CloudCompare is primarily used to examine meshes and point clouds
 
--- Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
+How to use the Script:
 
--- Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare Viewer" menu item.
+Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
-------------------------------------------------------------------------------
+Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" menu item.
 
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -197,16 +197,19 @@ function openGeometry(filename, nodeType, status)
 	-- ------------------------------------
 	-- Load the preferences
 	-- ------------------------------------
+	local defaultCloudCompareViewerFile = ''
+	local command = ''
 	
 	if platform == 'Windows' then
 		-- Reactor Install
 		defaultCloudCompareViewerFile = comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.exe')
 		-- defaultCloudCompareViewerFile = comp:MapPath('C:\\Program Files\\CloudCompare\\ccViewer.exe')
 	elseif platform == 'Mac' then
-		defaultCloudCompareViewerFile =  comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/') .. 'ccViewer.app'
-		-- defaultCloudCompareViewerFile = '/Applications/ccViewer.app'
+		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
+		defaultCloudCompareViewerFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.app'), '[/]$', '')
+		-- -- defaultCloudCompareViewerFile = '/Applications/ccViewer.app'
 	else
-		defaultCloudCompareViewerFile = comp:MapPath('/usr/bin/ccViewer')
+		defaultCloudCompareViewerFile = '/usr/bin/ccViewer'
 		-- defaultCloudCompareViewerFile = 'ccViewer'
 	end
 	
@@ -214,7 +217,7 @@ function openGeometry(filename, nodeType, status)
 	compPath = dirname(comp:GetAttrs().COMPS_FileName)
 	
 	-- Location of CloudCompare
-	CloudCompareViewerFile = getPreferenceData('KartaVR.SendGeometry.CloudCompareViewer', defaultCloudCompareViewerFile, printStatus)
+	CloudCompareViewerFile = getPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', defaultCloudCompareViewerFile, printStatus)
 	soundEffect = getPreferenceData('KartaVR.SendGeometry.SoundEffect', 1, printStatus)
 	
 	msg = 'Customize the settings for sending geometry files to CloudCompare. Please close CloudCompare before running this tool.'
@@ -239,7 +242,13 @@ function openGeometry(filename, nodeType, status)
 		-- Debug - List the output from the AskUser dialog window
 		dump(dialog)
 		
-		CloudCompareViewerFile = comp:MapPath(dialog.CloudCompareViewerFile)
+		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
+		if platform == 'Mac' then
+			CloudCompareViewerFile = string.gsub(comp:MapPath(dialog.CloudCompareViewerFile), '[/]$', '')
+		else
+			CloudCompareViewerFile = comp:MapPath(dialog.CloudCompareViewerFile)
+		end
+		
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', CloudCompareViewerFile, printStatus)
 			
 		soundEffect = dialog.SoundEffect
@@ -258,13 +267,13 @@ function openGeometry(filename, nodeType, status)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a ' .. CloudCompareViewerFile .. ' --args ' .. '"' .. filename .. '" '
+		command = 'open -a "' .. CloudCompareViewerFile .. '" --args ' .. '"' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = CloudCompareViewerFile .. ' ' .. '"' .. filename .. '" '
+		command = '"' .. CloudCompareViewerFile .. '" ' .. '"' .. filename .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else

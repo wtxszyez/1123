@@ -1,30 +1,32 @@
-------------------------------------------------------------------------------
--- Send Geometry to MeshLab v4 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Send Geometry to MeshLab v4 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Send Geometry to MeshLab script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take a AlembicMesh3D / FBXMesh3D / ExporterFBX node that is selected in the flow and send them to MeshLab via a new MeshLab .mlp project file.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- How to use the Script:
+The Send Geometry to MeshLab script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take a AlembicMesh3D / FBXMesh3D / ExporterFBX node that is selected in the flow and send them to MeshLab via a new MeshLab .mlp project file.
 
--- Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
+How to use the Script:
 
--- Step 2. Run the Script > KartaVR > Geometry > Send Geometry to MeshLab menu item.
+Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
-------------------------------------------------------------------------------
--- Todos:
+Step 2. Run the Script > KartaVR > Geometry > Send Geometry to MeshLab menu item.
 
--- Add Fusion loader/saver node based <RasterGroup> support for texture projections
--- Add support with a file table for loading in multiple meshes at once
--- Add FBXExporter mesh sequence handling. Look at work-arounds for the extra zero digit that gets added by fusion to the output generated mesh filename where "Comp:/torus_chain_0.obj" gets saved out as "Comp:/torus_chain_00.obj"
-------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+Todos:
 
+Add Fusion loader/saver node based <RasterGroup> support for texture projections
+Add support with a file table for loading in multiple meshes at once
+Add FBXExporter mesh sequence handling. Look at work-arounds for the extra zero digit that gets added by fusion to the output generated mesh filename where "Comp:/torus_chain_0.obj" gets saved out as "Comp:/torus_chain_00.obj"
+----------------------------------------------------------------------------
+
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -40,6 +42,9 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -94,10 +99,8 @@ end
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
+	-- LUA dirname command inspired by Stackoverflow code example:
+	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
 	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
@@ -203,15 +206,15 @@ function openGeometry(filename, nodeType, status)
 	-- ------------------------------------
 	
 	if platform == 'Windows' then
-		meshlabFile = 'C:\\Program Files\\VCG\\MeshLab\\meshlab.exe'
-		-- meshlabServerFile = 'C:\\Program Files\\VCG\\MeshLab\\meshlabserver.exe'
+		meshlabFile = comp:MapPath('Reactor:/Deploy/Bin/meshlab//meshlab.exe')
+		-- meshlabFile = 'C:\\Program Files\\VCG\\MeshLab\\meshlab.exe'
 	elseif platform == 'Mac' then
-		meshlabFile = '/Applications/meshlab.app'
-		-- meshlabServerFile = '/Applications/meshlab.app/Contents/MacOS/meshlabserver'
+		-- Take the trailing slash off the end of the final meshlab.app path after the pathmap lookup
+		meshlabFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/meshlab/meshlab.app'), '[/]$', '')
+		-- meshlabFile = '/Applications/meshlab.app'
 	else
 		meshlabFile = '/usr/bin/meshlab'
 		-- meshlabFile = 'meshlab'
-		-- meshlabServerFile = 'meshlabserver'
 	end
 	
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
@@ -243,7 +246,13 @@ function openGeometry(filename, nodeType, status)
 		-- Debug - List the output from the AskUser dialog window
 		dump(dialog)
 		
-		meshlabFile = comp:MapPath(dialog.MeshlabFile)
+		-- Take the trailing slash off the end of the final meshlab.app path after the pathmap lookup
+		if platform == 'Mac' then
+			meshlabFile = string.gsub(comp:MapPath(dialog.MeshlabFile), '[/]$', '')
+		else
+			meshlabFile = comp:MapPath(dialog.MeshlabFile)
+		end
+		
 		setPreferenceData('KartaVR.SendGeometry.MeshlabFile', meshlabFile, printStatus)
 		
 		soundEffect = dialog.SoundEffect
@@ -305,19 +314,19 @@ function openGeometry(filename, nodeType, status)
 	-- Open the MeshLab tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		command = 'start "" "' .. meshlabFile .. '" ' .. mlpFile
+		command = 'start "" "' .. meshlabFile .. '" "' .. mlpFile .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a ' .. meshlabFile .. ' --args ' .. mlpFile
+		command = 'open -a "' .. meshlabFile .. '" --args "' .. mlpFile .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = meshlabFile .. ' ' .. mlpFile
+		command = '"' .. meshlabFile .. '"" "' .. mlpFile .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else

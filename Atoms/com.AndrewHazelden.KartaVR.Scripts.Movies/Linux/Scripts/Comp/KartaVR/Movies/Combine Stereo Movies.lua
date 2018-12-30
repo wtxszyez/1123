@@ -1,6 +1,6 @@
 --[[--
 ------------------------------------------------------------------------------
-Combine Stereo Movies v4.0 for Fusion - 2018-12-11
+Combine Stereo Movies v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -8,15 +8,18 @@ andrew@andrewhazelden.com
 KartaVR
 http://www.andrewhazelden.com/blog/downloads/kartavr/
 ------------------------------------------------------------------------------
+
 Overview:
 
 The Combine Stereo Movies script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. You can also transcode the video into MP4 H.264, H.265, and QuickTime ProRes video formats.
 
 How to use the Script:
 
-Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > Movies > Combine Stereo Movies menu item.
+Step 1. Start Fusion and open a new comp.
 
-Step 2. In the Combine Stereo Movies dialog window you need to select the left and right movie files and define the output movie name.
+Step 2. Run the "Script > KartaVR > Movies > Combine" Stereo Movies menu item.
+
+Step 3. In the Combine Stereo Movies dialog window you need to select the left and right movie files and define the output movie name.
 
 Note: The close X box on the dialog window does not work. You have to hit the "Cancel" button to close the window.
 
@@ -44,22 +47,17 @@ local printStatus = false
 -- Find out if we are running Fusion 7 or 8
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
--- Add the platform specific folder slash character
-local osSeparator = package.config:sub(1,1)
-
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
 
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 -- Open a folder window up using your desktop file browser
 function openDirectory(mediaDirName)
@@ -356,7 +354,7 @@ function ffmpegTranscodeMedia(leftMovie, rightMovie, stereoMovieOutput, stereoLa
 	outputLog = outputTempDirectory .. 'ffmpegVideoTranscode.txt'
 	logCommand = ''
 	if platform == 'Windows' then
-		logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+		logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a "' .. outputLog .. '" '
 	elseif platform == 'Mac' then
 		logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
 	elseif platform == 'Linux' then
@@ -369,27 +367,36 @@ function ffmpegTranscodeMedia(leftMovie, rightMovie, stereoMovieOutput, stereoLa
 	-- Open FFMPEG
 	if platform == 'Windows' then
 		-- Running on Windows
-		viewerProgram = '"C:\\Program Files\\KartaVR\\tools\\ffmpeg\\bin\\ffmpeg.exe"'
-		command = 'start "" ' .. viewerProgram .. ' ' .. ffmpegCommand .. logCommand
-		-- command = viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+		
+		defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg.exe')
+		-- defaultffmpegProgram = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe'
+		-- defaultffmpegProgram = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
+		ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+		command = 'start "" "' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
+		
 		print('[FFMPEG Launch Command] ', command)
 		-- os.execute(command)
 		print("Combine Stereo Movies is not available for Windows yet.")
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		viewerProgram = '"/Applications/KartaVR/mac_tools/ffmpeg/bin/ffmpeg"'
-		-- viewerProgram = '"/opt/local/bin/ffmpeg"'
-		command = viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+		
+		defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg')
+		-- defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+		ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+		command = '"' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
+		
 		print('[FFMPEG Launch Command] ', command)
 		os.execute(command)
 	else
 		-- Running on Linux
-		viewerProgram = '"/opt/local/bin/ffmpeg"'
-		command = viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+		
+		defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+		ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+		
+		command = '"' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
 		print('[FFMPEG Launch Command] ', command)
 		os.execute(command)
 	end
-	
 	
 	-- Open up the output folder
 	if openOutputFolder == 1 and platform ~= 'Windows' then

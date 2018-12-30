@@ -259,7 +259,7 @@ if selectedNode then
 		-- Write out a temporary viewer snapshot so the script can send any kind of node to the viewer tool
 		
 		-- Image name with extension.
-		imageFilename = 'dfm_autopano_' .. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
+		imageFilename = 'kvr_autopano_' .. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
 		
 		-- Find out the Fusion temporary directory path
 		dirName = comp:MapPath('Temp:\\KartaVR\\')

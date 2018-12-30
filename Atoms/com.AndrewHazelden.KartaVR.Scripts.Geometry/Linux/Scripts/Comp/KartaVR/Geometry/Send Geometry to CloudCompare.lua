@@ -1,26 +1,26 @@
-------------------------------------------------------------------------------
--- Send Geometry to CloudCompare v4.0 for Fusion - 2018-12-19
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Send Geometry to CloudCompare v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- Note: CloudCompare is primarily used to examine meshes and point clouds
+The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
 
--- How to use the Script:
+Note: CloudCompare is primarily used to examine meshes and point clouds
 
--- Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
+How to use the Script:
 
--- Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" menu item.
+Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
-------------------------------------------------------------------------------
+Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" menu item.
 
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -197,16 +197,19 @@ function openGeometry(filename, nodeType, status)
 	-- ------------------------------------
 	-- Load the preferences
 	-- ------------------------------------
+	local defaultCloudCompareFile = ''
+	local command = ''
 	
 	if platform == 'Windows' then
 		-- Reactor Install
 		defaultCloudCompareFile = comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/CloudCompare.exe')
 		-- defaultCloudCompareFile = comp:MapPath('C:\\Program Files\\CloudCompare\\CloudCompare.exe')
 	elseif platform == 'Mac' then
-		defaultCloudCompareFile =  comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/') .. 'CloudCompare.app'
+		defaultCloudCompareFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/CloudCompare.app'), '[/]$', '')
+		-- -- defaultCloudCompareFile = '/Applications/CloudCompare.app'
 	else
 		defaultCloudCompareFile = '/usr/bin/CloudCompare'
-		-- defaultCloudCompareFile = 'ccViewer'
+		-- defaultCloudCompareFile = 'CloudCompare'
 	end
 	
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
@@ -238,7 +241,13 @@ function openGeometry(filename, nodeType, status)
 		-- Debug - List the output from the AskUser dialog window
 		dump(dialog)
 		
-		CloudCompareFile = comp:MapPath(dialog.CloudCompareFile)
+		-- Take the trailing slash off the end of the final CloudCompare.app path after the pathmap lookup
+		if platform == 'Mac' then
+			CloudCompareFile = string.gsub(comp:MapPath(dialog.CloudCompareFile), '[/]$', '')
+		else
+			CloudCompareFile = comp:MapPath(dialog.CloudCompareFile)
+		end
+		
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareFile', CloudCompareFile, printStatus)
 			
 		soundEffect = dialog.SoundEffect
@@ -251,19 +260,19 @@ function openGeometry(filename, nodeType, status)
 	-- Open the CloudCompare tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		command = 'start "" "' .. CloudCompareFile .. '" ' .. '"' .. filename .. '" '
+		command = 'start "" "' .. CloudCompareFile .. '" "' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a ' .. CloudCompareFile .. ' --args ' .. '"' .. filename .. '" '
+		command = 'open -a "' .. CloudCompareFile .. '" --args ' .. '"' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = CloudCompareFile .. ' ' .. '"' .. filename .. '" '
+		command = '"' .. CloudCompareFile .. '" "' .. filename .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else

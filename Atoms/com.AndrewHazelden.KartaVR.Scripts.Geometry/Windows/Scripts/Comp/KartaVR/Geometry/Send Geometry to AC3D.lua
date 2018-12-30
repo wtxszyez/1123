@@ -1,26 +1,27 @@
-------------------------------------------------------------------------------
--- Send Geometry to AC3D v4.0 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Send Geometry to AC3D v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Send Geometry to AC3D script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to AC3D.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
 
--- Note: AC3D is primarily used to load OBJ meshes and perform simple editing and UV layout tasks.
+Overview:
 
--- How to use the Script:
+The Send Geometry to AC3D script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to AC3D.
 
--- Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
+Note: AC3D is primarily used to load OBJ meshes and perform simple editing and UV layout tasks.
 
--- Step 2. Run the Script > KartaVR > Geometry > Send Geometry to AC3D menu item.
+How to use the Script:
 
-------------------------------------------------------------------------------
+Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
+Step 2. Run the Script > KartaVR > Geometry > Send Geometry to AC3D menu item.
+
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -33,9 +34,11 @@ local err = false
 
 -- Find out if we are running Fusion 6, 7, or 8
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
-
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -90,14 +93,11 @@ end
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
+	-- LUA dirname command inspired by Stackoverflow code example:
+	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
 	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 
 -- Open a folder window up using your desktop file browser
@@ -203,6 +203,7 @@ function openGeometry(filename, nodeType, status)
 		AC3DFile = 'C:\\Program Files\\AC3D 8.0.80\\ac3d.exe'
 		--AC3DFile = 'C:\\Program Files\\AC3D\\ac3d.exe'
 	elseif platform == 'Mac' then
+		-- Take the trailing slash off the end of the final AC3D.app path after the pathmap lookup
 		AC3DFile = '/Applications/ac3dmac/AC3D.app'
 		-- AC3DFile = '/Applications/ac3d/AC3D.app'
 	else
@@ -239,7 +240,13 @@ function openGeometry(filename, nodeType, status)
 		-- Debug - List the output from the AskUser dialog window
 		dump(dialog)
 		
-		AC3DFile = comp:MapPath(dialog.AC3DFile)
+		-- Take the trailing slash off the end of the final AC3D.app path after the pathmap lookup
+		if platform == 'Mac' then
+			AC3DFile = string.gsub(comp:MapPath(dialog.AC3DFile), '[/]$', '')
+		else
+			AC3DFile = comp:MapPath(dialog.AC3DFile)
+		end
+		
 		setPreferenceData('KartaVR.SendGeometry.AC3DFile', AC3DFile, printStatus)
 			
 		soundEffect = dialog.SoundEffect
@@ -252,19 +259,19 @@ function openGeometry(filename, nodeType, status)
 	-- Open the AC3D tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		command = 'start "" "' .. AC3DFile .. '" ' .. '"' .. filename .. '" '
+		command = 'start "" "' .. AC3DFile .. '" "' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a ' .. AC3DFile .. ' --args ' .. '"' .. filename .. '" '
+		command = 'open -a "' .. AC3DFile .. '" --args ' .. '"' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = AC3DFile .. ' ' .. '"' .. filename .. '" '
+		command = '"' ..AC3DFile .. '" "' .. filename .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else

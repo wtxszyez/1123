@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Photomatix Pro v4.0 for Fusion - 2018-12-11
+Send Frame to Photomatix Pro v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -256,7 +256,7 @@ if selectedNode then
 		-- Write out a temporary viewer snapshot so the script can send any kind of node to the viewer tool
 		
 		-- Image name with extension.
-		imageFilename = 'dfm_photomatixpro_'..selectedNode.Name..'.'.. viewportSnapshotImageFormat
+		imageFilename = 'kvr_photomatixpro_'..selectedNode.Name..'.'.. viewportSnapshotImageFormat
 		
 		-- Find out the Fusion temporary directory path
 		dirName = comp:MapPath('Temp:\\KartaVR\\')

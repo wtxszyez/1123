@@ -1,22 +1,25 @@
-------------------------------------------------------------------------------
--- Open VR View Publishing Folder v4.0 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Open VR View Publishing Folder v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Open VR View Publishing Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the Google Cardboard VR View directory that the KartaVR uses to write out viewer snapshots and other files.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
 
--- How to use the Script:
+Overview:
 
--- Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > Open VR View Publishing Folder menu item.
+The Open VR View Publishing Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the Google Cardboard VR View directory that the KartaVR uses to write out viewer snapshots and other files.
 
-------------------------------------------------------------------------------
+How to use the Script:
 
+Step 1. Start Fusion and open a new comp. 
+
+Step 2. Run the Script > KartaVR > Open Folder > Open VR View Publishing Folder menu item.
+
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -33,6 +36,8 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -85,14 +90,9 @@ end
 
 
 -- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
-function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
-	return mediaDirName:match('(.*' .. osSeparator .. ')')
+-- Example: print(Dirname('/Volumes/Media/image.0000.exr'))
+function dirname(filename)
+	return filename:match('(.*' .. osSeparator .. ')')
 end
 
 

@@ -66,17 +66,17 @@ The Looking Glass Quiltr application is installed to:
 If you are curious, you can take a peek at the metadata tags that the QUILTR app embeds into your imagery. The exiftool program shows the embedded QUILTR metadata tags as:
 
 		Background Color                : 65535 65535 65535
-		Comment                         : <lkg><properties vX="4" vY="4" pixelAspect="1" fps=""/><info renderer="KartaVR"/></lkg>
+		Comment                         : <lkg><properties vX=4 vY=4 pixelAspect=1/><info renderer="KartaVR"/></lkg>
 
 Exiftool makes it easy to embed a Looking Glass `QUILTR` style comment tag in your imagery:
 
 Green Lantern 5x9 Quilted Image:
 
-		exiftool -overwrite_original -Comment='<lkg><properties vX="5" vY="9" pixelAspect="1.3" fps=""/><info renderer="KartaVR"/></lkg>' /Volumes/Media/Green_Lantern_5x9_Quilted.0001.jpg
+		exiftool -overwrite_original -Comment='<lkg><properties vX=5 vY=9 pixelAspect=1.3/><info renderer="KartaVR"/></lkg>' /Volumes/Media/Green_Lantern_5x9_Quilted.0001.jpg
 
 Silver Mask 4x4 Quilted Image:
 
-		exiftool -overwrite_original -Comment='<lkg><properties vX="4" vY="4" pixelAspect="1" fps=""/><info renderer="KartaVR"/></lkg>' /Volumes/Media/Silver_Mask_4x4_Quilted.0001.jpg
+		exiftool -overwrite_original -Comment='<lkg><properties vX=4 vY=4 pixelAspect=1/><info renderer="KartaVR"/></lkg>' /Volumes/Media/Silver_Mask_4x4_Quilted.0001.jpg
 
 ## Fusion Macro Todos ##
 

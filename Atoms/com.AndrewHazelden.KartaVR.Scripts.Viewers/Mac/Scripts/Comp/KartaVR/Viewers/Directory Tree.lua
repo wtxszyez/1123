@@ -1,14 +1,14 @@
-_VERSION = 'v4.0 - 2018-12-11'
+_VERSION = 'v4.0 - 2018-12-25'
 print('[Directory Tree] ' .. tostring(_VERSION))
 
 --[[--
-Directory Tree for Fusion - v4.0 2018-12-11
+Directory Tree for Fusion - v4.0 2018-12-25
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 ----------------------------------------------------------------------------
 
 Overview:
-This script works in Fusion 9 and Resolve 15. It allows you you quickly view a list of the Fusion saver, loader, and geometry nodes in your composite in a UI Manager based Tree view list.
+This script works in Fusion 9 and Resolve 15 on macOS. It allows you you quickly view a list of the Fusion saver, loader, and geometry nodes in your composite in a UI Manager based Tree view list.
 
 Installation:
 The Linux copy to clipboard command is "xclip"

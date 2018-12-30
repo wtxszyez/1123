@@ -1,6 +1,14 @@
 --[[--
-Open Containing Folder - v4.0 2018-12-16
-by Andrew Hazelden <andrew@andrewhazelden.com>
+Open Containing Folder - v4.0 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
+
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+
+Overview:
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
 

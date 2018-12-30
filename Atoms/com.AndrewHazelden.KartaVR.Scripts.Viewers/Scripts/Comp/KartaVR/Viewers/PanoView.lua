@@ -1,41 +1,42 @@
-------------------------------------------------------------------------------
--- PanoView v4.0 - 2018-12-11
+--[[--
+----------------------------------------------------------------------------
+PanoView v4.0 - 2018-12-25
 
--- by Andrew Hazelden -- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+by Andrew Hazelden -- www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The PanoView script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send your currently selected file loader or saver node media files to an Oculus Rift HMD using an external media viewer / playback tool. This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system. 
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- Note: The PanoView script supports sending any kind of node from the flow view to the your media viewer tool.
+The PanoView script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send your currently selected file loader or saver node media files to an Oculus Rift HMD using an external media viewer / playback tool. This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system. 
 
--- Supported media viewing tools include: 
+Note: The PanoView script supports sending any kind of node from the flow view to the your media viewer tool.
 
--- Kolor Eyes
--- GoPro VR Player
--- Amateras Player
--- Adobe Speedgrade
--- DJV Viewer
--- Live View Rift
--- QuickTime
--- RV
--- Assimilate Scratch Player
--- VLC
--- Whirligig
+Supported media viewing tools include: 
 
--- How to use the Script:
+	- Kolor Eyes
+	- GoPro VR Player
+	- Amateras Player
+	- Adobe Speedgrade
+	- DJV Viewer
+	- Live View Rift
+	- QuickTime
+	- RV
+	- Assimilate Scratch Player
+	- VLC
+	- Whirligig
 
--- Step 1. Use the "Edit PanoView Preferences" script GUI to choose the media viewer tool you would like use each time the PanoView script is run.
+How to use the Script:
 
--- Step 2. Start Fusion and open a new comp. Select and activate a node in the flow view. Then run the Script > KartaVR > PanoView menu item to view the media in a degree media viewer. The default tool is Kolor Eyes. 
+Step 1. Use the "Edit PanoView Preferences" script GUI to choose the media viewer tool you would like use each time the PanoView script is run.
 
--- If a loader or saver node is selected in the flow, the existing media file will be opened up in the viewer tool. Otherwise if any other node is active in the flow, a snapshot of the current viewer image will be saved to the temporary image directory and sent to the viewer tool.
+Step 2. Start Fusion and open a new comp. Select and activate a node in the flow view. Then run the Script > KartaVR > Viewers > PanoView menu item to view the media in a degree media viewer. The default tool is DJV Viewer. 
 
-------------------------------------------------------------------------------
+If a loader or saver node is selected in the flow, the existing media file will be opened up in the viewer tool. Otherwise if any other node is active in the flow, a snapshot of the current viewer image will be saved to the temporary image directory and sent to the viewer tool.
+
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -187,8 +188,10 @@ function GoProVRPlayer(mediaFileName)
 	-- GoPro VR Viewer
 	if platform == 'Windows' then
 		-- Running on Windows
+		
 		defaultViewerProgram = 'C:\\Program Files\\GoPro\\GoPro VR Player 3.0\\GoProVRPlayer_x64.exe'
 		-- defaultViewerProgram = 'GoProVRPlayer_x64.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.GoProVRPlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -196,7 +199,9 @@ function GoProVRPlayer(mediaFileName)
 		os.execute(command)
 	elseif platform == "Mac" then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/GoPro VR Player 3.0.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.GoProVRPlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
@@ -204,6 +209,7 @@ function GoProVRPlayer(mediaFileName)
 		os.execute(command)
 	elseif platform == "Linux" then
 		-- Running on Linux
+		
 		-- defaultViewerProgram = 'GoProVRPlayer'
 		defaultViewerProgram = '/usr/bin/GoProVRPlayer'
 		
@@ -226,7 +232,9 @@ function amaterasPlayerViewer(mediaFileName)
 	-- Amateras Dome Player
 	if platform == 'Windows' then
 		-- Running on Windows
+		
 		defaultViewerProgram = 'AmaterasPlayer.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.AmaterasFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -234,7 +242,9 @@ function amaterasPlayerViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/Amateras3/Amateras.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.AmaterasFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
@@ -242,7 +252,10 @@ function amaterasPlayerViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		viewerProgram = '"amateras"'
+		
+		defaultViewerProgram = 'amateras'
+		
+		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.AmaterasFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
 		
 		print('[Launch Command] ', command)
@@ -262,9 +275,12 @@ function djvViewer(mediaFileName)
 	-- DJV Viewer
 	if platform == 'Windows' then
 		-- Running on Windows
-		defaultViewerProgram = 'C:\\Program Files\\djv-1.2.4-Windows-64\\bin\\djv_view.exe'
+		
+		defaultViewerProgram = 'C:\\Program Files\\DJV\\bin\\djv_view.exe'
+		-- defaultViewerProgram = 'C:\\Program Files\\djv-1.2.4-Windows-64\\bin\\djv_view.exe'
 		-- defaultViewerProgram = 'C:\\Program Files\\djv-1.1.0-Windows-64\\bin\\djv_view.exe'
 		-- defaultViewerProgram = 'djv_view.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -272,11 +288,13 @@ function djvViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
+		defaultViewerProgram = '/Applications/djv.app'
 		-- defaultViewerProgram = '/Applications/djv-1.2.4-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-1.1.0-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-1.0.5-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-OSX-64.app'
-		defaultViewerProgram = '/Applications/djv.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
@@ -284,7 +302,9 @@ function djvViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
+		
 		defaultViewerProgram = 'djv_view'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
 		
@@ -305,7 +325,9 @@ function liveViewRiftViewer(mediaFileName)
 	-- Live View Rift
 	if platform == 'Windows' then
 		-- Running on Windows
+		
 		defaultViewerProgram = 'C:\\Program Files (x86)\\Viarum\\LiveViewRift\\LiveViewRift.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.LiveViewRiftFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -313,7 +335,9 @@ function liveViewRiftViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/LiveViewRift.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.LiveViewRiftFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -321,7 +345,9 @@ function liveViewRiftViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
+		
 		defaultViewerProgram = 'LiveViewRift'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.LiveViewRiftFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
 		
@@ -342,7 +368,9 @@ function scratchViewer(mediaFileName)
 	-- Assimilate Scratch
 	if platform == 'Windows' then
 		-- Running on Windows
+		
 		defaultViewerProgram = 'C:\\Program Files\\Assimilate\\bin64\\Assimilator.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.ScratchPlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -350,7 +378,9 @@ function scratchViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/Scratch.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.ScratchPlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
@@ -358,7 +388,9 @@ function scratchViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
+		
 		defaultViewerProgram = 'Assimilator'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.ScratchPlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
 		
@@ -404,8 +436,8 @@ function speedgradeViewer(mediaFileName)
 			-- Fallback
 			defaultViewerProgram = 'SpeedGradeCmd.exe'
 		end
-		viewerProgram = '"' .. defaultViewerProgram .. '"'
 		
+		viewerProgram = '"' .. defaultViewerProgram .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
@@ -461,7 +493,10 @@ function vlcViewer(mediaFileName)
 	if platform == 'Windows' then
 		-- Running on Windows
 		options = ' --started-from-file '
+		
 		defaultViewerProgram = 'C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe'
+		-- defaultViewerProgram = 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.VLCFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" '..viewerProgram..options..' "'..mediaFileName..'"'
 		
@@ -469,7 +504,9 @@ function vlcViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/VLC.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.VLCFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
@@ -477,7 +514,9 @@ function vlcViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
+		
 		defaultViewerProgram = 'vlc'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.VLCFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
 		
@@ -498,8 +537,10 @@ function QuicktimePlayer(mediaFileName)
 	-- Quicktime Player
 	if platform == 'Windows' then
 		-- Running on Windows
+		
 		defaultViewerProgram = 'C:\\Program Files (x86)\\QuickTime\\QuickTimePlayer.exe'
 		--defaultViewerProgram = 'QuicktimePlayer.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.QuicktimePlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -507,8 +548,10 @@ function QuicktimePlayer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		-- defaultViewerProgram = '/Applications/QuickTime Player 7.app'
 		defaultViewerProgram = '/Applications/QuickTime Player.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.QuicktimePlayerFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
 		
@@ -533,7 +576,9 @@ function rvViewer(mediaFileName)
 	if platform == 'Windows' then
 		-- Running on Windows
 		options = ' -fullscreen '
+		
 		defaultViewerProgram = 'rv.exe'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.RVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'start "" ' .. viewerProgram .. options .. ' "' .. mediaFileName .. '"'
 		
@@ -542,7 +587,9 @@ function rvViewer(mediaFileName)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		options = " -fullscreen "
+		
 		defaultViewerProgram = '/Applications/RV64.app'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.RVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args' .. options .. '"' .. mediaFileName .. '"'
 		
@@ -551,7 +598,9 @@ function rvViewer(mediaFileName)
 	elseif platform == 'Linux' then
 		-- Running on Linux
 		options = ' -fullscreen '
+		
 		defaultViewerProgram = 'rv'
+		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.RVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. options .. ' "' .. mediaFileName .. '" &'
 		
@@ -751,7 +800,9 @@ function whirligigViewer(mediaFileName)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
+		
 		defaultViewerProgram = '/Applications/Whirligig.app'
+		
 		viewerProgram = '"' .. defaultViewerProgram .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args -feature "' .. mediaFileName .. '"' .. projection .. anaglyph .. domeTilt .. '&'
 		

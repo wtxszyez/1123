@@ -6,7 +6,6 @@ Atom {
 	Date = {2018, 12, 25},
 	Description = [[<p>The KartaVR viewer scripts allow you to send your panoramic imagery to external media viewer tools, HMDs, and web browsers for review.</p>]],
 	Deploy = {
-		"Bin/KartaVR/bonus/Keyboard Maestro Macros/KartaVR Macros.kmmacros",
 		"Bin/KartaVR/vr_view/charcoal_template.css",
 		"Bin/KartaVR/vr_view/charcoal_template.html",
 		"Bin/KartaVR/vr_view/custom_template.css",
@@ -63,6 +62,17 @@ Atom {
 
 		Linux = {
 			"Scripts/Comp/KartaVR/Viewers/Edit PanoView Preferences.lua",
+		},
+	},
+	InstallScript = {
+		Mac = {
+			[[-- Turn on executable permissions for the MacOS program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/KartaVR/mac_tools/applescript/') .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end
+			]],
 		},
 	},
 }

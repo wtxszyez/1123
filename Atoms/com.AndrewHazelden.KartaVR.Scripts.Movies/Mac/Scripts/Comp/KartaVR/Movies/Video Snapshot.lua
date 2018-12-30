@@ -1,5 +1,5 @@
---[[
-Video Snapshot for Fusion - v4.0 2018-12-16
+--[[--
+Video Snapshot for Fusion - v4.0 2018-12-25
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -7,15 +7,6 @@ Web: www.andrewhazelden.com
 ## Overview: ##
 
 This Fusion script takes a live video frame snapshot from a MacOS computer's AV foundation based video capture device. The script has Fusion 9 based UI Manager GUI and uses FFMPEG from the command line to do the capture.
-
-## Installation: ##
-
-Step 1. Install Reactor.
-
-Step 2. Open Reactor and install the "Tools/VR/KartaVR" content. Then restart Fusion once.
-
-Step 3. You are now ready to use the Video Snapshot script. :)
-
 
 ## Script Usage: ##
 
@@ -68,7 +59,7 @@ You can use a terminal window with ffmpeg + AV Foundation to capture a still fra
 
 /usr/local/bin/ffmpeg -y -f avfoundation -framerate 30.000000 -video_size 1280x720 -pixel_format uyvy422 -vsync 2 -i "default" -f image2 -vcodec mjpeg -vframes 1 -qscale:v 2 $HOME/Desktop/Snapshot.0001.jpg 2>&1
 
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------
@@ -298,13 +289,13 @@ function VideoDeviceList()
 	videoMediaType[1] = {id = 1, format = 'JPEG Image'}
 	videoMediaType[2] = {id = 1, format = 'PNG Image'}
 	videoMediaType[3] = {id = 1, format = 'TIFF Image'}
-	videoMediaType[4] = {id = 1, format = 'MP4 H.264 Movie'}
-	videoMediaType[5] = {id = 1, format = 'MP4 H.265 Movie'}
-	videoMediaType[6] = {id = 1, format = 'MOV H.264 Movie'}
-	videoMediaType[7] = {id = 1, format = 'MOV ProRes 422 Movie'}
-
+	-- videoMediaType[4] = {id = 1, format = 'MP4 H.264 Movie'}
+	-- videoMediaType[5] = {id = 1, format = 'MP4 H.265 Movie'}
+	-- videoMediaType[6] = {id = 1, format = 'MOV H.264 Movie'}
+	-- videoMediaType[7] = {id = 1, format = 'MOV ProRes 422 Movie'}
+``
 	local options = ''
-	if platform == "Windows" then
+	if platform == 'Windows' then
 		-- Running on Windows
 		options = options .. ' ' .. ''
 	elseif platform == 'Mac' then
@@ -592,22 +583,6 @@ win = disp:AddWindow({
 		ID = 'root',
 		-- Add your GUI elements here:
 		
-		-- Video Devices Combo Controls
-		-- ui:HGroup{
-			-- Weight = 0,
-			-- ui:Label{ID = 'VideoDevicesLabel', Text = 'Select your video inputs:'},
-			
-			-- Video input list
-			-- ui:ComboBox{ID = 'VideoDevicesCombo1'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo2'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo3'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo4'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo5'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo6'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo7'},
-			-- ui:ComboBox{ID = 'VideoDevicesCombo8'},
-		-- },
-		
 		-- Video Capture Settings
 		ui:HGroup{
 			Weight = 0,
@@ -728,36 +703,6 @@ end
 function win.On.VideoDevicesCombo1.CurrentIndexChanged(ev)
 	print('[Video Input] [1] ' .. itm.VideoDevicesCombo1.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
 end
-
---[[--
-function win.On.VideoDevicesCombo2.CurrentIndexChanged(ev)
-	print('[Video Input] [2] ' .. itm.VideoDevicesCombo2.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo3.CurrentIndexChanged(ev)
-	print('[Video Input] [3] ' .. itm.VideoDevicesCombo3.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo4.CurrentIndexChanged(ev)
-	print('[Video Input] [4] ' .. itm.VideoDevicesCombo4.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo5.CurrentIndexChanged(ev)
-	print('[Video Input] [5] ' .. itm.VideoDevicesCombo5.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo6.CurrentIndexChanged(ev)
-	print('[Video Input] [6] ' .. itm.VideoDevicesCombo6.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo7.CurrentIndexChanged(ev)
-	print('[Video Input] [7] ' .. itm.VideoDevicesCombo7.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
-
-function win.On.VideoDevicesCombo8.CurrentIndexChanged(ev)
-	print('[Video Input] [8] ' .. itm.VideoDevicesCombo8.CurrentText .. ' @ ' .. itm.VideoResolutionCombo.CurrentText)
-end
---]]--
 
 -- Check the ffmpeg video device list
 VideoDeviceList()

@@ -9,7 +9,7 @@ Atom {
 		"Scripts/Comp/KartaVR/Stereoscopic/Convert PFM Depth Images.lua",
 
 		Windows = {
-			"Bin/KartaVR/pfmtopsd.exe",
+			"Bin/KartaVR/tools/pfmtopsd.exe",
 		},
 
 		Mac = {
@@ -18,6 +18,17 @@ Atom {
 
 		Linux = {
 			"Bin/KartaVR/linux_tools/pfmtopsd",
+		},
+	},
+	InstallScript = {
+		Mac = {
+			[[-- Turn on executable permissions for the MacOS program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	command = 'chmod -R 755 "' .. app:MapPath('Reactor:/Deploy/Bin/KartaVR/mac_tools/') .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end
+			]],
 		},
 	},
 }

@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to After Effects v4 for Fusion - 2018-12-11
+Send Media to After Effects v4 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -319,7 +319,7 @@ function afterEffectsLauncher()
 	local attrs = comp:GetAttrs()
 	local prefs = comp:GetPrefs()
 	
-	local compName = 'DFM Fusion Comp'
+	local compName = 'KVR Fusion Comp'
 	
 	-- Initial default value for comp:
 	local compFilename = attrs.COMPS_FileName

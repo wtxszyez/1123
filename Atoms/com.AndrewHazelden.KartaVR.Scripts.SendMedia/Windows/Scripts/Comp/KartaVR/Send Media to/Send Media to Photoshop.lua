@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Photoshop v4 for Fusion - 2018-12-11
+Send Media to Photoshop v4 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

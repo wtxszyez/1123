@@ -1,21 +1,27 @@
-------------------------------------------------------------------------------
--- Reset LUA Script Settings to Defaults v4.0 for Fusion - 2018-12-19
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+Reset LUA Script Settings to Defaults v4.0 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The Reset LUA Script Settings to Defaults script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will clear all of the custom settings for the scripts included with the KartaVR.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
 
--- How to use the Script:
+Overview:
 
--- Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > Reset LUA Script Settings to Defaults menu item.
+The Reset LUA Script Settings to Defaults script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will clear all of the custom settings for the scripts included with the KartaVR.
 
--- Step 2. Click the "Okay" button in the dialog to clear the KartaVR script preferences. This will reset every LUA script dialog setting back to their original defaults.
+How to use the Script:
+
+Step 1. Start Fusion and open a new comp.
+
+Step 2. Run the "Script > KartaVR > Reset LUA Script" Settings to Defaults menu item.
+
+Step 3. Click the "Okay" button in the dialog to clear the KartaVR script preferences. This will reset every LUA script dialog setting back to their original defaults.
+
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -31,18 +37,15 @@ local err = false
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
-local platform = ''
-if string.find(comp:MapPath('Fusion:\\'), 'Program Files', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'PROGRA~1', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'Applications', 1) then
-	-- Check if the OS is Mac by searching for the Applications folder
-	platform = 'Mac'
-else
-	platform = 'Linux'
+local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
+
+-- Find out the current directory from a file path
+-- Example: print(dirname("/Users/Shared/file.txt"))
+function dirname(mediaDirName)
+	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
 
@@ -199,6 +202,7 @@ function Main()
 		setPreferenceData('KartaVR.SendMedia.CorelPhotoPaintFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.HuginFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.ImagemagickFile', nil, printStatus)
+		setPreferenceData('KartaVR.SendMedia.ffmpegFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.PhotomatixProFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.PTGuiFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.SynthEyesFile', nil, printStatus)

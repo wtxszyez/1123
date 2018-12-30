@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Temp Folder v4.0 for Fusion - 2018-12-16
+Open KartaVR Temp Folder v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -8,15 +8,17 @@ andrew@andrewhazelden.com
 KartaVR
 http://www.andrewhazelden.com/blog/downloads/kartavr/
 ----------------------------------------------------------------------------
+
 Overview:
 
 The Open KartaVR Temp Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the temporary directory that the KartaVR uses to write out viewer snapshots and other files.
 
 How to use the Script:
 
-Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > Open Folder > Open Containing Folder" menu item.
+Step 1. Start Fusion and open a new comp. 
 
-----------------------------------------------------------------------------
+Step 2. Run the "Script > KartaVR > Open Folder > Open Containing Folder" menu item.
+
 --]]--
 
 -- --------------------------------------------------------

@@ -1,22 +1,22 @@
-------------------------------------------------------------------------------
--- View Help Documentation v4 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
-------------------------------------------------------------------------------
--- Overview:
+--[[--
+----------------------------------------------------------------------------
+View Help Documentation v4 for Fusion - 2018-12-25
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
 
--- The View Help Documentation script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a web browser window to and display the HTML formatted help documentation.
+KartaVR
+http://www.andrewhazelden.com/blog/downloads/kartavr/
+----------------------------------------------------------------------------
+Overview:
 
--- How to use the Script:
+The View Help Documentation script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a web browser window to and display the HTML formatted help documentation.
 
--- Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > View Help Documentation menu item.
+How to use the Script:
 
-------------------------------------------------------------------------------
+Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > View Help Documentation menu item.
 
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -96,7 +96,6 @@ function dirname(mediaDirName)
 end
 
 
-
 -- Open a web browser window up with the help documentation
 function openBrowser()
 	command = nil
@@ -105,7 +104,6 @@ function openBrowser()
 		-- Running on Windows
 		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR/index.html')
 		command = 'explorer "' .. webpage .. '"'
-		-- command = '"' .. webpage .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)

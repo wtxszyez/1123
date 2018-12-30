@@ -1,7 +1,6 @@
-
 --[[--
 ----------------------------------------------------------------------------
-Convert Movies to Image Sequences v4.0 for Fusion - 2018-12-11
+Convert Movies to Image Sequences v4.0 for Fusion - 2018-12-25
 
 by Andrew Hazelden
 www.andrewhazelden.com
@@ -37,13 +36,9 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
-
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -398,14 +393,14 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 			overwriteMedia = '-y'
 		
 			-- FFMPEG launching string
-			ffmpegCommand = overwriteMedia .. ' ' .. ' -i ' .. '"' .. sourceMovie .. '"' .. ' ' .. videoframeRate .. ' ' ..quality .. ' ' .. pixelFormat .. ' ' ..	'"' .. imgSeqFile .. '"' 
+			ffmpegCommand = overwriteMedia .. ' ' .. ' -i ' .. '"' .. sourceMovie .. '"' .. ' ' .. videoframeRate .. ' ' ..quality .. ' ' .. pixelFormat .. ' ' .. '"' .. imgSeqFile .. '"' 
 			-- print('[FFMPEG Command String] ' .. ffmpegCommand)
 			
 			-- Redirect the output from the terminal to a log file
 			outputLog = outputDirectory .. 'ffmpegVideoTranscode.txt'
 			logCommand = ''
 			if platform == 'Windows' then
-				logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+				logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
 			elseif platform == 'Mac' then
 				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
 			elseif platform == 'Linux' then
@@ -415,21 +410,32 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 			-- Open FFMPEG
 			if platform == 'Windows' then
 				-- Running on Windows
-				viewerProgram = '"C:\\Program Files\\KartaVR\\tools\\ffmpeg\\bin\\ffmpeg.exe"'
-				command = 'start "" ' .. viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+				
+				defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg.exe')
+				-- defaultffmpegProgram = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe'
+				-- defaultffmpegProgram = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = 'start "" "' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			elseif platform == 'Mac' then
 				-- Running on Mac
-				viewerProgram = '"/Applications/KartaVR/mac_tools/ffmpeg/bin/ffmpeg"'
-				-- viewerProgram = '"/opt/local/bin/ffmpeg"'
-				command = viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+				
+				defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg')
+				-- defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = '"' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			else
 				-- Running on Linux
-				viewerProgram = '"/opt/local/bin/ffmpeg"'
-				command = viewerProgram .. ' ' .. ffmpegCommand .. logCommand
+				
+				defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = '"' .. ffmpegProgram .. '" ' .. ffmpegCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			end
@@ -468,7 +474,7 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 			outputLog = outputDirectory .. 'ffmpegAudioTranscode.txt'
 			logCommand = ''
 			if platform == 'Windows' then
-				logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+				logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
 			elseif platform == 'Mac' then
 				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
 				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
@@ -477,21 +483,32 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 			-- Open FFMPEG
 			if platform == 'Windows' then
 				-- Running on Windows
-				viewerProgram = '"C:\\Program Files\\KartaVR\\tools\\ffmpeg\\bin\\ffmpeg.exe"'
-				command = 'start "" ' .. viewerProgram .. ' ' .. ffmpegAudioCommand .. logCommand
+				
+				defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg.exe')
+				-- defaultffmpegProgram = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe'
+				-- defaultffmpegProgram = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = 'start "" "' .. ffmpegProgram .. '" ' .. ffmpegAudioCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			elseif platform == 'Mac' then
 				-- Running on Mac
-				viewerProgram = '"/Applications/KartaVR/mac_tools/ffmpeg/bin/ffmpeg"'
-				-- viewerProgram = '"/opt/local/bin/ffmpeg"'
-				command = viewerProgram .. ' ' .. ffmpegAudioCommand .. logCommand
+				
+				defaultffmpegProgram = comp:MapPath('Reactor:/Deploy/Bin/ffmpeg/bin/ffmpeg')
+				-- defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = '"' .. ffmpegProgram .. '" ' .. ffmpegAudioCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			else
 				-- Running on Linux
-				viewerProgram = '"/opt/local/bin/ffmpeg"'
-				command = viewerProgram .. ' ' .. ffmpegAudioCommand .. logCommand
+				
+				defaultffmpegProgram = '/opt/local/bin/ffmpeg'
+				ffmpegProgram = getPreferenceData('KartaVR.SendMedia.ffmpegFile', defaultffmpegProgram, printStatus)
+				command = '"' .. ffmpegProgram .. '" ' .. ffmpegAudioCommand .. logCommand
+				
 				print('[FFMPEG Launch Command] ', command)
 				os.execute(command)
 			end
@@ -508,7 +525,7 @@ function ffmpegTranscodeMedia(movieFolder, audioFormat, imageFormat, imageName, 
 end
 
 
-print ('Convert Movies to Image Sequences is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print('Convert Movies to Image Sequences is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then

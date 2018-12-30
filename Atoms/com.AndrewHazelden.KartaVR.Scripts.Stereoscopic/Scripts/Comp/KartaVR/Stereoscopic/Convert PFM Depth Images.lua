@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Convert PFM Depth Images v4.0 for Fusion - 2018-12-15
+Convert PFM Depth Images v4.0 for Fusion - 2018-12-25
 
 by Andrew Hazelden
 www.andrewhazelden.com
@@ -391,34 +391,34 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 			outputLog = outputDirectory .. 'pfmTranscode.txt'
 			logCommand = ''
 			if platform == 'Windows' then
-				-- logCommand = ' ' .. '2> "' .. outputLog.. '" '
-				-- logCommand = ' ' .. '> "' .. outputLog.. '" 2>&1'
-				logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+				-- logCommand = ' ' .. '2> "' .. outputLog .. '" '
+				-- logCommand = ' ' .. '> "' .. outputLog .. '" 2>&1'
+				logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a "' .. outputLog .. '" '
 			elseif platform == 'Mac' then
-				-- logCommand = ' ' .. '2> "' .. outputLog.. '" '
-				-- logCommand = ' ' .. '> "' .. outputLog.. '" 2>&1'
-				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
+				-- logCommand = ' ' .. '2> "' .. outputLog .. '" '
+				-- logCommand = ' ' .. '> "' .. outputLog .. '" 2>&1'
+				logCommand = ' ' .. '2>&1 | tee -a "' .. outputLog.. '" '
 			elseif platform == 'Linux' then
-				-- logCommand = ' ' .. '2> "' .. outputLog.. '" '
-				-- logCommand = ' ' .. '> "' .. outputLog.. '" 2>&1'
-				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
+				-- logCommand = ' ' .. '2> "' .. outputLog .. '" '
+				-- logCommand = ' ' .. '> "' .. outputLog .. '" 2>&1'
+				logCommand = ' ' .. '2>&1 | tee -a "' .. outputLog.. '" '
 			end 
 			
 			-- Launch the PFM converter tool
 			if platform == 'Windows' then
 				-- Running on Windows
-				pfmProgram = '"' .. app:MapPath('Reactor:/Deploy/Bin/KartaVR/tools/pfmtopsd') .. '"'
+				pfmProgram = app:MapPath('Reactor:/Deploy/Bin/KartaVR/tools/pfmtopsd.exe')
 				
 				defaultImagemagickProgram =  comp:MapPath('Reactor:/Deploy/Bin/imagemagick/bin/imconvert.exe')
 				imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
 				
-				pfmCommand = ' ' .. pfmProgram .. ' ' .. '"' .. sourceMovie .. '" | ' .. imagemagickProgram .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | ' .. imagemagickProgram .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = 'start "" ' .. pfmCommand .. logCommand
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
 			elseif platform == 'Mac' then
 				-- Running on Mac
-				pfmProgram = '"' .. app:MapPath('Reactor:/Deploy/Bin/KartaVR/mac_tools/pfmtopsd') .. '"'
+				pfmProgram = app:MapPath('Reactor:/Deploy/Bin/KartaVR/mac_tools/pfmtopsd')
 				
 				-- ****** The Default KartaVR "Cactus Lab" provided ImageMagick tool should be enabled by default:
 				defaultImagemagickProgram = '/opt/ImageMagick/bin/convert'
@@ -429,13 +429,12 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 				-- Manual compiled ImageMagick:
 				-- defaultImagemagickProgram = '/usr/local/bin/convert'
 				
-				imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultViewerProgram, printStatus) .. '"'
-				
+				imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
 				
 				-- unused addons:  .. colorDepth .. dpi .. compressionMode ..
 				-- pfmCommand = ' ' .. pfmProgram .. ' ' .. '"' .. sourceMovie .. '" | ' .. imagemagickProgram .. ' psd:- ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				
-				pfmCommand = ' ' .. pfmProgram .. ' ' .. '"' .. sourceMovie .. '" | ' .. imagemagickProgram .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = pfmCommand .. logCommand
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
@@ -443,13 +442,13 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 				-- Running on Linux
 				
 				-- pfm depth converter program
-				pfmProgram = '"' .. app:MapPath('Reactor:/Deploy/Bin/KartaVR/linux_tools/pfmtopsd') .. '"'
+				pfmProgram = app:MapPath('Reactor:/Deploy/Bin/KartaVR/linux_tools/pfmtopsd')
 				
 				-- Imagemagick convert program
 				defaultImagemagickProgram = '/usr/bin/convert'
-				imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultViewerProgram, printStatus) .. '"'
+				imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultViewerProgram, printStatus)
 				
-				pfmCommand = ' ' .. pfmProgram .. ' ' .. '"' .. sourceMovie .. '" | ' .. imagemagickProgram .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = pfmCommand .. logCommand
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
@@ -465,7 +464,7 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 end
 
 
-print ('Convert PFM Depth Images is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print('Convert PFM Depth Images is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then
