@@ -1,4 +1,4 @@
-_VERSION = [[Version 2.1 - December 16, 2018]]
+_VERSION = [[Version 2.1 - December 30, 2018]]
 --[[
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -139,7 +139,7 @@ or
 - Added a new "Tools/Position" category.
 - Added a new "Tools/Stereo" category.
 
-### 2.1 2018-12-16 ###
+### 2.1 2018-12-30 ###
 
 - Added a new "KartaVR" category.
 - Added a new "KartaVR/Comps" category.
@@ -148,7 +148,7 @@ or
 - Added a new "KartaVR/Scripts" category.
 - Added a new "KartaVR/Tools" category.
 - Added a new "KartaVR/Viewshaders" category.
-
+- Added image loading support for local images like <img src="Reactor:/Docs/ReactorDocs/Images/atomizer-welcome.png">
 
 ## Todos ##
 
@@ -537,10 +537,19 @@ end
 -- docsFolder = homeFolder .. 'Documents'
 docsFolder = homeFolder
 
--- Add emoticon support for local images like <img src="Emoticons:/wink.png">
+------------------------------------------------------------------------
+-- Reactor Deploy Folder
+deployDir = app:MapPath('Reactor:/Deploy')
+
+-- Added emoticon support for local images like <img src="Emoticons:/wink.png">
 -- Example: dump(EmoticonParse([[<img src="Emoticons:/wink.png">]]))
+-- Added image loading support for local images like <img src="Reactor:/Docs/ReactorDocs/Images/atomizer-welcome.png">
 function EmoticonParse(str)
-	return string.gsub(str, '[Ee]moticons:/', emoticonsDir)
+	local htmlstr = ''
+	htmlstr = string.gsub(str, '[Ee]moticons:/', emoticonsDir)
+	htmlstr = string.gsub(htmlstr, "[Rr]eactor:/", deployDir)
+	
+	return htmlstr
 end
 
 
