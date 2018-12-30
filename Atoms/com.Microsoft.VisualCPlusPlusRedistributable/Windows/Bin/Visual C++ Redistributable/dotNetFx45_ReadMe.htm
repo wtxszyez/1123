@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<TITLE>.NET Framework 4.5 Readme.htm</TITLE><style type="text/css"> UL.toc, OL.toc { list-style: none; font-family: arial } UL, OL { font-family: arial } LI.tocline1 { font-weight: bold; font-family: arial } LI.tocline2 { font-weight: normal; font-family: arial; text-indent: 2em; }LI.tocline3 { font-weight: normal; font-family: arial; text-indent: 4em; }P { font-size: 0.8em; font-family: arial }H1, H2, H3, H4, span, LI { font-family: arial }</style></HEAD>
+<BODY>
+<H1>
+Microsoft .NET Framework 4.5 Readme
+</H1>
+<P>Date Published: September 28, 2012</P>
+    <P class="style3">For the latest version of the Readme 
+        <a href="http://go.microsoft.com/fwlink/?LinkId=255964">click here</a></P>
+<H2>
+<A name="TOC"></A>
+</H2>
+<UL class="toc">
+<li class="tocline1">1. <A href="#.Net Known Issues">.Net Known Issues</A></li>
+<li class="tocline2">1.1. <A href="#NetFx Installation">NetFx Installation</A></li>
+<li class="tocline2">1.2. <A href="#NetFx Uninstallation">NetFx Uninstallation</A></li>
+<li class="tocline2">1.3. <A href="#.Net Product Issues">.Net Product Issues</A></li>
+<li class="tocline3">1.3.1. <A href="#General Issues">General Issues</A></li>
+<li class="tocline3">1.3.2. <A href="#ASP.NET">ASP.NET</A></li>
+<li class="tocline3">1.3.3. <A href="#Winforms">Winforms</A></li>
+<li class="tocline3">1.3.4. <A href="#Parallel Programming">Parallel Programming</A></li>
+<li class="tocline3">1.3.5. <A href="#Managed Extensibility Framework">Managed Extensibility Framework</A></li>
+<li class="tocline3">1.3.6. <A href="#Entity Framework">Entity Framework</A></li>
+<li class="tocline3">1.3.7. <A href="#LINQ to SQL">LINQ to SQL</A></li>
+<li class="tocline3">1.3.8. <A href="#Windows Communication Foundation (WCF)">Windows Communication Foundation (WCF)</A></li>
+<li class="tocline3">1.3.9. <A href="#Windows Presentation Foundation (WPF)">Windows Presentation Foundation (WPF)</A></li>
+<li class="tocline3">1.3.10. <A href="#Windows Workflow Foundation (WF)">Windows Workflow Foundation (WF)</A></li>
+<li class="tocline1">2. <A href="#.Net Maintenance">.Net Maintenance</A></li>
+<li class="tocline1">3. <A href="#Related Links">Related Links</A></li>
+</UL>
+<H2>
+1. <A name=".Net Known Issues">.Net Known Issues</A>
+</H2>
+<H3>
+1.1 <A name="NetFx Installation">NetFx Installation</A>
+</H3>
+<P><B>
+1.1.1  The .NET Framework 4.5 language packs are not available on Windows 8
+</P></B>
+<p>The .NET Framework 4.5 language packs cannot be installed on the Windows 8&#160;operating system, because the .NET Framework 4.5 is a component of the operating system. The .NET Framework 4.5 language packs can be installed on earlier supported versions of Windows.</p>
+<P><B><U>To resolve this issue:</U></B></P>
+<p>Download the language packs for the Windows 8 operating system, or install a localized version of Windows 8 to get the localized resources for the .NET Framework 4.5.</p>
+<P><B>
+1.1.2  Failed or canceled .NET Framework 4.5 installation reverts application pools to 2.0
+</P></B>
+<P>If you are upgrading from the .NET Framework 4 to the .NET Framework 4.5 RTM release, and if the installation is canceled or fails, the .NET Framework reverts to version 4. However, ASP.NET 4 is also unregistered and all the application pools in IIS are set to target the .NET Framework 2.0.</p>
+<P>If this happens, browsing to a web application based on ASP.NET 4 results in a configuration error that reports that the &quot;targetFramework&quot; attribute of the &quot;compilation&quot; element is not recognized.</p>
+<P><B><U>To resolve this issue:</U></B></P>
+<P>To work around this issue:</p>
+<ol>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Fix the incorrect registration by completing option A or option B below (you do not have to do both):</li>
+<ul>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Reregister ASP.NET 4 by running the ASP.NET IIS Registration tool (aspnet_regiis) using the following command:</li>
+<i>%windir%\Microsoft.Net\Framework(64)\v4.0.30319\aspnet_regiis.exe -iru -enable</i>
+<P> -or-</p>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Repair the .NET Framework 4 Extended Profile by rerunning the installation program and choosing the Repair option.</li></ul><br />
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Additionally, if you have custom application pools that targeted ASP.NET 4 before the failed upgrade, use IIS Manager (inetmgr.exe) to manually reset them to target ASP.NET 4.</li>
+</ol>
+<H3>
+1.2 <A name="NetFx Uninstallation">NetFx Uninstallation</A>
+</H3>
+<P><B>
+1.2.1  ASP.NET 2.0 and 3.5 don’t work after you remove the .NET Framework 4.5 from Windows 8 or Windows Server 2012
+</P></B>
+<P>On Windows 8 and Windows Server 2012, ASP.NET 2.0 and 3.5 require the ASP.NET 4.5 feature to be enabled. If you remove or disable the .NET Framework 4.5, your ASP.NET 2.0 and 3.5 applications will no longer run.</p>
+<P><B><U>To resolve this issue:</U></B></P>
+<p><strong>On Windows 8</strong></p>
+<p>Enable the ASP.NET 4.5 feature in Control Panel:</p>
+<ol>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Open Control Panel.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Choose <strong>Programs</strong>.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Under the <b>Programs and Features</b> heading, choose <b>Turn Windows features on or off</b>.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Expand the node <b>.NET Framework 4.5 Advanced Services</b>.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Select the <b>ASP.NET 4.5</b> check box.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Choose&#160;<strong>OK</strong>.</li></ol>
+<p><strong>On Windows Server 2012</strong></p>
+<p>See <a href="http://go.microsoft.com/fwlink/?LinkID=258861&amp;clcid=0x409">IIS 8.0 Using ASP.NET 3.5 and ASP.NET 4.5</a> in the IIS Learning Center.</p>
+<H3>
+1.3 <A name=".Net Product Issues">.Net Product Issues</A>
+</H3>
+<H4>
+1.3.1 <A name="General Issues">General Issues</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.2 <A name="ASP.NET">ASP.NET</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.3 <A name="Winforms">Winforms</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.4 <A name="Parallel Programming">Parallel Programming</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.5 <A name="Managed Extensibility Framework">Managed Extensibility Framework</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.6 <A name="Entity Framework">Entity Framework</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.7 <A name="LINQ to SQL">LINQ to SQL</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.8 <A name="Windows Communication Foundation (WCF)">Windows Communication Foundation (WCF)</A>
+</H4>
+<P><B>
+1.3.8.1  Problems running existing XML serialization code in WCF 4.5
+</P></B>
+<p>In Windows Communication Foundation (WCF) 4.5, the XmlSerializer class was optimized to remove its dependency on the C# compiler. This change provides significant performance gains for cold startup scenarios. However, it may cause problems in XML serialization code that was compiled in WCF 4 but is running against WCF 4.5.</p>
+<P><B><U>To resolve this issue:</U></B></P>
+<p>If you encounter any problems running your existing XML serialization code in WCF 4.5, use the following configuration element to revert to the&#160;XmlSerializer behavior in WCF 4:</p>
+<p></p>
+<p>&lt;configuration&gt;<br>&#160;&#160; &lt;system.xml.serialization&gt;<br>&#160;&#160;&#160;&#160;&#160; &lt;xmlSerializer useLegacySerializerGeneration=&quot;true&quot;/&gt;<br>&#160;&#160; &lt;/system.xml.serialization&gt;<br>&lt;/configuration&gt;</p>
+<H4>
+1.3.9 <A name="Windows Presentation Foundation (WPF)">Windows Presentation Foundation (WPF)</A>
+</H4>
+<P>There are no known issues.</P>
+<H4>
+1.3.10 <A name="Windows Workflow Foundation (WF)">Windows Workflow Foundation (WF)</A>
+</H4>
+<P><B>
+1.3.10.1  Host fails to start if you use workflows with the Workflow Identity parameter
+</P></B>
+<p>The .NET Framework 4.5 includes a new workflow parameter, Workflow Identity, that is persisted to the SQL Workflow Instance Store. If you use workflows that include this parameter and its value is not null, you must update the Instance Store so it can store the value. Otherwise, the host will fail to start.</p>
+<P><B><U>To resolve this issue:</U></B></P>
+<P>Update the SQL Workflow Instance Store by running the script at the following location: </p>
+<P>%windir%\Microsoft.NET\Framework\&lt;version&gt;\SQL\&lt;language&gt;\SqlWorkflowInstanceStoreSchemaUpgrade.sql</p>
+<P></p>
+<P><B>
+1.3.10.2  Some of the new features in the Workflow Designer may cause issues with existing solutions
+</P></B>
+<p>In the .NET Framework 4.5, the Workflow Designer includes the following changes:</p>
+<ul>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">The shortcut menu is now available when multiple activities are selected. </li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">In an activity designer, the area that can be dragged is now the header of the designer instead of being the whole designer. In the FlowDecision and FlowSwitch designers, the area that can be dragged is still the whole designer.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Behavior change for multi-selection with Ctrl key pressed: In the .NET Framework 4, the selection is canceled on mouse down. In the .NET Framework 4.5 RC, the selection is canceled on mouse up. Selection still happens on mouse down.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Activity designers now support activity delegates. For more information, see &quot;How To: Define and consume activity delegates in the Workflow Designer&quot; in the MSDN Library.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">The variable and argument designers now support the shortcut menu. The shortcut menu has items for deleting variables and arguments, and working with annotations. For more information, see &quot;How To: Add comments to a workflow in the Workflow Designer&quot in the MSDN Library. </li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Previously, the MetadataStore class did not support adding an attribute on a generic property of a generic type definition. This is now supported.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">The ModelItemDictionary class now supports a null key.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Previously, the ModelItem.Parents property contained items that were not in the model tree. Now, all objects in ModelItem.Parents are valid objects that are in the model tree.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Previously, when a Case was selected in the designer for the Switch activity, the keyboard focus went to the activity in the selected Case, and the activity was highlighted. Now, the activity is highlighted, but the keyboard focus does not change.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Previously, if just one character was entered in an expression text box, the designer treated the value as a constant of type Char. Now, the expression is treated as a variable or argument name.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Previously, the type browser showed types in referenced assemblies that had dependencies on unreferenced assemblies. Now, types that have dependencies on unreferenced assembles do not appear until the dependent assemblies are referenced.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">The following types and members are now obsolete:</li>
+<ul>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">Most of the properties in the System.Activities.Presentation.Services.ModelChangedEventArgs class are obsolete. Use the ModelChangeInfo property instead of the obsolete properties.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">In the System.Activities.Presentation.DragDropHelper class, the following methods have been made obsolete by new multi-select features: </li>
+<ul>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">DoDragMove(WorkflowViewElement, Point) - Use DoDragMove(IEnumerable&lt;WorkflowViewElement&gt;, Point) instead.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">GetDroppedObject(DependencyObject, DragEventArgs, EditingContext) - Use GetDroppedObjects(DependencyObject, DragEventArgs, EditingContext) instead.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">GetDraggedModelItem(DragEventArgs) - Use GetDraggedModelItems(DragEventArgs) instead.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">GetCompositeView(DragEventArgs) - Use GetCompositeView(WorkflowViewElement) instead.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">SetDragDropCompletedEffects(DragEventArgs, DragDropEffects) - Use SetDragDropMovedViewElements(DragEventArgs, IEnumerable&lt;WorkflowViewElement&gt;) instead.</li>
+<li style= "font-family: 'arial';FONT-SIZE:10pt;">GetDragDropCompletedEffects(DataObject) - Use GetDragDropMovedViewElements(DataObject) instead.</li></ul></ul></ul>
+<P><B><U>To resolve this issue:</U></B></P>
+<P>Use the workaround for each issue discussed in the preceding list.</p>
+<H2>
+2. <A name=".Net Maintenance">.Net Maintenance</A>
+</H2>
+<P><B>
+2..1  Upgrading to Windows 8 does not update .NET Framework 4 language packs
+</P></B>
+<P>
+<p>If you upgrade from the Windows 7 operating system to Windows 8, the .NET Framework 4 language packs that you previously installed on your computer are not removed or updated. This issue affects language packs that do not match the language of the upgraded Windows 8, not including English. For example, if you have an English edition of Windows 7 Ultimate and the .NET Framework 4 German language pack, and you upgrade your system to the English edition of Windows 8, the language pack will remain on your system but will not be updated to the .NET Framework 4.5. </p>
+</P>
+<P><B><U>To resolve this issue:</U></B></P>
+<P>
+<p>Either uninstall the .NET Framework 4 language pack before you upgrade to Windows 8, or install the appropriate Windows 8&#160;language pack after you upgrade.</p>
+</P>
+<H2>
+3. <A name="Related Links">Related Links</A>
+</H2>
+    <P>&copy; 2012 Microsoft Corporation. All rights reserved.</P>
+<P class="style1"><a id="ctl00_BottomControl1_MSFT_Terms" href="http://msdn.microsoft.com/cc300389.aspx" title="Terms of Use">Terms of Use</a>  |
+   <a href="http://www.microsoft.com/library/toolbar/3.0/trademarks/en-us.mspx" title="Trademarks">Trademarks</a>  |
+   <a href="http://www.microsoft.com/info/privacy.mspx" title="Privacy Statement">Privacy Statement</a>
+</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>
