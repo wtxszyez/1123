@@ -1,5 +1,5 @@
 --[[--
-Reload Alembic Scene.lua v4.0 - 2018-12-25
+Reload Alembic Scene v4.0.1 - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -19,7 +19,6 @@ This script relies on you having the macOS based "Keyboard Maestro" (http://www.
 And the "Bin/KartaVR/Bonus/Keyboard Maestro Macros/KartaVR Macros.kmmacros" file has to be loaded in Keyboard Maestro, too.
 
 --]]--
-
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

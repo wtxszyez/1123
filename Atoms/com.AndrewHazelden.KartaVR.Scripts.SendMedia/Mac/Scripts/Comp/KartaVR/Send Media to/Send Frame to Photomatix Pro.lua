@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Photomatix Pro v4.0 for Fusion - 2018-12-25
+Send Frame to Photomatix Pro v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -104,8 +104,8 @@ function photomatixProLauncher(mediaFileName)
 		-- defaultViewerProgram = 'C:\\Program Files\\PhotomatixPro5\\PhotomatixPro.exe'
 		defaultViewerProgram = 'C:\\Program Files\\PhotomatixPro6\\PhotomatixPro.exe'
 		
-		viewerProgram = '"' .. getPreferenceData('KartaVR.SendMedia.PhotomatixProFile', defaultViewerProgram, printStatus) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = getPreferenceData('KartaVR.SendMedia.PhotomatixProFile', defaultViewerProgram, printStatus)
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -114,8 +114,8 @@ function photomatixProLauncher(mediaFileName)
 		-- defaultViewerProgram = '/Applications/Photomatix Pro 5.app'
 		defaultViewerProgram = '/Applications/Photomatix Pro 6.app'
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PhotomatixProFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
-		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PhotomatixProFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -267,7 +267,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

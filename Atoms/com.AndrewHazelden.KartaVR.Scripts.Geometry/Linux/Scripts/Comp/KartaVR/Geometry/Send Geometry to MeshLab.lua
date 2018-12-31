@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to MeshLab v4 for Fusion - 2018-12-25
+Send Geometry to MeshLab v4.0.1 - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -37,7 +37,7 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -45,6 +45,66 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
+-- Duplicate a file
+function copyFile(src, dest)
+	host = app:MapPath('Fusion:/')
+	if string.lower(host):match('resolve') then
+		hostOS = 'Resolve'
+		
+		if platform == 'Windows' then
+			command = 'copy /Y "' .. src .. '" "' .. dest .. '" '
+		else
+			-- Mac / Linux
+			command = 'cp "' .. src .. '" "' .. dest .. '" '
+		end
+		
+		print('[Copy File Command] ' .. command)
+		os.execute(command)
+	else
+		hostOS = 'Fusion'
+		
+		-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8/9 "bmd.scriptlib" libraries
+		eyeon.copyfile(src, dest)
+	end
+end
+
+-- Get the file extension from a filepath
+function getExtension(src)
+	local extension = string.match(src, '(%..+)$')
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(src)
+	local path, basename = string.match(src, "^(.+[/\\])(.+)")
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	local name, extension = string.match(basename, "^(.+)(%..+)$")
+	local barename, sequence = string.match(name, "^(.-)(%d+)$")
+	
+	return barename or ''
+end
+
+-- Read a binary file to calculate the filesize in bytes
+-- Example: size = getFilesize('/image.png')
+function getFilesize(filename)
+	fp, errMsg = io.open(filename, "rb")
+	if fp == nil then
+		print('[Filesize] Error reading the file: ' .. filename)
+		return 0
+	end
+	
+	local filesize = fp:seek('end')
+	fp:close()
+	
+	return filesize
+end
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -279,7 +339,7 @@ function openGeometry(filename, nodeType, status)
 	end
 	
 	-- Extract the base filename without the path
-	meshFilename = eyeon.getfilename(filename)
+	meshFilename = getFilename(filename)
 	
 	-- Write out the .MLP (MeshLab Project File)
 	outFile:write('<!DOCTYPE MeshLabDocument>\n')

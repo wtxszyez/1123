@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Affinity Designer v4.0 for Fusion - 2018-12-25
+Send Frame to Affinity Designer v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -104,16 +104,16 @@ function affinityDesignerLauncher(mediaFileName)
 		-- Running on Windows
 		defaultViewerProgram = 'C:\\Program Files\\Affinity\\Affinity Designer\\Designer.exe'
 		
-		viewerProgram = '"' .. getPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', defaultViewerProgram, printStatus) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = getPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', defaultViewerProgram, printStatus)
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		defaultViewerProgram = '/Applications/Affinity Designer.app'
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
-		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 					
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -266,7 +266,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

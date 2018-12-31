@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Autopano Pro v4.0 for Fusion - 2018-12-11
+Send Frame to Autopano Pro v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -107,8 +107,8 @@ function autopanoProLauncher(mediaFileName)
 		defaultViewerProgram = 'C:\\Program Files\\Kolor\\Autopano Pro 4.2\\AutopanoPro_x64.exe'
 		-- defaultViewerProgram = 'C:\\Program Files\\Kolor\\Autopano Giga 4.2\\AutopanoGiga_x64.exe'
 
-		viewerProgram = '"' .. getPreferenceData('KartaVR.SendMedia.AutopanoProFile', defaultViewerProgram, printStatus) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = getPreferenceData('KartaVR.SendMedia.AutopanoProFile', defaultViewerProgram, printStatus)
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -117,14 +117,14 @@ function autopanoProLauncher(mediaFileName)
 		defaultViewerProgram = '/Applications/Autopano Pro 4.2.app'
 		-- defaultViewerProgram = '/Applications/Autopano Giga 4.2.app'
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.AutopanoProFile', defaultViewerProgram, printStatus)), '[/]$', '')	 .. '"'
-		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.AutopanoProFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 					
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		print('Autopano Pro has not beed tested with Blackmagic Design Fusion on Linux yet.')
+		print('Autopano Pro has not been tested with Blackmagic Design Fusion on Linux yet.')
 	else
 		print('[Platform] ', platform)
 		print('There is an invalid platform defined in the local platform variable at the top of the code.')
@@ -270,7 +270,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

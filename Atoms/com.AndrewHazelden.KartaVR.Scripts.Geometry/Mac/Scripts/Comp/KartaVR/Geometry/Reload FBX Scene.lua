@@ -1,5 +1,5 @@
 --[[--
-Reload FBX Scene.lua v4.0 - 2018-12-25
+Reload FBX Scene v4.0.1 - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

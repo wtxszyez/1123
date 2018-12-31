@@ -27,7 +27,7 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 6, 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -89,9 +89,6 @@ end
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
-	-- LUA dirname command inspired by Stackoverflow code example:
-	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -103,24 +100,39 @@ function openBrowser()
 	if platform == 'Windows' then
 		-- Running on Windows
 		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR/index.html')
-		command = 'explorer "' .. webpage .. '"'
 		
-		print('[Launch Command] ', command)
-		os.execute(command)
+		-- Check of the Webpage exists on disk
+		if eyeon.fileexists(webpage) then
+			command = 'explorer "' .. webpage .. '"'
+			print('[Launch Command] ', command)
+			os.execute(command)
+		else
+			print('[Please Install the KartaVR Documentation using Reactor]\n\t[Document Missing] ', webpage)
+		end
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR/index.html')
-		command = 'open "' .. webpage .. '" &'
 		
-		print('[Launch Command] ', command)
-		os.execute(command)
+		-- Check of the Webpage exists on disk
+		if eyeon.fileexists(webpage) then
+			command = 'open "' .. webpage .. '" &'
+			print('[Launch Command] ', command)
+			os.execute(command)
+		else
+			print('[Please Install the KartaVR Documentation using Reactor]\n\t[Document Missing] ', webpage)
+		end
 	elseif platform == 'Linux' then
 		-- Running on Linux
 		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR/index.html')
-		command = 'xdg-open "' .. webpage .. '" &'
 		
-		print('[Launch Command] ', command)
-		os.execute(command)
+		-- Check of the Webpage exists on disk
+		if eyeon.fileexists(webpage) then
+			command = 'xdg-open "' .. webpage .. '" &'
+			print('[Launch Command] ', command)
+			os.execute(command)
+		else
+			print('[Please Install the KartaVR Documentation using Reactor]\n\t[Document Missing] ', webpage)
+		end
 	else
 		print('[Platform] ', platform)
 		print('There is an invalid platform defined in the local platform variable at the top of the code.')

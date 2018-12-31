@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Illustrator v4 for Fusion - 2018-12-25
+Send Frame to Illustrator v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -141,8 +141,8 @@ function illustratorLauncher(mediaFileName)
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		end
 		
-		viewerProgram = '"' .. defaultViewerProgram .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = defaultViewerProgram
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -301,7 +301,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

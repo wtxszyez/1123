@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open 360 Video Metadata Tool v4.0 for Fusion - 2018-12-25
+Open 360 Video Metadata Tool v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

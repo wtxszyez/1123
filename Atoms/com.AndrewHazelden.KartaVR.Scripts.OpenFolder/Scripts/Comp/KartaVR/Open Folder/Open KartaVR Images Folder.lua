@@ -17,5 +17,5 @@ if bmd.direxists(path) == false then
 	print('[Created KartaVR Images Folder] ' .. path)
 end
 
-print('[Show KartaVR Bin Folder] ' .. path)
+print('[Show KartaVR Images Folder] ' .. path)
 bmd.openfileexternal('Open', path)

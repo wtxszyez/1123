@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to AC3D v4.0 for Fusion - 2018-12-25
+Send Geometry to AC3D v4.0.1 - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

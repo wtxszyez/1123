@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Hugin v4.0 for Fusion - 2018-12-25
+Send Frame to Hugin v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -106,8 +106,8 @@ function huginStitcher(mediaFileName)
 		-- defaultViewerProgram = 'C:\\Program Files\\Hugin\\bin\\hugin.exe'
 		defaultViewerProgram = 'C:\\Program Files (x86)\\Hugin\\bin\\hugin.exe'
 		
-		viewerProgram = '"' .. getPreferenceData('KartaVR.SendMedia.HuginFile', defaultViewerProgram, printStatus) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = getPreferenceData('KartaVR.SendMedia.HuginFile', defaultViewerProgram, printStatus)
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -116,8 +116,8 @@ function huginStitcher(mediaFileName)
 		defaultViewerProgram = '/Applications/Hugin/Hugin.app'
 		-- defaultViewerProgram = '/Applications/Hugin.app'
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.HuginFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
-		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.HuginFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" --args "' .. mediaFileName .. '"'
 					
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -273,7 +273,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

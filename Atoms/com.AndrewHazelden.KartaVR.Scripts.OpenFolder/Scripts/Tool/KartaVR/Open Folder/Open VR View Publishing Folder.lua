@@ -99,7 +99,6 @@ end
 -- Open a folder window up using your desktop file browser
 function openDirectory(mediaDirName)
 	command = nil
-	
 	dir = dirname(mediaDirName)
 	
 	if platform == 'Windows' then

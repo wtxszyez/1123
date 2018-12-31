@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to TouchDesigner v4.0 for Fusion - 2018-12-25
+Send Media to TouchDesigner v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -35,23 +35,81 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 7 or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
+-- Duplicate a file
+function copyFile(src, dest)
+	host = app:MapPath('Fusion:/')
+	if string.lower(host):match('resolve') then
+		hostOS = 'Resolve'
+		
+		if platform == 'Windows' then
+			command = 'copy /Y "' .. src .. '" "' .. dest .. '" '
+		else
+			-- Mac / Linux
+			command = 'cp "' .. src .. '" "' .. dest .. '" '
+		end
+		
+		print('[Copy File Command] ' .. command)
+		os.execute(command)
+	else
+		hostOS = 'Fusion'
+		
+		-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8/9 "bmd.scriptlib" libraries
+		eyeon.copyfile(src, dest)
+	end
+end
+
+-- Get the file extension from a filepath
+function getExtension(src)
+	local extension = string.match(src, '(%..+)$')
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(src)
+	local path, basename = string.match(src, "^(.+[/\\])(.+)")
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	local name, extension = string.match(basename, "^(.+)(%..+)$")
+	local barename, sequence = string.match(name, "^(.-)(%d+)$")
+	
+	return barename or ''
+end
+
+-- Read a binary file to calculate the filesize in bytes
+-- Example: size = getFilesize('/image.png')
+function getFilesize(filename)
+	fp, errMsg = io.open(filename, "rb")
+	if fp == nil then
+		print('[Filesize] Error reading the file: ' .. filename)
+		return 0
+	end
+	
+	local filesize = fp:seek('end')
+	fp:close()
+	
+	return filesize
+end
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -120,10 +178,9 @@ function GenerateMediaList()
 	-- -------------------------------------------
 	-- Start adding each image element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
-
+	
 	-- Scan the comp to check how many Loader nodes are present
 	totalLoaders = table.getn(toollist1)
 	totalSavers = table.getn(toollist2)
@@ -166,9 +223,9 @@ function GenerateMediaList()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
+			mediaExtension = getExtension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format. Please extract a frame from the movie file as PTGui does not support working with video formats directly.]')
@@ -205,13 +262,13 @@ function GenerateMediaList()
 			--sourceMediaFile = comp:MapPath(tool:GetAttrs().TOOLST_Clip_Name[1])
 			sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
 			-- filenameClip = (eyeon.parseFilename(toolClip))
-		
+			
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
+			mediaExtension = getExtension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format. Please extract a frame from the movie file as PTGui does not support working with video formats directly.]')
@@ -319,19 +376,19 @@ function touchDesignerViewer()
 		
 		defaultViewerProgram = 'C:\\Program Files\\Derivative\\TouchDesigner099\\bin\\touchdesigner099.exe'
 		
-		viewerProgram = '"' .. getPreferenceData('KartaVR.SendMedia.TouchDesignerFile', defaultViewerProgram, printStatus) .. '"'
-		command = 'start "" ' .. viewerProgram .. mediaList
+		viewerProgram = getPreferenceData('KartaVR.SendMedia.TouchDesignerFile', defaultViewerProgram, printStatus)
+		command = 'start "" "' .. viewerProgram .. '" '.. mediaList
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		viewerProgram = '"/Applications/TouchDesigner099.app"'
-		command = 'open -a ' .. viewerProgram .. ' --args ' .. mediaList
 		
-		-- viewerProgram = '"/Applications/TouchDesigner099.app/Contents/MacOS/TouchDesigner099"'
-		-- command = '' .. viewerProgram .. ' --args ' .. mediaList
-		 
+		defaultViewerProgram = '/Applications/TouchDesigner099.app'
+		-- defaultViewerProgram = '/Applications/TouchDesigner099.app/Contents/MacOS/TouchDesigner099'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.TouchDesignerFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" --args ' .. mediaList
+		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then

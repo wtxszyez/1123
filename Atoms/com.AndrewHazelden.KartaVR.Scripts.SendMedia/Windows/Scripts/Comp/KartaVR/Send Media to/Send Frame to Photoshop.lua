@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Photoshop v4 for Fusion - 2018-12-25
+Send Frame to Photoshop v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -189,8 +189,8 @@ function photoshopLauncher(mediaFileName)
 			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
 		end
 		
-		viewerProgram = '"' .. defaultViewerProgram .. '"'
-		command = 'open -a ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = defaultViewerProgram
+		command = 'open -a "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 					
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -342,7 +342,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else
