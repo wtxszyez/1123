@@ -2,7 +2,7 @@
 
 This webpage lists the KartaVR example compositing projects that include large media files and Fusion .comp files. This media will get you up to speed with node based live action panoramic 360&deg; video stitching and photogrammetry workflows in Fusion.
 
-These files are designed to show several different workflows for stitching and editing 360&deg; panoramic imagery. There is approximately 16 GB of panoramic video stitching and photogrammetry project files available for download from the web when you view the "`Rector:/Deploy/Docs/KartaVR.Stitching/index.html`" webpage. You can access this example stitching footage resource page from inside Fusion by opening the "`Scripts > KartaVR > View KartaVR Example 360VR Stitching Comps`" menu item.
+These files are designed to show several different workflows for stitching and editing 360&deg; panoramic imagery. There is approximately 16 GB of panoramic video stitching and photogrammetry project files available for download from the web when you view the "`Reactor:/Deploy/Docs/KartaVR.Stitching/index.html`" webpage. You can access this example stitching footage resource page from inside Fusion by opening the "`Scripts > KartaVR > View KartaVR Example 360VR Stitching Comps`" menu item.
 
 There is a **real cost** to keep this media online and to create new learning materials in the future. Please consider making a small donation to help offset the server hosting costs if this media was useful to your Fusion VR learning efforts: [http://www.paypal.me/andrewhazelden](http://www.paypal.me/andrewhazelden)
 
