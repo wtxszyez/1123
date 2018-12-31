@@ -146,7 +146,7 @@ The KartaVR plug-in works inside of Blackmagic Design's powerful node based Fusi
 				ui:Label {
 					ID = 'URLLabel',
 					Weight = 0,
-					Text = [[Copyright © 2014-2018 Andrew Hazelden.<br><a href="http://www.andrewhazelden.com/blog/">http://www.andrewhazelden.com/blog/</a>]],
+					Text = [[Copyright © 2014-2018 Andrew Hazelden.<br><a href="http://www.andrewhazelden.com/blog/"  style="color: rgb(139,155,216)">http://www.andrewhazelden.com/blog/</a>]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {
