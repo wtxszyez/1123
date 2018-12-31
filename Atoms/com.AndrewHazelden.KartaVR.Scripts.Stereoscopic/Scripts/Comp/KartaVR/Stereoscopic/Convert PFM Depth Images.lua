@@ -38,9 +38,9 @@ Todo: Implement the "Process Sub-Folders" checkbox
 Todo: Apply a linear workflow gamma setting to the EXR media
 Todo: The Default KartaVR "Cactus Lab" provided ImageMagick tool should be enabled by default.
 
-----------------------------------------------------------------------------
 --]]--
 
+-- --------------------------------------------------------------------------
 local printStatus = false
 
 -- Find out if we are running Fusion 7 or 8
@@ -51,7 +51,6 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
-
 
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
@@ -410,9 +409,9 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 				pfmProgram = app:MapPath('Reactor:/Deploy/Bin/KartaVR/tools/pfmtopsd.exe')
 				
 				defaultImagemagickProgram =  comp:MapPath('Reactor:/Deploy/Bin/imagemagick/bin/imconvert.exe')
-				imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
+				imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
 				
-				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | ' .. imagemagickProgram .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = 'start "" ' .. pfmCommand .. logCommand
 				print('[PFM Launch Command] ', command)
 				os.execute(command)

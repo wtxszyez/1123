@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate UV Pass in PTGui v4.0 for Fusion - 2018-12-11
+Generate UV Pass in PTGui v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -64,7 +64,7 @@ Currently Disabled GUI control:
 
 The "Skip Batch Alignment" checkbox control allows you to disable the PTGui option for running the alignment command when a batch rendering is done. This is useful if you have only one source image loaded in the PTGui .pts file and are attempting to render a UV Pass map that performs a basic panoramic remapping operation without any control points present in the image.
 
-]]--
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -84,17 +84,14 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 
 -- Set a fusion specific preference value
@@ -190,7 +187,7 @@ function controlPointRegexFile(inFilepath, imageWidth, imageHeight)
 			end
 		end
 	end
-
+	
 	-- Track the resolution of the last image found in the PTGui file for the control point scaling effect
 	if resolution ~= nil then
 		print('[Last Image Resolution] ' .. resolution)
@@ -500,7 +497,7 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 	outputLog = outputDirectory .. 'imagemagickUVPassOutputLog.txt'
 	logCommand = ''
 	if platform == 'Windows' then
-		logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+		logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
 	elseif platform == 'Mac' then
 		logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
 	elseif platform == 'Linux' then
@@ -524,8 +521,8 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 	if platform == 'Windows' then
 		-- Running on Windows
 		defaultImagemagickProgram = app:MapPath('Reactor:/Deploy/Bin/imagemagick/bin/imconvert.exe')
-		imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
-		command = 'start "" ' .. imagemagickProgram .. ' ' .. imagemagickCommand
+		imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
+		command = 'start "" "' .. imagemagickProgram .. '" ' .. imagemagickCommand
 		
 		print('[Imagemagick Launch Command] ', command)
 		os.execute(command)
@@ -540,8 +537,8 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 			-- Manual compiled ImageMagick:
 			-- defaultImagemagickProgram = '/usr/local/bin/convert'
 		
-		imagemagickProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)), '[/]$', '') .. '"'
-		command = imagemagickProgram .. ' ' .. imagemagickCommand
+		imagemagickProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)), '[/]$', '')
+		command = '"' .. imagemagickProgram .. ' ' .. imagemagickCommand
 		
 		print('[Imagemagick Launch Command] ', command)
 		os.execute(command)
@@ -549,8 +546,8 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 		-- Running on Linux
 		defaultImagemagickProgram = '/usr/bin/convert'
 		
-		imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
-		command = imagemagickProgram .. ' ' .. imagemagickCommand
+		imagemagickProgram =  .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
+		command = '"' .. imagemagickProgram .. '" ' .. imagemagickCommand
 		
 		print('[Imagemagick Launch Command] ', command)
 		os.execute(command)
@@ -968,17 +965,16 @@ function ptguiStitcher(ptsFileName, batchProcess)
 	if platform == 'Windows' then
 		-- Running on Windows
 		defaultViewerProgram = 'C:\\Program Files\\PTGui\\PTGui.exe'
+		viewerProgram = comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus))
 		
-		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)) .. '"'
 		command = ''
-		
 		-- Should PTGui be run as a batch render process
 		if batchProcess == 1 then
 			-- Batch render process the pts file with no gui shown
-			command = 'start "" ' .. viewerProgram .. ' -batch -x "' .. ptsFileName .. '"'
+			command = 'start "" "' .. viewerProgram .. '" -batch -x "' .. ptsFileName .. '"'
 		else
 			-- Open the pts file in PTGui and show the gui
-			command = 'start "" ' .. viewerProgram .. ' "' .. ptsFileName .. '"'
+			command = 'start "" "' .. viewerProgram .. '" "' .. ptsFileName .. '"'
 		end
 		
 		print('[PTGui Launch Command] ', command)
@@ -986,17 +982,16 @@ function ptguiStitcher(ptsFileName, batchProcess)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		defaultViewerProgram = '/Applications/PTGui Pro.app'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '')
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
 		command = ''
-		
 		-- Should PTGui be run as a batch render process
 		if batchProcess == 1 then
 			-- Batch render process the pts file with no gui shown
-			command = 'open -a ' .. viewerProgram .. ' -n -W --args -batch -x "' .. ptsFileName .. '"'
+			command = 'open -a "' .. viewerProgram .. '" -n -W --args -batch -x "' .. ptsFileName .. '"'
 		else
 			-- Open the pts file in PTGui and show the gui
-			command = 'open -a ' .. viewerProgram .. ' --args "' .. ptsFileName .. '"'
+			command = 'open -a "' .. viewerProgram .. '" --args "' .. ptsFileName .. '"'
 		end
 		
 		print('[PTGui Launch Command] ', command)
@@ -1188,7 +1183,7 @@ function Main()
 	-- Show the "Generate UV Pass in PTGui" dialog window
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
 	compPath = dirname(comp:GetAttrs().COMPS_FileName)
-	compPrefs = comp:GetPrefs("Comp.FrameFormat")
+	compPrefs = comp:GetPrefs('Comp.FrameFormat')
 	width = compPrefs.Width
 	height = compPrefs.Height
 	

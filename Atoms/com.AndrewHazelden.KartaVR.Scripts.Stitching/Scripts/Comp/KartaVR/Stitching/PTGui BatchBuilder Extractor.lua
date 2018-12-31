@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui BatchBuilder Extractor v4.0 for Fusion - 2018-12-11
+PTGui BatchBuilder Extractor v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -12,8 +12,7 @@ Overview:
 
 The PTGui BatchBuilder Extractor script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) will convert your currently selected loader and saver node based media from inside numbered PTGui BatchBuilder folders into a flat image sequence.
 
-
-As an example a PTGui BatchBuilder "folderized" image sequence named in the format of: `####/name.ext` will be copied and placed into a standard image sequence:	`name.####.ext`
+As an example a PTGui BatchBuilder "folderized" image sequence named in the format of: `####/name.ext` will be copied and placed into a standard image sequence: `name.####.ext`
 
 Installation and Usage:
 
@@ -40,15 +39,9 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
-
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -124,7 +117,6 @@ function openDirectory(mediaDirName)
 		end
 	end
 end
-
 
 
 -- Set a fusion specific preference value
@@ -278,7 +270,7 @@ function BatchBuilderRename(mediaFileName)
 			if frameRange == 0 then
 				-- Custom frame range
 				-- (Loader clip frame range / Saver render time range)
-				start_frame =	 mediaStartFrame 
+				start_frame = mediaStartFrame 
 				end_frame = mediaEndFrame
 				print('[Using the Clip Time Frame Range]')
 			elseif frameRange == 1 then
@@ -453,8 +445,8 @@ function ptguiStitcher(mediaFileName)
 		-- Running on Windows
 		defaultViewerProgram = 'C:\\Program Files\\PTGui\\PTGui.exe'
 		
-		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus))
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -462,8 +454,8 @@ function ptguiStitcher(mediaFileName)
 		-- Running on Mac
 		defaultViewerProgram = '/Applications/PTGui Pro.app'
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
-		command = 'open -a '..viewerProgram ..' --args "' .. mediaFileName .. '"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram ..'" --args "' .. mediaFileName .. '"'
 					
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -530,7 +522,7 @@ function GenerateMediaTable()
 				-- filenameClip = (eyeon.parseFilename(toolClip))
 			end
 			
-			print("[" .. toolType .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Active frame range
 			sourceStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
@@ -580,7 +572,7 @@ function GenerateMediaTable()
 			sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
 			-- filenameClip = (eyeon.parseFilename(toolClip))
 			
-			print("[" .. toolType .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Active frame range
 			sourceStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
@@ -680,7 +672,6 @@ function main()
 	-- -------------------------------------------
 	-- Start adding each image and video element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
 	
@@ -699,7 +690,6 @@ function main()
 		-- Exit this script instantly on error
 		-- return
 	-- end
-	
 	
 	-- ------------------------------------
 	-- Load the preferences
@@ -763,20 +753,20 @@ function main()
 	mediaEndFrame = getPreferenceData('KartaVR.ConvertToBatchBuilder.MediaEndFrame', 143, printStatus)
 	
 	-- imageFormat = getPreferenceData('KartaVR.ConvertToBatchBuilder.ImageFormat', 0, printStatus)
-
+	
 	frameRange = getPreferenceData('KartaVR.ConvertToBatchBuilder.FrameRange', 1, printStatus)
 	
 	extractFrameExtension = getPreferenceData('KartaVR.ConvertToBatchBuilder.ExtractExtractFrameExtension', 0, printStatus)
-
+	
 	fileManagement = getPreferenceData('KartaVR.ConvertToBatchBuilder.FileManagement', 1, printStatus)
-
+	
 	framePadding = getPreferenceData('KartaVR.ConvertToBatchBuilder.FramePadding', 4, printStatus)
 	
 	openOutputFolder = getPreferenceData('KartaVR.ConvertToBatchBuilder.OpenOutputFolder', 1, printStatus)
 	
 	d = {}
 	d[1] = {msg, Name = 'Warning', 'Text', ReadOnly = true, Lines = 3, Wrap = true, Default = msg}
- 
+	
 	d[2] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect, Options = soundEffectList}
 	
 	d[3] = {'OutputFolder', Name = 'Image Sequence Output Folder', browseMode, Default = outputFolder}
@@ -786,11 +776,11 @@ function main()
 	-- d[5] = {'ImageFormat', Name = 'Image Format', 'Dropdown', Default = imageFormat, Options = imageFormatList}
 	
 	d[4] = {'ExtractFrameExtension', Name = 'Output Name', 'Dropdown', Default = extractFrameExtension, Options = extractFrameExtensionList}
-
+	
 	d[5] = {'FileManagement', Name = 'File Mode', 'Dropdown', Default = fileManagement, Options = fileManagementList}
-
+	
 	d[6] = {'FrameRange', Name = 'Frame Range', 'Dropdown', Default = frameRange, Options = frameRangeList}
-		
+	
 	d[7] = {'MediaStartFrame', Name = 'Custom Start Frame', 'Slider', Lines = 1, Default = mediaStartFrame, Integer = true, Min = 0}
 	
 	d[8] = {'MediaEndFrame', Name = 'Custom End Frame', 'Slider', Lines = 1, Default = mediaEndFrame, Integer = true, Min = 0}

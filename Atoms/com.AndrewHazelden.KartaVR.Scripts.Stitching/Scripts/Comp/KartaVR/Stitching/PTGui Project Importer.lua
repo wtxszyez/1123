@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Project Importer v4.0 for Fusion - 2018-12-11
+PTGui Project Importer v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -8,6 +8,7 @@ andrew@andrewhazelden.com
 KartaVR
 http://www.andrewhazelden.com/blog/downloads/kartavr/
 ----------------------------------------------------------------------------
+
 Overview:
 
 The PTGui Project Importer script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will load the source image data from a PTGui .pts project file and create a node based panoramic 360° stitching composite.
@@ -21,7 +22,7 @@ Step 2. In the PTGui Project Importer dialog window you need to select a PTGui .
 
 Note: Fusion does not read in or interpret EXIF image rotation metadata. You need to bake in and flatten the EXIF image rotation value into the image and remove that metadata setting in advance if you want PTGui and Fusion to use the exact same portrait/landscape style rotation setting when importing the imagery into a composite.
 
-Todo: 
+Todo:
 
 	- The intermediate saver view# element should really be frame padded in the future.
 	- Detect the PTGui simple mode (which means no cropping has been applied since that requires the advanced tab to be used)
@@ -61,17 +62,14 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
 -- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
+-- Example: print(Dirname("/Users/Shared/file.txt"))
 function Dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 
 -- Check if a directory exists
@@ -449,7 +447,7 @@ function FusionMediaExt(mediaFile, returnType)
 		imageFormatFusion = 'JpegFormat'
 	end
 	
-	-- print('[' .. mediaFile .. '] '	 .. imageFormatExt)
+	-- print('[' .. mediaFile .. '] ' .. imageFormatExt)
 	
 	-- Check if the format or file extension should be returned
 	if returnType == 'format' then
@@ -2666,7 +2664,7 @@ function CreateSaverNode(nodeNumber, saverName, nodeOriginXPos, nodeOriginYPos, 
 		if importLensSettings == 1 then
 			if nodeNumber >= 2 then
 				-- If there are two or more images then link the saver node to the merge node
-				mergeNode = 'ptMerge' .. (nodeNumber-1)
+				mergeNode = 'ptMerge' .. (nodeNumber - 1)
 				nodeString = nodeString .. '\t\t\t\tInput = Input {\n'
 				nodeString = nodeString .. '\t\t\t\t\tSourceOp = "' .. mergeNode .. '",\n'
 				nodeString = nodeString .. '\t\t\t\t\tSource = "Output",\n'
@@ -3035,7 +3033,7 @@ function CreateLoaderNodes(nodeNumber, loaderName, loaderFilename, loaderFormat,
 	ellipseMaskWidth = 1920
 	ellipseMaskHeight = 1080
 	
-	-- Note: Scale ratio is	 Cropped Width / Original Width
+	-- Note: Scale ratio is Cropped Width / Original Width
 	-- Example 3054 / 3840 = 0.795
 	ellipseScaleX = cropXSize / originalWidth
 	ellipseScaleY = cropYSize / originalHeight
@@ -3253,7 +3251,6 @@ end
 	
 	-- Add a Fisheye2Equirectangular macro
 	if importLensSettings == 1 then
-		
 		fisheyeOutputName = ''
 		
 		print('[Final Lens Type] "' .. lensType .. '"')
@@ -3293,7 +3290,6 @@ end
 				-- No Gridwarp node - Fallback to the Rectilinear Lens
 				intermediateSaverNodeInput = 'BackgroundColorMerge' .. '_' .. nodeNumber
 			end
-			
 			
 			-- Create the image output filename for the intermediate saver node: <name>_view#.<padded frame>.<ext>
 			-- Todo: The intermediate saver view# element should really be frame padded in the future.
@@ -3338,30 +3334,30 @@ end
 			if importIntermediateSaver == 1 then
 				-- Add an intermediate Saver node
 				mergeNodeInput = 'ptSaver' .. nodeNumber
-				mergeNodeInputPrev = 'ptSaver' .. nodeNumber-1
+				mergeNodeInputPrev = 'ptSaver' .. nodeNumber - 1
 			elseif importGridWarp == 1 then
 				-- Add a GridWarp node
 				mergeNodeInput = 'ptGridWarp' .. nodeNumber
-				mergeNodeInputPrev = 'ptGridWarp' .. nodeNumber-1
+				mergeNodeInputPrev = 'ptGridWarp' .. nodeNumber - 1
 			elseif lensType == '2' then
 				-- No Gridwarp node - Fallback to the Circular Fisheye Lens
 				mergeNodeInput = 'UVRenderer3D_' .. nodeNumber
-				mergeNodeInputPrev = 'UVRenderer3D_' .. nodeNumber-1
+				mergeNodeInputPrev = 'UVRenderer3D_' .. nodeNumber - 1
 			else
 				-- No Gridwarp node - Fallback to the Rectilinear Lens
 				mergeNodeInput = 'BackgroundColorMerge' .. '_' .. nodeNumber
-				mergeNodeInputPrev = 'BackgroundColorMerge' .. '_' .. nodeNumber-1
+				mergeNodeInputPrev = 'BackgroundColorMerge' .. '_' .. nodeNumber - 1
 			end
 			
 			-- Connect the GridWarp node to the merge node
-			nodeString = nodeString .. AddMergeNode(mergeName, mergeNodeInput, 'Output', mergeNodeInputPrev,	'Output', mergeNodeXPos, mergeNodeYPos)
+			nodeString = nodeString .. AddMergeNode(mergeName, mergeNodeInput, 'Output', mergeNodeInputPrev, 'Output', mergeNodeXPos, mergeNodeYPos)
 			
 			-- Connect the Fisheye2Equirectangular node to the merge node
-			-- nodeString = nodeString .. AddMergeNode(mergeName, ('UVRenderer3D_' .. nodeNumber), 'Output', ('UVRenderer3D_' .. nodeNumber-1),	 'Output', mergeNodeXPos, mergeNodeYPos)
+			-- nodeString = nodeString .. AddMergeNode(mergeName, ('UVRenderer3D_' .. nodeNumber), 'Output', ('UVRenderer3D_' .. nodeNumber - 1), 'Output', mergeNodeXPos, mergeNodeYPos)
 		elseif nodeNumber >= 3 then
 			-- When adding the 2nd or more merge nodes Connect the new image and the previous merge node inputs to the new merge node
 			mergeName = 'ptMerge' .. nodeNumber
-			mergePreviousName = 'ptMerge' .. nodeNumber-1
+			mergePreviousName = 'ptMerge' .. nodeNumber - 1
 			
 			-- Input connection name for the 2nd branch
 			 if importIntermediateSaver == 1 then

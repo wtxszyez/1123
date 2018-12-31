@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui BatchBuilder Creator v4.0 for Fusion - 2018-12-11
+PTGui BatchBuilder Creator v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -39,15 +39,9 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
 
-
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -372,8 +366,8 @@ function ptguiStitcher(mediaFileName)
 		-- Running on Windows
 		defaultViewerProgram = 'C:\\Program Files\\PTGui\\PTGui.exe'
 		
-		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)) .. '"'
-		command = 'start "" ' .. viewerProgram .. ' "' .. mediaFileName .. '"'
+		viewerProgram = comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus))
+		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -381,8 +375,8 @@ function ptguiStitcher(mediaFileName)
 		-- Running on Mac
 		defaultViewerProgram = '/Applications/PTGui Pro.app'
 		
-		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
-		command = 'open -a '..viewerProgram..' --args "'..mediaFileName..'"'
+		viewerProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.PTGuiFile', defaultViewerProgram, printStatus)), '[/]$', '')
+		command = 'open -a "' .. viewerProgram .. '" --args "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -411,7 +405,6 @@ function GenerateMediaTable()
 	-- -------------------------------------------
 	-- Start adding each image and video element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
 
@@ -449,7 +442,7 @@ function GenerateMediaTable()
 				-- filenameClip = (eyeon.parseFilename(toolClip))
 			end
 			
-			print("[" .. toolType .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Active frame range
 			sourceStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
@@ -499,7 +492,7 @@ function GenerateMediaTable()
 			sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
 			-- filenameClip = (eyeon.parseFilename(toolClip))
 			
-			print("[" .. toolType .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Active frame range
 			sourceStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
@@ -599,7 +592,6 @@ function main()
 	-- -------------------------------------------
 	-- Start adding each image and video element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
 
@@ -689,34 +681,22 @@ function main()
 	-- Location of output - use the comp path as the default starting value if the preference doesn't exist yet
 	compPath = comp:MapPath('Comp:/')
 	compBatchBuilderPath = comp:MapPath('Comp:/BatchBuilder/')
-	
 	batchBuilderFolder = getPreferenceData('KartaVR.ConvertToBatchBuilder.BatchBuilderFolder', compBatchBuilderPath, printStatus)
-	
 	soundEffect = getPreferenceData('KartaVR.ConvertToBatchBuilder.SoundEffect', 1, printStatus)
-	
 	frameRange = getPreferenceData('KartaVR.ConvertToBatchBuilder.FrameRange', 1, printStatus)
-	
 	frameExtension = getPreferenceData('KartaVR.ConvertToBatchBuilder.FrameExtension', 1, printStatus)
-	
 	openOutputFolder = getPreferenceData('KartaVR.ConvertToBatchBuilder.OpenOutputFolder', 1, printStatus)
-	
 	framePadding = getPreferenceData('KartaVR.ConvertToBatchBuilder.FramePadding', 4, printStatus)
 	
 	d = {}
 	d[1] = {msg, Name = 'Warning', 'Text', ReadOnly = true, Lines = 3, Wrap = true, Default = msg}
- 
 	d[2] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect, Options = soundEffectList}
-	
 	d[3] = {'BatchBuilderFolder', Name = 'BatchBuilder Output Folder', browseMode, Default = batchBuilderFolder}
-	
 	d[4] = {'FrameRange', Name = 'Frame Range', 'Dropdown', Default = frameRange, Options = frameRangeList}
-	
 	d[5] = {"FrameExtension", Name = "Output Name", "Dropdown", Default = frameExtension, Options = frameExtensionList}
-	
 	d[6] = {'FramePadding', Name = 'Frame Padding', 'Slider', Default = framePadding, Integer = true, Min = 0, Max = 8}
-	
 	d[7] = {'OpenOutputFolder', Name = 'Open Output Folder', 'Checkbox', Default = openOutputFolder, NumAcross = 1}
-
+	
 	dialog = comp:AskUser('PTGui BatchBuilder Creator', d)
 	if dialog == nil then
 		print('You cancelled the dialog!')
@@ -724,7 +704,7 @@ function main()
 		
 		-- Unlock the comp flow area
 		comp:Unlock()
-
+		
 		return
 	else
 		print('[You Pressed the OK Button]')
@@ -821,7 +801,7 @@ else
 	end
 end
 
-	
+
 -- Unlock the comp flow area
 comp:Unlock()
 

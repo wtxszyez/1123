@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Mask Importer v4.0 for Fusion - 2018-12-11
+PTGui Mask Importer v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -40,17 +40,14 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 
 -- Check if a directory exists
@@ -241,12 +238,11 @@ function regexFile(inFilepath, searchString, replaceString)
 		print('[Error Opening File for Writing]')
 		return
 	end
-
+	
 	-- Scan through the input textfile line by line
 	counter = 0
 	lineCounter = 0
 	for oneLine in io.lines(inFilepath) do
-
 		-- Check if we have found a match with the searchString
 		if oneLine:match(searchString) then
 			-- Track the number of edits done
@@ -262,7 +258,7 @@ function regexFile(inFilepath, searchString, replaceString)
 		-- Track the progress through the file
 		lineCounter = lineCounter + 1
 		-- print('[' .. lineCounter .. '] ' .. oneLine)
-
+		
 		-- Write the line entry to the output file
 		if platform == 'Windows' then
 			-- Add a newline character
@@ -442,7 +438,7 @@ function sourcemaskRegex(ptguiFile, framePadding, startOnFrameOne)
 			outputLog = outputDirectory .. 'base64Decoder.txt'
 			logCommand = ''
 			if platform == 'Windows' then
-				logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+				logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
 			elseif platform == 'Mac' then
 				logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
 			elseif platform == 'Linux' then
@@ -452,18 +448,19 @@ function sourcemaskRegex(ptguiFile, framePadding, startOnFrameOne)
 			-- Use the base64 terminal utility to decode the PNG formatted mask images
 			command = ''
 			if platform == 'Windows' then
-				-- viewerProgram = '"C:\\Program Files\\KartaVR\\tools\\cygwin\\bin\\base64.exe"'
-				
+				defaultbase64Program =  comp:MapPath('Reactor:/Deploy/Bin/cygwin/bin/base64.exe')
 				-- This line assumes the KartaVR Cygwin "bin" folder is in the system %PATH% environment variable.
-				viewerProgram = 'base64.exe' 
-				
-				command = viewerProgram .. ' -d -i "' .. base64Filename .. '" > "' .. pngOutFilename .. '" ' .. logCommand
+				-- defaultbase64Program = 'C:\\Program Files\\KartaVR\\tools\\cygwin\\bin\\base64.exe'
+				base64Program = getPreferenceData('KartaVR.SendMedia.base64File', defaultbase64Program, printStatus)
+				command = '"' .. base64Program .. '" -d -i "' .. base64Filename .. '" > "' .. pngOutFilename .. '" ' .. logCommand
 				
 				print('[base64 Command] ', command)
 				os.execute(command)
 			else
-				viewerProgram = 'base64' 
-				command = viewerProgram .. ' -D -i "' .. base64Filename .. '" -o "' .. pngOutFilename .. '" ' --.. logCommand
+				base64Program = 'base64'
+				command = base64Program .. ' -D -i "' .. base64Filename .. '" -o "' .. pngOutFilename .. '" ' --.. logCommand
+				-- command = base64Program .. ' -D -i "' .. base64Filename .. '" -o "' .. pngOutFilename .. '" ' .. logCommand
+				
 				print('[base64 Command] ', command)
 				os.execute(command)
 			end
@@ -768,15 +765,10 @@ compPrefs = comp:GetPrefs("Comp.FrameFormat")
 -- Share this text field with the PTGui Project Importer Script
 -- PTGui Project File - use the comp path as the default starting value if the preference doesn't exist yet
 ptguiFile = comp:MapPath(getPreferenceData('KartaVR.PTGuiImporter.File', compPath, printStatus))
-
 nodeDirection = getPreferenceData('KartaVR.PTGuiMaskImporter.NodeDirection', 2, printStatus)
-
 frameExtension = getPreferenceData('KartaVR.PTGuiMaskImporter.FrameExtension', 1, printStatus)
-
 framePadding = getPreferenceData('KartaVR.PTGuiMaskImporter.FramePadding', 4, printStatus)
-
 startOnFrameOne = getPreferenceData('KartaVR.PTGuiMaskImporter.StartOnFrameOne', 1, printStatus)
-
 openOutputFolder = getPreferenceData('KartaVR.PTGuiMaskImporter.OpenOutputFolder', 1, printStatus)
 
 -- Node Build Direction
@@ -839,8 +831,8 @@ print('[PTGui Project File] ' .. dialog.File)
 -- Check if the PTGui filename ends with the .pts file extension
 searchString = 'pts$'
 if ptguiFile:match(searchString) ~= nil then
---ptguiFileExtension = eyeon.getextension(ptguiFile)
---if ptguiFileExtension == 'pts' then
+-- ptguiFileExtension = eyeon.getextension(ptguiFile)
+-- if ptguiFileExtension == 'pts' then
 	
 	print('[A PTGui project file was selected and it has the .pts file extension.]')
 	
@@ -917,6 +909,7 @@ AddMaskNodes()
 -- Unlock the comp flow area
 comp:Unlock()
 
+
 -- Open the PTGui .pts folder as an Explorer/Finder/Nautilus folder view
 if openOutputFolder == 1 then
 	if fu_major_version >= 8 then
@@ -937,6 +930,7 @@ if openOutputFolder == 1 then
 		end
 	end
 end
+
 
 -- Play a sound effect
 soundEffect = getPreferenceData('KartaVR.SendMedia.SoundEffect', 1, printStatus)

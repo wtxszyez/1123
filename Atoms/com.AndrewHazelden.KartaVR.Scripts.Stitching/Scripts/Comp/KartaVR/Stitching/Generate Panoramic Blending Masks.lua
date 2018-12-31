@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate Panoramic Blending Masks v4.0 for Fusion - 2018-12-11
+Generate Panoramic Blending Masks v4.0 for Fusion - 2018-12-25
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -41,14 +41,12 @@ local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -210,7 +208,6 @@ function GenerateMediaList()
 	-- -------------------------------------------
 	-- Start adding each image and video element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
 
@@ -247,7 +244,7 @@ function GenerateMediaList()
 				-- filenameClip = (eyeon.parseFilename(toolClip))
 			end
 			
-			print("[" .. toolAttrs .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
 			mediaFile = eyeon.getfilename(sourceMediaFile)
@@ -290,7 +287,7 @@ function GenerateMediaList()
 			sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
 			-- filenameClip = (eyeon.parseFilename(toolClip))
 			
-			print("[" .. toolAttrs .. " Name] " .. nodeName .. " [Image Filename] " .. sourceMediaFile)
+			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
 			mediaFile = eyeon.getfilename(sourceMediaFile)
@@ -522,7 +519,7 @@ function CreateLoaderNodes(nodeNumber, booleanName, loaderName, loaderFilename, 
 	
 	return nodeString
 end
-	
+
 -- Create the new enblended mask image nodes and channel booleans for to the comp
 function AddEnblendMaskNodes()
 	-- Check the Node Layout aka. "Build Direction" setting
@@ -689,7 +686,6 @@ else
 	browseMode = 'PathBrowse'
 end
 
-
 soundEffect = getPreferenceData('KartaVR.GenerateMask.SoundEffect', 2, printStatus)
 imageFormat = getPreferenceData('KartaVR.GenerateMask.ImageFormat', 0, printStatus)
 compress = getPreferenceData('KartaVR.GenerateMask.Compression', 2, printStatus)
@@ -702,7 +698,6 @@ startOnFrameOne = getPreferenceData('KartaVR.GenerateMask.StartOnFrameOne', 1, p
 openOutputFolder = getPreferenceData('KartaVR.GenerateMask.OpenOutputFolder', 1, printStatus)
 fineMask = getPreferenceData('KartaVR.GenerateMask.FineMask', 1, printStatus)
 useCurrentFrame = getPreferenceData('KartaVR.GenerateMask.UseCurrentFrame', 1, printStatus)
-
 
 d = {}
 d[1] = {'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 3, Wrap = true, Default = msg}
@@ -926,7 +921,7 @@ outputLog = outputLogDirectory .. 'enblendMaskingOutputLog.txt'
 logCommand = ''
 if platform == 'Windows' then
 	logCommand = ' > "' .. outputLog.. '" '
-	-- logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
+	-- logCommand = ' ' .. '2>&1 | "' .. app:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a "' .. outputLog.. '" '
 elseif platform == 'Mac' then
 	--logCommand = ' > "' .. outputLog.. '" '
 	logCommand = ' ' .. '2>&1 | tee -a' .. ' "' .. outputLog.. '" '
@@ -939,20 +934,32 @@ end
 -- Find the enblend program path
 if platform == 'Windows' then
 	-- Running on Windows
-	-- enblendProgram = '"C:\\Program Files\\KartaVR\\tools\\panotoolsNG\\bin\\enblend.exe"'
-	enblendProgram = 'start "" "C:\\Program Files\\KartaVR\\tools\\panotoolsNG\\bin\\enblend.exe"'
+	
+	defaultEnblendProgram = app:MapPath('Reactor:/Deploy/Bin/panotoolsNG/bin/enblend.exe')
+	-- defaultEnblendProgram = 'C:\\Program Files\\KartaVR\\tools\\panotoolsNG\\bin\\enblend.exe'
+	enblendProgram = getPreferenceData('KartaVR.SendMedia.enblendFile', defaultEnblendProgram, printStatus)
+	
+	enblendProgramCommand = 'start "" "' .. enblendProgram .. '"'
 elseif platform == 'Mac' then
 	-- Running on Mac
-	enblendProgram = '"/Applications/KartaVR/mac_tools/panotoolsNG/bin/enblend"'
+	
+	defaultEnblendProgram = app:MapPath('Reactor:/Deploy/Bin/panotoolsNG/bin/enblend')
+	-- defaultEnblendProgram = '/Applications/KartaVR/mac_tools/panotoolsNG/bin/enblend'
+	enblendProgram = getPreferenceData('KartaVR.SendMedia.enblendFile', defaultEnblendProgram, printStatus)
+	
+	enblendProgramCommand = '"' .. enblendProgram .. '"'
 elseif platform == 'Linux' then
 	-- Running on Linux
-	 enblendProgram = '"/usr/bin/enblend"'
+	
+	defaultEnblendProgram = '/usr/bin/enblend'
+	enblendProgram = getPreferenceData('KartaVR.SendMedia.enblendFile', defaultEnblendProgram, printStatus)
+	
+	enblendProgramCommand = '"' .. enblendProgram .. '"'
 else
 	print('[Platform] ', platform)
 	print('There is an invalid platform defined in the local platform variable at the top of the code.')
-	enblendProgram = '"enblend"'
+	enblendProgramCommand = '"enblend"'
 end
-
 
 
 -- GPU accelerate enblend
@@ -969,7 +976,7 @@ end
 -- Enblend command string
 -- -------------------------
 
-command = enblendProgram
+command = enblendProgramCommand
 -- command = 'enblend'
 
 -- Add verbose option
