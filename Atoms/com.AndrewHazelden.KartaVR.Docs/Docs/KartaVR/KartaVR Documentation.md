@@ -1,7 +1,7 @@
 # KartaVR 4.0 for Reactor Documentation #
 
 -------------------------
-**Version 4.0** - Released 2018-12-18  
+**Version 4.0** - Released 2018-12-25  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -13,7 +13,7 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ![Reactor Atom Package](images/reactor-atom-package.png)
 
-As a small 🎄 Christmas timed gift to the "[Steak Underwater](https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commerical projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
+As a small 🎄 Christmas timed gift to the "[Steak Underwater](https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
 
 The commercial paid version of KartaVR was discontinued and withdrawn from the market when at SIGGRAPH 2017 [Blackmagic Design released Fusion 9](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=62288) with an integrated VR toolset as a free update for all Fusion (Free) and Fusion Studio users.
 
@@ -442,8 +442,10 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 - [Fusion Macro LUTs](luts.html)
   - [Bright LUT](luts.html#bright-lut)
   - [ViewerEquirectangular LUT](luts.html#viewerequirectangular-lut)
+  - [ViewerEquirectangular Stereo OU LUT](luts.html#viewerequirectangular-stereo-ou-lut)
   - [ViewerMesh LUT](luts.html#viewermesh-lut)
   - [ViewerWarp LUT](luts.html#viewerwarp-lut)
+  - [Z360 Stereo LUT](luts.html#z360-stereo-lut)
 - [Fusion Compositing Examples](examples.html)
 - [Macros Reference Guide](macros-guide.html)
 - [Getting Started With Nodes in Fusion](getting-started.html)
