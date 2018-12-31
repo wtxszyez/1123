@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Photoscan v4.0 for Fusion - 2018-12-25
+Send Media to Photoscan v4.0.1 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -40,7 +40,7 @@ Todos:
 
 local printStatus = true
 
--- Find out if we are running Fusion 7 or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -49,14 +49,16 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
 
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	
+	return basename
+end
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -412,7 +414,7 @@ function zipFile(zipFilename, sourceFileName, moveFile)
 	pathMappedSourceFileName = comp:MapPath(sourceFileName)
 
 	-- The individual source file to be zipped with the absolute path removed
-	sourceFileNoPath = eyeon.getfilename(pathMappedSourceFileName)
+	sourceFileNoPath = getFilename(pathMappedSourceFileName)
 	workingFolder = dirname(pathMappedSourceFileName)
 	
 	-- You can find custom zip flag options in the terminal using 'man zip'
@@ -589,12 +591,12 @@ function ConvertToRelativePathMap(to, from, pathMap)
 	end
 	
 	-- Put the "To" filename on the directory path of the "From" file
-	from = dirname(from) .. eyeon.getfilename(to)
+	from = dirname(from) .. getFilename(to)
 	
 	-- Check if the strings are identical
 	if from == to then
 		-- It's a match so Comp:/ is the same directory as the source image
-		result = pathMap .. eyeon.getfilename(to)
+		result = pathMap .. getFilename(to)
 		print('[PathMap Result] ' .. result .. ' is in the same folder as the comp.')
 		return result
 	end
@@ -720,7 +722,7 @@ function addChunk(camera, imageCount)
 	
 	for i = 1, imageCount do
 		-- The filepath is cut down to just the base image name here so in AGI Photoscan's Photos window the "short" file name is displayed vs showing the full absolute filepath.
-		chunkString = chunkString .. '		<camera id="'.. camera[i].imageID4 .. '" label="' .. eyeon.getfilename(camera[i].filename1) .. '" sensor_id="0" enabled="' .. camera[i].enabled5 .. '">\n'
+		chunkString = chunkString .. '		<camera id="'.. camera[i].imageID4 .. '" label="' .. getFilename(camera[i].filename1) .. '" sensor_id="0" enabled="' .. camera[i].enabled5 .. '">\n'
 		
 		-- chunkString = chunkString .. '			 <orientation>' .. camera[i].orientation6 .. '</orientation>\n'
 		chunkString = chunkString .. '		</camera>\n'
@@ -797,7 +799,7 @@ function addFrame(camera, imageCount)
 			-- The location of the reference file that is used to do the relative path trimming
 			-- fromFile = comp:GetAttrs().COMPS_FileName
 			-- The reference folder needs to help you move down from the Photoscan.files\0\o- folder
-			fromFile = outputDirectory .. photoscanProjectName .. '.files' .. osSeparator .. '0' .. osSeparator .. '0' .. osSeparator .. eyeon.getfilename(camera[i].filename1)
+			fromFile = outputDirectory .. photoscanProjectName .. '.files' .. osSeparator .. '0' .. osSeparator .. '0' .. osSeparator .. getFilename(camera[i].filename1)
 			
 			-- The pathmap prefix value that is added to the final relative path result
 			relativePathMap = ''
@@ -1222,7 +1224,7 @@ function GenerateMediaList()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
 			mediaExtension = eyeon.getextension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
@@ -1268,7 +1270,7 @@ function GenerateMediaList()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
 			mediaExtension = eyeon.getextension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
@@ -1451,7 +1453,7 @@ function Main()
 
 	-- Output Photoscan filename prefix
 	-- Get the name of the Fusion .comp file with the extension removed
-	compName = eyeon.trimExtension(eyeon.getfilename(comp:GetAttrs().COMPS_FileName))
+	compName = eyeon.trimExtension(getFilename(comp:GetAttrs().COMPS_FileName))
 	if compName ~= nil then
 		-- The comp has been saved to disk and has a name
 		photoscanProjectName = compName
