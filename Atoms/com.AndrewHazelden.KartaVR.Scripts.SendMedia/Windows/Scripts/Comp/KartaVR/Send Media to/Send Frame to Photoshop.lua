@@ -183,7 +183,7 @@ function photoshopLauncher(mediaFileName)
 			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2018/Adobe Photoshop CC 2018.app'
 		elseif photoshopVersion == 10 then
 			-- Adobe Photoshop CC 2019
-			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2018/Adobe Photoshop CC 2019.app'
+			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
 		else
 			-- Fallback
 			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'

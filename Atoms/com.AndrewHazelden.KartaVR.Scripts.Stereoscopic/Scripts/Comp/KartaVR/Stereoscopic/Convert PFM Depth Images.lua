@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Convert PFM Depth Images v4.0 for Fusion - 2018-12-25
+Convert PFM Depth Images v4.0.1 - 2018-12-31
 
 by Andrew Hazelden
 www.andrewhazelden.com
@@ -52,15 +52,78 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Take a base filename and remove just the final extension
+function trimExtensionfromFilename(mediaDirName)
+	name, extension = string.match(mediaDirName, '^(.+)(%..+)$')
+	
+	return name or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 -- Open a folder window up using your desktop file browser
 function openDirectory(mediaDirName)
@@ -325,31 +388,31 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 		-- Generate the extracted filename
 		if imageName == 0 then
 			-- <name>.<ext>
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. '.' .. imageFormatExt
 		elseif imageName == 1 then
 			-- <name>.#.<ext>
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 2 then
 			-- <name>_#.<ext>
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 3 then
 			-- <name>#.<ext>
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files).. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files).. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 4 then
 			-- <name>/<name>.#.<ext> (In a Subfolder)
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. osSeparator .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. osSeparator .. getFilenameNoExt(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 5 then
 			-- <name>/<name>_#.<ext> (In a Subfolder)
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. osSeparator .. eyeon.trimExtension(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. osSeparator .. getFilenameNoExt(files) .. '_' .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 6 then
 			-- <name>/#.<ext> (In a Subfolder)
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. osSeparator .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. osSeparator .. frameNumber .. '.' .. imageFormatExt
 		elseif imageName == 7 then
 			-- #/<name>.<ext> (In a Subfolder)
-			imgSeqFile = pfmFolder .. frameNumber .. osSeparator .. eyeon.trimExtension(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. frameNumber .. osSeparator .. getFilenameNoExt(files) .. '.' .. frameNumber .. '.' .. imageFormatExt
 		else 
 			-- <name>.<ext>
-			imgSeqFile = pfmFolder .. eyeon.trimExtension(files) .. '.' .. imageFormatExt
+			imgSeqFile = pfmFolder .. trimExtensionfromFilename(files) .. '.' .. imageFormatExt
 		end
 		
 		-- -----------------------------------
@@ -406,13 +469,13 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 			-- Launch the PFM converter tool
 			if platform == 'Windows' then
 				-- Running on Windows
+				
 				pfmProgram = app:MapPath('Reactor:/Deploy/Bin/KartaVR/tools/pfmtopsd.exe')
-				
-				defaultImagemagickProgram =  comp:MapPath('Reactor:/Deploy/Bin/imagemagick/bin/imconvert.exe')
+				defaultImagemagickProgram = comp:MapPath('Reactor:/Deploy/Bin/imagemagick/bin/imconvert.exe')
 				imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
-				
 				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = 'start "" ' .. pfmCommand .. logCommand
+				
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
 			elseif platform == 'Mac' then
@@ -433,8 +496,9 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 				-- unused addons:  .. colorDepth .. dpi .. compressionMode ..
 				-- pfmCommand = ' ' .. pfmProgram .. ' ' .. '"' .. sourceMovie .. '" | ' .. imagemagickProgram .. ' psd:- ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				
-				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = '"' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = pfmCommand .. logCommand
+				
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
 			else
@@ -447,8 +511,9 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 				defaultImagemagickProgram = '/usr/bin/convert'
 				imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultViewerProgram, printStatus)
 				
-				pfmCommand = ' "' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
+				pfmCommand = '"' .. pfmProgram .. '" "' .. sourceMovie .. '" | "' .. imagemagickProgram .. '" ' .. colorDepth .. ' psd:- ' .. ' ' .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. imgSeqFile .. '"'
 				command = pfmCommand .. logCommand
+				
 				print('[PFM Launch Command] ', command)
 				os.execute(command)
 			end
@@ -481,6 +546,10 @@ comp:Lock()
 
 -- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
 compPath = dirname(comp:GetAttrs().COMPS_FileName)
+if compName ~= nil and compName ~= '' then
+	-- In Resolve where there is no comp filename save the result to the Temp folder.
+	compPath = comp:MapPath('Temp:\\KartaVR\\')
+end
 
 -- Location of movies - use the comp path as the default starting value if the preference doesn't exist yet
 pfmFolder = getPreferenceData('KartaVR.ConvertPFM.PFMFolder', compPath, printStatus)
@@ -493,7 +562,7 @@ framePadding = getPreferenceData('KartaVR.ConvertPFM.FramePadding', 4, printStat
 startOnFrameOne = getPreferenceData('KartaVR.ConvertPFM.StartOnFrameOne', 1, printStatus)
 soundEffect = getPreferenceData('KartaVR.ConvertPFM.SoundEffect', 1, printStatus)
 openFolder = getPreferenceData('KartaVR.ConvertPFM.OpenFolder', 1, printStatus)
-procesSubFolders = getPreferenceData('KartaVR.ConvertPFM.ProcesSubFolders', 1, printStatus)
+-- procesSubFolders = getPreferenceData('KartaVR.ConvertPFM.ProcesSubFolders', 1, printStatus)
 
 msg = 'Customize the settings for converting a folder of Portable Float Map (.pfm) format greyscale depth images.'
 
@@ -522,7 +591,7 @@ d[6] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect,
 d[7] = {'FramePadding', Name = 'Frame Padding', 'Slider', Default = framePadding, Integer = true, Min = 0, Max = 8}
 d[8] = {'StartOnFrameOne', Name = 'Start on Frame 1', 'Checkbox', Default = startOnFrameOne, NumAcross = 2}
 d[9] = {'OpenFolder', Name = 'Open Output Folder', 'Checkbox', Default = openFolder, NumAcross = 1}
-d[10] = {'ProcesSubFolders', Name = 'Process Sub-Folders', 'Checkbox', Default = procesSubFolders, NumAcross = 1}
+-- d[10] = {'ProcesSubFolders', Name = 'Process Sub-Folders', 'Checkbox', Default = procesSubFolders, NumAcross = 1}
 
 dialog = comp:AskUser('Convert PFM Depth Images', d)
 if dialog == nil then
@@ -560,8 +629,8 @@ else
 	openFolder = dialog.OpenFolder
 	setPreferenceData('KartaVR.ConvertPFM.OpenFolder', openFolder, printStatus)
 	
-	procesSubFolders = dialog.ProcesSubFolders
-	setPreferenceData('KartaVR.ConvertPFM.ProcesSubFolders', procesSubFolders, printStatus)
+	-- procesSubFolders = dialog.ProcesSubFolders
+	-- setPreferenceData('KartaVR.ConvertPFM.ProcesSubFolders', procesSubFolders, printStatus)
 end
 
 

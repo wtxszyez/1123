@@ -18,7 +18,6 @@ Step 1. Start Fusion and open a new comp.
 
 Step 2. Select Loader/Saver node media in the Fusion flow view. Then run the "Script > KartaVR > Photogrammetry > Send Media to Photoscan" menu item.
 
-
 Todos:
 	Provide a warning when nothing is selected in the comp.
 	Handle cases when a new Fusion comp hasn't been saved yet
@@ -49,11 +48,64 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
 
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
 -- Get the base filename from a filepath
 function getFilename(mediaDirName)
-	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
 	
-	return basename
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
 end
 
 -- Find out the current directory from a file path
@@ -320,7 +372,7 @@ function SV_GetFrames(sv)
 		return {sv_file}
 	end
 	
-	local seq = eyeon.parseFilename(sv_file)
+	local seq = parseFilename(sv_file)
 	
 	-- Saver has a control to force the starting sequence number.
 	if sv.SetSequenceStart[fu.TIME_UNDEFINED] == 0 then
@@ -370,7 +422,7 @@ function LD_GetFrames(ld)
 	frames = {}
 	
 	for i = 1, table.getn(lda.TOOLST_Clip_Name) do
-		seq = eyeon.parseFilename(comp:MapPath(lda.TOOLST_Clip_Name[i]))
+		seq = parseFilename(comp:MapPath(lda.TOOLST_Clip_Name[i]))
 		if seq.Padding == nil then 
 			table.insert(frames, v )
 		else
@@ -446,34 +498,33 @@ function zipFile(zipFilename, sourceFileName, moveFile)
 	-- Command line zip program 
 	if platform == 'Windows' then
 		-- Running on Windows
-		defaultProgram = comp:MapPath('Reactor:\\Deploy\\Bin\\KartaVR\\tools\\cygwin\\bin\\zip.exe')
-		-- defaultProgram = 'C:\\Program Files\\KartaVR\\tools\\cygwin\\bin\\zip.exe'
+		defaultProgram = comp:MapPath('Reactor:\\Deploy\\Bin\\cygwin\\bin\\zip.exe')
 		-- defaultProgram = "C:\\cygwin64\\bin\\zip.exe"
 		-- defaultProgram = 'zip.exe'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
 		
 		-- Add the cd command to change the working directory
 		-- Note: cd /D changes the drive letter and the directory
 		-- command = 'cd /D "' .. workingFolder .. '" && ' .. 'start "" ' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
 		
 		-- Note: cd /D changes the drive letter and the directory
-		command = 'cd /D "' .. workingFolder .. '" && ' .. '' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
+		command = 'cd /D "' .. workingFolder .. '" && "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		defaultProgram = '/usr/bin/zip'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
-		command = 'cd "' .. workingFolder .. '";' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
+		command = 'cd "' .. workingFolder .. '"; "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
 		defaultProgram = '/usr/bin/zip'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
-		command = 'cd "' .. workingFolder .. '";' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
+		command = 'cd "' .. workingFolder .. '"; "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' "' .. sourceFileNoPath .. '"'
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -537,34 +588,33 @@ function zipFolder(zipFilename, sourceFolderName, moveFile, excludeZips)
 	-- Command line zip program 
 	if platform == 'Windows' then
 		-- Running on Windows
-		defaultProgram = comp:MapPath('Reactor:\\Deploy\\Bin\\KartaVR\\tools\\cygwin\\bin\\zip.exe')
-		-- defaultProgram = 'C:\\Program Files\\KartaVR\\tools\\cygwin\\bin\\zip.exe'
+		defaultProgram = comp:MapPath('Reactor:\\Deploy\\Bin\\cygwin\\bin\\zip.exe')
 		-- defaultProgram = "C:\\cygwin64\\bin\\zip.exe"
 		-- defaultProgram = 'zip.exe'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
 		
 		-- Add the cd command to change the working directory
 		-- Note: cd /D changes the drive letter and the directory
 		-- command = 'cd /D "' .. workingFolder .. '" && ' .. 'start "" ' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
 		
 		-- Note: cd /D changes the drive letter and the directory
-		command = 'cd /D "' .. workingFolder .. '" && ' .. '' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
+		command = 'cd /D "' .. workingFolder .. '" && ' .. ' "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		defaultProgram = '/usr/bin/zip'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
-		command = 'cd "' .. workingFolder .. '";' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
+		command = 'cd "' .. workingFolder .. '"; "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
 		defaultProgram = '/usr/bin/zip'
-		zipProgram = '"' .. getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus) .. '"'
-		command = 'cd "' .. workingFolder .. '";' .. zipProgram .. ' ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
+		zipProgram = getPreferenceData('KartaVR.Compression.ZipFile', defaultProgram, printStatus)
+		command = 'cd "' .. workingFolder .. '"; "' .. zipProgram .. '" ' .. zipOptions .. ' "' .. pathMappedZipFilename .. '" ' .. ' . ' .. zipExcludeList
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
@@ -702,10 +752,20 @@ function addChunk(camera, imageCount)
 	-- Sensor "Camera Model" elements
 	-- This is a single entry for all images from the same camera
 	-- -------------------------------
-
+	
+	local sensorWidth = ''
+	local sensorHeight = ''
+	if not camera[1] then
+		sensorWidth = compPrefs.Width
+		sensorHeight = compPrefs.Height
+	else
+		sensorWidth = camera[1].width2
+		sensorHeight = camera[1].height3
+	end
+	
 	chunkString = chunkString .. '	<sensors next_id="1">\n'
 	chunkString = chunkString .. '		<sensor id="0" label="unknown" type="frame">\n'
-	chunkString = chunkString .. '			<resolution width="' .. camera[1].width2 .. '" height="' .. camera[1].height3 .. '"/>\n'
+	chunkString = chunkString .. '			<resolution width="' .. sensorWidth .. '" height="' .. sensorHeight .. '"/>\n'
 	chunkString = chunkString .. '			<property name="fixed" value="false"/>\n'
 	chunkString = chunkString .. '			<bands>\n'
 	chunkString = chunkString .. '				<band label="Red"/>\n'
@@ -961,8 +1021,7 @@ function generateMaskImages(camera, imageCount, workingFolder)
 	if platform == 'Windows' then
 		-- logCommand = ' ' .. '2> "' .. outputLog.. '" '
 		-- logCommand = ' ' .. '> "' .. outputLog.. '" 2>&1'
-		-- logCommand = ' ' .. '2>&1 | "C:\\Program Files\\KartaVR\\tools\\wintee\\bin\\wtee.exe" -a' .. ' "' .. outputLog.. '" '
-		logCommand = ' ' .. '2>&1 | "' .. comp:MapPath('Reactor:\\Deploy\\Bin\\KartaVR\\tools\\wintee\\bin\\wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
+		logCommand = ' ' .. '2>&1 | "' .. comp:MapPath('Reactor:\\Deploy\\Bin\\wintee\\bin\\wtee.exe') .. '" -a' .. ' "' .. outputLog.. '" '
 	elseif platform == 'Mac' then
 		-- logCommand = ' ' .. '2> "' .. outputLog.. '" '
 		-- logCommand = ' ' .. '> "' .. outputLog.. '" 2>&1'
@@ -978,7 +1037,7 @@ function generateMaskImages(camera, imageCount, workingFolder)
 		sourceImagepath = comp:MapPath(camera[i].filename1)
 		
 		-- Example: Temp:\\KartaVR\\photoscan.files\\0\\0\\masks\\c01.png
-		destinationImagename = 'c' .. camera[i].imageID4 ..	 '.png'
+		destinationImagename = 'c' .. camera[i].imageID4 .. '.png'
 		destinationImagepath = comp:MapPath(workingFolder .. destinationImagename)
 		
 		-- Add a new entry to the media table that is returned from the function and used to create the masks.zip file that holds the mask images + doc.xml file
@@ -988,26 +1047,25 @@ function generateMaskImages(camera, imageCount, workingFolder)
 		if platform == 'Windows' then
 			-- Running on Windows
 			defaultImagemagickProgram =  comp:MapPath('Reactor:\\Deploy\\Bin\\imagemagick\\bin\\imconvert.exe')
+			imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
+			command = 'start "" ' .. ' "' .. imagemagickProgram .. '" "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
 			
-			imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
-			
-			command = 'start "" ' .. ' ' .. imagemagickProgram .. ' "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
 			print('[Launch Command] ', command)
 			os.execute(command)
 		elseif platform == 'Mac' then
 			-- Running on Mac
 			-- ****** The Default KartaVR "Cactus Lab" provided ImageMagick tool should be enabled by default:
-			defaultImagemagickProgram = '"/opt/ImageMagick/bin/convert"'
+			defaultImagemagickProgram = '/opt/ImageMagick/bin/convert'
 			
 			-- Mac Ports Compiled/Official site downloaded ImageMagick:
-			-- defaultImagemagickProgram = '"/opt/local/bin/convert"'
+			-- defaultImagemagickProgram = '/opt/local/bin/convert'
 			
 			-- Manual compiled ImageMagick:
-			-- defaultImagemagickProgram = '"/usr/local/bin/convert"'
+			-- defaultImagemagickProgram = '/usr/local/bin/convert'
 			
-			imagemagickProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)), '[/]$', '') .. '"'
+			imagemagickProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)), '[/]$', '')
 			
-			command =  imagemagickProgram .. ' "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
+			command = '"' .. imagemagickProgram .. '" "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
 			print('[Launch Command] ', command)
 			os.execute(command)
 		else
@@ -1016,7 +1074,7 @@ function generateMaskImages(camera, imageCount, workingFolder)
 			
 			imagemagickProgram = '"' .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus) .. '"'
 			
-			command = imagemagickProgram .. ' "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
+			command = '"' .. imagemagickProgram .. '" "' .. sourceImagepath .. '" ' .. alphaChannel .. colorDepth .. dpi .. compressionMode .. ' ' .. imageFormatExt .. ':' .. '"' .. destinationImagepath .. '"' .. logCommand
 			print('[Launch Command] ', command)
 			os.execute(command)
 		end
@@ -1144,6 +1202,7 @@ function createPhotoscanProject(projectName, imageTable, totalImages)
 	zipFile(projectZipFile, projectTempFile, true)
 	
 	print('[chunk.xml File] ' .. chunkTempFile)
+	dump(imageTable)
 	chunk = addChunk(imageTable, totalImages)
 	writeTextFile(chunkTempFile, chunk, printStatus)
 	zipFile(chunkZipFile, chunkTempFile, true)
@@ -1190,7 +1249,6 @@ function GenerateMediaList()
 	-- -------------------------------------------
 	-- Start adding each image element:
 	-- -------------------------------------------
-	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
 	
@@ -1226,7 +1284,7 @@ function GenerateMediaList()
 			-- Extract the base media filename without the path
 			mediaFilename = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
+			mediaExtension = getExtension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format. Please extract a frame from the movie file as AGI Photoscan does not support working with video formats directly.]')
@@ -1272,7 +1330,7 @@ function GenerateMediaList()
 			-- Extract the base media filename without the path
 			mediaFilename = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
+			mediaExtension = getExtension(mediaFilename)
 			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format. Please extract a frame from the movie file as AGI Photoscan does not support working with video formats directly.]')
@@ -1283,7 +1341,7 @@ function GenerateMediaList()
 				-- Get the node position
 				flow = comp.CurrentFrame.FlowView
 				nodeXpos, nodeYpos = flow:GetPos(tool)
-				--print('Node [X] ' .. nodeXpos .. ' [Y] ' .. nodeYpos)
+				-- print('Node [X] ' .. nodeXpos .. ' [Y] ' .. nodeYpos)
 				
 				-- Add a new entry to the media {} table:
 				-- id
@@ -1393,7 +1451,7 @@ function Main()
 	
 	local toollist1 = comp:GetToolList(true, 'Loader')
 	local toollist2 = comp:GetToolList(true, 'Saver')
-
+	
 	-- Scan the comp to check how many Loader nodes are present
 	totalLoaders = table.getn(toollist1)
 	totalSavers = table.getn(toollist2)
@@ -1413,7 +1471,6 @@ function Main()
 	-- -------------------
 	-- Global Variables 
 	-- -------------------
-	
 	width = 0
 	height = 0
 	
@@ -1453,13 +1510,14 @@ function Main()
 
 	-- Output Photoscan filename prefix
 	-- Get the name of the Fusion .comp file with the extension removed
-	compName = eyeon.trimExtension(getFilename(comp:GetAttrs().COMPS_FileName))
-	if compName ~= nil then
+	compName = getFilenameNoExt(comp:GetAttrs().COMPS_FileName)
+	if compName ~= nil and compName ~= '' then
 		-- The comp has been saved to disk and has a name
 		photoscanProjectName = compName
 	else
 		-- The comp has not been saved to disk yet so use 'Photoscan' as the default project file name
 		photoscanProjectName = 'Photoscan'
+		compName = 'Photoscan'
 	end
 	
 	-- -------------------
@@ -1472,7 +1530,7 @@ function Main()
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
 	-- compPath = dirname(comp:GetAttrs().COMPS_FileName)
 	compPath = comp:MapPath('Comp:/')
-	if compPath ~= nil then
+	if compPath ~= nil and hostOS == 'Fusion' then
 		-- The comp has been saved to disk and has a name
 		print('[Comp:/ PathMap] ' .. compPath)
 	else
@@ -1510,7 +1568,12 @@ function Main()
 	d[4] = {'Width', Name = 'Image Width', 'Slider', Default = width, Integer = true, Min = 1, Max = 16384}
 	d[5] = {'Height', Name = 'Image Height', 'Slider', Default = height, Integer = true, Min = 1, Max = 16384}
 	d[6] = {'UseAlphaMasks', Name = 'Use Alpha Masks', 'Checkbox', Default = useAlphaMasks, NumAcross = 2}
-	d[7] = {'UseRelativePaths', Name = 'Use Relative Paths for Loaders', 'Checkbox', Default = useRelativePaths, NumAcross = 2}
+	
+	-- Hide a relative path control from Resolve since "Comp:/" does not exist
+	if hostOS == 'Fusion' then
+		d[7] = {'UseRelativePaths', Name = 'Use Relative Paths for Loaders', 'Checkbox', Default = useRelativePaths, NumAcross = 2}
+	end
+	
 	d[8] = {'OpenOutputFolder', Name = 'Open Output Folder', 'Checkbox', Default = openOutputFolder, NumAcross = 1}
 
 	dialog = comp:AskUser('Send Media to Photoscan', d)
@@ -1534,7 +1597,14 @@ function Main()
 		useAlphaMasks = dialog.UseAlphaMasks
 		setPreferenceData('KartaVR.Photoscan.UseAlphaMasks', useAlphaMasks, printStatus)
 		
-		useRelativePaths = dialog.UseRelativePaths
+		-- Only allow relative filepaths on Fusion Standalone
+		useRelativePaths = ''
+		if hostOS == 'Fusion' then
+			useRelativePaths = dialog.UseRelativePaths
+		else
+			-- Resolve is running
+			useRelativePaths = 0
+		end
 		setPreferenceData('KartaVR.Photoscan.UseRelativePaths', useRelativePaths, printStatus)
 		
 		openOutputFolder = dialog.OpenOutputFolder
