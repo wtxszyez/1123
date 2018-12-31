@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PanoView v4.0 - 2018-12-25
+PanoView v4.0.1 - 2018-12-31
 
 by Andrew Hazelden -- www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -949,7 +949,7 @@ if selectedNode then
 		-- Write out a temporary viewer snapshot so the script can send any kind of node to the viewer tool
 		
 		-- Image name with extension.
-		imageFilename = 'dfm_preview_' .. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
+		imageFilename = 'kvr_preview_' .. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
 		
 		-- Find out the Fusion temporary directory path
 		dirName = comp:MapPath('Temp:\\KartaVR\\')
@@ -960,7 +960,10 @@ if selectedNode then
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
 		
-		if fu_major_version >= 8 then
+		if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+		elseif fu_major_version >= 8 then
 			-- Fusion 8 workflow for saving an image
 			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
 		else

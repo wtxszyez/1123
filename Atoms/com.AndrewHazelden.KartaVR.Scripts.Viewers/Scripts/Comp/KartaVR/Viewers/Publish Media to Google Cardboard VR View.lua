@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Publish Media to Google Cardboard VR View v4.0 for Fusion - 2018-12-25
+Publish Media to Google Cardboard VR View v4.0.1 for Fusion - 2018-12-31
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -34,27 +34,10 @@ Step 3. In the "Publish Media to Google Cardboard VR View" dialog window you nee
 vrviewWidth = '100%%'
 vrviewHeight = '300px'
 
--- Get the name of the Fusion .comp file
-compName = eyeon.getfilename(comp:GetAttrs().COMPS_FileName)
-if compName ~= nil then
-	-- The comp has been saved to disk and has a name
-	compName = '"' .. compName .. '"'
-else
-	-- The comp has not been saved to disk yet
-	compName = '"Untitled Comp"'
-end
-
--- VR View Header Block Element
-vrviewHeader = '<h1>VR View - ' .. compName .. '</h1>\n'
-
--- VR View Page Introduction text
-vrviewIntroParagraph = '		<p>The VR View webpage allows you to explore panoramic imagery in your web browser or with a Google Cardboard HMD.</p>\n\n'
-
-
 -- Print out extra debugging information
 local printStatus = false
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 6, 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -63,6 +46,68 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
 
+-- Duplicate a file
+function copyFile(src, dest)
+	host = app:MapPath('Fusion:/')
+	if string.lower(host):match('resolve') then
+		hostOS = 'Resolve'
+		
+		if platform == 'Windows' then
+			command = 'copy /Y "' .. src .. '" "' .. dest .. '" '
+		else
+			-- Mac / Linux
+			command = 'cp "' .. src .. '" "' .. dest .. '" '
+		end
+		
+		print('[Copy File Command] ' .. command)
+		os.execute(command)
+	else
+		hostOS = 'Fusion'
+		
+		-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8/9 "bmd.scriptlib" libraries
+		eyeon.copyfile(src, dest)
+	end
+end
+
+-- Get the file extension from a filepath
+function getExtension(src)
+	local extension = string.match(src, '(%..+)$')
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(src)
+	local path, basename = string.match(src, "^(.+[/\\])(.+)")
+	
+	return basename or ''
+end
+
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	local name, extension = string.match(basename, "^(.+)(%..+)$")
+	local barename, sequence = string.match(name, "^(.-)(%d+)$")
+	
+	return barename or ''
+end
+
+
+-- Read a binary file to calculate the filesize in bytes
+-- Example: size = getFilesize('/image.png')
+function getFilesize(filename)
+	fp, errMsg = io.open(filename, "rb")
+	if fp == nil then
+		print('[Filesize] Error reading the file: ' .. filename)
+		return 0
+	end
+	
+	local filesize = fp:seek('end')
+	fp:close()
+	
+	return filesize
+end
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -113,13 +158,9 @@ function getPreferenceData(pref, defaultValue, status)
 	return newPreference
 end
 
-
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
-	-- LUA dirname command inspired by Stackoverflow code example:
-	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
@@ -205,7 +246,7 @@ function regexFile(inFilepath, searchString, replaceString)
 	print('[' .. inFilepath .. '] [Find] ' .. searchString .. ' [Replace] ' .. replaceString)
 	
 	-- Trimmed filename without the directory path
-	justFilename = eyeon.getfilename(inFilepath)
+	justFilename = getFilename(inFilepath)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -262,7 +303,7 @@ function regexFile(inFilepath, searchString, replaceString)
 	
 	-- Copy the temp file back into the orignal document
 	-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8 "bmd.scriptlib" libraries
-	eyeon.copyfile(tempFile, inFilepath)
+	copyFile(tempFile, inFilepath)
 	print('[Copy File] [From] ' .. tempFile .. ' [To] ' .. inFilepath)
 	
 	--	if platform == 'Windows' then
@@ -360,13 +401,13 @@ function processTemplate()
 	
 	-- Copy the template into the web sharing folder's index.html file
 	-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8 "bmd.scriptlib" libraries
-	eyeon.copyfile(sourceTemplateHTMLFile, destinationTemplateHTMLFile)
+	copyFile(sourceTemplateHTMLFile, destinationTemplateHTMLFile)
 	print('[Copy HTML File] [From] ' .. sourceTemplateHTMLFile .. ' [To] ' .. destinationTemplateHTMLFile)
 	
-	eyeon.copyfile(sourceTemplateCSSFile, destinationTemplateCSSFile)
+	copyFile(sourceTemplateCSSFile, destinationTemplateCSSFile)
 	print('[Copy CSS File] [From] ' .. sourceTemplateCSSFile .. ' [To] ' .. destinationTemplateCSSFile)
 	
-	eyeon.copyfile(sourceVrviewFile, destinationVrviewFile)
+	copyFile(sourceVrviewFile, destinationVrviewFile)
 	print('[Copy Vr View iFrame File] [From] ' .. sourceVrviewFile .. ' [To] ' .. destinationVrviewFile)
 	
 	-- Copy the Google VR View webpage elements
@@ -385,7 +426,7 @@ function processTemplate()
 	end
 	
 	-- Get the name of the Fusion .comp file
-	compName = eyeon.getfilename(comp:GetAttrs().COMPS_FileName)
+	compName = getFilename(comp:GetAttrs().COMPS_FileName)
 	if compName ~= nil then
 		-- The comp has been saved to disk and has a name
 		compName = '"' .. compName .. '"'
@@ -450,7 +491,10 @@ function processTemplate()
 			-- Create the final web publishing media filename
 			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. 'kvr_'	.. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
 			
-			if fu_major_version >= 8 then
+			if fu_major_version >= 15 then
+			-- Resolve 15 workflow for saving an image
+			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(destinationMediaFile)
+			elseif fu_major_version >= 8 then
 				-- Fusion 8 workflow for saving an image
 				comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(destinationMediaFile)
 			else
@@ -460,13 +504,13 @@ function processTemplate()
 			end
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(destinationMediaFile)
+			mediaFilename = getFilename(destinationMediaFile)
 			
 			-- Everything worked fine and an image was saved
 			print('[Saved Image] ', destinationMediaFile, ' [Selected Node] ', selectedNode.Name)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFilename)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format.]')
 			else
@@ -512,16 +556,16 @@ function processTemplate()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
 			-- Create the final web publishing media filename
-			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. eyeon.getfilename(sourceMediaFile)
+			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. getFilename(sourceMediaFile)
 			
-			eyeon.copyfile(sourceMediaFile, destinationMediaFile)
+			copyFile(sourceMediaFile, destinationMediaFile)
 			print('[Copy Media File] [From] ' .. sourceMediaFile .. ' [To] ' .. destinationMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFilename)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format.]')
 			else
@@ -545,20 +589,20 @@ function processTemplate()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFilename = eyeon.getfilename(sourceMediaFile)
+			mediaFilename = getFilename(sourceMediaFile)
 			
 			-- Create the final web publishing media filename
-			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. eyeon.getfilename(sourceMediaFile)
+			destinationMediaFile = webSharingFolder .. mediaSubfolder .. osSeparator .. getFilename(sourceMediaFile)
 			
-			eyeon.copyfile(sourceMediaFile, destinationMediaFile)
+			copyFile(sourceMediaFile, destinationMediaFile)
 			print('[Copy Media File] [From] ' .. sourceMediaFile .. ' [To] ' .. destinationMediaFile)
 			
 			-- File size in MB
 			mediaFileSize = ' '
 			-- mediaFileSize = ' (' .. '4.4 MB' .. ') '
 			
-			mediaExtension = eyeon.getextension(mediaFilename)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFilename)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFilename .. ' media file was detected as a movie format.]')
 			else
@@ -641,6 +685,23 @@ function playDFMWaveAudio(filename, status)
 		print('[Playing a KartaVR based sound file using System] ' .. audioFilePath)
 	end
 end
+
+
+-- Get the name of the Fusion .comp file
+compName = getFilename(comp:GetAttrs().COMPS_FileName)
+if compName ~= nil then
+	-- The comp has been saved to disk and has a name
+	compName = '"' .. compName .. '"'
+else
+	-- The comp has not been saved to disk yet
+	compName = '"Untitled Comp"'
+end
+
+-- VR View Header Block Element
+vrviewHeader = '<h1>VR View - ' .. compName .. '</h1>\n'
+
+-- VR View Page Introduction text
+vrviewIntroParagraph = '		<p>The VR View webpage allows you to explore panoramic imagery in your web browser or with a Google Cardboard HMD.</p>\n\n'
 
 
 print('Publish Media to Google Cardboard VR View is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
