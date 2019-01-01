@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Publish Media to Google Cardboard VR View v4.0.1 for Fusion - 2018-12-31
+Publish Media to Google Cardboard VR View v4.0.1 - 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -427,12 +427,12 @@ function processTemplate()
 	
 	-- Get the name of the Fusion .comp file
 	compName = getFilename(comp:GetAttrs().COMPS_FileName)
-	if compName ~= nil then
+	if compName ~= nil and compName ~= '' then
 		-- The comp has been saved to disk and has a name
 		compName = '"' .. compName .. '"'
 	else
 		-- The comp has not been saved to disk yet
-		compName = '"Untitled Comp"'
+		compName = '"KartaVR Comp"'
 	end
 	
 	-- Create the sub directory where the VR View media files are placed relative to the generated index.html file
@@ -484,7 +484,6 @@ function processTemplate()
 		
 		-- List the selected Node in Fusion 
 		selectedNode = comp.ActiveTool
-		
 		if selectedNode then
 			print('[Selected Node] ', selectedNode.Name)
 			
@@ -628,9 +627,9 @@ end
 
 
 -- Play a KartaVR "audio" folder based wave audio file using a native Mac/Windows/Linux method:
--- Example: playWaveAudio('sound.wav')
+-- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
--- Example: playWaveAudio('sound.wav', true)
+-- Example: playWaveAudio('trumpet-fanfare.wav', true)
 function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
@@ -640,27 +639,38 @@ function playDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		-- audioFolderPath = 'C:\\Program` Files\\KartaVR\\audio\\'
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Mac' then
-		audioFolderPath = '/Applications/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Linux' then
-		audioFolderPath = '/opt/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -668,17 +678,30 @@ function playDFMWaveAudio(filename, status)
 			print('[Audio Launch Command] ', command)
 		end
 		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	else
 		-- Windows Fallback
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	end
 	
 	if status == true or status == 1 then 

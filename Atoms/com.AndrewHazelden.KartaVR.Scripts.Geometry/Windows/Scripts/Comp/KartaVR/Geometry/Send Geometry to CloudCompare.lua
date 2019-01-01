@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to CloudCompare v4.0.1 - 2018-12-31
+Send Geometry to CloudCompare v4.0.1 - 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -26,7 +26,7 @@ Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" me
 -- --------------------------------------------------------
 -- --------------------------------------------------------
 
-local printStatus = false
+local printStatus = true
 
 -- Track if the image was found
 local err = false
@@ -131,9 +131,9 @@ end
 
 
 -- Play a KartaVR "audio" folder based wave audio file using a native Mac/Windows/Linux method:
--- Example: playWaveAudio('sound.wav')
+-- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
--- Example: playWaveAudio('sound.wav', true)
+-- Example: playWaveAudio('trumpet-fanfare.wav', true)
 function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
@@ -143,27 +143,38 @@ function playDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		-- audioFolderPath = 'C:\\Program` Files\\KartaVR\\audio\\'
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Mac' then
-		audioFolderPath = '/Applications/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Linux' then
-		audioFolderPath = '/opt/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -171,17 +182,30 @@ function playDFMWaveAudio(filename, status)
 			print('[Audio Launch Command] ', command)
 		end
 		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	else
 		-- Windows Fallback
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	end
 	
 	if status == true or status == 1 then 

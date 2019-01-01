@@ -1,5 +1,5 @@
 --[[--
-Video Snapshot for Fusion - v4.0 2018-12-25
+Video Snapshot for Fusion - v4.0.1 2019-01-01
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -293,7 +293,7 @@ function VideoDeviceList()
 	-- videoMediaType[5] = {id = 1, format = 'MP4 H.265 Movie'}
 	-- videoMediaType[6] = {id = 1, format = 'MOV H.264 Movie'}
 	-- videoMediaType[7] = {id = 1, format = 'MOV ProRes 422 Movie'}
-``
+	
 	local options = ''
 	if platform == 'Windows' then
 		-- Running on Windows

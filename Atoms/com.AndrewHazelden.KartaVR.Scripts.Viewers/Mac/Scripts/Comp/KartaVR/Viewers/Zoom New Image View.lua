@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- Zoom New Image View for Fusion v4.0 - 2018-12-10
+-- Zoom New Image View v4.0.1 2019-01-01
 -- 
 -- by Andrew Hazelden -- www.andrewhazelden.com
 -- andrew@andrewhazelden.com

@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults v4.0 for Fusion - 2018-12-25
+Reset LUA Script Settings to Defaults v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

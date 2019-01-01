@@ -261,10 +261,10 @@ end
 
 
 -- Play a KartaVR "audio" folder based wave audio file using a native Mac/Windows/Linux method:
--- Example: PlayDFMWaveAudio('sound.wav')
+-- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
--- Example: PlayDFMWaveAudio('sound.wav', true)
-function PlayDFMWaveAudio(filename, status)
+-- Example: playWaveAudio('trumpet-fanfare.wav', true)
+function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
 	end
@@ -273,27 +273,38 @@ function PlayDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		-- audioFolderPath = 'C:\\Program` Files\\KartaVR\\audio\\'
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Mac' then
-		audioFolderPath = '/Applications/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Linux' then
-		audioFolderPath = '/opt/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -301,17 +312,30 @@ function PlayDFMWaveAudio(filename, status)
 			print('[Audio Launch Command] ', command)
 		end
 		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	else
 		-- Windows Fallback
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	end
 	
 	if status == true or status == 1 then 
@@ -328,7 +352,7 @@ function CompletedSound()
 		if soundEffect >= 1 then
 			-- If the sound Effect mode is 1 or greater (not set to "None" ) than play a braam sound when an error happens
 			local audioFile = 'cinematic-musical-sting-braam.wav'
-			PlayDFMWaveAudio(audioFile)
+			playDFMWaveAudio(audioFile)
 		end
 	else
 		if soundEffect == 0 then
@@ -339,15 +363,15 @@ function CompletedSound()
 		elseif soundEffect == 2 then
 			-- Steam Train Whistle Sound
 			local audioFile = 'steam-train-whistle.wav'
-			PlayDFMWaveAudio(audioFile)
+			playDFMWaveAudio(audioFile)
 		elseif soundEffect == 3 then
 			-- Trumpet Sound
 			local audioFile = 'trumpet-fanfare.wav'
-			PlayDFMWaveAudio(audioFile)
+			playDFMWaveAudio(audioFile)
 		elseif soundEffect == 4 then
 			-- Braam Sound
 			local audioFile = 'cinematic-musical-sting-braam.wav'
-			PlayDFMWaveAudio(audioFile)
+			playDFMWaveAudio(audioFile)
 		end
 	end
 end

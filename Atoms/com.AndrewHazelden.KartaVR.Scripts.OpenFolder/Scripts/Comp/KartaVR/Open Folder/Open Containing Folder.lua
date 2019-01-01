@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - v4.0 2018-12-25
+Open Containing Folder - v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -17,16 +17,11 @@ This script works with the following types of nodes in the Resolve 15 Fusion pag
 - MediaIn
 - Loader
 - Saver
-- SucklessLoader
-- SucklessSaver
+- LifeSaver
 - External Matte Saver
 - AlembicMesh3D
 - FBXMesh3D
 - ExporterFBX
-
-Todo:
-
-- Add LifeSaver.fuse node support
 
 --]]--
 
@@ -40,14 +35,14 @@ platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (
 osSeparator = package.config:sub(1,1)
 
 -- Find out the current directory from a file path
--- Example: print(Dirname('/Volumes/Media/image.0000.exr'))
-function Dirname(filename)
+-- Example: print(dirname('/Volumes/Media/image.0000.exr'))
+function dirname(filename)
 	return filename:match('(.*' .. tostring(osSeparator) .. ')')
 end
 
 -- Open a folder window up using your desktop file browser
 function OpenDirectory(mediaDirName)
-	path = Dirname(mediaDirName)
+	path = dirname(mediaDirName)
 	-- print('[Open Containing Folder] ' .. path)
 	bmd.openfileexternal('Open', path)
 end
@@ -88,40 +83,40 @@ function Main()
 		-- Read the file path data from the node
 		if toolAttrs.TOOLS_RegID == 'MediaIn' then
 			loadedImage = comp:MapPath(selectedNode:GetData('MediaProps.MEDIA_PATH'))
-			mediaDirName = Dirname(loadedImage)
+			mediaDirName = dirname(loadedImage)
 			result = '[MediaIn file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Loader' then
 			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
-			mediaDirName = Dirname(loadedImage)
+			mediaDirName = dirname(loadedImage)
 			result = '[Loader file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Saver' then
 			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
-			mediaDirName = Dirname(loadedImage)
+			mediaDirName = dirname(loadedImage)
 			result = '[Saver file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceFBXMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('ImportFile'))
-			mediaDirName = Dirname(loadedMesh)
+			mediaDirName = dirname(loadedMesh)
 			result = '[FBXMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceAlembicMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = Dirname(loadedMesh)
+			mediaDirName = dirname(loadedMesh)
 			result = '[AlembicMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'ExporterFBX' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = Dirname(loadedMesh)
+			mediaDirName = dirname(loadedMesh)
 			result = '[ExporterFBX file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.ExternalMatteSaver' then
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = Dirname(loadedImage)
+			mediaDirName = dirname(loadedImage)
 			result = '[ExternalMatteSaver file] ' .. tostring(loadedImage)
-		elseif toolAttrs.TOOLS_RegID == 'Fuse.SucklessLoader' then
-			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = Dirname(loadedImage)
-			result = '[SucklessLoader file] ' .. tostring(loadedImage)
-		elseif toolAttrs.TOOLS_RegID == 'Fuse.SucklessSaver' then
-			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = Dirname(loadedImage)
-			result = '[SucklessSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
+			if selectedNode.Output[comp.CurrentTime] then
+				loadedImage = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+			else
+				loadedImage = ''
+			end
+			mediaDirName = dirname(loadedImage)
+			result = '[LifeSaver file] ' .. tostring(loadedImage)
 		else
 			result = '[Invalid Node Type] '
 		end
@@ -148,6 +143,7 @@ function Main()
 		return
 	end
 end
+
 
 -- Run the main function
 Main()

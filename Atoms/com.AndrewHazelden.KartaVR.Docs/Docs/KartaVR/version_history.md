@@ -1,6 +1,10 @@
 <a name="version-history"></a>
 ## Version History ##
 
+### Version 4.0.1 - 2019-01-01 ###
+
+- Resolve 15.2 Lua script compatibility improvements
+
 ### Version 4 - 2018-12-15 ###
 
 - Created a Reactor installable version of KartaVR.

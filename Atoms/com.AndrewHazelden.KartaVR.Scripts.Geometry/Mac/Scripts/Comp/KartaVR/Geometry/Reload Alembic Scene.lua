@@ -1,5 +1,5 @@
 --[[--
-Reload Alembic Scene v4.0.1 - 2018-12-31
+Reload Alembic Scene v4.0.1 - 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

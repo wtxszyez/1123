@@ -1,8 +1,8 @@
-_VERSION = 'v4.0 - 2018-12-25'
+_VERSION = 'v4.0.1 2019-01-01'
 print('[Directory Tree] ' .. tostring(_VERSION))
 
 --[[--
-Directory Tree for Fusion - v4.0 2018-12-25
+Directory Tree v4.0.1 2019-01-01
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 ----------------------------------------------------------------------------
@@ -84,50 +84,136 @@ end
 -- Check what platform this script is running on
 platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
-------------------------------------------------------------------------
+-- Add the platform specific folder slash character
+osSeparator = package.config:sub(1,1)
+
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Get the file path
+function getPath(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return path or ''
+end
+
+-- Remove the trailing file extension off a filepath
+function trimExtension(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	return path or '' .. basename or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
+
+-- Find out the current directory from a file path
+-- Example: print(dirname("/Users/Shared/file.txt"))
+function dirname(mediaDirName)
+	return mediaDirName:match('(.*' .. osSeparator .. ')')
+end
+
 -- Set a fusion specific preference value
--- Example: setPreferenceData('AndrewHazelden.DirectoryTree.dir', 1)
-function setPreferenceData(pref, value)
-	-- Choose if you are saving the preference to the comp or to all of fusion
+-- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
+function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
 	
 	-- List the preference value
-	if value == nil then
-		dprint("[Setting " .. tostring(pref) .. " Preference Data] " .. "nil")
-	else
-		dprint("[Setting " .. tostring(pref) .. " Preference Data] " .. tostring(value))
+	if status == 1 or status == true then
+		if value == nil then
+			print('[Setting ' .. pref .. ' Preference Data] ' .. 'nil')
+		else
+			print('[Setting ' .. pref .. ' Preference Data] ' .. value)
+		end
 	end
 end
 
-
-------------------------------------------------------------------------
 -- Read a fusion specific preference value. If nothing exists set and return a default value
--- Example: dir = getPreferenceData("AndrewHazelden.DirectoryTree.dir", 1)
-function getPreferenceData(pref, defaultValue)
-	-- Choose if you are saving the preference to the comp or to all of fusion
+-- Example: getPreferenceData('KartaVR.SendMedia.Format', 3, true)
+function getPreferenceData(pref, defaultValue, status)
 	-- local newPreference = comp:GetData(pref)
 	local newPreference = fusion:GetData(pref)
-
 	if newPreference then
 		-- List the existing preference value
-		if newPreference == nil then
-			dprint('[Reading ' .. tostring(pref) .. ' Preference Data] ' .. 'nil')
-		else
-			dprint('[Reading ' .. tostring(pref) .. ' Preference Data] ' .. tostring(newPreference))
+		if status == 1 or status == true then
+			if newPreference == nil then
+				print('[Reading ' .. pref .. ' Preference Data] ' .. 'nil')
+			else
+				print('[Reading ' .. pref .. ' Preference Data] ' .. newPreference)
+			end
 		end
 	else
 		-- Force a default value into the preference & then list it
 		newPreference = defaultValue
-		
-		-- Choose if you are saving the preference to the comp or to all of fusion
 		-- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
 		
-		if newPreference == nil then
-			dprint('[Creating ' .. tostring(pref) .. ' Preference Data] ' .. 'nil')
-		else
-			dprint('[Creating '.. tostring(pref) .. ' Preference Entry] ' .. tostring(newPreference))
+		if status == 1 or status == true then
+			if newPreference == nil then
+				print('[Creating ' .. pref .. ' Preference Data] ' .. 'nil')
+			else
+				print('[Creating '.. pref .. ' Preference Entry] ' .. newPreference)
+			end
 		end
 	end
 	
@@ -743,18 +829,18 @@ function UpdateTree()
 		
 		kind = tostring(fileTable[i]['kind'])
 		filepath = tostring(fileTable[i]['filename'])
-		filename = bmd.getfilename(filepath)
+		filename = getFilename(filepath)
 		if kind == 'Folder' then
 			extension = 'Folder'
 			filepath = filepath .. osSep
 		elseif string.lower(filename) == 'readme' then
 			extension = 'README'
 		else
-			extension = string.upper(bmd.getextension(filename))
+			extension = string.upper(getExtension(filename))
 			
 			-- Catch situations in filenames where there are multiple . periods in the file extension field
 			if (extension:match("(%.)") ~= nil) then
-				extension = string.upper(bmd.getextension(extension))
+				extension = string.upper(getExtension(extension))
 			end
 		end
 		

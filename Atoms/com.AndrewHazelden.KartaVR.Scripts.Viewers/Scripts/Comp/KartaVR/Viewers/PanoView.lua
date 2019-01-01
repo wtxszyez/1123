@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PanoView v4.0.1 - 2018-12-31
+PanoView v4.0.1 - 2019-01-01
 
 by Andrew Hazelden -- www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -819,9 +819,9 @@ end
 
 
 -- Play a KartaVR "audio" folder based wave audio file using a native Mac/Windows/Linux method:
--- Example: playWaveAudio('sound.wav')
+-- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
--- Example: playWaveAudio('sound.wav', true)
+-- Example: playWaveAudio('trumpet-fanfare.wav', true)
 function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
@@ -831,27 +831,38 @@ function playDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		-- audioFolderPath = 'C:\\Program` Files\\KartaVR\\audio\\'
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Mac' then
-		audioFolderPath = '/Applications/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	elseif platform == 'Linux' then
-		audioFolderPath = '/opt/KartaVR/audio/'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -859,23 +870,37 @@ function playDFMWaveAudio(filename, status)
 			print('[Audio Launch Command] ', command)
 		end
 		
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	else
 		-- Windows Fallback
-		audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
+		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
-		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
+		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
 		
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		os.execute(command)
+		-- Verify the audio files were installed
+		if eyeon.fileexists(audioFilePath) then
+			os.execute(command)
+		else
+			print('[Please install the KartaVR/KartaVR Audio Reactor Package]\n\t[Audio File Missing] ', audioFilePath)
+			err = true
+		end
 	end
 	
 	if status == true or status == 1 then 
 		print('[Playing a KartaVR based sound file using System] ' .. audioFilePath)
 	end
 end
+
 
 
 print('PanoView is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
@@ -919,7 +944,7 @@ selectedNode = comp.ActiveTool
 if selectedNode then
 	print('[Selected Node] ', selectedNode.Name)
 	toolAttrs = selectedNode:GetAttrs()
-
+	
 	-- Read data from either a the loader and saver nodes
 	if toolAttrs.TOOLS_RegID == 'Loader' then
 		-- Fixed starting frame of the sequence
@@ -932,18 +957,44 @@ if selectedNode then
 			-- It will report a 'nil' when outside of the active frame range
 			print('[PanoView Use Current Frame] Enabled')
 			print('Note: If you see an error in the console it means that you have scrubbed the timeline beyond the actual frame range of the media file.')
-			mediaFileName = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+			if selectedNode.Output[comp.CurrentTime] then
+				mediaFileName = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+			else
+				print('[Loader Node Filename Field is empty] ')
+				err = true
+			end
 		else
 			-- Get the file name directly from the clip
 			print('[PanoView Use Current Frame] Disabled')
 			-- mediaFileName = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
 			mediaFileName = comp:MapPath(selectedNode.Clip[fu.TIME_UNDEFINED])
-			-- filenameClip = (eyeon.parseFilename(toolClip))
 		end
 		
 		print('[Loader] ', mediaFileName)
+	elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
+		print('Note: If you see an error in the console it means that you have scrubbed the timeline beyond the actual frame range of the media file.')
+		if selectedNode.Output[comp.CurrentTime] then
+			mediaFileName = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+		else
+			print('[Loader Node Filename Field is empty] ')
+			err = true
+		end
+		
+		print('[LifeSaver] ', mediaFileName)
+	elseif toolAttrs.TOOLS_RegID == 'MediaIn' then
+		mediaFileName = comp:MapPath(selectedNode:GetData('MediaProps.MEDIA_PATH'))
+		
+		if mediaFileName then
+		-- Find the first frame of an image sequence
+			startFrame = tostring(string.match(mediaFileName, '%[(%d+)%-%d+%]'))
+			endFrame = tostring(string.match(mediaFileName, '%[%d+%-(%d+)%]'))
+			mediaFileName = string.gsub(mediaFileName, '%[%d+%-%d+%]', startFrame)
+		end
+		
+		print('[MediaIn] ', mediaFileName)
 	elseif toolAttrs.TOOLS_RegID == 'Saver' then
 		mediaFileName = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
+		
 		print('[Saver] ', mediaFileName)
 	else
 		-- Write out a temporary viewer snapshot so the script can send any kind of node to the viewer tool
@@ -986,6 +1037,9 @@ if selectedNode then
 			print('[Media File Missing] ', mediaFileName)
 			err = true
 		end
+	else
+		print('[Media File Missing] Empty Filename string')
+		err = true
 	end
 else
 	print('[Pano View] No media node was selected. Please select and activate a loader or saver node in the flow view.')

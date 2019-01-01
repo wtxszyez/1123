@@ -1,7 +1,7 @@
-# KartaVR 4.0 for Reactor Documentation #
+# KartaVR 4.0.1 for Reactor Documentation #
 
 -------------------------
-**Version 4.0** - Released 2018-12-25  
+**Version 4.0.1** - Released 2019-01-01  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  

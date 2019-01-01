@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Edit Send Media to Preferences v4.0.1 for Fusion - 2018-12-31
+Edit Send Media to Preferences v4.0.1 - 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
