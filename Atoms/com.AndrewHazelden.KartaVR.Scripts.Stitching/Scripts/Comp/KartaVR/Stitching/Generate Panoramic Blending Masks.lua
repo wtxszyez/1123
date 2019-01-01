@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate Panoramic Blending Masks v4.0 for Fusion - 2018-12-25
+Generate Panoramic Blending Masks v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -35,7 +35,7 @@ Todo: Look at adding the enblend "--no-optimize" option to prevent seam modifica
 -- Print out extra debugging information
 local printStatus = false
 
--- Find out if we are running Fusion 7 or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -43,6 +43,66 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
+
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
 
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
@@ -247,10 +307,10 @@ function GenerateMediaList()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFile = eyeon.getfilename(sourceMediaFile)
+			mediaFile = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFile)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFile)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFile .. ' media file was detected as a movie format. Please extract a frame from the movie file as enblend does not support working with video formats directly.]')
 			else
@@ -290,10 +350,10 @@ function GenerateMediaList()
 			print('[' .. toolAttrs .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
 			-- Extract the base media filename without the path
-			mediaFile = eyeon.getfilename(sourceMediaFile)
+			mediaFile = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFile)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFile)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFile .. ' media file was detected as a movie format. Please extract a frame from the movie file as enblend does not support working with video formats directly.]')
 			else
@@ -636,7 +696,7 @@ msg = 'Each time the script is run the mask images are placed as loader nodes in
 imageFormatList = {'TIFF', 'TGA', 'BMP', 'PNG', 'JPEG'}
 
 -- Image compression list
-compressionList = {"None", "Deflate", "LZW", "RLE"}
+compressionList = {'None', 'Deflate', 'LZW', 'RLE'}
 
 -- Sound Effect List
 soundEffectList = {'None', 'On Error Only', 'Steam Train Whistle Sound', 'Trumpet Sound', 'Braam Sound'}
@@ -687,10 +747,10 @@ else
 end
 
 soundEffect = getPreferenceData('KartaVR.GenerateMask.SoundEffect', 2, printStatus)
-imageFormat = getPreferenceData('KartaVR.GenerateMask.ImageFormat', 0, printStatus)
+imageFormat = getPreferenceData('KartaVR.GenerateMask.ImageFormat', 3, printStatus)
 compress = getPreferenceData('KartaVR.GenerateMask.Compression', 2, printStatus)
 edgeWrap = getPreferenceData('KartaVR.GenerateMask.EdgeWrap', 0, printStatus)
-seamBlend = getPreferenceData('KartaVR.GenerateMask.SeamBlend', 1, printStatus)
+seamBlend = getPreferenceData('KartaVR.GenerateMask.SeamBlend', 0, printStatus)
 layerOrder = getPreferenceData('KartaVR.GenerateMask.LayerOrder', 2, printStatus)
 nodeDirection = getPreferenceData('KartaVR.GenerateMask.NodeDirection', 2, printStatus)
 frameExtension = getPreferenceData('KartaVR.GenerateMask.FrameExtension', 1, printStatus)
@@ -795,8 +855,8 @@ elseif imageFormat == 4 then
 	imageFormatFusion = 'JpegFormat'
 else
 	-- Fallback option
-	imageFormatExt = 'tif'
-	imageFormatFusion = 'TiffFormat'
+	imageFormatExt = 'png'
+	imageFormatFusion = 'PNGFormat'
 end
 
 
@@ -958,7 +1018,7 @@ elseif platform == 'Linux' then
 else
 	print('[Platform] ', platform)
 	print('There is an invalid platform defined in the local platform variable at the top of the code.')
-	enblendProgramCommand = '"enblend"'
+	enblendProgramCommand = '"' .. 'enblend' .. '"'
 end
 
 
@@ -1050,7 +1110,7 @@ if openOutputFolder == 1 then
 			if eyeon.fileexists(maskOutputFolder) then
 				openDirectory(maskOutputFolder)
 			else
-				print("[Mask Output Directory Missing] ", maskOutputFolder)
+				print('[Mask Output Directory Missing] ', maskOutputFolder)
 				err = true
 			end
 		else
@@ -1058,7 +1118,7 @@ if openOutputFolder == 1 then
 			if eyeon.direxists(maskOutputFolder) then
 				openDirectory(maskOutputFolder)
 			else
-				print("[Mask Output Directory Missing] ", maskOutputFolder)
+				print('[Mask Output Directory Missing] ', maskOutputFolder)
 				err = true
 			end
 		end
@@ -1103,4 +1163,3 @@ comp:Unlock()
 -- End of the script
 print('[Done]')
 return
- 

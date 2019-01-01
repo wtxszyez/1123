@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Mask Importer v4.0 for Fusion - 2018-12-25
+PTGui Mask Importer v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -34,7 +34,7 @@ local err = false
 -- Global variable to track how many images were found in the PTGui project file
 totalFrames = 0
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -42,6 +42,76 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
+
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Get the file path
+function getPath(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return path or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
 
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
@@ -222,7 +292,7 @@ function regexFile(inFilepath, searchString, replaceString)
 	print('[' .. inFilepath .. '] [Find] ' .. searchString .. ' [Replace] ' .. replaceString)
 	
 	-- Trimmed pts filename without the directory path
-	ptsJustFilename = eyeon.getfilename(inFilepath)
+	ptsJustFilename = getFilename(inFilepath)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -312,7 +382,7 @@ function sourcemaskRegex(ptguiFile, framePadding, startOnFrameOne)
 	mask = {}
 
 	-- Newly edited .pts filename with the extension swapped and the directory removed
-	ptsName = eyeon.getfilename(eyeon.trimExtension(ptguiFile) .. '_temp.pts')
+	ptsName = getBasename(ptguiFile) .. '_temp.pts'
 
 	-- .pts file directory
 	ptsDir = dirname(ptguiFile)
@@ -432,7 +502,7 @@ function sourcemaskRegex(ptguiFile, framePadding, startOnFrameOne)
 			
 			-- Generate the output png image filename
 			-- pngOutFilename = outputDirectory .. 'mask.' .. maskCounter .. '.png'
-			pngOutFilename = eyeon.trimExtension(ptguiFile) .. '_mask_' .. maskFrameNumber .. frameExtensionNumber .. '.png'
+			pngOutFilename = getPath(ptguiFile) .. getBasename(ptguiFile) .. '_mask_' .. maskFrameNumber .. frameExtensionNumber .. '.png'
 			
 			-- Redirect the output from the terminal to a log file
 			outputLog = outputDirectory .. 'base64Decoder.txt'
@@ -448,9 +518,8 @@ function sourcemaskRegex(ptguiFile, framePadding, startOnFrameOne)
 			-- Use the base64 terminal utility to decode the PNG formatted mask images
 			command = ''
 			if platform == 'Windows' then
+				
 				defaultbase64Program =  comp:MapPath('Reactor:/Deploy/Bin/cygwin/bin/base64.exe')
-				-- This line assumes the KartaVR Cygwin "bin" folder is in the system %PATH% environment variable.
-				-- defaultbase64Program = 'C:\\Program Files\\KartaVR\\tools\\cygwin\\bin\\base64.exe'
 				base64Program = getPreferenceData('KartaVR.SendMedia.base64File', defaultbase64Program, printStatus)
 				command = '"' .. base64Program .. '" -d -i "' .. base64Filename .. '" > "' .. pngOutFilename .. '" ' .. logCommand
 				
@@ -701,7 +770,8 @@ function AddMaskNodes()
 		maskFrameNumber = string.format('%0' .. framePadding .. 'd', nodeNumber+startOnFrameOne)
 		
 		-- Generate the current mask image filename assuming no mask number frame padding
-		mediaClipName = eyeon.trimExtension(ptguiFile) .. '_mask_' .. maskFrameNumber .. frameExtensionNumber .. '.png'
+		
+		mediaClipName = getPath(ptguiFile) .. getBasename(ptguiFile) .. '_mask_' .. maskFrameNumber .. frameExtensionNumber .. '.png'
 		
 		if eyeon.fileexists(mediaClipName) then
 			-- Try finding the mask image with no padding first

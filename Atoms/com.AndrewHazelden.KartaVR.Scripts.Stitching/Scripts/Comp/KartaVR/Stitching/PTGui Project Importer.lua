@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Project Importer v4.0 for Fusion - 2018-12-25
+PTGui Project Importer v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -56,7 +56,7 @@ local err = false
 -- Global variable to track how many images were found in the PTGui project file
 totalFrames = 0
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -65,16 +65,95 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Get the file path
+function getPath(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return path or ''
+end
+
+-- Remove the trailing file extension off a filepath
+function trimExtension(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	return path or '' .. basename or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
+
 -- Find out the current directory from a file path
--- Example: print(Dirname("/Users/Shared/file.txt"))
-function Dirname(mediaDirName)
+-- Example: print(dirname("/Users/Shared/file.txt"))
+function dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
 
 -- Check if a directory exists
--- Example: DirectoryExists('/Users/Andrew/Desktop/')
-function DirectoryExists(mediaDirName)
+-- Example: directoryExists('/Users/Andrew/Desktop/')
+function directoryExists(mediaDirName)
 	if mediaDirName == nil then
 		-- print('[Directory Variable is Empty] ', mediaDirName)
 		return false
@@ -101,11 +180,11 @@ end
 
 
 -- Open a folder window up using your desktop file browser
-function OpenDirectory(mediaDirName)
-	dir = Dirname(mediaDirName)
+function openDirectory(mediaDirName)
+	dir = dirname(mediaDirName)
 	
 	-- Double check that the folder actually exists before trying to open it
-	if DirectoryExists(dir) == true then
+	if directoryExists(dir) == true then
 		command = ''
 		if platform == 'Windows' then
 			-- Running on Windows
@@ -290,12 +369,12 @@ function ConvertToRelativePathMap(to, from, pathMap)
 	end
 	
 	-- Put the "To" filename on the directory path of the "From" file
-	from = Dirname(from) .. eyeon.getfilename(to)
+	from = dirname(from) .. getFilename(to)
 	
 	-- Check if the strings are identical
 	if from == to then
 		-- It's a match so Comp:/ is the same directory as the source image
-		result = pathMap .. eyeon.getfilename(to)
+		result = pathMap .. getFilename(to)
 		print('[PathMap Result] ' .. result .. ' is in the same folder as the comp.')
 		return result
 	end
@@ -370,7 +449,7 @@ end
 -- (0) <prefix>.ext, (1) <prefix>.0000.ext, or (2) <prefix>.0001.ext
 -- Example: frameExtension, frameExtensionNumber, frameExtensionFusionStartFrame	= CheckFrameExtension('/media/image.0001.ext')
 function CheckFrameExtension(filename)
-	mediaExtension = eyeon.getextension(filename:lower())
+	mediaExtension = getExtension(filename:lower())
 	if mediaExtension:match('0%.') then
 		-- Check for the final digit and the period to avoid frame padding
 		
@@ -404,7 +483,7 @@ end
 -- Example: FusionMediaExt('input-01.0000.TIFF', 'ext')
 function FusionMediaExt(mediaFile, returnType)
 	-- mediaFile = 'input-01.0000.TIFF'
-	mediaExtension = eyeon.getextension(mediaFile:lower())
+	mediaExtension = getExtension(mediaFile:lower())
 	
 	imageFormatExt = ''
 	imageFormatFusion = ''
@@ -468,7 +547,7 @@ function RegexFile(inFilepath, searchString, replaceString)
 	print('[' .. inFilepath .. '] [Find] ' .. searchString .. ' [Replace] ' .. replaceString)
 	
 	-- Trimmed pts filename without the directory path
-	ptsJustFilename = eyeon.getfilename(inFilepath)
+	ptsJustFilename = getFilename(inFilepath)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -560,10 +639,10 @@ function ImageRegex(ptguiFile, framePadding, startOnFrameOne)
 	output = {}
 	
 	-- Newly edited .pts filename with the extension swapped and the directory removed
-	ptsName = eyeon.getfilename(eyeon.trimExtension(ptguiFile) .. '_temp.pts')
+	ptsName = getFilenameNoExt(ptguiFile) .. '_temp.pts'
 	
 	-- .pts file directory
-	ptsDir = Dirname(ptguiFile)
+	ptsDir = dirname(ptguiFile)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -3182,7 +3261,7 @@ if nodeNumber == 1 then
 	noteName = 'ptNote'
 	
 	-- Short filename
-	nodePTGuiFilename = eyeon.getfilename(ptguiFile)
+	nodePTGuiFilename = getFilename(ptguiFile)
 	-- or Long filename with the full path
 	-- nodePTGuiFilename = ptguiFile
 	
@@ -3306,7 +3385,7 @@ end
 				-- Use a shortened Comp:/ centric relative path
 				
 				-- The absolute saver image path that is being re-written
-				toIntermediateFile = eyeon.trimExtension(ptguiFile) .. '_view' .. nodeNumber .. saverFrameExtensionNumber .. '.' .. saverOutputExtension
+				toIntermediateFile = trimExtension(ptguiFile) .. '_view' .. nodeNumber .. saverFrameExtensionNumber .. '.' .. saverOutputExtension
 				
 				-- The location of the comp file that is used to do the relative path trimming
 				fromIntermediateFile = comp:GetAttrs().COMPS_FileName
@@ -3319,7 +3398,7 @@ end
 			else
 				-- Use the full absolute filepath
 				-- Build the saver node image path
-				outputIntermediateFilename = eyeon.trimExtension(ptguiFile) .. '_view' .. nodeNumber .. saverFrameExtensionNumber .. '.' .. saverOutputExtension
+				outputIntermediateFilename = trimExtension(ptguiFile) .. '_view' .. nodeNumber .. saverFrameExtensionNumber .. '.' .. saverOutputExtension
 			end
 			
 			nodeString = nodeString .. AddIntermediateSaverNode(nodeNumber, intermediateSaverName, intermediateSaverNodeInput, 'Output', intermediateSaverNodeXPos, intermediateSaverNodeYPos, saverFormat, outputIntermediateFilename, intermediateSaverNodePassThrough)
@@ -3735,7 +3814,7 @@ function AddImageNodes()
 			-- Use a shortened Comp:/ centric relative path
 			
 			-- The absolute saver image path that is being re-written
-			toFile = eyeon.trimExtension(ptguiFile) .. frameExtensionNumber .. '.' .. outputExtension
+			toFile = trimExtension(ptguiFile) .. frameExtensionNumber .. '.' .. outputExtension
 			
 			-- The location of the comp file that is used to do the relative path trimming
 			fromFile = comp:GetAttrs().COMPS_FileName
@@ -3748,7 +3827,7 @@ function AddImageNodes()
 		else
 			-- Use the full absolute filepath
 			-- Build the saver node image path
-			outputFilename = eyeon.trimExtension(ptguiFile) .. frameExtensionNumber .. '.' .. outputExtension
+			outputFilename = trimExtension(ptguiFile) .. frameExtensionNumber .. '.' .. outputExtension
 		end
 		
 		
@@ -3786,7 +3865,7 @@ function Main()
 
 	-- Show the dialog window
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
-	compPath = Dirname(comp:GetAttrs().COMPS_FileName)
+	compPath = dirname(comp:GetAttrs().COMPS_FileName)
 	compPrefs = comp:GetPrefs("Comp.FrameFormat")
 	
 	-- ------------------------------------
@@ -3965,7 +4044,7 @@ function Main()
 	-- Check if the PTGui filename ends with the .pts file extension
 	searchString = 'pts$'
 	if ptguiFile:match(searchString) ~= nil then
-		-- ptguiFileExtension = eyeon.getextension(ptguiFile)
+		-- ptguiFileExtension = getExtension(ptguiFile)
 		-- if ptguiFileExtension == 'pts' then
 		
 		print('[A PTGui project file was selected and it has the .pts file extension.]')
@@ -3989,7 +4068,7 @@ function Main()
 	end
 	
 	-- PTGui project file directory
-	ptsFolder = Dirname(ptguiFile)
+	ptsFolder = dirname(ptguiFile)
 	
 	--
 	---- The mask image final sequence frame numbers
@@ -4036,7 +4115,7 @@ function Main()
 	
 	-- Open the PTGui .pts folder as an Explorer/Finder/Nautilus folder view
 	if openOutputFolder == 1 then
-	 OpenDirectory(ptsFolder)
+	 openDirectory(ptsFolder)
 	end
 	
 	-- Play a sound effect

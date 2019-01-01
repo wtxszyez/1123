@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui BatchBuilder Creator v4.0 for Fusion - 2018-12-25
+PTGui BatchBuilder Creator v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -30,7 +30,7 @@ Todo: Add a move vs copy file mode option to the UI
 
 local printStatus = false
 
--- Find out if we are running Fusion 7 or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -39,12 +39,122 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
 
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
+
+-- Duplicate a file
+function copyFile(src, dest)
+	host = app:MapPath('Fusion:/')
+	if string.lower(host):match('resolve') then
+		hostOS = 'Resolve'
+		
+		if platform == 'Windows' then
+			command = 'copy /Y "' .. src .. '" "' .. dest .. '" '
+		else
+			-- Mac / Linux
+			command = 'cp "' .. src .. '" "' .. dest .. '" '
+		end
+		
+		print('[Copy File Command] ' .. command)
+		os.execute(command)
+	else
+		hostOS = 'Fusion'
+		
+		-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8/9 "bmd.scriptlib" libraries
+		eyeon.copyfile(src, dest)
+	end
+end
+
+
+-- Helper function copied from the scriptlib.lua file
+function parseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, '^(.+[/\\])(.+)', function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, '^(.+)(%..+)$', function(name, ext) seq.Name = name seq.Extension = ext end)
+	
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+	
+	string.gsub(seq.Name, '^(.-)(%d+)$', function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	
+	if seq.SNum then 
+		seq.Number = tonumber(seq.SNum) 
+		seq.Padding = string.len( seq.SNum)
+	else
+		 seq.SNum = ''
+		seq.CleanName = seq.Name
+	end
+	
+	if seq.Extension == nil then seq.Extension = '' end
+	seq.UNC = (string.sub(seq.Path, 1, 2) == [[\\]])
+	
+	return seq
+end
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 -- Check if a directory exists
 -- Example: directoryExists('/Users/Andrew/Desktop/')
@@ -217,7 +327,7 @@ end
 
 -- Process the footage into the new BatchBuilder folders
 function BatchBuilderRename(mediaFileName, mediaStartFrame, mediaEndFrame)
-	mediaExtension = eyeon.getextension(eyeon.getfilename(mediaFileName))
+	mediaExtension = getExtension(getFilename(mediaFileName))
 	if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 		mediaType = 'video'
 		print('[The ' .. mediaFileName .. ' media file was detected as a movie format. Please convert the footage to image sequences as PTGui only supports working with image formats directly.]')
@@ -271,7 +381,7 @@ function BatchBuilderRename(mediaFileName, mediaStartFrame, mediaEndFrame)
 				seqDir = dirName .. dirPaddedFrame
 				
 				-- Process the media file into a table entry
-				parsedTable = eyeon.parseFilename(mediaFileName)
+				parsedTable = parseFilename(mediaFileName)
 				-- print('[Parsed Filename]')
 				-- dump(parsedTable)
 				-- print('\n')
@@ -330,7 +440,7 @@ function BatchBuilderRename(mediaFileName, mediaStartFrame, mediaEndFrame)
 					if directoryExists(seqDir) then
 						-- print ('[Created Directory] ' .. seqDir)
 						-- Write a renamed copy of the source image to the destination location
-						eyeon.copyfile(srcFile, destFile)
+						copyFile(srcFile, destFile)
 						
 						-- Check if the file was written to the destination image location
 						if eyeon.fileexists(destFile) then
@@ -439,7 +549,7 @@ function GenerateMediaTable()
 			else
 				-- sourceMediaFile = comp:MapPath(tool:GetAttrs().TOOLST_Clip_Name[1])
 				sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
-				-- filenameClip = (eyeon.parseFilename(toolClip))
+				-- filenameClip = (parseFilename(toolClip))
 			end
 			
 			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
@@ -449,10 +559,10 @@ function GenerateMediaTable()
 			sourceEndFrameRange = toolAttrs.TOOLNT_Clip_End[1]
 			
 			-- Extract the base media filename without the path
-			mediaFile = eyeon.getfilename(sourceMediaFile)
+			mediaFile = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFile)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFile)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFile .. ' media file was detected as a movie format. Please extract a frame from the movie file as enblend does not support working with video formats directly.]')
 			else
@@ -490,7 +600,7 @@ function GenerateMediaTable()
 			
 			-- sourceMediaFile = comp:MapPath(tool:GetAttrs().TOOLST_Clip_Name[1])
 			sourceMediaFile = comp:MapPath(tool.Clip[fu.TIME_UNDEFINED])
-			-- filenameClip = (eyeon.parseFilename(toolClip))
+			-- filenameClip = (parseFilename(toolClip))
 			
 			print('[' .. toolType .. ' Name] ' .. nodeName .. ' [Image Filename] ' .. sourceMediaFile)
 			
@@ -499,10 +609,10 @@ function GenerateMediaTable()
 			sourceEndFrameRange = toolAttrs.TOOLNT_Clip_End[1]
 			
 			-- Extract the base media filename without the path
-			mediaFile = eyeon.getfilename(sourceMediaFile)
+			mediaFile = getFilename(sourceMediaFile)
 			
-			mediaExtension = eyeon.getextension(mediaFile)
-			if mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
+			mediaExtension = getExtension(mediaFile)
+			if mediaExtension and mediaExtension == 'mov' or mediaExtension == 'mp4' or mediaExtension == 'm4v' or mediaExtension == 'mpg' or mediaExtension == 'webm' or mediaExtension == 'ogg' or mediaExtension == 'mkv' or mediaExtension == 'avi' then
 				mediaType = 'video'
 				print('[The ' .. mediaFile .. ' media file was detected as a movie format. Please extract a frame from the movie file as enblend does not support working with video formats directly.]')
 			else
@@ -641,7 +751,6 @@ function main()
 	-- ------------------------------------
 	-- Load the preferences
 	-- ------------------------------------
-	
 	local browseMode = ''
 	if platform == 'Windows' then
 		browseMode = 'PathBrowse'

@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate UV Pass in PTGui v4.0 for Fusion - 2018-12-25
+Generate UV Pass in PTGui v4.0.1 2019-01-01
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -8,6 +8,7 @@ andrew@andrewhazelden.com
 KartaVR
 http://www.andrewhazelden.com/blog/downloads/kartavr/
 ----------------------------------------------------------------------------
+
 Overview:
 
 The Generate UV Pass in PTGui script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will use Imagemagick and PTGui Pro to create a collection of UV Pass maps that can be used in Fusion to quickly and efficiently warp and stitch multi-camera rig panoramic 360 degree imagery.
@@ -57,7 +58,6 @@ The "OK" button will start processing the PTGui Project File that was specified 
 The "Cancel" button will close the script GUI and stop the script.
 
 
-
 ----------------------------------------------------------------------------
 
 Currently Disabled GUI control:
@@ -78,7 +78,7 @@ local err = false
 -- Global variable to track how many images were found in the PTGui project file
 totalFrames = 0
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
@@ -87,12 +87,90 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
+-- Get the file extension from a filepath
+function getExtension(mediaDirName)
+	local extension = ''
+	if mediaDirName then
+		extension = string.match(mediaDirName, '(%..+)$')
+	end
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(mediaDirName)
+	local path, basename = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+	path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return barename or ''
+end
+
+-- Get the base filename with the frame number left intact
+function getBasename(mediaDirName)
+	local path, basename,name, extension, barename, sequence = ''
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+		if basename then
+			name, extension = string.match(basename, '^(.+)(%..+)$')
+			if name then
+				barename, sequence = string.match(name, '^(.-)(%d+)$')
+			end
+		end
+	end
+	
+	return name or ''
+end
+
+-- Get the file path
+function getPath(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	
+	return path or ''
+end
+
+-- Remove the trailing file extension off a filepath
+function trimExtension(mediaDirName)
+	local path, basename
+	if mediaDirName then
+		path, basename = string.match(mediaDirName, '^(.+[/\\])(.+)')
+	end
+	return path or '' .. basename or ''
+end
+
+-- Check if Resolve is running and then disable relative filepaths
+host = app:MapPath('Fusion:/')
+if string.lower(host):match('resolve') then
+	hostOS = 'Resolve'
+else
+	hostOS = 'Fusion'
+end
+
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
-
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -150,7 +228,7 @@ function controlPointRegexFile(inFilepath, imageWidth, imageHeight)
 	-- Note: The control point line entries "n1" and "N2" are the values for the source and destination images that the x/y and X/Y control points are referring to on a line like this: c n1 N2 x1919 y1 X3839 Y1 t0
 	
 	-- Trimmed pts filename without the directory path
-	ptsJustFilename = eyeon.getfilename(inFilepath)
+	ptsJustFilename = getBasename(inFilepath)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -336,7 +414,7 @@ function regexFile(inFilepath, searchString, replaceString)
 	print('[' .. inFilepath .. '] [Find] ' .. searchString .. ' [Replace] ' .. replaceString)
 	
 	-- Trimmed pts filename without the directory path
-	ptsJustFilename = eyeon.getfilename(inFilepath)
+	ptsJustFilename = getBasename(inFilepath)
 	
 	-- The system temporary directory path (Example: $TEMP/KartaVR/)
 	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -538,7 +616,7 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 			-- defaultImagemagickProgram = '/usr/local/bin/convert'
 		
 		imagemagickProgram = string.gsub(comp:MapPath(getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)), '[/]$', '')
-		command = '"' .. imagemagickProgram .. ' ' .. imagemagickCommand
+		command = '"' .. imagemagickProgram .. '" ' .. imagemagickCommand
 		
 		print('[Imagemagick Launch Command] ', command)
 		os.execute(command)
@@ -546,7 +624,7 @@ function createImagemagickUVMapTemplate(imageWidth, imageHeight, oversampleMap, 
 		-- Running on Linux
 		defaultImagemagickProgram = '/usr/bin/convert'
 		
-		imagemagickProgram =  .. getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
+		imagemagickProgram = getPreferenceData('KartaVR.SendMedia.ImagemagickFile', defaultImagemagickProgram, printStatus)
 		command = '"' .. imagemagickProgram .. '" ' .. imagemagickCommand
 		
 		print('[Imagemagick Launch Command] ', command)
@@ -564,13 +642,13 @@ end
 function editPTGuiProjectFile(ptguiFile, img, imageWidth, imageHeight, mask, oversampleMap, imageFormat, compress, panoWidth, panoHeight, panoImageFormat, panoHorizontalFOV, batchProcess, skipBatchAlign)
 
 	-- Newly edited .pts filename
-	pts = eyeon.trimExtension(ptguiFile) .. '_uvpass.pts'
+	pts = getPath(ptguiFile) .. getBasename(ptguiFile) .. '_uvpass.pts'
 	
 	-- .pts file directory
 	ptsDir = dirname(ptguiFile)
 	
 	-- Trimmed img filename without the directory path
-	imgJustFilename = eyeon.getfilename(img)
+	imgJustFilename = getFilename(img)
 	
 	-- Copied img filename with the .pts directory path added
 	imgInPtsFolder = ptsDir .. imgJustFilename
@@ -814,7 +892,7 @@ function editPTGuiProjectFile(ptguiFile, img, imageWidth, imageHeight, mask, ove
 	
 	-- Note: By adding two dots to the end of the file name like "..tif" this will cause the PTGui frame numbering system to output a set of images in the foramt <name>.####.<ext> like:
 	-- /panorama_uvpass.0000.tif /panorama_uvpass.0001.tif	/panorama_uvpass.0002.tif	 /panorama_uvpass.0003.tif
-	replaceString ='#-outputfile ' ..eyeon.trimExtension(ptguiFile) .. '_uvpass..' .. panoImageFrameExt
+	replaceString ='#-outputfile ' .. getBasename(ptguiFile) .. '_uvpass..' .. panoImageFrameExt
 	regexFile(pts, searchString, replaceString)
 	
 	-- #-pathseparator /
@@ -1088,18 +1166,18 @@ function renameUVMapImages(ptguiFile, batchProcess, panoImageFormat, startViewNu
 			-- Fallback mode if there are a wrong number of items in the Pano Format dialog field
 			panoImageFrameExt = 'tif'
 		end
-				 
+		
 		frame = 0
 		-- Rename the images
 		while ( frame < totalFrames) do
 			-- Add a dummy frame padding group of numbers on the end of the PTGui images to make Fusion happy and not load the images as a single image sequence
 			-- Example: Turn the image named "panorama_uvpass.0001.tif" into "panorama_uvpass_0001.0000.tif"
-			oldImage = eyeon.trimExtension(ptguiFile) .. '_uvpass.' .. string.format('%04d', frame) .. '.' .. panoImageFrameExt
+			oldImage = getPath(ptguiFile) .. getBasename(ptguiFile) .. '_uvpass.' .. string.format('%04d', frame) .. '.' .. panoImageFrameExt
 			
 			-- Add the Fusion dummy frame padding to the end of the images
 			dummyFrames = '000' .. startOnFrameOne
-			newImage = eyeon.trimExtension(ptguiFile) .. '_uvpass_' .. string.format('%04d', frame + startViewNumberingOnOne) .. '.' .. dummyFrames .. '.' .. panoImageFrameExt
-			-- newImage = eyeon.trimExtension(ptguiFile) .. '_uvpass_' .. string.format("%04d", frame) .. '.0000.' .. panoImageFrameExt
+			newImage =  getPath(ptguiFile) .. getBasename(ptguiFile) .. '_uvpass_' .. string.format('%04d', frame + startViewNumberingOnOne) .. '.' .. dummyFrames .. '.' .. panoImageFrameExt
+			-- newImage = getBasename(ptguiFile) .. '_uvpass_' .. string.format("%04d", frame) .. '.0000.' .. panoImageFrameExt
 
 			-- if platform == 'Windows' then
 				-- command = 'copy /Y "' .. oldImage .. '" "' .. newImage .. '" '
@@ -1112,7 +1190,6 @@ function renameUVMapImages(ptguiFile, batchProcess, panoImageFormat, startViewNu
 			-- print('[Copy UV Pass File Command] ' .. command)
 			-- os.execute(command)
 			-- print('[Rename Image ' .. frame .. '] [From Filename] ' .. oldImage .. ' [To Filename] ' .. newImage)
-			
 			renameResult = os.rename(oldImage, newImage)
 			if renameResult ~= nil then
 				print('[Rename Image ' .. frame .. '] [From Filename] ' .. oldImage .. ' [To Filename] ' .. newImage)
@@ -1359,7 +1436,7 @@ function Main()
 	-- Check if the PTGui filename ends with the .pts file extension
 	searchString = 'pts$'
 	if ptguiFile:match(searchString) ~= nil then
-	--ptguiFileExtension = eyeon.getextension(ptguiFile)
+	--ptguiFileExtension = getExtension(ptguiFile)
 	--if ptguiFileExtension == 'pts' then
 		
 		print('[A PTGui project file was selected and it has the .pts file extension.]')
