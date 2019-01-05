@@ -3,6 +3,7 @@
 <table>
 <tr>
   <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerAcerWMR2StereoOU">ViewerAcerWMR2StereoOU</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1Mono">ViewerOculusDK1Mono</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a></li>
@@ -21,6 +22,11 @@
   </ul></td>
 </tr>
 </table>
+
+
+## <a name="ViewerAcerWMR2StereoOU">ViewerAcerWMR2StereoOU</a> ##
+
+This node allows you to use the Acer WMR HMD as a fullscreen stereo viewer window output device in Fusion that let you view your Fusion based equirectangular mono 2D imagery right on the HMD. This first version of the node has no head tracking support. To use this macro you need to mount the Acer WMR HMD as a regular monitor on Mac/Windows/Linux.
 
 ## <a name="ViewerOculusDK1Mono">ViewerOculusDK1Mono</a> ##
 

@@ -1,7 +1,7 @@
 # KartaVR 4.0.1 for Reactor Documentation #
 
 -------------------------
-**Version 4.0.1** - Released 2019-01-04  
+**Version 4.0.1** - Released 2019-01-05  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -39,7 +39,7 @@ KartaVR is (C) Copyright Andrew Hazelden 2014-2018. All rights reserved.
 
 ![Create Amazing VR Content](images/create-amazing-vr-content.jpg)
 
-Unlock a massive VR toolset consisting of 136 nodes, 57 scripts, and 6 macroLUTS that will enable you to convert image projections, apply panoramic masking, retouch images, render filters and effects, edit stereoscopic 3D media, create panoramic 3D renderings, and review 360&deg; media in Fusion's 2D and 3D viewers.
+Unlock a massive VR toolset consisting of 138 nodes, 57 scripts, and 6 macroLUTS that will enable you to convert image projections, apply panoramic masking, retouch images, render filters and effects, edit stereoscopic 3D media, create panoramic 3D renderings, and review 360&deg; media in Fusion's 2D and 3D viewers.
 
 KartaVR integrates with the rest of your production pipeline through a series of "Send Media to" scripts. With a single click you can send footage from your Fusion composite to other content creation tools including: Adobe After Effects, Adobe Photoshop, Adobe Illustrator, Affinity Photo &amp; Designer, PTGui, Autopano, and other tools.
 
@@ -394,6 +394,7 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 <table>
 <tr>
   <td><ul>
+    <li><a href="macros-guide-viewer.html#ViewerAcerWMR2StereoOU">ViewerAcerWMR2StereoOU</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1Mono">ViewerOculusDK1Mono</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1Stereo">ViewerOculusDK1Stereo</a></li>
     <li><a href="macros-guide-viewer.html#ViewerOculusDK1StereoOU">ViewerOculusDK1StereoOU</a></li>
