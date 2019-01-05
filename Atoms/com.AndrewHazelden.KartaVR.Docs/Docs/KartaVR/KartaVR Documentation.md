@@ -1,7 +1,7 @@
 # KartaVR 4.0.1 for Reactor Documentation #
 
 -------------------------
-**Version 4.0.1** - Released 2019-01-01  
+**Version 4.0.1** - Released 2019-01-04  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -314,15 +314,17 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 <table>
 <tr>
   <td><ul>
+    <li><a href="macros-guide-renderer3d.html#AcerWMRStereoRenderer3D">AcerWMRStereoRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CubicRenderer3D">CubicRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3D">CylindricalRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3DAdvanced">CylindricalRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3D">DomemasterRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3DAdvanced">DomemasterRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3D">EquirectangularRenderer3D</a></li>
-    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced">EquirectangularRenderer3DAdvanced</a></li>
+    
   </ul></td>
   <td><ul>
+    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced">EquirectangularRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#OculusDK1MonoRenderer3D">OculusDK1MonoRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#OculusDK1StereoRenderer3D">OculusDK1StereoRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#OculusDK2MonoRenderer3D">OculusDK2MonoRenderer3D</a></li>

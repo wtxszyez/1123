@@ -3,24 +3,43 @@
 <table>
 <tr>
   <td><ul>
+    <li><a href="macros-guide-renderer3d.html#AcerWMRStereoRenderer3D">AcerWMRStereoRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CubicRenderer3D">CubicRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3D">CylindricalRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#CylindricalRenderer3DAdvanced">CylindricalRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3D">DomemasterRenderer3D</a></li>
     <li><a href="macros-guide-renderer3d.html#DomemasterRenderer3DAdvanced">DomemasterRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3D">EquirectangularRenderer3D</a></li>
-    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced">EquirectangularRenderer3DAdvanced</a></li>
+    
   </ul></td>
   <td><ul>
+    <li><a href="macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced">EquirectangularRenderer3DAdvanced</a></li>
     <li><a href="macros-guide-renderer3d.html#OculusDK1MonoRenderer3D">OculusDK1MonoRenderer3D</a></li>
-	  <li><a href="macros-guide-renderer3d.html#OculusDK1StereoRenderer3D">OculusDK1StereoRenderer3D</a></li>
-	  <li><a href="macros-guide-renderer3d.html#OculusDK2MonoRenderer3D">OculusDK2MonoRenderer3D</a></li>
-	  <li><a href="macros-guide-renderer3d.html#OculusDK2StereoRenderer3D">OculusDK2StereoRenderer3D</a></li>
-	  <li><a href="macros-guide-renderer3d.html#YouTube180Renderer3D">YouTube180Renderer3D</a></li>
-	  <li><a href="macros-guide-renderer3d.html#YouTube180StereoRenderer3D">YouTube180StereoRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#OculusDK1StereoRenderer3D">OculusDK1StereoRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#OculusDK2MonoRenderer3D">OculusDK2MonoRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#OculusDK2StereoRenderer3D">OculusDK2StereoRenderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#YouTube180Renderer3D">YouTube180Renderer3D</a></li>
+    <li><a href="macros-guide-renderer3d.html#YouTube180StereoRenderer3D">YouTube180StereoRenderer3D</a></li>
   </ul></td>
 </tr>
 </table>
+
+## <a name="AcerWMRStereoRenderer3D"></a>AcerWMRStereoRenderer3D ##
+
+![OculusDK2StereoRenderer3D GUI](images/macro-acer-wmr-stereo-renderer3d.png)
+
+
+This roller coaster ride example shows how the "AcerWMRStereoRenderer3D" macro allows you to use an Acer Windows Mixed Reality HMD display as the output device from the Fusion 3D system. 
+
+To use this macro you need to mount the AcerWMR as a regular monitor on Mac/Windows/Linux. 
+
+In Fusion select the "Windows  > New Image View"  menu item. Then drag this floating image view onto the AcerWMR display monitor and then resize the image view to be fullscreen.  You can now load the rendered image in Fusion on the new view using the 3 hotkey and the content will show up on the Rift's screen. It helps to turn off the View window's "Show Controls" (Command+K) and "Show Checker Underlay" options. 
+
+Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.
+
+Check out the [Zoom New Image View](scripts.html#zoom-new-image-view) script documentation for tips on how to display this node on an HMD using a floating Viewer Windows.
+
+![OculusDK2StereoRenderer3D Output](images/macro-acer-wmr-stereo-renderer3d-gui.png)
 
 ## <a name="CubicRenderer3D"></a>CubicRenderer3D ##
 

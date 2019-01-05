@@ -52,6 +52,7 @@ You can view an online version of the "KartaVR Example 360VR Stitching Comps" co
   - [Roller Coaster Ride DomemasterRenderer3D](examples.html#roller-coaster-ride-dome)
   - [Roller Coaster Ride EquirectangularRenderer3D](examples.html#roller-coaster-ride-latlong)
   - [Roller Coaster Ride Oculus Rift Stereo.comp](examples.html#roller-coaster-ride-oculus-rift-stereo)
+  - [Roller Coaster Ride Acer Windows Mixed Reality Stereo.comp](examples.html#roller-coaster-ride-acer-wmr-stereo)
   - [Rotate Panoramas.comp](examples.html#rotate-panorama)
   - [Samsung Gear 360 Stitch.comp](examples.html#samsung-gear-360-stitch)
   - [Stereo 3D Roto Conversion.comp](examples.html#stereo-3d-roto-conversion)
@@ -488,6 +489,25 @@ In Fusion select the "Windows > New Image View" menu item. Then drag this floati
 Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.
 
 ![Roller Coaster Ride Oculus Rift Stereo Nodes](images/examples-roller-coaster-ride-oculus-rift-stereo-nodes.png)
+
+
+<a name="roller-coaster-ride-acer-wmr-stereo"></a>
+## Roller Coaster Ride Acer WMR Stereo.comp ##
+
+![Roller Coaster Ride Acer WMR Stereo](images/macro-acer-wmr-stereo-renderer3d.png)
+
+This roller coaster ride example shows how the "AcerWMRStereoRenderer3D" macro that allows you to use an Acer Windows Mixed Reality HMD display as the output device from the Fusion 3D system. 
+
+A roller coaster track model with a camera path based animation is imported from an FBX file. Then a Fusion transform3D node is used with the "Invert Transform" checkbox to prepare the scene for easy rendering with the AcerWMRStereoRenderer3D nodes.
+
+To use this macro you need to mount the AcerWMR as a regular monitor on Mac/Windows/Linux. 
+
+In Fusion select the "Windows  > New Image View"  menu item. Then drag this floating image view onto the AcerWMR display monitor and then resize the image view to be fullscreen.  You can now load the rendered image in Fusion on the new view using the 3 hotkey and the content will show up on the AcerWMR's screen. It helps to turn off the View window's "Show Controls" (Command+K) and "Show Checker Underlay" options. 
+
+Clicking on the view and selecting the Fit (Command+F) option will make sure the image fills the HMD screen.
+
+![Roller Coaster Ride Acer WMR Rift Stereo Nodes](images/examples-roller-coaster-ride-acer-wmr-stereo-nodes.png)
+
 
 <a name="rotate-panorama"></a>
 ## Rotate Panoramas.comp ##
