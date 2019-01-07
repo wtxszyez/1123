@@ -1,7 +1,7 @@
 # PanoView for Fusion #
 
-<a name="overview"></a>
-## Overview ##
+
+## <a name="overview"></a>Overview ##
 
 ![PanoView Script](images/panoview-koloreyes.png)
 
@@ -23,10 +23,10 @@ Supported media viewing tools include:
 - [Assimilate Scratch Player](http://www.assimilateinc.com/products/scratch-play)  
 - [VLC](http://www.videolan.org/)  
 
-<a name="how-to-use"></a>
-## How to use the Script: ##
 
-The PanoView script for Fusion 7 and Fusion 8 supports sending any kind of node from the flow view to an external media view tool and the Oculus Rift & HTC VIVE HMD.
+## <a name="how-to-use"></a>How to use the Script: ##
+
+The PanoView script for Fusion supports sending any kind of node from the flow view to an external media view tool and the Oculus Rift & HTC VIVE HMD.
 
 **Step 1.** Start Fusion and open a new comp.
 
@@ -99,7 +99,19 @@ The "OK" button will save the revised preferences.
 
 The "Cancel" button will close the script GUI and stop the script.
 
-### Whirligig Notes ###
+### <a name="panoview-is-context-aware"></a>Panoview is Context Aware ###
+
+The Panoview script is context aware and will run in a slightly different state based upon the type of node that is selected in the Fusion flow/nodes area.
+
+![Panoview Node Types](images/panoview-node-types.png)
+
+If you have a 2D image processing node selected, a live "left" viewer window snapshot will be taken and passed by Panoview to the external media viewer tool. The snapshot image format is defined by the `Image Format` control in the Edit PanoView Preferences script dialogue.
+
+If a Saver or LifeSaver node is selected, then a pre-existing (and pre-rendered) movie or image sequence clip on disk will be passed as a file reference by Panoview to the external media viewer tool. This allows you to playback long clips without needing to render the existing media.
+
+If a Loader/MediaIn node is selected then the the source footage will be passed by Panoview to the external media viewer tool. This allows you to playback long clips without needing to render the existing media.
+
+### <a name="whirligig-notes"></a>Whirligig Notes ###
 
 The `PanoView.lua` script has options for enabling different panoramic projections in Whirligig. The default projection type is LatLong, but you can enable rectangular, angular fisheye, GearVR Horizontal Strip Cube Map, Ricoh Theta, Facebook Cube Map 3x2, Vertical Cross Cube Map and Horizontal Cross Cube Map panoramic display modes in both mono 2D and stereo 3D.
 
@@ -107,7 +119,7 @@ If you are using Whirligig and nothing shows up in the viewer window on your mon
 
 You can toggle the Whirligig anaglyph red/cyan stereo mode on/off and between different color formats using the F7 hotkey.
 
-#### LAV Video Configuration ####
+#### <a name="lav-video-configuration"></a>LAV Video Configuration ####
 
 If you have issues viewing imagery in the Whirligig viewer and only see a black background in the Whirligig window, it it likely due to a video codec or hardware decoding setting.
 

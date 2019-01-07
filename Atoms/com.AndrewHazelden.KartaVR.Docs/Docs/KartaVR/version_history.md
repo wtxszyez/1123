@@ -1,13 +1,15 @@
 <a name="version-history"></a>
 ## Version History ##
 
-### Version 4.0.1 - 2019-01-05 ###
+### Version 4.0.1 - 2019-01-06 ###
 
 - Resolve 15.2 Lua script compatibility improvements
 
 - Added a new `AcerWMRStereoRenderer3D` Renderer3D macro that creates stereoscopic 3DD 2880x1440px output from the Fusion 3D system. That interactively rendered output can be displayed directly on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
 
 - Add a new `ViewerAcerWMR2StereoOU` node for displaying panoramic images on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
+
+- Updated the Panoview script to support the Reactor provided version of DJV_View. Added notes about Panoview's context aware operating modes.
 
 ### Version 4 - 2018-12-15 ###
 

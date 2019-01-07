@@ -322,8 +322,7 @@ img {
 </style>
 </head>
 <body><h1>PanoView for Fusion</h1>
-<p><a name="overview"></a></p>
-<h2>Overview</h2>
+<h2><a name="overview"></a>Overview</h2>
 <p><img src="images/panoview-koloreyes.png" alt="PanoView Script" /></p>
 <p>The PanoView script is a module from the <a href="http://www.andrewhazelden.com/blog/downloads/kartavr/">KartaVR</a> that will send the imagery from the currently selected Fusion node to an Oculus Rift HMD or an HTC VIVE/OSVR HMD using an external media viewer / playback tool.</p>
 <p>This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system.</p>
@@ -341,9 +340,8 @@ img {
 <li><a href="http://www.assimilateinc.com/products/scratch-play">Assimilate Scratch Player</a></li>
 <li><a href="http://www.videolan.org/">VLC</a></li>
 </ul>
-<p><a name="how-to-use"></a></p>
-<h2>How to use the Script:</h2>
-<p>The PanoView script for Fusion 7 and Fusion 8 supports sending any kind of node from the flow view to an external media view tool and the Oculus Rift &amp; HTC VIVE HMD.</p>
+<h2><a name="how-to-use"></a>How to use the Script:</h2>
+<p>The PanoView script for Fusion supports sending any kind of node from the flow view to an external media view tool and the Oculus Rift &amp; HTC VIVE HMD.</p>
 <p><strong>Step 1.</strong> Start Fusion and open a new comp.</p>
 <p><strong>Step 2.</strong> Select and activate a file saver or loader node in the flow view. Then run the <strong>Script &gt; KartaVR &gt; Viewers &gt; PanoView</strong> menu item to view the media in Kolor Eyes.</p>
 <p><img src="images/script-menu-panoview.png" alt="Launch the PanoView Script" /></p>
@@ -380,11 +378,17 @@ img {
 <p>The &quot;Eye Order&quot; control allows you to specify the arrangement of the left and right stereoscopic views in the media that will be sent to Whirligig. Most stereoscopic image projections have the left view on the left side of the frame and the right view on the right side of the frame. The most common exception to this rule is the Gear VR/Octane Render ORBX/Vray style of horizontal strip cubemap. You can choose one of the following options: &quot;Left/Right&quot;, or &quot;Right/Left&quot;.</p>
 <p>The &quot;OK&quot; button will save the revised preferences.</p>
 <p>The &quot;Cancel&quot; button will close the script GUI and stop the script.</p>
-<h3>Whirligig Notes</h3>
+<h3><a name="panoview-is-context-aware"></a>Panoview is Context Aware</h3>
+<p>The Panoview script is context aware and will run in a slightly different state based upon the type of node that is selected in the Fusion flow/nodes area.</p>
+<p><img src="images/panoview-node-types.png" alt="Panoview Node Types" /></p>
+<p>If you have a 2D image processing node selected, a live &quot;left&quot; viewer window snapshot will be taken and passed by Panoview to the external media viewer tool. The snapshot image format is defined by the <code>Image Format</code> control in the Edit PanoView Preferences script dialogue.</p>
+<p>If a Saver or LifeSaver node is selected, then a pre-existing (and pre-rendered) movie or image sequence clip on disk will be passed as a file reference by Panoview to the external media viewer tool. This allows you to playback long clips without needing to render the existing media.</p>
+<p>If a Loader/MediaIn node is selected then the the source footage will be passed by Panoview to the external media viewer tool. This allows you to playback long clips without needing to render the existing media.</p>
+<h3><a name="whirligig-notes"></a>Whirligig Notes</h3>
 <p>The <code>PanoView.lua</code> script has options for enabling different panoramic projections in Whirligig. The default projection type is LatLong, but you can enable rectangular, angular fisheye, GearVR Horizontal Strip Cube Map, Ricoh Theta, Facebook Cube Map 3x2, Vertical Cross Cube Map and Horizontal Cross Cube Map panoramic display modes in both mono 2D and stereo 3D.</p>
 <p>If you are using Whirligig and nothing shows up in the viewer window on your monitor you can tap the F10 hotkey to toggle the display settings. This is useful if you are using the SteamVR version of Whirligig and don't have an HMD attached at the moment but still want to be able to view panoramic imagery on your monitor.</p>
 <p>You can toggle the Whirligig anaglyph red/cyan stereo mode on/off and between different color formats using the F7 hotkey.</p>
-<h4>LAV Video Configuration</h4>
+<h4><a name="lav-video-configuration"></a>LAV Video Configuration</h4>
 <p>If you have issues viewing imagery in the Whirligig viewer and only see a black background in the Whirligig window, it it likely due to a video codec or hardware decoding setting.</p>
 <p>One solution to this problem is to open up the &quot;LAV Video Configuration&quot; program that is accessible using your Windows start menu.</p>
 <p>The LAV Video Configuration Properties window will appear. In this properties window you should change the Hardware Decoder to use the &quot;DXVA2 (native)&quot; option. Click &quot;OK&quot; to save the settings.</p>

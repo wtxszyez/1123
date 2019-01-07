@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Edit PanoView Preferences v4.0.1 2019-01-01
+Edit PanoView Preferences v4.0.1 2019-01-06
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -167,7 +167,8 @@ if platform == 'Windows' then
 	-- amaterasFile = 'AmaterasDomePlayer.exe'
 	amaterasFile = 'AmaterasPlayer.exe'
 	-- djvFile = 'djv_view.exe'
-	djvFile = 'C:\\Program Files\\DJV\\bin\\djv_view.exe'
+	-- djvFile = 'C:\\Program Files\\DJV\\bin\\djv_view.exe'
+	djvFile = 'Reactor:/Deploy/Bin/djv/bin/djv_view.exe'
 	kolorEyesFile = 'C:\\Program Files\\Kolor\\Kolor Eyes 1.6\\KolorEyes_x64.exe'
 	-- kolorEyesFile = 'KolorEyes_x64.exe'
 	goProVRPlayerFile = 'C:\\Program Files\\GoPro\\GoPro VR Player 3.0\\GoProVRPlayer_x64.exe'
@@ -180,7 +181,8 @@ elseif platform == 'Mac' then
 	amaterasFile = '/Applications/Amateras3/Amateras.app'
 	-- djvFile = '/Applications/djv-1.2.4-OSX-64.app'
 	-- djvFile = '/Applications/djv-OSX-64.app'
-	djvFile = '/Applications/djv.app'
+	-- djvFile = '/Applications/djv.app'
+	djvFile = 'Reactor:/Deploy/Bin/djv/DJV.app'
 	kolorEyesFile = '/Applications/Kolor Eyes 1.6.app'
 	goProVRPlayerFile = '/Applications/GoPro VR Player 3.0.app'
 	liveViewRiftFile = '/Applications/LiveViewRift.app'
@@ -191,7 +193,8 @@ elseif platform == 'Mac' then
 	scratchPlayerFile = '/Applications/Scratch.app'
 else
 	-- djvFile = '/usr/bin/djv_view'
-	djvFile = 'djv_view'
+	-- djvFile = 'djv_view'
+	djvFile = 'Reactor:/Deploy/Bin/djv/bin/djv_view'
 	rvFile = 'rv'
 	-- vlcFile = '/usr/bin/vlc'
 	vlcFile = 'vlc'

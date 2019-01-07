@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PanoView v4.0.1 - 2019-01-01
+PanoView v4.0.1 - 2019-01-06
 
 by Andrew Hazelden -- www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -276,7 +276,8 @@ function djvViewer(mediaFileName)
 	if platform == 'Windows' then
 		-- Running on Windows
 		
-		defaultViewerProgram = 'C:\\Program Files\\DJV\\bin\\djv_view.exe'
+		defaultViewerProgram = 'Reactor:/Deploy/Bin/djv/bin/djv_view.exe'
+		-- defaultViewerProgram = 'C:\\Program Files\\DJV\\bin\\djv_view.exe'
 		-- defaultViewerProgram = 'C:\\Program Files\\djv-1.2.4-Windows-64\\bin\\djv_view.exe'
 		-- defaultViewerProgram = 'C:\\Program Files\\djv-1.1.0-Windows-64\\bin\\djv_view.exe'
 		-- defaultViewerProgram = 'djv_view.exe'
@@ -289,13 +290,14 @@ function djvViewer(mediaFileName)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		
-		defaultViewerProgram = '/Applications/djv.app'
+		defaultViewerProgram = 'Reactor:/Deploy/Bin/djv/DJV.app'
+		-- defaultViewerProgram = '/Applications/djv.app'
 		-- defaultViewerProgram = '/Applications/djv-1.2.4-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-1.1.0-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-1.0.5-OSX-64.app'
 		-- defaultViewerProgram = '/Applications/djv-OSX-64.app'
 		
-		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)) .. '"'
+		viewerProgram = '"' .. string.gsub(comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)), '[/]$', '') .. '"'
 		command = 'open -a ' .. viewerProgram .. ' --args "' .. mediaFileName .. '"'
 		
 		print('[Launch Command] ', command)
@@ -303,7 +305,8 @@ function djvViewer(mediaFileName)
 	elseif platform == 'Linux' then
 		-- Running on Linux
 		
-		defaultViewerProgram = 'djv_view'
+		defaultViewerProgram = 'Reactor:/Deploy/Bin/djv/bin/djv_view'
+		-- defaultViewerProgram = 'djv_view'
 		
 		viewerProgram = '"' .. comp:MapPath(getPreferenceData('KartaVR.PanoView.DJVFile', defaultViewerProgram, printStatus)) .. '"'
 		command = viewerProgram .. ' "' .. mediaFileName .. '" &'
