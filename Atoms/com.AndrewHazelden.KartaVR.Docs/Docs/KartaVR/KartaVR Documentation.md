@@ -11,15 +11,11 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## <a name="pricing"></a>Pricing and Availability ##
 
+KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform via the [WSL Reactor package manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
+
+KartaVR works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
+
 ![Reactor Atom Package](images/reactor-atom-package.png)
-
-As a small 🎄 Christmas timed gift to the "[Steak Underwater](https://www.steakunderwater.com/)" Fusion community, a new "KartaVR v4" release has been prepared as a free [WSL Reactor package manager based install](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform. KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
-
-The commercial paid version of KartaVR was discontinued and withdrawn from the market when at SIGGRAPH 2017 [Blackmagic Design released Fusion 9](https://forum.blackmagicdesign.com/viewtopic.php?f=22&t=62288) with an integrated VR toolset as a free update for all Fusion (Free) and Fusion Studio users.
-
-Unfortunately, it's now more than 500 days since that point in 2017 when Fu 9 VR came out, and BMD has not come back solve the remaining issues with Fusion 9 (and now Resolve 15's) initial VR tool offerings. So KartaVR is back on the scene. The KartaVR for Reactor atom package dramatically improves the panoramic 360&deg; compositing toolset available to Fusion (Free) and Fusion Studio based artists who want to create their own immersive content. And with the [WSL Reactor Package Manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159), you can now do a KartaVR install without even leaving Fusion.😀
-
-KartaVR v9 works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
 
 KartaVR technical support is available through the "Steak Underwater" user community:  
 [https://www.steakunderwater.com/wesuckless/index.php](https://www.steakunderwater.com/wesuckless/index.php)
