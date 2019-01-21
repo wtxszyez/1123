@@ -15,8 +15,6 @@ KartaVR v4 is freeware distributed exclusively through the Steak Underwater user
 
 KartaVR works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
 
-![Reactor Atom Package](images/reactor-atom-package.png)
-
 KartaVR technical support is available through the "Steak Underwater" user community:  
 [https://www.steakunderwater.com/wesuckless/index.php](https://www.steakunderwater.com/wesuckless/index.php)
 
@@ -53,12 +51,15 @@ KartaVR was formerly known as the "Domemaster Fusion Macros". With the release o
 
 - Steak Underwater "Reactor" package manager suppport was added, along with new full-featured KartaVR freeware license that allows commercial use of the VR tools for $0.
 
-- Looking Glass Display based lightfield rendering support.
+- Added Looking Glass Display based [lightfield rendering](macros-guide-looking-glass.html) support, and [compositing examples](examples.html#looking-glass-renderer-3d).
 
 - macOS based users of KartaVR can run the new "Video Snapshot" tool that allows Fusion to capture live action footage from HDMI/SDI/USB video sources to disk. This video I/O captured media is accessed inside of Fusion using a managed loader node that can be added to the foreground comp with a single click inside the "Video Snapshot" window.
 
-The video snapshot tool could be used for stop motion animation work. Or a VFX supervisor could use it to grab footage from a video camera to help with on-set production comp-viz work. Or an XR media producer could do a fast node based 360VR stitching test in Fusion to make sure the footage being captured on location is going to be able to be fine-stitched in post without any show-stooping issues.
+  The video snapshot tool could be used for stop motion animation work. Or a VFX supervisor could use it to grab footage from a video camera to help with on-set production comp-viz work. Or an XR media producer could do a fast node based 360VR stitching test in Fusion to make sure the footage being captured on location is going to be able to be fine-stitched in post without any show-stopping issues.
 
+- Added an [AcerWMRStereoRenderer3D](macros-guide-renderer3d.html#AcerWMRStereoRenderer3D) Renderer3D macro that creates stereoscopic 3D 2880x1440px output from the Fusion 3D system. That interactively rendered output can be displayed directly on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
+
+- Added a [ViewerAcerWMR2StereoOU](macros-guide-viewer.html#ViewerAcerWMR2StereoOU) node for displaying panoramic images on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
 
 ## <a name="new-features"></a>New Features in KartaVR 3.5 ##
 
