@@ -736,18 +736,23 @@ You can change Fusion's timeline playback mode from "looped" playback to A "ping
 
 ![Fusion PingPong Playback](images/playback-control-pingpong.png)
 
-
 <a name="looking-glass-4x4-quilted-to-image-sequence"></a>
 ### Looking Glass 4x4 Quilted to Image Sequence.comp ###
+
+
+![LookingGlass Quilted to Image Sequence.comp](images/examples-looking-glass-quilted-to-image-sequences.png)
 
 This comp will decode a static Looking Glass display 4x4 quilted grid based linear array image and turn it into an image sequence.
 
 Due to the way the timeStretcher node works inside of the "ImageGridExtractor" macro, you have to start the in-point in the timeline at the total number of quilted views. In this case there are 4x4 quilted views so the timeline starts on frame 16.
 
-![LookingGlass Quilted to Image Sequence.comp](images/examples-looking-glass-quilted-to-image-Sequence.png)
+![LookingGlass Quilted to Image Sequence Output](images/examples-looking-glass-quilted-to-image-sequences-output.png)
 
 <a name="looking-glass-5x9-quilted-anaglyph-stereo-3d-viewer"></a>
 ### Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp ###
+
+
+![Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp](images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer.png)
 
 This comp will decode a static Looking Glass display 5x9 quilted grid based linear array image and preview it on a desktop monitor as anagyph stereo 3D imagery.
 
@@ -755,13 +760,20 @@ The comp uses a pair of TimeStretcher + Crop nodes the clip out each of the quil
 
 There are 5x9 quilted views so the timeline starts on frame  "Global In -45".
 
-![Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer.comp](images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer.png)
+Quilted Image to Side-By-Side Stereo Preview:
 
+![Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer Output 1](images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer_output1.png)
+
+Quilted Image to Anaglyph Stereo Preview:
+
+![Looking Glass 5x9 Quilted Anaglyph Stereo 3D Viewer Output 2](images/examples-looking_glass_5x9_quilted_anaglyph_stereo_3d_viewer_output2.png)
 <a name="looking-glass-5x9-quilted-to-image-sequence"></a>
 ### Looking Glass 5x9 Quilted to Image Sequence.comp ###
+
+![Looking Glass 5x9 Quilted to Image Sequence.comp](images/examples-looking_glass_5x9_quilted_to_image_sequence.png)
 
 This comp will decode a static Looking Glass display quilted grid based linear array image and turn it into an image sequence.
 
 Due to the way the timeStretcher node works inside of the "ImageGridExtractor" macro, you have to start the in-point in the timeline at Global In (zero minus the total number of quilted views). In this case there are 5x9 quilted views so the timeline starts on frame  "Global In -45".
 
-![Looking Glass 5x9 Quilted to Image Sequence.comp](images/examples-looking_glass_5x9_quilted_to_image_sequence.png)
+![Looking Glass 5x9 Quilted to Image Sequence Output](images/examples-looking_glass_5x9_quilted_to_image_sequence-output.png)
