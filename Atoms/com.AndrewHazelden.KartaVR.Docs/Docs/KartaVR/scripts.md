@@ -67,7 +67,7 @@ The PanoView script will send the imagery from the currently selected Fusion nod
 
 The [Panoview script is described on its own separate documentation page here](pano-view.html).
 
-![PanoView Script](images/panoview-koloreyes.png)
+![PanoView Script](images/panoview-gopro.png)
 
 <a name="edit-panoview-preferences"></a>
 ## Edit PanoView Preferences ##

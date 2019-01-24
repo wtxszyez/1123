@@ -1,0 +1,218 @@
+--[[--
+This Fuse clones the functionality of the standard Transform tool Fusion as closely as possible.
+It is not intended to replace the Transform tool, but to act as an example for anyone creating 
+a Fuse which needs to mimic part of what Transform does.
+
+Currently this tool does not 
+ - No flip options yet
+ - Concatenate, so no Flatten Transform
+ - Offer an Invert Transform Option 
+ - The Size/Aspect Rectangle Control does not work, so I commented that part out for now.
+ - Axis and Angle do not follow the Center
+
+Updated On : May 25, 2018 to change REGS_Category entry to "Fuses\\VFXPedia"
+--]]--
+
+FuRegisterClass("FuseTransform", CT_Tool, {
+	REGS_Category = "Fuses\\VFXPedia\\Transform",
+	REGS_OpIconString = "fXf",
+	REGS_OpDescription = "Fuse Transform",
+	})
+
+function Create()
+	InFlipHorizontal = self:AddInput("Flip Horizontally", "FlipHorizontally", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 0.5,
+		})
+		
+	InFlipVertical = self:AddInput("Flip Vertically", "FlipVertically", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 0.0,
+		ICD_Width = 0.5,
+		})			
+		
+	InEdges = self:AddInput("Edges", "Edges", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		{ CCS_AddString = "Black", },
+		{ CCS_AddString = "Wrap", },
+		{ CCS_AddString = "Duplicate", },
+		})
+	InCenter = self:AddInput("Center", "Center", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		})
+		
+	InPivot = self:AddInput("Pivot", "Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "DiagonalCross",
+		PC_GrabPriority = -1,
+		})
+	--[[--		
+	InUseAspect = self:AddInput("Use Size and Aspect", "UseSizeandAspect", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = true,
+		INP_Default = 1.0,
+		INP_DoNotifyChanged = true, -- We want to hear about changes on this control
+		})			
+
+	InSize = self:AddInput("Size", "Size", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})
+	
+	InAspect = self:AddInput("Aspect", "Aspect", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})
+	--]]--
+	InSizeX = self:AddInput("Size X", "SizeX", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})			
+
+	InSizeY = self:AddInput("Size Y", "SizeY", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})
+	
+	InAngle = self:AddInput("Angle", "Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INPID_PreviewControl = "AngleControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InPivot,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1,
+		})
+	--[[--
+	InSize:SetAttrs({
+		INPID_PreviewControl = "RectangleControl",
+		PC_ControlGroup = 1,
+		PC_ControlID = 0,
+		RCP_Center = InCenter,
+		RCP_Angle = InAngle,
+		RCP_Axis = InPivot,
+		RC_DoLockAspect = true,
+		RCD_LockAspect = 1
+		})
+	--]]--	
+	InSizeX:SetAttrs({
+		INPID_PreviewControl = "RectangleControl",
+		PC_ControlGroup = 2,
+		PC_ControlID = 0,
+		RCP_Center = InCenter,
+		RCP_Angle = InAngle,
+		RCP_Axis = InPivot,
+		RC_DoLockAspect = false,
+		})
+		
+	InSizeY:SetAttrs({
+		INPID_PreviewControl = "RectangleControl",
+		PC_ControlGroup = 2,
+		PC_ControlID = 1,
+		RCP_Center = InCenter,
+		RCP_Angle = InAngle,
+		RCP_Axis = InPivot,
+		RC_DoLockAspect = false,
+		})	
+		
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})				
+		
+end
+
+edge_modes = {"Black", "Wrap", "Duplicate"}
+
+function Process(req) 
+	local img     = InImage:GetValue(req)
+	local center  = InCenter:GetValue(req)
+	local pivot   = InPivot:GetValue(req)
+	local sizex   = InSizeX:GetValue(req).Value
+	local sizey   = InSizeY:GetValue(req).Value
+	--[[--
+	local size    = InSize:GetValue(req).Value
+	local aspect  = InAspect:GetValue(req).Value
+	local locked  = (InUseAspect:GetValue(req).Value > 0.5)
+	--]]--
+	local angle   = InAngle:GetValue(req).Value
+	local edges   = InEdges:GetValue(req).Value
+	
+	
+	if locked then
+		sizey = sizex
+	end
+	
+	out = img:Transform(nil, { 
+		XF_XOffset = center.X, 
+		XF_YOffset = center.Y, 
+		XF_XAxis = pivot.X,
+		XF_YAxis = pivot.Y,
+		XF_XSize = sizex, 
+		XF_YSize = sizey, 
+		XF_Angle = angle, 
+		XF_EdgeMode = edge_modes[edges+1],
+		})
+	
+	OutImage:Set(req, out)
+end
+
+function NotifyChanged(inp, param, time)
+	--[[-- This is all broken
+	if inp == InUseAspect then   -- Update our sliders
+		local use_aspect = (param.Value > 0.5)
+		
+		InSizeX:SetAttrs({ IC_Visible = not (use_aspect), PC_Visible = not (use_aspect) })
+		InSizeY:SetAttrs({ IC_Visible = not (use_aspect), PC_Visible = not (use_aspect) })
+		
+		InAspect:SetAttrs({ IC_Visible = (use_aspect), PC_Visible = (use_aspect) })
+		InSize:SetAttrs({ IC_Visible = (use_aspect), PC_Visible = (use_aspect) })
+		
+		-- who controls the rectangle control!
+	
+	elseif inp == InCenter then
+	
+		-- the center moved, reposition the axis according to the current offset
+		nCenterX = param.X
+		nCenterY = param.Y
+		
+		InPivot:SetAttrs({
+			PCD_OffsetX = nCenterX - 0.5,
+			PCD_OffsetY = nCenterY - 0.5,
+			})
+			
+		InAngle:SetAttrs({
+			PCD_OffsetX = nCenterX - 0.5,
+			PCD_OffsetY = nCenterY - 0.5,
+			})
+		
+	elseif inp == InPivot then
+		-- the axis moved, adjust the current offset
+	
+	end
+	--]]--	
+end
