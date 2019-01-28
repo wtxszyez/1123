@@ -1,0 +1,56 @@
+Atom {
+	Name = "potrace",
+	Category = "Bin",
+	Author = "Peter Selinger",
+	Version = 1.15,
+	Date = {2017, 8, 4},
+	Description = [[
+<p>Potrace is a tool for tracing a bitmap, which means, transforming a bitmap into a smooth, scalable image. The input is a bitmap (PBM, PGM, PPM, or BMP), and the output is one of several vector file formats.  A typical use is to create SVG or PDF files from scanned data, such as company or university logos, handwritten notes, etc. The resulting image is not jaggy like a bitmap, but smooth. It can then be rendered at any resolution.</p>
+
+<h2>License</h2>
+
+<p>GPL v2</p>]],
+	Deploy = {
+		"Bin/potrace/docs/AUTHORS",
+		"Bin/potrace/docs/COPYING",
+		"Bin/potrace/docs/ChangeLog",
+		"Bin/potrace/docs/NEWS",
+		"Bin/potrace/docs/README",
+		"Bin/potrace/docs/README-WIN",
+		"Bin/potrace/docs/mkbitmap.1",
+		"Bin/potrace/docs/potrace.1",
+
+		Windows = {
+			"Bin/potrace/bin/mkbitmap.exe",
+			"Bin/potrace/bin/potrace.exe",
+		},
+
+		Mac = {
+			"Bin/potrace/bin/mkbitmap",
+			"Bin/potrace/bin/potrace",
+		},
+
+		Linux = {
+			"Bin/potrace/bin/mkbitmap",
+			"Bin/potrace/bin/potrace",
+		},
+	},
+	InstallScript = {
+		Mac = {
+			[[-- Turn on executable permissions for the MacOS program so the command line tool can be used from Fusion:
+if platform == 'Mac' then
+	local potracePath = app:MapPath('Reactor:/Deploy/Bin/potrace/bin')
+	command = 'chmod -R 755 "' .. potracePath .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end]]},
+	Linux = {
+			[[-- Turn on executable permissions for the Linux program so the command line tool can be used from Fusion:
+if platform == 'Linux' then
+	local potracePath = app:MapPath('Reactor:/Deploy/Bin/potrace/bin')
+	command = 'chmod -R 755 "' .. potracePath .. '"'
+	dprintf('[Permissions Update] ' .. command .. '\n')
+	os.execute(command)
+end]]},
+	},
+}
