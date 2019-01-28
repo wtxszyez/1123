@@ -13,19 +13,23 @@ The VectorSnapshot script generates an SVG vector traced version of an image. Th
 
 ## Install ##
 
-Step 1. Use the WSL Reactor package manager to add the "Bin/potrace" atom.
-
-Step 2. Use the WSL Reactor package manager to add the "Script/Comp/VectorSnapshot" atom.
-
+Step 1. Use the WSL Reactor package manager to add the "Scripts/Comp/VectorSnapshot" atom.
 
 ## Usage ##
 
-Step 1. Select the "Script > Andrew Hazelden > VectorSnapshot" menu item.
+Step 1. Load a node into the Fusion's left image viewer.
 
-Step 2. Open the SVG image that was exported to the "Temp:/Fusion/" PathMap folder.
+Step 2. Select the "Script > Andrew Hazelden > VectorSnapshot" menu item.
+
+Step 3. Open the SVG image that was exported to the "Temp:/Fusion/" PathMap folder.
 
 
 ## POTRACE CLI OPTIONS ##
+
+You can fully customize the potrace CLI commands used to vectorize the output by editing the line of Lua code that starts with:
+
+potraceOptions = '--group --invert'
+
 
 Usage: potrace [options] [filename...]
 General options:
