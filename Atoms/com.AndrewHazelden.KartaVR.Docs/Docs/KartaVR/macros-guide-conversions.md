@@ -24,15 +24,16 @@
     <li><a href="macros-guide-conversions.html#CubicFaces2VerticalStrip">CubicFaces2VerticalStrip</a></li>
     <li><a href="macros-guide-conversions.html#CubicFaces2VerticalTee">CubicFaces2VerticalTee</a></li>
     <li><a href="macros-guide-conversions.html#CubicFaces2YouTube180">CubicFaces2YouTube180</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2YouTubeCubemap3x2">CubicFaces2YouTubeCubemap3x2</a></li>
     <li><a href="macros-guide-conversions.html#Cylindrical2CubicFaces">Cylindrical2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Domemaster2Equirectangular">Domemaster2Equirectangular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Angular">Equirectangular2Angular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2CubicFaces">Equirectangular2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
   </ul></td>
   <td><ul>
-    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
     <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
@@ -60,6 +61,8 @@
     <li><a href="macros-guide-conversions.html#VerticalCross2CubicFaces">VerticalCross2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#VerticalStrip2CubicFaces">VerticalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#VerticalTee2CubicFaces">VerticalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#YouTubeCubemap3x22CubicFaces">YouTubeCubemap3x22CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#YouTubeCubemap3x22Equirectangular">YouTubeCubemap3x22Equirectangular</a></li>
   </ul></td>
 </tr>
 </table>
@@ -632,6 +635,18 @@ This macro takes a set of six individual 90&deg; FOV based cubic view source ima
 To use this node, individual 90&deg; FOV based cubic view source images are connected to the node's colored inputs named `Front`, `Right`, `Back`, `Left`, `Top`, and `Bottom` attributes. There is a single image output from the node called "Output" which creates a merged panoramic frame.
 
 ![CubicFaces2YouTube180 Node](images/macro-cubicfaces-to-youtube-180-node.png)
+
+## <a name="CubicFaces2YouTubeCubemap3x2"></a>CubicFaces2YouTubeCubemap3x2 ##
+
+![CubicFaces2YouTubeCubemap3x2 GUI](images/macro-cubic-faces-to-youtube-cubemap3x2-gui.png)
+
+This macro takes a set of six individual 90&deg; FOV based cubic view source images and merges them into a single combined image with a YouTube 360&deg; based 3x2 cubic face arrangement.
+
+![CubicFaces2YouTubeCubemap3x2 Macro](images/macro-cubic-faces-to-youtube-cubemap3x2.png)
+
+To use this node, individual 90&deg; FOV based cubic view source images are connected to the node's colored inputs named `Front`, `Right`, `Back`, `Left`, `Top`, and `Bottom` attributes. There is a single image output from the node called "Output" which creates a merged panoramic frame.
+
+![CubicFaces2YouTubeCubemap3x2 Node](images/macro-cubic-faces-to-youtube-cubemap3x2-node.png)
 
 ## <a name="Cylindrical2CubicFaces"></a>Cylindrical2CubicFaces ##
 
@@ -1411,3 +1426,11 @@ To use this node, the vertical tee source imagery is connected to the node's yel
 
 **Note:** If you hover your cursor over each of the red color node outputs you will see a tool tip appear that indicates what the currently selected output is called.
 
+
+## <a name="YouTubeCubemap3x22CubicFaces"></a>YouTubeCubemap3x22CubicFaces ##
+
+This macro takes a single combined image with a YouTube 360&deg; based 3x2 cubic face arrangement and outputs a set of six individual 90&deg; FOV based cubic view source images.
+
+## <a name="YouTubeCubemap3x22Equirectangular"></a>YouTubeCubemap3x22Equirectangular ##
+
+This macro takes a single combined image with a YouTube 360&deg; based 3x2 cubic face arrangement and outputs an equirectangular/LatLong/spherical panorama with a 360&deg; x 180&deg; FOV.

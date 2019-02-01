@@ -1,7 +1,7 @@
-# KartaVR 4.0.1 for Reactor Documentation #
+# KartaVR 4.0.2 for Reactor Documentation #
 
 -------------------------
-**Version 4.0.1** - Released 2019-01-06  
+**Version 4.0.2** - Released 2019-01-31  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -173,15 +173,16 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
     <li><a href="macros-guide-conversions.html#CubicFaces2VerticalStrip">CubicFaces2VerticalStrip</a></li>
     <li><a href="macros-guide-conversions.html#CubicFaces2VerticalTee">CubicFaces2VerticalTee</a></li>
     <li><a href="macros-guide-conversions.html#CubicFaces2YouTube180">CubicFaces2YouTube180</a></li>
+    <li><a href="macros-guide-conversions.html#CubicFaces2YouTubeCubemap3x2">CubicFaces2YouTubeCubemap3x2</a></li>
     <li><a href="macros-guide-conversions.html#Cylindrical2CubicFaces">Cylindrical2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Domemaster2Equirectangular">Domemaster2Equirectangular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Angular">Equirectangular2Angular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2CubicFaces">Equirectangular2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
   </ul></td>
   <td><ul>
-    <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
     <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
@@ -209,6 +210,8 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
     <li><a href="macros-guide-conversions.html#VerticalCross2CubicFaces">VerticalCross2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#VerticalStrip2CubicFaces">VerticalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#VerticalTee2CubicFaces">VerticalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#YouTubeCubemap3x22CubicFaces">YouTubeCubemap3x22CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#YouTubeCubemap3x22Equirectangular">YouTubeCubemap3x22Equirectangular</a></li>
   </ul></td>
 </tr>
 </table>

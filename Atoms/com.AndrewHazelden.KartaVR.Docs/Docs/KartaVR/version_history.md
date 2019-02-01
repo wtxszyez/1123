@@ -1,6 +1,10 @@
 <a name="version-history"></a>
 ## Version History ##
 
+### Version 4.0.2 - 2019-01-31 ###
+
+- Added YouTube 360° cubic 3x2 format movie conversion macros called `YouTubeCubemap3x22CubicFaces`, `YouTubeCubemap3x22Equirectangular` and `CubicFaces2YouTubeCubemap3x2`. There is a `YouTube Cubemap3x2.comp` example composite, and a sample `youtube_cubemap3x2.jpg` image as well.
+
 ### Version 4.0.1 - 2019-01-06 ###
 
 - Resolve 15.2 Lua script compatibility improvements

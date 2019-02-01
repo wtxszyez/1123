@@ -70,6 +70,10 @@ You can view an online version of the "KartaVR Example 360VR Stitching Comps" co
   - [Viewer Mesh Stereo.comp](examples.html#viewer-mesh-stereo)
   - [ViewerMesh.comp](examples.html#viewer-mesh)
   - [Wireframe Oculus Rift Stereo.comp](examples.html#wireframe-oculus-rift-stereo)
+  - YouTube Cubemap3x2.comp
+  - YouTube180 Conversions.comp
+  - Z360 Stereo.comp
+  - Z360Mesh3D.comp
 
 <a name="example-lightfield-projects"></a>
 ## Example Lightfield Projects ##
