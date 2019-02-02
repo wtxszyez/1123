@@ -1,5 +1,5 @@
 --[[--
-Nudge Playhead Hotkeys - v1.1 2018-02-22
+Nudge Playhead Hotkeys - v1.2 2019-02-02
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Shift+Left Cursor" and "Shift+Right Cursor" keys to nudge the timeline playhead forwards/backwards.
@@ -50,7 +50,7 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 					-- Wrap the timeline at the start/end render frame range boundaries
 					if startFrame > offsetTime then
 						-- Nudge Left = Wrap around start frame around to the end frame
-						difference = math.fmod(offsetTime,startFrame)
+						difference = math.fmod(offsetTime, startFrame)
 						updatedTime = endFrame + difference
 					elseif endFrame < offsetTime then
 						-- Nudge Right = Wrap around the end frame around to the start frame
@@ -62,6 +62,11 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 						updatedTime = offsetTime
 					end
 
+					-- Fix a NAN occurance
+					if updatedTime ~= updatedTime then
+					  updatedTime = endFrame
+					end
+					
 					-- Move the acutal playhead
 					obj:Comp():SetAttrs({COMPN_CurrentTime = updatedTime})
 
@@ -107,7 +112,7 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 					-- Wrap the timeline at the start/end render frame range boundaries
 					if startFrame > offsetTime then
 						-- Nudge Left = Wrap around start frame around to the end frame
-						difference = math.fmod(offsetTime,startFrame)
+						difference = math.fmod(offsetTime, startFrame)
 						updatedTime = endFrame + difference
 					elseif endFrame < offsetTime then
 						-- Nudge Right = Wrap around the end frame around to the start frame
@@ -117,6 +122,11 @@ Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
 						-- Update the playhead position
 						difference = frameStep
 						updatedTime = offsetTime
+					end
+					
+					-- Fix a NAN occurance
+					if updatedTime ~= updatedTime then
+					  updatedTime = startFrame
 					end
 
 					-- Move the acutal playhead
