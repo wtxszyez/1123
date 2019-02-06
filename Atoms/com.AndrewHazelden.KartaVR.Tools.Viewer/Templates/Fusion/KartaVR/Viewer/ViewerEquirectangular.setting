@@ -1,0 +1,219 @@
+{
+	Tools = ordered() {
+		ViewerEquirectangular = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-viewer.html#ViewerEquirectangular",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "PixelAspect",
+					DefaultX = 1,
+					DefaultY = 1,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "AovType",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "AoV",
+					Default = 90,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "FilmGate",
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "ApertureW",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "ApertureH",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "LensShiftX",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "LensShiftY",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input14 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = -90,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Renderer3DFront",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				Renderer3DFront = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 2160, },
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						SceneInput = Input {
+							SourceOp = "Merge3DFront",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DFront", }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 49.5, }, },
+				},
+				Merge3DFront = Merge3D {
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input {
+							Value = 1,
+							Expression = "CameraViewInput.PassThroughLights",
+						},
+						SceneInput1 = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, -16.5, }, },
+				},
+				Camera3DFront = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono", }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User", }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, -82.5, }, },
+				},
+				CameraViewInput = Merge3D {
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "Shape3D",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -16.5, }, },
+				},
+				Shape3D = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 2, },
+						["SurfaceTorusInputs.ObjectID.ObjectID"] = Input { Value = 6, },
+						["SurfaceIcoInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["SurfaceCylinderInputs.ObjectID.ObjectID"] = Input { Value = 5, },
+						["SurfaceCubeInputs.ObjectID.ObjectID"] = Input { Value = 4, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs", }, },
+						MaterialInput = Input {
+							SourceOp = "SphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.Diffuse.Color.Red"] = Input { Value = 0.5968992248062, },
+						["MtlStdInputs.Diffuse.Color.Green"] = Input { Value = 0.3643410852713, },
+						["MtlStdInputs.Diffuse.Color.Blue"] = Input { Value = 0.6589147286822, },
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialIDNest"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 72, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 36, },
+						["SurfaceSphereInputs.Visibility.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Visibility.CullFrontFace"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Lighting.IsAffectedByLights"] = Input { Value = 0, },
+						["SurfaceSphereInputs.Matte.Nest"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Controls.Normals.Scale"] = Input { Value = 6.93, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, -16.5, }, },
+				},
+				SphereMap = SphereMap {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YXZ", }, },
+						["Rotate.X"] = Input { Value = -90, },
+						["Rotate.Y"] = Input { Value = -90, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear", }, },
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, -16.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "ViewerEquirectangular",
+}

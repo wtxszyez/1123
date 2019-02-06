@@ -1,0 +1,454 @@
+{
+	Tools = ordered() {
+		DomemasterCrossbounceSim = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-miscellaneous.html#DomemasterCrossbounceSim",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ResizeInput",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ResizeInput",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "ChangeDepth1",
+					Source = "Depth",
+					Default = 3,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "BrightnessBounce1",
+					Source = "Gain",
+					Name = "Screen Gain",
+					MaxScale = 2,
+					Default = 0.2,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "BrightnessBounce1",
+					Source = "Saturation",
+					Name = "Crossbounce Saturation",
+					MaxScale = 1,
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "MergeBlend",
+					Source = "BlendClone",
+					Name = "Crossbounce Blend",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "MergeBlend",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				ResizeInput = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -163.382, 181.5 } },
+				},
+				ChangeDepth1 = ChangeDepth {
+					Inputs = {
+						Depth = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "ResizeInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 181.5 } },
+				},
+				PipeRouter3 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 55, 148.5 } },
+				},
+				PipeRouter2 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 55, 181.5 } },
+				},
+				PipeRouter1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 55, 214.5 } },
+				},
+				BrightnessBounce1 = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Gain = Input { Value = 0.2, },
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 148.5 } },
+				},
+				FisheyeMask1 = GroupOperator {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { 275, 117.047 } },
+					Tools = ordered() {
+						FisheyeMask_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce1 = Blur {
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input { Value = 100, },
+						Input = Input {
+							SourceOp = "BrightnessBounce1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 148.5 } },
+				},
+				TransformBounce1 = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+				},
+				Bounce1LightMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce1",
+							Source = "Output",
+						},
+						Gain = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 493.526, 181.5 } },
+				},
+				BrightnessBounce2 = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.1,
+							Expression = "BrightnessBounce1.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+						Input = Input {
+							SourceOp = "Bounce1LightMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 148.5 } },
+				},
+				FisheyeMask2 = GroupOperator {
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { 770, 115.5 } },
+					Tools = ordered() {
+						FisheyeMask_1_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				BlurBounce2 = Blur {
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 770, 148.5 } },
+				},
+				TransformBounce2 = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 148.5 } },
+				},
+				BouncedLight2 = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "Bounce1LightMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce2",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 990, 181.5 } },
+				},
+				BrightnessBounce3 = BrightnessContrast {
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 0.05,
+							Expression = "BrightnessBounce2.Gain/2",
+						},
+						Saturation = Input { Expression = "BrightnessBounce1.Saturation", },
+						Input = Input {
+							SourceOp = "BouncedLight2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+				},
+				BlurBounce3 = Blur {
+					NameSet = true,
+					Inputs = {
+						XBlurSize = Input {
+							Value = 100,
+							Expression = "BlurBounce1.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessBounce3",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 148.5 } },
+				},
+				FisheyeMask3 = GroupOperator {
+					NameSet = true,
+					Inputs = ordered() {
+						Input1 = InstanceInput {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "MaskHeight",
+							Expression = "ResizeInput.Height",
+							Name = "Input Height",
+							MaxScale = 8192,
+							Default = 2048,
+						}
+					},
+					Outputs = {
+						MainOutput1 = InstanceOutput {
+							SourceOp = "FisheyeMask_1_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = GroupInfo { Pos = { 1263.45, 115.5 } },
+					Tools = ordered() {
+						FisheyeMask_1_1_1 = EllipseMask {
+							CtrlWZoom = false,
+							CtrlWShown = false,
+							NameSet = true,
+							Inputs = {
+								OutputSize = Input { Value = FuID { "Custom" }, },
+								MaskWidth = Input {
+									Value = 2048,
+									Expression = "MaskHeight",
+								},
+								MaskHeight = Input {
+									Value = 2048,
+									Expression = "ResizeInput.Height",
+								},
+								PixelAspect = Input { Value = { 1, 1 }, },
+								ClippingMode = Input { Value = FuID { "None" }, },
+								Width = Input { Value = 1, },
+								Height = Input { Value = 1, },
+							},
+							ViewInfo = OperatorInfo { Pos = { 0, 8.80938 } },
+						}
+					},
+				},
+				TransformBounce3 = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BlurBounce3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1375, 148.5 } },
+				},
+				BouncedLight3 = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BouncedLight2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformBounce3",
+							Source = "Output",
+						},
+						SubtractiveAdditive = Input { Expression = "Bounce1LightMerge.SubtractiveAdditive", },
+						Gain = Input {
+							Value = 0,
+							Expression = "Bounce1LightMerge.Gain",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1484.99, 181.5 } },
+				},
+				DifferenceMatting = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Difference" }, },
+						SubtractiveAdditive = Input { Value = 0, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, 214.5 } },
+				},
+				MergeBlend = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "DifferenceMatting",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "BouncedLight3",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1705, 181.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "DomemasterCrossbounceSim"
+}

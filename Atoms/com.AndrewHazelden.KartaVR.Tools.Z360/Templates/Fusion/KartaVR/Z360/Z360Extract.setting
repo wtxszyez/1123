@@ -1,0 +1,133 @@
+{
+	Tools = ordered() {
+		Z360Extract = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-z360.html#Z360Extract",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Width",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+			},
+			Outputs = {
+        MainOutput1 = InstanceOutput {
+					SourceOp = "OutputScalingRGB",
+					Source = "Output",
+					Name = "RGB",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "OutputScalingDepth",
+					Source = "Output",
+					Name = "Depth",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "Z360Extract",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				OutputScalingDepth = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1118.28, 151.033, }, },
+				},
+				OutputScalingRGB = Scale {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1118.28, 49.9169, }, },
+				},
+				CropRight = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 3840,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1003.02, 151.033, }, },
+				},
+				CropLeft = Crop {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						XSize = Input {
+							Value = 3840,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1004.02, 51.033, }, },
+				},
+				InputScaling = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 865.02, 150.033, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "Z360Extract",
+}

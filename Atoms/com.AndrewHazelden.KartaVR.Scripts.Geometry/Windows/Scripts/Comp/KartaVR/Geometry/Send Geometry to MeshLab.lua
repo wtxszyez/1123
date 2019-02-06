@@ -45,6 +45,7 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 
 -- Add the platform specific folder slash character
 local osSeparator = package.config:sub(1,1)
+
 -- Duplicate a file
 function copyFile(src, dest)
 	host = app:MapPath('Fusion:/')

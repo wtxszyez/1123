@@ -1,0 +1,106 @@
+{
+	Tools = ordered() {
+		UVPassFromRGBImageOnDisk = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-uvpass.html#UVPassFromRGBImageOnDisk",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "Texture",
+					Name = "Image",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "UVLoader",
+					Source = "Clip",
+					Name = "UV Pass Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontal",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipVert",
+					Name = "Flip Vertical",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "UOffset",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "VOffset",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Texture",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				UVLoader = Loader {
+					Clips = {
+					},
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						MissingFrames = Input { Value = 2, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 551.055, -86.4667 } },
+				},
+				UVTransform = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVLoader",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 551.089, -22.1368 } },
+				},
+				Texture = Texture {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVPassChannelBoolean",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 418, 109.772 } },
+				},
+				UVPassChannelBoolean = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 418.036, 45.7071 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "UVPassFromRGBImageOnDisk"
+}

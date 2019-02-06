@@ -1,0 +1,137 @@
+{
+	Tools = ordered() {
+		UVGradientMap = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-uvpass.html#UVGradientMap",
+      },
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "GradientFlipTransform",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontally",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "GradientFlipTransform",
+					Source = "FlipVert",
+					Name = "Flip Vertically",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "RedGradBackground",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "RedGradBackground",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "RedGradBackground",
+					Source = "Depth",
+					Default = 3,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "GradientFlipTransform",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "UVGradientMap",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				UVGradientMerge = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "RedGradBackground",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "GreenGradBackground",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Screen", }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 221, -34.5, }, },
+				},
+				GradientFlipTransform = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVGradientMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 221, 11, }, },
+				},
+				GreenGradBackground = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "RedGradBackground.Width",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "RedGradBackground.Height",
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "RedGradBackground.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Type = Input { Value = FuID { "Vertical", }, },
+						TopLeftGreen = Input { Value = 1, },
+						TopRightGreen = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 172.296, -88.589, }, },
+				},
+				RedGradBackground = Background {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Type = Input { Value = FuID { "Horizontal", }, },
+						TopLeftRed = Input { Value = 1, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1, },
+									[1] = { 1, 1, 1, 1, },
+								},
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 266.256, -88.9, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "UVGradientMap",
+}

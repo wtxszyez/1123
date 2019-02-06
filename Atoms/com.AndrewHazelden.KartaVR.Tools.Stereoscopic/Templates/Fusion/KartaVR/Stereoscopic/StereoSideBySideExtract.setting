@@ -1,0 +1,133 @@
+{
+	Tools = ordered() {
+		StereoSideBySideExtract = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoSideBySideExtract",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Width",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OutputScalingLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "OutputScalingRight",
+					Source = "Output",
+					Name = "Right",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "StereoSideBySideExtract",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				OutputScalingLeft = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1104, 49.5, }, },
+				},
+				OutputScalingRight = Scale {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1104, 148.5, }, },
+				},
+				CropLeft = Crop {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1024,
+							Expression = "InputScaling.Width/2",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "InputScaling.Height",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 990, 49.5, }, },
+				},
+				CropRight = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1024,
+							Expression = "InputScaling.Width/2",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "InputScaling.Width/2",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "InputScaling.Height",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 990, 148.5, }, },
+				},
+				InputScaling = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 148.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "StereoSideBySideExtract",
+}

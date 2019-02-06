@@ -1,0 +1,203 @@
+{
+	Tools = ordered() {
+		MRCube1HorizontalStrip2CubicFaces = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#MRCube1HorizontalStrip2CubicFaces",
+      },
+			Inputs = ordered() {
+        MainInput1 = InstanceInput {
+					SourceOp = "MRCube1HorizontalStripInput",
+					Source = "Background",
+          Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CropFront",
+					Source = "YSize",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CropFront",
+					Source = "Output",
+					Name = "Front",
+				},
+        MainOutput2 = InstanceOutput {
+					SourceOp = "CropRight",
+					Source = "Output",
+					Name = "Right",
+				},
+        MainOutput3 = InstanceOutput {
+					SourceOp = "CropBack",
+					Source = "Output",
+					Name = "Back",
+				},
+        MainOutput4 = InstanceOutput {
+					SourceOp = "CropLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+        MainOutput5 = InstanceOutput {
+					SourceOp = "TransformTop",
+					Source = "Output",
+					Name = "Top",
+				},
+				MainOutput6 = InstanceOutput {
+					SourceOp = "CropBottom",
+					Source = "Output",
+					Name = "Bottom",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				CropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 5120,
+							Expression = "CropFront.YSize*5",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input { Value = 1024, },
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 407.627, 374.784, }, },
+				},
+				CropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2048,
+							Expression = "CropFront.YSize*2",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 518.335, 376.198, }, },
+				},
+				CropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 4096,
+							Expression = "CropFront.YSize*4",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 631.163, 378.32, }, },
+				},
+				TransformTop = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipVert = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "CropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 738.334, 476.612, }, },
+				},
+				CropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 848.335, 376.198, }, },
+				},
+				CropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 963.992, 376.198, }, },
+				},
+				CropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 3072,
+							Expression = "CropFront.YSize*3",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "MRCube1HorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 738.334, 377.612, }, },
+				},
+				MRCube1HorizontalStripInput = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 685.808, 224.457, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "MRCube1HorizontalStrip2CubicFaces",
+}

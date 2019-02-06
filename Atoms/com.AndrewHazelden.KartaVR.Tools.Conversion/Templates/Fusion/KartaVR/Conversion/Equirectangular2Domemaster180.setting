@@ -1,0 +1,217 @@
+{
+	Tools = ordered() {
+		Equirectangular2Domemaster180 = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Equirectangular2Domemaster180",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ViewRotate",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				ViewRotate = Transform {
+					NameSet = true,
+					Inputs = {
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "OrientView",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 148.5 } },
+				},
+				OrientView = Transform {
+					NameSet = true,
+					Inputs = {
+						UseSizeAndAspect = Input { Value = 0, },
+						Angle = Input { Value = -90, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "PolarConversion2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1155, 148.5 } },
+				},
+				PolarConversion2 = CoordSpace {
+					NameSet = true,
+					Inputs = {
+						Shape = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "LatLongReposition2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1045, 148.5 } },
+				},
+				LatLongReposition2 = Transform {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									LatLongReposition2 = Transform {
+										Inputs = {
+											YSize = Input { Value = 0.7 },
+											Center = Input { Value = { 0.5, 0.3571 } },
+											UseSizeAndAspect = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "Resize2kx2k2",
+												Source = "Output"
+											},
+											XSize = Input { Value = 1 },
+											FlipHoriz = Input { Value = 1 },
+											Size = Input { Value = 0.75 }
+										},
+										Name = "LatLongReposition2",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Center = Input { Value = { 0.5, 0.3535 }, },
+						UseSizeAndAspect = Input { Value = 0, },
+						Size = Input { Value = 0.75, },
+						XSize = Input { Value = 1.001, },
+						YSize = Input { Value = 0.707, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "Rotate180",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 148.5 } },
+				},
+				Rotate180 = Transform {
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "DomemasterCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 148.5 } },
+				},
+				DomemasterCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Input = Input {
+							SourceOp = "DomemasterScale",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 714.364, 148.5 } },
+				},
+				DomemasterScale = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input {
+							Value = { 0.5, 0.185 },
+							Expression = "Point(0.5, (2-YSize)/2)",
+						},
+						UseSizeAndAspect = Input { Value = 0, },
+						YSize = Input { Value = 2, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ScaleSquareAspectRatio",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 148.5 } },
+				},
+				ScaleSquareAspectRatio = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						Height = Input {
+							Value = 4096,
+							Expression = "InputScaling.Width",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 148.5 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 4096,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 148.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Equirectangular2Domemaster180"
+}

@@ -1,0 +1,224 @@
+{
+	Tools = ordered() {
+		GearVRMono2CubicFaces = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#GearVRMono2CubicFaces",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "GearVRHorizontalStripInput",
+					Source = "Background",
+          Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CropFront",
+					Source = "YSize",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CropFront",
+					Source = "Output",
+					Name = "Front",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "CropRight",
+					Source = "Output",
+					Name = "Right",
+				},
+        MainOutput3 = InstanceOutput {
+					SourceOp = "CropBack",
+					Source = "Output",
+					Name = "Back",
+				},
+				MainOutput4 = InstanceOutput {
+					SourceOp = "CropLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput5 = InstanceOutput {
+					SourceOp = "TransformTop",
+					Source = "Output",
+					Name = "Top",
+				},
+				MainOutput6 = InstanceOutput {
+					SourceOp = "TransformBottom",
+					Source = "Output",
+					Name = "Bottom",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				GearVRHorizontalStripInput = Merge {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 685.808, 224.457, }, },
+				},
+				CropFront = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 5120,
+							Expression = "CropFront.YSize*5",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input { Value = 1024, },
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 407.627, 374.784, }, },
+				},
+				CropBottom = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 3072,
+							Expression = "CropFront.YSize*3",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 518.335, 376.198, }, },
+				},
+				CropRight = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 963.992, 376.198, }, },
+				},
+				CropLeft = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 848.335, 376.198, }, },
+				},
+				CropBack = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 4096,
+							Expression = "CropFront.YSize*4",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 631.163, 378.32, }, },
+				},
+				CropTop = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2048,
+							Expression = "CropFront.YSize*2",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "GearVRHorizontalStripInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 738.334, 378.319, }, },
+				},
+				TransformTop = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "CropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 738.334, 493.612, }, },
+				},
+				TransformBottom = Transform {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "CropBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 517.726, 492.373, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "GearVRMono2CubicFaces",
+}

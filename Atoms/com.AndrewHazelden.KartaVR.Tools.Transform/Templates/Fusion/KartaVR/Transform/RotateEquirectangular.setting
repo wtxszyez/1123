@@ -1,0 +1,203 @@
+{
+	Tools = ordered() {
+		RotateEquirectangular = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-transform.html#RotateEquirectangular",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SphereMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "UVRenderer3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				UVRenderer3D = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+				},
+				Shape3D = Shape3D {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									Shape3D = Shape3D {
+										Inputs = {
+											MaterialInput = Input {
+												SourceOp = "SphereMap",
+												Source = "MaterialOutput"
+											},
+											["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7 },
+											["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256 },
+											["MtlStdInputs.MaterialID"] = Input { Value = 6 },
+											["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256 },
+											["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8 },
+											Shape = Input { Value = FuID { "SurfaceSphereInputs" } },
+											["SurfaceSphereInputs.Radius"] = Input { Value = 500 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 180, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "SphereMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 115.5 } },
+				},
+				SphereMap = SphereMap {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											},
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.GL.LowQ"] = Input { Value = FuID { "Trilinear" } },
+											["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" } },
+											["FilterMode.GL.HiQ"] = Input { Value = FuID { "SAT" } }
+										},
+										Name = "SphereMap",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									SphereMap = SphereMap {
+										Inputs = {
+											Rotation = Input { Value = 1 },
+											["FilterMode.Nest"] = Input { Value = 1 },
+											["Rotate.Y"] = Input { Value = 90 },
+											MaterialID = Input { Value = 1 },
+											["FilterMode.SW.HiQ"] = Input { Value = FuID { "Nearest" } },
+											Image = Input {
+												SourceOp = "Loader1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Image = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+				},
+				PanoMerge = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 115.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "RotateEquirectangular"
+}

@@ -1,0 +1,228 @@
+{
+	Tools = ordered() {
+		ViewerMeshStereo = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-viewer.html#ViewerMeshStereo",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ReplaceMaterial3DLeft",
+					Source = "MaterialInput",
+					Name = "Left",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "ReplaceMaterial3DRight",
+					Source = "MaterialInput",
+					Name = "Right",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "FBXMesh3DCenter",
+					Source = "ImportFile",
+					Name = "Mesh File",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Width",
+					MaxScale = 16384,
+					Default = 3840,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DLeft",
+					Source = "RendererType",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "AovType",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "AoV",
+					Default = 90,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "FLength",
+					Default = 12.7,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "FilmGate",
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "ApertureW",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "ApertureH",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "LensShiftX",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "LensShiftY",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input14 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.X",
+					Default = 0,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.Y",
+					Default = 0,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "Camera3DCenter",
+					Source = "Transform3DOp.Rotate.Z",
+					Default = 0,
+				},
+				Input17 = InstanceInput {
+					SourceOp = "FBXMesh3DCenter",
+					Source = "Transform3DOp.Scale.X",
+					Name = "Scale",
+					MaxScale = 10000,
+					Default = 1000,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Renderer3DLeft",
+					Source = "Output",
+					Name = "LeftOutput",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "Renderer3DRight",
+					Source = "Output",
+					Name = "RightOutput",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				Renderer3DLeft = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "ReplaceMaterial3DLeft",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DCenter" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 247.5 } },
+				},
+				Renderer3DRight = Renderer3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 3840,
+							Expression = "Renderer3DLeft.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "Renderer3DLeft.Height",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "ReplaceMaterial3DRight",
+							Source = "Output",
+						},
+						RendererType = Input { Expression = "Renderer3DLeft.RendererType", },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 280.5 } },
+				},
+				ReplaceMaterial3DRight = ReplaceMaterial3D {
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "CameraCenterViewInput",
+							Source = "Output",
+						},
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 280.5 } },
+				},
+				ReplaceMaterial3DLeft = ReplaceMaterial3D {
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "CameraCenterViewInput",
+							Source = "Output",
+						},
+						["MtlStdInputs.ReceivesLighting"] = Input { Value = 0, },
+						["MtlStdInputs.ReceivesShadows"] = Input { Value = 0, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 2, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 247.5 } },
+				},
+				CameraCenterViewInput = Merge3D {
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "FBXMesh3DCenter",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "Camera3DCenter",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 181.5 } },
+				},
+				FBXMesh3DCenter = SurfaceFBXMesh {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Scale.X"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						TransformToWorld = Input { Value = 0, },
+						["ObjectID.ObjectID"] = Input { Value = 2, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 181.5 } },
+				},
+				Camera3DCenter = Camera3D {
+					NameSet = true,
+					Inputs = {
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 115.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "ViewerMeshStereo"
+}

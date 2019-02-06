@@ -1,0 +1,2184 @@
+{
+	Tools = ordered() {
+		EquirectangularRenderer3DAdvanced = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-renderer3d.html#EquirectangularRenderer3DAdvanced",
+      },
+			Inputs = ordered() {
+			  MainInput1 = InstanceInput {
+					SourceOp = "CameraViewInput",
+					Source = "SceneInput1",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVRenderer3DColor",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "UVRenderer3DColor",
+					Source = "Depth",
+					Default = 4,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.RGBA",
+					Default = 1,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.Z",
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.Coverage",
+					Default = 1,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.BgColor",
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.TexCoord0",
+					Default = 1,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.ObjectID",
+					Default = 1,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.MaterialID",
+					Default = 1,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.Channels.WorldCoord",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.LightingEnabled",
+					Default = 1,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "Renderer3DFront",
+					Source = "RendererSoftware.ShadowsEnabled",
+					Default = 1,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "Transform3DOp.Translate.X",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				Input14 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "Transform3DOp.Translate.Y",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				Input15 = InstanceInput {
+					SourceOp = "Camera3DFront",
+					Source = "Transform3DOp.Translate.Z",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				Input16 = InstanceInput {
+					SourceOp = "CubeMapColor",
+					Source = "Rotate.RotOrder",
+				},
+				Input17 = InstanceInput {
+					SourceOp = "CubeMapColor",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input18 = InstanceInput {
+					SourceOp = "CubeMapColor",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input19 = InstanceInput {
+					SourceOp = "CubeMapColor",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ChannelBooleansBGColorMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				Camera3DFront = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, -82.5 } },
+				},
+				Camera3DBack = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -90,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+						},
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = 180,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.Z+180.0",
+						},
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, -16.5 } },
+				},
+				Camera3DLeft = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -90,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+						},
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = -90,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.Z-90.0",
+						},
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, 16.5 } },
+				},
+				Camera3DTop = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.X+90", },
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Z", },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, 49.5 } },
+				},
+				Camera3DRight = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -90,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.X",
+						},
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = 90,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.Z+90",
+						},
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, -49.5 } },
+				},
+				Camera3DBottom = Camera3D {
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Translate.X"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.X", },
+						["Transform3DOp.Translate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Y", },
+						["Transform3DOp.Translate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Translate.Z", },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -180,
+							Expression = "Camera3DFront.Transform3DOp.Rotate.X-90",
+						},
+						["Transform3DOp.Rotate.Y"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Y", },
+						["Transform3DOp.Rotate.Z"] = Input { Expression = "Camera3DFront.Transform3DOp.Rotate.Z", },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1430, 82.5 } },
+				},
+				CameraViewInput = Merge3D {
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput2 = Input {
+							SourceOp = "Camera3DFront",
+							Source = "Output",
+						},
+						SceneInput3 = Input {
+							SourceOp = "Camera3DRight",
+							Source = "Output",
+						},
+						SceneInput5 = Input {
+							SourceOp = "Camera3DLeft",
+							Source = "Output",
+						},
+						SceneInput4 = Input {
+							SourceOp = "Camera3DBack",
+							Source = "Output",
+						},
+						SceneInput7 = Input {
+							SourceOp = "Camera3DBottom",
+							Source = "Output",
+						},
+						SceneInput6 = Input {
+							SourceOp = "Camera3DTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, 181.5 } },
+				},
+				Renderer3DBack = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DBack" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+						},
+						["RendererSoftware.Channels.Coverage"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage",
+						},
+						["RendererSoftware.Channels.BgColor"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor",
+						},
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0",
+						},
+						["RendererSoftware.Channels.ObjectID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID",
+						},
+						["RendererSoftware.Channels.MaterialID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID",
+						},
+						["RendererSoftware.Channels.WorldCoord"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord",
+						},
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+						},
+						["RendererSoftware.ShadowsEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+						},
+						["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 247.5 } },
+				},
+				Renderer3DFront = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DFront" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.Z"] = Input { Value = 1, },
+						["RendererSoftware.Channels.Coverage"] = Input { Value = 1, },
+						["RendererSoftware.Channels.BgColor"] = Input { Value = 1, },
+						["RendererSoftware.Channels.TexCoord0"] = Input { Value = 1, },
+						["RendererSoftware.Channels.ObjectID"] = Input { Value = 1, },
+						["RendererSoftware.Channels.MaterialID"] = Input { Value = 1, },
+						["RendererSoftware.Channels.WorldCoord"] = Input { Value = 1, },
+						["RendererSoftware.LightingEnabled"] = Input { Value = 1, },
+						["RendererSoftware.ShadowsEnabled"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 181.5 } },
+				},
+				Renderer3DTop = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DTop" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+						},
+						["RendererSoftware.Channels.Coverage"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage",
+						},
+						["RendererSoftware.Channels.BgColor"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor",
+						},
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0",
+						},
+						["RendererSoftware.Channels.ObjectID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID",
+						},
+						["RendererSoftware.Channels.MaterialID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID",
+						},
+						["RendererSoftware.Channels.WorldCoord"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord",
+						},
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+						},
+						["RendererSoftware.ShadowsEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+						},
+						["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 313.5 } },
+				},
+				Renderer3DBottom = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DBottom" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+						},
+						["RendererSoftware.Channels.Coverage"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage",
+						},
+						["RendererSoftware.Channels.BgColor"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor",
+						},
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0",
+						},
+						["RendererSoftware.Channels.ObjectID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID",
+						},
+						["RendererSoftware.Channels.MaterialID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID",
+						},
+						["RendererSoftware.Channels.WorldCoord"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord",
+						},
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+						},
+						["RendererSoftware.ShadowsEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+						},
+						["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 346.5 } },
+				},
+				Renderer3DLeft = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DLeft" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+						},
+						["RendererSoftware.Channels.Coverage"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage",
+						},
+						["RendererSoftware.Channels.BgColor"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor",
+						},
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0",
+						},
+						["RendererSoftware.Channels.ObjectID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID",
+						},
+						["RendererSoftware.Channels.MaterialID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID",
+						},
+						["RendererSoftware.Channels.WorldCoord"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord",
+						},
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+						},
+						["RendererSoftware.ShadowsEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+						},
+						["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 280.5 } },
+				},
+				Renderer3DRight = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3DColor.Height*0.5",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Camera3DRight" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.RGBA", },
+						["RendererSoftware.Channels.Z"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Z",
+						},
+						["RendererSoftware.Channels.Coverage"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.Coverage",
+						},
+						["RendererSoftware.Channels.BgColor"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.BgColor",
+						},
+						["RendererSoftware.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Normal", },
+						["RendererSoftware.Channels.TexCoord0"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.TexCoord0",
+						},
+						["RendererSoftware.Channels.ObjectID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.ObjectID",
+						},
+						["RendererSoftware.Channels.MaterialID"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.MaterialID",
+						},
+						["RendererSoftware.Channels.WorldCoord"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.Channels.WorldCoord",
+						},
+						["RendererSoftware.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.Vector", },
+						["RendererSoftware.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererSoftware.Channels.BackVector", },
+						["RendererSoftware.Lighting"] = Input { Value = 0, },
+						["RendererSoftware.LightingEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.LightingEnabled",
+						},
+						["RendererSoftware.ShadowsEnabled"] = Input {
+							Value = 1,
+							Expression = "Renderer3DFront.RendererSoftware.ShadowsEnabled",
+						},
+						["RendererOpenGL.Channels.Nest"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Nest", },
+				["RendererOpenGL.Channels.Z"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Z", },
+				["RendererOpenGL.Channels.Normal"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Normal", },
+				["RendererOpenGL.Channels.TexCoord0"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.TexCoord0", },
+				["RendererOpenGL.Channels.ObjectID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.ObjectID", },
+				["RendererOpenGL.Channels.MaterialID"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.MaterialID", },
+				["RendererOpenGL.Channels.WorldCoord"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.WorldCoord", },
+				["RendererOpenGL.Channels.Vector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.Vector", },
+				["RendererOpenGL.Channels.BackVector"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Channels.BackVector", },
+				["RendererOpenGL.Supersampling"] = Input { Expression = "Renderer3DFront.RendererOpenGL.Supersampling", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1815, 214.5 } },
+				},
+				PipeRouterLeft = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 280.5 } },
+				},
+				PipeRouterTop = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 313.5 } },
+				},
+				PipeRouterBack = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 247.5 } },
+				},
+				PipeRouterBottom = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 346.5 } },
+				},
+				PipeRouterRight = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 214.5 } },
+				},
+				PipeRouterFront = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Renderer3DFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1925, 181.5 } },
+				},
+				ChangeDepthBottom5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -280.5 } },
+				},
+				ChangeDepthBottom2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 511.5 } },
+				},
+				ChangeDepthFront2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 346.5 } },
+				},
+				ChangeDepthBottom = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 742.5 } },
+				},
+				ChangeDepthTop = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 709.5 } },
+				},
+				ChangeDepthLeft = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 676.5 } },
+				},
+				ChangeDepthBack = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 643.5 } },
+				},
+				ChangeDepthRight3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 115.5 } },
+				},
+				ChangeDepthLeft3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 181.5 } },
+				},
+				ChangeDepthBack3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 148.5 } },
+				},
+				ChangeDepthBottom3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 247.5 } },
+				},
+				ChangeDepthFront3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 82.5 } },
+				},
+				ChangeDepthTop3 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 2, },
+						Input = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 214.5 } },
+				},
+				ChangeDepthRight = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 610.5 } },
+				},
+				ChangeDepthRight5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -412.5 } },
+				},
+				ChangeDepthTop5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -313.5 } },
+				},
+				ChangeDepthLeft4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -82.5 } },
+				},
+				ChangeDepthTop2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 478.5 } },
+				},
+				ChangeDepthTop4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -49.5 } },
+				},
+				ChangeDepthFront = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 577.5 } },
+				},
+				ChangeDepthBack5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -379.5 } },
+				},
+				ChangeDepthFront4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -181.5 } },
+				},
+				ChangeDepthRight4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -148.5 } },
+				},
+				ChangeDepthFront5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -445.5 } },
+				},
+				ChangeDepthBack2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 412.5 } },
+				},
+				ChangeDepthRight2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 379.5 } },
+				},
+				ChangeDepthLeft2 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, 445.5 } },
+				},
+				ChangeDepthBottom4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -16.5 } },
+				},
+				ChangeDepthBack4 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -115.5 } },
+				},
+				ChangeDepthLeft5 = ChangeDepth {
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Value = 4, },
+						Input = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2200, -346.5 } },
+				},
+				ChannelBooleansTop2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthTop2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 478.5 } },
+				},
+				ChannelBooleansRight2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthRight2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 379.5 } },
+				},
+				ChannelBooleansBack2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBack2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 412.5 } },
+				},
+				ChannelBooleansFront5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthFront5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -445.5 } },
+				},
+				ChannelBooleansRight5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthRight5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -412.5 } },
+				},
+				ChannelBooleansBack5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBack5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -379.5 } },
+				},
+				ChannelBooleansLeft5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthLeft5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -346.5 } },
+				},
+				ChannelBooleansTop5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthTop5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -313.5 } },
+				},
+				ChannelBooleansBottom5 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 27, },
+						ToGreen = Input { Value = 28, },
+						ToBlue = Input { Value = 29, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBottom5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -280.5 } },
+				},
+				ChannelBooleansFront3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthFront3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 82.5 } },
+				},
+				ChannelBooleansRight3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthRight3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 115.5 } },
+				},
+				ChannelBooleansFront4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthFront4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -181.5 } },
+				},
+				ChannelBooleansRight4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthRight4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -148.5 } },
+				},
+				ChannelBooleansBack4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBack4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -115.5 } },
+				},
+				ChannelBooleansLeft4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthLeft4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -82.5 } },
+				},
+				ChannelBooleansTop4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthTop4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -49.5 } },
+				},
+				ChannelBooleansBottom4 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 35, },
+						ToGreen = Input { Value = 36, },
+						ToBlue = Input { Value = 37, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBottom4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, -16.5 } },
+				},
+				ChannelBooleansBack3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBack3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 148.5 } },
+				},
+				ChannelBooleansBottom3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBottom3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 247.5 } },
+				},
+				ChannelBooleansLeft3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthLeft3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 181.5 } },
+				},
+				ChannelBooleansTop3 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 22, },
+						ToGreen = Input { Value = 23, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthTop3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 214.5 } },
+				},
+				ChannelBooleansBottom2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBottom2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 511.5 } },
+				},
+				ChannelBooleansFront2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthFront2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 346.5 } },
+				},
+				ChannelBooleansLeft2 = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 21, },
+						ToGreen = Input { Value = 20, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthLeft2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 445.5 } },
+				},
+				ChannelBooleansFront = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 577.5 } },
+				},
+				ChannelBooleansRight = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 610.5 } },
+				},
+				ChannelBooleansBack = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 643.5 } },
+				},
+				ChannelBooleansLeft = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 676.5 } },
+				},
+				ChannelBooleansTop = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 709.5 } },
+				},
+				ChannelBooleansBottom = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 18, },
+						ToGreen = Input { Value = 19, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "ChangeDepthBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2310, 742.5 } },
+				},
+				CubeMapColor = CubeMap {
+					NameSet = true,
+					Inputs = {
+						Orientation = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						Left = Input {
+							SourceOp = "PipeRouterLeft",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "PipeRouterRight",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "PipeRouterTop",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "PipeRouterBottom",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "PipeRouterFront",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "PipeRouterBack",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, 973.5 } },
+				},
+				CubeMapDepth = CubeMap {
+					NameSet = true,
+					SourceOp = "CubeMapColor",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						CrossImage = Input { },
+						Left = Input {
+							SourceOp = "ChannelBooleansLeft",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "ChannelBooleansRight",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "ChannelBooleansTop",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "ChannelBooleansBottom",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "ChannelBooleansFront",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "ChannelBooleansBack",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, 742.5 } },
+				},
+				CubeMapBGColor = CubeMap {
+					NameSet = true,
+					SourceOp = "CubeMapColor",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						CrossImage = Input { },
+						Left = Input {
+							SourceOp = "ChannelBooleansLeft5",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "ChannelBooleansRight5",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "ChannelBooleansTop5",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "ChannelBooleansBottom5",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "ChannelBooleansFront5",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "ChannelBooleansBack5",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, -280.5 } },
+				},
+				CubeMapWorld = CubeMap {
+					NameSet = true,
+					SourceOp = "CubeMapColor",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						CrossImage = Input { },
+						Left = Input {
+							SourceOp = "ChannelBooleansLeft4",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "ChannelBooleansRight4",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "ChannelBooleansTop4",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "ChannelBooleansBottom4",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "ChannelBooleansFront4",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "ChannelBooleansBack4",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, -16.5 } },
+				},
+				CubeMapTex = CubeMap {
+					NameSet = true,
+					SourceOp = "CubeMapColor",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						CrossImage = Input { },
+						Left = Input {
+							SourceOp = "ChannelBooleansLeft3",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "ChannelBooleansRight3",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "ChannelBooleansTop3",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "ChannelBooleansBottom3",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "ChannelBooleansFront3",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "ChannelBooleansBack3",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, 247.5 } },
+				},
+				CubeMapID = CubeMap {
+					NameSet = true,
+					SourceOp = "CubeMapColor",
+					Inputs = {
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						CrossImage = Input { },
+						Left = Input {
+							SourceOp = "ChannelBooleansLeft2",
+							Source = "Output",
+						},
+						Right = Input {
+							SourceOp = "ChannelBooleansRight2",
+							Source = "Output",
+						},
+						Up = Input {
+							SourceOp = "ChannelBooleansTop2",
+							Source = "Output",
+						},
+						Down = Input {
+							SourceOp = "ChannelBooleansBottom2",
+							Source = "Output",
+						},
+						Front = Input {
+							SourceOp = "ChannelBooleansFront2",
+							Source = "Output",
+						},
+						Back = Input {
+							SourceOp = "ChannelBooleansBack2",
+							Source = "Output",
+						},
+						MaterialIDNest = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, 511.5 } },
+				},
+				Shape3DSphereWorld = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapWorld",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, -16.5 } },
+				},
+				Shape3DSphereID = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapID",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, 511.5 } },
+				},
+				Shape3DSphereColor = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapColor",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, 973.5 } },
+				},
+				Shape3DSphereBGColor = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapBGColor",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, -280.5 } },
+				},
+				Shape3DSphereTex = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapTex",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, 247.5 } },
+				},
+				Shape3DSphereDepth = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMapDepth",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 2585, 742.5 } },
+				},
+				UVRenderer3DWorld = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "UVRenderer3DColor.Height*2",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "UVRenderer3DColor.Height",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereWorld",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 4, },
+						["RendererOpenGLUV.WireframeAntialiasing"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, -16.5 } },
+				},
+				UVRenderer3DBGColor = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "UVRenderer3DColor.Height*2",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "UVRenderer3DColor.Height",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereBGColor",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 4, },
+						["RendererOpenGLUV.WireframeAntialiasing"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, -280.5 } },
+				},
+				UVRenderer3DDepth = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "UVRenderer3DColor.Height*2",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "UVRenderer3DColor.Height",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereDepth",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, 742.5 } },
+				},
+				UVRenderer3DColor = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereColor",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, 973.5 } },
+				},
+				UVRenderer3DTex = Renderer3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "UVRenderer3DColor.Height*2",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "UVRenderer3DColor.Height",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereTex",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 2, },
+						["RendererOpenGLUV.WireframeAntialiasing"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, 247.5 } },
+				},
+				UVRenderer3DID = Renderer3D {
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 144, },
+						Width = Input {
+							Value = 3840,
+							Expression = "UVRenderer3DColor.Height*2",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "UVRenderer3DColor.Height",
+						},
+						Depth = Input { Value = 4, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphereID",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 4, },
+						["RendererOpenGLUV.WireframeAntialiasing"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2695, 511.5 } },
+				},
+				PipeRouterTex = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DTex",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2805, 247.5 } },
+				},
+				PipeRouterBGColor = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DBGColor",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2805, -280.5 } },
+				},
+				PipeRouterID = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DID",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2805, 511.5 } },
+				},
+				PipeRouterDepth = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2805, 742.5 } },
+				},
+				PipeRouterWorld = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DWorld",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2805, -16.5 } },
+				},
+				ChannelBooleansBGColorMerge = ChannelBoolean {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToBGRed = Input { Value = 0, },
+						ToBGGreen = Input { Value = 1, },
+						ToBGBlue = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "ChannelBooleansWorldMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouterBGColor",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2970, -280.5 } },
+				},
+				ChannelBooleansDepthMerge = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToZBuffer = Input { Value = 0, },
+						ToZCoverage = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "PipeRouterColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouterDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2970, 742.5 } },
+				},
+				ChannelBooleansIDMerge = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToObjectID = Input { Value = 1, },
+						ToMaterialID = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "ChannelBooleansDepthMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouterID",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2970, 511.5 } },
+				},
+				ChannelBooleansTexMerge = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 0, },
+						ToVTexture = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "ChannelBooleansIDMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouterTex",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2970, 247.5 } },
+				},
+				ChannelBooleansWorldMerge = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToXPosition = Input { Value = 0, },
+						ToYPosition = Input { Value = 1, },
+						ToZPosition = Input { Value = 2, },
+						Background = Input {
+							SourceOp = "ChannelBooleansTexMerge",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouterWorld",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2970, -16.5 } },
+				},
+				PipeRouterColor = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVRenderer3DColor",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3025, 973.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "EquirectangularRenderer3DAdvanced"
+}

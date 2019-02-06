@@ -1,0 +1,802 @@
+{
+	Tools = ordered() {
+		Z360DepthBlur = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-z360.html#Z360DepthBlur",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "Filter",
+					Name = "ZDepth Blur Filter",
+					Default = 2,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "BlurChannel",
+					Name = "ZDepth Blur Channel",
+					Default = 5,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "DepthBlur",
+					Source = "XBlurSize",
+					Name = "ZDepth Blur Size",
+					Default = 1,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "MasterRGBContrast",
+					Name = "ZDepth - Contrast",
+					Default = 1.0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "MasterRGBGain",
+					Name = "ZDepth- Gain",
+					Default = 1,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "MasterRGBLift",
+					Name = "ZDepth - Lift",
+					Default = 0,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "ZDepthColorCorrector",
+					Source = "MasterRGBGamma",
+					Name = "ZDepth - Gamma",
+					Default = 0.6,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "RGBColorCorrector",
+					Source = "Saturation1",
+					Name = "RGB - Saturation",
+					Default = 1,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "RGBColorCorrector",
+					Source = "MasterRGBContrast",
+					Name = "RGB - Contrast",
+					Default = 1,
+				},
+				Inpu10 = InstanceInput {
+					SourceOp = "RGBColorCorrector",
+					Source = "MasterRGBGain",
+					Name = "RGB - Gain",
+					Default = 1,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "RGBColorCorrector",
+					Source = "MasterRGBLift",
+					Name = "RGB - Lift",
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "RGBColorCorrector",
+					Source = "MasterRGBGamma",
+					Name = "RGB - Gamma",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OverUnderCrop",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				ViewTransformLeft = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ZDepthColorCorrector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4950, 2293.5 } },
+				},
+				OverUnderCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalHeight",
+						},
+						Input = Input {
+							SourceOp = "ViewMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 5115, 2029.5 } },
+				},
+				ViewMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "ViewTransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ViewTransformLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 4950, 2029.5 } },
+				},
+				ImageCanvasCrop = Crop {
+					NameSet = true,
+					SourceOp = "CanvasExpand",
+					Inputs = {
+						XOffset = Input {
+							Value = -6144,
+							Expression = "-PanoMerge.Background.OriginalWidth"
+						},
+						XSize = Input {
+							Value = 18432,
+							Expression = "PanoMerge.Background.OriginalWidth*3"
+						},
+						YSize = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2"
+						},
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "ImageRightMerge",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 4015, 1963.5 } },
+				},
+				ImageRightTransform = Transform {
+					NameSet = true,
+					SourceOp = "RightTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "ImagePipeRouter2",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 3685, 1963.5 } },
+				},
+				ImageRightMerge = Merge {
+					NameSet = true,
+					SourceOp = "RightMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "ImageRightTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ImageLeftMerge",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 3905, 1963.5 } },
+				},
+				ImagePipeRouterLeft = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageCanvasCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 4290, 1963.5 } },
+				},
+				ImagePipeRouter2 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter2",
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter1Left",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3465, 1963.5 } },
+				},
+				ImageLeftMerge = Merge {
+					NameSet = true,
+					SourceOp = "LeftMerge",
+					Inputs = {
+						Background = Input {
+							SourceOp = "ImagePipeRouter3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter1Left",
+							Source = "Output",
+						},
+						ReferenceSize = Input { Value = 1, },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 3905, 1897.5 } },
+				},
+				PipeRouter1Left = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "RGBColorCorrector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3300, 1897.5 } },
+				},
+				ImageLeftTransform = Transform {
+					NameSet = true,
+					SourceOp = "LeftTransform",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "ImagePipeRouter1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 3685, 1831.5 } },
+				},
+				ImagePipeRouter1 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter1",
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter1Left",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3465, 1831.5 } },
+				},
+				ImagePipeRouter3 = PipeRouter {
+					NameSet = true,
+					SourceOp = "DepthPipeRouter3",
+					Inputs = {
+						Input = Input {
+							SourceOp = "ImageLeftTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3905, 1831.5 } },
+				},
+				ZDepthColorCorrector = ColorCorrector {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									ZDepthColorCorrector = ColorCorrector {
+										Inputs = {
+											HistogramIgnoreTransparent = Input { Value = 1 },
+											ColorRanges = Input {
+												Value = ColorCurves {
+													Curves = {
+														{
+															Points = {
+																{ 0, 1 },
+																{ 0.4, 0.2 },
+																{ 0.6, 0 },
+																{ 1, 0 }
+															}
+														},
+														{
+															Points = {
+																{ 0, 0 },
+																{ 0.4, 0 },
+																{ 0.6, 0.2 },
+																{ 1, 1 }
+															}
+														}
+													}
+												}
+											},
+											Input = Input {
+												SourceOp = "RGBCropTop",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 2805, 2293.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						MasterRGBContrast = Input { Value = 1.0, },
+						MasterRGBGamma = Input { Value = 0.6, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						PreDividePostMultiply = Input { Value = 1, },
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "ZDepthCropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2805, 2293.5 } },
+				},
+				RGBColorCorrector = ColorCorrector {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									RGBColorCorrector = ColorCorrector {
+										Inputs = {
+											WheelSaturation1 = Input { Value = 1.3 },
+											ColorRanges = Input {
+												Value = ColorCurves {
+													Curves = {
+														{
+															Points = {
+																{ 0, 1 },
+																{ 0.4, 0.2 },
+																{ 0.6, 0 },
+																{ 1, 0 }
+															}
+														},
+														{
+															Points = {
+																{ 0, 0 },
+																{ 0.4, 0 },
+																{ 0.6, 0.2 },
+																{ 1, 1 }
+															}
+														}
+													}
+												}
+											},
+											Input = Input {
+												SourceOp = "ZDepthCropBottom",
+												Source = "Output"
+											},
+											HistogramIgnoreTransparent = Input { Value = 1 }
+										},
+										Name = "RGBColorCorrector",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									RGBColorCorrector = ColorCorrector {
+										Inputs = {
+											WheelSaturation1 = Input { Value = 1.3 },
+											ColorRanges = Input {
+												Value = ColorCurves {
+													Curves = {
+														{
+															Points = {
+																{ 0, 1 },
+																{ 0.4, 0.2 },
+																{ 0.6, 0 },
+																{ 1, 0 }
+															}
+														},
+														{
+															Points = {
+																{ 0, 0 },
+																{ 0.4, 0 },
+																{ 0.6, 0.2 },
+																{ 1, 1 }
+															}
+														}
+													}
+												}
+											},
+											Input = Input {
+												SourceOp = "ZDepthCropBottom",
+												Source = "Output"
+											},
+											HistogramIgnoreTransparent = Input { Value = 1 }
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						PreDividePostMultiply = Input { Value = 1, },
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "RGBCropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2805, 1897.5 } },
+				},
+				ZDepthCropTop = Crop {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2640, 2293.5 } },
+				},
+				RGBCropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						XSize = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2640, 1897.5 } },
+				},
+				ViewTransformRight = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.5, 1.5 }, },
+						Input = Input {
+							SourceOp = "CanvasShrink",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4950, 1732.5 } },
+				},
+				CanvasShrink = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						XSize = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "DepthBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4400, 1732.5 } },
+				},
+				DepthBlur = DepthBlur {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									DepthBlur = DepthBlur {
+										Inputs = {
+											Filter = Input { Value = 1 },
+											Input = Input {
+												SourceOp = "ImagePipeRouter4",
+												Source = "Output"
+											},
+											EffectMask = Input {
+												SourceOp = "EffectMaskCanvasExpand",
+												Source = "Output"
+											},
+											BlurChannel = Input { Value = 5 },
+											BlurImage = Input {
+												SourceOp = "CanvasExpand",
+												Source = "Output"
+											}
+										},
+										Name = "DepthBlur",
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									DepthBlur = DepthBlur {
+										Inputs = {
+											Filter = Input { Value = 1 },
+											Input = Input {
+												SourceOp = "ImagePipeRouter4",
+												Source = "Output"
+											},
+											EffectMask = Input {
+												SourceOp = "EffectMaskCanvasExpand",
+												Source = "Output"
+											},
+											BlurChannel = Input { Value = 5 },
+											BlurImage = Input {
+												SourceOp = "CanvasExpand",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 2145, 16.5 } },
+										CustomData = {
+										}
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						Filter = Input { Value = 2, },
+						BlurChannel = Input { Value = 5, },
+						Input = Input {
+							SourceOp = "ImagePipeRouterLeft",
+							Source = "Output",
+						},
+						BlurImage = Input {
+							SourceOp = "DepthChannelBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4290, 1732.5 } },
+				},
+				RightTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5 }, },
+						Input = Input {
+							SourceOp = "DepthPipeRouter2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 3685, 1732.5 } },
+				},
+				RightMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "RightTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "LeftMerge",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						ReferenceSize = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 3905, 1732.5 } },
+				},
+				DepthChannelBlur = Blur {
+					NameSet = true,
+					CurrentSettings = 2,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									DepthBlur = Blur {
+										Inputs = {
+											XBlurSize = Input { Value = 0 },
+											Input = Input {
+												SourceOp = "CanvasExpand",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										NameSet = true,
+										ViewInfo = OperatorInfo { Pos = { 4125, 1732.5 } },
+										CustomData = {
+										}
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						XBlurSize = Input { Value = 8, },
+						Input = Input {
+							SourceOp = "CanvasExpand",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4125, 1732.5 } },
+				},
+				CanvasExpand = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = -6144,
+							Expression = "-PanoMerge.Background.OriginalWidth",
+						},
+						XSize = Input {
+							Value = 18432,
+							Expression = "PanoMerge.Background.OriginalWidth*3",
+						},
+						YSize = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "RightMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 4015, 1732.5 } },
+				},
+				DepthPipeRouter2 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3465, 1732.5 } },
+				},
+				PipeRouter3 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 2585, 2095.5 } },
+				},
+				PanoMerge = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2475, 2095.5 } },
+				},
+				LeftMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "DepthPipeRouter3",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						ReferenceSize = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 3905, 1666.5 } },
+				},
+				PipeRouter1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ZDepthColorCorrector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3300, 1666.5 } },
+				},
+				LeftTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { -0.5, 0.5 }, },
+						Input = Input {
+							SourceOp = "DepthPipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 3685, 1600.5 } },
+				},
+				DepthPipeRouter1 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3465, 1600.5 } },
+				},
+				DepthPipeRouter3 = PipeRouter {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "LeftTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 3905, 1600.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Z360DepthBlur"
+}

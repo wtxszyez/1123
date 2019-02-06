@@ -1,0 +1,157 @@
+{
+	Tools = ordered() {
+		CubicFaces2YouTube180 = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#CubicFaces2YouTube180",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Front",
+					Name = "Front",
+				},
+				MainInput2 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Right",
+					Name = "Right",
+				},
+				MainInput3 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Back",
+					Name = "Back",
+				},
+				MainInput4 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Left",
+					Name = "Left",
+				},
+				MainInput5 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Up",
+					Name = "Top",
+				},
+				MainInput6 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Down",
+					Name = "Bottom",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.RotOrder",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "UVRenderer3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1265, 313.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 376.864, 100.88, 173, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				UVRenderer3D = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input {
+							Value = 1920,
+							Expression = "Height",
+						},
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3D",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 49.5 } },
+				},
+				Shape3D = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = -78.75, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 1000, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.StartSweep"] = Input { Value = 90, },
+						["SurfaceSphereInputs.EndSweep"] = Input { Value = 270, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 49.5 } },
+				},
+				CubeMap = CubeMap {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Orientation = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 49.5 } },
+				},
+			},
+		}
+	},
+	ActiveTool = "CubicFaces2YouTube180"
+}

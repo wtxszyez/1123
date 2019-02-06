@@ -1,0 +1,203 @@
+{
+	Tools = ordered() {
+		Cubemap3x22CubicFaces = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Cubemap3x22CubicFaces",
+      },
+			Inputs = ordered() {
+      	MainInput1 = InstanceInput {
+					SourceOp = "Cubemap3x2Input",
+					Source = "Background",
+          Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CropFront",
+					Source = "YSize",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "CropFront",
+					Source = "Output",
+					Name = "Front",
+				},
+        MainOutput2 = InstanceOutput {
+					SourceOp = "CropRight",
+					Source = "Output",
+					Name = "Right",
+				},
+        MainOutput3 = InstanceOutput {
+					SourceOp = "CropBack",
+					Source = "Output",
+					Name = "Back",
+				},
+				MainOutput4 = InstanceOutput {
+					SourceOp = "CropLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput5 = InstanceOutput {
+					SourceOp = "CropTop",
+					Source = "Output",
+					Name = "Top",
+				},
+				MainOutput6 = InstanceOutput {
+					SourceOp = "CropBottom",
+					Source = "Output",
+					Name = "Bottom",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				CropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input { Expression = "0", },
+						YOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input { Value = 1024, },
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 379.5, }, },
+				},
+				CropLeft = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input { Expression = "0", },
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 379.5, }, },
+				},
+				CropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 379.5, }, },
+				},
+				CropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YOffset = Input { Expression = "", },
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 379.5, }, },
+				},
+				CropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2048,
+							Expression = "CropFront.YSize*2",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 379.5, }, },
+				},
+				CropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						XOffset = Input {
+							Value = 2048,
+							Expression = "CropFront.YSize*2",
+						},
+						YOffset = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						XSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "CropFront.YSize",
+						},
+						Input = Input {
+							SourceOp = "Cubemap3x2Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 379.5, }, },
+				},
+				Cubemap3x2Input = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 247.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "Cubemap3x22CubicFaces",
+}

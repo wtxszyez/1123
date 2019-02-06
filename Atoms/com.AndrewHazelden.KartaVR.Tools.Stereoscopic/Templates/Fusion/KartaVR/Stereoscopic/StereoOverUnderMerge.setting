@@ -1,0 +1,163 @@
+{
+	Tools = ordered() {
+		StereoOverUnderMerge = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoOverUnderMerge",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Input",
+					Name = "Left",
+				},
+        MainInput2 = InstanceInput {
+					SourceOp = "InputScalingRight",
+					Source = "Input",
+					Name = "Right",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Width",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "InputScalingLeft",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "OverUnderCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "StereoOverUnderMerge",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				OverUnderCrop = Crop {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScalingLeft.Width",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "InputScalingLeft.Height",
+						},
+						Input = Input {
+							SourceOp = "ViewMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 148.5, }, },
+				},
+				ViewMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "ViewTransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ViewTransformLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 148.5, }, },
+				},
+				ViewTransformLeft = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.5, 1.5, }, },
+						Input = Input {
+							SourceOp = "ScaleHalfHeightLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 49.5, }, },
+				},
+				ViewTransformRight = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ScaleHalfHeightRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 148.5, }, },
+				},
+				ScaleHalfHeightRight = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 0.5, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "InputScalingRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 148.5, }, },
+				},
+				ScaleHalfHeightLeft = Scale {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 0.5, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Input = Input {
+							SourceOp = "InputScalingLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 49.5, }, },
+				},
+				InputScalingLeft = BetterResize {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 49.5, }, },
+				},
+				InputScalingRight = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "InputScalingLeft.Width",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "InputScalingLeft.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 148.5, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "StereoOverUnderMerge",
+}

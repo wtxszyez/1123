@@ -1,0 +1,84 @@
+{
+	Tools = ordered() {
+		UVPassFromRGBImage = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-uvpass.html#UVPassFromRGBImage",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "Texture",
+					Name = "Image",
+				},
+        MainInput2 = InstanceInput {
+					SourceOp = "UVTransform",
+					Source = "Input",
+					Name = "UV Pass",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipHoriz",
+					Name = "Flip Horizontal",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "FlipVert",
+					Name = "Flip Vertical",
+					Default = 0,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "Texture",
+					Source = "UOffset",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Texture",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				Texture = Texture {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "UVPassChannelBoolean",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 418, 108.879, }, },
+				},
+				UVPassChannelBoolean = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 6, },
+						Background = Input {
+							SourceOp = "UVTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 418.036, 45.7071, }, },
+				},
+				UVTransform = Transform {
+					NameSet = true,
+					ViewInfo = OperatorInfo { Pos = { 551.089, -22.1368, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "UVPassFromRGBImage",
+}

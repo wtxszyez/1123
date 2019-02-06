@@ -1,0 +1,44 @@
+{
+	Tools = ordered() {
+		FisheyeMask = GroupOperator {
+			CustomData = {
+			 HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#FisheyeMask",
+			},
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "FisheyeMaskShape",
+					Source = "MaskHeight",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "FisheyeMaskShape",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				FisheyeMaskShape = EllipseMask {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 2048,
+							Expression = "MaskHeight",
+						},
+						MaskHeight = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 244, -42.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "FisheyeMask"
+}

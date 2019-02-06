@@ -1,0 +1,223 @@
+{
+	Tools = ordered() {
+		StereoAnaglyphOU = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoAnaglyphOU",
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+					Name = "Image",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "HalfColorLeft",
+					Source = "Saturation1",
+					Name = "Saturation",
+					Default = 0.5,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Edges",
+					Default = 1,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Center",
+					Name = "Convergence",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Size",
+					Default = 1,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SlideTransform",
+					Source = "Angle",
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AnaglyphHalfColorMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { -210.177, 116.903 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 658.074, 189.261, 228, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -5.61317, -0.701647 }
+			},
+			Tools = ordered() {
+				AnaglyphHalfColorMerge = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 16, },
+						Background = Input {
+							SourceOp = "HalfColorRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "HalfColorLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 115.5 } },
+				},
+				HalfColorRight = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						WheelSaturation1 = Input {
+							Value = 0.5,
+							Expression = "HalfColorLeft.Saturation1",
+						},
+						Saturation1 = Input { Expression = "HalfColorLeft.Saturation1", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						PreDividePostMultiply = Input { Value = 1, },
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "SlideTransform",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 115.5 } },
+				},
+				SlideTransform = Transform {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Edges = Input { Value = 1, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 115.5 } },
+				},
+				HalfColorLeft = ColorCorrector {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						WheelSaturation1 = Input { Value = 0.5, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						PreDividePostMultiply = Input { Value = 1, },
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 16.5 } },
+				},
+				CropLeft = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						XSize = Input {
+							Value = 3840,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 16.5 } },
+				},
+				CropRight = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 3840,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1920,
+							Expression = "PanoMerge.Background.OriginalHeight/2",
+						},
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 115.5 } },
+				},
+				PanoMerge = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 49.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "StereoAnaglyphOU"
+}

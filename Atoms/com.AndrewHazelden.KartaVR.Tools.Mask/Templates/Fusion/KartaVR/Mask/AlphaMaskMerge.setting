@@ -1,0 +1,53 @@
+{
+	Tools = ordered() {
+		AlphaMaskMerge = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#AlphaMaskMerge",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "ChannelBooleansMatte",
+					Source = "Background",
+					Name = "Image",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "ChannelBooleansMatte",
+					Source = "Matte",
+					Name = "EffectMask",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "AlphaMultiplyMask",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				AlphaMultiplyMask = AlphaMultiply {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChannelBooleansMatte",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 552.383, 85.0724 } },
+				},
+				ChannelBooleansMatte = ChannelBoolean {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToGreen = Input { Value = 6, },
+						ToBlue = Input { Value = 7, },
+						ToAlpha = Input { Value = 30, },
+						EnableExtraChannels = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 82.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "AlphaMaskMerge"
+}

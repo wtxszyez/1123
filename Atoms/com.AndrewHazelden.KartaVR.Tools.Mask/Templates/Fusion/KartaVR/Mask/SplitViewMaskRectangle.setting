@@ -1,0 +1,116 @@
+{
+	Tools = ordered() {
+		SplitViewMaskRectangle = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#SplitViewMaskRectangle",
+      },
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "EffectMask",
+				},
+				Input2 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "SpitView",
+					Page = "Controls",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "MaskWidth",
+					Default = 3840,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "MaskHeight",
+					Default = 2160,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Level",
+					Default = 1,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Invert",
+				},
+				Input8 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Solid",
+					Default = 1,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "Filter",
+				},
+				Input10 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "SoftEdge",
+					Default = 0.04,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "SplitViewMask",
+					Source = "CornerRadius",
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "SplitViewMask",
+					Source = "Mask",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				SplitViewMask = RectangleMask {
+					CtrlWZoom = false,
+					NameSet = true,
+					CurrentSettings = 4,
+					Inputs = {
+						SoftEdge = Input { Value = 0.04, },
+						BorderWidth = Input {
+							Value = -0.04,
+							Expression = "SoftEdge*-1",
+						},
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input { Value = 3840, },
+						MaskHeight = Input { Value = 2160, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Center = Input {
+							Value = { 0.5, 0.25 },
+							Expression = "Point(iif(SplitViewMask.SpitView == 4, 0.5,iif(SplitViewMask.SpitView >= 2, 0.5, iif(SplitViewMask.SpitView == 1, 0.75, 0.25))), iif(SplitViewMask.SpitView == 4, 0.5,iif(SplitViewMask.SpitView <= 1, 0.5, iif(SplitViewMask.SpitView == 2, 0.75, 0.25))))",
+						},
+						Width = Input {
+							Value = 1,
+							Expression = "iif(SplitViewMask.SpitView == 4, 1,iif(SplitViewMask.SpitView >= 2, 1, 0.5))",
+						},
+						Height = Input { Expression = "iif(SplitViewMask.SpitView == 4, 1, iif(SplitViewMask.SpitView >= 2, 0.5, 1))", },
+						SpitView = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 439.475, 116.608 } },
+					UserControls = ordered() {
+						SpitView = {
+							{ CCS_AddString = "Left" },
+							{ CCS_AddString = "Right" },
+							{ CCS_AddString = "Top" },
+							{ CCS_AddString = "Bottom" },
+							{ CCS_AddString = "Full Frame" },
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							CC_LabelPosition = "Horizontal",
+							INPID_InputControl = "ComboControl",
+							LINKS_Name = "Spit View"
+						}
+					}
+				}
+			},
+		}
+	},
+	ActiveTool = "SplitViewMaskRectangle"
+}

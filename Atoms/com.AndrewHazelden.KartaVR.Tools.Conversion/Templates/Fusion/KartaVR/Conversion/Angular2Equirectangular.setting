@@ -1,0 +1,132 @@
+{
+	Tools = ordered() {
+		Angular2Equirectangular = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Angular2Equirectangular",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "WideAspectViewScale",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				WideAspectViewScale = Scale {
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						XSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "ViewRotate",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 660, 148.5 } },
+				},
+				ViewRotate = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "ViewResize",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 550, 148.5 } },
+				},
+				ViewResize = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						Height = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "EquirectConversionCrop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 440, 148.5 } },
+				},
+				EquirectConversionCrop = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScaling.Height",
+						},
+						YSize = Input {
+							Value = 1440,
+							Expression = "EquirectConversionCrop.XSize/1.422222222222222",
+						},
+						Input = Input {
+							SourceOp = "ViewSlide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 330, 148.5 } },
+				},
+				ViewSlide = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 0.75, 0.5 }, },
+						Edges = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "EquirectConversion",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 148.5 } },
+				},
+				EquirectConversion = CoordSpace {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 110, 148.5 } },
+				},
+				InputScaling = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 2048,
+							Expression = "Height",
+						},
+						Height = Input { Value = 2048, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 148.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Angular2Equirectangular"
+}

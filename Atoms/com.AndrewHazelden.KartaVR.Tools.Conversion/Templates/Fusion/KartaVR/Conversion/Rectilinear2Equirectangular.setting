@@ -1,0 +1,220 @@
+{
+	Tools = ordered() {
+		Rectilinear2Equirectangular = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#Rectilinear2Equirectangular",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "ProjectiveImage",
+					Name = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1",
+					Source = "Width",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "RectilinearUVRenderer3D1",
+					Source = "Depth",
+					Default = 0,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Angle",
+					Name = "FOV",
+					Default = 90,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Fit",
+				},
+				Input6 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Transform3DOp.Rotate.RotOrder",
+				},
+				Input7 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Transform3DOp.Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Transform3DOp.Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "RectilinearProjector3D1",
+					Source = "Transform3DOp.Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftRed",
+					Name = "Color",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftGreen",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftBlue",
+					ControlGroup = 1,
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "BackgroundColor",
+					Source = "TopLeftAlpha",
+					ControlGroup = 1,
+					Default = 0,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "BackgroundColorMerge",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				BackgroundColor = Background {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "RectilinearUVRenderer3D1.Width",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "RectilinearUVRenderer3D1.Height",
+						},
+						Depth = Input { Expression = "RectilinearUVRenderer3D1.Depth", },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftAlpha = Input { Value = 0, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0, 0, 0, 1 },
+									[1] = { 1, 1, 1, 1 }
+								}
+							},
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 247.5 } },
+				},
+				BackgroundColorMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "BackgroundColor",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RectilinearFlipTransform",
+							Source = "Output",
+						},
+						FlattenTransform = Input { Value = 1, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1760, 181.5 } },
+				},
+				RectilinearFlipTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "RectilinearUVRenderer3D1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1595, 181.5 } },
+				},
+				RectilinearUVRenderer3D1 = Renderer3D {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 3840, },
+						Height = Input { Value = 1920, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "RectilinearSphereShape3D1",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.LightingEnabled"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1485, 181.5 } },
+				},
+				RectilinearSphereShape3D1 = Shape3D {
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						SceneInput = Input {
+							SourceOp = "RectilinearProjector3D1",
+							Source = "Output",
+						},
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "RectilinearCatcher1",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.StartSweep"] = Input { Value = 90, },
+						["SurfaceSphereInputs.EndSweep"] = Input { Value = 450, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 2, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1375, 181.5 } },
+				},
+				RectilinearProjector3D1 = LightProjector {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+					  ["Transform3DOp.Rotate.RotOrder"] = Input { Value = FuID { "ZXY" }, },
+						Angle = Input { Value = 90, },
+						Fit = Input { Value = FuID { "Height" }, },
+						ProjectionMode = Input { Value = 2, },
+						["ShadowLightInputs3D.Nest"] = Input { Value = 1, },
+						["ShadowLightInputs3D.ShadowsEnabled"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1265, 181.5 } },
+				},
+				RectilinearCatcher1 = TexCatcher {
+					NameSet = true,
+					Inputs = {
+						ColorAccumulationMode = Input { Value = FuID { "Blend" }, },
+						AlphaAccumulationMode = Input { Value = FuID { "Blend" }, },
+						MaterialIDNest = Input { Value = 1, },
+						MaterialID = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1375, 115.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Rectilinear2Equirectangular"
+}

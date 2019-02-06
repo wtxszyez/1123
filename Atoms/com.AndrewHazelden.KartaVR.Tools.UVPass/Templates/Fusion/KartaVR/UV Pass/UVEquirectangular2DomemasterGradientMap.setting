@@ -1,0 +1,153 @@
+{
+	Tools = ordered() {
+		UVEquirectangular2DomemasterGradientMap = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-uvpass.html#UVEquirectangular2DomemasterGradientMap",
+      },
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "AngularGradBackground",
+					Source = "Width",
+					Name = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "AngularGradBackground",
+					Source = "Depth",
+					Default = 3,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "RedGreenChannelBooleans",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				RedGreenChannelBooleans = ChannelBoolean {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						ToRed = Input { Value = 5, },
+						ToBlue = Input { Value = 15, },
+						ToAlpha = Input { Value = 8, },
+						ToUTexture = Input { Value = 5, },
+						ToVTexture = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "AngularGradHorizontalFlipTransform",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RadialGradBackground",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 427.913, 241.144, }, },
+				},
+				AngularGradHorizontalFlipTransform = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "AngularGradBackground",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.233, 207.541, }, },
+				},
+				AngularGradBackground = Background {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 1920, },
+						Height = Input {
+							Value = 1920,
+							Expression = "Width",
+						},
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Type = Input { Value = FuID { "Gradient", }, },
+						TopLeftRed = Input { Value = 1, },
+						GradientType = Input { Value = FuID { "Angle", }, },
+						Start = Input { Value = { 0.5, 0.5, }, },
+						End = Input { Value = { 0.5, 1, }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 1, 1, 1, 1, },
+									[1] = { 0, 0, 0, 1, },
+								},
+							},
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 207.727, 208.388, }, },
+				},
+				RadialGradBackground = Background {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "AngularGradBackground.Width",
+						},
+						Height = Input {
+							Value = 1920,
+							Expression = "AngularGradBackground.Width",
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "AngularGradBackground.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2", }, },
+						Type = Input { Value = FuID { "Gradient", }, },
+						TopLeftRed = Input { Value = 1, },
+						GradientType = Input { Value = FuID { "Radial", }, },
+						Start = Input { Value = { 0.5, 0.5, }, },
+						End = Input { Value = { 0.5, 1, }, },
+						Gradient = Input {
+							Value = Gradient {
+								Colors = {
+									[0] = { 0.5, 1, 0.5, 1, },
+									[1] = { 0.5, 0.5, 0.5, 1, },
+								},
+							},
+						},
+						EffectMask = Input {
+							SourceOp = "FisheyeMask",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 207.935, 274.51, }, },
+				},
+				FisheyeMask = EllipseMask {
+					NameSet = true,
+					Inputs = {
+						OutputSize = Input { Value = FuID { "Custom", }, },
+						MaskWidth = Input {
+							Value = 1920,
+							Expression = "AngularGradBackground.Width",
+						},
+						MaskHeight = Input {
+							Value = 1920,
+							Expression = "AngularGradBackground.Width",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						Depth = Input {
+							Value = 3,
+							Expression = "AngularGradBackground.Depth",
+						},
+						ClippingMode = Input { Value = FuID { "None", }, },
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 91.01, 242.198, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "UVEquirectangular2DomemasterGradientMap",
+}

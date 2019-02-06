@@ -1,0 +1,222 @@
+{
+	Tools = ordered() {
+		FacebookVerticalStrip2CubicFaces = GroupOperator {
+			CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#FacebookVerticalStrip2CubicFaces",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "PanoMerge",
+					Source = "Background",
+				},
+			},
+			Outputs = {
+			  MainOutput1 = InstanceOutput {
+					SourceOp = "CropFront",
+					Source = "Output",
+					Name = "Front",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "CropRight",
+					Source = "Output",
+					Name = "Right",
+				},
+				MainOutput3 = InstanceOutput {
+					SourceOp = "CropBack",
+					Source = "Output",
+					Name = "Back",
+				},
+				MainOutput4 = InstanceOutput {
+					SourceOp = "CropLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput5 = InstanceOutput {
+					SourceOp = "TransformTop180",
+					Source = "Output",
+					Name = "Top",
+				},
+				MainOutput6 = InstanceOutput {
+					SourceOp = "TransformBottom180",
+					Source = "Output",
+					Name = "Bottom",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				TransformBottom180 = Transform {
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "CropBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 544.5 } },
+				},
+				TransformTop180 = Transform {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "CropTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 880, 445.5 } },
+				},
+				CropTop = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 4608,
+							Expression = "PanoMerge.Background.OriginalWidth*3",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 445.5 } },
+				},
+				CropFront = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 49.5 } },
+				},
+				CropBottom = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 3072,
+							Expression = "PanoMerge.Background.OriginalWidth*2",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 544.5 } },
+				},
+				CropRight = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 7680,
+							Expression = "PanoMerge.Background.OriginalWidth*5",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 148.5 } },
+				},
+				CropBack = Crop {
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 247.5 } },
+				},
+				CropLeft = Crop {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 6144,
+							Expression = "PanoMerge.Background.OriginalWidth*4",
+						},
+						XSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						YSize = Input {
+							Value = 1536,
+							Expression = "PanoMerge.Background.OriginalWidth",
+						},
+						Input = Input {
+							SourceOp = "FlipViews",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 346.5 } },
+				},
+				FlipViews = Transform {
+					NameSet = true,
+					Inputs = {
+						FlipHoriz = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "PanoMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 247.5 } },
+				},
+				PanoMerge = Merge {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, 247.5 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "FacebookVerticalStrip2CubicFaces"
+}

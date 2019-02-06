@@ -1,0 +1,692 @@
+{
+	Tools = ordered() {
+		CubicFaces2GearVRStereo = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#CubicFaces2GearVRStereo",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "LeftCamInputScalingFront",
+					Source = "Input",
+					Name = "LeftCam_Front",
+				},
+        MainInput2 = InstanceInput {
+					SourceOp = "LeftCamInputScalingRight",
+					Source = "Input",
+					Name = "LeftCam_Right",
+				},
+        MainInput3 = InstanceInput {
+					SourceOp = "LeftCamInputScalingBack",
+					Source = "Input",
+					Name = "LeftCam_Back",
+				},
+        MainInput4 = InstanceInput {
+					SourceOp = "LeftCamInputScalingLeft",
+					Source = "Input",
+					Name = "LeftCam_Left",
+				},
+        MainInput5 = InstanceInput {
+					SourceOp = "LeftCamInputScalingTop",
+					Source = "Input",
+					Name = "LeftCam_Top",
+				},
+				MainInput6 = InstanceInput {
+					SourceOp = "LeftCamInputScalingBottom",
+					Source = "Input",
+					Name = "LeftCam_Bottom",
+				},
+				MainInput7 = InstanceInput {
+					SourceOp = "RightCamInputScalingFront",
+					Source = "Input",
+					Name = "RightCam_Front",
+				},
+				MainInput8 = InstanceInput {
+					SourceOp = "RightCamInputScalingRight",
+					Source = "Input",
+					Name = "RightCam_Right",
+				},
+        MainInput9 = InstanceInput {
+					SourceOp = "RightCamInputScalingBack",
+					Source = "Input",
+					Name = "RightCam_Back",
+				},
+				MainInput10 = InstanceInput {
+					SourceOp = "RightCamInputScalingLeft",
+					Source = "Input",
+					Name = "RightCam_Left",
+				},
+				MainInput11 = InstanceInput {
+					SourceOp = "RightCamInputScalingTop",
+					Source = "Input",
+					Name = "RightCam_Top",
+				},
+				MainInput12 = InstanceInput {
+					SourceOp = "RightCamInputScalingBottom",
+					Source = "Input",
+					Name = "RightCam_Bottom",
+				},
+        Input1 = InstanceInput {
+					SourceOp = "LeftCamInputScalingFront",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "SideBySideCrop",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0, }, },
+			Tools = ordered() {
+				LeftCamInputScalingFront = BetterResize {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "Height",
+						},
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, -148.5, }, },
+				},
+				LeftCamInputScalingBottom = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, -148.5, }, },
+				},
+				LeftCamInputScalingBack = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -148.5, }, },
+				},
+				LeftCamInputScalingLeft = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, -148.5, }, },
+				},
+				LeftCamInputScalingTop = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, -148.5, }, },
+				},
+				LeftCamInputScalingRight = BetterResize {
+					NameSet = true,
+					Inputs = {
+						Width = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Height = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, -148.5, }, },
+				},
+				RightCamInputScalingFront = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingFront",
+					Inputs = {
+						Width = Input { Expression = "Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1421.46, -153.327, }, },
+				},
+				RightCamInputScalingRight = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingRight",
+					Inputs = {
+						Width = Input { Expression = "LeftCamInputScalingFront.Height", },
+						Height = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1971.46, -153.327, }, },
+				},
+				RightCamInputScalingLeft = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingLeft",
+					Inputs = {
+						Width = Input { Expression = "LeftCamInputScalingFront.Height", },
+						Height = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1861.46, -153.327, }, },
+				},
+				RightCamInputScalingTop = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingTop",
+					Inputs = {
+						Width = Input { Expression = "LeftCamInputScalingFront.Height", },
+						Height = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1751.46, -153.327, }, },
+				},
+				RightCamInputScalingBack = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingBack",
+					Inputs = {
+						Width = Input { Expression = "LeftCamInputScalingFront.Height", },
+						Height = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1641.46, -153.327, }, },
+				},
+				RightCamInputScalingBottom = BetterResize {
+					NameSet = true,
+					SourceOp = "LeftCamInputScalingBottom",
+					Inputs = {
+						Width = Input { Expression = "LeftCamInputScalingFront.Height", },
+						Height = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						Input = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1531.46, -153.327, }, },
+				},
+				TransformTop = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 2.5, 0.5, }, },
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "LeftCamInputScalingTop",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, -16.5, }, },
+				},
+				TransformLeft = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "LeftCamInputScalingLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, -16.5, }, },
+				},
+				TransformRight = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "LeftCamInputScalingRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, -16.5, }, },
+				},
+				TransformBack = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 4.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "LeftCamInputScalingBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, -16.5, }, },
+				},
+				Instance_TransformTop = Transform {
+					NameSet = true,
+					SourceOp = "TransformTop",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingTop",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1751.46, -21.3273, }, },
+				},
+				Instance_TransformBack = Transform {
+					NameSet = true,
+					SourceOp = "TransformBack",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingBack",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1641.46, -21.3273, }, },
+				},
+				Instance_TransformBottom = Transform {
+					NameSet = true,
+					SourceOp = "TransformBottom",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingBottom",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1531.46, -21.3273, }, },
+				},
+				Instance_TransformRight = Transform {
+					NameSet = true,
+					SourceOp = "TransformRight",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingRight",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1971.46, -21.3273, }, },
+				},
+				Instance_TransformLeft = Transform {
+					NameSet = true,
+					SourceOp = "TransformLeft",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingLeft",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1861.46, -21.3273, }, },
+				},
+				TransformBottom = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 3.5, 0.5, }, },
+						Angle = Input { Value = 180, },
+						Input = Input {
+							SourceOp = "LeftCamInputScalingBottom",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, -16.5, }, },
+				},
+				RightCamCrop2Cubemap = Crop {
+					NameSet = true,
+					SourceOp = "LeftCamCrop2Cubemap",
+					Inputs = {
+						XSize = Input { Expression = "LeftCamInputScalingFront.Height*6", },
+						YSize = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "Instance_MergeRight",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2136.46, 110.673, }, },
+				},
+				Instance_MergeRight = Merge {
+					NameSet = true,
+					SourceOp = "MergeRight",
+					Inputs = {
+						Background = Input {
+							SourceOp = "Instance_TransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_MergeLeft",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1971.46, 110.673, }, },
+				},
+				Instance_MergeLeft = Merge {
+					NameSet = true,
+					SourceOp = "MergeLeft",
+					Inputs = {
+						Background = Input {
+							SourceOp = "Instance_TransformLeft",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_MergeTop",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1861.46, 110.673, }, },
+				},
+				Instance_TransformFront = Transform {
+					NameSet = true,
+					SourceOp = "TransformFront",
+					Inputs = {
+						ReferenceSize = Input { },
+						Input = Input {
+							SourceOp = "RightCamInputScalingFront",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1421.46, 110.673, }, },
+				},
+				Instance_MergeBottom = Merge {
+					NameSet = true,
+					SourceOp = "MergeBottom",
+					Inputs = {
+						Background = Input {
+							SourceOp = "Instance_TransformBottom",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_TransformFront",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1531.46, 110.673, }, },
+				},
+				Instance_MergeBack = Merge {
+					NameSet = true,
+					SourceOp = "MergeBack",
+					Inputs = {
+						Background = Input {
+							SourceOp = "Instance_TransformBack",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_MergeBottom",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1641.46, 110.673, }, },
+				},
+				Instance_MergeTop = Merge {
+					NameSet = true,
+					SourceOp = "MergeTop",
+					Inputs = {
+						Background = Input {
+							SourceOp = "Instance_TransformTop",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_MergeBack",
+							Source = "Output",
+						},
+						ReferenceSize = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1751.46, 110.673, }, },
+				},
+				LeftCamCrop2Cubemap = Crop {
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 6144,
+							Expression = "LeftCamInputScalingFront.Height*6",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Input = Input {
+							SourceOp = "MergeRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, 115.5, }, },
+				},
+				MergeRight = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "MergeLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 935, 115.5, }, },
+				},
+				MergeBack = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformBack",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "MergeBottom",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 605, 115.5, }, },
+				},
+				MergeTop = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformTop",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "MergeBack",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 715, 115.5, }, },
+				},
+				MergeLeft = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformLeft",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "MergeTop",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 825, 115.5, }, },
+				},
+				MergeBottom = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "TransformBottom",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "TransformFront",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 495, 115.5, }, },
+				},
+				TransformFront = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 5.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "LeftCamInputScalingFront",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 115.5, }, },
+				},
+				Crop1 = Crop {
+					Inputs = {
+						XSize = Input {
+							Value = 6144,
+							Expression = "LeftCamInputScalingFront.Height*6",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Input = Input {
+							SourceOp = "LeftCamCrop2Cubemap",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1098.59, 254.098, }, },
+				},
+				Instance_Crop1 = Crop {
+					SourceOp = "Crop1",
+					Inputs = {
+						XSize = Input { Expression = "LeftCamInputScalingFront.Height*6", },
+						YSize = Input { Expression = "LeftCamInputScalingFront.Height", },
+						ResetSize = Input { },
+						ResetOffset = Input { },
+						Input = Input {
+							SourceOp = "RightCamCrop2Cubemap",
+							Source = "Output",
+						},
+						AutoCrop = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2136.4, 257.231, }, },
+				},
+				ViewTransformLeft = Transform {
+					NameSet = true,
+					Inputs = {
+						Input = Input {
+							SourceOp = "Instance_Crop1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2138.17, 382.889, }, },
+				},
+				ViewTransformRight = Transform {
+					NameSet = true,
+					Inputs = {
+						Center = Input { Value = { 1.5, 0.5, }, },
+						Input = Input {
+							SourceOp = "Crop1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1098.31, 391.379, }, },
+				},
+				ViewMerge = Merge {
+					NameSet = true,
+					Inputs = {
+						Background = Input {
+							SourceOp = "ViewTransformRight",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ViewTransformLeft",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1628.33, 487.546, }, },
+				},
+				SideBySideCrop = Crop {
+					CtrlWZoom = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 12288,
+							Expression = "LeftCamInputScalingFront.Height*12",
+						},
+						YSize = Input {
+							Value = 1024,
+							Expression = "LeftCamInputScalingFront.Height",
+						},
+						Input = Input {
+							SourceOp = "ViewMerge",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1626.6, 621.896, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "CubicFaces2GearVRStereo",
+}

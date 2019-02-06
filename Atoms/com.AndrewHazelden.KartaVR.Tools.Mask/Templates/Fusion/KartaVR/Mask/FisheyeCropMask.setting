@@ -1,0 +1,164 @@
+{
+	Tools = ordered() {
+		FisheyeCropMask = GroupOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-mask.html#FisheyeCropMask",
+			},
+			Inputs = ordered() {
+				Input2 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "MaskWidth",
+					MaxScale = 8192,
+					Default = 3840,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "MaskHeight",
+					MaxScale = 8192,
+					Default = 2160,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "Width",
+					Name = "Scale X",
+					Default = 0.79,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "Height",
+					Name = "Scale Y",
+					Default = 0.79,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "Center",
+				},
+				Input7 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "Angle",
+					Default = 0,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "SoftEdge",
+					Default = 0.02,
+				},
+				Input9 = InstanceInput {
+					SourceOp = "ptEllipseMask",
+					Source = "BorderWidth",
+					Default = -0.02,
+				},
+				Input10 = InstanceInput {
+					SourceOp = "ptRectangleMask",
+					Source = "SoftEdge",
+					Name = "Crop Soft Edge",
+					Default = 0.02,
+				},
+				Input11 = InstanceInput {
+					SourceOp = "ptRectangleMask",
+					Source = "BorderWidth",
+					Name = "Crop Border Width",
+					MinScale = -0.4,
+					MaxScale = 0.4,
+					Default = -0.04,
+				},
+				Input12 = InstanceInput {
+					SourceOp = "ptMatteControl",
+					Source = "MatteBlur",
+					Default = 0,
+				},
+				Input13 = InstanceInput {
+					SourceOp = "ptMatteControl",
+					Source = "InvertGarbageMatte",
+					Default = 0,
+				},
+				Input1 = InstanceInput {
+					SourceOp = "ptMatteControl",
+					Source = "GarbageMatte",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "ptMatteControl",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 962, 124 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 227.938, 95.8562, 113.969, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				ptMatteControl = MatteControl {
+					NameSet = true,
+					Inputs = {
+						MatteCombine = Input { Value = 4, },
+						CombineOp = Input { Value = 5, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						MultiplyGarbageMatte = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "ptEllipseMask",
+							Source = "Mask",
+						},
+						Foreground = Input {
+							SourceOp = "ptRectangleMask",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 42.4281 } },
+				},
+				ptRectangleMask = RectangleMask {
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input { Value = 0.02, },
+						BorderWidth = Input { Value = -0.04, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input {
+							Value = 7680,
+							Expression = "ptEllipseMask.MaskWidth*2",
+						},
+						MaskHeight = Input {
+							Value = 2160,
+							Expression = "ptEllipseMask.MaskHeight",
+						},
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Center = Input {
+							Value = { 0.25, 0.5 },
+							Expression = "ptEllipseMask.Center - Point(0.25,0)",
+						},
+						Width = Input { Value = 1, },
+						Height = Input { Value = 1, },
+						Angle = Input { Expression = "ptEllipseMask.Angle", },
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 42.4281 } },
+				},
+				ptEllipseMask = EllipseMask {
+					NameSet = true,
+					Inputs = {
+						SoftEdge = Input { Value = 0.02, },
+						BorderWidth = Input { Value = -0.02, },
+						OutputSize = Input { Value = FuID { "Custom" }, },
+						MaskWidth = Input { Value = 3840, },
+						MaskHeight = Input { Value = 2160, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						ClippingMode = Input { Value = FuID { "None" }, },
+						Width = Input { Value = 0.79, },
+						Height = Input { Value = 0.79, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 9.42812 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "FisheyeCropMask"
+}

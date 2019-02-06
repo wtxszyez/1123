@@ -1,0 +1,133 @@
+{
+	Tools = ordered() {
+		StereoOverUnderExtract = GroupOperator {
+		  CustomData = {
+        HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-stereoscopic.html#StereoOverUnderExtract",
+      },
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Input",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Width",
+					Name = "Input Width",
+					MaxScale = 8192,
+					Default = 2048,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "InputScaling",
+					Source = "Height",
+					Name = "Input Height",
+					MaxScale = 8192,
+					Default = 1024,
+				},
+			},
+			Outputs = {
+        MainOutput1 = InstanceOutput {
+					SourceOp = "OutputScalingLeft",
+					Source = "Output",
+					Name = "Left",
+				},
+				MainOutput2 = InstanceOutput {
+					SourceOp = "OutputScalingRight",
+					Source = "Output",
+					Name = "Right",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Name = "StereoOverUnderExtract",
+				Pos = { 0, 0, },
+			},
+			Tools = ordered() {
+				OutputScalingRight = Scale {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropRight",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1118.28, 151.033, }, },
+				},
+				OutputScalingLeft = Scale {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LockXY = Input { Value = 0, },
+						YSize = Input { Value = 2, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+						Input = Input {
+							SourceOp = "CropLeft",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1118.28, 49.9169, }, },
+				},
+				CropRight = Crop {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1003.02, 151.033, }, },
+				},
+				CropLeft = Crop {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						YOffset = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						XSize = Input {
+							Value = 2048,
+							Expression = "InputScaling.Width",
+						},
+						YSize = Input {
+							Value = 512,
+							Expression = "InputScaling.Height/2",
+						},
+						Input = Input {
+							SourceOp = "InputScaling",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1004.02, 51.033, }, },
+				},
+				InputScaling = BetterResize {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 1024, },
+						PixelAspect = Input { Value = { 1, 1, }, },
+						FilterMethod = Input { Value = 6, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 865.02, 150.033, }, },
+				},
+			},
+		},
+	},
+	ActiveTool = "StereoOverUnderExtract",
+}
