@@ -1,7 +1,7 @@
 # KartaVR 4.0.2 for Reactor Documentation #
 
 -------------------------
-**Version 4.0.2** - Released 2019-01-31  
+**Version 4.0.2** - Released 2019-02-07  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -60,6 +60,8 @@ KartaVR was formerly known as the "Domemaster Fusion Macros". With the release o
 - Added an [AcerWMRStereoRenderer3D](macros-guide-renderer3d.html#AcerWMRStereoRenderer3D) Renderer3D macro that creates stereoscopic 3D 2880x1440px output from the Fusion 3D system. That interactively rendered output can be displayed directly on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
 
 - Added a [ViewerAcerWMR2StereoOU](macros-guide-viewer.html#ViewerAcerWMR2StereoOU) node for displaying panoramic images on an Acer Windows Mixed Reality HMD on macOS/Win/Linux via a floating image view.
+
+- Added a DaVinci Resolve compatible set of example Fusion page compositing project files that can be accessed in the PathMap folder: `Reactor:/Deploy/Comps/KartaVR/KartaVR Example Comps.drp`
 
 ## <a name="new-features"></a>New Features in KartaVR 3.5 ##
 
