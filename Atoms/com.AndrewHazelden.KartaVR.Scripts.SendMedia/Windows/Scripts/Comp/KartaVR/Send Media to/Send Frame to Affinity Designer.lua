@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Affinity Designer v4.0.1 - 2019-01-01
+Send Frame to Affinity Designer v4.0.2 - 2019-02-10
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -102,7 +102,8 @@ function affinityDesignerLauncher(mediaFileName)
 	-- Open the Viewer tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		defaultViewerProgram = 'C:\\Program Files\\Affinity\\Affinity Designer\\Designer.exe'
+		defaultViewerProgram = 'C:\\Program Files\\Affinity\\Designer\\Designer.exe'
+		-- defaultViewerProgram = 'C:\\Program Files\\Affinity\\Affinity Designer\\Designer.exe'
 		
 		viewerProgram = getPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', defaultViewerProgram, printStatus)
 		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'

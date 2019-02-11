@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Affinity Photo v4.0.1 - 2019-01-01
+Send Frame to Affinity Photo v4.0.2 - 2019-02-10
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -101,7 +101,8 @@ function affinityPhotoLauncher(mediaFileName)
 	-- Open the Viewer tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		defaultViewerProgram = 'C:\\Program Files\\Affinity\\Affinity Photo\\Photo.exe'
+		defaultViewerProgram = 'C:\\Program Files\\Affinity\\Photo\\Photo.exe'
+		-- defaultViewerProgram = 'C:\\Program Files\\Affinity\\Affinity Photo\\Photo.exe'
 		
 		viewerProgram = getPreferenceData('KartaVR.SendMedia.AffinityPhotoFile', defaultViewerProgram, printStatus)
 		command = 'start "" "' .. viewerProgram .. '" "' .. mediaFileName .. '"'

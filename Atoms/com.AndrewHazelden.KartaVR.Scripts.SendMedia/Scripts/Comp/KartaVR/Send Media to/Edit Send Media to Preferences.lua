@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Edit Send Media to Preferences v4.0.1 - 2019-01-01
+Edit Send Media to Preferences v4.0.2 - 2019-02-10
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -169,8 +169,10 @@ end
 
 
 if platform == 'Windows' then
-	affinityDesignerFile = 'C:\\Program Files\\Affinity\\Affinity Designer\\Designer.exe'
-	affinityPhotoFile = 'C:\\Program Files\\Affinity\\Affinity Photo\\Photo.exe'
+	affinityDesignerFile = 'C:\\Program Files\\Affinity\\Designer\\Designer.exe'
+	-- affinityDesignerFile = 'C:\\Program Files\\Affinity\\Affinity Designer\\Designer.exe'
+	affinityPhotoFile = 'C:\\Program Files\\Affinity\\Photo\\Photo.exe'
+	-- affinityPhotoFile = 'C:\\Program Files\\Affinity\\Affinity Photo\\Photo.exe'
 	autopanoProFile = 'C:\\Program Files\\Kolor\\Autopano Pro 4.2\\AutopanoPro_x64.exe'
 	corelPhotoPaintFile = 'C:\\Program Files\\Corel\\CorelDRAW Graphics Suite X7\\Programs64\\CorelPP.exe'
 	huginFile = 'C:\\Program Files (x86)\\Hugin\\bin\\hugin.exe'
