@@ -1,9 +1,11 @@
 <a name="version-history"></a>
 ## Version History ##
 
-### Version 4.0.2 - 2019-01-31 ###
+### Version 4.0.2 - 2019-02-07 ###
 
-- Added YouTube 360° cubic 3x2 format movie conversion macros called `YouTubeCubemap3x22CubicFaces`, `YouTubeCubemap3x22Equirectangular` and `CubicFaces2YouTubeCubemap3x2`. There is a `YouTube Cubemap3x2.comp` example composite, and a sample `youtube_cubemap3x2.jpg` image as well.
+- Added YouTube 360&deg; cubic 3x2 format movie conversion macros called `YouTubeCubemap3x22CubicFaces`, `YouTubeCubemap3x22Equirectangular` and `CubicFaces2YouTubeCubemap3x2`. There is a `YouTube Cubemap3x2.comp` example composite, and a sample `youtube_cubemap3x2.jpg` image as well.
+
+- Added a DaVinci Resolve compatible set of example Fusion page compositing project files that can be accessed in the PathMap folder: `Reactor:/Deploy/Comps/KartaVR/KartaVR Example Comps.drp`
 
 ### Version 4.0.1 - 2019-01-06 ###
 
