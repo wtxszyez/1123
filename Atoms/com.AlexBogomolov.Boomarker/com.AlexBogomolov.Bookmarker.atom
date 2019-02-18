@@ -1,0 +1,54 @@
+Atom {
+	Name = "Bookmarker",
+	Category = "Scripts/Comp",
+	Author = "Alexey Bogomolov",
+	Version = 2.1,
+	Date = {2019, 2, 18},
+	Description = [[<p>Bookmarking script for your flow.</p>
+<p>Add bookmarks for selected or active tool. Set custom bookmark name or use default tool's name. Then invoke jump script and switch instantly to the desired node on your huge comp.</p>
+<p>Use <code>SHIFT+A</code> to add bookmark and <code>SHIFT+J</code> to jump between bookmarks. Windows users can additionally jump with <code>DOWN/UP</code> or open bookmarks dropdown with <code>ALT+DOWN</code>.</p>   
+<p>Bookmarks are stored in comp metadata, so they will remain after Fusion restart. The script requires 64-bit Python (v2.7 or v3.6).
+Suggestions and PR's are appreciated: https://github.com/movalex/fusion_scripts</p>
+<p>Features:</p>
+
+<ul>
+	<li>bookmarks are sorted alphabetically</li>
+	<li>delete single bookmark or reset all</li>
+	<li>submit bookmark addition on <code>Enter</code></li>
+	<li>close window on <code>ESC</code></li>
+	<li>flow scaling is preserved for each bookmark</li>
+	<li>rename bookmark (add the same tool with different name)</li>
+	<li>add a bookmark button in Jump UI</li>
+	<li>refresh bookmarks list if some was added while Jump UI is still running</li>
+	<li>do not switch to first bookmark on launch</li>
+
+</ul>
+
+<p>Known issues:</p>
+<p>1) Depending on complexity if the comp, the nodes in a flow may temporarily disappear from view after bookmark jump. As a workaround to this issue added 0.1 sec delay before jump to the tool. Hope it works for you :)</p>
+<p>2) The script just finds a tool in a flow and makes it active. It does not center it in the flow.
+There's two possible workarounds here:
+</p>
+
+<ul>
+	<li>after jumping to the tool, click on the flow, press CTRL(CMD)+F and then hit ENTER (recommended)</li>
+	<li>use a PipeRouter hackaround (see this post: https://www.steakunderwater.com/wesuckless/viewtopic.php?p=22068#p22068)</li>
+</ul>
+
+
+<p>TODO: add all Underlays as bookmarks with single button click (?)</p>
+
+]],
+	Donation = {
+		URL = [[https://paypal.me/aabogomolov]],
+		Amount = "5.00USD",
+	},
+
+	Deploy = {
+		"Config/Bookmarker/bookmark_cfg.fu",
+		"Scripts/Comp/Bookmarker/bookmark_add.py",
+		"Scripts/Comp/Bookmarker/bookmark_jump.py",
+		"Scripts/Comp/Bookmarker/icons/plus_icon.png",
+		"Scripts/Comp/Bookmarker/icons/refresh_icon.png",
+	},
+}
