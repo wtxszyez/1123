@@ -77,7 +77,7 @@ def delete_bookmark(key):
 
 def _switch_UI(ev):
     choice = int(itm['MyCombo'].CurrentIndex)
-    if choice > 0 and data:
+    if choice > 1 and data:
         tool_data = parse_data(data)[choice - 2]
         bm_name, tool_name, scale_factor, _ = tool_data
         print('jump to', tool_name)
@@ -145,13 +145,13 @@ def _refresh_UI(ev):
 
 
 def _run_add_script(ev):
-    comp.RunScript('GIT:/Scripts/Comp/Bookmarker/bookmark_add.py')
+    comp.RunScript('Reactor:Deploy/Scripts/Comp/Bookmarker/bookmark_add.py')
 
 
 if __name__ == '__main__':
     data = comp.GetData('BM')
     if not data:
-        data = None
+        data = {}
         print('add some bookmarks!')
 
     # Main Window
@@ -178,7 +178,7 @@ if __name__ == '__main__':
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'GIT:Scripts/Comp/Bookmarker/icons/plus_icon.png'}),
+                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/plus_icon.png'}),
                                        'Weight': .1
                                        }),
                             ui.Button({'ID': 'refreshButton',
@@ -186,7 +186,7 @@ if __name__ == '__main__':
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'GIT:Scripts/Comp/Bookmarker/icons/refresh_icon.png',
+                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/refresh_icon.png',
                                                         }),
                                        'Weight': .1
                                        }),
