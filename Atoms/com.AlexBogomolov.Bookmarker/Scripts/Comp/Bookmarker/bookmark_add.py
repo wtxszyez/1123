@@ -15,6 +15,7 @@ Donations are highly appreciated: https://paypal.me/aabogomolov
 
 MIT License: https://mit-license.org/
 """
+# legacy python reporting compatibility
 from __future__ import print_function
 
 flow = comp.CurrentFrame.FlowView
