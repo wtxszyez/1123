@@ -5,13 +5,15 @@ KEY FEATURES:
 * All bookmarks are alphabetically sorted.
 * Add a bookmark from Jump UI
 * Refresh bookmarks if some was added while Jump UI is running
+* If you already jumped to the tool, then moved the flow, you can jump back to the same bookmark again
 
 KNOWN ISSUES:
 * depending on complexity if the comp, the nodes in a flow
 may temporarily disappear after bookmark jump. As a workaround to this issue
-added 0.2 sec delay before jump to the tool. Hope it works for you :)
+added 0.2 sec delay before jump to the tool. Hope it works for you
 * the script just finds a tool in a flow and makes it active. It does not center it in the flow.
-Possible workaround here: jump to the tool, click on the flow, press CTRL/CMD+F and then hit ENTER
+Possible workaround here:
+* jump to the tool, click on the flow, press CTRL/CMD+F and then hit ENTER
 
 Alexey Bogomolov mail@abogomolov.com
 Requests and issues: https://github.com/movalex/fusion_scripts/issues
@@ -122,7 +124,7 @@ def _refresh_UI(ev):
 
 
 def _run_add_script(ev):
-    comp.RunScript('Reactor:Deploy/Scripts/Comp/Bookmarker/bookmark_add.py')
+    comp.RunScript('Scripts:Comp/Bookmarker/bookmark_add.py')
 
 
 if __name__ == '__main__':
@@ -139,7 +141,7 @@ if __name__ == '__main__':
         {'ID': 'combobox',
          'TargetID': 'combobox',
          'WindowTitle': 'jump to bookmark',
-         'Geometry': [200, 450, 300, 80]},
+         'Geometry': [200, 450, 300, 75]},
         [
             ui.VGroup(
                 [
@@ -154,7 +156,7 @@ if __name__ == '__main__':
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/plus_icon.png'}),
+                                                        'Scripts:Comp/Bookmarker/icons/plus_icon.png'}),
                                        'Weight': .1
                                        }),
                             ui.Button({'ID': 'refreshButton',
@@ -162,7 +164,7 @@ if __name__ == '__main__':
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/refresh_icon.png',
+                                                        'Scripts:Comp/Bookmarker/icons/refresh_icon.png',
                                                         }),
                                        'Weight': .1
                                        }),
