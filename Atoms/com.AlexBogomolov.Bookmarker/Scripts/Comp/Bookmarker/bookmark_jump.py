@@ -63,12 +63,9 @@ def fill_checkbox(_data):
 
 def delete_bookmark(key):
     comp.SetData('BM')
-    try:
-        del data[key]
-        for k, v in data.items():
-            comp.SetData('BM.{}'.format(k), v)
-    except IndexError:
-        pass
+    del data[key]
+    for k, v in data.items():
+        comp.SetData('BM.{}'.format(k), v)
 
 
 def _switch_UI(ev):
@@ -98,17 +95,15 @@ def _clear_all_UI(ev):
 
 
 def _delete_bm_UI(ev):
-    try:
-        choice = int(itm['MyCombo'].CurrentIndex)
-        if choice > 0:
-            bm_text, tool_id = parse_data(data)[choice - 2][::3]
-            itm['MyCombo'].RemoveItem(choice)
-            print('bookmark {} deleted'.format(bm_text))
-            delete_bookmark(tool_id)
-            if len(data) == 0:
-                prefill_checkbox()
-    except IndexError:
-        print('stop hitting that button!')
+    choice = int(itm['MyCombo'].CurrentIndex)
+    if choice > 0:
+        bm_text, tool_id = parse_data(data)[choice - 2][::3]
+        itm['MyCombo'].RemoveItem(choice)
+        print('bookmark {} deleted'.format(bm_text))
+        delete_bookmark(tool_id)
+        if len(data) == 0:
+            prefill_checkbox()
+            print('no bookmarks left')
 
 
 def _refresh_UI(ev):
@@ -196,3 +191,4 @@ if __name__ == '__main__':
     win.Show()
     disp.RunLoop()
     win.Hide()
+
