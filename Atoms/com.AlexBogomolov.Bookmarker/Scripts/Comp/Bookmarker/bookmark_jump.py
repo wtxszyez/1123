@@ -5,15 +5,15 @@ KEY FEATURES:
 * All bookmarks are alphabetically sorted.
 * Add a bookmark from Jump UI
 * Refresh bookmarks if some was added while Jump UI is running
+* If you already jumped to the tool, then moved the flow, you can jump back to the same bookmark again
 
 KNOWN ISSUES:
 * depending on complexity if the comp, the nodes in a flow
 may temporarily disappear after bookmark jump. As a workaround to this issue
-added 0.1 sec delay before jump to the tool. Hope it works for you :)
+added 0.2 sec delay before jump to the tool. Hope it works for you
 * the script just finds a tool in a flow and makes it active. It does not center it in the flow.
-There's two possible workarounds here:
-    1) after jumping to the tool, click on the flow, press CTRL(CMD)+F and then hit ENTER (recommended)
-    2) use a PipeRouter hackaround (see commented section below)
+Possible workaround here:
+* jump to the tool, click on the flow, press CTRL/CMD+F and then hit ENTER
 
 Alexey Bogomolov mail@abogomolov.com
 Requests and issues: https://github.com/movalex/fusion_scripts/issues
@@ -24,6 +24,7 @@ MIT License: https://mit-license.org/
 # legacy python reporting compatibility
 from __future__ import print_function
 import time
+
 flow = comp.CurrentFrame.FlowView
 
 # close UI on ESC button
@@ -32,7 +33,7 @@ comp.Execute('''app:AddConfig("combobox",
 Target  {ID = "combobox"},
 Hotkeys {Target = "combobox",
          Defaults = true,
-         ESCAPE = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}" } })
+         ESCAPE = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}" }})
 ''')
 
 
@@ -60,19 +61,11 @@ def fill_checkbox(_data):
             itm['MyCombo'].AddItem(bkm)
 
 
-def clear_all():
-    comp.SetData('BM')
-    print('all bookmarks gone')
-
-
 def delete_bookmark(key):
     comp.SetData('BM')
-    try:
-        del data[key]
-        for k, v in data.items():
-            comp.SetData('BM.{}'.format(k), v)
-    except IndexError:
-        pass
+    del data[key]
+    for k, v in data.items():
+        comp.SetData('BM.{}'.format(k), v)
 
 
 def _switch_UI(ev):
@@ -80,32 +73,14 @@ def _switch_UI(ev):
     if choice > 1 and data:
         tool_data = parse_data(data)[choice - 2]
         bm_name, tool_name, scale_factor, _ = tool_data
-        print('jump to', tool_name)
-        source = comp.FindTool(tool_name)
-
-# uncomment the section below if you need centered bookmark hackaround
-# Thanks @Intelligent_Machine for pointing this out:
-# https://www.steakunderwater.com/wesuckless/viewtopic.php?p=22068#p22068
-# However the result it too unpredictable for different scales
-# and produces visible flow movements (it zooms in, creates and then deletes
-# two Dots on each side of the tool to try to center it).
-# Therefore this option is disabled by default
-
-# --------------------------------------------------------------------------------
-        # sx, sy = flow.GetPosTable(source).values()
-        # flow.SetScale(4)
-        # pr1 = comp.AddTool("PipeRouter", sx - 1, sy - .5)
-        # pr2 = comp.AddTool("PipeRouter", sx + 3, sy + .5)
-        # comp.SetActiveTool(pr2)
-        # comp.SetActiveTool(pr1)
-        # flow.Select()
-        # pr1.Delete()
-        # pr2.Delete()
-# --------------------------------------------------------------------------------
-
+        # print('jump to', tool_name)
+        target = comp.FindTool(tool_name)
+        if target.GetAttrs('TOOLB_Selected'):
+            # print('tool already selected, now jumping back')
+            flow.Select()
         flow.SetScale(scale_factor)
-        time.sleep(.1)
-        comp.SetActiveTool(source)
+        time.sleep(.2)
+        comp.SetActiveTool(target)
 
 
 def _close_UI(ev):
@@ -113,23 +88,22 @@ def _close_UI(ev):
 
 
 def _clear_all_UI(ev):
-    clear_all()
+    comp.SetData('BM')
+    print('all your bookmarks are belong to us')
     itm['MyCombo'].Clear()
-    itm['MyCombo'].AddItem('all bookmarks gone')
+    itm['MyCombo'].AddItem('add some bookmarks!')
 
 
 def _delete_bm_UI(ev):
-    try:
-        choice = int(itm['MyCombo'].CurrentIndex)
-        if choice > 0:
-            bm_text, tool_id = parse_data(data)[choice - 2][::3]
-            itm['MyCombo'].RemoveItem(choice)
-            print('bookmark {} deleted'.format(bm_text))
-            delete_bookmark(tool_id)
-            if len(data) == 0:
-                prefill_checkbox()
-    except IndexError:
-        print('stop hitting that button!')
+    choice = int(itm['MyCombo'].CurrentIndex)
+    if choice > 0:
+        bm_text, tool_id = parse_data(data)[choice - 2][::3]
+        itm['MyCombo'].RemoveItem(choice)
+        print('bookmark {} deleted'.format(bm_text))
+        delete_bookmark(tool_id)
+        if len(data) == 0:
+            prefill_checkbox()
+            print('no bookmarks left')
 
 
 def _refresh_UI(ev):
@@ -145,7 +119,7 @@ def _refresh_UI(ev):
 
 
 def _run_add_script(ev):
-    comp.RunScript('Reactor:Deploy/Scripts/Comp/Bookmarker/bookmark_add.py')
+    comp.RunScript('Scripts:Comp/Bookmarker/bookmark_add.py')
 
 
 if __name__ == '__main__':
@@ -162,7 +136,7 @@ if __name__ == '__main__':
         {'ID': 'combobox',
          'TargetID': 'combobox',
          'WindowTitle': 'jump to bookmark',
-         'Geometry': [200, 450, 300, 80]},
+         'Geometry': [200, 450, 300, 75]},
         [
             ui.VGroup(
                 [
@@ -170,15 +144,14 @@ if __name__ == '__main__':
                         [
                             ui.ComboBox({'ID': 'MyCombo',
                                          'Text': 'Choose preset',
-                                         # 'Events': {'Activated': True},
-                                         'ShowPopup': True,
+                                         'Events': {'Activated': True},
                                          'Weight': .8}),
                             ui.Button({'ID': 'AddButton',
                                        'Flat': False,
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/plus_icon.png'}),
+                                                        'Scripts:Comp/Bookmarker/icons/plus_icon.png'}),
                                        'Weight': .1
                                        }),
                             ui.Button({'ID': 'refreshButton',
@@ -186,7 +159,7 @@ if __name__ == '__main__':
                                        'IconSize': [12, 12],
                                        'MinimumSize': [20, 25],
                                        'Icon': ui.Icon({'File':
-                                                        'Reactor:Deploy/Scripts/Comp/Bookmarker/icons/refresh_icon.png',
+                                                        'Scripts:Comp/Bookmarker/icons/refresh_icon.png',
                                                         }),
                                        'Weight': .1
                                        }),
@@ -207,10 +180,10 @@ if __name__ == '__main__':
 
     itm = win.GetItems()
 
+    win.On.MyCombo.Activated = _switch_UI
     win.On.rm.Clicked = _delete_bm_UI
     win.On.rmall.Clicked = _clear_all_UI
     win.On.combobox.Close = _close_UI
-    win.On.MyCombo.CurrentIndexChanged = _switch_UI
     win.On.refreshButton.Clicked = _refresh_UI
     win.On.AddButton.Clicked = _run_add_script
     fill_checkbox(data)
@@ -218,3 +191,4 @@ if __name__ == '__main__':
     win.Show()
     disp.RunLoop()
     win.Hide()
+
