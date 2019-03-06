@@ -2,7 +2,7 @@ local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width, height = 300,78
 
-function showUI(tool, str)
+function showUI(tool, cur_name)
     win = disp:AddWindow({
         ID = 'renameplus',
         TargetID = "renameplus",
@@ -16,7 +16,7 @@ function showUI(tool, str)
             ui:HGroup{
                 VMargin = 10,
                 ui:LineEdit {
-                    ID = 'mytext', Text = tostring(str),
+                    ID = 'mytext', Text = tostring(cur_name),
                     Alignment = {AlignHCenter = true},
                     Events = {ReturnPressed = true},
                 }
@@ -36,20 +36,30 @@ function showUI(tool, str)
     })
     itm = win:GetItems()
     itm.mytext:SelectAll()
-    s = itm.ok:GetAutoDefault()
-
+    -- s = itm.ok:GetAutoDefault()
+    
+    function win.On.cancel.Clicked(ev)
+        cancelled = true
+        disp:ExitLoop()
+    end
+    
     function win.On.renameplus.Close(ev)
+        -- cancelled = true
         disp:ExitLoop()
     end
     
     function do_rename(new_name)
-        if tonumber(string.sub(new_name, 1, 1)) ~= nil then
+        if new_name == cur_name then
+            -- print('name not changed')
+            return false
+        elseif tonumber(string.sub(new_name, 1, 1)) ~= nil then
             print('tool\'s name can\'t start with a number, now prepending with "_"')
             local name = '_'.. new_name
             tool:SetAttrs({TOOLS_Name = name})
             return true
         end
         tool:SetAttrs({TOOLS_Name = new_name})
+        return true
     end
 
     function win.On.ok.Clicked(ev)
@@ -58,15 +68,12 @@ function showUI(tool, str)
         disp:ExitLoop()
     end
     
-    function win.On.cancel.Clicked(ev)
-        disp:ExitLoop()
-    end
-
     function win.On.mytext.ReturnPressed(ev)
         new_name = itm.mytext:GetText()
-        do_rename(new_name)
+        do_rename(new_name) 
         disp:ExitLoop()
     end
+    
 
     app:AddConfig("renameplus", {
         Target {
@@ -95,6 +102,9 @@ else
     for i, tool in ipairs(selectednodes) do
         current_name = tool:GetAttrs().TOOLS_Name
         showUI(tool, current_name)
+        if cancelled then
+            break
+        end
     end
 end
 composition:EndUndo(true)
