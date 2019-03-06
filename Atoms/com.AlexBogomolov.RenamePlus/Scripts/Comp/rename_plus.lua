@@ -41,9 +41,20 @@ function showUI(tool, str)
     function win.On.renameplus.Close(ev)
         disp:ExitLoop()
     end
-        
+    
+    function do_rename(new_name)
+        if tonumber(string.sub(new_name, 1, 1)) ~= nil then
+            print('tool\'s name can\'t start with a number, now prepending with "_"')
+            local name = '_'.. new_name
+            tool:SetAttrs({TOOLS_Name = name})
+            return true
+        end
+        tool:SetAttrs({TOOLS_Name = new_name})
+    end
+
     function win.On.ok.Clicked(ev)
-        tool:SetAttrs({TOOLS_Name = itm.mytext:GetText()})
+        new_name = itm.mytext:GetText()
+        do_rename(new_name)
         disp:ExitLoop()
     end
     
@@ -52,7 +63,8 @@ function showUI(tool, str)
     end
 
     function win.On.mytext.ReturnPressed(ev)
-        tool:SetAttrs({TOOLS_Name = itm.mytext:GetText()})
+        new_name = itm.mytext:GetText()
+        do_rename(new_name)
         disp:ExitLoop()
     end
 
@@ -81,8 +93,8 @@ if active and active:GetAttrs().TOOLS_RegID == 'Underlay' then
 else
     local selectednodes = comp:GetToolList(true)
     for i, tool in ipairs(selectednodes) do
-        name = tool:GetAttrs().TOOLS_Name
-        showUI(tool,name)
+        current_name = tool:GetAttrs().TOOLS_Name
+        showUI(tool, current_name)
     end
 end
 composition:EndUndo(true)
