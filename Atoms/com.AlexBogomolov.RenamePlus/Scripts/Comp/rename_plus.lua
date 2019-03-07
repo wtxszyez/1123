@@ -2,6 +2,18 @@ local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width, height = 300,78
 
+
+app:AddConfig("renameplus", {
+    Target {
+        ID = "renameplus",
+    },
+    Hotkeys {
+        Target = "renameplus",
+        Defaults = true,
+        ESCAPE = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+    },
+})
+
 function showUI(tool, cur_name)
     win = disp:AddWindow({
         ID = 'renameplus',
@@ -48,7 +60,8 @@ function showUI(tool, cur_name)
         disp:ExitLoop()
     end
     
-    function do_rename(new_name)
+    function do_rename()
+        local new_name = itm.mytext:GetText()
         if new_name == cur_name then
             -- print('name not changed')
             return false
@@ -63,29 +76,15 @@ function showUI(tool, cur_name)
     end
 
     function win.On.ok.Clicked(ev)
-        new_name = itm.mytext:GetText()
-        do_rename(new_name)
+        do_rename()
         disp:ExitLoop()
     end
     
     function win.On.mytext.ReturnPressed(ev)
-        new_name = itm.mytext:GetText()
-        do_rename(new_name) 
+        do_rename() 
         disp:ExitLoop()
     end
     
-
-    app:AddConfig("renameplus", {
-        Target {
-            ID = "renameplus",
-        },
-        Hotkeys {
-            Target = "renameplus",
-            Defaults = true,
-            ESCAPE = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
-        },
-    })
-
     win:Show()
     disp:RunLoop()
     win:Hide()
@@ -99,11 +98,13 @@ if active and active:GetAttrs().TOOLS_RegID == 'Underlay' then
     showUI(active, current_name)
 else
     local selectednodes = comp:GetToolList(true)
-    for i, tool in ipairs(selectednodes) do
-        current_name = tool:GetAttrs().TOOLS_Name
-        showUI(tool, current_name)
-        if cancelled then
-            break
+    if #selectednodes > 0 then
+        for i, tool in ipairs(selectednodes) do
+            current_name = tool:GetAttrs().TOOLS_Name
+            showUI(tool, current_name)
+            if cancelled then
+                break
+            end
         end
     end
 end
