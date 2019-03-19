@@ -6,7 +6,6 @@ KEY FEATURES:
 * Add a bookmark from Jump UI
 * Refresh bookmarks if some was added while Jump UI is running
 * If you already jumped to the tool, then moved the flow, you can jump back to the same bookmark again
-* You can get single tool with you when you jump to bookmark. Just make sure one tool is selected (not active) before jump
 
 KNOWN ISSUES:
 * depending on complexity if the comp, the nodes in a flow
@@ -41,9 +40,7 @@ Hotkeys {Target = "combobox",
 def parse_data(_data):
     # return sorted by bookmark
     strip_data = list(_data.values())
-    parsed_data = sorted(
-        [list(i.values()) for i in strip_data],
-        key=lambda x: x[0].lower())
+    parsed_data = sorted([list(i.values()) for i in strip_data], key=lambda x: x[0].lower())
     return parsed_data
 
 
@@ -78,21 +75,12 @@ def _switch_UI(ev):
         bm_name, tool_name, scale_factor, _ = tool_data
         # print('jump to', tool_name)
         target = comp.FindTool(tool_name)
-        active = comp.ActiveTool
         if target.GetAttrs('TOOLB_Selected'):
             # print('tool already selected, now jumping back')
             flow.Select()
-        if active:
-            flow.Select()
-        current_tool = list(comp.GetToolList(True).values())
         flow.SetScale(scale_factor)
         time.sleep(.2)
         comp.SetActiveTool(target)
-        if current_tool and len(current_tool) == 1:
-            comp.StartUndo('Move tool to BM')
-            pos_targetx, pos_targety = flow.GetPosTable(target).values()
-            flow.SetPos(current_tool[0], pos_targetx + 1, pos_targety)
-            comp.EndUndo()
 
 
 def _close_UI(ev):
