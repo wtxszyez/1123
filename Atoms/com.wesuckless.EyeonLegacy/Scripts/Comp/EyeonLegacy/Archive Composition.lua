@@ -890,7 +890,7 @@ function main()
 	--------------------------------------------
 	-- Now that the new dir exists
 	-- save a copy of the composition in the root folder of the destination directory
-	output_composition = output_root .. composition:GetAttrs().COMPS_Name
+	output_composition = output_root .. composition:GetAttrs().COMPS_Name .. '.comp'
 	composition:Save(output_composition)
 
 	dprintf("-----------------------------------\n")
