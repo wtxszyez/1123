@@ -1,10 +1,10 @@
 local P, S, C, R, Ct, Cg, Cc = lpeg.P, lpeg.S, lpeg.C, lpeg.R, lpeg.Ct, lpeg.Cg, lpeg.Cc
 
 local ws       = S ('\r\n\f\t ')^1
-local alpha    = R ( "az", "AZ" )
+local alpha    = R ( "az", "AZ")
 local digit    = R ( "09" )
 local number   = (S ('+-')^-1 * digit^1 * (P "." * digit^0)^-1) / tonumber
-local fuid     = (alpha + P "_") * (alpha + digit + P "_")^0
+local fuid     = (alpha + P "." + P "_" ) * (alpha + digit + P "." + P "_")^0
 local rest     = (1-(ws * P "&"))^1
 
 local prefix   = P "/for"
