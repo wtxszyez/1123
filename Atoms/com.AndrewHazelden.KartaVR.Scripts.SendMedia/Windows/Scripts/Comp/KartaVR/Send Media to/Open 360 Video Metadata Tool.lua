@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open 360 Video Metadata Tool v4.0.1 - 2019-01-01
+Open 360 Video Metadata Tool v4.0.2 - 2019-04-26
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -160,7 +160,7 @@ function playDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
@@ -176,7 +176,7 @@ function playDFMWaveAudio(filename, status)
 			err = true
 		end
 	elseif platform == 'Mac' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
@@ -191,7 +191,7 @@ function playDFMWaveAudio(filename, status)
 			err = true
 		end
 	elseif platform == 'Linux' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -208,7 +208,7 @@ function playDFMWaveAudio(filename, status)
 		end
 	else
 		-- Windows Fallback
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
@@ -230,17 +230,12 @@ function playDFMWaveAudio(filename, status)
 	end
 end
 
-
 print ('Open 360 Video Metadata Tool is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then
 	print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 end
-
-
--- Lock the comp flow area
-comp:Lock()
 
 
 -- Launch the viewer tool
@@ -276,10 +271,6 @@ else
 		playDFMWaveAudio(audioFile)
 	end
 end
-
-
--- Unlock the comp flow area
-comp:Unlock()
 
 -- End of the script
 print('[Done]')
