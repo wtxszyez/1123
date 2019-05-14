@@ -14,12 +14,19 @@ app:AddConfig("renameplus", {
     },
 })
 
+
 function showUI(tool, cur_name)
+    local x = fu:GetMousePos()[1]
+    local y = fu:GetMousePos()[2]
+    if y < 90 then
+        y = 130
+    end
+
     win = disp:AddWindow({
         ID = 'renameplus',
         TargetID = "renameplus",
         WindowTitle = 'Rename+ Tool',
-        Geometry = {700, 510, width, height},
+        Geometry = {x, y, width, height},
         Spacing = 50,
         
         ui:VGroup{
