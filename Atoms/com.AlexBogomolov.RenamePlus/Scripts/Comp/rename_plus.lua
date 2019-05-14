@@ -15,6 +15,7 @@ app:AddConfig("renameplus", {
 })
 
 
+
 function showUI(tool, cur_name)
     local x = fu:GetMousePos()[1]
     local y = fu:GetMousePos()[2]
@@ -26,7 +27,7 @@ function showUI(tool, cur_name)
         ID = 'renameplus',
         TargetID = "renameplus",
         WindowTitle = 'Rename+ Tool',
-        Geometry = {x, y, width, height},
+        Geometry = {x+20, y, width, height},
         Spacing = 50,
         
         ui:VGroup{
