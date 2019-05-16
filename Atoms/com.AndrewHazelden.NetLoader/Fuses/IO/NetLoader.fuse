@@ -1,5 +1,5 @@
 --[[--
-NetLoader - v1.2 2018-07-04 08.58 PM
+NetLoader - v1.3 2019-05-16 9.51 AM 
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 The NetLoader fuse uses cURL to download and display a still image in Fusion's viewer window using the "file://", "http://", and "https://" web protocols. To use this node type in a URL, and then click the "Download Image" button.
@@ -76,6 +76,9 @@ v1.1 2018-06-17
 v1.2 2018-07-04
 	- Reactor packaged version
 
+v1.3 2019-05-16
+	- Added "REG_Unpredictable = true" to the FuRegisterClass. This should reduce cache related issues where the fuse would skip writing files to disk.
+
 --]]--
 
 FuRegisterClass('NetLoader', CT_Tool, {
@@ -86,22 +89,23 @@ FuRegisterClass('NetLoader', CT_Tool, {
 	REGS_Company = 'Andrew Hazelden',
 	REGS_URL = 'http://www.andrewhazelden.com',
 	REGS_HelpTopic = 'http://www.andrewhazelden.com',
-	
+
 	-- Should the current time setting be cached?
 	REG_TimeVariant = true,
-	
+	REG_Unpredictable = true,
+
 	REG_OpNoMask = true,
 	REG_NoBlendCtrls = true,
 	REG_NoObjMatCtrls = true,
 	REG_NoMotionBlurCtrls = true,
 	REG_SupportsDoD = true,
-	
+
 	-- Should the Edit and Reload buttons be hidden?
 	REG_Fuse_NoEdit = false,
 	REG_Fuse_NoReload = false,
-	
-	-- Version number where 120 = v1.20
-	REG_Version = 120,
+
+	-- Version number where 130 = v1.3
+	REG_Version = 130,
 	})
 
 function Create()

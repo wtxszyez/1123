@@ -1,5 +1,5 @@
 --[[--
-LifeSaver - v1.0.4 2018-07-29 12.03 PM
+LifeSaver - v1.0.5 2019-05-16 9.45 AM
 By Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -327,6 +327,10 @@ You can use this trick to connect a MediaIn > LifeSaver > Cryptomatte node flow 
 
 - Added a "Format > Save Frames > None" ComboControl entry that lets you skip doing the frame writing. This allows the LifeSaver fuse to be a wedge that enables the Cryptomatte v1.2.1 (WSL Reactor Edition) fuse to run inside of Resolve 15 Beta 7 without any changes.
 
+### v1.0.5 2019-05-16 ###
+
+- Added "REG_Unpredictable = true" to the FuRegisterClass. This should reduce cache related issues where the fuse would skip writing files to disk.
+
 --]]--
 
 -- Set up the Fuse registry settings
@@ -345,12 +349,13 @@ FuRegisterClass('LifeSaver', CT_SinkTool, {
 	
 	-- Should the current time setting be cached?
 	REG_TimeVariant = true,
-	
+	REG_Unpredictable = true,
+
 	REG_SupportsDoD = true,
 	REG_OpNoMask = true,
 	
 	-- Sets the fuse version number (100 means v1.0) so newer fuses override older versions
-	REG_Version = 104,
+	REG_Version = 105,
 	})
 
 -- Add a new output entry to the Channels tab when the '+' button is clicked.
@@ -1635,7 +1640,7 @@ function HelpWindow()
 				Alignment = {AlignHCenter = true, AlignTop = true},
 				HTML = [=[
 <h1>About LifeSaver Fuse</h1>
-<h2>Version 1.0.4 - 2018-07-27</h2>
+<h2>Version 1.0.5 - 2019-05-16</h2>
 <p>LifeSaver is a fuse based replacement for the traditional Saver node. This fuse uses EXRIO for the file output and supports multi-Channel and multi-part EXR data export.</p>
 
 <p>This node is special in that you can use it in comps that are created inside of Resolve's Fusion page and inside of Fusion Standalone. This allows you to move documents between both programs easily via copy paste, the 'Fusion Comp Link' atom in Reactor, or using a .comp file</p>
