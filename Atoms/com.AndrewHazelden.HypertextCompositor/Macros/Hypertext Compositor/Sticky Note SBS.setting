@@ -1,0 +1,32 @@
+{
+	Tools = ordered() {
+		SBSNote = Note {
+			CtrlWZoom = false,
+			Inputs = {
+				Comments = Input { Value = "For more information, select this note. Then click the \"Display SBS Help\" button in the Inspector view.", },
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 149.333, 154.03 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 221.333, 39.5458 }
+			},
+			UserControls = ordered() {
+				UIManagerButton = {
+					INP_Integer = false,
+					LINKID_DataType = "Number",
+					BTNCS_Execute = [[
+					comp = app:GetAttrs().FUSIONH_CurrentComp
+					-- Add a '{dragDropCompFile = comp:MapPath("")}' section below between the {} with your .htm file specified so Resolve users can access the SBS HTML note.
+					comp:RunScript("Config:/HypertextCompositor/HypertextCompositor.lua" , {})
+					]],
+					ICS_ControlPage = "File",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Display SBS Help"
+				}
+			}
+		}
+	},
+	ActiveTool = "SBSNote"
+}
