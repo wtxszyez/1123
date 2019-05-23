@@ -15,7 +15,7 @@ Hypertext Compositor was inpired by an old-school Fusion term called "SBS" or Si
 
 ## Hypertext Compositor Usage ##
 
-<p>If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.</p>
+If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.
 
 ## Images ##
 
