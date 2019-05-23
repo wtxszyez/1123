@@ -530,7 +530,7 @@ function CreateWebpageEditor()
 		TargetID = 'htmlWin',
 		WindowTitle = 'Hypertext Compositor Editor',
 		Events = {Close = true, KeyPress = true, KeyRelease = true,},
-		Geometry = {0, 0, width, height},
+		Geometry = {10, 100, width, height},
 		Spacing = 0,
 		Margin = 0,
 	
@@ -546,7 +546,7 @@ function CreateWebpageEditor()
 				ui:LineEdit{
 					ID = 'NavigationLineEdit',
 					Weight = 1.0,
-					PlaceholderText = 'Empty SBS Webpage URL',
+					PlaceholderText = 'Empty Webpage URL',
 					Text = '',
 					ReadOnly = true,
 				},
