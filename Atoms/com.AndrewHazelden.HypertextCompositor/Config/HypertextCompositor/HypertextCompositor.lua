@@ -395,7 +395,7 @@ function DisplayHTML(webpage)
 		disp:ExitLoop()
 		
 		-- Run the HypertextCompositor Editor script
-		comp:RunScript('Config:/HypertextCompositor/HypertextCompositor_Editor.lua', {webpageFile = itm.NavigationLineEdit.Text})
+		comp:RunScript('Config:/HypertextCompositor/HypertextCompositorEditor.lua', {webpageFile = itm.NavigationLineEdit.Text})
 	end
 
 	-- Open an HTML link when clicked on in the HTML preview zone
