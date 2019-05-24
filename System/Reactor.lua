@@ -1654,6 +1654,7 @@ function Init()
 			-- Download the Reactor:/System/Images files
 			-- All of the icons are accessible in single download using a Fusion ZIPIO Resource
 			"System/UI/Images/icons.zip",
+			"System/UI/Images/reactormagic.png",
 
 			-- Download the Reactor:/System/Emoticons files
 			"System/UI/Emoticons/banana.png",
@@ -1677,22 +1678,22 @@ function Init()
 			"System/UI/Emoticons/whistle.png",
 
 			-- The extended set of emoticons are disabled for now:
-			-- "System/UI/Emoticons/arrow.png",
-			-- "System/UI/Emoticons/banghead.png",
-			-- "System/UI/Emoticons/biggrin.png",
-			-- "System/UI/Emoticons/confused.png",
-			-- "System/UI/Emoticons/eek.png",
-			-- "System/UI/Emoticons/evil.png",
-			-- "System/UI/Emoticons/exclaim.png",
-			-- "System/UI/Emoticons/geek.png",
-			-- "System/UI/Emoticons/idea.png",
-			-- "System/UI/Emoticons/neutral.png",
-			-- "System/UI/Emoticons/question.png",
-			-- "System/UI/Emoticons/razz.png",
-			-- "System/UI/Emoticons/redface.png",
-			-- "System/UI/Emoticons/surprised.png",
-			-- "System/UI/Emoticons/twisted.png",
-			-- "System/UI/Emoticons/ugeek.png",
+			"System/UI/Emoticons/arrow.png",
+			"System/UI/Emoticons/banghead.png",
+			"System/UI/Emoticons/biggrin.png",
+			"System/UI/Emoticons/confused.png",
+			"System/UI/Emoticons/eek.png",
+			"System/UI/Emoticons/evil.png",
+			"System/UI/Emoticons/exclaim.png",
+			"System/UI/Emoticons/geek.png",
+			"System/UI/Emoticons/idea.png",
+			"System/UI/Emoticons/neutral.png",
+			"System/UI/Emoticons/question.png",
+			"System/UI/Emoticons/razz.png",
+			"System/UI/Emoticons/redface.png",
+			"System/UI/Emoticons/surprised.png",
+			"System/UI/Emoticons/twisted.png",
+			"System/UI/Emoticons/ugeek.png",
 		}
 
 		local local_files = {}
