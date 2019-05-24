@@ -1,12 +1,12 @@
-_VERSION = [[Version 2.0.2 - July 20, 2018]]
+_VERSION = [[Version 3 - May 23, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0.2 2018-07-20
+Reactor Package Manager for Fusion - v3 2019-05-23
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
-            : Andrew Hazelden                 [andrew@andrewhazelden]
+            : Andrew Hazelden                 [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -47,42 +47,69 @@ The `REACTOR_DEBUG` environment variable can be set to true if you want to see m
 
 export REACTOR_DEBUG=true
 
+The `REACTOR_DEBUG` environment variable also tells Reactor to provide a status message in the Reactor package manager progress dialog that lists each file as it is being installed. This is handy if you are installing a lot of `Bin` category Reactor atoms that can be hundreds of megabytes in size.
+
+
 The `REACTOR_DEBUG_FILES` environment variable can be set to true if you want to see Console logging output that shows each of the cURL based file download operations. When the environment variable is set to true Reactor will print the contents of the files as they are downloaded and written to disk. This debugging information is useful for spotting formatting issues and "Error 404" states when a file has trouble successfully downloading from GitLab:
 
 export REACTOR_DEBUG_FILES=true
+
 
 The `REACTOR_BRANCH` environment variable can be set to a custom value like "dev" to override the default master branch setting for syncing with the GitLab repo:
 
 export REACTOR_BRANCH=dev
 
-Note: If you are using macOS you will need to use an approach like a LaunchAgents file to define the environment variables as Fusion + Lua tends to ignore .bash_profile based environment variables entries.
 
 The `REACTOR_INSTALL_PATHMAP` environment variable can be used to change the Reactor installation location to something other then the default PathMap value of "AllData:"
 
 export REACTOR_INSTALL_PATHMAP=AllData:
+
+
+Note: If you are using macOS you will need to use an approach like a LaunchAgents file to define the environment variables as Fusion + Lua tends to ignore .bash_profile based environment variables entries.
+
 --]]--
+
+jit.off()
+
 
 -- Reactor GitLab Public Project ID
 local reactor_project_id = "5058837"
 
--- Check if we are in the master or dev branch
-local branch = os.getenv("REACTOR_BRANCH")
-if branch == nil then
-	branch = "master"
-end
+-- Reactor GitLab Dev Project ID
+-- local reactor_project_id = "4405807"
 
-ffi = require "ffi"
-curl = require "lj2curl"
-json = require "dkjson"
+-- Reactor GitLab Test Repo Project ID
+-- local reactor_project_id = "5273696"
+
+-- Check if we are in the master or dev branch
+local branch = os.getenv("REACTOR_BRANCH") or "master"
+
+ffi   = require "ffi"
+curl  = require "lj2curl"
+json  = require "dkjson"
 
 local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
+
+if local_system then
+	local_system = local_system:gsub("System/?$", "")
+end
 
 dprintf = (os.getenv("REACTOR_DEBUG") ~= "true") and function() end or
 function(fmt, ...)
 	-- Display the debug output in the Console tab
 	-- print(fmt:format(...))
 
-	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+
+	-- Check for a pre-existing PathMap preference
+	local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+	if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+		-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+		reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
+	end
+
+	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 	local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
 	local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
 	local reactor_log = reactor_log_root .. "ReactorLog.txt"
@@ -98,7 +125,17 @@ function(fmt, ...)
 	end
 end
 
-local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
+
+-- Check for a pre-existing PathMap preference
+local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
+end
+
+local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
 local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
 local reactor_log = reactor_log_root .. "ReactorLog.txt"
@@ -106,7 +143,8 @@ bmd.createdir(reactor_log_root)
 local atoms_root = reactor_root .. "Atoms/"
 local deploy_root = reactor_root .. "Deploy/"
 local installed_root = deploy_root .. "Atoms/"
-local system_ui_root = reactor_root .. "System/UI/"
+local system_root = reactor_root .. "System/"
+local system_ui_root = system_root .. "UI/"
 
 if os.getenv("REACTOR_DEBUG") == "true" then
 	-- Clear the log file at the start of the Reactor session
@@ -148,6 +186,18 @@ end
 -- Reactor GitLab repository URL
 local reactor_system_url = "https://gitlab.com/api/v4/projects/" .. reactor_project_id
 
+local ver = app:GetVersion()
+
+g_AppVersion = ver[1] + ver[2]/10 + ver[3]/100
+g_AppName = ver.App or (ver[1] < 15 and "Fusion" or "Resolve")
+
+local g_Apps =
+{
+	Fusion = (g_AppName == "Fusion") or false,
+	Resolve = (g_AppName == "Resolve") or false,
+	StudioPlayer = (g_AppName == "StudioPlayer") or false,
+}
+
 local g_Platforms =
 {
 	Windows = FuPLATFORM_WINDOWS or false,
@@ -157,26 +207,46 @@ local g_Platforms =
 
 local g_ThisPlatform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
 
-g_DefaultConfig = {
-		Repos = {
-			GitLab = {
-				Projects = {
-					Reactor = reactor_project_id,
-				},
-			},
+
+g_DefaultConfig =
+{
+	Repos =
+	{
+		_Core =
+		{
+			Protocol = "GitLab",
+			ID = reactor_project_id,
 		},
-		Settings = {
-			Reactor = {
-			},
+		Reactor =
+		{
+			Protocol = "GitLab",
+			ID = reactor_project_id,
 		},
-	}
+	},
+	Settings =
+	{
+		Reactor =
+		{
+			AskForInstallScriptPermissions = true,
+			LiveSearch = true,
+			MarkAsNew = true,
+			NewForDays = 7,
+			PrevSyncTime = os.time(),
+			ViewLayout = "Balanced View",
+		},
+	},
+}
 
 g_Installed = false
 g_Category = ""
 g_Repository = nil
 g_FilterText = ""
+g_FilterCount = 0
 g_Config = {}
 g_Protocols = { }
+g_MainWin = nil
+g_MainItm = nil
+g_OldCore = nil
 
 
 function LoadFile(path)
@@ -358,7 +428,7 @@ function AskScript(title, atom, script)
 	local scriptLanguage = ScriptLanguageCheck(script)
 	function InstallScriptRun()
 		-- Provide access to the current OS platform along with UI Manager support
-		scriptPrefix = [=[
+		scriptPrefix = _Lua [=[
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
@@ -372,7 +442,17 @@ function dprintf(fmt, ...)
 	end
 
 	if (os.getenv("REACTOR_DEBUG") == "true") then
-		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+		-- Add the platform specific folder slash character
+		local osSeparator = package.config:sub(1,1)
+
+		-- Check for a pre-existing PathMap preference
+		local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+		if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+			-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+			reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
+		end
+
+		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 		local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
 		local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
 		local reactor_log = reactor_log_root .. "ReactorLog.txt"
@@ -608,7 +688,7 @@ end
 	})
 
 	-- Enable syntax highlighting on Win/Mac only (tends to crash on Fu 9.0.2 on Linux)
-	if (g_ThisPlatform == 'Mac') or (g_ThisPlatform == 'Windows') then
+	if (g_ThisPlatform == 'Mac') or (g_ThisPlatform == 'Windows') or g_AppVersion >= 16.0 then
 		-- Adjust the syntax highlighting colors
 		bgcol = {
 			R = 0.125,
@@ -625,8 +705,13 @@ end
 	win:Show()
 	-- disp:RunLoop()
 
+	-- Fallback check for the "Always Ask for InstallScript Permissions" preference
+	if g_Config.Settings.Reactor.AskForInstallScriptPermissions == nil then
+		g_Config.Settings.Reactor.AskForInstallScriptPermissions = true
+	end
+
 	-- The Reactor "Collections" debug mode hides the confirmation window during automated testing.
-	if os.getenv("REACTOR_DEBUG_COLLECTIONS") ~= "true" then
+	if os.getenv("REACTOR_DEBUG_COLLECTIONS") ~= "true" and g_Config.Settings.Reactor.AskForInstallScriptPermissions ~= false then
 		disp:RunLoop()
 	else
 		-- bmd.wait(1)
@@ -646,6 +731,22 @@ end
 	return ok, win,win:GetItems()
 end
 
+save_cb = {
+	start = function(i, cbdata)
+		cbdata.msg.Text = cbdata.paths[i]:gsub(".+/(.+)", "%1")
+	end,
+
+	complete = function(i, cbdata, data, headers)
+		local path = cbdata.paths[i]
+		bmd.createdir(path:gsub("(.+)/.+", "%1"))
+		SaveFile(path, data)
+		return true
+	end,
+
+	failed = function(i, cbdata)
+	end,
+}
+
 function InstallAtom(id, deps)
 	deps = deps or {}
 
@@ -663,61 +764,43 @@ function InstallAtom(id, deps)
 			AskDonation(atom)
 		end
 
+		local local_files, remote_files = {}, {}
+
 		local msgwin,msgitm = MessageWin("Installing Atom", atom.Name)
 
 		if atom.Dependencies then
 			for i,depID in ipairs(atom.Dependencies) do
-				local full_id = depID:find('/') and depID or atom.Repo .. "/" .. depID
+				local full_id = depID:find("/") and depID or atom.Repo .. "/" .. depID
 
 				InstallAtom(full_id, deps)
 			end
 		end
 
 		if atom.Deploy then
-			local protocol
-			local pid
+			local protocol = g_Protocols[g_Config.Repos[atom.Repo].Protocol]
 
-			--@todo: fix.
-			for site, sitecfg in pairs(g_Config.Repos) do
-				for project, id in pairs(sitecfg.Projects) do
-					if project == atom.Repo then
-						protocol = g_Protocols[site]
-						pid = id
+			local files = {}
+			if GetDeployFiles(atom.Deploy, files) then
+				for i,file in ipairs(files) do
+					if type(file) == "table" then
+						table.insert(remote_files, "Atoms/" .. atom.ID .. "/" .. file.Remote)
+						table.insert(local_files, deploy_root .. file.Local)
 					end
 				end
+
+				local cbdata = { paths = local_files, msg = msgitm.Message }
+				protocol.GetFiles(remote_files, atom.Repo, save_cb, cbdata)
+
+				local txt = LoadFile(atoms_root .. id .. ".atom")
+				local destfile = installed_root .. id .. ".atom"
+
+				bmd.createdir(destfile:gsub("(.+)/.+", "%1"))
+				SaveFile(installed_root .. id .. ".atom", txt)
+
+				g_Installed = true
+
+				ret = true
 			end
-
-			for i,lpath in ipairs(atom.Deploy) do
-				if type(lpath) == "string" then
-					local path = "Atoms/" .. atom.ID .. "/" .. lpath
-					local destfile = deploy_root .. lpath
-					local content = protocol.GetFile(path, pid, atom.Repo)
-					bmd.createdir(destfile:gsub("(.+)/.+", "%1"))
-					SaveFile(destfile, content)
-				end
-			end
-
-			if atom.Deploy[g_ThisPlatform] then
-				for i,lpath in ipairs(atom.Deploy[g_ThisPlatform]) do
-					if type(lpath) == "string" then
-						local path = "Atoms/" .. atom.ID .. "/" .. g_ThisPlatform .. "/" .. lpath
-						local destfile = deploy_root .. lpath
-						local content = protocol.GetFile(path, pid, atom.Repo)
-						bmd.createdir(destfile:gsub("(.+)/.+", "%1"))
-						SaveFile(destfile, content)
-					end
-				end
-			end
-
-			local txt = LoadFile(atoms_root .. id .. ".atom")
-			local destfile = installed_root .. id .. ".atom"
-
-			bmd.createdir(destfile:gsub("(.+)/.+", "%1"))
-			SaveFile(installed_root .. id .. ".atom", txt)
-
-			g_Installed = true
-
-			ret = true
 		else
 			msgitm.Message.Text = "ERROR: Nothing to install for Atom " .. atom.Name
 			bmd.wait(2)
@@ -737,6 +820,15 @@ function InstallAtom(id, deps)
 					end
 				end
 			end
+		end
+
+		atom._TreeItem.CheckState[0] = "Checked"
+
+		local cur = g_MainItm.AtomTree:CurrentItem()
+		if cur and cur:GetData(0, "UserRole") == atom.Repo .. "/" .. atom.ID then
+			g_MainItm.Install.Enabled = false
+			g_MainItm.Update.Enabled = not atom.Disabled
+			g_MainItm.Remove.Enabled = true
 		end
 
 		msgwin:Hide()
@@ -769,18 +861,14 @@ function RemoveAtom(id, deps)
 	]]
 
 	if atom.Deploy then
-		for i,lpath in ipairs(atom.Deploy) do
-			if type(lpath) == "string" then
-				local destfile = deploy_root .. lpath
-				os.remove(destfile)
-			end
-		end
-
-		if atom.Deploy[g_ThisPlatform] then
-			for i,lpath in ipairs(atom.Deploy[g_ThisPlatform]) do
-				if type(lpath) == "string" then
-					local destfile = deploy_root .. lpath
+		local files = {}
+		if GetDeployFiles(atom.Deploy, files) then
+			for i,file in ipairs(files) do
+				if type(file) == "table" then
+					local destfile = deploy_root .. file.Local
 					os.remove(destfile)
+					-- Provide a status message for each file being saved to disk
+					msgitm.Message.Text = atom.Name .. "\n" .. tostring(file.Local)
 				end
 			end
 		end
@@ -810,6 +898,17 @@ function RemoveAtom(id, deps)
 	msgwin:Hide()
 	msgwin = nil
 
+	local a = FindAtom(id)
+
+	a._TreeItem.CheckState[0] = "Unchecked"
+
+	local cur = g_MainItm.AtomTree:CurrentItem()
+		if cur and cur:GetData(0, "UserRole") == a.Repo .. "/" .. a.ID then
+		g_MainItm.Install.Enabled = not a.Disabled
+		g_MainItm.Update.Enabled = false
+		g_MainItm.Remove.Enabled = false
+	end
+
 	g_Installed = true
 end
 
@@ -838,8 +937,8 @@ function MessageWinUpdate(title, text, win, itm)
 	end
 end
 
-function MigrateLegacyInstall()
-	dprintf("[Status] MigrateLegacyInstall()")
+function MigrateLegacyInstall1()
+	dprintf("[Status] MigrateLegacyInstall1()")
 	local repo = "Reactor"
 
 	os.rename(atoms_root, reactor_root .. "_Temp")
@@ -857,31 +956,189 @@ function MigrateLegacyInstall()
 	bmd.writefile(reactor_root .. "System/Reactor.cfg", g_Config)
 end
 
-local function GetURL(url)
-	-- dprintf("[Status] GetURL('%s')", url)
-	dprintf("[Status] GetURL('%s')", url:gsub("&private_token=.+", ""))
+function MigrateLegacyInstall2()
+	dprintf("[Status] MigrateLegacyInstall2()")
 
-	local body = {}
+	local oldrepos = g_Config.Repos
 
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_URL, url)
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_SSL_VERIFYPEER, 0)
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_WRITEFUNCTION, ffi.cast("curl_write_callback",
-		function(buffer, size, nitems, userdata)
-			table.insert(body, ffi.string(buffer, size*nitems))
-			return nitems;
-		end))
+	g_Config.Repos = {}
 
-	local ret = curl.curl_easy_perform(curl_handle)
+	for protocol,repos in pairs(oldrepos) do
+		for project,id in pairs(repos.Projects) do
+			g_Config.Repos[project] = { ID = id, Protocol = protocol, Token = (g_Config.Settings[project] and g_Config.Settings[project].Token), PrevCommitID = (g_Config.Settings[project] and g_Config.Settings[project].PrevCommitID) }
+		end
+	end
 
-	return table.concat(body)
+	if g_Config.Repos.Reactor then
+		g_Config.Settings = g_DefaultConfig.Settings
+
+		if not g_Config.Repos._Core then
+			g_Config.Repos._Core = g_Config.Repos.Reactor
+		end
+	else
+		g_Config = g_DefaultConfig
+	end
+
+	bmd.writefile(reactor_root .. "System/Reactor.cfg", g_Config)
+end
+
+local data, headers
+
+local writefunc = ffi.cast("curl_write_callback",
+	function(buffer, size, nitems, userdata)
+		table.insert(data[tonumber(ffi.cast("int", userdata))], ffi.string(buffer, size*nitems))
+		return size*nitems
+	end)
+
+local headerfunc = ffi.cast("curl_write_callback",
+	function(buffer, size, nitems, userdata)
+		table.insert(headers[tonumber(ffi.cast("int", userdata))], ffi.string(buffer, size*nitems))
+		return size*nitems
+	end)
+
+function GetURLs(urls, do_headers, header, callbacks, cbdata)
+	data, headers = {}, {}
+	local pool = {}
+	local slist
+
+	if header then
+		for i,v in ipairs(header) do
+			slist = curl.curl_slist_append(slist, v);
+		end
+	end
+
+	for i,ch in ipairs(curl_pool) do
+		pool[i] = ch
+
+--		curl.curl_easy_reset(ch)
+
+		curl.curl_easy_setopt(ch, curl.CURLOPT_HTTPHEADER, slist)
+	end
+
+	local tmp = ffi.new("int[1]")
+	local ptr = ffi.new("void *[1]")
+
+	local index = 1
+
+	while index <= #urls or #pool < #curl_pool do
+		while index <= #urls and #pool > 0 do
+			local ch = table.remove(pool)
+
+			data[index] = {}
+			headers[index] = {}
+
+			if callbacks and callbacks.start then
+				callbacks.start(index, cbdata)
+			end
+
+			curl.curl_easy_setopt(ch, curl.CURLOPT_URL, urls[index])
+			curl.curl_easy_setopt(ch, curl.CURLOPT_PRIVATE, ffi.cast("void *", index))
+			curl.curl_easy_setopt(ch, curl.CURLOPT_WRITEDATA, ffi.cast("void *", index))
+			curl.curl_easy_setopt(ch, curl.CURLOPT_HEADERDATA, ffi.cast("void *", index))
+
+			curl.curl_multi_add_handle(curl_multi, ch)
+
+			index = index + 1
+		end
+
+		curl.curl_multi_perform(curl_multi, tmp)
+
+		curl.curl_multi_wait(curl_multi, nil, 0, 100, tmp)
+
+		local msg = curl.curl_multi_info_read(curl_multi, tmp)
+
+		while msg ~= nil do
+			if msg.msg == curl.CURLMSG_DONE then
+				local ch = msg.easy_handle
+
+				curl.curl_easy_getinfo(ch, curl.CURLINFO_PRIVATE, ptr);
+
+				local i = tonumber(ffi.cast("int", ptr[0]))
+
+				if msg.data.result == curl.CURLE_OK then
+					data[i] = table.concat(data[i])
+
+					if callbacks and callbacks.complete then
+						if callbacks.complete(i, cbdata, data[i], headers[i]) then
+							data[i] = nil
+							headers[i] = nil
+						end
+					end
+				else
+					data[i] = nil
+
+					if callbacks and callbacks.failed then
+						callbacks.failed(i, cbdata, nil)
+					end
+				end
+
+				curl.curl_multi_remove_handle(curl_multi, ch);
+
+				table.insert(pool, ch)
+			end
+
+			msg = curl.curl_multi_info_read(curl_multi, tmp)
+		end
+	end
+
+	for i,ch in ipairs(curl_pool) do
+		curl.curl_easy_setopt(ch, curl.CURLOPT_HTTPHEADER, nil)
+	end
+
+	if slist then
+		curl.curl_slist_free_all(slist)
+	end
+
+	return data,headers
+end
+
+function GetURL(url, do_headers, header)
+	dprintf("[Status] GetURL('%s')", url:gsub("https://.+@api", "https://api"))
+
+	local data,headers = GetURLs({url}, do_headers, header)
+
+	return data[1], headers[1]
+end
+
+function GetJSON(url)
+	local body = GetURL(url)
+
+	return json.decode(body)
+end
+
+function GetPagedJSON(url, subkey)
+	local ret = {}
+
+	repeat
+		local body,headers = GetURL(url, true)
+
+		local data = json.decode(body)
+
+		for i,v in ipairs(subkey and data[subkey] or data) do
+			table.insert(ret, v)
+		end
+
+		url = nil
+
+		for i,hdr in ipairs(headers) do
+			if hdr:sub(1,5) == "Link:" then
+				local links = {}
+				hdr:gsub('<(.-)>; *rel="(.-)"', function(link,rel) links[rel] = link end)
+
+				url = links.next
+			end
+		end
+	until not url
+
+	return ret
 end
 
 local function EncodeURL(txt)
 	if txt ~= nil then
 		urlCharacters = {
-			{pattern = '[/]', replace = '%%2F'},
-			{pattern = '[.]', replace = '%%2E'},
-			{pattern = '[ ]', replace = '%%20'},
+			{pattern = "[/]", replace = "%%2F"},
+			{pattern = "[.]", replace = "%%2E"},
+			{pattern = "[ ]", replace = "%%20"},
 		}
 
 		for i,val in ipairs(urlCharacters) do
@@ -892,37 +1149,183 @@ local function EncodeURL(txt)
 	return txt
 end
 
-local function DownloadSystemURL(baseFolder, relativePath, relativeFilename)
-	local token = ""
-	if g_Config.Settings.Reactor.Token ~= nil and string.len(g_Config.Settings.Reactor.Token) >= 10 then
-		token = "&private_token=" .. g_Config.Settings.Reactor.Token
-	end
-
-	local url = reactor_system_url .. baseFolder .. EncodeURL(relativePath) .. "/raw?ref=" .. branch .. token
-	local content = GetURL(url)
-	SaveFile(reactor_root .. relativeFilename, content)
-end
-
-local function LoadSaveSystemFile(relativeLoadFilename, relativeSaveFilename)
-	local content = LoadFile(local_system .. relativeLoadFilename)
-	SaveFile(reactor_root .. relativeSaveFilename, content)
-end
 
 function UpdateDependencies(atom)
-	if atom and atom.Dependencies then
-		for i,v in ipairs(atom.Dependencies) do
-			local full_id = v:find('/') and v or atom.Repo .. "/" .. v
+	if atom then
+		if atom.Collection then
+			local env = {
+				collection = atom,
+				system = {
+					platform = g_ThisPlatform,
+					},
+				}
 
-			local av = FindAtom(full_id)
+			local filter = loadstring((atom.Collection:sub(1,1) == ":") and atom.Collection:sub(2,-1) or ("return " .. atom.Collection))
 
-			UpdateDependencies(av)
+			setfenv(filter, env)
+			setmetatable(env, { __index = _G } )
 
-			if not av or av.Disabled then
-				table.insert(atom.Issues, "The dependency '" .. v .. "' is not available.")
-				atom.Disabled = true
+			atom.Dependencies = atom.Dependencies or {}
+
+			for i,v in ipairs(Atoms) do
+				if atom.Repo == v.Repo and v ~= atom and not v.Disabled and not v.Collection then
+					env.atom = v
+					if filter() then
+						table.insert(atom.Dependencies, v.ID)
+					end
+				end
+			end
+		end
+
+		if atom.Dependencies then
+			for i,v in ipairs(atom.Dependencies) do
+				local full_id = v:find("/") and v or atom.Repo .. "/" .. v
+
+				local av = FindAtom(full_id)
+
+				UpdateDependencies(av)
+
+				if not av or av.Disabled then
+					table.insert(atom.Issues, "The dependency '" .. v .. "' is not available.")
+					atom.Disabled = true
+				end
 			end
 		end
 	end
+end
+
+function BuildSearchKey(t, key)
+	if type(t) == "string" or type(t) == "number" then
+		key[#key+1] = tostring(t):lower()
+	elseif type(t) == "table" then
+		for i,v in pairs(t) do
+			BuildSearchKey(v, key)
+		end
+	end
+end
+
+function GetDeployFiles(tbl, files, prefix)
+	local ok = true
+	local foundplat, thisplat = false, false
+	local foundapp, thisapp = false, false
+	local foundver, thisver = false, false
+
+	prefix = prefix or ""
+
+	for key,v in pairs(tbl) do
+		if type(key) == "string" then
+			if g_Platforms[key] ~= nil then
+				foundplat = true
+				if g_ThisPlatform == key then
+					thisplat = true
+					ok = GetDeployFiles(v, files, prefix .. key .. "/") and ok
+				end
+			elseif g_Apps[key] ~= nil then
+				foundapp = true
+				if g_AppName == key then
+					thisapp = true
+					ok = GetDeployFiles(v, files, prefix .. key .. "/") and ok
+				end
+			elseif key:sub(1,1) == 'v' then
+				foundver = true
+				local verstr = key:sub(2,-1)
+				if verstr:sub(-1,-1) == '+' and tonumber(verstr:sub(1,-2)) then
+					if g_AppVersion >= tonumber(verstr:sub(1,-2)) then
+						thisver = true
+						ok = GetDeployFiles(v, files, prefix .. key .. "/") and ok
+					end
+				elseif verstr:sub(-1,-1) == '-' and tonumber(verstr:sub(1,-2)) then
+					if g_AppVersion <= tonumber(verstr:sub(1,-2)) then
+						thisver = true
+						ok = GetDeployFiles(v, files, prefix .. key .. "/") and ok
+					end
+				elseif tonumber(verstr) then
+					if g_AppVersion == tonumber(verstr) then
+						thisver = true
+						ok = GetDeployFiles(v, files, prefix .. key .. "/") and ok
+					end
+				end
+			end
+		else
+			table.insert(files, { Local = v, Remote = prefix .. v })
+		end
+	end
+
+	if (foundplat and not thisplat) or (foundapp and not thisapp) or (foundver and not thisver) then
+		ok = false
+	end
+
+	return ok
+end
+
+function IsDeployable(tbl, issues, str)
+	local ok = true
+	local foundplat, thisplat = false, false
+	local foundapp, thisapp = false, false
+	local foundver, thisver = false, false
+
+	for key,v in pairs(tbl) do
+		if type(key) == "string" then
+			if g_Platforms[key] ~= nil then
+				foundplat = true
+				if g_ThisPlatform == key then
+					thisplat = true
+					ok = IsDeployable(v, issues, str .. key .. " ") and ok
+				end
+			elseif g_Apps[key] ~= nil then
+				foundapp = true
+				if g_AppName == key then
+					thisapp = true
+					ok = IsDeployable(v, issues, str .. key .. " ") and ok
+				end
+			elseif key:sub(1,1) == 'v' then
+				foundver = true
+				local verstr = key:sub(2,-1)
+				if verstr:sub(-1,-1) == '+' and tonumber(verstr:sub(1,-2)) then
+					if g_AppVersion >= tonumber(verstr:sub(1,-2)) then
+						thisver = true
+						ok = IsDeployable(v, issues, str .. key .. " ") and ok
+					end
+				elseif verstr:sub(-1,-1) == '-' and tonumber(verstr:sub(1,-2)) then
+					if g_AppVersion <= tonumber(verstr:sub(1,-2)) then
+						thisver = true
+						ok = IsDeployable(v, issues, str .. key .. " ") and ok
+					end
+				elseif tonumber(verstr) then
+					if g_AppVersion == tonumber(verstr) then
+						thisver = true
+						ok = IsDeployable(v, issues, str .. key .. " ") and ok
+					end
+				end
+			end
+		end
+	end
+
+	if foundplat and not thisplat then
+		if issues then
+			table.insert(issues, "This Atom package cannot be installed on " .. str .. g_ThisPlatform)
+		end
+
+		ok = false
+	end
+
+	if foundapp and not thisapp then
+		if issues then
+			table.insert(issues, "This Atom package cannot be installed on " .. str .. g_AppName)
+		end
+
+		ok = false
+	end
+
+	if foundver and not thisver then
+		if issues then
+			table.insert(issues, "This Atom package cannot be installed on " .. str .. ("v%.02f"):format(g_AppVersion))
+		end
+
+		ok = false
+	end
+
+	return ok
 end
 
 function ReadAtoms(path)
@@ -940,48 +1343,27 @@ function ReadAtoms(path)
 					atom.ID = v.Name:sub(1,-6)
 					atom.Issues = {}
 
-					local plat,enable = false,false
-					for i,v in pairs(g_Platforms) do
-						if atom.Deploy[i] then
-							plat = true
-							if v then
-								enable = true
-							end
-						end
-					end
-
-					if plat and not enable then
-						table.insert(atom.Issues, "This Atom package cannot be installed on your OS.")
-						atom.Disabled = plat and not enable
-					end
-
-					local fuVersion = tonumber(bmd._VERSION)
-					local fuAppName = "Fusion"
-					if fuVersion >= 15 then
-						fuAppName = "Resolve"
-					end
-
-					local fuAppCompatibleName = "Fusion"
-					if atom.Maximum and fuVersion > atom.Maximum then
-						if atom.Maximum >= 15 then
-							fuAppCompatibleName = "Resolve"
-						end
-						table.insert(atom.Issues, "This Atom does not support " .. fuAppName .. " " .. fuVersion .. ". You need " .. fuAppCompatibleName .. " " .. atom.Maximum .. " to use this atom.")
+					atom.Disabled = not IsDeployable(atom.Deploy, atom.Issues, "")
+--[[
+					if atom.Maximum and g_AppVersion > atom.Maximum and g_AppVersion ~= 0 then
+						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Maximum) .. " or lower to use this Atom.")
 						atom.Disabled = true
-					elseif atom.Minimum and fuVersion < atom.Minimum then
-						if atom.Minimum >= 15 then
-							fuAppCompatibleName = "Resolve"
-						end
-						table.insert(atom.Issues, "This Atom does not support " .. fuAppName .. " " .. fuVersion .. ". You need " .. fuAppCompatibleName .. " " .. atom.Minimum .. " to use this atom.")
+					elseif atom.Minimum and g_AppVersion < atom.Minimum and g_AppVersion ~= 0 then
+						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Minimum) .. " or higher to use this Atom.")
 						atom.Disabled = true
 					end
-					
+]]
 					local installed = IsAtomInstalled(GetAtomID(atom))
 					local updatable, installedVersion, newVersion = IsAtomUpdatable(atom)
 					if updatable == true then
 						table.insert(atom.Issues, "You have v" .. tostring(installedVersion) .. " of this atom installed. There is a v" .. tostring(newVersion) .. " update available. Click the update button to install the new version.")
+					else
+						-- Only consider a new atom "new" if is not installed and needing an update
+						local new = IsAtomNew(atom)
+						if new == true then
+							table.insert(atom.Issues, "This is a new atom that was added to Reactor recently.")
+						end
 					end
-					
 					table.insert(Atoms, atom)
 				end
 			end
@@ -990,18 +1372,34 @@ function ReadAtoms(path)
 
 	for i,v in ipairs(Atoms) do
 		UpdateDependencies(v)
+
+		local searchkey = {}
+
+		BuildSearchKey(v, searchkey)
+
+		v._SearchKey = table.concat(searchkey, "\n")
 	end
 end
 
-local function UpdateAtoms(msg, repo, force)
-	for site, sitecfg in pairs(g_Config.Repos) do
-		local protocol = g_Protocols[site]
-		if protocol then
-			for project, id in pairs(sitecfg.Projects) do
-				if not repo or project == repo then
-					protocol.UpdateAtoms(msg, project, id, force)
-				end
+local function UpdateAtoms(msg, repo, all)
+	for project, config in pairs(g_Config.Repos) do
+		if (not repo or project == repo) and project:sub(1,1) ~= "_" then
+			local protocol = g_Protocols[config.Protocol]
+			local repo_atoms = atoms_root .. project .. "/"
+
+			local files = protocol.GetAtomList(project, all)
+
+			local local_files = {}
+
+			for i,path in pairs(files) do
+				local name = path:gsub(".+/(.+).atom", "%1")
+				local_files[i] = repo_atoms .. name .. ".atom"
 			end
+
+			bmd.createdir(repo_atoms)
+
+			local cbdata = { paths = local_files, msg = msg }
+			protocol.GetFiles(files, project, save_cb, cbdata)
 		end
 	end
 end
@@ -1039,23 +1437,19 @@ function GetAtomDescription(atom)
 	end
 
 	if atom.Deploy then
-		str = str .. "<p>Installed Files:<ul>"
+		local files = {}
 
-		for i,v in ipairs(atom.Deploy) do
-			if type(v) == "string" then
-				str = str .. "<li>&nbsp;&nbsp;" .. v .. "</li>"
-			end
-		end
+		if GetDeployFiles(atom.Deploy, files) then
+			str = str .. "<p>Installed Files:<ul>"
 
-		if atom.Deploy[g_ThisPlatform] then
-			for i,v in ipairs(atom.Deploy[g_ThisPlatform]) do
-				if type(v) == "string" then
-					str = str .. "<li>&nbsp;&nbsp;" .. v .. "</li>"
+			for i,v in ipairs(files) do
+				if type(v) == "table" then
+					str = str .. "<li>&nbsp;&nbsp;" .. v.Local .. "</li>"
 				end
 			end
-		end
 
-		str = str .. "</ul></p>"
+			str = str .. "</ul></p>"
+		end
 	end
 
 	if atom.InstallScript and atom.UninstallScript then
@@ -1070,9 +1464,56 @@ function GetAtomDescription(atom)
 	str = str .. "</body></html>"
 
 	-- Add emoticon support for local images like <img src="Emoticons:/wink.png">
-	str = string.gsub(str, '[Ee]moticons:/', system_ui_root .. "Emoticons/")
+	str = string.gsub(str, "[Ee]moticons:/", system_ui_root .. "Emoticons/")
+
+	-- Add image loading support for local images like <img src="Reactor:/Deploy/Docs/ReactorDocs/Images/atomizer-welcome.png">
+	str = string.gsub(str, "[Rr]eactor:/", reactor_root)
 
 	return str
+end
+
+function FetchProtocols()
+	bmd.createdir(system_root)
+	bmd.createdir(system_root .. "Protocols/")
+
+	local token = g_Config and g_Config.Repos and g_Config.Repos._Core and g_Config.Repos._Core.Token
+
+	local files =
+	{
+		["Protocols/GitLab.lua"] = "System/Protocols/GitLab.lua",
+		["Protocols/FileSystem.lua"] = "System/Protocols/FileSystem.lua",
+		-- ["Protocols/GitHub.lua"] = "System/Protocols/GitHub.lua",
+	}
+
+	for i,v in pairs(files) do
+		local str = nil
+		if local_system then
+			local file = io.open(local_system .. osSeparator .. v, "r")
+
+			if file then
+				str = file:read("*all")
+				file:close()
+			else
+				error("[Reactor Error] Disk permissions error reading local_system path " .. local_system)
+			end
+		else
+			v = v:gsub(".", { ["."] = "%2E", ["/"] = "%2F" })
+
+			local url = "https://gitlab.com/api/v4/projects/" .. reactor_project_id .. "/repository/files/" .. v .. "/raw?ref=" .. branch
+
+			if token then
+				url = url .. "&private_token=" .. token
+			end
+
+			str = GetURL(url)
+
+			if not str then
+				error("[Reactor Error] Fetch Failed.")
+			end
+		end
+
+		SaveFile(system_root .. i, str)
+	end
 end
 
 function Init()
@@ -1085,13 +1526,33 @@ function Init()
 
 	if type(g_Config) ~= "table" then
 		g_Config = g_DefaultConfig
-	elseif g_Config.PrevCommitID then
-		MigrateLegacyInstall()
+	end
+
+	if g_Config.PrevCommitID then
+		MigrateLegacyInstall1()
+	end
+
+	if not g_Config.Repos._Core then
+		MigrateLegacyInstall2()
+	end
+
+	if local_system then
+		g_OldCore = g_Config.Repos._Core
+		g_Config.Repos._Core = { Protocol = "FileSystem", Path = local_system }
 	end
 
 	Atoms = {}
 
-	curl_handle = curl.curl_easy_init()
+	curl_pool = {}
+	for i=1, (g_Config.Settings.Reactor.ConcurrentTransfers or 8) do
+		curl_pool[i] = curl.curl_easy_init()
+ 		curl.curl_easy_setopt(curl_pool[i], curl.CURLOPT_USERAGENT, "Reactor")
+		curl.curl_easy_setopt(curl_pool[i], curl.CURLOPT_SSL_VERIFYPEER, 0)
+		curl.curl_easy_setopt(curl_pool[i], curl.CURLOPT_WRITEFUNCTION, writefunc)
+		curl.curl_easy_setopt(curl_pool[i], curl.CURLOPT_HEADERFUNCTION, headerfunc)
+	end
+
+	curl_multi = curl.curl_multi_init()
 
 	-- Create the extra Docs, Comps, and Bin folders
 	-- Reactor:/Deploy/Docs/ folder
@@ -1117,112 +1578,16 @@ function Init()
 	bmd.createdir(system_ui_root .. 'Images/')
 	bmd.createdir(system_ui_root .. 'Emoticons/')
 
-	if local_system then
-		MessageWinUpdate("Updating Reactor Core...", "Fusion Reactor", msgwin, msgitm)
+	bmd.createdir(reactor_root)
+	bmd.createdir(atoms_root)
+	bmd.createdir(deploy_root)
+	bmd.createdir(installed_root)
 
-		--@todo: Scan dir and fetch
-		-- Copy the Reactor:/System/Protocol files
-		LoadSaveSystemFile("/Protocols/GitLab.lua", "System/Protocols/GitLab.lua")
-		LoadSaveSystemFile("/Protocols/FileSystem.lua", "System/Protocols/FileSystem.lua")
+	-- @todo: Scan dir and fetch
+	MessageWinUpdate("Updating Reactor Core...", "Fusion Reactor", msgwin, msgitm)
 
-		-- Copy the Reactor:/System/UI files
-		LoadSaveSystemFile("/UI/AboutWindow.lua", "System/UI/AboutWindow.lua")
-		LoadSaveSystemFile("/UI/ResyncRepository.lua", "System/UI/ResyncRepository.lua")
-
-		-- Copy the Atomizer Package Editor files
-		LoadSaveSystemFile("/UI/Atomizer.lua", "System/UI/Atomizer.lua")
-		LoadSaveSystemFile("/UI/Images/icons.zip", "System/UI/Images/icons.zip")
-
-		-- @todo: Add the local_system Reactor:/System/UI/Emoticons/ files
-		-- @todo: Add the local_system Script > Reactor menu items
-	else
-		bmd.createdir(reactor_root)
-		bmd.createdir(atoms_root)
-		bmd.createdir(deploy_root)
-		bmd.createdir(installed_root)
-
-		-- @todo: Scan dir and fetch
-		MessageWinUpdate("Updating Reactor Core...", "Fusion Reactor", msgwin, msgitm)
-		git_system_folder = "/repository/files/System"
-
-		-- Download the Reactor:/System/Protocol files
-		DownloadSystemURL(git_system_folder, "/Protocols/GitLab.lua", "System/Protocols/GitLab.lua")
-		DownloadSystemURL(git_system_folder, "/Protocols/FileSystem.lua", "System/Protocols/FileSystem.lua")
-
-		-- MessageWinUpdate("Updating Reactor Menus...", "Fusion Reactor", msgwin, msgitm)
-		-- Download the Script > Reactor menu items
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/About Reactor.lua", "System/Scripts/Comp/Reactor/About Reactor.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Open Reactor....lua", "System/Scripts/Comp/Reactor/Open Reactor....lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Atomizer.lua", "System/Scripts/Comp/Reactor/Tools/Atomizer.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Macro Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Macro Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua", "System/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua", "System/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua", "System/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Resync Repository.lua", "System/Scripts/Comp/Reactor/Tools/Resync Repository.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Config Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Config Folder.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Tools/Show Temp Folder.lua", "System/Scripts/Comp/Reactor/Tools/Show Temp Folder.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua", "System/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua")
-		DownloadSystemURL(git_system_folder, "/Scripts/Comp/Reactor/Resources/We Suck Less.lua", "System/Scripts/Comp/Reactor/Resources/We Suck Less.lua")
-
-		-- Download the Reactor:/System/UI files
-		DownloadSystemURL(git_system_folder, "/Protocols/FileSystem.lua", "System/Protocols/FileSystem.lua")
-		DownloadSystemURL(git_system_folder, "/UI/AboutWindow.lua", "System/UI/AboutWindow.lua")
-		DownloadSystemURL(git_system_folder, "/UI/Atomizer.lua", "System/UI/Atomizer.lua")
-		DownloadSystemURL(git_system_folder, "/UI/Fuse Scanner.lua", "System/UI/Fuse Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/UI/Macro Scanner.lua", "System/UI/Macro Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/UI/Plugin Scanner.lua", "System/UI/Plugin Scanner.lua")
-		DownloadSystemURL(git_system_folder, "/UI/ResyncRepository.lua", "System/UI/ResyncRepository.lua")
-
-		-- Download the Reactor:/System/Images files
-		-- All of the icons are accessible in single download using a Fusion ZIPIO Resource
-		DownloadSystemURL(git_system_folder, "/UI/Images/icons.zip", "System/UI/Images/icons.zip")
-
-		-- Download the Reactor:/System/Emoticons files
-		MessageWinUpdate("Updating Reactor Icons...", "Fusion Reactor", msgwin, msgitm)
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/banana.png", "System/UI/Emoticons/banana.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/bowdown.png", "System/UI/Emoticons/bowdown.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/buttrock.png", "System/UI/Emoticons/buttrock.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cheer.png", "System/UI/Emoticons/cheer.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cheers.png", "System/UI/Emoticons/cheers.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cool.png", "System/UI/Emoticons/cool.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/cry.png", "System/UI/Emoticons/cry.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/facepalm.png", "System/UI/Emoticons/facepalm.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/lol.png", "System/UI/Emoticons/lol.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/mad.png", "System/UI/Emoticons/mad.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/mrgreen.png", "System/UI/Emoticons/mrgreen.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/nocheer.png", "System/UI/Emoticons/nocheer.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/popcorn.png", "System/UI/Emoticons/popcorn.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/rolleyes.png", "System/UI/Emoticons/rolleyes.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/sad.png", "System/UI/Emoticons/sad.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/smile.png", "System/UI/Emoticons/smile.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/wink.png", "System/UI/Emoticons/wink.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/wip.png", "System/UI/Emoticons/wip.png")
-		DownloadSystemURL(git_system_folder, "/UI/Emoticons/whistle.png", "System/UI/Emoticons/whistle.png")
-
-		-- The extended set of emoticons are disabled for now:
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/arrow.png", "System/UI/Emoticons/arrow.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/banghead.png", "System/UI/Emoticons/banghead.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/biggrin.png", "System/UI/Emoticons/biggrin.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/confused.png", "System/UI/Emoticons/confused.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/eek.png", "System/UI/Emoticons/eek.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/evil.png", "System/UI/Emoticons/evil.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/exclaim.png", "System/UI/Emoticons/exclaim.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/geek.png", "System/UI/Emoticons/geek.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/idea.png", "System/UI/Emoticons/idea.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/neutral.png", "System/UI/Emoticons/neutral.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/question.png", "System/UI/Emoticons/question.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/razz.png", "System/UI/Emoticons/razz.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/redface.png", "System/UI/Emoticons/redface.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/surprised.png", "System/UI/Emoticons/surprised.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/twisted.png", "System/UI/Emoticons/twisted.png")
-		-- DownloadSystemURL(git_system_folder, "/UI/Emoticons/ugeek.png", "System/UI/Emoticons/ugeek.png")
-	end
-
-	MessageWinUpdate("Updating Reactor PathMap...", "Fusion Reactor", msgwin, msgitm)
+	-- @TODO: We need to explicitly fetch protocols here. Improve.
+	FetchProtocols()
 
 	local pdir = bmd.readdir(reactor_root .. "System/Protocols/*.lua")
 
@@ -1239,8 +1604,107 @@ function Init()
 
 			g_Protocols[name] = protocol()
 		else
-			error(err)
+			print(err)
 		end
+	end
+
+	for name,protocol in pairs(g_Protocols) do
+		if protocol.Init then
+			protocol.Init()
+		end
+	end
+
+	local previd = g_Protocols[g_Config.Repos._Core.Protocol].GetRecentCommitID and g_Protocols[g_Config.Repos._Core.Protocol].GetRecentCommitID("_Core")
+
+	if not previd or previd ~= g_Config.Repos._Core.PrevCommitID then
+		local system_files = {
+			-- Download the Reactor:/System/Protocol files - already fetched above
+			-- "System/Protocols/GitLab.lua",
+			-- "System/Protocols/FileSystem.lua",
+			"System/Protocols/GitHub.lua",
+
+			-- Download the Script > Reactor menu items
+			"System/Scripts/Comp/Reactor/About Reactor.lua",
+			"System/Scripts/Comp/Reactor/Open Reactor....lua",
+			"System/Scripts/Comp/Reactor/Reactor Preferences....lua",
+			"System/Scripts/Comp/Reactor/Tools/Atomizer.lua",
+			"System/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua",
+			"System/Scripts/Comp/Reactor/Tools/Macro Scanner.lua",
+			"System/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua",
+			"System/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua",
+			"System/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua",
+			"System/Scripts/Comp/Reactor/Tools/Resync Repository.lua",
+			"System/Scripts/Comp/Reactor/Tools/Show Config Folder.lua",
+			"System/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua",
+			"System/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua",
+			"System/Scripts/Comp/Reactor/Tools/Show Temp Folder.lua",
+			"System/Scripts/Comp/Reactor/Resources/Reactor Online Discussion.lua",
+			"System/Scripts/Comp/Reactor/Resources/Reactor Online Repository.lua",
+			"System/Scripts/Comp/Reactor/Resources/We Suck Less.lua",
+
+			-- Download the Reactor:/System/UI files
+			"System/UI/AboutWindow.lua",
+			"System/UI/Atomizer.lua",
+			"System/UI/Fuse Scanner.lua",
+			"System/UI/Macro Scanner.lua",
+			"System/UI/Plugin Scanner.lua",
+			"System/UI/Preferences.lua",
+			"System/UI/ResyncRepository.lua",
+
+			-- Download the Reactor:/System/Images files
+			-- All of the icons are accessible in single download using a Fusion ZIPIO Resource
+			"System/UI/Images/icons.zip",
+
+			-- Download the Reactor:/System/Emoticons files
+			"System/UI/Emoticons/banana.png",
+			"System/UI/Emoticons/bowdown.png",
+			"System/UI/Emoticons/buttrock.png",
+			"System/UI/Emoticons/cheer.png",
+			"System/UI/Emoticons/cheers.png",
+			"System/UI/Emoticons/cool.png",
+			"System/UI/Emoticons/cry.png",
+			"System/UI/Emoticons/facepalm.png",
+			"System/UI/Emoticons/lol.png",
+			"System/UI/Emoticons/mad.png",
+			"System/UI/Emoticons/mrgreen.png",
+			"System/UI/Emoticons/nocheer.png",
+			"System/UI/Emoticons/popcorn.png",
+			"System/UI/Emoticons/rolleyes.png",
+			"System/UI/Emoticons/sad.png",
+			"System/UI/Emoticons/smile.png",
+			"System/UI/Emoticons/wink.png",
+			"System/UI/Emoticons/wip.png",
+			"System/UI/Emoticons/whistle.png",
+
+			-- The extended set of emoticons are disabled for now:
+			-- "System/UI/Emoticons/arrow.png",
+			-- "System/UI/Emoticons/banghead.png",
+			-- "System/UI/Emoticons/biggrin.png",
+			-- "System/UI/Emoticons/confused.png",
+			-- "System/UI/Emoticons/eek.png",
+			-- "System/UI/Emoticons/evil.png",
+			-- "System/UI/Emoticons/exclaim.png",
+			-- "System/UI/Emoticons/geek.png",
+			-- "System/UI/Emoticons/idea.png",
+			-- "System/UI/Emoticons/neutral.png",
+			-- "System/UI/Emoticons/question.png",
+			-- "System/UI/Emoticons/razz.png",
+			-- "System/UI/Emoticons/redface.png",
+			-- "System/UI/Emoticons/surprised.png",
+			-- "System/UI/Emoticons/twisted.png",
+			-- "System/UI/Emoticons/ugeek.png",
+		}
+
+		local local_files = {}
+
+		for i,path in ipairs(system_files) do
+			local_files[i] = reactor_root .. path
+		end
+
+		local cbdata = { paths = local_files, msg = msgitm.Message }
+		g_Protocols[g_Config.Repos._Core.Protocol].GetFiles(system_files, "_Core", save_cb, cbdata)
+
+		g_Config.Repos._Core.PrevCommitID = previd
 	end
 
 	-- Add a "Reactor:" UserPaths PathMap entry
@@ -1285,16 +1749,57 @@ function Init()
 end
 
 function CleanUp()
+	g_Config.Settings.Reactor.PrevSyncTime = os.time()
+
+	if g_OldCore then
+		g_Config.Repos._Core = g_OldCore
+	end
+
+	-- Save token to legacy location also, in case .fu hasn't been updated.
+	g_Config.Settings.Reactor.Token = g_Config.Repos._Core.Token
+
 	bmd.writefile(reactor_root .. "System/Reactor.cfg", g_Config)
 
 	app:RemoveConfig("Reactor")
 
-	curl.curl_easy_cleanup(curl_handle)
+	for name,protocol in pairs(g_Protocols) do
+		if protocol.CleanUp then
+			protocol.CleanUp()
+		end
+	end
+
+	curl.curl_multi_cleanup(curl_multi)
+
+	for i=1,#curl_pool do
+		curl.curl_easy_cleanup(curl_pool[i])
+	end
 
 	collectgarbage()
 end
 
 function CreateMainWin()
+	-- View layout from preferences
+	local AtomTreeWeight = 2.0
+	local DescriptionWeight = 1.5
+	if g_Config.Settings.Reactor.ViewLayout ~= nil then
+		if g_Config.Settings.Reactor.ViewLayout == "Larger Atom View" then
+			AtomTreeWeight= 3
+			DescriptionWeight = 0.5
+			dprintf("[View Layout] Larger Atom View ")
+		elseif g_Config.Settings.Reactor.ViewLayout == "Larger Description View" then
+			AtomTreeWeight = 1
+			DescriptionWeight = 2.5
+			dprintf("[View Layout] Larger Description View ")
+		else
+			AtomTreeWeight = 2.0
+			DescriptionWeight = 1.5
+			dprintf("[View Layout] Balanced View")
+		end
+	else
+		-- Fallback to a balanced view
+		g_Config.Settings.Reactor.ViewLayout = "Balanced View"
+	end
+
 	local win = disp:AddWindow({
 		ID = "ReactorWin",
 		TargetID = "ReactorWin",
@@ -1360,16 +1865,18 @@ function CreateMainWin()
 				},
 				ui:Tree
 				{
-					Weight = 2.0,
+					Weight = AtomTreeWeight,
 					ID = "AtomTree",
 					RootIsDecorated = false,
+					Events = { CurrentItemChanged = true, ItemChanged = true, },
 				},
 				ui:TextEdit
 				{
-					Weight = 1.5,
+					Weight = DescriptionWeight,
 					ID = "Description",
 					ReadOnly = true,
 					TabStopWidth = 32,
+					Events = { AnchorClicked = true },
 				},
 
 				ui:HGroup
@@ -1387,8 +1894,8 @@ function CreateMainWin()
 
 	itm.Description:SetPaletteColor("All", "Base", { R=0.12, G=0.12, B=0.12, A=1.0 })
 
-	itm.AtomTree.ColumnCount = 6
-	itm.AtomTree:SetHeaderLabels({"Name", "Category", "Version", "Author", "Date", "Repo", "Status", "ID", })
+	itm.AtomTree.ColumnCount = 9
+	itm.AtomTree:SetHeaderLabels({"Name", "Category", "Version", "Author", "Date", "Repo", "Status", "Donation", "ID"})
 	itm.AtomTree.ColumnWidth[0] = 240
 	itm.AtomTree.ColumnWidth[1] = 120
 	itm.AtomTree.ColumnWidth[2] = 52
@@ -1396,7 +1903,8 @@ function CreateMainWin()
 	itm.AtomTree.ColumnWidth[4] = 78
 	itm.AtomTree.ColumnWidth[5] = 68
 	itm.AtomTree.ColumnWidth[6] = 68
-	itm.AtomTree.ColumnWidth[7] = 190
+	itm.AtomTree.ColumnWidth[7] = 72
+	itm.AtomTree.ColumnWidth[8] = 190
 
 	itm.AtomTree:SortByColumn(0, "AscendingOrder")
 
@@ -1405,21 +1913,32 @@ function CreateMainWin()
 	end
 
 	function win.On.SearchButton.Clicked(ev)
-		itm.SearchText.Text = ""
-		itm.SearchText:SetFocus("OtherFocusReason")
+		if g_Config.Settings.Reactor.LiveSearch ~= nil and g_Config.Settings.Reactor.LiveSearch == false then
+			g_FilterText = itm.SearchText.Text
+			PopulateAtomTree(itm.AtomTree)
+		else
+			itm.SearchText.Text = ""
+			itm.SearchText:SetFocus("OtherFocusReason")
+		end
 	end
 
 	function win.On.SearchText.TextChanged(ev)
-		g_FilterText = ev.Text
-		itm.SearchButton.Text = (g_FilterText == "") and "\xF0\x9F\x94\x8D" or "\xF0\x9F\x97\x99",
-		PopulateAtomTree(itm.AtomTree)
+		-- Check if "Live Search" is enabled in the Preferences
+		if g_Config.Settings.Reactor.LiveSearch ~= nil and g_Config.Settings.Reactor.LiveSearch == true then
+			g_FilterText = ev.Text
+			itm.SearchButton.Text = (g_FilterText == "") and "\xF0\x9F\x94\x8D" or "\xF0\x9F\x97\x99",
+			FilterAtomTree(itm.AtomTree)
 
-		if g_FilterText and g_FilterText ~= "" then
-			-- @todo - add items found count Fusion Reactor | Searching for "foo" | X items found
-			itm.ReactorWin.WindowTitle = "Fusion Reactor | Searching for \"" .. tostring(g_FilterText) .. "\""
-		else
-			itm.ReactorWin.WindowTitle = "Fusion Reactor"
+			if g_FilterText and g_FilterText ~= "" then
+				itm.ReactorWin.WindowTitle = "Fusion Reactor | Searching for \"" .. tostring(g_FilterText) .. "\" | " .. tostring(g_FilterCount) .. (g_FilterCount == 1 and " item found" or " items found")
+			else
+				itm.ReactorWin.WindowTitle = "Fusion Reactor"
+			end
 		end
+	end
+
+	function win.On.Description.AnchorClicked(ev)
+		bmd.openurl(ev.URL)
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
@@ -1447,6 +1966,18 @@ function CreateMainWin()
 		end
 	end
 
+	function win.On.AtomTree.ItemChanged(ev)
+		if ev.item then
+			local id = ev.item:GetData(0, "UserRole")
+
+			if ev.item.CheckState[0] == "Checked" and not IsAtomInstalled(id) then
+				InstallAtom(id)
+			elseif ev.item.CheckState[0] == "Unchecked" and IsAtomInstalled(id) then
+				RemoveAtom(id)
+			end
+		end
+	end
+
 	function win.On.RepoCombo.CurrentIndexChanged(ev)
 		g_Repository = itm.RepoCombo.CurrentText
 
@@ -1455,7 +1986,7 @@ function CreateMainWin()
 		end
 
 		PopulateCategoryTree(itm.CategoryTree)
-		PopulateAtomTree(itm.AtomTree)
+		FilterAtomTree(itm.AtomTree)
 	end
 
 	function win.On.RefreshRepo.Clicked(ev)
@@ -1473,24 +2004,24 @@ function CreateMainWin()
 
 	function win.On.CategoryTree.CurrentItemChanged(ev)
 		g_Category = ev.item and ev.item:GetData(0, "UserRole") or ""
-		PopulateAtomTree(itm.AtomTree)
+		FilterAtomTree(itm.AtomTree)
 	end
 
 	function win.On.Install.Clicked(ev)
 		InstallAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
-		PopulateAtomTree(itm.AtomTree)
+		FilterAtomTree(itm.AtomTree)
 	end
 
 	function win.On.Update.Clicked(ev)
 		local id = itm.AtomTree:CurrentItem():GetData(0, "UserRole")
 		RemoveAtom(id)
 		InstallAtom(id)
-		PopulateAtomTree(itm.AtomTree)
+		FilterAtomTree(itm.AtomTree)
 	end
 
 	function win.On.Remove.Clicked(ev)
 		RemoveAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
-		PopulateAtomTree(itm.AtomTree)
+		FilterAtomTree(itm.AtomTree)
 	end
 
 	return win, itm
@@ -1511,6 +2042,7 @@ function PopulateRepoCombo(combo)
 	table.insert(repos, 1, "All")
 	table.insert(repos, 2, "Installed")
 	table.insert(repos, 3, "Update")
+	table.insert(repos, 3, "New")
 
 	combo:AddItems(repos)
 end
@@ -1586,20 +2118,81 @@ function IsAtomUpdatable(atom)
 	end
 end
 
-function MatchFilter(t, filter)
-	for i,v in pairs(t) do
-		if type(v) == "string" or type(v) == "number" then
-			if tostring(v):lower():match(filter) then
-				return true
+function IsAtomNew(atom)
+	local atomDate = ''
+	local systemDate = os.date('%Y-%m-%d')
+	if atom and atom.Date then
+		-- Get the atom's date record
+		atomDate = ("%04d-%02d-%02d"):format(atom.Date[1], atom.Date[2], atom.Date[3])
+		-- Get the last GitLab sync date record
+		local syncTime = g_Config.Settings.Reactor.PrevSyncTime or os.time()
+		-- Compare the last sync time & date against the atom's date field
+		-- Tip: For debugging purposes you can use "==os.time{year = 2019, month = 1, day = 9}" to generate a custom "PrevSyncTime" value that can be entered in the Reactor.cfg file or "==os.time()" gives you the current moment.
+		elapsedSeconds = os.difftime(syncTime, os.time{year = atom.Date[1], month = atom.Date[2], day = atom.Date[3]})
+		fractionalDayInSeconds = 1/(60 * 60 * 24)
+		daysDifference = math.ceil(elapsedSeconds * fractionalDayInSeconds)
+
+		if g_Config.Settings.Reactor.MarkAsNew == nil then
+			-- Fallback if the table entry is nil
+			g_Config.Settings.Reactor.MarkAsNew = true
+		elseif g_Config.Settings.Reactor.MarkAsNew == false then
+			-- The 'Mark Atoms as "New"' checkbox is disabled
+			return false
+		end
+
+		-- Fallback if the table entry is nil
+		if g_Config.Settings.Reactor.NewForDays == nil or g_Config.Settings.Reactor.NewForDays == "" then
+			g_Config.Settings.Reactor.NewForDays = 7
+		end
+
+		-- Check if the atom was added in the last few days or if it is new since the last sync
+		if daysDifference <= tonumber(g_Config.Settings.Reactor.NewForDays) then
+			dprintf("[Status] [New Atoms] \"" .. atom.Name .. "\"\t[Sync-Days Old] " .. tostring(daysDifference))
+			return true
+		end
+
+		return false
+	else
+		return false
+	end
+end
+
+function FilterAtomTree(tree)
+	tree.UpdatesEnabled = false
+	tree.SortingEnabled = false
+
+	local key = g_FilterText:lower()
+	g_FilterCount = 0
+
+	for i,v in ipairs(Atoms) do
+		if v._TreeItem then
+			local hide = true
+
+			local installed = IsAtomInstalled(GetAtomID(v))
+			local updatable = IsAtomUpdatable(v)
+			local new = IsAtomNew(v)
+
+			if not g_Repository or g_Repository == v.Repo or (installed and g_Repository == "Installed") or (updatable and g_Repository == "Update") or (new and g_Repository == "New") then
+				if (v.Category .. "/"):sub(1, #g_Category) == g_Category then
+					if #key == 0 or v._SearchKey:match(key) then
+						hide = false
+					end
+				end
 			end
-		elseif type(v) == "table" then
-			if MatchFilter(v, filter) then
-				return true
+
+			if hide ~= v.Hidden then
+				v.Hidden = hide
+				v._TreeItem.Hidden = hide
+			end
+
+			if not hide then
+				g_FilterCount = g_FilterCount + 1
 			end
 		end
 	end
 
-	return false
+	tree.UpdatesEnabled = true
+	tree.SortingEnabled = true
 end
 
 function PopulateAtomTree(tree)
@@ -1611,62 +2204,67 @@ function PopulateAtomTree(tree)
 	for i,v in ipairs(Atoms) do
 		local installed = IsAtomInstalled(GetAtomID(v))
 		local updatable = IsAtomUpdatable(v)
-		
-		if not g_Repository or g_Repository == v.Repo or (installed and g_Repository == "Installed") or (updatable and g_Repository == "Update") then
-			if (v.Category .. "/"):sub(1, #g_Category) == g_Category then
-				if #g_FilterText == 0 or MatchFilter(v, g_FilterText:lower()) then
-					it = tree:NewItem()
-					
-					local status = (v.Disabled and "Disabled") or (updatable and "Update") or 'OK'
-					
-					it.Text[0] = v.Name
-					it.Text[1] = v.Category
-					it.Text[2] = ("%.2f"):format(v.Version or 0)
-					it.Text[3] = v.Author
-					if v.Date then
-						it.Text[4] = ("%04d-%02d-%02d"):format(v.Date[1], v.Date[2], v.Date[3])
-					end
-					it.Text[5] = v.Repo
-					it.Text[6] = status
-					it.Text[7] = v.ID
-					
-					it.CheckState[0] = installed and "Checked" or "Unchecked"
-					it.Flags = { ItemIsSelectable = true, ItemIsEnabled = true }
-					it:SetData(0, "UserRole", GetAtomID(v))
-					
-					if v.Disabled then
-						for i=0,7 do
-							-- Faint Red
-							it.TextColor[i] = { R=1.0, G=0.549, B=0.549, A=1.0}
-						end
-					elseif updatable then
-						for i=0,7 do
-							-- Upgrade Blue
-							it.TextColor[i] = { R=0.55, G=0.6, B=0.84, A=1.0}
-						end
-					end
-					tree:AddTopLevelItem(it)
-				end
+		local new = IsAtomNew(v)
+		local it = tree:NewItem()
+
+		local status = (v.Disabled and "Disabled") or (updatable and "Update") or (new and "New") or 'OK'
+
+		it.Text[0] = v.Name
+		it.Text[1] = v.Category
+		it.Text[2] = ("%.2f"):format(v.Version or 0)
+		it.Text[3] = v.Author
+		if v.Date then
+			it.Text[4] = ("%04d-%02d-%02d"):format(v.Date[1], v.Date[2], v.Date[3])
+		end
+		it.Text[5] = v.Repo
+		it.Text[6] = status
+		it.Text[7] = (v.Donation and "Yes") or "No"
+		it.Text[8] = v.ID
+
+		it.CheckState[0] = installed and "Checked" or "Unchecked"
+		it.Flags = { ItemIsSelectable = true, ItemIsEnabled = true, ItemIsUserCheckable = not v.Disabled }
+		it:SetData(0, "UserRole", GetAtomID(v))
+
+		if v.Disabled then
+			for i=0,7 do
+				-- Faint Red
+				it.TextColor[i] = {R=1.0, G=0.549, B=0.549, A=1.0}
+			end
+		elseif updatable then
+			for i=0,7 do
+				-- Upgrade Blue
+				it.TextColor[i] = {R=0.55, G=0.6, B=0.84, A=1.0}
+			end
+		elseif new then
+			for i=0,7 do
+				-- New Green
+				it.TextColor[i] = {R=0.55, G=0.84, B=0.6, A=1.0}
 			end
 		end
+		tree:AddTopLevelItem(it)
+
+		v._TreeItem = it
+		v._Hidden = false
 	end
-	
+
 	tree.SortingEnabled = true
 	tree.UpdatesEnabled = true
+
+	FilterAtomTree(tree)
 end
 
 function Main()
 	Init()
 
-	local mainwin,mainitm = CreateMainWin()
+	g_MainWin,g_MainItm = CreateMainWin()
 
-	PopulateRepoCombo(mainitm.RepoCombo)
-	PopulateCategoryTree(mainitm.CategoryTree)
-	PopulateAtomTree(mainitm.AtomTree)
+	PopulateRepoCombo(g_MainItm.RepoCombo)
+	PopulateCategoryTree(g_MainItm.CategoryTree)
+	PopulateAtomTree(g_MainItm.AtomTree)
 
-	mainwin:Show()
+	g_MainWin:Show()
 	disp:RunLoop()
-	mainwin:Hide()
+	g_MainWin:Hide()
 
 	if g_Installed then
 		local msgwin,msgitm = MessageWin("New Atoms have been installed", "You may need to restart Fusion.")

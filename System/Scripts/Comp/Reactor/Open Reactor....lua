@@ -1,11 +1,14 @@
 --[[--
-Open Reactor... menu item - v2.0 2018-05-21
+Open Reactor... menu item - v3 2019-05-23
 By Andrew Hazelden <andrew@andrewhazelden.com>
 --]]--
 
 -- This GitLab based Project ID is used to download "Reactor.lua"
 -- Reactor GitLab Project ID
 local reactor_project_id = "5058837"
+
+-- Reactor GitLab Test Repo Project ID
+-- local reactor_project_id = "5273696"
 
 -- The release_mode is used to toggle Reactor between a "public" vs "dev" state.
 -- In the "public" mode a GitLab Token ID is not required.
@@ -30,29 +33,11 @@ bmd.createdir(path)
 
 local config = bmd.readfile(path .. "Reactor.cfg")
 
-local token = config and config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token
-if not config then
-	-- For now, let's just create a new config file if there's no token.
-	bmd.writefile(path .. "Reactor.cfg", {
-		Repos = {
-			GitLab = {
-				Projects = {
-					Reactor = reactor_project_id,
-				},
-			},
-		},
-		Settings = {
-			Reactor =
-			{
-				Token = "",
-			},
-		},
-	})
+local token = config and ((config.Repos and config.Repos._Core and config.Repos._Core.Token) or (config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token))
 
-	-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
-	if release_mode ~= "public" then
-		error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
-	end
+-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
+if not token and release_mode ~= "public" then
+	error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
 end
 
 if local_system then

@@ -1,4 +1,4 @@
-VERSION = 'v2.0 2018-05-21'
+VERSION = 'v3 2019-05-23'
 --[[--
 Macro Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>

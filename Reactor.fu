@@ -1,11 +1,11 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0.1 2018-06-29
+Reactor Package Manager for Fusion - v3 2019-05-23
 ==============================================================================
 Requires    : Fusion 9.0.2+
 Created by  : We Suck Less Community   [https://www.steakunderwater.com]
             : Pieter Van Houte         [pieter@steakunderwater.com]
-            : Andrew Hazelden          [andrew@andrewhazelden]
+            : Andrew Hazelden          [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -53,6 +53,9 @@ The `REACTOR_DEBUG` environment variable can be set to true if you want to see m
 
 export REACTOR_DEBUG=true
 
+The `REACTOR_DEBUG` environment variable also tells Reactor to provide a status message in the Reactor package manager progress dialog that lists each file as it is being installed. This is handy if you are installing a lot of `Bin` category Reactor atoms that can be hundreds of megabytes in size.
+
+
 The `REACTOR_DEBUG_FILES` environment variable can be set to true if you want to see Console logging output that shows each of the cURL based file download operations. When the environment variable is set to true Reactor will print the contents of the files as they are downloaded and written to disk. This debugging information is useful for spotting formatting issues and "Error 404" states when a file has trouble successfully downloading from GitLab:
 
 export REACTOR_DEBUG_FILES=true
@@ -61,11 +64,13 @@ The `REACTOR_BRANCH` environment variable can be set to a custom value like "dev
 
 export REACTOR_BRANCH=dev
 
-Note: If you are using macOS you will need to use an approach like a LaunchAgents file to define the environment variables as Fusion + Lua tends to ignore .bash_profile based environment variables entries.
 
 The `REACTOR_INSTALL_PATHMAP` environment variable can be used to change the Reactor installation location to something other then the default PathMap value of "AllData:"
 
 export REACTOR_INSTALL_PATHMAP=AllData:
+
+
+Note: If you are using macOS you will need to use an approach like a LaunchAgents file to define the environment variables as Fusion + Lua tends to ignore .bash_profile based environment variables entries.
 ]]--
 
 {
@@ -96,7 +101,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 
 					local separator = package.config:sub(1,1)
 					local local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 					local destFile = path .. "Reactor.lua"
 
@@ -109,29 +122,10 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 
 					local config = bmd.readfile(path .. "Reactor.cfg")
 
-					local token = config and config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token
-					if not config then
-						-- For now, let's just create a new config file if there's no token.
-						bmd.writefile(path .. "Reactor.cfg", {
-							Repos = {
-								GitLab = {
-									Projects = {
-										Reactor = reactor_project_id,
-									},
-								},
-							},
-							Settings = {
-								Reactor =
-								{
-									Token = "",
-								},
-							},
-						})
+					local token = config and ((config.Repos and config.Repos._Core and config.Repos._Core.Token) or (config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token))
 
-						-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
-						if release_mode ~= "public" then
-							error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
-						end
+					if not token and release_mode ~= "public" then
+						error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
 					end
 
 					if local_system then
@@ -261,7 +255,14 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 					local separator = package.config:sub(1,1)
 					local local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
 
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 
 					local installer_path = app:MapPath("Temp:/Reactor/")
@@ -287,33 +288,19 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 						branch = "master"
 					end
 
+					-- Create the "Reactor:/System/" folder
 					bmd.createdir(path)
+
+					-- Create the "Temp:/Reactor/" folder
+					bmd.createdir(installer_path)
 
 					local config = bmd.readfile(path .. "Reactor.cfg")
 
-					local token = config and config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token
-					if not config then
-						-- For now, let's just create a new config file if there's no token.
-						bmd.writefile(path .. "Reactor.cfg", {
-							Repos = {
-								GitLab = {
-									Projects = {
-										Reactor = reactor_project_id,
-									},
-								},
-							},
-							Settings = {
-								Reactor =
-								{
-									Token = "",
-								},
-							},
-						})
+					local token = config and ((config.Repos and config.Repos._Core and config.Repos._Core.Token) or (config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token))
 
-						-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
-						if release_mode ~= "public" then
-							error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
-						end
+					-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
+					if not token and release_mode ~= "public" then
+						error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
 					end
 
 					if not local_system then
@@ -390,7 +377,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Atomizer.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -412,7 +407,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Fuse Scanner.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -434,7 +437,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Macro Scanner.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -456,7 +467,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Plugin Scanner.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -478,8 +497,16 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_path = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-					local path = app:MapPath(tostring(reactor_path) .. "Reactor/")
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+					local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
 					if bmd.direxists(path) == false then
 						bmd.createdir(path)
 						print("[Created Reactor Folder] " .. path)
@@ -502,14 +529,54 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_path = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-					local path = app:MapPath(tostring(reactor_path) .. "Reactor/Deploy/Docs/")
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+					local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/Deploy/Docs/")
 					if bmd.direxists(path) == false then
 						bmd.createdir(path)
 						print("[Created Reactor Folder] " .. path)
 					end
 
 					print("[Show Reactor Folder] " .. path)
+					bmd.openfileexternal("Open", path)
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Reactor_Comps_Folder",
+		Category = "Reactor",
+		Name = "Show Comps Folder",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+					local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/Deploy/Comps/")
+					if bmd.direxists(path) == false then
+						bmd.createdir(path)
+						print("[Created Reactor Folder] " .. path)
+					end
+
+					print("[Show Reactor Comps Folder] " .. path)
 					bmd.openfileexternal("Open", path)
 				]=],
 			},
@@ -569,7 +636,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 		Targets = {
 			Composition = {
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/ResyncRepository.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -750,6 +825,36 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 	},
 	Action
 	{
+		ID = "Reactor_Prefs",
+		Category = "Reactor",
+		Name = "Reactor Preferences...",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Preferences.lua")
+					if bmd.fileexists(scriptPath) == false then
+						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
+					else
+						target:RunScript(scriptPath)
+					end
+				]=],
+			},
+		},
+	},
+	Action
+	{
 		ID = "Reactor_About",
 		Category = "Reactor",
 		Name = "About Reactor",
@@ -759,7 +864,15 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 			Composition =
 			{
 				Execute = _Lua [=[
-					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/AboutWindow.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
@@ -797,6 +910,7 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 					"_",
 					"Reactor_Folder{}",
 					"Reactor_Docs_Folder{}",
+					"Reactor_Comps_Folder{}",
 					"Reactor_Config_Folder{}",
 					"Reactor_Temp_Folder{}",
 					"Reactor_Open_Reactor_Log{}",
@@ -814,6 +928,8 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 					"Resources_WSL{}",
 					"Resources_Bug_Tracker{}",
 				},
+				"_",
+				"Reactor_Prefs{}",
 				"_",
 				"Reactor_About{}",
 			},

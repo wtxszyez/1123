@@ -216,21 +216,25 @@ The `PrevCommitID` entry is used by Reactor to save a record of the last differe
 
 This is a preview of what a `Reactor:/System/Reactor.cfg` file looks like when a PrevCommitID value is present:
 
-		{
-			Repos = {
-				GitLab = {
-					Projects = {
-						Reactor = "5058837"
-					}
-				}
+	{
+		Repos = {
+			Reactor = {
+				PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
+				Protocol = "GitLab",
+				Token = "",
+				ID = "5058837"
 			},
-			Settings = {
-				Reactor = {
-					PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
-					Token = ""
-				}
+			_Core = {
+				PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
+				Protocol = "GitLab",
+				Token = "",
+				ID = "5058837"
 			}
+		},
+		Settings = {
+			...
 		}
+	}
 
 The PrevCommitID value changes every time a new git commit is pushed to the Reactor online repository.
 
@@ -279,4 +283,4 @@ Here are the macOS terminal commands to re-create the `AllData:` Pathmap folder:
 		# Open the Fusion Folder in a Finder browsing window
 		open "/Library/Application Support/Blackmagic Design/Fusion/"
 
-Last Revised 2018-09-25
+Last Revised 2019-05-23

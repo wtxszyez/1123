@@ -11,12 +11,14 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## <a name="pricing"></a>Pricing and Availability ##
 
-KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform via the [WSL Reactor package manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
+KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform via the [WSL Reactor package manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager. Check out the KartaVR v4 for Fusion and Resolve [blog post here](http://www.andrewhazelden.com/blog/2019/01/kartavr-v4-for-fusion-and-resolve/).
 
 KartaVR works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
 
 KartaVR technical support is available through the "Steak Underwater" user community:  
 [https://www.steakunderwater.com/wesuckless/index.php](https://www.steakunderwater.com/wesuckless/index.php)
+
+Steak Underwater [KartaVR v4 Freeware Edition thread](https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2725) (Requires a free Steakunderwater forum account to view.)
 
 KartaVR Example 360VR Stitching Comps:  
 [http://www.andrewhazelden.com/projects/kartavr/examples/](http://www.andrewhazelden.com/projects/kartavr/examples/)
@@ -24,7 +26,7 @@ KartaVR Example 360VR Stitching Comps:
 ![Reactor Atom Package - Supporting 360VR Stitching Project Files](images/reactor-atom-package-stitching-media.png)
 
 
-KartaVR is (C) Copyright Andrew Hazelden 2014-2018. All rights reserved.
+KartaVR is (C) Copyright Andrew Hazelden 2014-2019. All rights reserved.
 
 ## <a name="overview"></a>Overview ##
 

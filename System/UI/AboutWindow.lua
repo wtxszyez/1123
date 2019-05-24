@@ -1,7 +1,7 @@
-_VERSION = [[Version 2.0.2 - July 20, 2018]]
+_VERSION = [[Version 3 - May 23, 2019]]
 --[[
 ==============================================================================
-AboutWindow.lua - v2.0.2 2018-07-20
+AboutWindow.lua - v3 2019-05-23
 ==============================================================================
 Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
 
@@ -136,7 +136,7 @@ function AboutReactorWin()
 			ui:VGroup{
 				ui:Label {
 					ID = "AboutLabel",
-					Text = [[Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.]],
+					Text = [[Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository. Now with 3x the magic!]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {
@@ -147,10 +147,25 @@ function AboutReactorWin()
 						PixelSize = 14,
 					},
 				},
+
+				ui:Button{
+					ID = 'ReactorMagicButton',
+					Weight = 0,
+					IconSize = {112,29},
+					Icon = ui:Icon{
+						File = 'Reactor:/System/UI/Images/reactormagic.png'
+					},
+					MinimumSize = {
+						112,
+						29,
+					},
+					Flat = true,
+				},
+
 				ui:Label {
 					ID = "URLLabel",
 					Weight = 0,
-					Text = [[Copyright © 2018 We Suck Less<br><a href="https://www.steakunderwater.com/wesuckless" style="color: rgb(139,155,216)">https://www.steakunderwater.com/wesuckless</a>]],
+					Text = [[Copyright © 2019 We Suck Less<br><a href="https://www.steakunderwater.com/wesuckless" style="color: rgb(139,155,216)">https://www.steakunderwater.com/wesuckless</a>]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {

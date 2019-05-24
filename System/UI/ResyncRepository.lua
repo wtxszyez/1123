@@ -1,7 +1,7 @@
-_VERSION = [[Version 2.0 - May 21, 2018]]
+_VERSION = [[Version 3 - May 23, 2019]]
 --[[
 ==============================================================================
-Resync Repository.lua - v2.0 2018-05-21
+Resync Repository.lua - v3 2019-05-23
 ==============================================================================
 The "Resync Repository" script is used to reset the Reactor sync reference point. This action will redownload the main Reactor repository files. A resync operation may take up to 1 minute to complete.
 
@@ -144,30 +144,38 @@ function Main()
 	ok = AskOK('Resync Reactor', 'Would you like to reset the Reactor sync reference point? This action will redownload the main Reactor repository files.\n\n A resync operation may take up to 1 minute to complete.')
 	if ok == true then
 		print('[Resync Repository] Started')
+
 		-- Opens the Reactor.cfg file and clears out the previous "PrevCommitID" entries.
-		local reactor_pathmap = os.getenv('REACTOR_INSTALL_PATHMAP') or 'AllData:'
+		local separator = package.config:sub(1,1)
+		-- Check for a pre-existing PathMap preference
+		local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+		if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+			-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+			reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+		end
+
+		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 		local reactorCfgFile = app:MapPath(tostring(reactor_pathmap) .. 'Reactor/System/Reactor.cfg')
 		local cfgTable = bmd.readfile(reactorCfgFile)
 		if type(cfgTable) == 'table' then
-			-- print('\n\n[Initial Reactor.cfg] ' .. reactorCfgFile)
-			-- dump(cfgTable)
+			print('\n\n[Initial Reactor.cfg] ' .. reactorCfgFile)
+			dump(cfgTable)
 
 			-- Clear out the PrevCommitID strings
 			print('\n\n[Reactor.cfg] Clearing PrevCommitID Entries')
-			for k,v in pairs(cfgTable.Settings) do
-				-- print('\t[' .. k .. '.PrevCommitID] ', cfgTable.Settings[k]['PrevCommitID'])
-				cfgTable.Settings[k].PrevCommitID = nil
+			for k,v in pairs(cfgTable.Repos) do
+				print('\t[' .. k .. '.PrevCommitID] ', cfgTable.Repos[k]['PrevCommitID'])
+				cfgTable.Repos[k].PrevCommitID = nil
 			end
 
 			-- Write the edited table back to the Reactor.cfg file
 			bmd.writefile(reactorCfgFile, cfgTable)
 			cfgTable = bmd.readfile(reactorCfgFile)
-			-- print('\n\n[Edited Reactor.cfg] ' .. reactorCfgFile)
-			-- dump(cfgTable)
+			print('\n\n[Edited Reactor.cfg] ' .. reactorCfgFile)
+			dump(cfgTable)
 		end
 
 		-- Display the Reactor Window to auto refresh the atom files
-		local reactor_pathmap = os.getenv('REACTOR_INSTALL_PATHMAP') or 'AllData:'
 		local reactorScript = app:MapPath(tostring(reactor_pathmap) .. 'Reactor/System/') .. 'Reactor.lua'
 		if bmd.fileexists(reactorScript) == false then
 			print('\n\n[Reactor Error] Open the Reactor window once to download the missing file: ' .. reactorScript)

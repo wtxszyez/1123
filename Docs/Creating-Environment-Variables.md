@@ -19,6 +19,8 @@ The `REACTOR_DEBUG` environment variable can be set to true if you want to see m
 
 `REACTOR_DEBUG=true`
 
+The `REACTOR_DEBUG` environment variable also tells Reactor to provide a status message in the Reactor package manager progress dialog that lists each file as it is being installed. This is handy if you are installing a lot of `Bin` category Reactor atoms that can be hundreds of megabytes in size.
+
 #### <a name="viewing-the-reactor-log-file"></a>Viewing the ReactorLog.txt File ####
 
 When the `REACTOR_DEBUG` environment variable is active it will tell Reactor that you want to have a log file written to `Temp:/Reactor/ReactorLog.txt`. You can quickly open this document by selecting the **Reactor > Tools > Open ReactorLog** menu item:
@@ -67,13 +69,9 @@ or
 
 or your own custom Reactor installation location on a local or network path like:
 
-		REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor
-		REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor
-		REACTOR_INSTALL_PATHMAP=/opt/Reactor
-
-On Windows you would open the **System Control Panel > Advanced System Settings > Environment Variables...** window and add a new `REACTOR_INSTALL_PATHMAP` entry like this:
-
-![Windows Environment Variable](Images/windows-adding-an-environment-variable.png)
+`REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor`
+`REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor`
+`REACTOR_INSTALL_PATHMAP=/opt/Reactor`
 
 ### <a name="reactor-local-system"></a>Reactor Local System ###
 
@@ -145,4 +143,4 @@ You will then see a directory listing that looks something like this:
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2018-07-16
+Last Revised 2019-05-15
