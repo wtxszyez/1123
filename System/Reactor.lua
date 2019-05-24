@@ -1676,8 +1676,6 @@ function Init()
 			"System/UI/Emoticons/wink.png",
 			"System/UI/Emoticons/wip.png",
 			"System/UI/Emoticons/whistle.png",
-
-			-- The extended set of emoticons are disabled for now:
 			"System/UI/Emoticons/arrow.png",
 			"System/UI/Emoticons/banghead.png",
 			"System/UI/Emoticons/biggrin.png",
@@ -1694,6 +1692,7 @@ function Init()
 			"System/UI/Emoticons/surprised.png",
 			"System/UI/Emoticons/twisted.png",
 			"System/UI/Emoticons/ugeek.png",
+			"System/UI/Emoticons/wand.png",
 		}
 
 		local local_files = {}
