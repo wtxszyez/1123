@@ -1,0 +1,231 @@
+--[[--
+HypertextCompositor - v1.0 2019-05-23
+by Andrew Hazelden <andrew@andrewhazelden.com>
+www.andrewhazelden.com
+
+The Hypertext Compositor script looks for an HTML formatted sidecar .htm webpage file in the same folder as a .comp file. This allows you to pass along an illustrated guide about the composite to other users.
+
+Hypertext Compositor supports the use of custom Fusion comp based HTML "a href" anchor codes to create guided tutorials that can control the Fusion timeline, adjust comp settings, add nodes/macros/media/3D models, run scripts, and display content in the viewer window when you click on the hyperlinks in Fusion 16/Resolve 16. If you Shift+Click on a hyperlink a preview of the URL will be displayed.
+
+In Fusion v16/Resolve v16 you can also drag an .htm file from your desktop and drop it in the Nodes view and the webpage will be displayed in a new window.
+
+If you would like to learn how to use the custom "a href" anchor codes, look in the header of the "Reactor:/Deploy/Config/HypertextCompositor/HypertextCompositor.lua" script for more information.
+
+Hypertext Compositor was inpired by an old-school Fusion term called "SBS" or Side-by-Side that was used to represent an approach where a lua script could be run by Fusion as soon as a .comp file of the same name was opened. The Hypertext Compositor extends this Side-by-Side system to support comp specific documentation.
+
+## Hypertext Compositor Usage ##
+
+If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.
+
+## Images ##
+
+The HTML Viewer supports PNG images. You can refer to the media using a PathMap based image embedding source URL. To display an image with a relative path starting at the same folder as your .comp/.htm file is located use:
+
+<img src="Comp:/example.png">
+
+or you could make a "docs" subfolder in your comp directory using and display the image using:
+
+<img src="Comp:/docs/example.png">
+
+
+## HTML Anchor <p><a href=""></a></p> Commands ##
+
+Select a node by name:
+<p><a href="Select://Saver1">Saver</a></p>
+
+View the selected node:
+<p><a href="View://">View Selected Node</a></p>
+
+View the selected node on the left viewer:
+<p><a href="ViewLeft://">View Selected on Left</a></p>
+
+View the selected node on the right viewer:
+<p><a href="ViewRight://">View Selected on Right</a></p>
+
+View a node by name:
+<p><a href="View://FastNoise1">FastNoise1</a></p>
+
+View a node on the left viewer by name:
+<p><a href="ViewLeft://FastNoise1">FastNoise1</a></p>
+
+View a node on the right viewer by name:
+<p><a href="ViewRight://FastNoise1">FastNoise1</a></p>
+
+Frame a view
+<p><a href="FrameAll://FlowView">FrameAll FlowView</a></p>
+
+Rename the selected node:
+<p><a href="Rename://CharlieLoader">Rename the node to CharlieLoader</a></p>
+
+Render a node by name:
+<p><a href="Render://Saver1">Saver</a></p>
+
+Start the sequence playback:
+<p><a href="Play://">Play</a></p>
+
+Rewind the playback:
+<p><a href="Rewind://">Rewind Playback</a></p>
+
+Go to a specific frame in the timeline:
+<p><a href="Time://12">Jump to frame 12</a></p>
+
+Nudge the Playhead in the timeline to step between keyframes and inbetween keyframes:
+<p><a href="NudgePlayhead://Right">Nudge Playhead Right</a></p>
+<p><a href="NudgePlayhead://Left">Nudge Playhead Left</a></p>
+
+Stop the playback:
+<p><a href="Stop://">Stop the Playback</a></p>
+
+Save the composite:
+<p><a href="Save://">Save the .comp</a></p>
+
+Load a composite:
+<p><a href="Load://Comp:/sidecar_demo_end.comp">Load a .comp</a></p>
+<p><a href="Load://Reactor:/Deploy/Comps/Templates/UT_Anonymous_Water.comp">Load a .comp</a></p>
+
+Add a macro:
+<p><a href="AddSetting://Reactor:/Macros/Creator/NyanCat.setting">Add the NyanCat macro</a></p>
+
+Add a node:
+<p><a href="AddTool://GridWarp">Add GridWarp node</a></p>
+
+Add a Loader node:
+<p><a href="AddMedia://Comp:/Render/image.0000.exr">Add an image</a></p>
+<p><a href="AddMedia://Reactor:/Deploy/Macros/KartaVR/Images/latlong_wide_ar.jpg">Add an image</a></p>
+
+Run a script:
+<p><a href="RunScript://Reactor:/Deploy/Scripts/Comp/hos_SplitEXR_Ultra.lua">Split the selected EXR image</a></p>
+
+Open Reactor:
+<p><a href="AddAtom://">Open the Reactor package manager</a></p>
+
+Toggle the passthrough mode on a node:
+<p><a href="PassthroughOn://Loader1">Passthrough On Loader1</a></p>
+<p><a href="PassthroughOff://Loader1">Passthrough Off Loader1</a></p>
+
+Toggle the passthrough mode on the currently selected node:
+<p><a href="PassthroughOn://">Passthrough On Selected Node</a></p>
+<p><a href="PassthroughOff://">Passthrough Off Selected Node</a></p>
+
+Run a shell command from the terminal:
+<p><a href="Shell://env">List environment variables on Mac/Linux</a></p>
+<p><a href="Shell://set">List environment variables on Windows</a></p>
+
+Run a Lua/Python command:
+<p><a href="Execute://Print([=[Hello World]=])">Print "Hello World" in the Fusion Console</a></p>
+
+Run a Fusion action:
+<p><a href="DoAction://App_CustomizeHotkeys">Run the Customize Hotkeys Action</a></p>
+
+Lock the comp to suppress file dialogs:
+<p><a href="Lock://">Lock the Comp</a></p>
+
+Unlock the comp to show file dialogs:
+<p><a href="Unlock://">Unlock the Comp</a></p>
+
+Undo the last action:
+<p><a href="Undo://">Undo</a></p>
+
+Redo the last action:
+<p><a href="Redo://">Redo</a></p>
+
+Show a preference window:
+<p><a href="ShowPrefs://PrefsScript">Show the scripting preference window</a></p>
+
+Import an ABC file:
+<p><a href="AbcImport://">Import ABC Mesh</a></p>
+
+Import an FBX/OBJ file:
+<p><a href="FBXImport://">Import FBX/OBJ Mesh</a></p>
+
+Import an SVG Vector file:
+<p><a href="SVGImport://">Import SVG Vector</a></p>
+
+Import a Shape file:
+<p><a href="ShapeImport://">Import Shape</a></p>
+
+Toggle the display of the Bins window:
+<p><a href="Bins://">Toggle Bin Window</a></p>
+
+Toggle the display of the Render Manager window:
+<p><a href="RenderManager://">Toggle Render Manager Window</a></p>
+
+--]]--
+
+
+
+{
+	Event {
+		-- Add a new event that intercepts the Action
+		-- Comp_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
+		Action = "Comp_Open",
+		Targets = {
+			Fusion = {
+				Execute = [[
+-- Run the Action as the first step
+rets = self:Default(ctx, args)
+
+target:RunScript("$CFG/SBS_HTML_Viewer.lua")
+]]
+			},
+		},
+	},
+	Event {
+		-- Add a new event that intercepts the Action
+		-- Comp_Recent_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
+		Action = "Comp_Recent_Open",
+		Targets = {
+			Fusion = {
+				Execute = [[
+-- Run the Action as the first step
+rets = self:Default(ctx, args)
+
+target:RunScript("$CFG/HypertextCompositor.lua")
+]]
+			},
+		},
+	},
+	Event {
+		Action = 'Drag_Drop',
+		Targets = {
+			FuView = {
+				Execute = [=[
+-- Call other chained events and default action
+rets = self:Default(ctx, args) 
+
+-- No one else handled this?
+if not rets.handled then
+	-- Get the current comp
+	comp = app:GetAttrs().FUSIONH_CurrentComp
+
+	-- Get the list of files dropped onto Fusion
+	files = args.urilist
+	-- comp:Print('[File Drop] ', #files, '\n')
+	-- dump(files)
+	
+	-- Scan through each of the files
+	for i, file in ipairs(files) do
+		-- Get the file extension
+		local path, ext = string.match(file, '^(.+)(%..+)$')
+		-- print('[Ext] ', ext, '\n')
+		
+		-- Process only the first file
+		if i == 1 then
+			-- Process any .htm files dropped into Fusion 16
+			if ext == '.htm' then
+				comp:Print('['.. i .. '][File Drop] ', file, '\n')
+
+				-- Accept the Drag and Drop event
+				rets.handled = true
+
+				-- Pass the drag and dropped file
+				comp:RunScript("$CFG/HypertextCompositor.lua", {dragDropCompFile = file})
+			end
+		end
+	end
+end
+				]=]
+			},
+		},
+	},
+}
