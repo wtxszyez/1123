@@ -6,24 +6,31 @@ v 1.0 Initial release 2019-01-21
 Email:  andrew@andrewhazelden.com
         mail@abogomolov.com
 Web: www.andrewhazelden.com
-     www.abogomolov.com
-
+     https://abogomolov.com
+     https://paypal.me/aabogomolov
 ]]
 
 
-function get_viewer(is_view)
-    if fu.Version == 16 then
-        glview = comp:GetPreviewList().LeftView.View
-    else
-        glview = comp:GetPreviewList().Left.View
+function get_viewer(side)
+    if side == 'left' then
+        if fu.Version == 16 then
+            glview = comp:GetPreviewList().LeftView.View
+        else
+            glview = comp:GetPreviewList().Left.View
+        end
+    elseif side == 'right' then
+        if fu.Version == 16 then
+            glview = comp:GetPreviewList().RightView.View
+        else
+            glview = comp:GetPreviewList().Right.View
+        end
     end
     return glview
 end
 
 
-view = get_viewer()
+view = get_viewer('left')
 viewer = view.CurrentViewer
-
 
 
 if view and viewer and viewer:GetID() == 'GLImageViewer' then
@@ -31,6 +38,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     lut_state = viewer:IsLUTEnabled()
     locked_state = view:GetLocked()
     controls_state = viewer:AreControlsShown()
+    dod_state = viewer:IsDoDShown()
 
     ui = fu.UIManager
     disp = bmd.UIDispatcher(ui)
@@ -43,8 +51,8 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
+        -- uncomment this to have translucent bg without window header 
         -- WindowFlags = {FramelessWindowHint = true, },
-        WindowFlags = {WA_NoSystemBackground = true, WA_TranslucentBackground = true},
         Geometry = {x-(width)/2, y+20, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -58,23 +66,12 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
             ui:HGroup{
                 ui:HGroup{
                     Weight = 0.8,
-                    
-                    -- Add three buttons that have an icon resource attached and no border shading
-                    -- ui:Button{
-                    --     ID = 'IconButtonSubV',
-                    --     Text = 'SubV',
-                    --     Flat = true,
-                    --     IconSize = {10,10},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/TriangleUp.png'},
-                    --     MinimumSize = iconsMediumLong,
-                    --     Checkable = true,
-                    -- },
+                    ui.HGap(0.25,0),
                     ui:Button{
                         ID = 'IconButtonZoom',
                         Text = '100%',
                         Flat = true,
                         IconSize = {6,10},
-                        -- Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/TriangleUp.png'},
                         MinimumSize = iconsMediumLong,
                         Checkable = false,
                     },
@@ -90,7 +87,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonPolyline',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Polyline.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Polyline.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -98,7 +95,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonBSpline',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_BSpline.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_BSpline.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -106,7 +103,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonBitmap',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Bitmap.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Bitmap.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -114,7 +111,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonPaint',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Paint.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Paint.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -122,7 +119,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonWand',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Wand.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Wand.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -130,7 +127,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonRectangle',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Rectangle.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Rectangle.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
@@ -138,85 +135,33 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonCircle',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Circle.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Circle.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
                     },
-                    -- ui:Button{
-                    --     ID = 'IconButtonABuffer',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_ABuffer.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    --     Checked = true,
-                    -- },
-                    -- ui:Button{
-                    --     ID = 'IconButtonSplitBuffer',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_SplitBuffer.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    -- },
-                    -- ui:Button{
-                    --     ID = 'IconButtonBBuffer',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_BBuffer.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    -- },
                     ui:Button{
                         ID = 'IconButtonStereo',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Stereo.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Stereo.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
                         Checked = view:IsStereoEnabled()
                     },
-                    -- ui:Button{
-                    --     ID = 'IconButtonSnap',
-                    --     Text = 'Snap',
-                    --     Flat = true,
-                    --     MinimumSize = iconsMediumLong,
-                    --     Checkable = true,
-                    -- },
-                    -- ui:Button{
-                    --     ID = 'IconButtonColour',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Colour.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    --     Checked = true,
-                    -- },
                     ui:Button{
                         ID = 'IconButtonLUT',
                         Text = 'LUT',
                         Flat = true,
                         IconSize = {5,10},
-                        -- Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/TriangleUp.png'},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
                         Checked = lut_state or false
                     },
-                    -- ui:Button{
-                    --     ID = 'IconButton360',
-                    --     Text = '360°',
-                    --     Flat = true,
-                    --     IconSize = {10,10},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/TriangleUp.png'},
-                    --     MinimumSize = iconsMediumLong,
-                    --     Checkable = true,
-                    -- },
                     ui:Button{
                         ID = 'IconButtonROI',
                         Text = 'RoI',
                         Flat = true,
                         IconSize = {5,10},
-                        -- Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/TriangleUp.png'},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
                         Checked = roi_state or false 
@@ -228,12 +173,13 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         IconSize = {5,10},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
+                        Checked = dod_state or false 
                     },
                     ui:Button{
                         ID = 'IconButtonLockCold',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_LockCold.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_LockCold.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
                         Checked = locked_state or false
@@ -242,16 +188,16 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         ID = 'IconButtonControls',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Controls.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Controls.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
-                        Checked = controls_state or false
+                        Checked = controls_state or true
                     },
                     ui:Button{
                         ID = 'IconButtonChequers',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Chequers.png'},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Chequers.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
                     },
@@ -266,7 +212,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                     --     ID = 'IconButtonOne2One',
                     --     Flat = true,
                     --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_One2One.png'},
+                    --     Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_One2One.png'},
                     --     MinimumSize = iconsMedium,
                     --     Checkable = true,
                     -- },
@@ -274,7 +220,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                     --     ID = 'IconButtonNormalise',
                     --     Flat = true,
                     --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Normalise.png'},
+                    --     Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Normalise.png'},
                     --     MinimumSize = iconsMedium,
                     --     Checkable = true,
                     -- },
@@ -282,7 +228,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                     --     ID = 'IconButtonSliders',
                     --     Flat = true,
                     --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/ToolbarUI/Icons/PT_Sliders.png'},
+                    --     Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Sliders.png'},
                     --     MinimumSize = iconsMedium,
                     --     Checkable = true,
                     --     Checked = gg_state 
@@ -291,6 +237,24 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                 ui:HGroup{
                     Weight = 0.2,
                     ui:Button{
+                        ID = 'Left',
+                        Text = 'left',
+                        IconSize = {6,2},
+                        Flat = true,
+                        MinimumSize = iconsMediumLong,
+                        Checkable = true,
+                        Checked = true,
+                    },
+                    ui:Button{
+                        ID = 'Right',
+                        Text = 'right',
+                        Flat = true,
+                        MinimumSize = iconsMediumLong,
+                        IconSize = {6,2},
+                        Checkable = true,
+                        Checked = false,
+                    },
+                    ui:Button{
                         ID = 'CloseButton',
                         Text = 'Close',
                         Flat = false,
@@ -298,13 +262,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         Checkable = false
                     },
                     ui.HGap(0.25,0),
-                --     ui:Button{
-                --         ID = 'showHideFrame',
-                --         Text = 'hide frame',
-                --         Flat = false,
-                --         IconSize = {12,16},
-                --         Checkable = false
-                --     },
                 },
             },
 
@@ -317,30 +274,28 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     -- win:SetAttribute('WA_TransparentForMouseEvents', true)
 
 
-    function win.On.showHideFrame.Clicked(ev)
-        -- win:SetAttribute('WA_FramelessWindowHint', true)
-        -- win:Close()
-    end
-
     -- The window was closed
     function win.On.ToolbarWin.Close(ev)
-            disp:ExitLoop()
+        disp:ExitLoop()
     end
+
     function win.On.CloseButton.Clicked(ev)
-            disp:ExitLoop()
+        disp:ExitLoop()
     end
 
     -- Add your GUI element based event functions here:
     itm = win:GetItems()
 
-    -- function win.On.IconButtonSubV.Clicked(ev)
-    --     state = itm.IconButtonSubV.Checked
-    --     print('[SubV][Button State] ', state)
-    -- end
-
-
-
-
+    
+    function win.On.Right.Clicked(ev)
+        itm.Left.Checked = false
+        view = get_viewer('right')
+    end
+    function win.On.Left.Clicked(ev)
+        itm.Right.Checked = false
+        view = get_viewer('left')
+    end
+    ---------- set glview attrs
     function win.On.IconButtonZoom.Clicked(ev)
         state = itm.IconButtonZoom.Checked
         print('[Zoom][Button State] ', state)
@@ -353,6 +308,21 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         view:SetScale(0)
     end
 
+    function win.On.IconButtonStereo.Clicked(ev)
+        state = itm.IconButtonStereo.Checked
+        print('[Stereo][Button State] ', state)
+        view:EnableStereo()
+    end
+
+    function win.On.IconButtonLockCold.Clicked(ev)
+        state = itm.IconButtonLockCold.Checked
+        print('[LockCold][Button State] ', state)
+        view:SetLocked(state)
+    end
+
+
+
+    ---------- add tools 
     function win.On.IconButtonPolyline.Clicked(ev)
         state = itm.IconButtonPolyline.Checked
         print('[Polyline][Button State] ', state)
@@ -395,66 +365,21 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         comp:AddTool('EllipseMask', -32768, -32768)
     end
 
-    -- function win.On.IconButtonABuffer.Clicked(ev)
-    --     state = itm.IconButtonABuffer.Checked
-    --     itm.IconButtonSplitBuffer.Checked = false
-    --     itm.IconButtonBBuffer.Checked = false
-    --     print('[ABuffer][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
 
-    -- function win.On.IconButtonSplitBuffer.Clicked(ev)
-    --     state = itm.IconButtonSplitBuffer.Checked
-    --     itm.IconButtonABuffer.Checked = false
-    --     itm.IconButtonBBuffer.Checked = false
-    --     print('[SplitBuffer][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
 
-    -- function win.On.IconButtonBBuffer.Clicked(ev)
-    --     state = itm.IconButtonBBuffer.Checked
-        
-    --     itm.IconButtonABuffer.Checked = false
-    --     itm.IconButtonSplitBuffer.Checked = false
-    --     print('[BBuffer][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
-
-    function win.On.IconButtonStereo.Clicked(ev)
-        state = itm.IconButtonStereo.Checked
-        print('[Stereo][Button State] ', state)
-        view:EnableStereo()
-    end
-
-    -- function win.On.IconButtonSnap.Clicked(ev)
-    --     state = itm.IconButtonSnap.Checked
-    --     print('[Snap][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
-
-    -- function win.On.IconButtonColour.Clicked(ev)
-    --     state = itm.IconButtonColour.Checked
-    --     print('[Colour][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
-
+    ------- change view attrs
     function win.On.IconButtonLUT.Clicked(ev)
         state = itm.IconButtonLUT.Checked
         print('[LUT][Button State] ', state)
-        local set = not state
+        viewer = view.CurrentViewer
         viewer:EnableLUT(set_lut)
         viewer:Redraw()
     end
 
-    -- function win.On.IconButton360.Clicked(ev)
-    --     state = itm.IconButton360.Checked
-    --     print('[360][Button State] ', state)
-    --     viewer = get_viewer()
-    -- end
-
     function win.On.IconButtonROI.Clicked(ev)
         state = itm.IconButtonROI.Checked
         print('[ROI][Button State] ', state)
+        viewer = view.CurrentViewer
         viewer:EnableRoI(state)
         viewer:Redraw()
     end
@@ -462,19 +387,15 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     function win.On.IconButtonDoD.Clicked(ev)
         state = itm.IconButtonDoD.Checked
         print('[DoD][Button State] ', state)
+        viewer = view.CurrentViewer
         viewer:ShowDoD()
         viewer:Redraw()
-    end
-
-    function win.On.IconButtonLockCold.Clicked(ev)
-        state = itm.IconButtonLockCold.Checked
-        print('[LockCold][Button State] ', state)
-        view:SetLocked(state)
     end
 
     function win.On.IconButtonControls.Clicked(ev)
         state = itm.IconButtonControls.Checked
         print('[Controls][Button State] ', state)
+        viewer = view.CurrentViewer
         viewer:ShowControls(state)
         viewer:Redraw()
     end
@@ -483,10 +404,29 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         state = itm.IconButtonChequers.Checked
         print('[Chequers][Button State] ', state)
         if fu.Version == 16 then
+            viewer = view.CurrentViewer
             viewer:EnableChecker(state)
             viewer:Redraw()
+        else
+            print('this does not work in Fu9')
         end
     end
+   
+    -- function win.On.IconButtonSnap.Clicked(ev)
+    --     state = itm.IconButtonSnap.Checked
+    --     print('[Snap][Button State] ', state)
+    -- end
+
+    -- function win.On.IconButtonColour.Clicked(ev)
+    --     state = itm.IconButtonColour.Checked
+    --     print('[Colour][Button State] ', state)
+    -- end
+    --
+    --
+    -- function win.On.IconButton360.Clicked(ev)
+    --     state = itm.IconButton360.Checked
+    --     print('[360][Button State] ', state)
+    -- end
 
     -- function win.On.IconButtonSmR.Clicked(ev)
     --     state = itm.IconButtonSmR.Checked
@@ -540,5 +480,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
 -- checker_state = viewer:IsCheckerEnabled()
 else print('Please load 2D node to the Viewer')
 end
+
 
 
