@@ -38,7 +38,9 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     lut_state = viewer:IsLUTEnabled()
     locked_state = view:GetLocked()
     controls_state = viewer:AreControlsShown()
-    dod_state = viewer:IsDoDShown()
+    if fu.Version == 16 then
+        dod_state = viewer:IsDoDShown()
+    end
 
     ui = fu.UIManager
     disp = bmd.UIDispatcher(ui)
