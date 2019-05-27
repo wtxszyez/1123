@@ -1,0 +1,297 @@
+{
+	Tools = ordered() {
+		ColorMatch = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Input = InstanceInput {
+					SourceOp = "PipeRouter1",
+					Source = "Input",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "EffectMask",
+				},
+				Blend = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "Blend",
+					Default = 1,
+					Page = "Common",
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+					Page = "Common",
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+					Page = "Common",
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+					Page = "Common",
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+					Page = "Common",
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ProcessAlpha",
+					Name = "Alpha",
+					Default = 1,
+					Page = "Common",
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+					Page = "Common",
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MultiplyByMask",
+					Default = 0,
+					Page = "Common",
+				},
+				FitMask = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "FitMask",
+					Page = "Common",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaskChannel",
+					Default = 3,
+					Page = "Common",
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaskHigh",
+					ControlGroup = 11,
+					Default = 1,
+					Page = "Common",
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaskLow",
+					ControlGroup = 11,
+					Default = 0,
+					Page = "Common",
+				},
+				MaskClipBlack = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaskClipBlack",
+					Default = 1,
+					Page = "Common",
+				},
+				MaskClipWhite = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaskClipWhite",
+					Default = 1,
+					Page = "Common",
+				},
+				UseObject = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "UseObject",
+					Default = 0,
+					Page = "Common",
+				},
+				UseMaterial = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "UseMaterial",
+					Default = 0,
+					Page = "Common",
+				},
+				CorrectEdges = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "CorrectEdges",
+					Page = "Common",
+				},
+				ObjectID = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ObjectID",
+					Name = "Object / Material",
+					ControlGroup = 17,
+					Default = 0,
+					Page = "Common",
+				},
+				MaterialID = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "MaterialID",
+					Name = "Object / Material",
+					ControlGroup = 17,
+					Default = 0,
+					Page = "Common",
+				},
+				ClippingMode = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "ClippingMode",
+					Page = "Common",
+				},
+				UseOpenCL = InstanceInput {
+					SourceOp = "ColorGain1",
+					Source = "UseOpenCL",
+					Default = 1,
+					Page = "Common",
+				},
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "PipeRouter2",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 823, 125 },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 311, 65.806, 155.5, 22 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 0, 0 }
+			},
+			Tools = ordered() {
+				PipeRouter2 = PipeRouter {
+					CtrlWShown = false,
+					Inputs = {
+						Input = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 128, 11.206 } },
+				},
+				PipeRouter1 = PipeRouter {
+					CtrlWShown = false,
+					ViewInfo = PipeRouterInfo { Pos = { -128, 11.206 } },
+				},
+				ColorGain1 = ColorGain {
+					Inputs = {
+						GainRed = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorRed/ColorMatch.TargetColorRed or ColorMatch.TargetColorRed/ColorMatch.SourceColorRed", },
+						GainGreen = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorGreen/ColorMatch.TargetColorGreen or ColorMatch.TargetColorGreen/ColorMatch.SourceColorGreen", },
+						GainBlue = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorBlue/ColorMatch.TargetColorBlue or ColorMatch.TargetColorBlue/ColorMatch.SourceColorBlue", },
+						PreDividePostMultiply = Input { Expression = "ColorMatch.PreDividePostMultiply", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.125, 0.75 },
+											{ 0.375, 0.25 },
+											{ 0.5, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0.5, 0 },
+											{ 0.625, 0.25 },
+											{ 0.875, 0.75 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						Input = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -0.33398, 10.6 } },
+				}
+			},
+			UserControls = ordered() {
+				SourceColorRed = {
+					INP_Default = 0.25,
+					IC_ControlGroup = 1,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					CLRC_ColorSpace = 0,
+					IC_ControlID = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Source Color"
+				},
+				SourceColorGreen = {
+					INP_Default = 0.5,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					IC_ControlID = 1,
+					INPID_InputControl = "ColorControl",
+					CLRC_ColorSpace = 0,
+					IC_ControlGroup = 1
+				},
+				SourceColorBlue = {
+					IC_ControlGroup = 1,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 2,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "Controls",
+					INP_Default = 0.25
+				},
+				TargetColorRed = {
+					INP_Default = 0.25,
+					IC_ControlGroup = 2,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					CLRC_ColorSpace = 0,
+					IC_ControlID = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Target Color"
+				},
+				TargetColorGreen = {
+					INP_Default = 0.5,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					IC_ControlID = 1,
+					INPID_InputControl = "ColorControl",
+					CLRC_ColorSpace = 0,
+					IC_ControlGroup = 2
+				},
+				TargetColorBlue = {
+					IC_ControlGroup = 2,
+					INPID_InputControl = "ColorControl",
+					LINKID_DataType = "Number",
+					IC_ControlID = 2,
+					CLRC_ColorSpace = 0,
+					ICS_ControlPage = "Controls",
+					INP_Default = 0.25
+				},
+				Direction = {
+					{ MBTNC_AddButton = "Forward" },
+					{ MBTNC_AddButton = "Reverse" },
+					INPID_InputControl = "MultiButtonControl",
+					LINKID_DataType = "Number",
+					LINKS_Name = "Direction",
+					MBTNC_StretchToFit = true,
+					ICS_ControlPage = "Controls",
+					INP_Default = 0
+				},
+				PreDividePostMultiply = {
+					LINKID_DataType = "Number",
+					LINKS_Name = "Pre-Divide / Post-Multiply",
+					INPID_InputControl = "CheckboxControl",
+					ICS_ControlPage = "Controls",
+					INP_Default = 0
+				}
+			}
+		}
+	},
+	ActiveTool = "ColorMatch"
+}
