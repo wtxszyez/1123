@@ -34,37 +34,41 @@ viewer = view.CurrentViewer
 
 
 if view and viewer and viewer:GetID() == 'GLImageViewer' then
-    roi_state = viewer:IsEnableRoI()
-    lut_state = viewer:IsLUTEnabled()
-    locked_state = view:GetLocked()
     controls_state = viewer:AreControlsShown()
-    if fu.Version == 16 then
+    locked_state = view:GetLocked()
+    lut_state = viewer:IsLUTEnabled()
+    roi_state = viewer:IsEnableRoI()
+    stereo_state = view:IsStereoEnabled() 
+
+    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
         dod_state = viewer:IsDoDShown()
+        checker_state = viewer:IsCheckerEnabled()
+    else
+        dod_state = false
+        checker_state = true
     end
 
     ui = fu.UIManager
     disp = bmd.UIDispatcher(ui)
     width,height = 650,26
     iconsMedium = {16,26}
-    iconsMediumLong = {32,26}
+    iconsMediumLong = {34,26}
 	local x = fu:GetMousePos()[1]
 	local y = fu:GetMousePos()[2]
     win = disp:AddWindow({
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        -- uncomment this to have translucent bg without window header 
+        -- uncomment this to have translucent bg without window header:
         -- WindowFlags = {FramelessWindowHint = true, },
-        Geometry = {x-(width)/2, y+20, width, height},
+        Geometry = {x-(width)/2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
         Margin = 0,
         
         ui:VGroup{
             ID = 'root',
-            
             -- Add your GUI elements here:
-            
             ui:HGroup{
                 ui:HGroup{
                     Weight = 0.8,
@@ -144,11 +148,12 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                     ui:Button{
                         ID = 'IconButtonStereo',
                         Flat = true,
+                        Text = '',
                         IconSize = {16,16},
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Stereo.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
-                        Checked = view:IsStereoEnabled()
+                        Checked = stereo_state 
                     },
                     ui:Button{
                         ID = 'IconButtonLUT',
@@ -157,7 +162,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         IconSize = {5,10},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
-                        Checked = lut_state or false
+                        Checked = lut_state
                     },
                     ui:Button{
                         ID = 'IconButtonROI',
@@ -166,7 +171,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         IconSize = {5,10},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
-                        Checked = roi_state or false 
+                        Checked = roi_state 
                     },
                     ui:Button{
                         ID = 'IconButtonDoD',
@@ -175,33 +180,37 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         IconSize = {5,10},
                         MinimumSize = iconsMediumLong,
                         Checkable = true,
-                        Checked = dod_state or false 
+                        Checked = dod_state
                     },
                     ui:Button{
                         ID = 'IconButtonLockCold',
                         Flat = true,
+                        Text = '',
                         IconSize = {16,16},
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_LockCold.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
-                        Checked = locked_state or false
+                        Checked = locked_state
                     },
                     ui:Button{
                         ID = 'IconButtonControls',
                         Flat = true,
+                        Text = '',
                         IconSize = {16,16},
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Controls.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
-                        Checked = controls_state or true
+                        Checked = controls_state
                     },
                     ui:Button{
                         ID = 'IconButtonChequers',
                         Flat = true,
+                        Text = '',
                         IconSize = {16,16},
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Chequers.png'},
                         MinimumSize = iconsMedium,
                         Checkable = true,
+                        Checked = checker_state
                     },
                     -- ui:Button{
                     --     ID = 'IconButtonSmR',
@@ -270,7 +279,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         },
     })
     
-
     -- win:SetAttribute('WA_FramelessWindowHint', true)
     -- win:SetAttribute('WA_NoSystemBackground', true)
     -- win:SetAttribute('WA_TransparentForMouseEvents', true)
@@ -322,8 +330,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         view:SetLocked(state)
     end
 
-
-
     ---------- add tools 
     function win.On.IconButtonPolyline.Clicked(ev)
         state = itm.IconButtonPolyline.Checked
@@ -366,8 +372,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         print('[Circle][Button State] ', state)
         comp:AddTool('EllipseMask', -32768, -32768)
     end
-
-
 
     ------- change view attrs
     function win.On.IconButtonLUT.Clicked(ev)
@@ -479,9 +483,5 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     app:RemoveConfig('ToolbarWin')
     collectgarbage()
     print('[Done]')
--- checker_state = viewer:IsCheckerEnabled()
 else print('Please load 2D node to the Viewer')
 end
-
-
-
