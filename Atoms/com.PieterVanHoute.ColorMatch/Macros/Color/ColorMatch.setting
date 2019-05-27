@@ -182,9 +182,9 @@
 				},
 				ColorGain1 = ColorGain {
 					Inputs = {
-						GainRed = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorRed/ColorMatch.TargetColorRed or ColorMatch.TargetColorRed/ColorMatch.SourceColorRed", },
-						GainGreen = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorGreen/ColorMatch.TargetColorGreen or ColorMatch.TargetColorGreen/ColorMatch.SourceColorGreen", },
-						GainBlue = Input { Expression = "ColorMatch.Direction == 1 and ColorMatch.SourceColorBlue/ColorMatch.TargetColorBlue or ColorMatch.TargetColorBlue/ColorMatch.SourceColorBlue", },
+						GainRed = Input { Expression = "ColorMatch.Direction == 1 and (ColorMatch.SourceColorRed==0 and 1 or (ColorMatch.SourceColorRed/(ColorMatch.TargetColorRed==0 and 1 or ColorMatch.TargetColorRed))) or (ColorMatch.SourceColorRed==0 and 1 or (ColorMatch.TargetColorRed/(ColorMatch.SourceColorRed==0 and 1 or ColorMatch.SourceColorRed)))", },
+						GainGreen = Input { Expression = "ColorMatch.Direction == 1 and (ColorMatch.SourceColorGreen==0 and 1 or (ColorMatch.SourceColorGreen/(ColorMatch.TargetColorGreen==0 and 1 or ColorMatch.TargetColorGreen))) or (ColorMatch.SourceColorGreen==0 and 1 or (ColorMatch.TargetColorGreen/(ColorMatch.SourceColorGreen==0 and 1 or ColorMatch.SourceColorGreen)))", },
+						GainBlue = Input { Expression = "ColorMatch.Direction == 1 and (ColorMatch.SourceColorBlue==0 and 1 or (ColorMatch.SourceColorBlue/(ColorMatch.TargetColorBlue==0 and 1 or ColorMatch.TargetColorBlue))) or (ColorMatch.SourceColorBlue==0 and 1 or (ColorMatch.TargetColorBlue/(ColorMatch.SourceColorBlue==0 and 1 or ColorMatch.SourceColorBlue)))", },
 						PreDividePostMultiply = Input { Expression = "ColorMatch.PreDividePostMultiply", },
 						ColorRanges = Input {
 							Value = ColorCurves {
