@@ -11,6 +11,27 @@ Web: www.andrewhazelden.com
 ]]
 
 
+function _init(side)
+    view = get_viewer(side)
+    viewer = view.CurrentViewer
+    controls_state = viewer:AreControlsShown()
+    locked_state = view:GetLocked()
+    lut_state = viewer:IsLUTEnabled()
+    roi_state = viewer:IsEnableRoI()
+    stereo_state = view:IsStereoEnabled()
+
+    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
+        dod_state = viewer:IsDoDShown()
+        checker_state = viewer:IsCheckerEnabled()
+    else
+        dod_state = false
+        checker_state = true
+    end
+
+    comp = fu:GetCurrentComp()
+end
+
+
 function get_viewer(side)
     if side == 'left' then
         if fu.Version == 16 then
@@ -28,25 +49,9 @@ function get_viewer(side)
     return glview
 end
 
-
-view = get_viewer('left')
-viewer = view.CurrentViewer
-
+_init('left')
 
 if view and viewer and viewer:GetID() == 'GLImageViewer' then
-    controls_state = viewer:AreControlsShown()
-    locked_state = view:GetLocked()
-    lut_state = viewer:IsLUTEnabled()
-    roi_state = viewer:IsEnableRoI()
-    stereo_state = view:IsStereoEnabled() 
-
-    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
-        dod_state = viewer:IsDoDShown()
-        checker_state = viewer:IsCheckerEnabled()
-    else
-        dod_state = false
-        checker_state = true
-    end
 
     ui = fu.UIManager
     disp = bmd.UIDispatcher(ui)
@@ -60,7 +65,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
         -- uncomment this to have translucent bg without window header:
-        -- WindowFlags = {FramelessWindowHint = true, },
+        WindowFlags = {FramelessWindowHint = true, },
         Geometry = {x-(width)/2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -257,6 +262,17 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         Checked = true,
                     },
                     ui:Button{
+                        ID = 'RefreshButtons',
+                        Text = '',
+                        IconSize = {12,12},
+                        -- Flat = true,
+                        MinimumSize = iconsMedium,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/refresh_icon.png'},
+                        -- Checkable = true,
+                        -- Checked = true,
+                        Enable = false,
+                    },                    
+                    ui:Button{
                         ID = 'Right',
                         Text = 'right',
                         Flat = true,
@@ -283,7 +299,6 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     -- win:SetAttribute('WA_NoSystemBackground', true)
     -- win:SetAttribute('WA_TransparentForMouseEvents', true)
 
-
     -- The window was closed
     function win.On.ToolbarWin.Close(ev)
         disp:ExitLoop()
@@ -296,14 +311,30 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
     -- Add your GUI element based event functions here:
     itm = win:GetItems()
 
-    
+    function refresh_ui(side)
+        -- itm.Left.Checked = true
+        -- itm.Right.Checked = false
+        _init(side)
+        _init(side)
+        itm.IconButtonStereo.Checked = stereo_state
+        itm.IconButtonLUT.Checked = lut_state
+        itm.IconButtonROI.Checked = roi_state
+        itm.IconButtonDoD.Checked = dod_state
+        itm.IconButtonLockCold.Checked = locked_state
+        itm.IconButtonControls.Checked = controls_state 
+        itm.IconButtonChequers.Checked = checker_state
+        print('[Refresh Buttons]')
+    end
+
     function win.On.Right.Clicked(ev)
         itm.Left.Checked = false
-        view = get_viewer('right')
+        -- view = get_viewer('right')
+        refresh_ui('right')
     end
     function win.On.Left.Clicked(ev)
         itm.Right.Checked = false
-        view = get_viewer('left')
+        -- view = get_viewer('left')
+        refresh_ui('left')
     end
     ---------- set glview attrs
     function win.On.IconButtonZoom.Clicked(ev)
@@ -416,6 +447,16 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         else
             print('this does not work in Fu9')
         end
+    end
+
+
+    function win.On.RefreshButtons.Clicked(ev)
+        if itm.Left.Checked == true then
+           side = 'left'
+        else
+           side = 'right'
+        end
+        refresh_ui(side)
     end
    
     -- function win.On.IconButtonSnap.Clicked(ev)
