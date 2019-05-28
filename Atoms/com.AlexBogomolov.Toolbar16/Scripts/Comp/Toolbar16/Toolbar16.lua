@@ -1,5 +1,5 @@
 --[[
-v 2.0 add some working buttons 2019-05-21
+v 1.3 add some working buttons 2019-05-21
 -- partial implementation for Fusion 16 by Alex Bogomolov 
 v 1.0 Initial release 2019-01-21
 -- original sample script and icons by Andrew Hazelden 
@@ -9,6 +9,30 @@ Web: www.andrewhazelden.com
      https://abogomolov.com
      https://paypal.me/aabogomolov
 ]]
+
+
+function _init(side)
+    view = get_viewer(side)
+    viewer = view.CurrentViewer
+    comp = fu:GetCurrentComp()
+    if not viewer then
+        print('Load the 2D tool to the '.. side ..' viewer')
+        return 0
+    end
+    controls_state = viewer:AreControlsShown()
+    locked_state = view:GetLocked()
+    lut_state = viewer:IsLUTEnabled()
+    roi_state = viewer:IsEnableRoI()
+    stereo_state = view:IsStereoEnabled()
+
+    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
+        dod_state = viewer:IsDoDShown()
+        checker_state = viewer:IsCheckerEnabled()
+    else
+        dod_state = false
+        checker_state = true
+    end
+end
 
 
 function get_viewer(side)
@@ -28,38 +52,22 @@ function get_viewer(side)
     return glview
 end
 
+_init('left')
 
-view = get_viewer('left')
-viewer = view.CurrentViewer
+ui = fu.UIManager
+disp = bmd.UIDispatcher(ui)
 
-
-if view and viewer and viewer:GetID() == 'GLImageViewer' then
-    controls_state = viewer:AreControlsShown()
-    locked_state = view:GetLocked()
-    lut_state = viewer:IsLUTEnabled()
-    roi_state = viewer:IsEnableRoI()
-    stereo_state = view:IsStereoEnabled() 
-
-    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
-        dod_state = viewer:IsDoDShown()
-        checker_state = viewer:IsCheckerEnabled()
-    else
-        dod_state = false
-        checker_state = true
-    end
-
-    ui = fu.UIManager
-    disp = bmd.UIDispatcher(ui)
+function show_ui()
     width,height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
-	local x = fu:GetMousePos()[1]
-	local y = fu:GetMousePos()[2]
-    win = disp:AddWindow({
+    local x = fu:GetMousePos()[1]
+    local y = fu:GetMousePos()[2]
+    local win = disp:AddWindow({
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        -- uncomment this to have translucent bg without window header:
+        -- uncomment this to have static translucent bg without window header:
         -- WindowFlags = {FramelessWindowHint = true, },
         Geometry = {x-(width)/2, y, width, height},
         -- Geometry = {0, 0, width, height},
@@ -257,6 +265,17 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
                         Checked = true,
                     },
                     ui:Button{
+                        ID = 'RefreshButtons',
+                        Text = '',
+                        IconSize = {12,12},
+                        -- Flat = true,
+                        MinimumSize = iconsMedium,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/refresh_icon.png'},
+                        -- Checkable = true,
+                        -- Checked = true,
+                        Enable = false,
+                    },                    
+                    ui:Button{
                         ID = 'Right',
                         Text = 'right',
                         Flat = true,
@@ -278,210 +297,200 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
 
         },
     })
-    
-    -- win:SetAttribute('WA_FramelessWindowHint', true)
-    -- win:SetAttribute('WA_NoSystemBackground', true)
-    -- win:SetAttribute('WA_TransparentForMouseEvents', true)
-
-
-    -- The window was closed
-    function win.On.ToolbarWin.Close(ev)
-        disp:ExitLoop()
-    end
-
-    function win.On.CloseButton.Clicked(ev)
-        disp:ExitLoop()
-    end
-
-    -- Add your GUI element based event functions here:
-    itm = win:GetItems()
-
-    
-    function win.On.Right.Clicked(ev)
-        itm.Left.Checked = false
-        view = get_viewer('right')
-    end
-    function win.On.Left.Clicked(ev)
-        itm.Right.Checked = false
-        view = get_viewer('left')
-    end
-    ---------- set glview attrs
-    function win.On.IconButtonZoom.Clicked(ev)
-        state = itm.IconButtonZoom.Checked
-        print('[Zoom][Button State] ', state)
-        view:SetScale(1)
-    end
-
-    function win.On.IconButtonFit.Clicked(ev)
-        state = itm.IconButtonFit.Checked
-        print('[Fit][Button State] ', state)
-        view:SetScale(0)
-    end
-
-    function win.On.IconButtonStereo.Clicked(ev)
-        state = itm.IconButtonStereo.Checked
-        print('[Stereo][Button State] ', state)
-        view:EnableStereo()
-    end
-
-    function win.On.IconButtonLockCold.Clicked(ev)
-        state = itm.IconButtonLockCold.Checked
-        print('[LockCold][Button State] ', state)
-        view:SetLocked(state)
-    end
-
-    ---------- add tools 
-    function win.On.IconButtonPolyline.Clicked(ev)
-        state = itm.IconButtonPolyline.Checked
-        print('[Polyline][Button State] ', state)
-        comp:AddTool('PolylineMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonBSpline.Clicked(ev)
-        state = itm.IconButtonBSpline.Checked
-        print('[BSpline][Button State] ', state)
-        comp:AddTool('BSplineMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonBitmap.Clicked(ev)
-        state = itm.IconButtonBitmap.Checked
-        print('[Bitmap][Button State] ', state)
-        comp:AddTool('BitmapMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonPaint.Clicked(ev)
-        state = itm.IconButtonPaint.Checked
-        print('[Paint][Button State] ', state)
-        comp:AddTool('PaintMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonWand.Clicked(ev)
-        state = itm.IconButtonWand.Checked
-        print('[Wand][Button State] ', state)
-        comp:AddTool('WandMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonRectangle.Clicked(ev)
-        state = itm.IconButtonRectangle.Checked
-        print('[Rectangle][Button State] ', state)
-        comp:AddTool('RectangleMask', -32768, -32768)
-    end
-
-    function win.On.IconButtonCircle.Clicked(ev)
-        state = itm.IconButtonCircle.Checked
-        print('[Circle][Button State] ', state)
-        comp:AddTool('EllipseMask', -32768, -32768)
-    end
-
-    ------- change view attrs
-    function win.On.IconButtonLUT.Clicked(ev)
-        state = itm.IconButtonLUT.Checked
-        print('[LUT][Button State] ', state)
-        viewer = view.CurrentViewer
-        viewer:EnableLUT(set_lut)
-        viewer:Redraw()
-    end
-
-    function win.On.IconButtonROI.Clicked(ev)
-        state = itm.IconButtonROI.Checked
-        print('[ROI][Button State] ', state)
-        viewer = view.CurrentViewer
-        viewer:EnableRoI(state)
-        viewer:Redraw()
-    end
-
-    function win.On.IconButtonDoD.Clicked(ev)
-        state = itm.IconButtonDoD.Checked
-        print('[DoD][Button State] ', state)
-        viewer = view.CurrentViewer
-        viewer:ShowDoD()
-        viewer:Redraw()
-    end
-
-    function win.On.IconButtonControls.Clicked(ev)
-        state = itm.IconButtonControls.Checked
-        print('[Controls][Button State] ', state)
-        viewer = view.CurrentViewer
-        viewer:ShowControls(state)
-        viewer:Redraw()
-    end
-
-    function win.On.IconButtonChequers.Clicked(ev)
-        state = itm.IconButtonChequers.Checked
-        print('[Chequers][Button State] ', state)
-        if fu.Version == 16 then
-            viewer = view.CurrentViewer
-            viewer:EnableChecker(state)
-            viewer:Redraw()
-        else
-            print('this does not work in Fu9')
-        end
-    end
-   
-    -- function win.On.IconButtonSnap.Clicked(ev)
-    --     state = itm.IconButtonSnap.Checked
-    --     print('[Snap][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonColour.Clicked(ev)
-    --     state = itm.IconButtonColour.Checked
-    --     print('[Colour][Button State] ', state)
-    -- end
-    --
-    --
-    -- function win.On.IconButton360.Clicked(ev)
-    --     state = itm.IconButton360.Checked
-    --     print('[360][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonSmR.Clicked(ev)
-    --     state = itm.IconButtonSmR.Checked
-    --     print('[SmR][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonOne2One.Clicked(ev)
-    --     state = itm.IconButtonOne2One.Checked
-    --     print('[One2One][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonNormalise.Clicked(ev)
-    --     state = itm.IconButtonNormalise.Checked
-    --     print('[Normalise][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonSliders.Clicked(ev)
-    --     state = itm.IconButtonSliders.Checked
-    --     print('[Sliders][Button State] ', state)
-    -- end
-
-    -- function win.On.IconButtonTool.Clicked(ev)
-    --     state = itm.IconButtonTool.Checked
-    --     print('[Tool][Button State] ', state)
-    -- end
-
-    -- The app:AddConfig() command that will capture the "Shift + Control + W" or "Shift + Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
-        app:AddConfig('ToolbarWin', {
-            Target {
-                ID = 'ToolbarWin',
-            },
-
-            Hotkeys {
-                Target = 'ToolbarWin',
-                Defaults = true,
-                ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-                SHIFT_CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-                SHIFT_CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-            },
-        })
-
-    -- Display the window
-    win:Show()
-
-    -- Keep the window updating until the script is quit
-    disp:RunLoop()
-    win:Hide()
-    app:RemoveConfig('ToolbarWin')
-    collectgarbage()
-    print('[Done]')
-else print('Please load 2D node to the Viewer')
+    return win
 end
+
+win = show_ui()
+
+
+-- The window was closed
+function win.On.ToolbarWin.Close(ev)
+    disp:ExitLoop()
+end
+
+function win.On.CloseButton.Clicked(ev)
+    disp:ExitLoop()
+end
+
+-- Add your GUI element based event functions here:
+itm = win:GetItems()
+
+function refresh_ui()
+    itm.IconButtonStereo.Checked = stereo_state
+    itm.IconButtonLUT.Checked = lut_state
+    itm.IconButtonROI.Checked = roi_state
+    itm.IconButtonDoD.Checked = dod_state
+    itm.IconButtonLockCold.Checked = locked_state
+    itm.IconButtonControls.Checked = controls_state 
+    itm.IconButtonChequers.Checked = checker_state
+end
+
+function win.On.Right.Clicked(ev)
+    itm.Left.Checked = false
+    _init('right')
+    refresh_ui()
+end
+function win.On.Left.Clicked(ev)
+    itm.Right.Checked = false
+    _init('left')
+    refresh_ui()
+end
+---------- set glview attrs
+function win.On.IconButtonZoom.Clicked(ev)
+    state = itm.IconButtonZoom.Checked
+    print('[Zoom] is set to 100%')
+    view:SetScale(1)
+end
+
+function win.On.IconButtonFit.Clicked(ev)
+    state = itm.IconButtonFit.Checked
+    print('[Fit] to view')
+    view:SetScale(0)
+end
+
+function win.On.IconButtonStereo.Clicked(ev)
+    state = itm.IconButtonStereo.Checked
+    print('[Stereo][Button State] ', state)
+    view:EnableStereo()
+end
+
+function win.On.IconButtonLockCold.Clicked(ev)
+    state = itm.IconButtonLockCold.Checked
+    print('[LockCold][Button State] ', state)
+    view:SetLocked(state)
+end
+
+---------- add tools 
+function win.On.IconButtonPolyline.Clicked(ev)
+    print('[Polyline] created')
+    comp:AddTool('PolylineMask', -32768, -32768)
+end
+
+function win.On.IconButtonBSpline.Clicked(ev)
+    print('[BSpline] created')
+    comp:AddTool('BSplineMask', -32768, -32768)
+end
+
+function win.On.IconButtonBitmap.Clicked(ev)
+    print('[Bitmap] created')
+    comp:AddTool('BitmapMask', -32768, -32768)
+end
+
+function win.On.IconButtonPaint.Clicked(ev)
+    print('[Paint] created')
+    comp:AddTool('PaintMask', -32768, -32768)
+end
+
+function win.On.IconButtonWand.Clicked(ev)
+    print('[Wand] created')
+    comp:AddTool('WandMask', -32768, -32768)
+end
+
+function win.On.IconButtonRectangle.Clicked(ev)
+    print('[Rectangle] created')
+    comp:AddTool('RectangleMask', -32768, -32768)
+end
+
+function win.On.IconButtonCircle.Clicked(ev)
+    print('[Circle] created')
+    comp:AddTool('EllipseMask', -32768, -32768)
+end
+
+------- change view attrs
+function win.On.IconButtonLUT.Clicked(ev)
+    state = itm.IconButtonLUT.Checked
+    print('[LUT][Button State] ', state)
+    viewer = view.CurrentViewer
+    if not viewer then
+        return
+    end
+    viewer:EnableLUT(set_lut)
+    viewer:Redraw()
+end
+
+function win.On.IconButtonROI.Clicked(ev)
+    state = itm.IconButtonROI.Checked
+    print('[ROI][Button State] ', state)
+    viewer = view.CurrentViewer
+    if not viewer then
+        return
+    end
+    viewer:EnableRoI(state)
+    viewer:Redraw()
+end
+
+function win.On.IconButtonDoD.Clicked(ev)
+    state = itm.IconButtonDoD.Checked
+    print('[DoD][Button State] ', state)
+    viewer = view.CurrentViewer
+    if not viewer then
+        return
+    end
+    viewer:ShowDoD()
+    viewer:Redraw()
+end
+
+function win.On.IconButtonControls.Clicked(ev)
+    state = itm.IconButtonControls.Checked
+    print('[Controls][Button State] ', state)
+    viewer = view.CurrentViewer
+    if not viewer then
+        return
+    end
+    viewer:ShowControls(state)
+    viewer:Redraw()
+end
+
+function win.On.IconButtonChequers.Clicked(ev)
+    state = itm.IconButtonChequers.Checked
+    print('[Chequers][Button State] ', state)
+    if fu.Version == 16 then
+        viewer = view.CurrentViewer
+        if not viewer then
+            return
+        end
+        viewer:EnableChecker(state)
+        viewer:Redraw()
+    else
+        print('this does not work in Fu9')
+    end
+end
+
+function win.On.RefreshButtons.Clicked(ev)
+    if itm.Left.Checked == true then
+       side = 'left'
+    else
+       side = 'right'
+    end
+    _init(side)
+    _init(side)
+    -- _init('right')
+    refresh_ui()
+    -- if viewer then
+    --     _init(side)
+    -- end
+end
+
+-- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
+app:AddConfig('ToolbarWin', {
+    Target {
+        ID = 'ToolbarWin',
+    },
+
+    Hotkeys {
+        Target = 'ToolbarWin',
+        Defaults = true,
+        ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+    },
+})
+
+-- Display the window
+win:Show()
+
+-- Keep the window updating until the script is quit
+disp:RunLoop()
+win:Hide()
+app:RemoveConfig('ToolbarWin')
+collectgarbage()
+print('[Done]')
+
