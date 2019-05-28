@@ -65,7 +65,7 @@ if view and viewer and viewer:GetID() == 'GLImageViewer' then
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
         -- uncomment this to have translucent bg without window header:
-        WindowFlags = {FramelessWindowHint = true, },
+        -- WindowFlags = {FramelessWindowHint = true, },
         Geometry = {x-(width)/2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
