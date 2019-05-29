@@ -67,9 +67,7 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        -- uncomment this to have static translucent bg without window header:
-        -- WindowFlags = {FramelessWindowHint = true, },
-        WindowFlags = {SplashScreen = true ,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = true },
+        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = true},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -405,7 +403,7 @@ function win.On.IconButtonLUT.Clicked(ev)
     if not viewer then
         return
     end
-    viewer:EnableLUT(set_lut)
+    viewer:EnableLUT(state)
     viewer:Redraw()
 end
 
