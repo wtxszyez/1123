@@ -28,9 +28,11 @@ function _init(side)
     if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
         dod_state = viewer:IsDoDShown()
         checker_state = viewer:IsCheckerEnabled()
+        sliders_state = viewer:IsShowGainGamma()
     else
         dod_state = false
-        checker_state = true
+        checker_state = false
+        sliders_state = false
     end
 end
 
@@ -242,15 +244,16 @@ function show_ui()
                     --     MinimumSize = iconsMedium,
                     --     Checkable = true,
                     -- },
-                    -- ui:Button{
-                    --     ID = 'IconButtonSliders',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Sliders.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    --     Checked = gg_state 
-                    -- },
+                    ui:Button{
+                        ID = 'IconButtonSliders',
+                        Flat = true,
+                        Text = '',
+                        IconSize = {16,16},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Sliders.png'},
+                        MinimumSize = iconsMedium,
+                        Checkable = true,
+                        Checked = sliders_state 
+                    },
                 },
                 ui:HGroup{
                     Weight = 0.2,
@@ -267,11 +270,8 @@ function show_ui()
                         ID = 'RefreshButtons',
                         Text = '',
                         IconSize = {12,12},
-                        -- Flat = true,
                         MinimumSize = iconsMedium,
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/refresh_icon.png'},
-                        -- Checkable = true,
-                        -- Checked = true,
                         Enable = false,
                     },                    
                     ui:Button{
@@ -322,6 +322,7 @@ function refresh_ui()
     itm.IconButtonLockCold.Checked = locked_state
     itm.IconButtonControls.Checked = controls_state 
     itm.IconButtonChequers.Checked = checker_state
+    itm.IconButtonSliders.Checked = sliders_state
 end
 
 function win.On.Right.Clicked(ev)
@@ -440,6 +441,22 @@ function win.On.IconButtonControls.Clicked(ev)
     viewer:Redraw()
 end
 
+function win.On.IconButtonSliders.Clicked(ev)
+    state = itm.IconButtonSliders.Checked
+    print('[Sliders][Button State] ', state)
+    if fu.Version == 16 then
+        viewer = view.CurrentViewer
+        if not viewer then
+            return
+        end
+        itm.IconButtonControls.Checked = true
+        viewer:ShowControls(true)
+        viewer:ShowGainGamma(state)
+    else
+        print('this does not work in Fu9')
+    end
+end
+
 function win.On.IconButtonChequers.Clicked(ev)
     state = itm.IconButtonChequers.Checked
     print('[Chequers][Button State] ', state)
@@ -463,11 +480,7 @@ function win.On.RefreshButtons.Clicked(ev)
     end
     _init(side)
     _init(side)
-    -- _init('right')
     refresh_ui()
-    -- if viewer then
-    --     _init(side)
-    -- end
 end
 
 -- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
