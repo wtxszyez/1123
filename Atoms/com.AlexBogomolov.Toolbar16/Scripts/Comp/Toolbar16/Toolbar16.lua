@@ -69,7 +69,7 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = true},
+        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
