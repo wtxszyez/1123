@@ -425,7 +425,7 @@ function win.On.IconButtonDoD.Clicked(ev)
     if not viewer then
         return
     end
-    viewer:ShowDoD()
+    viewer:ShowDoD(state)
     viewer:Redraw()
 end
 
