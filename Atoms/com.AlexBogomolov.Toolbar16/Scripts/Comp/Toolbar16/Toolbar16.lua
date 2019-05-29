@@ -16,8 +16,8 @@ function _init(side)
     viewer = view.CurrentViewer
     comp = fu:GetCurrentComp()
     if not viewer then
-        print('Load the 2D tool to the '.. side ..' viewer')
-        return 0
+        print('Load any 2D tool to the '.. side ..' viewer')
+        return nil
     end
     controls_state = viewer:AreControlsShown()
     locked_state = view:GetLocked()
@@ -58,7 +58,7 @@ ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
 function show_ui()
-    width,height = 650,26
+    width, height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
     local x = fu:GetMousePos()[1]
@@ -69,7 +69,8 @@ function show_ui()
         WindowTitle = 'Viewer Toolbar for Fusion16',
         -- uncomment this to have static translucent bg without window header:
         -- WindowFlags = {FramelessWindowHint = true, },
-        Geometry = {x-(width)/2, y, width, height},
+        WindowFlags = {SplashScreen = true ,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = true },
+        Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
         Margin = 0,
