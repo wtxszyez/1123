@@ -16,8 +16,8 @@ function _init(side)
     viewer = view.CurrentViewer
     comp = fu:GetCurrentComp()
     if not viewer then
-        print('Load the 2D tool to the '.. side ..' viewer')
-        return 0
+        print('Load any 2D tool to the '.. side ..' viewer')
+        return nil
     end
     controls_state = viewer:AreControlsShown()
     locked_state = view:GetLocked()
@@ -28,9 +28,11 @@ function _init(side)
     if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
         dod_state = viewer:IsDoDShown()
         checker_state = viewer:IsCheckerEnabled()
+        sliders_state = viewer:IsShowGainGamma()
     else
         dod_state = false
-        checker_state = true
+        checker_state = false
+        sliders_state = false
     end
 end
 
@@ -58,7 +60,7 @@ ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
 function show_ui()
-    width,height = 650,26
+    width, height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
     local x = fu:GetMousePos()[1]
@@ -67,9 +69,8 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        -- uncomment this to have static translucent bg without window header:
-        -- WindowFlags = {FramelessWindowHint = true, },
-        Geometry = {x-(width)/2, y, width, height},
+        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
+        Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
         Margin = 0,
@@ -243,15 +244,16 @@ function show_ui()
                     --     MinimumSize = iconsMedium,
                     --     Checkable = true,
                     -- },
-                    -- ui:Button{
-                    --     ID = 'IconButtonSliders',
-                    --     Flat = true,
-                    --     IconSize = {16,16},
-                    --     Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Sliders.png'},
-                    --     MinimumSize = iconsMedium,
-                    --     Checkable = true,
-                    --     Checked = gg_state 
-                    -- },
+                    ui:Button{
+                        ID = 'IconButtonSliders',
+                        Flat = true,
+                        Text = '',
+                        IconSize = {16,16},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Sliders.png'},
+                        MinimumSize = iconsMedium,
+                        Checkable = true,
+                        Checked = sliders_state 
+                    },
                 },
                 ui:HGroup{
                     Weight = 0.2,
@@ -268,11 +270,8 @@ function show_ui()
                         ID = 'RefreshButtons',
                         Text = '',
                         IconSize = {12,12},
-                        -- Flat = true,
                         MinimumSize = iconsMedium,
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/refresh_icon.png'},
-                        -- Checkable = true,
-                        -- Checked = true,
                         Enable = false,
                     },                    
                     ui:Button{
@@ -323,6 +322,7 @@ function refresh_ui()
     itm.IconButtonLockCold.Checked = locked_state
     itm.IconButtonControls.Checked = controls_state 
     itm.IconButtonChequers.Checked = checker_state
+    itm.IconButtonSliders.Checked = sliders_state
 end
 
 function win.On.Right.Clicked(ev)
@@ -404,7 +404,7 @@ function win.On.IconButtonLUT.Clicked(ev)
     if not viewer then
         return
     end
-    viewer:EnableLUT(set_lut)
+    viewer:EnableLUT(state)
     viewer:Redraw()
 end
 
@@ -426,7 +426,7 @@ function win.On.IconButtonDoD.Clicked(ev)
     if not viewer then
         return
     end
-    viewer:ShowDoD()
+    viewer:ShowDoD(state)
     viewer:Redraw()
 end
 
@@ -439,6 +439,22 @@ function win.On.IconButtonControls.Clicked(ev)
     end
     viewer:ShowControls(state)
     viewer:Redraw()
+end
+
+function win.On.IconButtonSliders.Clicked(ev)
+    state = itm.IconButtonSliders.Checked
+    print('[Sliders][Button State] ', state)
+    if fu.Version == 16 then
+        viewer = view.CurrentViewer
+        if not viewer then
+            return
+        end
+        itm.IconButtonControls.Checked = true
+        viewer:ShowControls(true)
+        viewer:ShowGainGamma(state)
+    else
+        print('this does not work in Fu9')
+    end
 end
 
 function win.On.IconButtonChequers.Clicked(ev)
@@ -464,11 +480,7 @@ function win.On.RefreshButtons.Clicked(ev)
     end
     _init(side)
     _init(side)
-    -- _init('right')
     refresh_ui()
-    -- if viewer then
-    --     _init(side)
-    -- end
 end
 
 -- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
