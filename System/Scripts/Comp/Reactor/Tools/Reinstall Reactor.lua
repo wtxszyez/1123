@@ -1,11 +1,17 @@
 --[[--
-Reinstall Reactor menu item - v2.0 2018-05-21
+Reinstall Reactor menu item - v3 2019-05-23
 By Andrew Hazelden <andrew@andrewhazelden.com>
 --]]--
 
 -- Choose the GitLab based Project ID that should be used to download the "Reactor Installer" Lua script.
 -- Reactor GitLab Project ID
 local reactor_project_id = "5058837"
+
+-- Reactor GitLab Dev Project ID
+-- local reactor_project_id = "4405807"
+
+-- Reactor GitLab Test Repo Project ID
+-- local reactor_project_id = "5273696"
 
 -- The release_mode is used to toggle Reactor between a "public" vs "dev" state.
 -- In the "public" mode a GitLab Token ID is not required.
@@ -36,7 +42,14 @@ end
 local separator = package.config:sub(1,1)
 local local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
 
-local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
+-- Check for a pre-existing PathMap preference
+local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+end
+
+local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 
 local installer_path = app:MapPath("Temp:/Reactor/")
@@ -61,30 +74,15 @@ end
 -- Create the "Reactor:/System/" folder
 bmd.createdir(path)
 
-local config = bmd.readfile(path .. "Reactor.cfg")
-local token = config and config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token
-if not config then
-	-- For now, let's just create a new config file if there's no token.
-	bmd.writefile(path .. "Reactor.cfg", {
-		Repos = {
-			GitLab = {
-				Projects = {
-					Reactor = reactor_project_id,
-				},
-			},
-		},
-		Settings = {
-			Reactor =
-			{
-				Token = "",
-			},
-		},
-	})
+-- Create the "Temp:/Reactor/" folder
+bmd.createdir(installer_path)
 
-	-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
-	if release_mode ~= "public" then
-		error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
-	end
+local config = bmd.readfile(path .. "Reactor.cfg")
+local token = config and ((config.Repos and config.Repos._Core and config.Repos._Core.Token) or (config.Settings and config.Settings.Reactor and config.Settings.Reactor.Token))
+
+-- Skip checking for the GitLab Token ID when Reactor is running in the public mode.
+if not token and release_mode ~= "public" then
+	error("[Reactor Error] No private GitLab token was found in the config file. Please edit " .. path .. "Reactor.cfg and add your token.")
 end
 
 if not local_system then

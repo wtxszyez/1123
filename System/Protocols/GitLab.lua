@@ -1,11 +1,11 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0 2018-05-21
+Reactor Package Manager for Fusion - v3 2019-05-23
 ==============================================================================
 Requires    : Fusion 9.0.2+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
-            : Andrew Hazelden                 [andrew@andrewhazelden]
+            : Andrew Hazelden                 [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -41,109 +41,18 @@ The Resolve "AllData:/Reactor/" PathMap folder location is:
 
 --]]--
 
-local ffi = require "ffi"
-local curl = require "lj2curl"
-local json = require "dkjson"
-
---@todo: remove
-local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
-local atoms_root = reactor_root .. "Atoms/"
-local deploy_root = reactor_root .. "Deploy/"
-local installed_root = deploy_root .. "Atoms/"
-
-local branch = os.getenv("REACTOR_BRANCH")
-if branch == nil then
-	branch = "master"
-end
-
-dprintf = (os.getenv("REACTOR_DEBUG") ~= "true") and function() end or
-function(fmt, ...)
-	-- Display the debug output in the Console tab
-	-- print(fmt:format(...))
-
-	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-	local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
-	local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
-	local reactor_log = reactor_log_root .. "ReactorLog.txt"
-	bmd.createdir(reactor_log_root)
-	log_fp, err = io.open(reactor_log, "a")
-	if err then
-		print("[Log Error] Could not open Reactor.log for writing")
-	else
-		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
-		log_fp:write("\n" .. time_stamp)
-		log_fp:write(fmt:format(...))
-		log_fp:close()
-	end
-end
-
 local gitlab_url = "https://gitlab.com/api/v4/projects/"
 
-local function GetURL(url, do_headers)
-	-- dprintf("[Status] GitLab GetURL('%s')", url)
-	dprintf("[Status] GitLab GetURL('%s')", url:gsub("&private_token=.+", ""))
+local function GetRecentCommitID(repo)
+	local branch = g_Config.Repos[repo].Branch or os.getenv("REACTOR_BRANCH") or "master"
+	local project_url = gitlab_url .. g_Config.Repos[repo].ID
 
-	local body = {}
-	local headers
-
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_URL, url)
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_SSL_VERIFYPEER, 0)
-	curl.curl_easy_setopt(curl_handle, curl.CURLOPT_WRITEFUNCTION, ffi.cast("curl_write_callback",
-		function(buffer, size, nitems, userdata)
-			table.insert(body, ffi.string(buffer, size*nitems))
-			return size*nitems
-		end))
-
-	if do_headers then
-		headers = {}
-		curl.curl_easy_setopt(curl_handle, curl.CURLOPT_HEADERFUNCTION, ffi.cast("curl_write_callback",
-			function(buffer, size, nitems, userdata)
-				table.insert(headers, ffi.string(buffer, size*nitems))
-				return size*nitems
-			end))
+	local token = ""
+	if g_Config.Repos[repo].Token and #g_Config.Repos[repo].Token >= 10 then
+		token = "&private_token=" .. g_Config.Repos[repo].Token
 	end
 
-	local ret = curl.curl_easy_perform(curl_handle)
-
-	return table.concat(body),headers
-end
-
-local function GetJSON(url)
-	local body = GetURL(url)
-
-	return json.decode(body)
-end
-
-local function GetPagedJSON(url)
-	local ret = {}
-
-	repeat
-		local body,headers = GetURL(url, true)
-
-		local data = json.decode(body)
-
-		for i,v in ipairs(data) do
-			table.insert(ret, v)
-		end
-
-		url = nil
-
-		for i,hdr in ipairs(headers) do
-			if hdr:sub(1,5) == "Link:" then
-				local links = {}
-				hdr:gsub('<(.-)>; *rel="(.-)"', function(link,rel) links[rel] = link end)
-
-				url = links.next
-			end
-		end
-	until not url
-
-	return ret
-end
-
-function GetRecentCommitID(project_url, token)
-	local commits = GetJSON(project_url .. "/repository/commits/?per_page=1" .. token)
+	local commits = GetJSON(project_url .. "/repository/commits/?per_page=1&ref_name=" .. branch .. token)
 
 	if commits[1] == nil then
 		dprintf("[Warning] GetRecentCommitID() has a commits[1] value of nil")
@@ -153,39 +62,33 @@ function GetRecentCommitID(project_url, token)
 	return commits[1].id
 end
 
+local function GetAtomList(repo, all)
+	local branch = g_Config.Repos[repo].Branch or os.getenv("REACTOR_BRANCH") or "master"
+	local project_url = gitlab_url .. g_Config.Repos[repo].ID
 
-function GetAtomList(project_url, token)
-	local paths = GetPagedJSON(project_url .. "/repository/tree?per_page=100&path=Atoms&ref=" .. branch .. token)
-	local atoms = {}
+--	msg.Text = "Updating Atom List from "..repo
 
-	if paths then
-		for i,path in ipairs(paths) do
-			if path.type == "tree" then
-				atoms[path.path .. "/" .. path.name .. ".atom"] = true
-			end
-		end
-	end
-	return atoms
-end
-
-local function UpdateAtoms(msg, repo, id, force)
-	local project_url = gitlab_url .. id
-
-	msg.Text = "Updating Atom List from "..repo
-
-	local previd = g_Config.Settings[repo] and g_Config.Settings[repo].PrevCommitID
-	local repo_atoms = atoms_root..repo..'/'
+	local previd = g_Config.Repos[repo] and g_Config.Repos[repo].PrevCommitID
 	local files = {}
 
 	local token = ""
-	if g_Config.Settings[repo].Token ~= nil and string.len(g_Config.Settings[repo].Token) >= 10 then
-		token = "&private_token=" .. g_Config.Settings[repo].Token
+	if g_Config.Repos[repo].Token ~= nil and string.len(g_Config.Repos[repo].Token) >= 10 then
+		token = "&private_token=" .. g_Config.Repos[repo].Token
 	end
 
-	if previd == nil or force then
+	if previd == nil or all then
 		-- initial fetch
-		previd = GetRecentCommitID(project_url, token)
-		files = GetAtomList(project_url, token)
+		previd = GetRecentCommitID(repo)
+
+		local paths = GetPagedJSON(project_url .. "/repository/tree?per_page=100&path=Atoms&ref=" .. branch .. token)
+
+		if paths then
+			for i,path in ipairs(paths) do
+				if path.type == "tree" then
+					table.insert(files, path.path .. "/" .. path.name .. ".atom")
+				end
+			end
+		end
 	else
 		-- update from commits
 		local url = project_url .. "/repository/compare?per_page=100&from=" .. previd .. "&to=" .. branch .. token
@@ -194,15 +97,21 @@ local function UpdateAtoms(msg, repo, id, force)
 
 		local commits = GetJSON(url)
 		if commits.diffs then
+			local temp = {}
 			for i,v in ipairs(commits.diffs) do
 				if v.old_path:sub(-5):lower() == ".atom" then
-					files[v.old_path] = true
+					temp[v.old_path] = true
 				end
 
 				if v.new_path:sub(-5):lower() == ".atom" then
-					files[v.new_path] = true
+					temp[v.new_path] = true
 				end
 			end
+
+			for file,_ in pairs(temp) do
+				table.insert(files, file)
+			end
+
 			previd = commits.commit and commits.commit.id
 		else
 			local msg = "[Warning] Failed to get recent commits from ".. repo .. commits.message and "\n   " .. commits.message or ""
@@ -211,49 +120,36 @@ local function UpdateAtoms(msg, repo, id, force)
 		end
 	end
 
-	bmd.createdir(repo_atoms)
-	for path,_ in pairs(files) do
-		local name = path:gsub(".+/(.+).atom", "%1")
-
-		msg.Text = "Repo ".. repo .. ": Fetching Atom: " .. name
-
-		body = GetURL(project_url .. "/repository/files/" .. EscapeStr(path) .. "/raw?ref=" .. branch .. token)
-
-		SaveFile(repo_atoms .. name .. ".atom", body)
-	end
-
 	if previd then
-		g_Config.Settings[repo] = g_Config.Settings[repo] or {}
-		g_Config.Settings[repo].PrevCommitID = previd
+		g_Config.Repos[repo].PrevCommitID = previd
 	end
+
+	return files
 end
 
-function Init()
-	curl_handle = curl.curl_easy_init()
-end
-
-function CleanUp()
-	curl.curl_easy_cleanup(curl_handle)
-end
-
-function GetFile(path, id, repo)
+local function GetFiles(paths, repo, callbacks, cbdata)
+	local branch = g_Config.Repos[repo].Branch or os.getenv("REACTOR_BRANCH") or "master"
 	local token = ""
-	if g_Config.Settings[repo].Token ~= nil and string.len(g_Config.Settings[repo].Token) >= 10 then
-		token = "&private_token=" .. g_Config.Settings[repo].Token
+	if g_Config.Repos[repo].Token ~= nil and string.len(g_Config.Repos[repo].Token) >= 10 then
+		token = "&private_token=" .. g_Config.Repos[repo].Token
 	end
 
-	local url = gitlab_url .. id .. "/repository/files/" .. EscapeStr(path) .. "/raw?ref=" .. branch .. token
-	return GetURL(url)
+	local project_url = gitlab_url .. g_Config.Repos[repo].ID .. "/repository/files/"
+
+	local urls = {}
+
+	for i,path in ipairs(paths) do
+		urls[i] = project_url .. EscapeStr(path) .. "/raw?ref=" .. branch .. token
+	end
+
+	return GetURLs(urls, false, nil, callbacks, cbdata)
 end
 
 -- Expose our module interface
-mod =
-{
-	Init = Init,
-	CleanUp = CleanUp,
-
-	UpdateAtoms = UpdateAtoms,
-	GetFile = GetFile,
+return {
+	-- Init =
+	-- CleanUp =
+	GetAtomList = GetAtomList,
+	GetFiles = GetFiles,
+	GetRecentCommitID = GetRecentCommitID,
 }
-
-return mod

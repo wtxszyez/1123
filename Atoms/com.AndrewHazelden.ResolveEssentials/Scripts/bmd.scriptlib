@@ -1,0 +1,673 @@
+
+
+-----------------------------------------------------
+-- bmd.scriptlib
+--
+-- $Revision$
+-- Last Modified : $Date$
+-- Description : Common routines used by FuScript
+--
+-----------------------------------------------------
+
+
+bmd = bmd or {}  -- namespace that things should be put in
+
+bmd.version = string.sub([[$Revision$]], 12, -2)
+
+
+-----------------------------------------------------
+-- convertIDtoChar(x)
+--
+-- several attrs in DF return ID values which are four
+-- characters combined into a single 32 bit number. To
+-- make life difficult, they are also swapped from
+-- normal reading order. This function decodes them
+-- into a string
+--
+-- introduced Blackmagic.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.convertIDtoChar(x)
+ return string.format("%c%c%c%c", x - floor(x / 256)*256, floor(x / 256) - floor(x / (256*256))*256, floor(x / (256*256)) - floor(x / (256*256*256))*256, floor(x / (256*256*256)))
+end
+
+-----------------------------------------------------
+-- split(strInput, delimit)
+--
+-- converts string strInput into a table, separating
+-- records using the provided delimiter string
+--
+-----------------------------------------------------
+function bmd.split(strInput, delimit)
+	local strLength
+	local strTemp
+	local strCollect
+	local tblSplit
+	local intCount
+
+	tblSplit = {}
+	intCount = 0
+	strCollect = ""
+	if delimit == nil then
+		delimit = ","
+	end
+
+	strLength = string.len(strInput)
+	for i = 1, strLength do
+		strTemp = string.sub(strInput, i, i)
+		if strTemp == delimit then
+			intCount = intCount + 1
+			tblSplit[intCount] = trim(strCollect)
+			strCollect = ""
+		else
+			strCollect = strCollect .. strTemp
+		end
+	end
+	intCount = intCount + 1
+	tblSplit[intCount] = trim(strCollect)
+
+	return tblSplit
+end
+
+-----------------------------------------------------
+-- trim(strTrim)
+--
+-- returns strTrim with leading and trailing spaces
+-- removed.
+--
+-- introduced bmd.dfscriptlib v1.0
+-- last updated in v1.3
+-----------------------------------------------------
+function bmd.trim(strTrim)
+	strTrim = string.gsub(strTrim, "^(%s+)", "") -- remove leading spaces
+	strTrim = string.gsub(strTrim, "(%s+)$", "") -- remove trailing spaces
+	return strTrim
+end
+
+-----------------------------------------------------
+-- GetLoaders(composition)
+--
+-- returns a table of loader tools from the comp
+--
+-- introduced bmd.scriptlib v2.0
+-- last updated in v2.1
+-----------------------------------------------------
+function bmd.GetLoaders(composition)
+	return composition:GetToolList(false, "Loader")
+end
+
+-----------------------------------------------------
+-- GetSavers(composition)
+--
+-- returns a table of saver tools from comp
+--
+-- introduced bmd.dfscriptlib v1.0
+-- last updated in v2.1
+-----------------------------------------------------
+function bmd.GetSavers(composition)
+	return composition:GetToolList(false, "Saver")
+end
+
+
+
+-----------------------------------------------------
+-- fprint(...)
+--
+-- prints a list of arguments, formatted into columns
+--
+-- introduced Blackmagic.dfscriptlib v1.10
+-----------------------------------------------------
+function bmd.fprint(...)
+	local ret = {}
+	for i, v in {...} do
+		v = tostring(v)
+		ret[i] = string.format("%-25.25s", v)
+	end
+	print(unpack(ret))
+end
+
+
+-----------------------------------------------------
+-- isin(t, val)
+--
+-- scans table t and returns true if the string val is
+-- found in the table.
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.isin(t, val)
+	if type(t) == "table" then
+		for i,v in pairs(t) do
+			if (type(v) == "string") and (type(val) == "string") then
+				if string.lower(v) == string.lower(val) then
+					return true
+				end
+			else
+				if v == val then
+					return true
+				end
+			end
+		end
+	end
+
+	return false
+end
+
+-----------------------------------------------------
+-- get_table_index(t, val)
+--
+-- scans table t and returns nil if the string val is
+-- not found in the table. Otherwise returns the index
+-- of the record containing the value.
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.get_table_index(t, val)
+	if type(t) == "table" then
+
+		for i,v in pairs(t) do
+			if string.lower(val) == string.lower(v) then
+				return i
+			end
+		end
+	end
+
+	return nil
+end
+
+------------------------------------------------------------------------------
+-- parseFilename()
+--
+-- this is a great function for ripping a filepath into little bits
+-- returns a table with the following
+--
+-- FullPath	: The raw, original path sent to the function
+-- Path		: The path, without filename
+-- FullName	: The name of the clip w\ extension
+-- Name     : The name without extension
+-- CleanName: The name of the clip, without extension or sequence
+-- SNum		: The original sequence string, or "" if no sequence
+-- Number 	: The sequence as a numeric value, or nil if no sequence
+-- Extension: The raw extension of the clip
+-- Padding	: Amount of padding in the sequence, or nil if no sequence
+-- UNC		: A true or false value indicating whether the path is a UNC path or not
+------------------------------------------------------------------------------
+function bmd.parseFilename(filename)
+	local seq = {}
+	seq.FullPath = filename
+	string.gsub(seq.FullPath, "^(.+[/\\])(.+)", function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, "^(.+)(%..+)$", function(name, ext) seq.Name = name seq.Extension = ext end)
+
+	if not seq.Name then -- no extension?
+		seq.Name = seq.FullName
+	end
+	
+	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	
+	if seq.SNum then
+		seq.Number = tonumber( seq.SNum )
+		seq.Padding = string.len( seq.SNum )
+	else
+		seq.SNum = ""
+		seq.CleanName = seq.Name
+	end
+	
+	if seq.Extension == nil then seq.Extension = "" end
+	seq.UNC = ( string.sub(seq.Path, 1, 2) == [[\\]] )
+	
+	return seq
+end
+
+-----------------------------------------------------
+-- getextension(name)
+--
+-- returns the portion of the filename after the
+-- extension, minus the "."
+--
+-- included for compatibility - use parseFilename instead
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.getextension(filename)
+	local i = ""
+    string.gsub(filename, "%.(.+)$", function(r) i = r end)
+	return i
+end
+
+-----------------------------------------------------
+-- getfilepath(path)
+--
+-- returns the portion of the string path
+-- up to and including the last "\" or "/" in the string
+--
+-- included for compatibility - use parseFilename instead
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.getfilepath(path)
+	for i = string.len(path), 1, -1 do
+		teststring = string.sub(path, i, i)
+		if teststring == "\\" or teststring == "/" then
+			return string.sub(path, 1, i)
+		end
+	end
+end
+
+-----------------------------------------------------
+-- getfilename(path)
+--
+-- returns the portion of the string path after the
+-- last "\" or "/" in the string
+--
+-- included for compatibility - use parseFilename instead
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.getfilename(path)
+
+	for i = string.len(path), 1, -1 do
+		teststring = string.sub(path, i, i)
+		if teststring == "\\" or teststring == "/" then
+			return string.sub(path, i+1)
+		end
+	end
+end
+
+-----------------------------------------------------
+-- trimExtension(path)
+--
+-- returns the portion of the string filename up to
+-- but not including the last "."
+--
+-- included for compatibility - use parseFilename instead
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.trimExtension(filename)
+	for i = string.len(filename), 1, -1 do
+		if string.sub(filename, i, i) == "." then
+			period_loc = i
+			break
+		end
+	end
+
+	return string.sub(filename, 1, period_loc-1)
+
+end
+
+-----------------------------------------------------
+-- trimSequence(path)
+--
+-- given a filename, this function will look for sequence
+-- numbers in the name : e.g. image0001.tga
+-- it returns a string with a copy of the filename minus
+-- any numerical sequence numbers : e.g. image.tga
+--
+-- included for compatibility - use parseFilename instead
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.trimSequence(filename)
+	-- get the name without the extension
+
+	for i = string.len(filename), 1, -1 do
+		if string.sub(filename, i, i) == "." then
+			period_loc = i
+			break
+		end
+	end
+
+	for i = period_loc-1, 1, -1 do
+		if tonumber(string.sub(filename, i, i)) == nil then
+			name_loc = i
+			break
+		end
+	end
+
+	if string.sub(filename, name_loc, name_loc) == "." then
+		name_loc = name_loc - 1
+	end
+
+	return string.sub(filename, 1, name_loc) .. string.sub(filename, period_loc)
+
+end
+
+-----------------------------------------------------
+-- CopyCineonSettings(source, dest)
+--
+-- function removed in bmd.dfscriptlib 1.3
+-- it was too specific to belong here.
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+function bmd.CopyCineonSettings(source, dest)
+	error("this function has been removed from bmd.scriptlib. Please contact tech@blackmagicdesign.com if you need a copy of the function for a script you are using.")
+end
+
+-----------------------------------------------------
+-- printf(...)
+--
+-- emulates the c function printf
+--
+-- introduced bmd.dfscriptlib v1.0
+-----------------------------------------------------
+-- global function
+function globals.printf(fmt, ...)
+    print(fmt:format(...))
+end
+
+-----------------------------------------------------
+-- pathIsMovieFormat(path)
+--
+-- Indicates whether a path's extension is a movie
+-- format.
+--
+-- introduced bmd.scriptlib v2.0
+-----------------------------------------------------
+
+function bmd.pathIsMovieFormat(path)
+	local extension = getextension(path)
+	if extension ~= nil then
+		if		( extension == ".avi" ) or ( extension == ".vdr" ) or ( extension == "wav" ) or
+				( extension == ".dvs" ) or
+				( extension == ".fb"  ) or
+				( extension == ".omf" ) or ( extension == ".omfi" ) or
+				( extension == ".stm" ) or
+				( extension == ".tar" ) or
+				( extension == ".vpv" ) or
+				( extension == ".mov" ) then
+			return true
+		end
+	end
+	return false
+end
+
+------------------------------------------------------------------------------
+-- SV_GetFrames(sv)
+--
+-- This function takes a Saver and returns a table containing the names of
+-- the frames the saver will actually output. If the tool provided is not a
+-- saver or the saver has never been set up then the return value is nil.
+--
+-- introduced bmd.dfscriptlib v1.3
+------------------------------------------------------------------------------
+function bmd.SV_GetFrames(sv)
+
+	local fla = sv.Composition:GetAttrs()
+
+   if sv.ID ~= "Saver" then
+		return nil, "The tool "..sv.Name.." is not a Saver tool."
+	end
+
+	if sv.Normal[fu.TIME_UNDEFINED] == 1 then
+		return nil, sv.Name.." is set to 2:3 pulldown. This function does not support pulldown."
+	end
+
+	-- its safe to assume [0] for Clipname since savers have no cliplists
+	local sv_file = sv.Clip[0]
+
+	if sv_file == "" then
+		return nil, sv.Name.." does not yet have a filename to save to."
+	end
+
+	-- multiframe clips only have one filename
+	if pathIsMovieFormat (sv.Clip[0]) == true then
+		return {sv_file}
+	end
+
+	local seq = bmd.parseFilename(sv_file)
+
+	-- Saver has a control to force the starting sequence number.
+	if sv.SetSequenceStart[fu.TIME_UNDEFINED] == 0 then
+		start = fla.COMPN_RenderStart
+	else
+		start = sv.SequenceStartFrame[fu.TIME_UNDEFINED]
+					+ fla.COMPN_RenderStart
+					- fla.COMPN_GlobalStart
+	end
+
+	local length = fla.COMPN_RenderEnd - fla.COMPN_RenderStart
+
+	if seq.Padding == nil then
+	   -- never rendered, no numbering provided assume default fusion padding
+		seq.Padding = 4
+	end
+
+	local files = {}
+	for i = start, start + length do
+	   table.insert(files, seq.Path..seq.CleanName..string.format("%0"..seq.Padding.."d", i)..seq.Extension)
+	end
+	return files
+
+end
+
+------------------------------------------------------------------------------
+-- LD_GetFrames(ld)
+--
+-- This function takes a Loader and returns a table containing the names of
+-- the files the loader will actually load from disk. If the tool provided is not a
+-- loader or the loader has never been set up return value is nil.
+--
+-- introduced bmd.dfscriptlib v1.3
+------------------------------------------------------------------------------
+function bmd.LD_GetFrames(ld)
+	lda = ld:GetAttrs()
+
+	-- is it a loader?
+	if ld.ID ~= "Loader" then
+		return nil, "The tool "..ld.Name.." is not a Loader tool."
+	end
+
+	if ld.ImportMode[fu.TIME_UNDEFINED] ~= 0 then
+		return nil, "The tool "..ld.Name.." is set to pulldown or pullup. This function does not support these import modes."
+	end
+
+	if not lda.TOOLST_Clip_Name then
+		return nil, "The tool "..ld.Name.." is not set up yet, the Loader is empty."
+	end
+
+	frames = {}
+
+	for i, v in lda.TOOLST_Clip_Name do
+
+		if lda.TOOLBT_Clip_IsMultiFrame[i] == 1 then
+			table.insert(frames, v)
+		else
+
+			seq = bmd.parseFilename(v)
+			if seq.Padding == nil then
+				table.insert(frames, v )
+			else
+				for x = lda.TOOLIT_Clip_TrimIn[i], lda.TOOLIT_Clip_TrimOut[i] do
+					frame = lda.TOOLIT_Clip_InitialFrame[i] + x
+					table.insert(frames, seq.Path..seq.CleanName..string.format("%0"..seq.Padding.."d", frame)..seq.Extension )
+				end
+			end
+
+		end
+
+	end
+
+	return frames
+
+end
+
+------------------------------------------------------------------------------
+-- FUNCTION copyfile()
+-- copy file from src_path to dest_path
+------------------------------------------------------------------------------
+function bmd.copyfile(src_path, dest_path)
+	local read_size = 65536
+
+	src, errMsg = io.open(src_path, "rb")
+	if src == nil then
+		return 0, "SOURCE : "..errMsg
+	end
+
+	local size = src:seek("end")
+	src:seek("set")
+
+	dest, errMsg = io.open(dest_path, "wb")
+	if dest == nil then
+		return 0, "DEST : "..errMsg
+	end
+
+	src_data = src:read(read_size)
+	repeat
+		dest:write(src_data)
+		src_data = src:read(read_size)
+	until src_data == nil
+
+	src:close()
+	dest:close()
+	return size
+end
+
+
+function is_console_script(dotool)
+	if not fusion then
+		fusion = Fusion()
+		if fusion == nil then error("Could not connect to Fusion") end
+		composition = fusion:GetCurrentComp()
+		if composition == nil then error("Could not connect to Fusion") end
+		if not tool and ( dotool == true ) then
+			tool = fusion:GetCurrentTool()
+			if tool == nil then
+				error("No currently active tool")
+			end
+		end
+		return true
+	else
+		return false
+	end
+end
+
+
+------------------------------------------------------------------------------
+-- MoveClip
+--
+-- This function is used to move a clip and perform the correct order of
+-- operations to preserve trimming.
+--
+-- introduced bmd.scriptlib v2.02
+------------------------------------------------------------------------------
+
+function bmd.MoveClip(loader, oldstart, newstart)
+    -- Remember clip trimming values
+    local globalin    = loader.GlobalIn[oldstart]
+    local globalout   = loader.GlobalOut[oldstart]
+    local clipstart   = loader.ClipTimeStart[oldstart]
+    local clipend     = loader.ClipTimeEnd[oldstart]
+    local extfirst    = loader.HoldFirstFrame[oldstart]
+    local extlast     = loader.HoldLastFrame[oldstart]
+
+    local len = globalout - globalin + 1
+
+    if newstart > oldstart then -- Moving forwards
+        loader.GlobalOut[oldstart] = newstart + len - 1
+        loader.GlobalIn[oldstart] = newstart
+    else -- Moving Backwards
+        loader.GlobalIn[oldstart] = newstart
+        loader.GlobalOut[newstart] = newstart + len - 1
+    end
+
+    -- Now fix our trimming
+    loader.ClipTimeStart[newstart]     = clipstart
+    loader.ClipTimeEnd[newstart]     = clipend
+    loader.HoldFirstFrame[newstart]  = extfirst
+    loader.HoldLastFrame[newstart]   = extlast
+end
+
+
+-- Expose our namespace
+globals.bmd = bmd
+
+-- expose some globals for compatibility :(
+-- bmd.dfscriptlib functions were part of the globals
+-- namespace until version 1.3 of the file.
+-- this allows compatibility with that old method.
+
+globals.convertIDtoChar = bmd.convertIDtoChar
+globals.pathIsMovieFormat = bmd.pathIsMovieFormat
+globals.split = bmd.split
+globals.trim = bmd.trim
+globals.GetLoaders = bmd.GetLoaders
+globals.GetSavers = bmd.GetSavers
+globals.isin = bmd.isin
+globals.get_table_index = bmd.get_table_index
+globals.getextension = bmd.getextension
+globals.getfilepath = bmd.getfilepath
+globals.getfilename = bmd.getfilename
+globals.trimExtension = bmd.trimExtension
+globals.trimSequence = bmd.trimSequence
+globals.CopyCineonSettings = bmd.CopyCineonSettings
+globals.MoveClip = bmd.MoveClip
+
+-- some legacy compatibility
+eyeon = bmd
+globals.eyeon = bmd
+
+-----------------------------------------------------
+-- prefLib
+--
+-- $Revision$
+-- Last Modified : $Date$
+-- Description : Script Library that gives a standard
+-- way to write out preferences for scripts.
+--
+-----------------------------------------------------
+
+
+prefLib = {}
+
+------------------------------------------------------------------------------
+-- doPrefs (scriptName,readPrefs,developer,tPrefs)
+--
+-- scriptName = String Value, required -- set to the name of the script, ideally
+-- readPrefs = Boolean Value, required -- whether you are reading or writing values, true if read
+-- developer = String Value, optional -- used to keep the preferences folders
+-- from being unwieldly.  Pass nil if you want it in the root.
+-- tPrefs = Table value, required if writing -- table of values that relate
+-- to preferences for the script.
+--
+-- This function is used to read and write functions to the ScriptPrefs file
+-- that you'll be writing out.  The goal was to create a template for people
+-- to work from so that it follows the 'rules' associated with Fusion profiles,
+-- given that these rules can sometimes be a bit complex (using environment
+-- variables, etc.).
+--
+------------------------------------------------------------------------------
+
+function prefLib.doPrefs(scriptName,readPrefs,developer,tPrefs)
+	if not scriptName then
+		error("ERROR: You did not specify a scriptName.")
+	end
+
+	developer = developer and developer.."\\" or ""
+
+	local f_dir = os.getenv("FUSION_PROFILE_DIR") or fusion:MapPath("Profiles:\\")
+	local profileName = os.getenv("FUSION_PROFILE") or "Default"
+
+	if f_dir:sub(-1)=="\\" then
+		f_dir = f_dir:sub(1, -2)
+	end
+
+	local prefDir = f_dir.."\\"..profileName.."\\ScriptPrefs\\"..developer
+	local prefFile = prefDir .. scriptName..".ScriptPrefs"
+
+	if not bmd.direxists(prefDir) then
+		bmd.createdir(prefDir)
+	end
+
+	if readPrefs then
+		return bmd.readfile(prefFile)
+	else
+		if type(tPrefs) == "table" then
+			bmd.writefile(prefFile, tPrefs)
+		else
+			error("ERROR: This function requires a table.")
+		end
+	end
+end
+
+-- Push the table to the globals environment.
+globals.prefLib = prefLib

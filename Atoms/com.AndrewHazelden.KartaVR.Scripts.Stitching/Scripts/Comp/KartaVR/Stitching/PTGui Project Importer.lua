@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Project Importer v4.0.1 2019-01-01
+PTGui Project Importer v4.0.2 2019-04-28
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -3867,6 +3867,9 @@ function AddImageNodes()
 	-- Add the new loader nodes to the system clipboard buffer
 	print('[Copying Loader Nodes to Clipboard]')
 	CopyToClipboard(loaderNodes)
+	
+	-- Paste the result:
+	comp:Paste()
 end
 
 -- ------------------------------------
@@ -3897,7 +3900,7 @@ function Main()
 	-- ------------------------------------
 	
 	-- PTGui Project File - use the comp path as the default starting value if the preference doesn't exist yet
-	ptguiFile = comp:MapPath(getPreferenceData('KartaVR.PTGuiImporter.File', compPath, printStatus))
+	ptguiFile = gPTGuiImporterFile or comp:MapPath(getPreferenceData('KartaVR.PTGuiImporter.File', compPath, printStatus))
 	xRotation = getPreferenceData('KartaVR.PTGuiImporter.XRotation', 0, printStatus)
 	yRotation = getPreferenceData('KartaVR.PTGuiImporter.YRotation', 0, printStatus)
 	zRotation = getPreferenceData('KartaVR.PTGuiImporter.ZRotation', 0, printStatus)

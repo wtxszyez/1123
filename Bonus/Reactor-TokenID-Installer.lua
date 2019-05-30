@@ -1,9 +1,9 @@
-_VERSION = [[Version 1.1 - May 15, 2018]]
-_REPO_EDITION = [[Install Reactor TokenID Edition]]
+_VERSION = [[Version 3 - May 23, 2019]]
+_REPO_EDITION = [[Install Reactor TokenID Edition v3]]
 _TOKENID_PRESET = [[]]
 --[[
 ==============================================================================
-Reactor TokenID Installer - v1.1 2018-05-15
+Reactor TokenID Installer - v3 2019-05-23
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created By  : Andrew Hazelden[andrew@andrewhazelden.com]
@@ -29,15 +29,15 @@ Step 1. Drag the Reactor-Installer.lua script from a folder on your desktop into
 
 Step 2. You need to paste your GitLab "Personal Access Token" code into the "Token ID" field in the installer window. This will give you access to the GitLab Reactor development repository
 
-Step 3. On Fusion 9 you would click the "Install and Relaunch" button. On Resolve 15 you would click the "Install and Launch" button.
+Step 3. On Fusion 9+ you would click the "Install and Relaunch" button. On Resolve 15+ you would click the "Install and Launch" button.
 
-On Fusion 9 the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+On Fusion 9+ the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
 
 The GitLab access token string is then written into a new "AllData:Reactor:/System/Reactor.cfg" file that is used to control what GitLab repositories are used with Reactor.
 
 When the installer finishes, Fusion will restart automatically and the Reactor Package Manager is ready for use. :D
 
-On Resolve 15 the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
+On Resolve 15+ the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
 
 Step 4. When you open the Reactor Package Manager window in the future using the Reactor > Open Reactor... menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool.
 
@@ -124,6 +124,19 @@ if branch == nil then
 	branch = "master"
 end
 
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
+
+-- Check for a pre-existing PathMap preference
+local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
+end
+
+-- Default Reactor install location
+local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+
 -- Minimum version of Fusion required to run Reactor
 local reactorMinVersion = 9.02
 
@@ -187,6 +200,27 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 			errwin:Hide()
 			exit()
 			return
+		elseif table.concat(body) == [[{"error":"invalid_token","error_description":"Token was revoked. You have to re-authorize from the user."}]] then
+			text = "[Error]\nYour GitLab TokenID has been revoked. Please enter a new TokenID value in your Reactor.cfg file, or switch to the Reactor Public repo and remove your existing Reactor.cfg file.\n"
+			errwin,erritm = ErrorWin("Installation Error", text)
+			win:Hide()
+			errwin:Hide()
+			exit()
+			return
+		elseif table.concat(body) == [[{"message":"404 Commit Not Found"}]] then
+			text = "[Error]\nGitLab Previous CommitID Empty Error. Please remove your existing Reactor.cfg file and try again. Alternativly, you may have a REACTOR_BRANCH environment variable active and it is requesting a branch that does not exist.\n"
+			errwin,erritm = ErrorWin("Installation Error", text)
+			win:Hide()
+			errwin:Hide()
+			exit()
+			return
+		elseif table.concat(body) == [[{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token.","scope":"api"}]] then
+			text = "[Error]\nGitLab TokenID Permissions Scope Error. Your current GitLab TokenID privileges do not grant you access to this repository.\n"
+			errwin,erritm = ErrorWin("Installation Error", text)
+			win:Hide()
+			errwin:Hide()
+			exit()
+			return
 		end
 
 		-- Save file to disk
@@ -215,7 +249,6 @@ function Install(token)
 	-- ==============================================================================
 	-- Setup the installation variables
 	-- ==============================================================================
-	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 	local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 
 	local fuURL = "https://gitlab.com/api/v4/projects/" .. reactor_project_id .. "/repository/files/Reactor%2Efu/raw?ref=" .. branch .. "&private_token=" .. token
@@ -234,7 +267,7 @@ function Install(token)
 	-- ==============================================================================
 	-- Create the installer progress window
 	-- ==============================================================================
-
+	
 	-- Number of steps in the HTML progress bar
 	totalSteps = 8
 
@@ -253,15 +286,19 @@ function Install(token)
 	local autorunComp = ''
 	local compFile = nil
 
-	-- Fusion Standalone is running (Skip this step on Resolve 15+)
-	if fuVersion < 15 then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+		-- Resolve 15+ is running
+		comp:Print("\n")
+	else
+		-- Fusion Standalone is running (Skip this step on Resolve 15+)
+
 		-- ==============================================================================
 		-- Download Reactor.fu
 		-- ==============================================================================
 		local req = ezreq(fuURL)
 		statusMsg = "[Download URL]\n" .. tostring(fuURL) .. "\n"
 		DownloadURL(fuURL, fuDestFile, "Reactor.fu", msgwin, msgitm, "Installation Status", statusMsg, 2, totalSteps, 1)
-
+	
 		-- ==============================================================================
 		-- Create AutorunReactor.comp
 		-- The comp file triggers AutorunReactor.lua to run in Fusion (Free) / Fusion Studio
@@ -295,19 +332,27 @@ function Install(token)
 	-- Create Reactor.cfg
 	-- ==============================================================================
 	local cfgFile = io.open(cfgDestFile, "w")
-	if cfgFile ~= nil then
+	if cfgFile then
 		cfgFile:write([[
 {
 	Repos = {
-		GitLab = {
-			Projects = {
-				Reactor = "]] .. reactor_project_id .. [[",
-			},
+		_Core = {
+			Protocol = "GitLab",
+			ID = ]] .. reactor_project_id .. [[,
+		},
+		Reactor = {
+			Protocol = "GitLab",
+			ID = ]] .. reactor_project_id .. [[,
 		},
 	},
 	Settings = {
 		Reactor = {
+			AskForInstallScriptPermissions = true,
+			LiveSearch = true,
+			MarkAsNew = true,
+			NewForDays = 7,
 			Token = "]] .. token .. [[",
+			ViewLayout = "Balanced View",
 		},
 	},
 }
@@ -332,8 +377,22 @@ function Install(token)
 	statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath) .. "\n"
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 7, totalSteps, statusDelay*2)
 	bmd.openfileexternal("Open", sysPath)
+	
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+		-- Resolve 15+ is running
+		comp:Print("\n")
 
-	if fuVersion < 15 then
+		-- ==============================================================================
+		-- Open the Reactor GUI - Run the script Temp:/Reactor/AutorunReactor.lua
+		-- ==============================================================================
+
+		ProgressWinUpdate(msgwin, msgitm, "Installation Complete", "Opening Reactor...", 8, totalSteps, statusDelay)
+
+		-- Hide the progress window
+		msgwin:Hide()
+
+		ldofile(autorunLuaDestFile)
+	else
 		-- Fusion Standalone is running (Skip the restarting step on Resolve 15+)
 
 		-- ==============================================================================
@@ -357,28 +416,15 @@ function Install(token)
 		else
 			comp:Print("[Launch Command Error] Fusion program filename is nil\n")
 		end
-
+		
 		-- Start up a new instance of Fusion
 		os.execute(command)
-
+	
 		-- Hide the progress window
 		msgwin:Hide()
 
 		-- Quit the current Fusion session
 		fusion:Quit()
-	else
-		-- Resolve 15+ is running
-
-		-- ==============================================================================
-		-- Open the Reactor GUI - Run the script Temp:/Reactor/AutorunReactor.lua
-		-- ==============================================================================
-
-		ProgressWinUpdate(msgwin, msgitm, "Installation Complete", "Opening Reactor...", 8, totalSteps, statusDelay)
-
-		-- Hide the progress window
-		msgwin:Hide()
-
-		ldofile(autorunLuaDestFile)
 	end
 end
 
@@ -431,14 +477,13 @@ function InstallReactorWin(defaultToken)
 	local logoSize = {80,80}
 
 	-- Install button label
-	local fuVersion = tonumber(eyeon._VERSION)
 	local installLabel = "Install and Relaunch"
-	if fuVersion >= 15 then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
 		installLabel = "Install and Launch"
 	end
 
 	-- Configure the window Size
-	local originX, originY, width, height = 450, 300, 550, 140
+	local originX, originY, width, height = 450, 300, 550, 150
 	-- Create the new UI Manager Window
 	local win = disp:AddWindow({
 		ID = "InstallReactorWin",
@@ -497,9 +542,6 @@ function InstallReactorWin(defaultToken)
 								AlignHCenter = true,
 								AlignVCenter = true,
 							},
-							--Font = ui:Font{
-							--	PixelSize = 14,
-							--},
 						},
 					},
 				},
@@ -554,6 +596,25 @@ function InstallReactorWin(defaultToken)
 	function win.On.InstallButton.Clicked(ev)
 		comp:Print("[Reactor] Installation Started\n")
 
+		-- Set the customized Reactor PathMap
+		local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+		app:SetPrefs("Global.Paths.Map.Reactor:", reactor_root)
+		local userpath = app:GetPrefs("Global.Paths.Map.UserPaths:")
+		if not userpath:find("Reactor:Deploy") then
+			userpath = userpath .. ";Reactor:Deploy"
+			app:SetPrefs("Global.Paths.Map.UserPaths:", userpath)
+		end
+
+		-- Add a "Reactor:System/Scripts" Scripts PathMap entry
+		local scriptpath = app:GetPrefs("Global.Paths.Map.Scripts:")
+		if not scriptpath:find("Reactor:System/Scripts") then
+			scriptpath = scriptpath .. ";Reactor:System/Scripts"
+			app:SetPrefs("Global.Paths.Map.Scripts:", scriptpath)
+		end
+		app:SavePrefs()
+		
+		comp:Print("[Reactor: PathMap] \"" .. tostring(app:GetPrefs("Global.Paths.Map.Reactor:")) .. "\"\n")
+
 		-- Get the Token ID value from the text field
 		token = tostring(itm.TokenLineEdit.Text)
 		comp:Print("[Reactor TokenID] \"" .. token .. "\"\n")
@@ -591,7 +652,9 @@ function InstallReactorWin(defaultToken)
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
-
+	app:RemoveConfig('InstallReactorWin')
+	collectgarbage()
+	
 	return win,win:GetItems()
 end
 
@@ -654,7 +717,7 @@ function ProgressWinUpdate(win, itm, title, text, progressLevel, progressMax, de
 
 	-- Update the heading Text
 	itm.Title.Text = title .. "\nStep " .. tostring(progressLevel) .. " of " .. tostring(progressMax)
-
+	
 	itm.Message.Text = text
 
 	-- Print the error to the Console tab
@@ -792,7 +855,9 @@ function ErrorWin(title, text)
 
 	disp:RunLoop()
 	win:Hide()
-
+	app:RemoveConfig('errWin')
+	collectgarbage()
+	
 	return win,win:GetItems()
 end
 
@@ -816,7 +881,7 @@ function RequiredTokenWindow(token, originX, originY, installWinHeight)
 
 		ui:VGroup{
 			ID = "root",
-
+			
 			-- Add your GUI elements here:
 			ui:Label{
 				ID = "RequiredTokenLabel",
@@ -827,9 +892,6 @@ function RequiredTokenWindow(token, originX, originY, installWinHeight)
 					AlignHCenter = true,
 					AlignVCenter = true,
 				},
-				-- Font = ui:Font{
-				-- 	PixelSize = 18,
-				-- },
 			},
 
 			ui:Label{
@@ -840,9 +902,6 @@ function RequiredTokenWindow(token, originX, originY, installWinHeight)
 					AlignHCenter = true,
 					AlignVCenter = true,
 				},
-				-- Font = ui:Font{
-				-- 	PixelSize = 14,
-				-- },
 				WordWrap = true,
 				ReadOnly = true,
 				OpenExternalLinks = true,
@@ -890,7 +949,7 @@ function RequiredTokenWindow(token, originX, originY, installWinHeight)
 			CONTROL_F4 = "Execute{ cmd = [[ app.UIManager:QueueEvent(obj, 'Close', {}) ]] }",
 		},
 	})
-
+	
 		-- Print the error to the Console tab
 	if comp ~= nil then
 		comp:Print("[Error] Please create a GitLab Personal Access Token <" .. URL .. "> and enter it in the Install Reactor \"Token ID\" field.\n")
@@ -911,7 +970,7 @@ end
 -- Close all of the Active Comps
 function CloseComps()
 	local openComps = "\n"
-
+	
 	local compList = fu:GetCompList()
 	for i = 1, table.getn(compList) do
 		-- Set cmp to the pointer of the current composite
@@ -962,29 +1021,37 @@ function Main()
 		platform = 'Linux'
 	end
 
-	if math.floor(fuVersion) < 9 and math.floor(fuVersion) ~= 0 then
+	if math.floor(fuVersion) < 9 then
 		-- Fusion 7 or 8 was detected
 		VersionError(fuVersion, reactorMinVersion, platform)
-	elseif fuVersion < reactorMinVersion and math.floor(fuVersion) ~= 0 then
+	elseif fuVersion < reactorMinVersion then
 		-- Fusion 9.00 or 9.01 was detected
 		VersionError(fuVersion, reactorMinVersion, platform)
 	else
-		-- Fusion 9.02+ was detected
+		if fu:GetVersion() and fu:GetVersion()[1] then
+			fuVersion = fu:GetVersion()[1]
+		end
+		
+		-- Resolve 15+ was detected
+		if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+			comp:Print("\n")
+		else
+			-- Close all of the active comps
+			closedLst = CloseComps()
 
-		-- Close all of the active comps
-		-- closedLst = CloseComps()
+			-- Print out a list of the comps that were closed
+			comp:Print(closedLst)
+		end
 
 		-- Print out the script info
 		comp:Print("\n\n[Reactor Installer] " .. tostring(_VERSION) .. "\n")
 		comp:Print("[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n")
 
-		-- Print out a list of the comps that were closed
-		-- comp:Print(closedLst)
-
+		VersionOK(fuVersion, platform)
+		
 		comp:Print("[GitLab Branch] \"" .. tostring(branch) .. "\"\n")
 
 		-- Check Reactor.cfg for an existing GitLab token value
-		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 		local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 		local cfgDestFile = sysPath .. "Reactor.cfg"
 		if eyeon.fileexists(cfgDestFile) then
@@ -1024,7 +1091,7 @@ end
 -- Reactor logo encoded as Base64 content
 -- Example: itm.Logo.HTML = ReactorLogo()
 function ReactorLogo()
-	return [[<center><img src='data:image/png;base64,
+	return [[<center><img width="68" height="68" src='data:image/png;base64,
 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
 '/></center>]]
 end
