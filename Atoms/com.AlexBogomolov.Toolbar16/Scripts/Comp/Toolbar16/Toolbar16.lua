@@ -10,6 +10,7 @@ Web: www.andrewhazelden.com
      https://paypal.me/aabogomolov
 ]]
 
+show_on_top = false
 
 function _init(side)
     view = get_viewer(side)
@@ -19,11 +20,14 @@ function _init(side)
         print('Load any 2D tool to the '.. side ..' viewer')
         return nil
     end
-    controls_state = viewer:AreControlsShown()
     locked_state = view:GetLocked()
+    multiview_state = view:ShowingQuadView()
+    stereo_state = view:IsStereoEnabled()
+    controls_state = viewer:AreControlsShown()
+    guides_state = viewer:AreGuidesShown()
     lut_state = viewer:IsLUTEnabled()
     roi_state = viewer:IsEnableRoI()
-    stereo_state = view:IsStereoEnabled()
+
 
     if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
         dod_state = viewer:IsDoDShown()
@@ -69,7 +73,7 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
+        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = show_on_top},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -83,6 +87,26 @@ function show_ui()
                     Weight = 0.8,
                     ui.HGap(0.25,0),
                     ui:Button{
+                        ID = 'IconButtonGuides',
+                        Text = '',
+                        Flat = true,
+                        IconSize = {16,16},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Guides.png'},
+                        MinimumSize = iconsMedium,
+                        Checkable = true,
+                        Checked = guides_state 
+                    },
+                    ui:Button{
+                        ID = 'IconButtonMultiView',
+                        Text = '',
+                        Flat = true,
+                        IconSize = {16,16},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_MultiView.png'},
+                        MinimumSize = iconsMedium,
+                        Checkable = true,
+                        Checked = multiview_state 
+                    },
+                    ui:Button{
                         ID = 'IconButtonZoom',
                         Text = '100%',
                         Flat = true,
@@ -95,7 +119,7 @@ function show_ui()
                         Text = 'Fit',
                         IconSize = {6,2},
                         Flat = true,
-                        MinimumSize = iconsMediumLong,
+                        MinimumSize = {28,26},
                         Checkable = false,
                     },
                     ui:Button{
@@ -168,8 +192,7 @@ function show_ui()
                         ID = 'IconButtonLUT',
                         Text = 'LUT',
                         Flat = true,
-                        IconSize = {5,10},
-                        MinimumSize = iconsMediumLong,
+                        MinimumSize = {30,16},
                         Checkable = true,
                         Checked = lut_state
                     },
@@ -177,8 +200,7 @@ function show_ui()
                         ID = 'IconButtonROI',
                         Text = 'RoI',
                         Flat = true,
-                        IconSize = {5,10},
-                        MinimumSize = iconsMediumLong,
+                        MinimumSize = {30,16},
                         Checkable = true,
                         Checked = roi_state 
                     },
@@ -221,13 +243,6 @@ function show_ui()
                         Checkable = true,
                         Checked = checker_state
                     },
-                    -- ui:Button{
-                    --     ID = 'IconButtonSmR',
-                    --     Text = 'SmR',
-                    --     Flat = true,
-                    --     MinimumSize = iconsMediumLong,
-                    --     Checkable = true,
-                    -- },
                     -- ui:Button{
                     --     ID = 'IconButtonOne2One',
                     --     Flat = true,
@@ -287,7 +302,7 @@ function show_ui()
                         ID = 'CloseButton',
                         Text = 'Close',
                         Flat = false,
-                        IconSize = {32,16},
+                        MinimumSize = {40,16},
                         Checkable = false
                     },
                     ui.HGap(0.25,0),
@@ -301,8 +316,8 @@ end
 
 win = show_ui()
 
-
 -- The window was closed
+
 function win.On.ToolbarWin.Close(ev)
     disp:ExitLoop()
 end
@@ -312,6 +327,7 @@ function win.On.CloseButton.Clicked(ev)
 end
 
 -- Add your GUI element based event functions here:
+
 itm = win:GetItems()
 
 function refresh_ui()
@@ -323,6 +339,8 @@ function refresh_ui()
     itm.IconButtonControls.Checked = controls_state 
     itm.IconButtonChequers.Checked = checker_state
     itm.IconButtonSliders.Checked = sliders_state
+    itm.IconButtonGuides.Checked = guides_state
+    itm.IconButtonMultiView.Checked = multiview_state
 end
 
 function win.On.Right.Clicked(ev)
@@ -330,12 +348,21 @@ function win.On.Right.Clicked(ev)
     _init('right')
     refresh_ui()
 end
+
 function win.On.Left.Clicked(ev)
     itm.Right.Checked = false
     _init('left')
     refresh_ui()
 end
+
 ---------- set glview attrs
+
+function win.On.IconButtonMultiView.Clicked(ev)
+    state = itm.IconButtonMultiView.Checked
+    print('[Guides] [Button State] ' , state)
+    view:ShowQuadView(state)
+end
+
 function win.On.IconButtonZoom.Clicked(ev)
     state = itm.IconButtonZoom.Checked
     print('[Zoom] is set to 100%')
@@ -397,53 +424,64 @@ function win.On.IconButtonCircle.Clicked(ev)
 end
 
 ------- change view attrs
-function win.On.IconButtonLUT.Clicked(ev)
-    state = itm.IconButtonLUT.Checked
-    print('[LUT][Button State] ', state)
+
+function win.On.IconButtonGuides.Clicked(ev)
+    state = itm.IconButtonGuides.Checked
     viewer = view.CurrentViewer
     if not viewer then
         return
     end
+    viewer:ShowGuides(state)
+    viewer:Redraw()
+    print('[Guides] [Button state] ', state)
+end
+
+function win.On.IconButtonLUT.Clicked(ev)
+    state = itm.IconButtonLUT.Checked
+    viewer = view.CurrentViewer
+    if not viewer then
+        return
+    end
+    print('[LUT][Button State] ', state)
     viewer:EnableLUT(state)
     viewer:Redraw()
 end
 
 function win.On.IconButtonROI.Clicked(ev)
     state = itm.IconButtonROI.Checked
-    print('[ROI][Button State] ', state)
     viewer = view.CurrentViewer
     if not viewer then
         return
     end
+    print('[ROI][Button State] ', state)
     viewer:EnableRoI(state)
     viewer:Redraw()
 end
 
 function win.On.IconButtonDoD.Clicked(ev)
     state = itm.IconButtonDoD.Checked
-    print('[DoD][Button State] ', state)
     viewer = view.CurrentViewer
     if not viewer then
         return
     end
+    print('[DoD][Button State] ', state)
     viewer:ShowDoD(state)
     viewer:Redraw()
 end
 
 function win.On.IconButtonControls.Clicked(ev)
     state = itm.IconButtonControls.Checked
-    print('[Controls][Button State] ', state)
     viewer = view.CurrentViewer
     if not viewer then
         return
     end
+    print('[Controls][Button State] ', state)
     viewer:ShowControls(state)
     viewer:Redraw()
 end
 
 function win.On.IconButtonSliders.Clicked(ev)
     state = itm.IconButtonSliders.Checked
-    print('[Sliders][Button State] ', state)
     if fu.Version == 16 then
         viewer = view.CurrentViewer
         if not viewer then
@@ -452,6 +490,7 @@ function win.On.IconButtonSliders.Clicked(ev)
         itm.IconButtonControls.Checked = true
         viewer:ShowControls(true)
         viewer:ShowGainGamma(state)
+        print('[Sliders][Button State] ', state)
     else
         print('this does not work in Fu9')
     end
@@ -459,7 +498,6 @@ end
 
 function win.On.IconButtonChequers.Clicked(ev)
     state = itm.IconButtonChequers.Checked
-    print('[Chequers][Button State] ', state)
     if fu.Version == 16 then
         viewer = view.CurrentViewer
         if not viewer then
@@ -467,6 +505,7 @@ function win.On.IconButtonChequers.Clicked(ev)
         end
         viewer:EnableChecker(state)
         viewer:Redraw()
+        print('[Chequers][Button State] ', state)
     else
         print('this does not work in Fu9')
     end
