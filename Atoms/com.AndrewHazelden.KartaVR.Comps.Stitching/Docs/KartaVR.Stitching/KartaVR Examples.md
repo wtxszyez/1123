@@ -32,7 +32,6 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 - [iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night.zip (465 MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/iZugar-Z3X-3-Camera-Rig-Indoor-Room-Night.zip)
 - [Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo.zip (30.5MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo.zip)
 - [Powers-Lake-3603D-Fusion-9.zip (3.2GB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/Powers-Lake-3603D-Fusion-9.zip)
-- [West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip (73MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/z360/West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip)
 - [Tiny-Planet-UV-Pass-Warp.zip (59.8MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/Tiny-Planet-UV-Pass-Warp.zip)
 
 ### Panoramic Stitching Example Projects ###
@@ -45,7 +44,6 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 - [Freedom360 6 Camera Rig](#freedom360-6-camera-rig)
 - [iZugar Z3X 3 Camera Rig Indoor Room Night](#izugar-z3x-3-camera-rig-indoor-room-night)
 - [Sony A7Sii Rig Powers Lake 3603D Stereo](#sony-a7sii-rig-powers-lake-3603d-stereo)
-- [West Dover Forest Z360 Disparity Depth Stitch](#west-dover-forest-z360-disparity-depth-stitch)
 - [Tiny Planet UV Pass Warp](#tiny-planet-uv-pass-warp)
 
 ## Stereo ##
@@ -53,10 +51,14 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 ### Stereo Download Links ###
 
 - [Creating-Stereo-Video-Based-Disparity-Depthmaps.zip (54 MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/Creating-Stereo-Video-Based-Disparity-Depthmaps.zip)
+- [Insta360_Pro_Z360_Stitch.zip (1.7 GB)](http://www.andrewhazelden.com/projects/kartavr/examples/downloads/z360/Insta360-Pro-Z360-Stitch.zip)
+- [West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip (73MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/z360/West-Dover-Forest-Z360-Disparity-Depth-Stitch.zip)
 
 ### Stereo Example Projects ###
 
 - [Creating Stereo Video Based Disparity Depthmaps](#creating-stereo-video-based-disparity-depthmaps)
+- [Insta360 Pro Z360 Depth Stitch](#Insta360-Pro-Z360-Stitch)
+- [West Dover Forest Z360 Disparity Depth Stitch](#west-dover-forest-z360-disparity-depth-stitch)
 
 ## Photogrammetry ##
 
@@ -423,53 +425,6 @@ The example footage was filmed on a Sony A7Sii camera by [Andrew Hazelden](http:
 
 ![Sony A7Sii Rig Powers Lake 3603D Stereo Node](images/Sony-A7Sii-Rig-Powers-Lake-3603D-Stereo-Node.png)
 
-## <a name="west-dover-forest-z360-disparity-depth-stitch"></a> West Dover Forest Z360 Disparity Depth Stitch ##
-
-![West Dover Forest Z360 Disparity Depth Stitch Over/Under](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Z360-Left.jpg)
-
-This example demonstrates a KartaVR workflow for stiching panoramic 360° stereo footage using color + disparity generated depthmap data.
-
-There are macros present in the example comp that show a new "Z360 Stereo" (Z-depth based omni-directional stereo 360°) workflow. Z360 Stereo is a term for converting an over/under style color + depthmap equirectangular image into a regular Over/Under left and right equirectangular stereo view using a depth displacement approach.
-
-This approach provides the freedom to change the IPD value (camera separation) in post so you can completely remap the stereo footage and tune it to have the exact amount of depth you want.
-
-![West Dover Forest Z360 Disparity Depth Stitch Over/Under](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Stereo-OU-Left.jpg)
-
-A set of three stereo pairs of circular fisheye 180° images are imported into the comp using 6 loader nodes
-
-A "FisheyeCropMask" node is applied to each of the loader nodes to smoothly feather the border edges of the fisheye frames so they can be easily blended together. This node has controls for handling the cropped border frame area on the fisheye images where the circular frame of the fisheye image data is clipped by the top and bottom edges of the 16:9 video sensor. This is important to feather out if you want to have an effortless stitch.
-
-Next the images are rotated upright and cropped/padded to a 1:1 aspect ratio.
-
-A panoramic transform is provided by the standard KartaVR "FisheyeStereo2EquirectangularStereo" node to remap the circular fisheye images into a 360x180 equirectangular frame layout. The footage was filmed by rotating the camera on a Nodal Ninja head to three viewing positions using a 120° Y axis (Yaw) rotation values per view. The CameraA footage uses a "FisheyeStereo2EquirectangularStereo" node with a X Rotation value of 0, the CameraB footage has a 240° X Rotation value, and the CameraC footage has a 120° X Rotation value.
-
-Then a set of Disparity > DisparityToZ > CopyAux nodes are used to generate a disparity based z-depth channel for the left and right camera views in each fisheye stereo pair. The output is a set of left and right views that have RGBA, and Z-Depth data.
-
-The depthmap data is merged using a series of ChannelBoolean nodes set to use the Minimum transfer mode which will layer the images so the darkest pixels from the foregound or background input are the elements that are kept when the views are blended together.
-
-The color images are combined using a series of Merge nodes.
-
-To create a high quality stitch the color and depth images have a tripod patching job applied. This paint work is done on a Horizontal Cross cubic image layout.
-
-Finally the footage is stacked into an equirectangular projection based Over/Under frame layout. The color imagery is placed on the top of the frame, and the depth data placed on the bottom of the frame. This frame layout is called "Z360 Stereo" to refer to a z-depth based stereo 360° VR image.
-
-The output from this composite is: a over/under color + depth based z360 image, and an over/under stereo 3D left and right view image generated by the "Z360Stereo" node. 
-
-For convenience there is also an anaglpyh preview created using the KartaVR provided "StereoAnaglyphOU" node which can be viewed in a stereo using a 360° media player like GoPro VR Player with red/cyan based anaglyph 3D glasses on.
-
-The 360VRDolly node can be used to create post-produced omni-directional stereo 3D compatible XYZ translation and rotation effects.
-
-The example footage was filmed on a Sony A7Sii camera by [Andrew Hazelden](http://www.andrewhazelden.com/blog/).
-
-### Source Footage ###
-
-![Sony A7SIi Camera Views](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-2x3-Grid.jpg)
-
-### Fusion Node View ###
-
-![West Dover Forest Z360 Disparity Depth Stitch](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch.png)
-
-
 ## <a name="tiny-planet-uv-pass-warp"></a> Tiny Planet UV Pass Warp ##
 
 ![Tiny Planet UV Pass Warp](images/Tiny-Planet-UV-Pass-Warp.jpg)
@@ -521,6 +476,109 @@ The greyscale depthmap output is then rendered to a TIFF image sequence with LZW
 ### Fusion Node View ###
 
 ![Creating Stereo Video Based Disparity Depthmaps Node](images/creating-stereo-video-based-disparity-depthmaps-node.jpg)
+
+
+## <a name="Insta360-Pro-Z360-Stitch"></a> Insta360 Pro Z360 Depth Stitch ##
+
+This example shows the Fusion based workflow needed to process unstitched Insta360 Pro camera fisheye media from an HDR tonemapped format into a final stitched LatLong Over/Under Color + Depthmap Z360 format.
+
+Footage by [RW Hawkins](http://www.rwcreations.com/).
+
+![Insta360 Pro Z360 Depth Stitch](images/Insta360_Pro_z360.jpg)
+
+
+### Insta360 Pro Input Photos ###
+
+6x 212° FOV Circular Fisheye Views  
+360° / 6 photos = ~60° rotation (pan) per fisheye view  
+
+
+### Workflow Summary ###
+
+**Step 0.** "`0_tonemapping`" Folder
+
+The source media was a bracketed set of images. I HDR merged the bracketed views and tonemapped the result using Photomatix Pro. This was done before the fisheye imagery was brought into Fusion/PTGui.
+
+![PhotomatixPro Batch Bracketing](images/Insta360_Pro_z360_PhotomatixPro_Batch_Bracketing_to_EXR.png)
+![PhotomatixPro_Batch_Tonemapping](images/Insta360_Pro_z360_PhotomatixPro_Batch_Tonemapping_to_Tiff_16_bit.png)
+
+**Step 1.** "`1_uvpass_warp`" Folder 
+
+A UV Pass warping set of templated views was created using KartaVR's "Generate UV Pass in PTGui" script, along with PTGui Pro v10. The UV Pass map was used to output each view in a LatLong image projection format.
+
+![UV Pass](images/Insta360_Pro_z360_1_uvpass.png)
+
+**Step 2.** "`2_disparity_map`" Folder
+
+A set of depthmaps were generated from the Insta360 Pro footage. The result was saved to disk for the "left eye" based disparity mapped views.
+
+![Disparity Map](images/Insta360_Pro_z360_2_disparity_mapping.png)
+
+**Step 3.** "`3_stitch`" Folder
+
+The color and depthmap views were stitched into a LatLong projection based Z360 Stye Over/Under Color + Depth image. This is a 6144x6144px image.
+
+![Stitch](images/Insta360_Pro_z360_3_stitch.png)
+
+**Step 4.** "`4_z360`" Folder
+
+The Z360Stereo node was used to create Stereo left/right eye color views
+from the Z360 stitched panorama. A color stereo version and depthmap stereo version is generated so you can see the results.
+
+![Z360](images/Insta360_Pro_z360_4_z360.png)
+
+Note 1:
+Ideally you would use an Over/Under Color + Depthmap based player on your HMD to view the output of this process so you can have omni-stereo playback in real-time with accurate depth when you roll your head and look around in the scene.
+
+Note 2:
+This was my first time using Insta360 Pro footage in KartaVR for Fusion. I suspect I will re-process this same footage again in the future to see if I can fix some of the disparity mapping/depth shading artifacts that are visible.
+
+
+## <a name="west-dover-forest-z360-disparity-depth-stitch"></a> West Dover Forest Z360 Disparity Depth Stitch ##
+
+![West Dover Forest Z360 Disparity Depth Stitch Over/Under](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Z360-Left.jpg)
+
+This example demonstrates a KartaVR workflow for stiching panoramic 360° stereo footage using color + disparity generated depthmap data.
+
+There are macros present in the example comp that show a new "Z360 Stereo" (Z-depth based omni-directional stereo 360°) workflow. Z360 Stereo is a term for converting an over/under style color + depthmap equirectangular image into a regular Over/Under left and right equirectangular stereo view using a depth displacement approach.
+
+This approach provides the freedom to change the IPD value (camera separation) in post so you can completely remap the stereo footage and tune it to have the exact amount of depth you want.
+
+![West Dover Forest Z360 Disparity Depth Stitch Over/Under](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-Stereo-OU-Left.jpg)
+
+A set of three stereo pairs of circular fisheye 180° images are imported into the comp using 6 loader nodes
+
+A "FisheyeCropMask" node is applied to each of the loader nodes to smoothly feather the border edges of the fisheye frames so they can be easily blended together. This node has controls for handling the cropped border frame area on the fisheye images where the circular frame of the fisheye image data is clipped by the top and bottom edges of the 16:9 video sensor. This is important to feather out if you want to have an effortless stitch.
+
+Next the images are rotated upright and cropped/padded to a 1:1 aspect ratio.
+
+A panoramic transform is provided by the standard KartaVR "FisheyeStereo2EquirectangularStereo" node to remap the circular fisheye images into a 360x180 equirectangular frame layout. The footage was filmed by rotating the camera on a Nodal Ninja head to three viewing positions using a 120° Y axis (Yaw) rotation values per view. The CameraA footage uses a "FisheyeStereo2EquirectangularStereo" node with a X Rotation value of 0, the CameraB footage has a 240° X Rotation value, and the CameraC footage has a 120° X Rotation value.
+
+Then a set of Disparity > DisparityToZ > CopyAux nodes are used to generate a disparity based z-depth channel for the left and right camera views in each fisheye stereo pair. The output is a set of left and right views that have RGBA, and Z-Depth data.
+
+The depthmap data is merged using a series of ChannelBoolean nodes set to use the Minimum transfer mode which will layer the images so the darkest pixels from the foregound or background input are the elements that are kept when the views are blended together.
+
+The color images are combined using a series of Merge nodes.
+
+To create a high quality stitch the color and depth images have a tripod patching job applied. This paint work is done on a Horizontal Cross cubic image layout.
+
+Finally the footage is stacked into an equirectangular projection based Over/Under frame layout. The color imagery is placed on the top of the frame, and the depth data placed on the bottom of the frame. This frame layout is called "Z360 Stereo" to refer to a z-depth based stereo 360° VR image.
+
+The output from this composite is: a over/under color + depth based z360 image, and an over/under stereo 3D left and right view image generated by the "Z360Stereo" node. 
+
+For convenience there is also an anaglpyh preview created using the KartaVR provided "StereoAnaglyphOU" node which can be viewed in a stereo using a 360° media player like GoPro VR Player with red/cyan based anaglyph 3D glasses on.
+
+The 360VRDolly node can be used to create post-produced omni-directional stereo 3D compatible XYZ translation and rotation effects.
+
+The example footage was filmed on a Sony A7Sii camera by [Andrew Hazelden](http://www.andrewhazelden.com/blog/).
+
+### Source Footage ###
+
+![Sony A7SIi Camera Views](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch-2x3-Grid.jpg)
+
+### Fusion Node View ###
+
+![West Dover Forest Z360 Disparity Depth Stitch](images/West-Dover-Forest-Z360-Disparity-Depth-Stitch.png)
 
 # <a name="photogrammetry"></a>Photogrammetry #
 
