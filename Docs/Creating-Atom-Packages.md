@@ -243,6 +243,7 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Testing
 - Tools
 - Tools/3D
+- Tools/Blur
 - Tools/Color
 - Tools/Composite
 - Tools/Creator

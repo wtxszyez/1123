@@ -1,5 +1,5 @@
 -- Atomizer Package Editor menu item
-
+local separator = package.config:sub(1,1)
 -- Check for a pre-existing PathMap preference
 local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
 if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
