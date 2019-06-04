@@ -1,0 +1,467 @@
+{
+	Tools = ordered() {
+		se_Normalator = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				DonateInfo = Input { Value = "Thanks for giving this tool a spin.\nI hope you enjoy using it as much as I enjoyed developing it.\nIf you do so, why not up my motivation to share further developments by buying me a coffee (or anything else up to a swiss chalet)?\nJust click that Donate Button below.\nIt will take you directly to my paypal page.\nCome on...it's easy.\nAnd you will feel so much better afterwards...:-)", },
+				Input2 = InstanceInput {
+					SourceOp = "rotateNormals",
+					Source = "doFloat",
+					Page = "Controls",
+				},
+				Input1 = InstanceInput {
+					SourceOp = "rotateNormals",
+					Source = "Rotate",
+					Page = "Controls",
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "cd1",
+					Source = "Input",
+				},
+				Input3 = InstanceInput {
+					SourceOp = "flipNormals",
+					Source = "FlipHorizontally",
+					Page = "Controls",
+				},
+				Input4 = InstanceInput {
+					SourceOp = "flipNormals",
+					Source = "FlipVertically",
+					Page = "Controls",
+				},
+				Input5 = InstanceInput {
+					SourceOp = "scaleNormals",
+					Source = "NumberIn1",
+					Name = "Scale Normals",
+					Default = 1,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "scaleNormals",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 275, 148.5 } },
+			Tools = ordered() {
+				rotateNormals = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "CustomTool3LUTIn11",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool3LUTIn21",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool3LUTIn31",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool3LUTIn41",
+							Source = "Value",
+						},
+						RedExpression = Input { Expression = "Rotate == 0 and Text(\"r1\") or Rotate == 1 and Text(\"1-g1\") or Rotate == 2 and Text(\"1-r1\") or Text(\"g1\")", },
+						GreenExpression = Input { Expression = "Rotate == 0 and Text(\"g1\") or Rotate == 1 and Text(\"r1\")  or Rotate == 2 and Text(\"1-g1\") or Text(\"1-r1\")", },
+						Image1 = Input {
+							SourceOp = "cd1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 10.15 } },
+					UserControls = ordered() {
+						Rotate = {
+							{ MBTNC_AddButton = "0" },
+							{ MBTNC_AddButton = "90" },
+							{ MBTNC_AddButton = "180" },
+							{ MBTNC_AddButton = "270" },
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "MultiButtonControl",
+							MBTNC_ShowBasicButton = true,
+							INP_MaxScale = 1,
+							ICS_ControlPage = "Controls",
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							MBTNC_ShowName = true,
+							MBTNC_StretchToFit = true,
+							MBTNC_ShowToolTip = false,
+							LINKS_Name = "Rotate"
+						},
+						doFloat = {
+							CBC_TriState = false,
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							INPID_InputControl = "CheckboxControl",
+							LINKS_Name = "Convert to Float16"
+						}
+					}
+				},
+				CustomTool3LUTIn11 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool3LUTIn21 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				CustomTool3LUTIn31 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				CustomTool3LUTIn41 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				},
+				cd1 = ChangeDepth {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Depth = Input { Expression = "rotateNormals.doFloat== 0 and 0 or 3", },
+						Input = Input {
+							SourceOp = "BrightnessContrast1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -165, 10.15 } },
+				},
+				flipNormals = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						ProcessAlpha = Input { Value = 0, },
+						Operation = Input { Value = 10, },
+						ToRed = Input {
+							Value = 4,
+							Expression = "FlipHorizontally == 0 and 4 or 5",
+						},
+						ToGreen = Input {
+							Value = 4,
+							Expression = "FlipVertically == 0 and 4 or 6",
+						},
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "rotateNormals",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 10.15 } },
+					UserControls = ordered() {
+						FlipHorizontally = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "CheckboxControl",
+							INP_MaxScale = 1,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							CBC_TriState = false,
+							ICD_Width = 0.5,
+							LINKS_Name = "Flip Horizontally"
+						},
+						FlipVertically = {
+							ICD_Width = 0.5,
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							CBC_TriState = false,
+							INPID_InputControl = "CheckboxControl",
+							LINKS_Name = "Flip Vertically"
+						}
+					}
+				},
+				scaleNormals = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1_1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1_1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1_1LUTIn4",
+												Source = "Value"
+											},
+											RedExpression = Input { Value = "if (n1>0,((r1-0.5)*abs(n1))+0.5, ((g1-0.5)*abs(n1))+0.5)" },
+											GreenExpression = Input { Value = "if (n1>0,((g1-0.5)*abs(n1))+0.5, ((r1-0.5)*abs(n1))+0.5)" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1_1LUTIn1",
+												Source = "Value"
+											},
+											NumberIn1 = Input { Value = -1 },
+											Image1 = Input {
+												SourceOp = "BrightnessContrast4",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "max(((b1-1)*abs(n1))+1, 0.5)" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1_1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1_1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1_1LUTIn1 = LUTBezier {
+										Name = "CustomTool1_1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1_1LUTIn2 = LUTBezier {
+										Name = "CustomTool1_1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1_1LUTIn3 = LUTBezier {
+										Name = "CustomTool1_1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1_1LUTIn4 = LUTBezier {
+										Name = "CustomTool1_1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1_1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1_1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1_1LUTIn4",
+												Source = "Value"
+											},
+											RedExpression = Input { Value = "if (n1>0,((r1-0.5)*abs(n1))+0.5, ((g1-0.5)*abs(n1))+0.5)" },
+											GreenExpression = Input { Value = "if (n1>0,((g1-0.5)*abs(n1))+0.5, ((r1-0.5)*abs(n1))+0.5)" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1_1LUTIn1",
+												Source = "Value"
+											},
+											NumberIn1 = Input { Value = 1 },
+											Image1 = Input {
+												SourceOp = "BrightnessContrast4",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "max(((b1-1)*abs(n1))+1, 0.5)" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1_1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 660, 115.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1_1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1_1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1_1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1_1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input { Value = 1, },
+						LUTIn1 = Input {
+							SourceOp = "scaleNormalsLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "scaleNormalsLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "scaleNormalsLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "scaleNormalsLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "if (n1>0,((r1-0.5)*abs(n1))+0.5, ((g1-0.5)*abs(n1))+0.5)", },
+						GreenExpression = Input { Value = "if (n1>0,((g1-0.5)*abs(n1))+0.5, ((r1-0.5)*abs(n1))+0.5)", },
+						BlueExpression = Input { Value = "((b1-1)*abs(n1))+1", },
+						Image1 = Input {
+							SourceOp = "flipNormals",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 10.15 } },
+					UserControls = ordered() {
+						ScaleNormals = {
+							INP_Integer = false,
+							LINKS_Name = "Scale Normals",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = -1,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 2,
+							INP_Default = 1,
+						}
+					}
+				},
+				scaleNormalsLUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+				},
+				scaleNormalsLUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+				},
+				scaleNormalsLUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+				},
+				scaleNormalsLUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+				}
+			},
+			UserControls = ordered() {
+				DonateInfo = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					TEC_Wrap = true,
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 10,
+					LINKS_Name = "SirEdric's (experimental) Info",
+				},
+				Donate = {
+					INP_Integer = false,
+					LINKID_DataType = "Number",
+					BTNCS_Execute = "myURL = \"https://www.paypal.me/SirEdric\"\n	if FuPLATFORM_WINDOWS then\n	command = \"explorer \\\"\" .. myURL .. \"\\\"\"\n	elseif FuPLATFORM_MAC then\n	command = \"open \\\"\" .. myURL .. \"\\\" &\"\n	elseif FuPLATFORM_LINUX then\n	command = \"xdg-open \\\"\" .. myURL .. \"\\\" &\"\n	end\n	os.execute(command)",
+					INPID_InputControl = "ButtonControl",
+					LINKS_Name = "Donate",
+				}
+			}
+		}
+	}
+}
