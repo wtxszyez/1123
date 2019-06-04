@@ -1,5 +1,5 @@
 --[[--
-HypertextCompositor - v1.0 2019-05-23
+Hypertext Compositor - v1.0.1 2019-05-24
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -779,7 +779,7 @@ function CreateWebpageEditor()
 			savedFilename = fu:RequestFile(suggestedFolder, suggestedFilename, { FReqB_Saving = true })
 			
 			-- Validate filename has the .htm extension at the end
-			local path, basename = string.match(savedFilename, '^(.+[/\\])(.+)')
+			local path, basename = string.match(savedFilename or '', '^(.+[/\\])(.+)')
 			local name, extension = nil, nil
 			if basename then
 				name, extension = string.match(basename, '^(.+)(%..+)$')
@@ -811,7 +811,7 @@ function CreateWebpageEditor()
 		end
 		
 		-- Push the newly saved filename back in into the path URL field
-		itm.NavigationLineEdit.Text = tostring(savedFilename)
+		itm.NavigationLineEdit.Text = tostring(savedFilename or '')
 	end
 
 -- Open an HTML link when clicked on in the HTML preview zone

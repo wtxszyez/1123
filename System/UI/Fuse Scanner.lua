@@ -1,4 +1,4 @@
-VERSION = 'v2 2018-05-21'
+VERSION = 'v3 2019-05-23'
 --[[--
 Fuse Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>

@@ -31,7 +31,7 @@ After the Conditional fuse has been applied as a modifier you need to define the
 
 The ImageGridCreator fuse is used to generate tiled mosaic images from an image sequence. An image grid is another name for a sprite atlas. This node is handy if you are working with media coming from photogrammetry or lightfield workflows in Fusion.
 
-This node is based upon the MIT open source licensed "hos_Tiler" fuse module from the [We Suck Less GitLab repository](https://gitlab.com/WeSuckLess/Fusion) project.
+This node is based upon the MIT open source licensed "hos_Tiler" fuse module from the [We Suck Less GitLab repository](https://gitlab.com/WeSuckLess/Reactor) project.
 
 To use the ImageGridCreator node you need to connect a "Background" node to the ImageGridCreator.Background input that is the exact image size and bit depth of the final image layout you want to generate.
 
@@ -57,7 +57,7 @@ This is a node view of the node connections that would be used to take an image 
 
 ![ImageGridCreator Node](images/fuse-image-grid-creator-node.png)
 
-**Note:** A sample image grid style photo called "pikachu_13x10_image_grid.jpg" is included with KartaVR in the `Macros:/KartaVR/Images/` folder. This image has a 13 wide by 10 high grid layout of photos that was taken with a regular grid spacing distance when photographed. This sample image is 8320x4270 px in size and has individual 640x427 px image tiles for each of the 130 views that are combined. This image was photographed by [Tobias Chen](http:www.tobiaschen.com).
+**Note:** A sample image grid style photo called "pikachu_13x10_image_grid.jpg" is included with KartaVR in the `Macros:/KartaVR/Images/` folder. This image has a 13 wide by 10 high grid layout of photos that was taken with a regular grid spacing distance when photographed. This sample image is 8320x4270 px in size and has individual 640x427 px image tiles for each of the 130 views that are combined. This image was photographed by [Tobias Chen](http://www.tobiaschen.com).
 
 ## <a name="ImageGridExtractor">ImageGridExtractor</a> ##
 
@@ -83,4 +83,4 @@ This is a node view of the node connections that would be used to take an image 
 
 ![ImageGridCImageGridExtractorreator Node](images/macro-image-grid-extractor-node.png)
 
-**Note:** A sample image grid style photo called "pikachu_13x10_image_grid.jpg" is included with KartaVR in the `Macros:/KartaVR/Images/` folder. This image has a 13 wide by 10 high grid layout of photos that was taken with a regular grid spacing distance when photographed. This sample image is 8320x4270 px in size and has individual 640x427 px image tiles for each of the 130 views that are combined. This image was photographed by [Tobias Chen](http:www.tobiaschen.com).
+**Note:** A sample image grid style photo called "pikachu_13x10_image_grid.jpg" is included with KartaVR in the `Macros:/KartaVR/Images/` folder. This image has a 13 wide by 10 high grid layout of photos that was taken with a regular grid spacing distance when photographed. This sample image is 8320x4270 px in size and has individual 640x427 px image tiles for each of the 130 views that are combined. This image was photographed by [Tobias Chen](http://www.tobiaschen.com).

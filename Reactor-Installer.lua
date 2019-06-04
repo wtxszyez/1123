@@ -1,8 +1,8 @@
-_VERSION = [[Version 2.0 - May 21, 2018]]
-_REPO_EDITION = [[Install Reactor]]
+_VERSION = [[Version 3 - May 27, 2019]]
+_REPO_EDITION = [[Install Reactor v3]]
 --[[
 ==============================================================================
-Reactor Installer - v2.0 2018-05-21
+Reactor Installer - v3 2019-05-27
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created By  : Andrew Hazelden[andrew@andrewhazelden.com]
@@ -32,15 +32,15 @@ Reactor Installer Usage
 
 Step 1. Drag the Reactor-Installer.lua script from your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Nodes" view. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
 
-Step 2. On Fusion 9 you would click the "Install and Relaunch" button. On Resolve 15 you would click the "Install and Launch" button.
+Step 2. On Fusion 9+ you would click the "Install and Relaunch" button. On Resolve 15+ you would click the "Install and Launch" button.
 
-On Fusion 9 the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+On Fusion 9+ the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
 
 The GitLab access token string is then written into a new "AllData:Reactor:/System/Reactor.cfg" file that is used to control what GitLab repositories are used with Reactor.
 
 When the installer finishes, Fusion will restart automatically and the Reactor Package Manager is ready for use. :D
 
-On Resolve 15 the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
+On Resolve 15+ the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
 
 Step 3. When you open the Reactor Package Manager window in the future using the Reactor > Open Reactor... menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool.
 
@@ -126,6 +126,19 @@ local branch = os.getenv("REACTOR_BRANCH")
 if branch == nil then
 	branch = "master"
 end
+
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
+
+-- Check for a pre-existing PathMap preference
+local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
+end
+
+-- Default Reactor install location
+local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 
 -- Minimum version of Fusion required to run Reactor
 local reactorMinVersion = 9.02
@@ -239,7 +252,6 @@ function Install(token)
 	-- ==============================================================================
 	-- Setup the installation variables
 	-- ==============================================================================
-	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 	local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 
 	local fuURL = "https://gitlab.com/api/v4/projects/" .. reactor_project_id .. "/repository/files/Reactor%2Efu/raw?ref=" .. branch .. "&private_token=" .. token
@@ -277,7 +289,7 @@ function Install(token)
 	local autorunComp = ''
 	local compFile = nil
 
-	if fuVersion >= 15 then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
 		-- Resolve 15+ is running
 		comp:Print("\n")
 	else
@@ -327,15 +339,23 @@ function Install(token)
 		cfgFile:write([[
 {
 	Repos = {
-		GitLab = {
-			Projects = {
-				Reactor = "]] .. reactor_project_id .. [[",
-			},
+		_Core = {
+			Protocol = "GitLab",
+			ID = ]] .. reactor_project_id .. [[,
+		},
+		Reactor = {
+			Protocol = "GitLab",
+			ID = ]] .. reactor_project_id .. [[,
 		},
 	},
 	Settings = {
 		Reactor = {
+			AskForInstallScriptPermissions = true,
+			LiveSearch = true,
+			MarkAsNew = true,
+			NewForDays = 7,
 			Token = "]] .. token .. [[",
+			ViewLayout = "Balanced View",
 		},
 	},
 }
@@ -361,7 +381,7 @@ function Install(token)
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 7, totalSteps, statusDelay*2)
 	bmd.openfileexternal("Open", sysPath)
 
-	if fuVersion >= 15 then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
 		-- Resolve 15+ is running
 		comp:Print("\n")
 
@@ -461,7 +481,7 @@ function InstallReactorWin()
 
 	-- Install button label
 	local installLabel = "Install and Relaunch"
-	if fuVersion >= 15 then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
 		installLabel = "Install and Launch"
 	end
 
@@ -536,7 +556,14 @@ function InstallReactorWin()
 						Weight = 0,
 
 						-- Add a horizontal spacer
-						ui:HGap(0, 2.0),
+						-- ui:HGap(0, 2.0),
+						ui:HGap(0, 1.0),
+
+						-- Custom Install Path Button
+						ui:Button{
+							ID = "CustomButton",
+							Text = "Custom Install Path",
+						},
 
 						-- Install and Relaunch Button
 						ui:Button{
@@ -558,9 +585,38 @@ function InstallReactorWin()
 		disp:ExitLoop()
 	end
 
+		-- The Custom Install Path button was clicked
+	function win.On.CustomButton.Clicked(ev)
+		comp:Print("[Reactor] Custom Install Path\n")
+		local selected_path = tostring(fu:RequestDir(reactor_pathmap) or reactor_pathmap)
+		reactor_pathmap = selected_path
+
+		-- List the modified Reactor install path
+		comp:Print("[Install Folder] \"" .. tostring(reactor_pathmap) .. "\"\n")
+	end
+
 	-- The Install and Relaunch Button was clicked
 	function win.On.InstallButton.Clicked(ev)
 		comp:Print("[Reactor] Installation Started\n")
+
+		-- Set the customized Reactor PathMap
+		local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
+		app:SetPrefs("Global.Paths.Map.Reactor:", reactor_root)
+		local userpath = app:GetPrefs("Global.Paths.Map.UserPaths:")
+		if not userpath:find("Reactor:Deploy") then
+			userpath = userpath .. ";Reactor:Deploy"
+			app:SetPrefs("Global.Paths.Map.UserPaths:", userpath)
+		end
+
+		-- Add a "Reactor:System/Scripts" Scripts PathMap entry
+		local scriptpath = app:GetPrefs("Global.Paths.Map.Scripts:")
+		if not scriptpath:find("Reactor:System/Scripts") then
+			scriptpath = scriptpath .. ";Reactor:System/Scripts"
+			app:SetPrefs("Global.Paths.Map.Scripts:", scriptpath)
+		end
+		app:SavePrefs()
+		
+		comp:Print("[Reactor: PathMap] \"" .. tostring(app:GetPrefs("Global.Paths.Map.Reactor:")) .. "\"\n")
 
 		-- Create the Reactor:/System/ folder
 		bmd.createdir(app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/"))
@@ -859,8 +915,12 @@ function Main()
 		-- Fusion 9.00 or 9.01 was detected
 		VersionError(fuVersion, reactorMinVersion, platform)
 	else
-		-- Fusion 9.02+ or Resolve 15+ was detected
-		if fuVersion >= 15 then
+		if fu:GetVersion() and fu:GetVersion()[1] then
+			fuVersion = fu:GetVersion()[1]
+		end
+		
+		-- Resolve 15+ was detected
+		if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
 			comp:Print("\n")
 		else
 			-- Close all of the active comps
@@ -879,7 +939,6 @@ function Main()
 		comp:Print("[GitLab Branch] \"" .. tostring(branch) .. "\"\n")
 
 		-- Check Reactor.cfg
-		local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 		local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 		local cfgDestFile = sysPath .. "Reactor.cfg"
 		if eyeon.fileexists(cfgDestFile) == false then

@@ -1,4 +1,4 @@
-_VERSION = [[Version 2.1 - December 30, 2018]]
+_VERSION = [[Version 3 - May 23, 2019]]
 --[[
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -139,7 +139,7 @@ or
 - Added a new "Tools/Position" category.
 - Added a new "Tools/Stereo" category.
 
-### 2.1 2018-12-30 ###
+### 3 2019-05-23 ###
 
 - Added a new "KartaVR" category.
 - Added a new "KartaVR/Comps" category.
@@ -148,7 +148,9 @@ or
 - Added a new "KartaVR/Scripts" category.
 - Added a new "KartaVR/Tools" category.
 - Added a new "KartaVR/Viewshaders" category.
-- Added image loading support for local images like <img src="Reactor:/Docs/ReactorDocs/Images/atomizer-welcome.png">
+- Added image loading support for local images like <img src="Reactor:/Deploy/Docs/ReactorDocs/Images/atomizer-welcome.png">
+- Added a new "Save as Defaults" button to save the current settings as an initial template.
+- Added clickable HTML links in the HTML Preview area.
 
 ## Todos ##
 
@@ -156,14 +158,9 @@ or
   - InstallScript = {} and UninstallScript = {} elements.
   - Minimum/Maximum Fusion compatible version tags
 
+- Added "Platform" tag support for Fusion vs Resolve based installs.
+
 - If the CategoryCombo is set to "Custom" then show a (hidden) custom Category entry field to allow new categories to be created by the end user.
-
-## Known Issues ##
-
-- Resolve 15 Beta crashes frequently when Lua based file requester dialogs are shown. If you need to edit an atom package in Resolve 15 Beta 1 you might need to use the Slash Atom "SlashCommand" to help open up your atoms if this is an issue.
-
-- Resolve 15 Beta 2 crashes when Lua AskUser dialogs are displayed like the "Reset to Defaults" button uses for the confirmation message.
-
 ]]
 
 ------------------------------------------------------------------------
@@ -238,7 +235,7 @@ end
 
 ------------------------------------------------------------------------
 -- Read a fusion specific preference value. If nothing exists set and return a default value
--- Example: GetPreferenceData('Atomizer.Version', 1.0, true)
+-- Example: GetPreferenceData('Reactor.Atomizer.Version', 1.0, true)
 function GetPreferenceData(pref, defaultValue, status)
 	-- local newPreference = comp:GetData(pref)
 	local newPreference = fusion:GetData(pref)
@@ -539,15 +536,16 @@ docsFolder = homeFolder
 
 ------------------------------------------------------------------------
 -- Reactor Deploy Folder
+reactorDir = app:MapPath('Reactor:/')
 deployDir = app:MapPath('Reactor:/Deploy')
 
 -- Added emoticon support for local images like <img src="Emoticons:/wink.png">
 -- Example: dump(EmoticonParse([[<img src="Emoticons:/wink.png">]]))
--- Added image loading support for local images like <img src="Reactor:/Docs/ReactorDocs/Images/atomizer-welcome.png">
+-- Added image loading support for local images like <img src="Reactor:/Deploy/Docs/ReactorDocs/Images/atomizer-welcome.png">
 function EmoticonParse(str)
 	local htmlstr = ''
 	htmlstr = string.gsub(str, '[Ee]moticons:/', emoticonsDir)
-	htmlstr = string.gsub(htmlstr, "[Rr]eactor:/", deployDir)
+	htmlstr = string.gsub(htmlstr, "[Rr]eactor:/", reactorDir)
 	
 	return htmlstr
 end
@@ -564,7 +562,7 @@ function LoadAtom()
 			atomFolder = Dirname(tostring(fusion:MapPath(atomFile)))
 
 			-- Save the last folder accessed to a Atomizer.Directory preference
-			SetPreferenceData('Atomizer.Directory', atomFolder, false)
+			SetPreferenceData('Reactor.Atomizer.Directory', atomFolder, false)
 
 			-- Read in the atom lua table
 			atomData = bmd.readfile(fusion:MapPath(atomFile))
@@ -721,49 +719,63 @@ function AtomWin()
 		{text = 'Custom'},
 	}
 
+
+	------------------------------------------------------------------------
+	-- Restore the previous Atom editing session
+	print('[Loading Defaults]\n')
+	name = GetPreferenceData('Reactor.Atomizer.Name', 'YourPackage', true)
+	author = GetPreferenceData('Reactor.Atomizer.Author', 'YourName', true)
+	category = GetPreferenceData('Reactor.Atomizer.Category', 'Tools', true)
+	donationURL = GetPreferenceData('Reactor.Atomizer.DonationURL', '', true)
+	donationAmount = GetPreferenceData('Reactor.Atomizer.DonationAmount', '', true)
+	description = EncodeHTML(GetPreferenceData('Reactor.Atomizer.Description', '', true))
+	--	deploy = GetPreferenceData('Reactor.Atomizer.Deploy', '', true)
+	--	dependencies = GetPreferenceData('Reactor.Atomizer.Dependencies', '', true)
+	--	version = GetPreferenceData('Reactor.Atomizer.Version', '1.0', true)
+
 	------------------------------------------------------------------------
 	-- Load the Lua table data into the GUI
-
-	if atomData.Name ~= nil then
+	
+	if atomData.Name ~= nil and atomData.Name ~= '' then
 		name = atomData.Name
 	else
-		name = ''
+		-- name = ''
 	end
 
-	if atomData.Author ~= nil then
+	if atomData.Author ~= nil and atomData.Author ~= '' then
 		author = atomData.Author
 	else
-		author = ''
+		-- author = ''
 	end
 
-	if atomData.Category ~= nil then
+	if atomData.Category ~= nil and atomData.Category ~= '' then
 		category = atomData.Category
 	else
-		category = ''
+		-- category = ''
 	end
 
-	if atomData.Version ~= nil then
+	if atomData.Version ~= nil and atomData.Version ~= '' then
 		version = tostring(atomData.Version)
 	else
 		version = ''
 	end
 
 	if atomData.Donation ~= nil and atomData.Donation.Amount ~= nil then
-		donationAmount = atomData.Donation.Amount
+		donationAmount = atomData.Donation.Amount or ''
 	else
-		donationAmount = ''
+		-- donationAmount = ''
 	end
 
 	if atomData.Donation ~= nil and atomData.Donation.URL ~= nil then
 		donationURL = atomData.Donation.URL
 	else
-		donationURL = ''
+		-- donationURL = ''
 	end
 
-	if atomData.Description ~= nil then
+	if atomData.Description ~= nil and atomData.Description ~= '' then
 		description = EncodeHTML(atomData.Description)
 	else
-		description = ''
+		-- description = ''
 	end
 
 	if atomData.Date ~= nil and atomData.Date[1] ~= nil and atomData.Date[2] ~= nil and atomData.Date[3] ~= nil then
@@ -816,17 +828,7 @@ function AtomWin()
 	end
 
 	------------------------------------------------------------------------
-	-- Restore the previous Atom editing session
-	print('[Loading Defaults]\n')
-	--	name = GetPreferenceData('Atomizer.Name', 'YourPackage', true)
-	--	version = GetPreferenceData('Atomizer.Version', '1.0', true)
-	--	author = GetPreferenceData('Atomizer.Author', 'YourName', true)
-	--	donationURL = GetPreferenceData('Atomizer.DonationURL', '', true)
-	--	donationAmount = GetPreferenceData('Atomizer.DonationAmount', '', true)
-	--	description = EncodeHTML(GetPreferenceData('Atomizer.Description', '', true))
-	--	deploy = GetPreferenceData('Atomizer.Deploy', '', true)
-	--	dependencies = GetPreferenceData('Atomizer.Dependencies', '', true)
-	--	category = GetPreferenceData('Atomizer.Category', 'Tools', true)
+	-- Current Values
 
 	print('[Name] ' .. name)
 	print('[Version] ' .. version)
@@ -1082,6 +1084,7 @@ function AtomWin()
 							Weight = 1.2,
 							ID = 'HTMLPreview',
 							ReadOnly = true,
+							Events = { AnchorClicked = true },
 						},
 					},
 				},
@@ -1303,6 +1306,17 @@ function AtomWin()
 				},
 				ui:HGap(20),
 				ui:Button{
+					ID = 'SaveDefaultButton',
+					Text = 'Save as Defaults',
+					IconSize = iconsMedium,
+					Icon = ui:Icon{
+						File = iconsDir .. 'save.png'
+					},
+					MinimumSize = iconsMedium,
+					Flat = true,
+				},
+				ui:HGap(20),
+				ui:Button{
 					ID = 'SaveAtomButton',
 					Text = 'Save Atom',
 					IconSize = iconsMedium,
@@ -1323,6 +1337,7 @@ function AtomWin()
 	function win.On.AtomizerWin.Close(ev)
 		disp:ExitLoop()
 	end
+
 
 	-- @todo - Verify if we are on a platform that supports the button modes
 
@@ -1544,7 +1559,7 @@ function AtomWin()
 		itm.DayText.Text = day
 	end
 
-	-- Reset the current settings as the Atomizer defaults
+	-- Reset the current settings to the Atomizer defaults
 	function win.On.ResetDefaultsButton.Clicked(ev)
 		local msg = 'Are you sure you want to clear out all of the information in your Atom?\n'
 		comp:Print('[Reset Defaults] ' .. msg)
@@ -1559,25 +1574,37 @@ function AtomWin()
 			print('You cancelled the dialog!')
 			return
 		else
-			SetPreferenceData('Atomizer.Name', 'YourPackage', false)
-			SetPreferenceData('Atomizer.Version', nil, false)
-			SetPreferenceData('Atomizer.Author', 'YourName', false)
-			SetPreferenceData('Atomizer.DonationURL', nil, false)
-			SetPreferenceData('Atomizer.DonationAmount', nil, false)
-			SetPreferenceData('Atomizer.Description', nil, false)
-			SetPreferenceData('Atomizer.Deploy', nil, false)
-			SetPreferenceData('Atomizer.Dependencies', nil, false)
-			SetPreferenceData('Atomizer.Category', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Name', 'YourPackage', false)
+--			SetPreferenceData('Reactor.Atomizer.Version', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Author', 'YourName', false)
+--			SetPreferenceData('Reactor.Atomizer.DonationURL', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.DonationAmount', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Description', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Deploy', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Dependencies', nil, false)
+--			SetPreferenceData('Reactor.Atomizer.Category', nil, false)
 
-			itm.NameText.Text = 'YourPackage'
-			itm.VersionText.Text = '1.0'
-			itm.AuthorText.Text = 'YourName'
-			itm.DonationURLText.Text = ''
-			itm.DonationAmountText.Text = ''
-			itm.DescriptionText.Text = ''
+			name = GetPreferenceData('Reactor.Atomizer.Name', 'YourPackage', true)
+			version = GetPreferenceData('Reactor.Atomizer.Version', 1.0, true)
+			author = GetPreferenceData('Reactor.Atomizer.Author', 'YourName', true)
+			category = GetPreferenceData('Reactor.Atomizer.Category', 'Tools', true)
+			donationURL = GetPreferenceData('Reactor.Atomizer.DonationURL', '', true)
+			donationAmount = GetPreferenceData('Reactor.Atomizer.DonationAmount', '', true)
+			description = EncodeHTML(GetPreferenceData('Reactor.Atomizer.Description', '', true))
+
+			itm.NameText.Text = name
+			itm.VersionText.Text = version
+			itm.AuthorText.Text = author
+			itm.DonationURLText.Text = donationURL
+			itm.DonationAmountText.Text = donationAmount
+			itm.DescriptionText.PlainText = description
+			itm.CategoryCombo.CurrentText = category
+
+--			itm.NameText.Text = 'YourPackage'
+--			itm.VersionText.Text = '1.0'
+--			itm.AuthorText.Text = 'YourName'
 			itm.DeployCommonListText.Text = ''
 			itm.DependenciesListText.Text = ''
-			itm.CategoryCombo.CurrentText = 'Tools'
 		end
 	end
 
@@ -1663,10 +1690,14 @@ function AtomWin()
 		end
 	end
 
+	function win.On.SaveDefaultButton.Clicked(ev)
+		print('[Save as Default] Saving the Atom package values as the initial defaults.')
+		SaveDefaults()
+	end
+
 	function win.On.SaveAtomButton.Clicked(ev)
 		print('[Save Atom] Writing the Atom package to disk.')
 		WriteAtom()
-		SaveDefaults()
 	end
 
 	-- Close the atom
@@ -1825,6 +1856,11 @@ function AtomWin()
 	------------------------------------------------------------------------
 	-- Save the current settings as the Atomizer defaults
 	function SaveDefaults()
+		-- Print out the window placement details
+		-- print(string.format("[Window Placement] [X] %d [Y] %d [Width] %d [Height] %d", itm.AtomizerWin.Geometry[1], itm.AtomizerWin.Geometry[2], itm.AtomizerWin.Geometry[3], itm.AtomizerWin.Geometry[4]))
+		local windowCenterX = itm.AtomizerWin.Geometry[1] + (itm.AtomizerWin.Geometry[3]/2)
+		local windowCenterY = itm.AtomizerWin.Geometry[2] + (itm.AtomizerWin.Geometry[4]/2)
+
 		local atomName = tostring(itm.NameText.Text)
 		local atomAuthor = tostring(itm.AuthorText.Text)
 
@@ -1836,15 +1872,13 @@ function AtomWin()
 			atomAuthor = 'YourName'
 		end
 
-		SetPreferenceData('Atomizer.Name', atomName, false)
-		SetPreferenceData('Atomizer.Version', itm.VersionText.Text, false)
-		SetPreferenceData('Atomizer.Author', atomAuthor, false)
-		SetPreferenceData('Atomizer.DonationURL', itm.DonationURLText.Text, false)
-		SetPreferenceData('Atomizer.DonationAmount', itm.DonationAmountText.Text, false)
-		SetPreferenceData('Atomizer.Description', EncodeHTML(itm.DescriptionText.PlainText), false)
-		SetPreferenceData('Atomizer.Deploy', itm.DeployCommonListText.PlainText, false)
-		SetPreferenceData('Atomizer.Dependencies', itm.DependenciesListText.PlainText, false)
-		SetPreferenceData('Atomizer.Category', itm.CategoryCombo.CurrentText, false)
+		-- Show a customization dialog
+		SaveDefaultsWin(windowCenterX, windowCenterY, atomName, itm.VersionText.Text, atomAuthor, itm.DonationURLText.Text, itm.DonationAmountText.Text, EncodeHTML(itm.DescriptionText.PlainText), itm.CategoryCombo.CurrentText)
+	end
+
+	-- Open an HTML link when clicked on in the HTML preview zone
+	function win.On.HTMLPreview.AnchorClicked(ev)
+		bmd.openurl(ev.URL)
 	end
 
 	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
@@ -1896,6 +1930,145 @@ function AtomWin()
 	collectgarbage()
 end
 
+
+-- Show the Save As Defaults view
+function SaveDefaultsWin(centerX, CenterY, defaultsName, defaultsVersion, defaultsAuthor, defaultsDonationURL, defaultsDonationAmount, defaultsDescription, defaultsCategory)
+	local width,height = 290,277
+
+	local winDefaults = disp:AddWindow({
+		ID = "SaveAsDefaultsWin",
+		TargetID = "SaveAsDefaultsWin",
+		WindowTitle = "Save as Defaults ",
+		Geometry = {100, 100, width, height},
+		Spacing = 10,
+
+		ui:VGroup{
+			ID = 'root',
+
+			ui:Label{
+					ID = 'InfoLabel',
+					Weight = 2.0,
+					WordWrap = true,
+					Text = 'Select the attributes you want to save as your Atomizer default settings.',
+				},
+
+			-- Add your GUI elements here:
+			ui:VGroup{
+				Weight = 0.1,
+				ui:CheckBox{ID = "NameCheckbox", Text = "Package Name", Checked = false,},
+				ui:CheckBox{ID = "VersionCheckbox", Text = "Version", Checked = true,},
+				ui:CheckBox{ID = "AuthorCheckbox", Text = "Author", Checked = true,},
+				ui:CheckBox{ID = "DonationURLCheckbox", Text = "Donation URL", Checked = true,},
+				ui:CheckBox{ID = "DonationAmountCheckbox", Text = "Donation Amount", Checked = true,},
+				ui:CheckBox{ID = "DescriptionCheckbox", Text = "Description", Checked = true,},
+				ui:CheckBox{ID = "CategoryCheckbox", Text = "Category", Checked = true,},
+			},
+			
+			ui:HGroup{
+				Weight = 0.1,
+				ui:Button{ID = "ClearAllButton", Text = "Clear All Defaults",},
+				ui:HGap(0, 2),
+				ui:Button{ID = "OKButton", Text = "OK",},
+			},
+		},
+	})
+
+	-- The window was closed
+	function winDefaults.On.SaveAsDefaultsWin.Close(ev)
+		disp:ExitLoop()
+	end
+
+	-- Add your GUI element based event functions here:
+	local itmPrefs = winDefaults:GetItems()
+
+	-- The OK Button saves the preferences
+	function winDefaults.On.OKButton.Clicked(ev)
+		print("[OK]")
+
+		if itmPrefs.NameCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.Name', defaultsName, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.Name', 'YourPackage', false)
+		end
+		
+		if itmPrefs.VersionCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.Version', defaultsVersion, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.Version', nil, false)
+		end
+		
+		if itmPrefs.AuthorCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.Author', defaultsAuthor, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.Author', 'YourName', false)
+		end
+		
+		if itmPrefs.DonationURLCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.DonationURL', defaultsDonationURL, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.DonationURL', nil, false)
+		end
+		
+		if itmPrefs.DonationAmountCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.DonationAmount', defaultsDonationAmount, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.DonationAmount', nil, false)
+		end
+		
+		if itmPrefs.DescriptionCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.Description', defaultsDescription, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.Description', nil, false)
+		end
+		
+		if itmPrefs.CategoryCheckbox.Checked then
+			SetPreferenceData('Reactor.Atomizer.Category', defaultsCategory, false)
+		else
+			SetPreferenceData('Reactor.Atomizer.Category', nil, false)
+		end
+
+		disp:ExitLoop()
+	end
+
+	-- The Clear All Defaults Button removes the old the preferences
+	function winDefaults.On.ClearAllButton.Clicked(ev)
+		print("[Clear All Defaults]")
+
+		SetPreferenceData('Reactor.Atomizer.Name', 'YourPackage', false)
+		SetPreferenceData('Reactor.Atomizer.Version', '1.0', false)
+		SetPreferenceData('Reactor.Atomizer.Author', 'YourName', false)
+		SetPreferenceData('Reactor.Atomizer.DonationURL', '', false)
+		SetPreferenceData('Reactor.Atomizer.DonationAmount', '', false)
+		SetPreferenceData('Reactor.Atomizer.Description', '', false)
+		SetPreferenceData('Reactor.Atomizer.Category', 'Tools', false)
+
+		disp:ExitLoop()
+	end
+
+	-- The app:AddConfig() command that will capture the 'Control + W' or 'Control + F4' hotkeys so they will close the window instead of closing the foreground composite.
+	app:AddConfig("SaveAsDefaultsWin", {
+		Target {
+			ID = "SaveAsDefaultsWin",
+		},
+
+		Hotkeys {
+			Target = "SaveAsDefaultsWin",
+			Defaults = true,
+
+			CONTROL_W  = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+			CONTROL_F4 = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+		},
+	})
+
+	-- Display the GUI
+	winDefaults:Show()
+	disp:RunLoop()
+	winDefaults:Hide()
+
+	-- Cleanup after the window was closed
+	app:RemoveConfig("SaveAsDefaultsWin")
+	collectgarbage()
+end
 
 -- Show the atom file in a raw text editor view
 function AtomTextView(centerX, CenterY)
@@ -2039,7 +2212,7 @@ end
 function NewPackageWin()
 	-- Read the last folder accessed from a Atomizer.WorkingDirectory preference
 	-- The default value for the first time the RequestDir is shown in the "$HOME/Documents/" folder.
-	workingFolder = GetPreferenceData('Atomizer.WorkingDirectory', docsFolder, true)
+	workingFolder = GetPreferenceData('Reactor.Atomizer.WorkingDirectory', docsFolder, true)
 
 	------------------------------------------------------------------------
 	-- Create the new window
@@ -2148,7 +2321,8 @@ function NewPackageWin()
 			-- Write the text string to disk
 			outFile:write(atomText)
 		else
-			defaultCategory = 'Tools'
+			-- defaultCategory = 'Tools'
+			defaultCategory = GetPreferenceData('Reactor.Atomizer.Category', 'Tools', true)
 
 			-- Year four digit padded (2017)
 			year = tostring(tonumber(os.date('%Y')))
@@ -2372,7 +2546,6 @@ function StartupWin()
 			ui:Button{
 				ID = 'NewAtomClipboardButton',
 				Text = 'Create Atom from Clipboard',
-				-- Text = 'Create Atom Package from Clipboard',
 				IconSize = iconsMedium,
 				Icon = ui:Icon{
 					File = iconsDir .. 'create.png'
@@ -2459,7 +2632,7 @@ function StartupWin()
 
 		-- Read the last folder accessed from a Atomizer.Directory preference
 		-- The default value for the first time the FileRequester is shown in the "$HOME/Documents/" folder.
-		atomFolder = GetPreferenceData('Atomizer.Directory', docsFolder, true)
+		atomFolder = GetPreferenceData('Reactor.Atomizer.Directory', docsFolder, true)
 
 		-- Double check the folder exists before showing the Request File dialog
 		if not bmd.fileexists(fusion:MapPath(atomFolder)) then

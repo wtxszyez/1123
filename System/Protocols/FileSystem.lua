@@ -1,11 +1,11 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v2.0 2018-05-21
+Reactor Package Manager for Fusion - v3 2019-05-23
 ==============================================================================
 Requires    : Fusion 9.0.2+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
-            : Andrew Hazelden                 [andrew@andrewhazelden]
+            : Andrew Hazelden                 [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -41,64 +41,46 @@ The Resolve "AllData:/Reactor/" PathMap folder location is:
 
 --]]--
 
---@todo: remove
-local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
-local atoms_root = reactor_root .. "Atoms/"
+local function GetAtomList(repo, all)
+	local dir = bmd.readdir(g_Config.Repos[repo].Path .. "/Atoms/*")
 
-dprintf = (os.getenv("REACTOR_DEBUG") ~= "true") and function() end or
-function(fmt, ...)
-	-- Display the debug output in the Console tab
-	-- print(fmt:format(...))
-
-	local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
-	local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
-	local reactor_log_root = fusion:MapPath("Temp:/Reactor/")
-	local reactor_log = reactor_log_root .. "ReactorLog.txt"
-	bmd.createdir(reactor_log_root)
-	log_fp, err = io.open(reactor_log, "a")
-	if err then
-		print("[Log Error] Could not open Reactor.log for writing")
-	else
-		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
-		log_fp:write("\n" .. time_stamp)
-		log_fp:write(fmt:format(...))
-		log_fp:close()
-	end
-end
-
-local function UpdateAtoms(msg, repo, id, force)
-	local dir = bmd.readdir(id .. "/Atoms/*")
-
-	local repo_atoms = atoms_root..repo..'/'
-	bmd.createdir(repo_atoms)
+	local ret = {}
 
 	for i,file in ipairs(dir) do
 		if file.IsDir then
-			local content = LoadFile(id .. "/Atoms/" .. file.Name .. "/" .. file.Name .. ".atom")
-			SaveFile(repo_atoms .. file.Name .. ".atom", content)
+			table.insert(ret, "Atoms/" .. file.Name .. "/" .. file.Name .. ".atom")
 		end
 	end
+
+	return ret
 end
 
-local function Init()
-end
+local function GetFiles(paths, repo, callbacks, cbdata)
+	local ret = {}
 
-local function CleanUp()
-end
+	for i,path in ipairs(paths) do
+		if callbacks and callbacks.start then
+			callbacks.start(i, cbdata)
+		end
 
-local function GetFile(path, id, repo)
-	return LoadFile(id .. "/" .. path)
+		ret[i] = LoadFile(g_Config.Repos[repo].Path .. "/" .. path)
+
+		local cb = callbacks and (ret[i] and callbacks.complete or callbacks.failed)
+
+		if cb then
+			if cb(i, cbdata, ret[i]) then
+				ret[i] = nil
+			end
+		end
+	end
+
+	return ret
 end
 
 -- Expose our module interface
-mod =
-{
-	Init = Init,
-	CleanUp = CleanUp,
-
-	UpdateAtoms = UpdateAtoms,
-	GetFile = GetFile,
+return {
+	-- Init =
+	-- CleanUp =
+	GetAtomList = GetAtomList,
+	GetFiles = GetFiles,
 }
-
-return mod

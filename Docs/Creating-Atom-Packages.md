@@ -243,6 +243,7 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Testing
 - Tools
 - Tools/3D
+- Tools/Blur
 - Tools/Color
 - Tools/Composite
 - Tools/Creator
@@ -473,6 +474,7 @@ For the purpose of atom packages, Fusion's version numbers are listed as:
 - 9.01
 - 9.02
 - 15
+- 16
 
 **Note:** The version number "15" is what Resolve 15's Fusion's page is detected as in a Lua script. When checking for a Fusion version number this value is reported to Reactor with the following Lua command:
 
@@ -638,4 +640,4 @@ This example creates a desktop folder based shortcut to the Reactor Docs folder:
 			CreateShortcut("Reactor:/Deploy/Docs/ReactorDocs", "Desktop:", "ReactorDocs", "folder")]],
 		}
 
-Last Revised 2018-05-21
+Last Revised 2019-05-23
