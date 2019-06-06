@@ -893,7 +893,7 @@ function main()
     --
     function check_extension(comp_name)
         -- this will check if COMPS_Name has returned file name without extension
-        if not string.sub(comp_name, -5) == '.comp' then
+        if string.sub(comp_name, -5) ~= '.comp' then
             return '.comp'
         else
             return ''
