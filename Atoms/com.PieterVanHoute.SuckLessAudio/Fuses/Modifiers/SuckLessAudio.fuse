@@ -3,7 +3,7 @@
 Suck Less Audio Fuse
 
 -------------------------------------------------------------------
-Copyright (c) 2015-2018,  Pieter Van Houte
+Copyright (c) 2015-2019,  Pieter Van Houte
 <pieter[at]secondman[dot]com>
 -------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --]]
 
-version = "Suck Less Audio v2.5 - 24 July 2018"
+version = "Suck Less Audio v2.6 - 5 June 2019"
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
@@ -29,6 +29,7 @@ FuRegisterClass("SuckLessAudio", CT_Modifier, {
 	REGID_DataType      = "Number",
 	REGID_InputDataType = "Number",
 	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGB_Temporal 		= true,			-- ensures reliability in Resolve 15
 	REGS_Company 		= "Pieter Van Houte",
 	REGS_URL 			= "http://www.steakunderwater.com",
 	REGS_HelpTopic      = "http://www.steakunderwater.com/wesuckless/viewtopic.php?f=6&t=496",
@@ -67,7 +68,8 @@ function Create()
 		INPID_InputControl = "MultiButtonIDControl",
 		INPID_DefaultID = "Sample",
 		INP_DoNotifyChanged  = true,
-		MBTNC_StretchToFit = true,	
+		MBTNC_StretchToFit = true,
+		MBTNC_ForceButtons = true,
 		{ MBTNC_AddButton = "Sample Values", MBTNCID_AddID = "Sample", MBTNCS_ToolTip = "Outputs the values in the sample file.", },
 		{ MBTNC_AddButton = "Sample Modifies Input", MBTNCID_AddID = "Modified", MBTNCS_ToolTip = "Adds the values in the sample file to the input parameter.", },
 		})
@@ -95,6 +97,7 @@ function Create()
 			LINKID_DataType = "Number",
 			INPID_InputControl = "MultiButtonControl",
 			MBTNC_StretchToFit = true,
+			MBTNC_ForceButtons = true,
 			INP_DoNotifyChanged  = true,
 			})	
 			
@@ -145,6 +148,7 @@ function Create()
 		LINKID_DataType = "FuID",
 		INPID_InputControl = "MultiButtonIDControl",
 		MBTNC_StretchToFit = true,
+		MBTNC_ForceButtons = true,
 		IC_Visible = false
 		})
 
@@ -180,6 +184,7 @@ function Create()
 		LINKID_DataType = "FuID",
 		INPID_InputControl = "MultiButtonIDControl",
 		MBTNC_StretchToFit = true,
+		MBTNC_ForceButtons = true,
 		IC_Visible = false
 		})
 
@@ -224,6 +229,7 @@ function Create()
 		INP_Default = 0,
 		LINKID_DataType = "Number",
 		INPID_InputControl = "MultiButtonControl",
+		MBTNC_ForceButtons = true,
 		MBTNC_StretchToFit = true,
 		})
 --]]	
@@ -240,6 +246,7 @@ function Create()
 		LINKID_DataType = "FuID",
 		INPID_InputControl = "MultiButtonIDControl",
 		MBTNC_StretchToFit = true,
+		MBTNC_ForceButtons = true,
 		})
 
 	InInvert = self:AddInput("Invert Values", "Invert", {
@@ -280,6 +287,7 @@ function Create()
 			LINKID_DataType = "Number",
 			INPID_InputControl = "MultiButtonControl",
 			MBTNC_StretchToFit = true,
+			MBTNC_ForceButtons = true,
 			})
 --]]	
 		InModeY = self:AddInput("Mode Y", "ModeY", {
@@ -295,6 +303,7 @@ function Create()
 			LINKID_DataType = "FuID",
 			INPID_InputControl = "MultiButtonIDControl",
 			MBTNC_StretchToFit = true,
+			MBTNC_ForceButtons = true,
 			})
 			
 		InInvertY = self:AddInput("Invert Values Y", "InvertY", {
