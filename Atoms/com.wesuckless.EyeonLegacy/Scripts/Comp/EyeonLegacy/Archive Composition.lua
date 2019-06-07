@@ -890,7 +890,18 @@ function main()
 	--------------------------------------------
 	-- Now that the new dir exists
 	-- save a copy of the composition in the root folder of the destination directory
-	output_composition = output_root .. composition:GetAttrs().COMPS_Name .. '.comp'
+    --
+    function check_extension(comp_name)
+        -- this will check if COMPS_Name has returned file name without extension
+        if string.sub(comp_name, -5) ~= '.comp' then
+            return '.comp'
+        else
+            return ''
+        end
+    end
+
+    comp_name = composition:GetAttrs().COMPS_Name
+	output_composition = output_root .. comp_name .. check_extension(comp_name)
 	composition:Save(output_composition)
 
 	dprintf("-----------------------------------\n")
