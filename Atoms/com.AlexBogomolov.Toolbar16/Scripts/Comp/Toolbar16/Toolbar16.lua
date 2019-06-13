@@ -16,10 +16,12 @@ function _init(side)
     view = get_viewer(side)
     viewer = view.CurrentViewer
     comp = fu:GetCurrentComp()
+
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
         return nil
     end
+
     locked_state = view:GetLocked()
     multiview_state = view:ShowingQuadView()
     stereo_state = view:IsStereoEnabled()
@@ -27,7 +29,6 @@ function _init(side)
     guides_state = viewer:AreGuidesShown()
     lut_state = viewer:IsLUTEnabled()
     roi_state = viewer:IsEnableRoI()
-
 
     if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
         dod_state = viewer:IsDoDShown()
@@ -63,17 +64,26 @@ _init('left')
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
+function get_window_xy()
+    get_pos = fu:GetData('Toolbar16.Position')
+    if get_pos then
+        return get_pos[1], get_pos[2]
+    else
+        return fu:GetMousePos()[1], fu:GetMousePos()[2]
+    end
+end
+
+
 function show_ui()
     width, height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
-    local x = fu:GetMousePos()[1]
-    local y = fu:GetMousePos()[2]
+    x, y = get_window_xy()
     local win = disp:AddWindow({
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        WindowFlags = {SplashScreen = true,  NoDropShadowWindowHint = true, WindowStaysOnTopHint = show_on_top},
+        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = show_on_top},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -95,16 +105,6 @@ function show_ui()
                         MinimumSize = iconsMedium,
                         Checkable = true,
                         Checked = guides_state 
-                    },
-                    ui:Button{
-                        ID = 'IconButtonMultiView',
-                        Text = '',
-                        Flat = true,
-                        IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_MultiView.png'},
-                        MinimumSize = iconsMedium,
-                        Checkable = true,
-                        Checked = multiview_state 
                     },
                     ui:Button{
                         ID = 'IconButtonZoom',
@@ -269,6 +269,16 @@ function show_ui()
                         Checkable = true,
                         Checked = sliders_state 
                     },
+                    ui:Button{
+                        ID = 'IconButtonMultiView',
+                        Text = '',
+                        Flat = true,
+                        IconSize = {16,16},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_MultiView.png'},
+                        MinimumSize = iconsMedium,
+                        Checkable = true,
+                        Checked = multiview_state 
+                    },
                 },
                 ui:HGroup{
                     Weight = 0.2,
@@ -311,10 +321,11 @@ function show_ui()
 
         },
     })
-    return win
+    return win, {x, y}
 end
 
-win = show_ui()
+win, position = show_ui()
+fu:SetData('Toolbar16.Position', position)
 
 -- The window was closed
 
@@ -519,6 +530,8 @@ function win.On.RefreshButtons.Clicked(ev)
     end
     _init(side)
     _init(side)
+    fu:SetData('Toolbar16.Position')
+    print('Position data flushed')
     refresh_ui()
 end
 
