@@ -11,6 +11,37 @@ Web: www.andrewhazelden.com
 ]]
 
 show_on_top = false
+ui = fu.UIManager
+disp = bmd.UIDispatcher(ui)
+
+function launch_prefs_window(pos)
+    prefx, prefy = pos[1], pos[2]
+    print(prefx, prefy)
+    dlg = disp:AddWindow({
+        ID = 'TBPrefs',
+        TargetID = 'TBPrefs',
+        WindowTitle = 'Toolbar16 Prefs',
+        -- WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
+        Geometry = {prefx +100, prefy, 400, 300},
+            ui:VGroup{
+            ID = 'prefs',
+            ui:HGroup{
+                ui:HGroup{
+                    Weight = 0.8,
+                    ui.HGap(0.25,0),
+                    ui:Button{
+                        Text = 'jkfjdkjf',
+                        Flat = true,
+                    },
+                },
+            },
+        },
+    })
+    dlg.Show()
+    disp.RunLoop()
+    dlg.Hide()
+end
+
 
 function _init(side)
     view = get_viewer(side)
@@ -61,8 +92,6 @@ end
 
 _init('left')
 
-ui = fu.UIManager
-disp = bmd.UIDispatcher(ui)
 
 function get_window_xy()
     get_pos = fu:GetData('Toolbar16.Position')
@@ -315,6 +344,16 @@ function show_ui()
                         MinimumSize = {40,16},
                         Checkable = false
                     },
+                    ui:Button{
+                        ID = 'prefs',
+                        Text = '',
+                        Flat = true,
+                        IconSize = {6,6},
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Triangle.png'},
+                        MinimumSize = iconsMedium,
+                        -- Checkable = true,
+                        -- Checked = multiview_state 
+                    },
                     ui.HGap(0.25,0),
                 },
             },
@@ -353,6 +392,12 @@ function refresh_ui()
     itm.IconButtonGuides.Checked = guides_state
     itm.IconButtonMultiView.Checked = multiview_state
 end
+
+
+function win.On.prefs.Clicked(ev)
+    launch_prefs_window(position)
+end
+
 
 function win.On.Right.Clicked(ev)
     itm.Left.Checked = false
