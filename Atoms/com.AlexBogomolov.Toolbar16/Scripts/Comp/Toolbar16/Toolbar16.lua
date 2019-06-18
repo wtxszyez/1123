@@ -14,33 +14,6 @@ show_on_top = false
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
-function launch_prefs_window(pos)
-    prefx, prefy = pos[1], pos[2]
-    print(prefx, prefy)
-    dlg = disp:AddWindow({
-        ID = 'TBPrefs',
-        TargetID = 'TBPrefs',
-        WindowTitle = 'Toolbar16 Prefs',
-        -- WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +100, prefy, 400, 300},
-            ui:VGroup{
-            ID = 'prefs',
-            ui:HGroup{
-                ui:HGroup{
-                    Weight = 0.8,
-                    ui.HGap(0.25,0),
-                    ui:Button{
-                        Text = 'jkfjdkjf',
-                        Flat = true,
-                    },
-                },
-            },
-        },
-    })
-    dlg.Show()
-    disp.RunLoop()
-    dlg.Hide()
-end
 
 
 function _init(side)
@@ -365,6 +338,45 @@ end
 
 win, position = show_ui()
 fu:SetData('Toolbar16.Position', position)
+
+function launch_prefs_window(pos)
+    local prefx, prefy = pos[1], pos[2]
+    print(prefx.. ' : ' ..prefy)
+    dlg = disp:AddWindow({
+        ID = 'TBPrefs',
+        TargetID = 'TBPrefs',
+        WindowTitle = 'Toolbar16 Prefs',
+        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
+        Geometry = {prefx +280, prefy-100, 200, 100},
+            ui:VGroup{
+            ID = 'prefs',
+            ui:HGroup{
+                ui:HGroup{
+                    Weight = 0.8,
+                    ui.HGap(5,0),
+                    ui:Button{
+                        ID = 'PrefClose',
+                        Text = 'close',
+                        Flat = true,
+                    },
+                },
+            },
+        },
+    })
+    itm = dlg:GetItems()
+
+    function dlg.On.PrefClose.Clicked(ev)
+        disp:ExitLoop()
+    end
+    function dlg.On.TBPrefs.Close(ev)
+        disp:ExitLoop()
+    end
+
+    dlg:Show()
+    disp:RunLoop()
+    dlg:Hide()
+    return dlg, dlg:GetItems()
+end
 
 -- The window was closed
 
