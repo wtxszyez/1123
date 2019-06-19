@@ -19,11 +19,18 @@ disp = bmd.UIDispatcher(ui)
 function _init(side)
     view = get_viewer(side)
     viewer = view.CurrentViewer
+    viewer_type = string.sub(tostring(viewer),1,2)
     comp = fu:GetCurrentComp()
+    
 
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
         return nil
+    end
+
+    if viewer_type ~= "2D" then
+        print('This tool is most useful with 2D viewers')
+        return
     end
 
     locked_state = view:GetLocked()
@@ -353,8 +360,6 @@ end
 
 function show_prefs_window(pos)
     local prefx, prefy = pos[1], pos[2]
-    print(prefx.. ' : ' ..prefy)
-    -- local disp_prefs = bmd.UIDispatcher(ui)
     
     dlg = disp:AddWindow({
         ID = 'TBPrefs',
@@ -388,8 +393,6 @@ function show_prefs_window(pos)
 
     function dlg.On.PrefClose.Clicked(ev)
         disp:ExitLoop()
-        dlg = nil
-        collectgarbage()
     end
 
     function dlg.On.TBPrefs.Close(ev)
@@ -534,7 +537,7 @@ end
 function win.On.IconButtonLUT.Clicked(ev)
     state = itm.IconButtonLUT.Checked
     viewer = view.CurrentViewer
-    if not viewer then
+    if not viewer or viewer_type == '3D' then
         return
     end
     print('[LUT][Button State] ', state)
@@ -545,7 +548,7 @@ end
 function win.On.IconButtonROI.Clicked(ev)
     state = itm.IconButtonROI.Checked
     viewer = view.CurrentViewer
-    if not viewer then
+    if not viewer or viewer_type == '3D' then
         return
     end
     print('[ROI][Button State] ', state)
@@ -556,7 +559,7 @@ end
 function win.On.IconButtonDoD.Clicked(ev)
     state = itm.IconButtonDoD.Checked
     viewer = view.CurrentViewer
-    if not viewer then
+    if not viewer or viewer_type == '3D' then
         return
     end
     print('[DoD][Button State] ', state)
@@ -579,7 +582,7 @@ function win.On.IconButtonSliders.Clicked(ev)
     state = itm.IconButtonSliders.Checked
     if fu.Version == 16 then
         viewer = view.CurrentViewer
-        if not viewer then
+        if not viewer or viewer_type == '3D' then
             return
         end
         itm.IconButtonControls.Checked = true
@@ -595,7 +598,7 @@ function win.On.IconButtonChequers.Clicked(ev)
     state = itm.IconButtonChequers.Checked
     if fu.Version == 16 then
         viewer = view.CurrentViewer
-        if not viewer then
+        if not viewer or viewer_type == '3D' then
             return
         end
         viewer:EnableChecker(state)
