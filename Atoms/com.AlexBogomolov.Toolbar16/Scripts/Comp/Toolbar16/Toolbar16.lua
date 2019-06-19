@@ -318,13 +318,13 @@ function show_ui()
                         Checkable = false
                     },
                     ui:Button{
-                        ID = 'prefs',
+                        ID = 'LaunchPrefs',
                         Text = '',
                         Flat = true,
                         IconSize = {6,6},
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Triangle.png'},
                         MinimumSize = iconsMedium,
-                        -- Checkable = true,
+                        Checkable = false,
                         -- Checked = multiview_state 
                     },
                     ui.HGap(0.25,0),
@@ -339,44 +339,6 @@ end
 win, position = show_ui()
 fu:SetData('Toolbar16.Position', position)
 
-function launch_prefs_window(pos)
-    local prefx, prefy = pos[1], pos[2]
-    print(prefx.. ' : ' ..prefy)
-    dlg = disp:AddWindow({
-        ID = 'TBPrefs',
-        TargetID = 'TBPrefs',
-        WindowTitle = 'Toolbar16 Prefs',
-        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +280, prefy-100, 200, 100},
-            ui:VGroup{
-            ID = 'prefs',
-            ui:HGroup{
-                ui:HGroup{
-                    Weight = 0.8,
-                    ui.HGap(5,0),
-                    ui:Button{
-                        ID = 'PrefClose',
-                        Text = 'close',
-                        Flat = true,
-                    },
-                },
-            },
-        },
-    })
-    itm = dlg:GetItems()
-
-    function dlg.On.PrefClose.Clicked(ev)
-        disp:ExitLoop()
-    end
-    function dlg.On.TBPrefs.Close(ev)
-        disp:ExitLoop()
-    end
-
-    dlg:Show()
-    disp:RunLoop()
-    dlg:Hide()
-    return dlg, dlg:GetItems()
-end
 
 -- The window was closed
 
@@ -388,9 +350,78 @@ function win.On.CloseButton.Clicked(ev)
     disp:ExitLoop()
 end
 
+
+function show_prefs_window(pos)
+    local prefx, prefy = pos[1], pos[2]
+    print(prefx.. ' : ' ..prefy)
+    -- local disp_prefs = bmd.UIDispatcher(ui)
+    
+    dlg = disp:AddWindow({
+        ID = 'TBPrefs',
+        TargetID = 'TBPrefs',
+        -- WindowTitle = 'Toolbar16 Prefs',
+        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
+        Geometry = {prefx +298, prefy-100, 200, 100},
+            ui:VGroup{
+            ID = 'prefs',
+                ui:HGroup{
+                    Weight = 0.8,
+                    ui:CheckBox{
+                        ID = 'SavePos',
+                        Text = 'Save Position'
+                    },
+                    ui:Button{
+                        ID = 'PrefClose',
+                        Text = 'close',
+                        Flat = true,
+                    },
+                },
+                ui:HGroup{
+                    ui:Button{
+                        ID = 'FlushData',
+                        Text = 'Flush',
+                    }
+                }
+            },
+        })
+    -- itm1 = dlg:GetItems()
+
+    function dlg.On.PrefClose.Clicked(ev)
+        disp:ExitLoop()
+        dlg = nil
+        collectgarbage()
+    end
+
+    function dlg.On.TBPrefs.Close(ev)
+        disp:ExitLoop()
+    end
+
+    function dlg.On.FlushData.Clicked(ev)
+        fu:SetData('Toolbar16.Position')
+        print('Position data flushed')
+    end
+
+    dlg:Show()
+    disp:RunLoop()
+    dlg:Hide()
+end
+
 -- Add your GUI element based event functions here:
 
 itm = win:GetItems()
+
+function win.On.LaunchPrefs.Clicked(ev)
+    -- show_prefs_window(position)
+    pref_win = ui:FindWindow('TBPrefs')
+    if pref_win then
+        print(pref_win)
+        pref_win:Raise()
+        pref_win:ActivateWindow()
+        return
+    end
+    show_prefs_window(position)
+end
+
 
 function refresh_ui()
     itm.IconButtonStereo.Checked = stereo_state
@@ -405,10 +436,6 @@ function refresh_ui()
     itm.IconButtonMultiView.Checked = multiview_state
 end
 
-
-function win.On.prefs.Clicked(ev)
-    launch_prefs_window(position)
-end
 
 
 function win.On.Right.Clicked(ev)
@@ -587,8 +614,6 @@ function win.On.RefreshButtons.Clicked(ev)
     end
     _init(side)
     _init(side)
-    fu:SetData('Toolbar16.Position')
-    print('Position data flushed')
     refresh_ui()
 end
 
