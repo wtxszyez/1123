@@ -28,16 +28,17 @@ function _init(side)
         return nil
     end
 
+    guides_state = viewer:AreGuidesShown()
+    controls_state = viewer:AreControlsShown()
+    multiview_state = view:ShowingQuadView()
+    locked_state = view:GetLocked()
+    
     if viewer_type ~= "2D" then
         print('This tool is most useful with 2D viewers')
         return
     end
 
-    locked_state = view:GetLocked()
-    multiview_state = view:ShowingQuadView()
     stereo_state = view:IsStereoEnabled()
-    controls_state = viewer:AreControlsShown()
-    guides_state = viewer:AreGuidesShown()
     lut_state = viewer:IsLUTEnabled()
     roi_state = viewer:IsEnableRoI()
 
@@ -46,6 +47,7 @@ function _init(side)
         checker_state = viewer:IsCheckerEnabled()
         sliders_state = viewer:IsShowGainGamma()
     else
+        -- check DoD, checkers and sliders state it not implemented in Resolve and Fusion 9
         dod_state = false
         checker_state = false
         sliders_state = false
@@ -70,7 +72,6 @@ function get_viewer(side)
     return glview
 end
 
-_init('left')
 
 
 function get_window_xy()
@@ -84,6 +85,7 @@ end
 
 
 function show_ui()
+    _init('left')
     width, height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
