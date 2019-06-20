@@ -1,4 +1,7 @@
 --[[
+v 2.0 
+    -- add preferences for save position and stay on top of all windows
+    -- now properly working with 3D viewers
 v 1.3 add some working buttons 2019-05-21
 -- partial implementation for Fusion 16 by Alex Bogomolov 
 v 1.0 Initial release 2019-01-21
@@ -10,18 +13,19 @@ Web: www.andrewhazelden.com
      https://paypal.me/aabogomolov
 ]]
 
-show_on_top = false
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
-
+local oldprint = print
+print = function(...)
+    oldprint('[Toolbar16] - ',  ...)
+end
 
 function _init(side)
     view = get_viewer(side)
     viewer = view.CurrentViewer
     viewer_type = string.sub(tostring(viewer),1,2)
     comp = fu:GetCurrentComp()
-    
 
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
@@ -32,22 +36,22 @@ function _init(side)
     controls_state = viewer:AreControlsShown()
     multiview_state = view:ShowingQuadView()
     locked_state = view:GetLocked()
+    stereo_state = view:IsStereoEnabled()
     
     if viewer_type ~= "2D" then
         print('This tool is most useful with 2D viewers')
         return
     end
 
-    stereo_state = view:IsStereoEnabled()
     lut_state = viewer:IsLUTEnabled()
     roi_state = viewer:IsEnableRoI()
 
-    if fu.Version == 16 and not fu:GetAttrs('FUSIONB_IsResolve') then
-        dod_state = viewer:IsDoDShown()
+    if fu.Version == 16 then
         checker_state = viewer:IsCheckerEnabled()
+        dod_state = viewer:IsDoDShown()
         sliders_state = viewer:IsShowGainGamma()
     else
-        -- check DoD, checkers and sliders state it not implemented in Resolve and Fusion 9
+        -- check DoD, checkers and sliders state it not implemented in Fusion 9
         dod_state = false
         checker_state = false
         sliders_state = false
@@ -72,20 +76,29 @@ function get_viewer(side)
     return glview
 end
 
-
+function get_state(value)
+    local data = fu:GetData(value)
+    if data and data == 'true' then
+        return true
+    else
+        return false
+    end
+end
 
 function get_window_xy()
-    get_pos = fu:GetData('Toolbar16.Position')
-    if get_pos then
+    local savepos_state = get_state('Toolbar16.SavePos')
+    local get_pos = fu:GetData('Toolbar16.Position')
+    if get_pos and savepos_state then
         return get_pos[1], get_pos[2]
     else
         return fu:GetMousePos()[1], fu:GetMousePos()[2]
     end
 end
 
-
 function show_ui()
+    show_on_top = get_state('Toolbar16.OnTop')
     _init('left')
+    -- check if window exists
     width, height = 650,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
@@ -106,7 +119,7 @@ function show_ui()
             ui:HGroup{
                 ui:HGroup{
                     Weight = 0.8,
-                    ui.HGap(0.25,0),
+                    ui:HGap(0.25,0),
                     ui:Button{
                         ID = 'IconButtonGuides',
                         Text = '',
@@ -321,7 +334,7 @@ function show_ui()
                     },
                     ui:Button{
                         ID = 'CloseButton',
-                        Text = 'Close',
+                        Text = 'Exit',
                         Flat = false,
                         MinimumSize = {40,16},
                         Checkable = false
@@ -345,12 +358,17 @@ function show_ui()
     return win, {x, y}
 end
 
-win, position = show_ui()
-fu:SetData('Toolbar16.Position', position)
-
+local main_win = ui:FindWindow("ToolbarWin")
+if main_win then
+    main_win:Raise()
+    main_win:ActivateWindow()
+    return
+else
+    win, position = show_ui()
+    fu:SetData('Toolbar16.Position', position)
+end
 
 -- The window was closed
-
 function win.On.ToolbarWin.Close(ev)
     disp:ExitLoop()
 end
@@ -359,72 +377,98 @@ function win.On.CloseButton.Clicked(ev)
     disp:ExitLoop()
 end
 
+-- show preferences
+
+local prefs_dlg = nil
+
+function toggle_prefs()
+    if prefs_dlg then
+        prefs_dlg:Hide()
+        prefs_dlg = nil
+    else
+        show_prefs_window(position)
+    end
+end
+
 
 function show_prefs_window(pos)
     local prefx, prefy = pos[1], pos[2]
-    
-    dlg = disp:AddWindow({
+    local offsetY = -100
+    if prefy < 120 then
+        offsetY = offsetY + 120
+    end
+    savepos_state = get_state('Toolbar16.SavePos')
+    ontop_state = get_state('Toolbar16.OnTop')
+
+    prefs_dlg = disp:AddWindow({
         ID = 'TBPrefs',
         TargetID = 'TBPrefs',
         -- WindowTitle = 'Toolbar16 Prefs',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +298, prefy-100, 200, 100},
+        Geometry = {prefx +298, prefy+offsetY, 200, 100},
             ui:VGroup{
             ID = 'prefs',
                 ui:HGroup{
-                    Weight = 0.8,
+                    Weight = 0.5,
                     ui:CheckBox{
                         ID = 'SavePos',
-                        Text = 'Save Position'
+                        Text = 'save position',
+                        Checked = savepos_state,
                     },
                     ui:Button{
-                        ID = 'PrefClose',
-                        Text = 'close',
-                        Flat = true,
+                        ID = 'FlushData',
+                        Text = 'flush data',
+                        MinimumSize = {5,10},
                     },
                 },
                 ui:HGroup{
-                    ui:Button{
-                        ID = 'FlushData',
-                        Text = 'Flush',
-                    }
-                }
+                        ui:CheckBox{
+                        ID = 'OnTop',
+                        Text = 'stay on top',
+                        Checked = ontop_state,
+                    },
+                },
             },
         })
-    -- itm1 = dlg:GetItems()
 
-    function dlg.On.PrefClose.Clicked(ev)
-        disp:ExitLoop()
+    pref_itm = prefs_dlg:GetItems()
+
+    function prefs_dlg.On.PrefClose.Clicked(ev)
+        prefs_dlg:Hide()
+        prefs_dlg = nil
     end
 
-    function dlg.On.TBPrefs.Close(ev)
-        disp:ExitLoop()
+
+    function prefs_dlg.On.SavePos.Clicked(ev)
+        local savePos = pref_itm.SavePos.Checked
+        print('saving main window position set to ' .. tostring(savePos))
+        fu:SetData('Toolbar16.SavePos', tostring(savePos))
     end
 
-    function dlg.On.FlushData.Clicked(ev)
+
+    function prefs_dlg.On.OnTop.Clicked(ev)
+        local onTop = pref_itm.OnTop.Checked
+        print('stay on top is set to ' .. tostring(onTop))
+        fu:SetData('Toolbar16.OnTop', tostring(onTop))
+    end
+
+    function prefs_dlg.On.FlushData.Clicked(ev)
         fu:SetData('Toolbar16.Position')
         print('Position data flushed')
+        prefs_dlg:Hide()
+        prefs_dlg = nil
     end
 
-    dlg:Show()
-    disp:RunLoop()
-    dlg:Hide()
+    prefs_dlg:Show()
 end
 
--- Add your GUI element based event functions here:
 
 itm = win:GetItems()
 
+
 function win.On.LaunchPrefs.Clicked(ev)
-    -- show_prefs_window(position)
     pref_win = ui:FindWindow('TBPrefs')
-    if pref_win then
-        print(pref_win)
-        pref_win:Raise()
-        pref_win:ActivateWindow()
-        return
-    end
-    show_prefs_window(position)
+    toggle_prefs()
 end
 
 
@@ -440,7 +484,6 @@ function refresh_ui()
     itm.IconButtonGuides.Checked = guides_state
     itm.IconButtonMultiView.Checked = multiview_state
 end
-
 
 
 function win.On.Right.Clicked(ev)
@@ -592,7 +635,7 @@ function win.On.IconButtonSliders.Clicked(ev)
         viewer:ShowGainGamma(state)
         print('[Sliders][Button State] ', state)
     else
-        print('this does not work in Fu9')
+        print('this function does not work in Fu9')
     end
 end
 
@@ -607,7 +650,7 @@ function win.On.IconButtonChequers.Clicked(ev)
         viewer:Redraw()
         print('[Chequers][Button State] ', state)
     else
-        print('this does not work in Fu9')
+        print('this function does not work in Fu9')
     end
 end
 
@@ -644,4 +687,3 @@ win:Hide()
 app:RemoveConfig('ToolbarWin')
 collectgarbage()
 print('[Done]')
-
