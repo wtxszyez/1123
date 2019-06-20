@@ -1,6 +1,33 @@
 local ctrls = table.ordered()
 comp:Lock()
 saver_plus = comp:AddTool('Saver', -32768, -32768)
+ctrls.SOLO = {
+    LINKID_DataType = "Number",
+    INP_Default = 0,
+    INPID_InputControl = "ButtonControl",
+    BTNCS_Execute = [[    function check_selected(tool)
+    return tool:GetAttrs('TOOLB_Selected')
+end
+
+function check_enabled(tool)
+    return tool:GetAttrs('TOOLB_PassThrough')
+end
+    local cmp = fu:GetCurrentComp()
+    local selectedSavers = cmp:GetToolList(true, "Saver")
+    local allSavers = cmp:GetToolList(false, "Saver")
+    for _, currentSaver in pairs(allSavers) do
+        if not check_selected(currentSaver) then
+            currentSaver:SetAttrs( { TOOLB_PassThrough = true } )
+        end
+    end
+    for _, sel in pairs(selectedSavers) do
+        if check_enabled(sel) then
+            sel:SetAttrs({ TOOLB_PassThrough = false})
+        end
+    end ]],
+    LINKS_Name = "Solo",
+    ICS_ControlPage = "File",
+}
 ctrls.ML = {
     LINKID_DataType = "Number",
     INP_Default = 0,
@@ -10,5 +37,14 @@ ctrls.ML = {
     ICS_ControlPage = "File",
 }
 saver_plus.UserControls = ctrls
-comp:Unlock()
 refresh = saver_plus:Refresh()
+
+
+function unlock(cmp)
+    cmp:Unlock()
+    if cmp:IsLocked() then
+        unlock(cmp)
+    end
+end
+
+unlock(comp)
