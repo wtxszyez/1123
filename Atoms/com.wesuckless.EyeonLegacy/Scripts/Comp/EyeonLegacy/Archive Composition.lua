@@ -192,7 +192,7 @@ function GetPreferenceData(pref, defaultValue, status)
 	else
 		-- Force a default value into the preference & then list it
 		newPreference = defaultValue
-		-- comp:SetData(pref, defaultValue)
+        -- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
 
 		if status == 1 or status == true then
@@ -569,7 +569,7 @@ function main()
 	-- If the composition is not saved, offer a chance to save the composition, or exit
 	------------------------------------------------------------------------------
 	while composition:GetAttrs().COMPS_FileName == "" do
-		ret = composition:AskUser("Error", {
+		ret = composition:AskUser("Error: Comp not saved!", {
 			{"save_path", Name = "save composition to", "FileBrowse", Default = GetNextCompositionSave(), Save = true},
 			{"description", "Text", Lines = 5, Default = "Please save the composition before running this script. You can use the path dialog above to save the composition, or Cancel to exit.", ReadOnly = true, Wrap = true}
 			})
@@ -587,6 +587,7 @@ function main()
 	fbx = comp:GetToolList(false, "SurfaceFBXMesh")
 	abc = comp:GetToolList(false, "SurfaceAlembicMesh")
 	snd = comp:GetToolList(false, "Fuse.SuckLessAudio")
+    luts = comp:GetToolList(false, "FileLUT")
 
 	------------------------------------------------------------------------------
 	-- Allow the user to choose initial options for the script, including
@@ -602,6 +603,7 @@ function main()
 	audioChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.audio', 1, printStatus)
 	fontsChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', 1, printStatus)
 	openFolderChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', 1, printStatus)
+	lutsChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.luts', 1, printStatus)
 	
 	-- Show the AskUser Dialog
 	init = composition:AskUser("Archive Composition", {
@@ -611,8 +613,9 @@ function main()
 		{"abc", Name = "Include Alembic", "Checkbox", Default = abcChk, NumAcross = 2},
 		{"audio", Name = "Include Audio", "Checkbox", Default = audioChk, NumAcross = 2},
 		{"fonts", Name = "Include Fonts", "Checkbox", Default = fontsChk, NumAcross = 2},
+		{"luts", Name = "Include LUTs", "Checkbox", Default = lutsChk, NumAcross = 2},
 		{"openFolder", Name = "Open Archive Composition Folder", "Checkbox", Default = openFolderChk, NumAcross = 1},
-		{"note", Name = "Client Notes for ArchiveLog.txt", "Text", Default ="", Wrap = true, Lines = 4},
+		{"note", Name = "Client Notes", "Text", Default ="", Wrap = true, Lines = 4},
 		{"instructions", Name = "Instructions", "Text", Default ="This script will collect all the clips used by your composition into folders beneath a single root directory. A copy of the composition will also be saved in the destination, with all loaders pointing to the new clip locations.\n\nThe script will calculate total file sizes before copying so that you can ensure enough space is available at the destination. You may disable the filesize pass by deselecting the checkbox above.", Wrap = true, Lines = 12, ReadOnly = true}
 		})
 
@@ -625,6 +628,7 @@ function main()
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.abc', init.abc, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.audio', init.audio, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', init.fonts, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.luts', init.luts, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', init.openFolder, printStatus)
 	
 	------------------------------------------------------------------------------
@@ -657,17 +661,20 @@ function main()
 
 	if err ~= "" then 
 		ret = composition:AskUser("Warning", {
-		{"description", "Text", Lines = 10, Default = "One or more Saver tools will be ignored. Tool names and reasons are listed below. Click OK to continue or Cancel to exit the script.\n\n" .. err, ReadOnly = true, Wrap = true}
+		{"description", "Text", Lines = 10, Default = "One or more Saver tools will be ignored. Tool names and reasons are listed below. Click OK to continue or Cancel to exit the script.\n\n" .. err, ReadOnly = true, Wrap = false}
 		})
 		if ret == nil then return end
 	end
 	err = ""
 	errText = ""
 
+	------------------------------------------------------------------------------
+	-- LUTS LIST
+	------------------------------------------------------------------------------
+    luts_list = {}
 
 	------------------------------------------------------------------------------
 	-- FONT LIST
-	--
 	------------------------------------------------------------------------------
 	font_files = {}
 
@@ -697,7 +704,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- FBX MESHES
-	--
 	------------------------------------------------------------------------------
 	fbx_files = {}
 
