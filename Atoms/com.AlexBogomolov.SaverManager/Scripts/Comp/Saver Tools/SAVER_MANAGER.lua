@@ -26,10 +26,10 @@ win = disp:AddWindow({
         -- Add your GUI elements here:
         ui:HGroup{VMargin = 10,
           ui:Button{ID = 'Disable', Text = 'Solo Selected',},
-          ui:Button{ID = 'Enable', Text = 'Enable All',},
         },
-        ui:VGroup{
-          ui.Button{ID= 'SelectAll', Text = 'Select All Savers'}
+        ui:HGroup{
+          ui.Button{ID= 'SelectAll', Text = 'Select All'},
+          ui:Button{ID = 'Enable', Text = 'Enable All',},
         },
         ui:VGroup{
           ui.Button{ID= 'CreateLoaders', Text = 'Create Loaders'}
@@ -94,3 +94,4 @@ end
 win:Show()
 disp:RunLoop()
 win:Hide()
+

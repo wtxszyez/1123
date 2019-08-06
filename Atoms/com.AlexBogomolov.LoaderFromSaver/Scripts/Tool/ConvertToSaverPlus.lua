@@ -1,6 +1,6 @@
 local ctrls = table.ordered()
+
 comp:Lock()
-saver_plus = comp:AddTool('Saver', -32768, -32768)
 ctrls.SOLO = {
     LINKID_DataType = "Number",
     INP_Default = 0,
@@ -36,12 +36,13 @@ ctrls.ML = {
     LINKS_Name = "Make Loader",
     ICS_ControlPage = "File",
 }
-saver_plus.UserControls = ctrls
-refresh = saver_plus:Refresh()
+tool.UserControls = ctrls
+refresh = tool:Refresh()
 
 
 function unlock(cmp)
     cmp:Unlock()
+    print('comp unlocked')
     if cmp:IsLocked() then
         unlock(cmp)
     end
