@@ -661,7 +661,7 @@ function main()
 
 	if err ~= "" then 
 		ret = composition:AskUser("Warning", {
-		{"description", "Text", Lines = 10, Default = "One or more Saver tools will be ignored. Tool names and reasons are listed below. Click OK to continue or Cancel to exit the script.\n\n" .. err, ReadOnly = true, Wrap = false}
+		{"description", "Text", Lines = 10, Default = "One or more Saver tools will be ignored. Tool names and reasons are listed below. Click OK to continue or Cancel to exit the script.\n\n" .. err, ReadOnly = true, Wrap = true}
 		})
 		if ret == nil then return end
 	end
