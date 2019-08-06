@@ -673,6 +673,15 @@ function main()
 	------------------------------------------------------------------------------
     luts_list = {}
 
+    if init.luts == 1 and table.getn(luts) > 0 then
+        for i, lut in pairs(luts) do
+            if not luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])] then
+                luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])] = {lut}
+            end
+            table.insert(luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])], lut)
+        end
+    end
+
 	------------------------------------------------------------------------------
 	-- FONT LIST
 	------------------------------------------------------------------------------
@@ -775,7 +784,12 @@ function main()
 		for i, v in pairs(font_files) do
 			total_size = total_size + filesize(i)
 		end
-	
+
+        -- Calculate luts size
+        for i, v in pairs(luts_list) do
+            total_size = total_size + filesize(i)
+        end
+
 		-- Calculate fbx filesizes
 		for i, v in pairs(fbx_files) do
 			total_size = total_size + filesize(i)
@@ -995,6 +1009,43 @@ function main()
 	
 	end
 
+	------------------------------------------------------------------------------
+	--	COPY ALL LUT FILES
+	--
+	--	if two lut files with the same name came from different directories this 
+	--	function would overwrite one of them.
+	------------------------------------------------------------------------------
+	if init.luts == 1 then
+		dprintf("\n")
+		dprintf("Copy LUTs\n")
+		dprintf("---------------\n")
+	
+		-- Create a folder for the abc files
+		new_dir = output_root .. "LUTs" .. os_separator
+		virtual_dir = "Comp:" .. os_separator .. "LUTs" .. os_separator
+	
+		createdir(new_dir)
+	
+		for name, val in pairs(luts_list) do
+			lut_seq = eyeon.parseFilename(name)
+		
+			dprintf(name.. "\n")
+			size, errText = eyeon.copyfile(name, new_dir .. lut_seq.FullName)
+		
+			if size == 0 then 
+				table.insert(badframe, errText)
+			end
+		
+			total_size = total_size + size
+		
+			comp:Lock()
+			for _, tool in pairs(val) do
+				tool.LUTFile[fu.TIME_UNDEFINED] = virtual_dir .. lut_seq.FullName
+			end
+			comp:Unlock()
+		end
+	
+	end
 
 
 	------------------------------------------------------------------------------
