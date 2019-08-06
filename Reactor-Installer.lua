@@ -1,11 +1,11 @@
-_VERSION = [[Version 3 - May 27, 2019]]
-_REPO_EDITION = [[Install Reactor v3]]
+_VERSION = [[Version 3.0.2 - July 16, 2019]]
+_REPO_EDITION = [[Install Reactor v3.0.2]]
 --[[
 ==============================================================================
-Reactor Installer - v3 2019-05-27
+Reactor Installer - v3 2019-07-16
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
-Created By  : Andrew Hazelden[andrew@andrewhazelden.com]
+Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -131,7 +131,7 @@ end
 local osSeparator = package.config:sub(1,1)
 
 -- Check for a pre-existing PathMap preference
-local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+local reactor_existing_pathmap = fusion:GetPrefs("Global.Paths.Map.Reactor:")
 if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
 	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
 	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. osSeparator .. "$", "")
@@ -159,6 +159,50 @@ local fuVersion = tonumber(eyeon._VERSION)
 -- local fuVersion = tonumber(9.02)
 -- local fuVersion = tonumber(15.0)
 
+
+function dprint(str)
+	-- Display the debug output in the Console tab
+	if math.floor(fuVersion) == 9 then
+		local cmp = fusion.CurrentComp
+		if cmp then
+			cmp:Print(tostring(str) .. "\n\n")
+		else
+			print(tostring(str) .. "\n")
+		end
+	else
+		print(tostring(str) .. "\n")
+	end
+	
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+	
+	-- Return a string with the directory path where the Lua script was run from
+	-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+	local fallbackPath = fusion:MapPath("Temp:/Reactor/")
+	local reactor_install_log_root = ""
+	if debug.getinfo(1).source == "???" then
+		-- Fallback absolute filepath
+		reactor_install_log_root = fallbackPath
+	else
+		-- Filepath coming from the Lua script's location on disk
+		local debugPath = string.sub(debug.getinfo(1).source, 2) or fallbackPath
+		reactor_install_log_root = string.match(debugPath, "^(.+[/\\])")
+	end
+
+	local reactor_log = reactor_install_log_root .. "ReactorInstallLog.txt"
+	eyeon.createdir(reactor_install_log_root)
+	log_fp, err = io.open(reactor_log, "a")
+	if err then
+		print("[Log Error] Could not open ReactorInstallLog.txt for writing")
+	else
+		time_stamp = os.date('[%Y-%m-%d|%I:%M:%S %p] ')
+		log_fp:write("\n" .. time_stamp)
+		log_fp:write(str)
+		log_fp:close()
+	end
+end
+
+
 -- Download a file using cURL + FFI
 -- Example: DownloadURL(fuURL, fuDestFilename, shortFilename, msgwin, msgitm, "Installation Status", statusMsg, 2, totalSteps, 1)
 function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, progressLevel, progressMax, delaySeconds)
@@ -170,15 +214,14 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 		return nitems
 	 end))
 
-	text = "[Download URL]\n" .. tostring(url) .. "\n"
+	text = "[Download URL]\n" .. tostring(url)
 	ProgressWinUpdate(win, itm, title, text, progressLevel, progressMax, delaySeconds)
 
 	ok, err = req:perform()
 	if ok then
 		-- Write the output to the terminal
 		if os.getenv("REACTOR_DEBUG_FILES") == "true" then
-			comp:Print(table.concat(body))
-			comp:Print("\n")
+			dprint(table.concat(body))
 		end
 
 		-- Check if the file was downloaded correctly
@@ -190,35 +233,35 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 			exit()
 			return
 		elseif table.concat(body) == [[{"message":"404 Project Not Found"}]] then
-			text = "[Error]\nThe \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Relaunch\" button again.\n"
+			text = "[Error] The \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Relaunch\" button again.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
 			exit()
 			return
 		elseif table.concat(body) == [[{"message":"404 File Not Found"}]] then
-			text = "[Error]\nThe main Reactor GitLab file has been renamed. Please download and install a new Reactor Bootstrap Installer script or you can try manually installing the latest Reactor.fu file.\n"
+			text = "[Error] The main Reactor GitLab file has been renamed. Please download and install a new Reactor Bootstrap Installer script or you can try manually installing the latest Reactor.fu file.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
 			exit()
 			return
 		elseif table.concat(body) == [[{"error":"invalid_token","error_description":"Token was revoked. You have to re-authorize from the user."}]] then
-			text = "[Error]\nYour GitLab TokenID has been revoked. Please enter a new TokenID value in your Reactor.cfg file, or switch to the Reactor Public repo and remove your existing Reactor.cfg file.\n"
+			text = "[Error] Your GitLab TokenID has been revoked. Please enter a new TokenID value in your Reactor.cfg file, or switch to the Reactor Public repo and remove your existing Reactor.cfg file.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
 			exit()
 			return
 		elseif table.concat(body) == [[{"message":"404 Commit Not Found"}]] then
-			text = "[Error]\nGitLab Previous CommitID Empty Error. Please remove your existing Reactor.cfg file and try again. Alternativly, you may have a REACTOR_BRANCH environment variable active and it is requesting a branch that does not exist.\n"
+			text = "[Error] GitLab Previous CommitID Empty Error. Please remove your existing Reactor.cfg file and try again. Alternativly, you may have a REACTOR_BRANCH environment variable active and it is requesting a branch that does not exist.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
 			exit()
 			return
 		elseif table.concat(body) == [[{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token.","scope":"api"}]] then
-			text = "[Error]\nGitLab TokenID Permissions Scope Error. Your current GitLab TokenID privileges do not grant you access to this repository.\n"
+			text = "[Error] GitLab TokenID Permissions Scope Error. Your current GitLab TokenID privileges do not grant you access to this repository.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
@@ -232,10 +275,10 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 			fuFile:write(table.concat(body))
 			fuFile:close()
 
-			text = "[" .. shortFilename .. " Saved]\n" .. fuDestFilename .. "\n"
+			text = "[" .. shortFilename .. " Saved] " .. fuDestFilename .. "\n"
 			ProgressWinUpdate(win, itm, "Installation Status", text, progressLevel, progressMax, delaySeconds)
 		else
-			text = "[" .. shortFilename .. "Write Error]\n" .. fuDestFilename .. "\n"
+			text = "[" .. shortFilename .. "Write Error] " .. fuDestFilename .. "\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
@@ -277,7 +320,7 @@ function Install(token)
 	-- Show the intital progress window
 	local msgwin,msgitm = ProgressWinCreate()
 
-	statusMsg = "[Downloads Started]\n"
+	statusMsg = "[Downloads Started]"
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 1, totalSteps, statusDelay)
 
 	-- ==============================================================================
@@ -289,9 +332,9 @@ function Install(token)
 	local autorunComp = ''
 	local compFile = nil
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		-- Resolve 15+ is running
-		comp:Print("\n")
+		dprint("\n")
 	else
 		-- Fusion Standalone is running (Skip this step on Resolve 15+)
 
@@ -328,7 +371,7 @@ function Install(token)
 	-- ==============================================================================
 	-- Download Reactor.lua and save it as AutorunReactor.lua
 	-- ==============================================================================
-	statusMsg = "[Download URL]\n" .. tostring(luaURL) .. "\n"
+	statusMsg = "[Download URL]\n" .. tostring(luaURL)
 	DownloadURL(luaURL, autorunLuaDestFile, "AutorunReactor.lua", msgwin, msgitm, "Installation Status", statusMsg, 4, totalSteps, 1)
 
 	-- ==============================================================================
@@ -362,10 +405,10 @@ function Install(token)
 ]])
 		cfgFile:close()
 
-		statusMsg = "[Reactor.cfg Saved]\n" .. tostring(cfgDestFile) .. "\n"
+		statusMsg = "[Reactor.cfg Saved]\n" .. tostring(cfgDestFile)
 		ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 5, totalSteps, statusDelay*2)
 	else
-		statusMsg = "[Reactor.cfg Write Error]\n" .. cfgDestFile .. "\n"
+		statusMsg = "[Reactor.cfg Write Error]\n" .. cfgDestFile
 		errwin,erritm = ErrorWin("Installation Error", statusMsg)
 		msgwin:Hide()
 		errwin:Hide()
@@ -373,17 +416,17 @@ function Install(token)
 		return
 	end
 
-	statusMsg = "[Reactor]\nAll Downloads Completed\n"
+	statusMsg = "[Reactor]\nAll Downloads Completed"
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 6, totalSteps, statusDelay*2)
 
 	-- Open Reactor:/System/ folder in a desktop file browser window
-	statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath) .. "\n"
+	statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath)
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 7, totalSteps, statusDelay*2)
 	bmd.openfileexternal("Open", sysPath)
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		-- Resolve 15+ is running
-		comp:Print("\n")
+		dprint("\n")
 
 		-- ==============================================================================
 		-- Open the Reactor GUI - Run the script Temp:/Reactor/AutorunReactor.lua
@@ -415,9 +458,9 @@ function Install(token)
 			else
 				command = "\"" .. tostring(fusionApp) .. "\" \"" .. tostring(autorunComp) .. "\" 2>&1 &"
 			end
-			comp:Print("[Launch Command] " .. tostring(command) .. "\n")
+			dprint("[Launch Command] " .. tostring(command))
 		else
-			comp:Print("[Launch Command Error] Fusion program filename is nil\n")
+			dprint("[Launch Command Error] Fusion program filename is nil")
 		end
 
 		-- Start up a new instance of Fusion
@@ -444,34 +487,43 @@ function OpenURL(siteName, path)
 		-- Running on Linux
 		command = "xdg-open \"" .. path .. "\" &"
 	else
-		comp:Print("[Error] There is an invalid Fusion platform detected\n")
+		dprint("[Error] There is an invalid Fusion platform detected")
 		return
 	end
 
 	os.execute(command)
 
-	-- comp:Print("[Launch Command] " tostring(command) .. "\n")
-	comp:Print("[Opening URL] " .. tostring(path) .. "\n")
+	-- dprint("[Launch Command] " tostring(command))
+	dprint("[Opening URL] " .. tostring(path))
 end
 
 -- Wrong version of Fusion detected
 function VersionError(ver, minVer, os)
-	local msg = "Detected Fusion " .. ver .. " running on " .. os .. ".\n\nReactor requires Fusion " .. minVer .. " or higher!\n\nPlease update your copy of Fusion.\n"
-	comp:Print("[Reactor Installer Error] " .. msg)
+	local msg = "Detected Fusion " .. ver .. " running on " .. os .. ".\n\nReactor requires Fusion " .. minVer .. " or higher!\n\nPlease update your copy of Fusion."
+	dprint("[Reactor Installer Error] " .. msg)
 
 	-- Show a warning message in an AskUser dialog
 	dlg = {
 		{'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 8, Wrap = true, Default = msg},
 	}
-	dialog = comp:AskUser('Reactor Installer Error', dlg)
-
+	
+	if comp then
+		dialog = comp:AskUser('Reactor Installer Error', dlg)
+	else
+		dprint(msg)
+	end
+	
 	-- Open the Blackmagic Fusion Webpage using your OS native http URL handler
 	OpenURL("Blackmagic Fusion Webpage", fusionDownloadURL)
 end
 
 -- Correct version of Fusion detected
-function VersionOK(ver, os)
-	comp:Print("[Reactor Installer] Detected Fusion " .. ver .. " running on " .. os .. ".\n\n")
+function VersionOK(host, ver, os)
+	-- Print out the script info
+	dprint("----------------------------------------------------------------------------")
+	dprint("[Reactor Installer] " .. tostring(_VERSION))
+	dprint("[Created By] Andrew Hazelden <andrew@andrewhazelden.com>")
+	dprint("[Reactor Installer] Detected " .. host .. " " .. ver .. " running on " .. os .. ".")
 end
 
 -- Create the "Install Reactor" dialog
@@ -481,7 +533,7 @@ function InstallReactorWin()
 
 	-- Install button label
 	local installLabel = "Install and Relaunch"
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		installLabel = "Install and Launch"
 	end
 
@@ -587,17 +639,17 @@ function InstallReactorWin()
 
 		-- The Custom Install Path button was clicked
 	function win.On.CustomButton.Clicked(ev)
-		comp:Print("[Reactor] Custom Install Path\n")
+		dprint("[Reactor] Custom Install Path\n")
 		local selected_path = tostring(fu:RequestDir(reactor_pathmap) or reactor_pathmap)
 		reactor_pathmap = selected_path
 
 		-- List the modified Reactor install path
-		comp:Print("[Install Folder] \"" .. tostring(reactor_pathmap) .. "\"\n")
+		dprint("[Install Folder] \"" .. tostring(reactor_pathmap) .. "\"")
 	end
 
 	-- The Install and Relaunch Button was clicked
 	function win.On.InstallButton.Clicked(ev)
-		comp:Print("[Reactor] Installation Started\n")
+		dprint("[Reactor] Installation Started")
 
 		-- Set the customized Reactor PathMap
 		local reactor_root = app:MapPath(tostring(reactor_pathmap) .. "Reactor/")
@@ -616,7 +668,7 @@ function InstallReactorWin()
 		end
 		app:SavePrefs()
 		
-		comp:Print("[Reactor: PathMap] \"" .. tostring(app:GetPrefs("Global.Paths.Map.Reactor:")) .. "\"\n")
+		dprint("[Reactor: PathMap] \"" .. tostring(app:GetPrefs("Global.Paths.Map.Reactor:")) .. "\"")
 
 		-- Create the Reactor:/System/ folder
 		bmd.createdir(app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/"))
@@ -710,14 +762,11 @@ function ProgressWinUpdate(win, itm, title, text, progressLevel, progressMax, de
 
 	-- Update the heading Text
 	itm.Title.Text = title .. "\nStep " .. tostring(progressLevel) .. " of " .. tostring(progressMax)
-
 	itm.Message.Text = text
 
-	-- Print the error to the Console tab
-	if comp ~= nil then
-		comp:Print(text)
-	end
-
+	dprint(title .. " Step " .. tostring(progressLevel) .. " of " .. tostring(progressMax))
+	dprint(text)
+	
 	-- Add the webpage header text
 	html = "<html>\n"
 	html = html .."\t<head>\n"
@@ -840,9 +889,8 @@ function ErrorWin(title, text)
 	})
 
 	-- Print the error to the Console tab
-	if comp ~= nil then
-		comp:Print(text)
-	end
+	dprint(title)
+	dprint(text)
 
 	win:Show()
 
@@ -884,9 +932,6 @@ function CloseComps()
 	-- Add an extra newline
 	openComps = openComps .. "\n"
 
-	-- Unlock the comp flow area - This causes comp.Close() to ask if you want to save the current document
-	cmp:Unlock()
-
 	-- Re-update the comp variable
 	new_comp = fusion:NewComp()
 	composition = fusion.CurrentComp
@@ -919,30 +964,30 @@ function Main()
 			fuVersion = fu:GetVersion()[1]
 		end
 		
-		-- Resolve 15+ was detected
-		if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
-			comp:Print("\n")
+		-- Resolve 15+ was detected - Note: Resolve 16 added "fu:GetVersion().app" so Fu 15 needs to be detected by fuVersion equalling "15"
+		if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
+			-- Show the version info
+			VersionOK("Resolve", fuVersion, platform)
 		else
+			-- Show the version info
+			VersionOK("Fusion", fuVersion, platform)
+			
 			-- Close all of the active comps
 			closedLst = CloseComps()
 
 			-- Print out a list of the comps that were closed
-			comp:Print(closedLst)
+			dprint(closedLst)
+			
+			-- Show the version info
+			VersionOK("Fusion", fuVersion, platform)
 		end
-
-		-- Print out the script info
-		comp:Print("\n\n[Reactor Installer] " .. tostring(_VERSION) .. "\n")
-		comp:Print("[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n")
-
-		VersionOK(fuVersion, platform)
-
-		comp:Print("[GitLab Branch] \"" .. tostring(branch) .. "\"\n")
+		dprint("[GitLab Branch] \"" .. tostring(branch) .. "\"")
 
 		-- Check Reactor.cfg
 		local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 		local cfgDestFile = sysPath .. "Reactor.cfg"
 		if eyeon.fileexists(cfgDestFile) == false then
-			-- comp:Print("[Reactor.cfg] Does not exist yet")
+			dprint("[Reactor.cfg] Does not exist yet")
 			bmd.createdir(sysPath)
 		end
 

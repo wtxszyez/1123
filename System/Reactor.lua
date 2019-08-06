@@ -1,7 +1,7 @@
-_VERSION = [[Version 3 - May 23, 2019]]
+_VERSION = [[Version 3.0.2 - July 23, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3 2019-05-23
+Reactor Package Manager for Fusion - v3.0.2 2019-07-23
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -1344,7 +1344,7 @@ function ReadAtoms(path)
 					atom.Issues = {}
 
 					atom.Disabled = not IsDeployable(atom.Deploy, atom.Issues, "")
---[[
+
 					if atom.Maximum and g_AppVersion > atom.Maximum and g_AppVersion ~= 0 then
 						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Maximum) .. " or lower to use this Atom.")
 						atom.Disabled = true
@@ -1352,7 +1352,7 @@ function ReadAtoms(path)
 						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Minimum) .. " or higher to use this Atom.")
 						atom.Disabled = true
 					end
-]]
+
 					local installed = IsAtomInstalled(GetAtomID(atom))
 					local updatable, installedVersion, newVersion = IsAtomUpdatable(atom)
 					if updatable == true then
