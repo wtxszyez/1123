@@ -214,35 +214,36 @@ end
 ------------------------------------------------------------------------------
 
 function pathIsMovieFormat(path)
-	local extension = eyeon.getextension(path):lower()
+    local extension = eyeon.parseFilename(path).Extension:lower()
+    -- print(extension)
 	if extension ~= nil then
-		if ( extension == "3gp" ) or
-				( extension == "aac" ) or
-				( extension == "aif" ) or
-				( extension == "aiff" ) or
-				( extension == "avi" ) or
-				( extension == "dvs" ) or
-				( extension == "fb" ) or
-				( extension == "flv" ) or
-				( extension == "m2ts" ) or
-				( extension == "m4a" ) or
-				( extension == "m4b" ) or
-				( extension == "m4p" ) or
-				( extension == "mkv" ) or
-				( extension == "mov" ) or
-				( extension == "mp3" ) or
-				( extension == "mp4" ) or
-				( extension == "mts" ) or
-				( extension == "mxf" ) or
-				( extension == "omf" ) or
-				( extension == "omfi" ) or
-				( extension == "qt" ) or
-				( extension == "stm" ) or
-				( extension == "tar" ) or
-				( extension == "vdr" ) or
-				( extension == "vpv" ) or
-				( extension == "wav" ) or
-				( extension == "webm" ) then
+        if  ( extension == ".3gp" ) or
+            ( extension == ".aac" ) or
+            ( extension == ".aif" ) or
+            ( extension == ".aiff" ) or
+            ( extension == ".avi" ) or
+            ( extension == ".dvs" ) or
+            ( extension == ".fb" ) or
+            ( extension == ".flv" ) or
+            ( extension == ".m2ts" ) or
+            ( extension == ".m4a" ) or
+            ( extension == ".m4b" ) or
+            ( extension == ".m4p" ) or
+            ( extension == ".mkv" ) or
+            ( extension == ".mov" ) or
+            ( extension == ".mp3" ) or
+            ( extension == ".mp4" ) or
+            ( extension == ".mts" ) or
+            ( extension == ".mxf" ) or
+            ( extension == ".omf" ) or
+            ( extension == ".omfi" ) or
+            ( extension == ".qt" ) or
+            ( extension == ".stm" ) or
+            ( extension == ".tar" ) or
+            ( extension == ".vdr" ) or
+            ( extension == ".vpv" ) or
+            ( extension == ".wav" ) or
+            ( extension == ".webm" ) then
 			return true
 		end
 	end
@@ -255,14 +256,14 @@ end
 ------------------------------------------------------------------------------
 
 function pathIsAudioFormat(path)
-	local extension = eyeon.getextension(path):lower()
+    local extension = eyeon.parseFilename(path).Extension:lower()
 	if extension ~= nil then
-		if	( extension == "aac" ) or
-				( extension == "aif" ) or
-				( extension == "aiff" ) or
-				( extension == "m4a" ) or
-				( extension == "mp3" ) or
-				( extension == "wav" ) then
+            if	( extension == ".aac" ) or
+				( extension == ".aif" ) or
+				( extension == ".aiff" ) or
+				( extension == ".m4a" ) or
+				( extension == ".mp3" ) or
+				( extension == ".wav" ) then
 			return true
 		end
 	end
@@ -377,12 +378,12 @@ function buildClipList(ld)
 	end
 	
 	-- If its a loader
-	for i = 1, table.getn(attrs.TOOLST_Clip_Name) do
+     for i = 1, table.getn(attrs.TOOLST_Clip_Name) do
 		local seq = eyeon.parseFilename(composition:MapPath(attrs.TOOLST_Clip_Name[i]))
 		clip = {}
 		clip.ClipName		= attrs.TOOLST_Clip_Name[i]
 		clip.Number			= seq.Number
-		clip.ImportMode	= attrs.TOOLIT_Clip_ImportMode[i]
+		clip.ImportMode     = attrs.TOOLIT_Clip_ImportMode[i]
 		clip.Start			= attrs.TOOLNT_Clip_Start[i]
 		clip.TrimIn			= attrs.TOOLIT_Clip_TrimIn[i]
 		clip.TrimOut		= attrs.TOOLIT_Clip_TrimOut[i]
@@ -402,8 +403,8 @@ function buildClipList(ld)
 		else
 			table.insert(cliplist[isduplicate].Clip, clip)
 		end
-	end
-	return
+    end
+    return
 end
 
 
@@ -943,8 +944,6 @@ function main()
 	
 	------------------------------------------------------------------------------
 	-- COPY ALL FONTS
-	--
-	--
 	------------------------------------------------------------------------------
 	if init.fonts == 1 then 
 		dprintf("\n")
@@ -972,7 +971,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL FBX FILES
-	--
 	-- if two fbx files with the same name came from different directories this 
 	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1011,7 +1009,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	--	COPY ALL LUT FILES
-	--
 	--	if two lut files with the same name came from different directories this 
 	--	function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1050,7 +1047,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	--	COPY ALL ABC FILES
-	--
 	--	if two abc files with the same name came from different directories this 
 	--	function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1088,7 +1084,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL AUDIO FILES
-	--
 	-- if two audio files with the same name came from different directories this 
 	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1137,8 +1132,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL LOADER CLIPS
-	--
-	--
 	------------------------------------------------------------------------------
 	dprintf("\n")
 	dprintf("Copy Loaders\n")
