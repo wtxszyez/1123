@@ -192,7 +192,7 @@ function GetPreferenceData(pref, defaultValue, status)
 	else
 		-- Force a default value into the preference & then list it
 		newPreference = defaultValue
-		-- comp:SetData(pref, defaultValue)
+        -- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
 
 		if status == 1 or status == true then
@@ -214,35 +214,36 @@ end
 ------------------------------------------------------------------------------
 
 function pathIsMovieFormat(path)
-	local extension = eyeon.getextension(path):lower()
+    local extension = eyeon.parseFilename(path).Extension:lower()
+    -- print(extension)
 	if extension ~= nil then
-		if ( extension == "3gp" ) or
-				( extension == "aac" ) or
-				( extension == "aif" ) or
-				( extension == "aiff" ) or
-				( extension == "avi" ) or
-				( extension == "dvs" ) or
-				( extension == "fb" ) or
-				( extension == "flv" ) or
-				( extension == "m2ts" ) or
-				( extension == "m4a" ) or
-				( extension == "m4b" ) or
-				( extension == "m4p" ) or
-				( extension == "mkv" ) or
-				( extension == "mov" ) or
-				( extension == "mp3" ) or
-				( extension == "mp4" ) or
-				( extension == "mts" ) or
-				( extension == "mxf" ) or
-				( extension == "omf" ) or
-				( extension == "omfi" ) or
-				( extension == "qt" ) or
-				( extension == "stm" ) or
-				( extension == "tar" ) or
-				( extension == "vdr" ) or
-				( extension == "vpv" ) or
-				( extension == "wav" ) or
-				( extension == "webm" ) then
+        if  ( extension == ".3gp" ) or
+            ( extension == ".aac" ) or
+            ( extension == ".aif" ) or
+            ( extension == ".aiff" ) or
+            ( extension == ".avi" ) or
+            ( extension == ".dvs" ) or
+            ( extension == ".fb" ) or
+            ( extension == ".flv" ) or
+            ( extension == ".m2ts" ) or
+            ( extension == ".m4a" ) or
+            ( extension == ".m4b" ) or
+            ( extension == ".m4p" ) or
+            ( extension == ".mkv" ) or
+            ( extension == ".mov" ) or
+            ( extension == ".mp3" ) or
+            ( extension == ".mp4" ) or
+            ( extension == ".mts" ) or
+            ( extension == ".mxf" ) or
+            ( extension == ".omf" ) or
+            ( extension == ".omfi" ) or
+            ( extension == ".qt" ) or
+            ( extension == ".stm" ) or
+            ( extension == ".tar" ) or
+            ( extension == ".vdr" ) or
+            ( extension == ".vpv" ) or
+            ( extension == ".wav" ) or
+            ( extension == ".webm" ) then
 			return true
 		end
 	end
@@ -255,14 +256,14 @@ end
 ------------------------------------------------------------------------------
 
 function pathIsAudioFormat(path)
-	local extension = eyeon.getextension(path):lower()
+    local extension = eyeon.parseFilename(path).Extension:lower()
 	if extension ~= nil then
-		if	( extension == "aac" ) or
-				( extension == "aif" ) or
-				( extension == "aiff" ) or
-				( extension == "m4a" ) or
-				( extension == "mp3" ) or
-				( extension == "wav" ) then
+            if	( extension == ".aac" ) or
+				( extension == ".aif" ) or
+				( extension == ".aiff" ) or
+				( extension == ".m4a" ) or
+				( extension == ".mp3" ) or
+				( extension == ".wav" ) then
 			return true
 		end
 	end
@@ -377,12 +378,12 @@ function buildClipList(ld)
 	end
 	
 	-- If its a loader
-	for i = 1, table.getn(attrs.TOOLST_Clip_Name) do
+     for i = 1, table.getn(attrs.TOOLST_Clip_Name) do
 		local seq = eyeon.parseFilename(composition:MapPath(attrs.TOOLST_Clip_Name[i]))
 		clip = {}
 		clip.ClipName		= attrs.TOOLST_Clip_Name[i]
 		clip.Number			= seq.Number
-		clip.ImportMode	= attrs.TOOLIT_Clip_ImportMode[i]
+		clip.ImportMode     = attrs.TOOLIT_Clip_ImportMode[i]
 		clip.Start			= attrs.TOOLNT_Clip_Start[i]
 		clip.TrimIn			= attrs.TOOLIT_Clip_TrimIn[i]
 		clip.TrimOut		= attrs.TOOLIT_Clip_TrimOut[i]
@@ -402,8 +403,8 @@ function buildClipList(ld)
 		else
 			table.insert(cliplist[isduplicate].Clip, clip)
 		end
-	end
-	return
+    end
+    return
 end
 
 
@@ -569,7 +570,7 @@ function main()
 	-- If the composition is not saved, offer a chance to save the composition, or exit
 	------------------------------------------------------------------------------
 	while composition:GetAttrs().COMPS_FileName == "" do
-		ret = composition:AskUser("Error", {
+		ret = composition:AskUser("Error: Comp not saved!", {
 			{"save_path", Name = "save composition to", "FileBrowse", Default = GetNextCompositionSave(), Save = true},
 			{"description", "Text", Lines = 5, Default = "Please save the composition before running this script. You can use the path dialog above to save the composition, or Cancel to exit.", ReadOnly = true, Wrap = true}
 			})
@@ -587,6 +588,7 @@ function main()
 	fbx = comp:GetToolList(false, "SurfaceFBXMesh")
 	abc = comp:GetToolList(false, "SurfaceAlembicMesh")
 	snd = comp:GetToolList(false, "Fuse.SuckLessAudio")
+    luts = comp:GetToolList(false, "FileLUT")
 
 	------------------------------------------------------------------------------
 	-- Allow the user to choose initial options for the script, including
@@ -602,6 +604,7 @@ function main()
 	audioChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.audio', 1, printStatus)
 	fontsChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', 1, printStatus)
 	openFolderChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', 1, printStatus)
+	lutsChk = GetPreferenceData('EyeonLegacy.ArchiveComposition.luts', 1, printStatus)
 	
 	-- Show the AskUser Dialog
 	init = composition:AskUser("Archive Composition", {
@@ -611,8 +614,9 @@ function main()
 		{"abc", Name = "Include Alembic", "Checkbox", Default = abcChk, NumAcross = 2},
 		{"audio", Name = "Include Audio", "Checkbox", Default = audioChk, NumAcross = 2},
 		{"fonts", Name = "Include Fonts", "Checkbox", Default = fontsChk, NumAcross = 2},
+		{"luts", Name = "Include LUTs", "Checkbox", Default = lutsChk, NumAcross = 2},
 		{"openFolder", Name = "Open Archive Composition Folder", "Checkbox", Default = openFolderChk, NumAcross = 1},
-		{"note", Name = "Client Notes for ArchiveLog.txt", "Text", Default ="", Wrap = true, Lines = 4},
+		{"note", Name = "Client Notes", "Text", Default ="", Wrap = true, Lines = 4},
 		{"instructions", Name = "Instructions", "Text", Default ="This script will collect all the clips used by your composition into folders beneath a single root directory. A copy of the composition will also be saved in the destination, with all loaders pointing to the new clip locations.\n\nThe script will calculate total file sizes before copying so that you can ensure enough space is available at the destination. You may disable the filesize pass by deselecting the checkbox above.", Wrap = true, Lines = 12, ReadOnly = true}
 		})
 
@@ -625,6 +629,7 @@ function main()
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.abc', init.abc, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.audio', init.audio, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.fonts', init.fonts, printStatus)
+	SetPreferenceData('EyeonLegacy.ArchiveComposition.luts', init.luts, printStatus)
 	SetPreferenceData('EyeonLegacy.ArchiveComposition.openFolder', init.openFolder, printStatus)
 	
 	------------------------------------------------------------------------------
@@ -664,10 +669,22 @@ function main()
 	err = ""
 	errText = ""
 
+	------------------------------------------------------------------------------
+	-- LUTS LIST
+	------------------------------------------------------------------------------
+    luts_list = {}
+
+    if init.luts == 1 and table.getn(luts) > 0 then
+        for i, lut in pairs(luts) do
+            if not luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])] then
+                luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])] = {lut}
+            end
+            table.insert(luts_list[composition:MapPath(lut.LUTFile[fu.TIME_UNDEFINED])], lut)
+        end
+    end
 
 	------------------------------------------------------------------------------
 	-- FONT LIST
-	--
 	------------------------------------------------------------------------------
 	font_files = {}
 
@@ -697,7 +714,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- FBX MESHES
-	--
 	------------------------------------------------------------------------------
 	fbx_files = {}
 
@@ -769,7 +785,12 @@ function main()
 		for i, v in pairs(font_files) do
 			total_size = total_size + filesize(i)
 		end
-	
+
+        -- Calculate luts size
+        for i, v in pairs(luts_list) do
+            total_size = total_size + filesize(i)
+        end
+
 		-- Calculate fbx filesizes
 		for i, v in pairs(fbx_files) do
 			total_size = total_size + filesize(i)
@@ -923,8 +944,6 @@ function main()
 	
 	------------------------------------------------------------------------------
 	-- COPY ALL FONTS
-	--
-	--
 	------------------------------------------------------------------------------
 	if init.fonts == 1 then 
 		dprintf("\n")
@@ -952,7 +971,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL FBX FILES
-	--
 	-- if two fbx files with the same name came from different directories this 
 	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -989,11 +1007,46 @@ function main()
 	
 	end
 
+	------------------------------------------------------------------------------
+	--	COPY ALL LUT FILES
+	--	if two lut files with the same name came from different directories this 
+	--	function would overwrite one of them.
+	------------------------------------------------------------------------------
+	if init.luts == 1 then
+		dprintf("\n")
+		dprintf("Copy LUTs\n")
+		dprintf("---------------\n")
+	
+		-- Create a folder for the abc files
+		new_dir = output_root .. "LUTs" .. os_separator
+		virtual_dir = "Comp:" .. os_separator .. "LUTs" .. os_separator
+	
+		createdir(new_dir)
+	
+		for name, val in pairs(luts_list) do
+			lut_seq = eyeon.parseFilename(name)
+		
+			dprintf(name.. "\n")
+			size, errText = eyeon.copyfile(name, new_dir .. lut_seq.FullName)
+		
+			if size == 0 then 
+				table.insert(badframe, errText)
+			end
+		
+			total_size = total_size + size
+		
+			comp:Lock()
+			for _, tool in pairs(val) do
+				tool.LUTFile[fu.TIME_UNDEFINED] = virtual_dir .. lut_seq.FullName
+			end
+			comp:Unlock()
+		end
+	
+	end
 
 
 	------------------------------------------------------------------------------
 	--	COPY ALL ABC FILES
-	--
 	--	if two abc files with the same name came from different directories this 
 	--	function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1031,7 +1084,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL AUDIO FILES
-	--
 	-- if two audio files with the same name came from different directories this 
 	-- function would overwrite one of them.
 	------------------------------------------------------------------------------
@@ -1080,8 +1132,6 @@ function main()
 
 	------------------------------------------------------------------------------
 	-- COPY ALL LOADER CLIPS
-	--
-	--
 	------------------------------------------------------------------------------
 	dprintf("\n")
 	dprintf("Copy Loaders\n")
