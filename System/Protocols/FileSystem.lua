@@ -1,6 +1,6 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3 2019-05-23
+Reactor Package Manager for Fusion - v3 2019-08-14
 ==============================================================================
 Requires    : Fusion 9.0.2+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]

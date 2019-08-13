@@ -55,4 +55,4 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Using a Linux BASH Profile](Docs/Creating-Environment-Variables.md#using-a-linux-bash-profile)
 	- [Using MacOS Launch Agent PLIST Files](Docs/Creating-Environment-Variables.md#using-macos-launch-agent-plist-files)
 
-Last Revised 2019-05-23
+Last Revised 2019-08-14
