@@ -134,7 +134,7 @@ function CompBrowser()
 		-- Read the comp frame format settings
 		local compPrefs = cmp:GetPrefs("Comp.FrameFormat")
 
-		-- Format Name:
+		-- Format Name
 		itRow.Text[4] = tostring(compPrefs.Name)
 
 		-- Frame Size
@@ -177,7 +177,7 @@ function CompBrowser()
 		end
 	end
 
-	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
+	-- The app:AddConfig() command will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
 	app:AddConfig("CompBrowserWin", {
 		Target
 		{
