@@ -1,7 +1,7 @@
-_VERSION = [[Version 3.0.2 - July 23, 2019]]
+_VERSION = [[Version 3.0.3 - August 14, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.0.2 2019-07-23
+Reactor Package Manager for Fusion - v3.0.3 2019-08-14
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -374,6 +374,8 @@ function AskDonation(atom)
 		},
 
 	})
+
+	itm = win:GetItems()
 
 	function win.On.Donate.Clicked(ev)
 		OpenURL("Donate to " .. atom.Name, atom.Donation.URL)
@@ -2010,6 +2012,7 @@ function CreateMainWin()
 	function win.On.Install.Clicked(ev)
 		InstallAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	function win.On.Update.Clicked(ev)
@@ -2017,11 +2020,13 @@ function CreateMainWin()
 		RemoveAtom(id)
 		InstallAtom(id)
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	function win.On.Remove.Clicked(ev)
 		RemoveAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	return win, itm
