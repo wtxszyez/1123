@@ -1,7 +1,7 @@
-_VERSION = [[Version 3 - May 23, 2019]]
+_VERSION = [[Version 3 - August 14, 2019]]
 --[[
 ==============================================================================
-Resync Repository.lua - v3 2019-05-23
+Resync Repository.lua - v3 2019-08-14
 ==============================================================================
 The "Resync Repository" script is used to reset the Reactor sync reference point. This action will redownload the main Reactor repository files. A resync operation may take up to 1 minute to complete.
 

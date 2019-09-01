@@ -1,11 +1,11 @@
-_VERSION = [[Version 3.0.1 - June 12, 2019]]
-_REPO_EDITION = [[Install Reactor v3.0.1]]
+_VERSION = [[Version 3.0.3 - August 14, 2019]]
+_REPO_EDITION = [[Install Reactor v3.0.3]]
 --[[
 ==============================================================================
-Reactor Installer - v3 2019-06-12
+Reactor Installer - v3 2019-08-14
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
-Created By  : Andrew Hazelden[andrew@andrewhazelden.com]
+Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
 
 ==============================================================================
 Overview
@@ -332,7 +332,7 @@ function Install(token)
 	local autorunComp = ''
 	local compFile = nil
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		-- Resolve 15+ is running
 		dprint("\n")
 	else
@@ -424,7 +424,7 @@ function Install(token)
 	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 7, totalSteps, statusDelay*2)
 	bmd.openfileexternal("Open", sysPath)
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		-- Resolve 15+ is running
 		dprint("\n")
 
@@ -533,7 +533,7 @@ function InstallReactorWin()
 
 	-- Install button label
 	local installLabel = "Install and Relaunch"
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 		installLabel = "Install and Launch"
 	end
 
@@ -964,8 +964,8 @@ function Main()
 			fuVersion = fu:GetVersion()[1]
 		end
 		
-		-- Resolve 15+ was detected
-		if fu:GetVersion() and fu:GetVersion().App == "Resolve" then
+		-- Resolve 15+ was detected - Note: Resolve 16 added "fu:GetVersion().app" so Fu 15 needs to be detected by fuVersion equalling "15"
+		if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
 			-- Show the version info
 			VersionOK("Resolve", fuVersion, platform)
 		else

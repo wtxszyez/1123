@@ -1,7 +1,7 @@
-_VERSION = [[Version 3 - May 23, 2019]]
+_VERSION = [[Version 3.0.3 - August 14, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3 2019-05-23
+Reactor Package Manager for Fusion - v3.0.3 2019-08-14
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -374,6 +374,8 @@ function AskDonation(atom)
 		},
 
 	})
+
+	itm = win:GetItems()
 
 	function win.On.Donate.Clicked(ev)
 		OpenURL("Donate to " .. atom.Name, atom.Donation.URL)
@@ -1344,7 +1346,7 @@ function ReadAtoms(path)
 					atom.Issues = {}
 
 					atom.Disabled = not IsDeployable(atom.Deploy, atom.Issues, "")
---[[
+
 					if atom.Maximum and g_AppVersion > atom.Maximum and g_AppVersion ~= 0 then
 						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Maximum) .. " or lower to use this Atom.")
 						atom.Disabled = true
@@ -1352,7 +1354,7 @@ function ReadAtoms(path)
 						table.insert(atom.Issues, "This Atom does not support version " .. tostring(g_AppVersion) .. ". You need version " .. tostring(atom.Minimum) .. " or higher to use this Atom.")
 						atom.Disabled = true
 					end
-]]
+
 					local installed = IsAtomInstalled(GetAtomID(atom))
 					local updatable, installedVersion, newVersion = IsAtomUpdatable(atom)
 					if updatable == true then
@@ -2010,6 +2012,7 @@ function CreateMainWin()
 	function win.On.Install.Clicked(ev)
 		InstallAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	function win.On.Update.Clicked(ev)
@@ -2017,11 +2020,13 @@ function CreateMainWin()
 		RemoveAtom(id)
 		InstallAtom(id)
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	function win.On.Remove.Clicked(ev)
 		RemoveAtom(itm.AtomTree:CurrentItem():GetData(0, "UserRole"))
 		FilterAtomTree(itm.AtomTree)
+		itm.AtomTree:SetFocus("OtherFocusReason")
 	end
 
 	return win, itm
