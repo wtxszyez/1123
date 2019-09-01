@@ -1,0 +1,5483 @@
+{
+	Tools = ordered() {
+		RsPhotographicExposure = MacroOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = ordered() {
+				Comments = Input { Value = "Filmic tone mapping based on John Hable's work.\nhttp://filmicgames.com/archives/75\n\nExponential luma operator is based on Modo's built-in tone mapper.\n\nReinhard operator is Reinhard global. \nhttps://www.cs.utah.edu/~reinhard/cdrom/\n\nHighlight Compression is based on the 3ds Max plugin render engine Corona.\n\nCredits to Adrian Cruceru for building the foundation to the Redshift Photographic Node, Simon Lundberg and Martin Geupel who helped convert Filmic and other tone mappers used for the modified Nuke script. Nuke gizmo modified by Saul Espinosa.\n\nFusion port by Bryan Ray for Muse VFX\nhttp://www.bryanray.name\nhttp://www.musevfx.com", },
+				SceneSettingsNest = Input { Value = 0, },
+				FilmSettingsNest = Input { Value = 0, },
+				ToneMapNest = Input { Value = 0, },
+				FilmicNest = Input { Value = 0, },
+				HighlightCompressionNest = Input { Value = 0, },
+				Input = InstanceInput {
+					SourceOp = "Input",
+					Source = "Input",
+				},
+				MetaCameraAngle = InstanceInput {
+					SourceOp = "Input",
+					Source = "metafov",
+					Expression = "self.Input.Metadata['rs/camera/fov'] or 0",
+					Name = "Camera Angle",
+					Page = "Metadata",
+				},
+				MetaCdm2 = InstanceInput {
+					SourceOp = "Input",
+					Source = "metacdm2",
+					Expression = "self.Input.Metadata['rs/camera/cdm2'] or 0",
+					Name = "Candela / Meter Squared",
+					Page = "Metadata",
+				},
+				MetaIso = InstanceInput {
+					SourceOp = "Input",
+					Source = "metaiso",
+					Expression = "self.Input.Metadata['rs/camera/iso'] or 0",
+					Name = "ISO",
+					Page = "Metadata",
+				},
+				MetaFStop = InstanceInput {
+					SourceOp = "Input",
+					Source = "metafstop",
+					Expression = "self.Input.Metadata['rs/camera/FStop'] or 0",
+					Name = "F-Stop",
+					Page = "Metadata",
+				},
+				MetaShutterRatio = InstanceInput {
+					SourceOp = "Input",
+					Source = "metashutterratio",
+					Expression = "self.Input.Metadata['rs/camera/shutterRatio'] or 0",
+					Name = "Shutter Ratio",
+					Page = "Metadata",
+				},
+				MetaWhitePointRed = InstanceInput {
+					SourceOp = "Input",
+					Source = "metawhitepointred",
+					Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][1] or 0",
+					Name = "White Point",
+					Page = "Metadata",
+				},
+				MetaWhitePointGreen = InstanceInput {
+					SourceOp = "Input",
+					Source = "metawhitepointgreen",
+					Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][2] or 0",
+					Page = "Metadata",
+				},
+				MetaWhitePointBlue = InstanceInput {
+					SourceOp = "Input",
+					Source = "metawhitepointblue",
+					Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][3] or 0",
+					Page = "Metadata",
+				},
+				MetaVignette = InstanceInput {
+					SourceOp = "Input",
+					Source = "metavignette",
+					Expression = "self.Input.Metadata['rs/camera/vignetting'] or 0",
+					Name = "Vignette Amount",
+					Page = "Metadata",
+				},
+				MetaAllowedOverExposure = InstanceInput {
+					SourceOp = "Input",
+					Source = "metaallowedoverexp",
+					Expression = "self.Input.Metadata['rs/camera/allowedOverexp'] or 0",
+					Name = "Allowed Overexposure",
+					Page = "Metadata",
+				},
+				MetaBlackCrushThresh = InstanceInput {
+					SourceOp = "Input",
+					Source = "metablackcrushthresh",
+					Expression = "self.Input.Metadata['rs/camera/blackCrushThresh'] or 0",
+					Name = "Black Crush Threshold",
+					Page = "Metadata",
+				},
+				MetaBlackCrushAmount = InstanceInput {
+					SourceOp = "Input",
+					Source = "metablackcrushamount",
+					Expression = "self.Input.Metadata['rs/camera/blackCrushAmount'] or 0",
+					Name = "Black Crush Amount",
+					Page = "Metadata",
+				},
+				MetaSaturation = InstanceInput {
+					SourceOp = "Input",
+					Source = "metasaturation",
+					Expression = "self.Input.Metadata['rs/camera/saturation'] or 0",
+					Name = "Saturation",
+					Page = "Metadata",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "Output",
+					Source = "EffectMask",
+				}
+			},
+			Outputs = {
+				Output1 = InstanceOutput {
+					SourceOp = "Output",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 2970, -247.5 },
+				Flags = {
+					AllowPan = false,
+					GridSnap = true,
+					ConnectedSnap = true,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 1441.2, 807.847, 683.331, 133.946 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -1711.67, 0 }
+			},
+			Tools = ordered() {
+				Output = Merge {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input { Expression = "RsPhotographicExposure.Mix", },
+						UseOpenCL = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "Input",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "UseMetadataSwitch_1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 2392.5, -88.85 } },
+				},
+				VignetteCameraAngle = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 50,
+							Expression = "RsPhotographicExposure.AoV",
+						},
+						NumberIn2 = Input { Expression = "RsPhotographicExposure.VignetteAmount*RsPhotographicExposure.Vignette", },
+						LUTIn1 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn4",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "1/tan(n1/2)", },
+						Intermediate1 = Input { Value = "2*x-1", },
+						Intermediate2 = Input { Value = "2*y-1", },
+						Intermediate3 = Input { Value = "sqrt(i1*i1+i2*i2)", },
+						Intermediate4 = Input { Value = "atan2(i3, s1)", },
+						RedExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						GreenExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						BlueExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						NameforNumber1 = Input { Value = "AoV - n1", },
+						NameforNumber2 = Input { Value = "Vignette Amount - n2", },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, -49.5 } },
+				},
+				Input = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						metafov = Input {
+							Value = 58.994930267334,
+							Expression = "self.Input.Metadata['rs/camera/fov'] or 0",
+						},
+						metacdm2 = Input {
+							Value = 10000,
+							Expression = "self.Input.Metadata['rs/camera/cdm2'] or 0",
+						},
+						metaiso = Input {
+							Value = 50,
+							Expression = "self.Input.Metadata['rs/camera/iso'] or 0",
+						},
+						metafstop = Input {
+							Value = 5.59999990463257,
+							Expression = "self.Input.Metadata['rs/camera/FStop'] or 0",
+						},
+						metashutterratio = Input {
+							Value = 48,
+							Expression = "self.Input.Metadata['rs/camera/shutterRatio'] or 0",
+						},
+						metawhitepointred = Input {
+							Value = 1,
+							Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][1] or 0",
+						},
+						metawhitepointgreen = Input {
+							Value = 1,
+							Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][2] or 0",
+						},
+						metawhitepointblue = Input {
+							Value = 1,
+							Expression = "self.Input.Metadata['rs/camera/whitepoint'] and self.Input.Metadata['rs/camera/whitepoint'][3] or 0",
+						},
+						metavignette = Input {
+							Value = 2,
+							Expression = "self.Input.Metadata['rs/camera/vignetting'] or 0",
+						},
+						metaallowedoverexp = Input {
+							Value = 0.100000001490116,
+							Expression = "self.Input.Metadata['rs/camera/allowedOverexp'] or 0",
+						},
+						metablackcrushthresh = Input {
+							Value = 0.25,
+							Expression = "self.Input.Metadata['rs/camera/blackCrushThresh'] or 0",
+						},
+						metablackcrushamount = Input { Expression = "self.Input.Metadata['rs/camera/blackCrushAmount'] or 0", },
+						metasaturation = Input {
+							Value = 1,
+							Expression = "self.Input.Metadata['rs/camera/saturation'] or 0",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1100, -88.85 } },
+					UserControls = ordered() {
+						metafov = {
+							LINKS_Name = "metafov",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metacdm2 = {
+							LINKS_Name = "metacdm2",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metaiso = {
+							LINKS_Name = "metaiso",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metafstop = {
+							LINKS_Name = "metafstop",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metashutterratio = {
+							LINKS_Name = "metashutterratio",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metawhitepointred = {
+							LINKS_Name = "metawhitepointred",
+							INP_Integer = false,
+							CLRC_ShowWheel = false,
+							LINKID_DataType = "Number",
+							CLRC_ColorSpace = "HSV",
+							INPID_InputControl = "ColorControl",
+							IC_ControlID = 0,
+							IC_ControlGroup = 2,
+						},
+						metawhitepointgreen = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "ColorControl",
+							CLRC_ColorSpace = "HSV",
+							INP_MaxScale = 1,
+							IC_ControlGroup = 2,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							CLRC_ShowWheel = false,
+							LINKS_Name = "metawhitepointgreen",
+						},
+						metawhitepointblue = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "ColorControl",
+							CLRC_ColorSpace = "HSV",
+							INP_MaxScale = 1,
+							IC_ControlGroup = 2,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							IC_ControlID = 2,
+							CLRC_ShowWheel = false,
+							LINKS_Name = "metawhitepointblue",
+						},
+						metavignette = {
+							LINKS_Name = "metavignette",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metaallowedoverexp = {
+							LINKS_Name = "metaallowedoverexp",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metablackcrushthresh = {
+							LINKS_Name = "metablackcrushthresh",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metablackcrushamount = {
+							LINKS_Name = "metablackcrushamount",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						},
+						metasaturation = {
+							LINKS_Name = "metasaturation",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+						}
+					}
+				},
+				whitePoint = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 10000,
+							Expression = "RsPhotographicExposure.cdm2",
+						},
+						NumberIn2 = Input {
+							Value = 100,
+							Expression = "RsPhotographicExposure.ISO",
+						},
+						NumberIn3 = Input {
+							Value = 100,
+							Expression = "RsPhotographicExposure.ShutterRatio",
+						},
+						NumberIn4 = Input {
+							Value = 8,
+							Expression = "RsPhotographicExposure.FStop",
+						},
+						NumberIn5 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.WhitePointRed",
+						},
+						NumberIn6 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.WhitePointGreen",
+						},
+						NumberIn7 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.WhitePointBlue",
+						},
+						LUTIn1 = Input {
+							SourceOp = "whitePointLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "whitePointLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "whitePointLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "whitePointLUTIn4",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "n1*(18/106)*(n2*(1/n3))/(15.4*n4*n4)\n# factor", },
+						Setup2 = Input { Value = "if(n5 > 0, 1/n5, 1)\n# Adjustment R", },
+						Setup3 = Input { Value = "if(n6 > 0, 1/n6, 1)", },
+						Setup4 = Input { Value = "if(n7 > 0, 1/n7, 1)", },
+						RedExpression = Input { Value = "c1*s1*s2/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						GreenExpression = Input { Value = "c1*s1*s3/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						BlueExpression = Input { Value = "c1*s1*s4/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						NameforNumber1 = Input { Value = "cdm2 - n1", },
+						NameforNumber2 = Input { Value = "iso - n2", },
+						NameforNumber3 = Input { Value = "shutter ratio - n3", },
+						NameforNumber4 = Input { Value = "fstop - n4", },
+						NameforNumber5 = Input { Value = "white point Red - n5", },
+						NameforNumber6 = Input { Value = "white point green - n6", },
+						NameforNumber7 = Input { Value = "white point blue - n7", },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "VignetteCameraAngle",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, -16.5 } },
+				},
+				rgb2xyY = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "rgb2xyYLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "rgb2xyYLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "rgb2xyYLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "rgb2xyYLUTIn4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "r1 * 0.4124 + g1 * 0.3576 + b1 * 0.1805", },
+						Intermediate2 = Input { Value = "r1 * 0.2126 + g1 * 0.7152 + b1 * 0.0722", },
+						Intermediate3 = Input { Value = "r1 * 0.0193 + g1 * 0.1192 + b1 * 0.9505", },
+						Intermediate4 = Input { Value = "i1+i2+i3", },
+						RedExpression = Input { Value = "if(i4==0, 0, i1/i4)", },
+						GreenExpression = Input { Value = "if(i4==0, 0, i2/i4)", },
+						BlueExpression = Input { Value = "i2", },
+						ShowNumber1 = Input { Value = 0, },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "whitePoint",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 49.5 } },
+				},
+				blackCrush = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 0.1,
+							Expression = "RsPhotographicExposure.AllowedOverexposure",
+						},
+						NumberIn2 = Input { Expression = "RsPhotographicExposure.BlackCrush", },
+						NumberIn3 = Input { Expression = "RsPhotographicExposure.BlackCrushThreshold", },
+						LUTIn1 = Input {
+							SourceOp = "blackCrushLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "blackCrushLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "blackCrushLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "blackCrushLUTIn4",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "b1 * (1.0 + (b1 * max(n1, 0.1))) / (1.0+ b1) ", },
+						BlueExpression = Input { Value = "if(i1 < n3, (i1^min(n2*2+1, 3) ) *  (1- i1 /n3) + i1*i1/n3, i1)", },
+						NameforNumber1 = Input { Value = "reinhardFactor - n1", },
+						NameforNumber2 = Input { Value = "black crush amount - n2", },
+						NameforNumber3 = Input { Value = "black crush threshold - n3", },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "rgb2xyY",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 82.5 } },
+				},
+				xyY2rgb = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "xyY2rgbLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "xyY2rgbLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "xyY2rgbLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "xyY2rgbLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "r1*(b1/g1) *  3.2406 + b1 * -1.5372 + (b1/g1)*(1-r1-g1) * -0.4986", },
+						GreenExpression = Input { Value = "r1*(b1/g1) * -0.9689 + b1 *  1.8758 + (b1/g1)*(1-r1-g1) *  0.0415", },
+						BlueExpression = Input { Value = "r1*(b1/g1) *  0.0557 + b1 * -0.2040 + (b1/g1)*(1-r1-g1) *  1.0570", },
+						ShowNumber1 = Input { Value = 0, },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "blackCrush",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 115.5 } },
+				},
+				saturation = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.Saturation",
+						},
+						LUTIn1 = Input {
+							SourceOp = "saturationLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "saturationLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "saturationLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "saturationLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "max(r1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						GreenExpression = Input { Value = "max(g1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						BlueExpression = Input { Value = "max(b1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "saturation - n1", },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Dissolve3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2035, 181.5 } },
+				},
+				ColorCorrector1 = ColorCorrector {
+					CtrlWShown = false,
+					Inputs = {
+						WheelSaturation1 = Input { Expression = "RsPhotographicExposure.OverexposureSaturation", },
+						Saturation1 = Input { Expression = "RsPhotographicExposure.OverexposureSaturation", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "xyY2rgb",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "LumaKeyer1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 181.5 } },
+				},
+				LumaKeyer1 = LumaKeyer {
+					CtrlWShown = false,
+					Inputs = {
+						Low = Input { Value = 0.5, },
+						Input = Input {
+							SourceOp = "xyY2rgb",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1182.5, 148.5 } },
+				},
+				Dissolve1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "RsPhotographicExposure.ToneMapMethod",
+						},
+						Background = Input {
+							SourceOp = "UseMetadataSwitch",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Expression_Filmic",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1540, 181.5 } },
+				},
+				Note1 = Note {
+					CtrlWShown = false,
+					Inputs = {
+						Comments = Input { Value = "Redshift Tone Mapping", }
+					},
+					ViewInfo = StickyNoteInfo {
+						Pos = { 1166.3, 16.5 },
+						Flags = {
+							Expanded = true
+						},
+						Size = { 161.076, 213.254 }
+					},
+				},
+				HighlightCompression = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 3.893,
+							Expression = "RsPhotographicExposure.HighlightCompression",
+						},
+						LUTIn1 = Input {
+							SourceOp = "HighlightCompressionLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "HighlightCompressionLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "HighlightCompressionLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "HighlightCompressionLUTIn4",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "c1*(1+c1/(n1*n1))/(1+c1)", },
+						GreenExpression = Input { Value = "c1*(1+c1/(n1*n1))/(1+c1)", },
+						BlueExpression = Input { Value = "c1*(1+c1/(n1*n1))/(1+c1)", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "compression - n1", },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "whitePoint",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1677.5, 49.5 } },
+				},
+				Dissolve2 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "RsPhotographicExposure.ToneMapMethod-1",
+						},
+						Background = Input {
+							SourceOp = "Dissolve1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "HighlightCompression",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1677.5, 181.5 } },
+				},
+				Exposure = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Gain = Input {
+							Value = 3.48220213809132,
+							Expression = "2^Exposure",
+						},
+						Input = Input {
+							SourceOp = "whitePoint",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1567.84, 49.5 } },
+					UserControls = ordered() {
+						Exposure = {
+							LINKS_Name = "Exposure",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							ICS_ControlPage = "Controls",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							INP_MaxScale = 10,
+							INP_Default = 1.79999995231628
+						}
+					}
+				},
+				Expression_Filmic = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input { Value = 0.1, },
+						NumberIn2 = Input { Value = 1, },
+						NumberIn3 = Input {
+							Value = 0.305,
+							Expression = "RsPhotographicExposure.ToeStrength",
+						},
+						NumberIn4 = Input {
+							Value = 0.164,
+							Expression = "RsPhotographicExposure.LinearAngle",
+						},
+						NumberIn5 = Input {
+							Value = 0.451,
+							Expression = "RsPhotographicExposure.LinearStrength",
+						},
+						NumberIn6 = Input {
+							Value = 0.34,
+							Expression = "RsPhotographicExposure.ShoulderStrength",
+						},
+						LUTIn1 = Input {
+							SourceOp = "Expression_FilmicLUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "Expression_FilmicLUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "Expression_FilmicLUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "Expression_FilmicLUTIn4",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "n1 / n2", },
+						Setup2 = Input { Value = "n3 * n2", },
+						Setup3 = Input { Value = "n3 * n1", },
+						Setup4 = Input { Value = "n4 * n5", },
+						RedExpression = Input { Value = "((c1*(n6*c1+s4)+s3)/(c1*(n6*c1+n5)+s2))-s1", },
+						GreenExpression = Input { Value = "((c1*(n6*c1+s4)+s3)/(c1*(n6*c1+n5)+s2))-s1", },
+						BlueExpression = Input { Value = "((c1*(n6*c1+s4)+s3)/(c1*(n6*c1+n5)+s2))-s1", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "toeNum - n1", },
+						NameforNumber2 = Input { Value = "toeDen - n2", },
+						NameforNumber3 = Input { Value = "toeStr - n3", },
+						NameforNumber4 = Input { Value = "linAngle - n4", },
+						NameforNumber5 = Input { Value = "linStr - n5", },
+						NameforNumber6 = Input { Value = "shoulderStr - n6", },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Exposure",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1567.84, 82.5 } },
+				},
+				desat = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Saturation = Input { Value = 0, },
+						Input = Input {
+							SourceOp = "whitePoint",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1842.5, 49.5 } },
+				},
+				Note3 = Note {
+					CtrlWShown = false,
+					Inputs = {
+						Comments = Input { Value = "Filmic", }
+					},
+					ViewInfo = StickyNoteInfo {
+						Pos = { 1540, 16.5 },
+						Flags = {
+							Expanded = true
+						},
+						Size = { 142.644, 123.034 }
+					},
+				},
+				Add1 = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Alpha = Input { Value = 1, },
+						Brightness = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "desat",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1842.5, 82.5 } },
+				},
+				Divide = ChannelBoolean {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Operation = Input { Value = 7, },
+						ToAlpha = Input { Value = 8, },
+						Background = Input {
+							SourceOp = "whitePoint",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Add1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1842.5, 115.5 } },
+				},
+				Note4 = Note {
+					CtrlWShown = false,
+					Inputs = {
+						Comments = Input { Value = "Exponential Luma", }
+					},
+					ViewInfo = StickyNoteInfo {
+						Pos = { 1823.1, 16.5 },
+						Flags = {
+							Expanded = true
+						},
+						Size = { 127.123, 147.287 }
+					},
+				},
+				Dissolve3 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "RsPhotographicExposure.ToneMapMethod-2",
+						},
+						Background = Input {
+							SourceOp = "Dissolve2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Divide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1842.5, 181.5 } },
+				},
+				saturation_1 = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.MetaSaturation",
+						},
+						LUTIn1 = Input {
+							SourceOp = "saturationLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "saturationLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "saturationLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "saturationLUTIn4_1",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "max(r1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						GreenExpression = Input { Value = "max(g1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						BlueExpression = Input { Value = "max(b1*n1 + (r1*0.2126+ g1*0.7152+ b1*0.0722) * (1-n1), 0.0)", },
+						NumberControls = Input { Value = 1, },
+						NameforNumber1 = Input { Value = "saturation - n1", },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Dissolve3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2035, 247.5 } },
+				},
+				Note1_1 = Note {
+					CtrlWShown = false,
+					Inputs = {
+						Comments = Input { Value = "Redshift Tone Mapping", }
+					},
+					ViewInfo = StickyNoteInfo {
+						Pos = { 1166.3, 412.5 },
+						Flags = {
+							Expanded = true
+						},
+						Size = { 161.076, 213.254 }
+					},
+				},
+				rgb2xyY_1 = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "rgb2xyYLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "rgb2xyYLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "rgb2xyYLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "rgb2xyYLUTIn4_1",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "r1 * 0.4124 + g1 * 0.3576 + b1 * 0.1805", },
+						Intermediate2 = Input { Value = "r1 * 0.2126 + g1 * 0.7152 + b1 * 0.0722", },
+						Intermediate3 = Input { Value = "r1 * 0.0193 + g1 * 0.1192 + b1 * 0.9505", },
+						Intermediate4 = Input { Value = "i1+i2+i3", },
+						RedExpression = Input { Value = "if(i4==0, 0, i1/i4)", },
+						GreenExpression = Input { Value = "if(i4==0, 0, i2/i4)", },
+						BlueExpression = Input { Value = "i2", },
+						ShowNumber1 = Input { Value = 0, },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "whitePoint_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 445.5 } },
+				},
+				blackCrush_1 = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 0.100000001490116,
+							Expression = "RsPhotographicExposure.MetaAllowedOverExposure",
+						},
+						NumberIn2 = Input { Expression = "RsPhotographicExposure.MetaBlackCrushAmount", },
+						NumberIn3 = Input {
+							Value = 0.25,
+							Expression = "RsPhotographicExposure.MetaBlackCrushThresh",
+						},
+						LUTIn1 = Input {
+							SourceOp = "blackCrushLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "blackCrushLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "blackCrushLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "blackCrushLUTIn4_1",
+							Source = "Value",
+						},
+						Intermediate1 = Input { Value = "b1 * (1.0 + (b1 * max(n1, 0.1))) / (1.0+ b1) ", },
+						BlueExpression = Input { Value = "if(i1 < n3, (i1^min(n2*2+1, 3) ) *  (1- i1 /n3) + i1*i1/n3, i1)", },
+						NameforNumber1 = Input { Value = "reinhardFactor - n1", },
+						NameforNumber2 = Input { Value = "black crush amount - n2", },
+						NameforNumber3 = Input { Value = "black crush threshold - n3", },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "rgb2xyY_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 478.5 } },
+				},
+				xyY2rgb_1 = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						LUTIn1 = Input {
+							SourceOp = "xyY2rgbLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "xyY2rgbLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "xyY2rgbLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "xyY2rgbLUTIn4_1",
+							Source = "Value",
+						},
+						RedExpression = Input { Value = "r1*(b1/g1) *  3.2406 + b1 * -1.5372 + (b1/g1)*(1-r1-g1) * -0.4986", },
+						GreenExpression = Input { Value = "r1*(b1/g1) * -0.9689 + b1 *  1.8758 + (b1/g1)*(1-r1-g1) *  0.0415", },
+						BlueExpression = Input { Value = "r1*(b1/g1) *  0.0557 + b1 * -0.2040 + (b1/g1)*(1-r1-g1) *  1.0570", },
+						ShowNumber1 = Input { Value = 0, },
+						ShowNumber2 = Input { Value = 0, },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "blackCrush_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 511.5 } },
+				},
+				ColorCorrector1_1 = ColorCorrector {
+					CtrlWShown = false,
+					Inputs = {
+						WheelSaturation1 = Input { Expression = "RsPhotographicExposure.OverexposureSaturation", },
+						Saturation1 = Input { Expression = "RsPhotographicExposure.OverexposureSaturation", },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.4, 0.2 },
+											{ 0.6, 0 },
+											{ 1, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0, 0 },
+											{ 0.4, 0 },
+											{ 0.6, 0.2 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						HistogramIgnoreTransparent = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "xyY2rgb_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "LumaKeyer1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 577.5 } },
+				},
+				LumaKeyer1_1 = LumaKeyer {
+					CtrlWShown = false,
+					Inputs = {
+						Low = Input { Value = 0.5, },
+						Input = Input {
+							SourceOp = "xyY2rgb_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 544.5 } },
+				},
+				whitePoint_1 = Custom {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 0, Red = 204 }
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 0, Red = 0 }
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 0, Blue = 204, Red = 0 }
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										NameSet = true,
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										SplineColor = { Green = 204, Blue = 204, Red = 204 }
+									}
+								}
+							},
+							[2] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1-c2" },
+											GreenExpression = Input { Value = "c1-c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1-c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+							[3] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											RedExpression = Input { Value = "c1+c2" },
+											GreenExpression = Input { Value = "c1+c2" },
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											},
+											BlueExpression = Input { Value = "c1+c2" },
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											}
+										},
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 0, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 0, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										SplineColor = { Green = 0, Blue = 204, Red = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										SplineColor = { Green = 204, Blue = 204, Red = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							}
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 10000,
+							Expression = "RsPhotographicExposure.MetaCdm2",
+						},
+						NumberIn2 = Input {
+							Value = 50,
+							Expression = "RsPhotographicExposure.MetaIso",
+						},
+						NumberIn3 = Input {
+							Value = 48,
+							Expression = "RsPhotographicExposure.MetaShutterRatio",
+						},
+						NumberIn4 = Input {
+							Value = 5.59999990463257,
+							Expression = "RsPhotographicExposure.MetaFStop",
+						},
+						NumberIn5 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.MetaWhitePointRed",
+						},
+						NumberIn6 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.MetaWhitePointGreen",
+						},
+						NumberIn7 = Input {
+							Value = 1,
+							Expression = "RsPhotographicExposure.MetaWhitePointBlue",
+						},
+						LUTIn1 = Input {
+							SourceOp = "whitePointLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "whitePointLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "whitePointLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "whitePointLUTIn4_1",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "n1*(18/106)*(n2*(1/n3))/(15.4*n4*n4)\n# factor", },
+						Setup2 = Input { Value = "if(n5 > 0, 1/n5, 1)\n# Adjustment R", },
+						Setup3 = Input { Value = "if(n6 > 0, 1/n6, 1)", },
+						Setup4 = Input { Value = "if(n7 > 0, 1/n7, 1)", },
+						RedExpression = Input { Value = "c1*s1*s2/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						GreenExpression = Input { Value = "c1*s1*s3/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						BlueExpression = Input { Value = "c1*s1*s4/(s2*0.2126+s3*0.7152+s4*0.0722)", },
+						NameforNumber1 = Input { Value = "cdm2 - n1", },
+						NameforNumber2 = Input { Value = "iso - n2", },
+						NameforNumber3 = Input { Value = "shutter ratio - n3", },
+						NameforNumber4 = Input { Value = "fstop - n4", },
+						NameforNumber5 = Input { Value = "white point Red - n5", },
+						NameforNumber6 = Input { Value = "white point green - n6", },
+						NameforNumber7 = Input { Value = "white point blue - n7", },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "VignetteCameraAngle_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 379.5 } },
+				},
+				VignetteCameraAngle_1 = Custom {
+					NameSet = true,
+					CustomData = {
+						Settings = {
+							[1] = {
+								Tools = ordered() {
+									CustomTool1 = Custom {
+										Inputs = {
+											LUTIn3 = Input {
+												SourceOp = "CustomTool1LUTIn3",
+												Source = "Value"
+											},
+											LUTIn1 = Input {
+												SourceOp = "CustomTool1LUTIn1",
+												Source = "Value"
+											},
+											LUTIn2 = Input {
+												SourceOp = "CustomTool1LUTIn2",
+												Source = "Value"
+											},
+											Image2 = Input {
+												SourceOp = "ChangeDepth1_1",
+												Source = "Output"
+											},
+											LUTIn4 = Input {
+												SourceOp = "CustomTool1LUTIn4",
+												Source = "Value"
+											},
+											Image1 = Input {
+												SourceOp = "TimeSpeed1",
+												Source = "Output"
+											}
+										},
+										Name = "CustomTool1",
+										CtrlWZoom = false,
+										ViewInfo = OperatorInfo { Pos = { 550, 181.5 } },
+										CustomData = {
+										}
+									},
+									CustomTool1LUTIn1 = LUTBezier {
+										Name = "CustomTool1LUTIn1",
+										SplineColor = { Red = 204, Blue = 0, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn2 = LUTBezier {
+										Name = "CustomTool1LUTIn2",
+										SplineColor = { Red = 0, Blue = 0, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn3 = LUTBezier {
+										Name = "CustomTool1LUTIn3",
+										SplineColor = { Red = 0, Blue = 204, Green = 0 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									},
+									CustomTool1LUTIn4 = LUTBezier {
+										Name = "CustomTool1LUTIn4",
+										SplineColor = { Red = 204, Blue = 204, Green = 204 },
+										KeyColorSplines = {
+											[0] = {
+												[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+												[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+											}
+										},
+										NameSet = true
+									}
+								}
+							},
+						}
+					},
+					Inputs = {
+						NumberIn1 = Input {
+							Value = 58.994930267334,
+							Expression = "RsPhotographicExposure.MetaCameraAngle",
+						},
+						NumberIn2 = Input {
+							Value = 2,
+							Expression = "RsPhotographicExposure.MetaVignette*RsPhotographicExposure.Vignette",
+						},
+						LUTIn1 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn1_1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn2_1",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn3_1",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "VignetteCameraAngleLUTIn4_1",
+							Source = "Value",
+						},
+						Setup1 = Input { Value = "1/tan(n1/2)", },
+						Intermediate1 = Input { Value = "2*x-1", },
+						Intermediate2 = Input { Value = "2*y-1", },
+						Intermediate3 = Input { Value = "sqrt(i1*i1+i2*i2)", },
+						Intermediate4 = Input { Value = "atan2(i3, s1)", },
+						RedExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						GreenExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						BlueExpression = Input { Value = "c1*min(cos(i4)^n2, 1)", },
+						NameforNumber1 = Input { Value = "AoV - n1", },
+						NameforNumber2 = Input { Value = "Vignette Amount - n2", },
+						ShowNumber3 = Input { Value = 0, },
+						ShowNumber4 = Input { Value = 0, },
+						ShowNumber5 = Input { Value = 0, },
+						ShowNumber6 = Input { Value = 0, },
+						ShowNumber7 = Input { Value = 0, },
+						ShowNumber8 = Input { Value = 0, },
+						ShowPoint1 = Input { Value = 0, },
+						ShowPoint2 = Input { Value = 0, },
+						ShowPoint3 = Input { Value = 0, },
+						ShowPoint4 = Input { Value = 0, },
+						LUTControls = Input { Value = 1, },
+						ShowLUT1 = Input { Value = 0, },
+						ShowLUT2 = Input { Value = 0, },
+						ShowLUT3 = Input { Value = 0, },
+						ShowLUT4 = Input { Value = 0, },
+						Image1 = Input {
+							SourceOp = "Input",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1210, 346.5 } },
+				},
+				UseMetadataSwitch = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "RsPhotographicExposure.UseMetadata",
+						},
+						Background = Input {
+							SourceOp = "ColorCorrector1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ColorCorrector1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1375, 181.5 } },
+				},
+				UseMetadataSwitch_1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "RsPhotographicExposure.UseMetadata",
+						},
+						Background = Input {
+							SourceOp = "saturation",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "saturation_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 2145, 181.5 } },
+				}
+			},
+			UserControls = ordered() {
+				UseMetadata = {
+					INP_Default = 0,
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "CheckboxControl",
+					LINKS_Name = "Use Metadata"
+				},
+				SceneSettingsNest = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 2,
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Scene Settings"
+				},
+				AoV = {
+					INP_MaxAllowed = 360,
+					INP_Integer = false,
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 180,
+					INP_Default = 50,
+					INP_MinScale = 15,
+					INP_MinAllowed = 0,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					ICD_Center = 35,
+					LINKS_Name = "Camera Angle"
+				},
+				cdm2 = {
+					ICS_ControlPage = "Controls",
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					LINKS_NAME = "Candela / Meter Squared",
+					INP_MinScale = 0,
+					INP_MaxScale = 10000,
+					INP_Default = 10000
+				},
+				FilmSettingsNest = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 8,
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Film Settings"
+				},
+				ISO = {
+					INP_MaxAllowed = 204800,
+					INP_Integer = true,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 1600,
+					INP_Default = 100,
+					INP_MinScale = 200,
+					INP_MinAllowed = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "ISO"
+				},
+				FStop = {
+					INP_MaxAllowed = 256,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 64,
+					INP_Default = 8,
+					INP_MinScale = 1,
+					INP_MinAllowed = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "F-Stop"
+				},
+				ShutterRatio = {
+					INP_MaxAllowed = 80000,
+					INP_Integer = true,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 8000,
+					INP_Default = 100,
+					INP_MinScale = 0.002,
+					INP_MinAllowed = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Shutter Ratio"
+				},
+				WhitePointRed = {
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "ColorControl",
+					INP_MaxScale = 5,
+					INP_Default = 1,
+					INP_MinScale = -1,
+					IC_ControlID = 0,
+					ICS_ControlPage = "Controls",
+					IC_ControlGroup = 2,
+					LINKS_Name = "White Point Color"
+				},
+				WhitePointGreen = {
+					IC_ControlGroup = 2,
+					INP_MinScale = -1,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					IC_ControlID = 1,
+					INPID_InputControl = "ColorControl",
+					INP_MaxScale = 5,
+					INP_Default = 1
+				},
+				WhitePointBlue = {
+					IC_ControlGroup = 2,
+					INP_MinScale = -1,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					IC_ControlID = 2,
+					INPID_InputControl = "ColorControl",
+					INP_MaxScale = 5,
+					INP_Default = 1
+				},
+				Vignette = {
+					INP_Integer = true,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "CheckboxControl",
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Enable Vignetting"
+				},
+				VignetteAmount = {
+					INP_MaxAllowed = 256,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 25,
+					INP_Default = 0,
+					INP_MinScale = 0,
+					INP_MinAllowed = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Vignetting"
+				},
+				ToneMapMethod = {
+					{ CCS_AddString = "Redshift Photographic Exposure" },
+					{ CCS_AddString = "Filmic Tone Mapping" },
+					{ CCS_AddString = "Highlight Compression" },
+					{ CCS_AddString = "Exponential Luma" },
+					INP_Integer = false,
+					LINKID_DataType = "Number",
+					ICS_ControlPage = "Controls",
+					CC_LabelPosition = "Horizontal",
+					INPID_InputControl = "ComboControl",
+					LINKS_Name = "Tone Mapping Method"
+				},
+				ToneMapNest = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 5,
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Redshift Tone Mapping"
+				},
+				OverexposureSaturation = {
+					INP_Default = 1,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					ICS_ControlPage = "Controls",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Overexposure Saturation"
+				},
+				AllowedOverexposure = {
+					INP_MaxAllowed = 256,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					INPID_InputControl = "SliderControl",
+					INP_MaxScale = 1,
+					INP_Default = 0.1,
+					INP_MinScale = 0.1,
+					INP_MinAllowed = 0,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Allowed Overexposure"
+				},
+				BlackCrushThreshold = {
+					INP_Default = 0,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Black Crush Threshold"
+				},
+				BlackCrush = {
+					INP_Default = 0,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Black Crush Amount"
+				},
+				Saturation = {
+					INP_Default = 1,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Saturation"
+				},
+				FilmicNest = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 4,
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Filmic Tone Matching"
+				},
+				ShoulderStrength = {
+					INP_Default = 0.35,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Shoulder Strength"
+				},
+				LinearStrength = {
+					INP_Default = 0.25,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Linear Strength"
+				},
+				LinearAngle = {
+					INP_Default = 0.25,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Linear Angle"
+				},
+				ToeStrength = {
+					INP_Default = 0.35,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Toe Strength"
+				},
+				HighlightCompressionNest = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 1,
+					INP_Default = 1,
+					ICS_ControlPage = "Controls",
+					LINKS_Name = "Highlight Compression"
+				},
+				HighlightCompression = {
+					INP_Default = 1,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 1,
+					INP_MaxScale = 10,
+					LINKS_Name = "Highlight Compression"
+				},
+				Mix = {
+					INP_Default = 1,
+					INP_Integer = false,
+					LINKID_DataTpe = "Number",
+					ICS_ControlPage = "Controls",
+					INPID_InputControl = "SliderControl",
+					INP_MinScale = 0,
+					INP_MaxScale = 1,
+					LINKS_Name = "Mix"
+				},
+				usemetadatadoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "When checked, the metadata of the incoming image is \nused to set the parameters in the Scene Settings, \nFilm Settings, Vignetting, and Redshift Tone Mapping sections. \nIncoming Metadata values can be viewed on the Metadata tab.\nRequires Redshift v2.0.72 or later.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 5,
+					LINKS_Name = "Use Metadata"
+				},
+				ScSettingsDocLabel = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 2,
+					LINKS_Name = "Scene Settings",
+					ICS_ControlPage = "Documentation",
+					INP_Default = 0
+				},
+				camangledoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Horizontal field of view of the scene camera. \nDetermines the width of the Vignette effect.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 2,
+					LINKS_Name = "Camera Angle"
+				},
+				cdm2doc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Photometric units conversion factor. \nAn intensity multiplier for non-physical light and scene scales.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 2,
+					LINKS_Name = "Candela per Square Meter"
+				},
+				FilmSettingsDocLabel = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 5,
+					LINKS_Name = "Film Settings",
+					ICS_ControlPage = "Documentation",
+					INP_Default = 0
+				},
+				isodoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "ISO represents the speed, or sensitivity, of the film. \nIn real film, high ISO means that the film is \nvery sensitive and will capture a lot of light \nin a short amount of time, but the image can be \n grainy. Low ISO means that the shutter has to be open \nlonger for the film to capture enough light for a good exposure, \nbut the result will be cleaner. Redshift, however, does not emulate \nthe grain properties of chemical film, so ISO affects \nonly the exposure level of the image.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 9,
+					LINKS_Name = "ISO"
+				},
+				fstopdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "The F-Stop parameter is the denominator of the ratio \nbetween the lens' focal length and the aperture's diameter. \nSo a larger F-Stop number means a smaller aperture \nand therefore less light reaching the film.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 4,
+					LINKS_Name = "F-Stop"
+				},
+				shutterdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "The Shutter Ratio controls the duration the camera's shutter \nwill stay open. A value of 30 means 1/30, i.e. a 30th of a \nsecond. Therefore, the smaller the value, the longer the \nshutter stays open and the brighter the image (and vice versa).",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 4,
+					LINKS_Name = "Shutter Ratio"
+				},
+				whitepointdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Defines what is considered 'white' in the image. \nImages that are lit by colored light sources can never achieve \na proper white (1.0, 1.0, 1.0) color. \nThe color you choose in this control will be removed \nfrom the image. So if your image is slightly red, you \nshould make White Point a bit red in order to remove the red tint.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 7,
+					LINKS_Name = "White Point Color"
+				},
+				vignettedoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Physical lenses are imperfect and, depending on the \nangle of the lighting, they might absorb or reflect some light \naway so less of it eventually reaches the film. The result \nis darkening around the edges of the image. This imperfection, \nhowever, can sometimes be visually pleasing and focuses the \nviewer's attention toward the center of the image. \nThe higher the Vignette value, the more darkening \nthere will be around the edges of the image. The Camera Angle \nparameter in the Scene Settings controls the width of \nthe Vignette.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 10,
+					LINKS_Name = "Vignette"
+				},
+				tonemapmodedoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Chooses which tone mapping mode to apply. \nRedshift Photographic Exposure approximately matches \nthe output from the in-render Exposure settings. \nFilmic emulates the tonemapping curve used by John Hable \nfor Uncharted 2. \nHighlight Compression performs a soft clamp of super-white \nvalues, emulating Corona's parameter of the same name. \nExponential Luma clamps the luminance of super-whites while \npreserving color. \nOnly the controls in the section matching the selected mode \nwill affect the output image.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 11,
+					LINKS_Name = "Tone Mapping"
+				},
+				rstonemapDocLabel = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 4,
+					LINKS_Name = "Redshift Tone Mapping",
+					ICS_ControlPage = "Documentation",
+					INP_Default = 0
+				},
+				overexposuresatdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Real film desaturates to white as it approaches total exposure. \nReducing the Overexposure Saturation slider emulates \nthat effect.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 3,
+					LINKS_Name = "Overexposure Saturation"
+				},
+				allowedoverexposuredoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Controls what happens to high-intensity pixel values. \nIt works by 'squashing' the high intensities into lower intensities \nin order to preserve fidelity that would normally be washed out \nwhite. A setting of 0 is the most aggressive. It means that lights \nhave to be extremely bright in order for the output pixels to \napproach pure white (1.0, 1.0, 1.0) display color.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 7,
+					LINKS_Name = "Allowed Overexposure"
+				},
+				blackcrushthreshdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Similar to how Allowed Overexposure controls what \nhappens to brightly-lit areas, Black Crush controls what happens \nin dimmer parts of the image. It effectively squashes the darker \ncolors in order to provide more contrast for images that have \ntoo much ambient lighting. \nThe Threshold determines the pixel value at which crushing begins.\nAmount determines the intensity of the crush.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 7,
+					LINKS_Name = "Black Crush"
+				},
+				saturationdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Lower values reduce the intensity of color in the output image. \nA Saturation value of 0 produces a greyscale image.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 3,
+					LINKS_Name = "Saturation"
+				},
+				filmictonemapDocLabel = {
+					LBLC_DropDownButton = true,
+					INPID_InputControl = "LabelControl",
+					LBLC_NumInputs = 4,
+					LINKS_Name = "Filmic Tone Mapping",
+					ICS_ControlPage = "Documentation",
+					INP_Default = 0
+				},
+				shoulderstrengthdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Alters local contrast in bright areas.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 1,
+					LINKS_Name = "Shoulder Strength"
+				},
+				linearstrengthdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Pushes the shoulder further toward the highlights. \nTends to alter local contrast in mid-tone areas.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 3,
+					LINKS_Name = "Linear Strength"
+				},
+				linearangledoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Controls the brightness slope of the mid-tones.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 1,
+					LINKS_Name = "Linear Angle"
+				},
+				toestrengthdoc = {
+					TEC_ReadOnly = true,
+					LINKID_DataType = "Text",
+					INPS_DefaultText = "Alters local contrast in the dark parts of the image.",
+					ICS_ControlPage = "Documentation",
+					INPID_InputControl = "TextEditControl",
+					TEC_Lines = 1,
+					LINKS_Name = "Toe Strength"
+				}
+			}
+		},
+		VignetteCameraAngleLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		VignetteCameraAngleLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		VignetteCameraAngleLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		VignetteCameraAngleLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		whitePointLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		whitePointLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		whitePointLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		whitePointLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		rgb2xyYLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		rgb2xyYLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		rgb2xyYLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		rgb2xyYLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		blackCrushLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		blackCrushLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		blackCrushLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		blackCrushLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		xyY2rgbLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		xyY2rgbLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		xyY2rgbLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		xyY2rgbLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		saturationLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		saturationLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		saturationLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		saturationLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		HighlightCompressionLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		HighlightCompressionLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		HighlightCompressionLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		HighlightCompressionLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		Expression_FilmicLUTIn1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		Expression_FilmicLUTIn2 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		Expression_FilmicLUTIn3 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		Expression_FilmicLUTIn4 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		saturationLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		saturationLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		saturationLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		saturationLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		rgb2xyYLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		rgb2xyYLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		rgb2xyYLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		rgb2xyYLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		blackCrushLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		blackCrushLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		blackCrushLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		blackCrushLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		xyY2rgbLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		xyY2rgbLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		xyY2rgbLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		xyY2rgbLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		whitePointLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		whitePointLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		whitePointLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		whitePointLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		},
+		VignetteCameraAngleLUTIn1_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 0, Blue = 0 },
+		},
+		VignetteCameraAngleLUTIn2_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 204, Blue = 0 },
+		},
+		VignetteCameraAngleLUTIn3_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 0, Green = 0, Blue = 204 },
+		},
+		VignetteCameraAngleLUTIn4_1 = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 204, Green = 204, Blue = 204 },
+		}
+	},
+	ActiveTool = "RsPhotographicExposure"
+}
