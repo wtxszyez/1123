@@ -22,10 +22,11 @@ print = function(...)
 end
 
 function _init(side)
-    view = get_viewer(side)
-    viewer = view.CurrentViewer
+    GlView = get_glview(side)
+    viewer = GlView.CurrentViewer
     viewer_type = string.sub(tostring(viewer),1,2)
     comp = fu:GetCurrentComp()
+    -- print(comp:GetAttrs().COMPS_Name)
 
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
@@ -34,9 +35,9 @@ function _init(side)
 
     guides_state = viewer:AreGuidesShown()
     controls_state = viewer:AreControlsShown()
-    multiview_state = view:ShowingQuadView()
-    locked_state = view:GetLocked()
-    stereo_state = view:IsStereoEnabled()
+    multiview_state = GlView:ShowingQuadView()
+    locked_state = GlView:GetLocked()
+    stereo_state = GlView:IsStereoEnabled()
     
     if viewer_type ~= "2D" then
         print('This tool is most useful with 2D viewers')
@@ -46,7 +47,7 @@ function _init(side)
     lut_state = viewer:IsLUTEnabled()
     roi_state = viewer:IsEnableRoI()
 
-    if fu.Version == 16 then
+    if fu.Version >= 16 then
         checker_state = viewer:IsCheckerEnabled()
         dod_state = viewer:IsDoDShown()
         sliders_state = viewer:IsShowGainGamma()
@@ -59,15 +60,15 @@ function _init(side)
 end
 
 
-function get_viewer(side)
+function get_glview(side)
     if side == 'left' then
-        if fu.Version == 16 then
+        if fu.Version >= 16 then
             glview = comp:GetPreviewList().LeftView.View
         else
             glview = comp:GetPreviewList().Left.View
         end
     elseif side == 'right' then
-        if fu.Version == 16 then
+        if fu.Version >= 16 then
             glview = comp:GetPreviewList().RightView.View
         else
             glview = comp:GetPreviewList().Right.View
@@ -503,31 +504,31 @@ end
 function win.On.IconButtonMultiView.Clicked(ev)
     state = itm.IconButtonMultiView.Checked
     print('[Guides] [Button State] ' , state)
-    view:ShowQuadView(state)
+    GlView:ShowQuadView(state)
 end
 
 function win.On.IconButtonZoom.Clicked(ev)
     state = itm.IconButtonZoom.Checked
     print('[Zoom] is set to 100%')
-    view:SetScale(1)
+    GlView:SetScale(1)
 end
 
 function win.On.IconButtonFit.Clicked(ev)
     state = itm.IconButtonFit.Checked
-    print('[Fit] to view')
-    view:SetScale(0)
+    print('[Fit] to GlView')
+    GlView:SetScale(0)
 end
 
 function win.On.IconButtonStereo.Clicked(ev)
     state = itm.IconButtonStereo.Checked
     print('[Stereo][Button State] ', state)
-    view:EnableStereo()
+    GlView:EnableStereo()
 end
 
 function win.On.IconButtonLockCold.Clicked(ev)
     state = itm.IconButtonLockCold.Checked
     print('[LockCold][Button State] ', state)
-    view:SetLocked(state)
+    GlView:SetLocked(state)
 end
 
 ---------- add tools 
@@ -566,11 +567,11 @@ function win.On.IconButtonCircle.Clicked(ev)
     comp:AddTool('EllipseMask', -32768, -32768)
 end
 
-------- change view attrs
+------- change GlView attrs
 
 function win.On.IconButtonGuides.Clicked(ev)
     state = itm.IconButtonGuides.Checked
-    viewer = view.CurrentViewer
+    viewer = GlView.CurrentViewer
     if not viewer then
         return
     end
@@ -581,7 +582,7 @@ end
 
 function win.On.IconButtonLUT.Clicked(ev)
     state = itm.IconButtonLUT.Checked
-    viewer = view.CurrentViewer
+    viewer = GlView.CurrentViewer
     if not viewer or viewer_type == '3D' then
         return
     end
@@ -592,7 +593,7 @@ end
 
 function win.On.IconButtonROI.Clicked(ev)
     state = itm.IconButtonROI.Checked
-    viewer = view.CurrentViewer
+    viewer = GlView.CurrentViewer
     if not viewer or viewer_type == '3D' then
         return
     end
@@ -603,7 +604,7 @@ end
 
 function win.On.IconButtonDoD.Clicked(ev)
     state = itm.IconButtonDoD.Checked
-    viewer = view.CurrentViewer
+    viewer = GlView.CurrentViewer
     if not viewer or viewer_type == '3D' then
         return
     end
@@ -614,7 +615,7 @@ end
 
 function win.On.IconButtonControls.Clicked(ev)
     state = itm.IconButtonControls.Checked
-    viewer = view.CurrentViewer
+    viewer = GlView.CurrentViewer
     if not viewer then
         return
     end
@@ -625,8 +626,8 @@ end
 
 function win.On.IconButtonSliders.Clicked(ev)
     state = itm.IconButtonSliders.Checked
-    if fu.Version == 16 then
-        viewer = view.CurrentViewer
+    if fu.Version >= 16 then
+        viewer = GlView.CurrentViewer
         if not viewer or viewer_type == '3D' then
             return
         end
@@ -641,8 +642,8 @@ end
 
 function win.On.IconButtonChequers.Clicked(ev)
     state = itm.IconButtonChequers.Checked
-    if fu.Version == 16 then
-        viewer = view.CurrentViewer
+    if fu.Version >= 16 then
+        viewer = GlView.CurrentViewer
         if not viewer or viewer_type == '3D' then
             return
         end
