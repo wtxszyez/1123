@@ -9,7 +9,7 @@ The Action Listener script uses the Fusion ActionManager and ui:AddNotify() func
 
 This script makes use of the fact Lua is a dynamic programming language by creating new functions for handling each ui:AddNotify event on the fly. This script is a Fusion Lua based UI Manager example that works in Fusion 9+ and Resolve 15+
 
-Version 2 of Action listener now tracks "Fusion" scope actions, in addition to the previous "comp" scope actions. This means creating a new comps, saving comps, and other tasks are captured more accurately now. Also, "comp:DoAction()" is used for translating generic actions.
+Version 2 of Action listener now tracks "Fusion" scope actions, in addition to the previous "comp" scope actions. This means creating new comps, saving comps, opening a new image view, and other tasks are captured more accurately now. Also, "comp:DoAction()" is used for translating generic actions.
 
 ## Installation ##
 
