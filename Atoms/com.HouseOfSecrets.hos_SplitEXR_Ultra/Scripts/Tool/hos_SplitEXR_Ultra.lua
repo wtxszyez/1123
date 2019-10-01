@@ -1,5 +1,5 @@
 --[[--
-Split EXR Ultra v2.1
+Split EXR Ultra v2.2
 by S.Neve / House of Secrets
 
 -------------------------------------------------------------------------------
@@ -27,6 +27,9 @@ The hos_SplitEXR script will then generate a series of Loader nodes in your comp
 -------------------------------------------------------------------------------
 RELEASE NOTES
 -------------------------------------------------------------------------------
+
+* v2.2 Ultra 2019-10-01 by bfloch
+	- Fix for Blender support with "local channel = string.match(channelName, "[.]([^.]+)$")"
 
 * v2.1 Ultra 2018-09-16 by Andrew Hazelden <andrew@andrewhazelden.com>
 	- Resolve 15.1+ Loader node compatibility verified.
@@ -364,7 +367,7 @@ function getLoader(verbose, dialogResult, tool)
 
 		-- Refresh the OpenEXRFormat setting using real channel name data in a 2nd stage
 		for i, channelName in ipairs(channels) do
-			local channel = string.match(channelName, "[.](.+)$")
+			local channel = string.match(channelName, "[.]([^.]+)$")
 			local _channelLower = channel:lower()
 			-- Perform a channel match for renderers that use a single letter character at the end of the channel name to define the red/green/blue channels
 			-- Example: Vray names its channels like "lighting.R"
