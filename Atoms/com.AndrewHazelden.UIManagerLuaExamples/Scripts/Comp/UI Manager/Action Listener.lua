@@ -425,8 +425,11 @@ end
 
 -- Add a new function for each AddNotify event
 function ProcessAction(a, win)
-	local notifyComp = ui:AddNotify(a.ID, comp)
-	local notifyApp = ui:AddNotify(a.ID, app)
+	-- local notifyComp = ui:AddNotify(a.ID, comp)
+	-- local notifyApp = ui:AddNotify(a.ID, app)
+	
+	notify = ui:AddNotify(a.ID, nil)
+
 	print('[AddNotify] ' .. a.ID)
 
 	disp.On[a.ID] = function(ev)
