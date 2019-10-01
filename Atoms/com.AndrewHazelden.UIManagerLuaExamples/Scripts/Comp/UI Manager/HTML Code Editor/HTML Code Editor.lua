@@ -1,11 +1,11 @@
 --[[
-HTML Code Editor v2.1 2018-05-21
+HTML Code Editor v2.2 2019-10-01
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
-## Overview ## 
+## Overview ##
 
-This script is a Fusion Lua based HTML code editor that works in Fusion 9.0.1. It allows you to edit HTML in the edit field at the top of the view and see a live preview rendered at the bottom of the window.
+This script is a Fusion Lua based HTML code editor that works in Fusion 9+ and Resolve 15+. It allows you to edit HTML in the edit field at the top of the view and see a live preview rendered at the bottom of the window.
 
 This post is a version 2.1 update to the previous HTML Code Editor example (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10496#p10496). There is now a fancy new HTML code formatting toolbar at the top of the window. Pressing any of these formatting buttons will append short chunks of HTML code to the bottom of the text editing window.
 
@@ -21,11 +21,11 @@ Copy the "HTML Text Editor" folder into your Fusion user preferences "Scripts:/C
 
 Step 1. In Fusion you can run the script by selecting the "Script > HTML Code Editor > HTML Code Editor" menu item.
 
-Step 2. Type your code into the HTML Code Editor section at the top of the editing window. The final HTML rendered webpage is shown at the bottom of the view in the HTML Live Preview section. 
+Step 2. Type your code into the HTML Code Editor section at the top of the editing window. The final HTML rendered webpage is shown at the bottom of the view in the HTML Live Preview section.
 
 Step 3. You can use the formatting buttons in the button bar at the top of the window to add little pre-made chunks of HTML code to your document. This text is inserted at the bottom of the HTML Code Editor text area. These code chunks make it easier to add HTML formatting tags if you are new to programming HTML.
 
-## What's new in V2 ## 
+## What's new in V2 ##
 
 Version 2.0 of this script example adds an HTML formatting button bar to the top of the window. The button bar is created dynamically by the script which is something that hasn't been shown before in a UI Manager example. 
 
@@ -35,9 +35,13 @@ The ui:Icon filenames and the text that is output by the button handler function
 
 The itm.root:AddChild() function was used to add each of the ui:Buttons to the ui:HGroup horizontal layout that has the ID name of "root".
 
-## What's new in V2.1 ##
+## What's new in V2.1 2018-05-21 ##
 
 Resolve 15 support was added to this script by removing the dependency on the bmd.scriptlib file for bmd.parseFilename().
+
+## What's new in V2.1 2019-10-01 ##
+
+Added support for clickable hyperlinks in the HTML Live Preview window. If you hold down the Shift key as you click on a hyperlink in the HTML Live preview window you will see a URL address preview hover caption.
 
 ## Notes ##
 
@@ -255,6 +259,54 @@ function parseFilename(filename)
 	return seq
 end
 
+
+-- Show a preview of the URL address when you "Shift + Click" a link
+function DisplayHoverToolTip(x, y, url)
+	local width,height = 900,50
+	local ui = fu.UIManager
+	local disp = bmd.UIDispatcher(ui)
+
+	hoverwin = disp:AddWindow({
+		ID = 'HoverToolTipWin',
+		TargetID = "HoverToolTipWin",
+		Geometry = {x, y - (height/2) - 25, width, height},
+		WindowFlags = {
+			Popup = true,
+			WindowStaysOnTopHint = true,
+		},
+		ui:HGroup{
+			ID = 'root',
+			-- Show the URL in hovering text
+			ui:Label{
+				Weight = 1,
+				ID = "HoverLabel",
+				Text = tostring(url),
+				Alignment = {
+					AlignHLeft= true,
+					AlignVCenter = true,
+				},
+			},
+		},
+	})
+
+	-- Enable window transparency
+	-- hoverwin:SetAttribute('WA_TranslucentBackground', true)
+
+	-- Add your GUI element based event functions here:
+	local itm = hoverwin:GetItems()
+
+	-- Add support for manually closing the window on Windows 7 
+	function hoverwin.On.HoverToolTipWin.Clicked(ev)
+		disp:ExitLoop()
+	end
+
+	hoverwin:Show()
+
+	-- Pause for 1.5 seconds then close the window
+	bmd.wait(1.5)
+	hoverwin:Hide()
+end
+
 ------------------------------------------------------------------------
 -- Home Folder
 -- Add the user folder path - Example: C:\Users\Administrator\
@@ -309,6 +361,11 @@ function CreateWebpageEditor()
 		ID = 'htmlWin',
 		TargetID = 'htmlWin',
 		WindowTitle = 'HTML Code Editor',
+		Events = {
+			Close = true,
+			KeyPress = true,
+			KeyRelease = true,
+		},
 		Geometry = {100, 100, width, height},
 		Spacing = 10,
 		Margin = 10,
@@ -371,6 +428,9 @@ function CreateWebpageEditor()
 				ui:TextEdit{
 					ID = 'HTMLPreview',
 					ReadOnly = true,
+					Events = { 
+						AnchorClicked = true,
+					},
 				},
 			},
 
@@ -384,11 +444,54 @@ function CreateWebpageEditor()
 
 	-- Add your GUI element based event functions here:
 	local itm = win:GetItems()
-	
+
+	-- Track if the shift key is currently held down
+	shiftKeyPressed = false
+
+	-- The shift key was held down
+	function win.On.htmlWin.KeyPress(ev)
+		if ev.Key == 0x1000020 then
+			shiftKeyPressed = true
+			print('[Shift Key] Pressed')
+		end
+	end
+
+	-- The shift key was released
+	function win.On.htmlWin.KeyRelease(ev)
+		if ev.Key == 0x1000020 then
+			shiftKeyPressed = false
+			print('[Shift Key] Released')
+		end
+	end
+
 	-- Add your GUI element based event functions here:
 	function win.On.CodeEntry.TextChanged(ev)
 		-- print('[HTML Text Editor] Updating the HTML preview')
 		itm.HTMLPreview.HTML = itm.CodeEntry.PlainText
+	end
+
+	-- Open an HTML link when clicked on in the HTML preview zone
+	function win.On.HTMLPreview.AnchorClicked(ev)
+		-- Cursor "click zone" offset
+		iconWidth = 15
+
+		if shiftKeyPressed == true then
+			-- The shift key was pressed
+			print('[URL Preview] ', ev.URL)
+
+			-- Refresh the mouse position
+			local mousex = fu:GetMousePos()[1] - (iconWidth)
+			local mousey = fu:GetMousePos()[2] - (iconWidth)
+
+			-- Show a preview of the URL address when you "Shift + Click" a link
+			DisplayHoverToolTip(mousex, mousey, ev.URL)
+
+			-- Force unset the Shift key pressed flag
+			shiftKeyPressed = false
+		else
+			print('[URL Open] ', ev.URL)
+			bmd.openurl(ev.URL)
+		end
 	end
 
 	------------------------------------------------------------------------
