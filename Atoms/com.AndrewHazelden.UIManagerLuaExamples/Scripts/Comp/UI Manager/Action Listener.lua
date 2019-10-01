@@ -246,6 +246,10 @@ fusion:ToggleBins()
 -- ----------------------------------------------------------------------------
 print('[Action Listener]')
 
+-- Notification tracking table
+notify = {}
+notifyCount = 1
+
 local trackTime = true
 local prev_when = 0
 
@@ -425,10 +429,9 @@ end
 
 -- Add a new function for each AddNotify event
 function ProcessAction(a, win)
-	-- local notifyComp = ui:AddNotify(a.ID, comp)
-	-- local notifyApp = ui:AddNotify(a.ID, app)
-	
-	notify = ui:AddNotify(a.ID, nil)
+	-- Track all scopes of the actions (app, comp, etc...)
+	notify[notifyCount] = ui:AddNotify(a.ID, nil)
+	notifyCount = notifyCount + 1
 
 	print('[AddNotify] ' .. a.ID)
 
