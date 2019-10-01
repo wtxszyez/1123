@@ -7,7 +7,9 @@ www.andrewhazelden.com
 
 The Action Listener script uses the Fusion ActionManager and ui:AddNotify() functions to log events as they happen inside the Fusion GUI. Only a small percentage of the compositing tasks you carry out in Fusion will show up in the "Recorded Action Log" view since the window is only able to track tools and commands that are applied using the new "action" system.
 
-This script makes use of the fact Lua is a dynamic programming language by creating new functions for handling each ui:AddNotify event on the fly. This script is a Fusion Lua based UI Manager example that works in Fusion 9+
+This script makes use of the fact Lua is a dynamic programming language by creating new functions for handling each ui:AddNotify event on the fly. This script is a Fusion Lua based UI Manager example that works in Fusion 9+ and Resolve 15+
+
+Version 2 of Action listener now tracks "Fusion" scope actions, in addition to the previous "comp" scope actions. This means creating a new comps, saving comps, and other tasks are captured more accurately now. Also, "comp:DoAction()" is used for translating generic actions.
 
 ## Installation ##
 
@@ -51,194 +53,229 @@ The "Track Elapsed Time" checkbox adds a pause that will match the speed of the 
 
 ## Actions List ##
 
-AddSetting
-AddTool
-App_About
-App_Copy
-App_CustomizeHotkeys
-App_CustomizeToolBars
-App_Cut
-App_Delete
-App_Exit
-App_Help
-App_NewImageView
-App_OnlyActiveComp
-App_Paste
-App_PasteSettings
-App_SelectAll
-App_ShowUI
-Bin_Icon_Size
+Here is a list of the typical Lua translated actions you would see in Fusion 16.1 with Reactor installed:
+
+Bin_New_Reel
 Bin_New_Folder
 Bin_New_Item
-Bin_New_Reel
+Bin_Icon_Size
 Bin_Show_Checker
 Bin_View_Mode
-Bins_Delete
-Bins_Mode_Exit
-Bins_Play
-Bins_Refresh
-Bins_Rename
-Bins_SelectAll
-Bins_Stop
-Comp_Abort
-Comp_Activate_Tool
-Comp_BackgroundRender
-Comp_Choose_Action
-Comp_Choose_Tool
-Comp_Close
-Comp_New
-Comp_NewFloatFrame
-Comp_NewTabbedFrame
-Comp_Open
-Comp_Opened
-Comp_Recent_Clear
-Comp_Recent_Open
-Comp_Redo
-Comp_Render
-Comp_Render_End
-Comp_Render_Frame
-Comp_Save
-Comp_SaveAs
-Comp_SaveCopyAs
-Comp_SaveVersion
-Comp_ShowTimeCode
-Comp_Start_Render
-Comp_StartRender
-Comp_TimeCodeFormat
-Comp_Undo
-Execute
-Frame_Activate_Frame
-Frame_Activate_Next
-Frame_Activate_Prev
-Frame_Activate_SubWnd
-Layout_Load
-Layout_Reset
-Layout_Save
-Layout_Switch
-NetRender_Allow
-No_Action
-Playback_Mode
-Playback_Seek
-Playback_Seek_End
-Playback_Seek_Start
-Player_Channel
-Player_Device_DeckLink
-Player_Gain
-Player_Gamma
-Player_Guide_Enable
-Player_Guide_Select
+GraphView_ZoomToFit
+GraphView_ZoomToRect
+GraphView_SortMenu
+GraphView_ZoomX
+KeyframeView_ZoomY
+GraphView_ZoomY
 Player_Item_Next
 Player_Item_Prev
-Player_Loop_Reset
-Player_Loop_Set_In
-Player_Loop_Set_Out
-Player_Loop_Set_Shot
 Player_Play
 Player_Play_Forward
 Player_Play_Reverse
 Player_Seek_By
-Player_Seek_End
-Player_Seek_Next
-Player_Seek_Prev
-Player_Seek_Start
 Player_Seek_To
-Player_Set_FPS
+Player_Seek_Start
+Player_Seek_End
+Player_Seek_Prev
+Player_Seek_Next
 Player_Set_Loop
-Player_Set_Time
-Player_Show_Metadata
-Player_Sync_Mode
-Player_Trim_Exit
 Player_Trim_Set_In
 Player_Trim_Set_Out
-Prefs_Show
-Reel_Delete_Selected
-Reel_Delete_Selected
+Player_Gamma
+Player_Gain
+Player_Set_FPS
+Player_Set_Time
+Player_Guide_Enable
+Player_Guide_Select
+Player_Channel
+Player_Show_Metadata
+Player_Sync_Mode
+Player_Loop_Set_In
+Player_Loop_Set_Out
+Player_Loop_Reset
+Player_Loop_Set_Shot
+Player_Device_DeckLink
+Fusion_Screen_Mode
+Fusion_View_Show
+Fusion_Zone_Expand
+Fusion_Time_Set
+Fusion_Time_Get
+ACTION_GET_TEMPLATES_LIST
+ACTION_GET_UI_LAYOUT
+ACTION_SET_UI_LAYOUT
+ACTION_SHOW_CONSOLE
+ACTION_PRINT_CONSOLE
+ACTION_CLOSE_COMP
+No_Action
+Viewer_Checker_Enable
+Viewer_ROI_Enable
+Viewer_ROI_Auto
+Viewer_ROI_Lock
+Viewer_ROI_Set
+Viewer_ROI_Reset
+Viewer_DOD_Enable
+Viewer_3D_Lighting
+Viewer_3D_Wireframe
+Viewer_3D_Solid
+Viewer_3D_Lights
+Viewer_3D_Shadows
+Viewer_3D_Transparency
+Frame_Activate_SubWnd
+Frame_Activate_Frame
+Frame_Activate_Next
+Frame_Activate_Prev
+Comp_Choose_Tool
+Comp_Choose_Action
+Execute
+Comp_New
+Comp_Open
+Comp_Save
+Comp_SaveVersion
+AddTool
+AddLUT
 RunScript
+AddSetting
+Layout_Switch
+Prefs_Show
+App_Exit
+Comp_BackgroundRender
+Comp_Undo
+Comp_Redo
+Comp_ShowTimeCode
+Comp_TimeCodeFormat
+App_About
+App_NewImageView
+Comp_NewTabbedFrame
+Comp_NewFloatFrame
+App_Help
+App_OnlyActiveComp
+App_ShowUI
+App_CustomizeToolBars
+App_CustomizeHotkeys
+App_Cut
+App_Copy
+App_Paste
+App_Delete
+App_SelectAll
+App_DeselectAll
+App_PasteSettings
+View_Show
+Comp_Close
+Comp_SaveAs
+Comp_SaveCopyAs
 Script_Edit
-Target_Show_Menu
-Target_Show_Menu
-Target_Show_Scripts
-Time_Goto_GlobalEnd
-Time_Goto_GlobalStart
-Time_Goto_Key_Next
-Time_Goto_Key_Prev
-Time_Goto_RenderEnd
-Time_Goto_RenderStart
-Time_Set
-Time_Step_Back
+Layout_Load
+Layout_Save
+Layout_Reset
+Comp_Recent_Open
+Comp_Recent_Clear
+Utility_Show
+Tool_ViewOn
+Tool_ViewClear
+Bins_Play
+Bins_Stop
+Bins_Delete
+Bins_Rename
+Bins_Refresh
+Bins_SelectAll
 Time_Step_Forward
+Time_Step_Back
 Time_Step_NextKey
 Time_Step_PrevKey
+Time_Goto_GlobalStart
+Time_Goto_GlobalEnd
+Time_Goto_RenderStart
+Time_Goto_RenderEnd
+Time_Set
 Tool_Settings_Activate
 Tool_Settings_Store
-Tool_ViewClear
-Tool_ViewOn
-Utility_Show
-View_Pan_Mode
-View_Reset
-View_Show
-View_Zoom_Absolute
-View_Zoom_Fit
-View_Zoom_In
-View_Zoom_Mode
-View_Zoom_Out
-View_Zoom_Rectangle
-View_Zoom_Relative
-Viewer_3D_CentreSelected
-Viewer_3D_FitAll
-Viewer_3D_FitSelected
-Viewer_Buffer
-Viewer_Channel
-Viewer_Controls_Show
-Viewer_Guides_Show
-Viewer_Image_ROI_Enable
+Viewer_SubView_Enable
 Viewer_Lock
 Viewer_QuadView
-Viewer_Reset
-Viewer_Scale_Abs
 Viewer_Scale_Rel
-Viewer_SubView_Show
+Viewer_Scale_Abs
+Viewer_Buffer
+Viewer_Reset
 Viewer_SubView_Swap
 Viewer_Tools_Disable
 Viewer_Unview_All
-
-## Supported Action to Lua Translations ##
-
-The process of translating each action event to its matching Lua script output is a manual process and will take a while to fully implement.
-
-Here is a list of the Lua translated actions:
-
-	AddTool()
-	App_About()
-	AddSetting()
-	Comp_Abort()
-	Comp_Activate_Tool()
-	Comp_Redo()
-	Comp_Start_Render()
-	Comp_Render_Frame()
-	Comp_Save()
-	Comp_SaveAs()
-	Comp_SaveCopyAs()
-	Comp_SaveVersion()
-	Comp_Undo()
-	Execute()
-	Playback_Mode()
-	RunScript()
-	Time_Set()
-	Time_Step_Back()
-	Time_Step_Forward()
-	Time_Goto_GlobalStart()
-	Time_Goto_GlobalEnd()
-	Time_Goto_RenderStart()
-	Time_Goto_RenderEnd()
-	Viewer_3D_CentreSelected()
-	Viewer_3D_FitAll()
-	Viewer_3D_FitSelected()
-	Viewer_Lock()
-
-## Dev Todos ##
-
-fusion:ToggleBins()
+Viewer_LUT_Enable
+Viewer_Show_GainGamma
+Viewer_LUT_Edit
+Viewer_Channel
+Viewer_Guides_Show
+Viewer_Controls_Show
+Viewer_3D_CentreSelected
+Viewer_3D_FitSelected
+Viewer_3D_FitAll
+View_Zoom_In
+View_Zoom_Out
+View_Zoom_Fit
+View_Zoom_Rectangle
+Time_Goto_Key_Next
+Time_Goto_Key_Prev
+Playback_Mode
+Playback_Seek
+Playback_Seek_Start
+Playback_Seek_End
+NetRender_Allow
+Comp_Render_Frame
+Comp_Render_End
+Comp_Activate_Tool
+Comp_StartRender
+Comp_Start_Render
+Comp_Render
+Comp_Abort
+Comp_Opened
+Drag_Drop
+Comp_High_Quality
+Comp_Motion_Blur
+Comp_Proxy
+Comp_Auto_Proxy
+Comp_Play_Loop
+Comp_Play_PingPong
+Reel_Delete_Selected
+Target_Show_Menu
+Target_Show_Scripts
+Console_Show
+Comp_Reset
+View_Zoom_Relative
+View_Zoom_Absolute
+View_Reset
+View_Pan_Mode
+View_Zoom_Mode
+Target_Show_Menu
+Reel_Delete_Selected
+Player_Trim_Exit
+Bins_Mode_Exit
+Reactor_Open
+Reactor_Reinstall_Reactor
+Reactor_Atomizer
+Reactor_Fuse_Scanner
+Reactor_Macro_Scanner
+Reactor_Plugin_Scanner
+Reactor_Folder
+Reactor_Docs_Folder
+Reactor_Comps_Folder
+Reactor_Config_Folder
+Reactor_Temp_Folder
+Reactor_Resync
+Reactor_Open_Reactor_Log
+Resources_Reactor_Online_Repository
+Resources_Online_Discussion
+Resources_WSL
+Resources_Bug_Tracker
+Reactor_Prefs
+Reactor_About
+Close_Other_Comps
+Close_Comps_To_Left
+Close_Comps_To_Right
+LifeSaverVersionUp
+LifeSaverVersionDown
+Open_A_Copy
+Open_Comp_in_Script_Editor
+Open_All_Comps_In_Script_Editor
+Restart_Fusion
 
 ]]
 
