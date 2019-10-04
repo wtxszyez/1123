@@ -23,7 +23,7 @@ In Fusion you can then run the script from inside Fusion's GUI by selecting the 
 
 Start adding nodes and carrying out compositing tasks to see the Recorded Action Log update and scroll.
 
-If you install the "Action Listenr.fu" hotkey file you can use the (Command + R) or (Control + R) hotkey to open the "Action Listener" window.
+If you install the "Action Listener.fu" hotkey file you can use the (Command + R) or (Control + R) hotkey to open the "Action Listener" window.
 
 
 ## Version History ##

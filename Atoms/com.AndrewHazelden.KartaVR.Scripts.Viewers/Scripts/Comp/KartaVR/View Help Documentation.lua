@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-View Help Documentation v4.0.1 2019-01-01
+View Help Documentation v4.1 2019-10-02
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -10,7 +10,7 @@ http://www.andrewhazelden.com/blog/downloads/kartavr/
 ----------------------------------------------------------------------------
 Overview:
 
-The View Help Documentation script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a web browser window to and display the HTML formatted help documentation.
+The View Help Documentation script is a module from [KartaVR](http://www.andrewhazelden.com/projects/kartavr/docs/) that will open a web browser window to and display the HTML formatted help documentation.
 
 How to use the Script:
 
