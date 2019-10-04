@@ -313,11 +313,12 @@ function Main()
 		setPreferenceData('KartaVR.VideoSnapshot.FilenamePrefix', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.DurationFrames', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.WarmupSeconds', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.OverwriteMedia', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.PathMap', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.VideoDevice', nil, printStatus)
-		setPreferenceData('KartaVR.VideoSnapshot.MediaType', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.Resolution', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.FPS', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.MediaType', nil, printStatus)
 	end
 
 	-- Unlock the comp flow area
