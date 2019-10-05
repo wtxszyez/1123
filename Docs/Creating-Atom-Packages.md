@@ -519,7 +519,7 @@ If you add a Dependencies tag, when your Atom package is selected for installati
 				},
 			}
 
-At this current time, Reactor will not remove the dependent Atom packages that are installed automatically when remove the original base package you selected.
+Note: If you are working with Dependencies tags in your atoms it's helpful to know that removing the original atom package will not effect the installation status of any dependent Atom packages that were installed automatically. So if your atom package installs any of the "Bin" Category items as a dependency, the end user would need to decide to remove those dependency items manually.
 
 ## <a name="adding-documentation"></a>Adding Documentation ##
 
