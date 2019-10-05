@@ -1,5 +1,5 @@
 _VERSION = [[Version 3.14 - October 5, 2019]]
-_REPO_EDITION = [[Install Reactor v3.2]]
+_REPO_EDITION = [[Install Reactor Version π (3.14)]]
 --[[
 ==============================================================================
 Reactor Installer - v3.14 2019-10-05
