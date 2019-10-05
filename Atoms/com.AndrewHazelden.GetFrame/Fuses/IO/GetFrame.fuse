@@ -1,0 +1,135 @@
+--[[--
+GetFrame - v1 2019-05-15 
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+GetFrame.fuse allows you to load RGBA channel based BMP/GIF/JPEG/PNG/TGA/TIFF/ imagery from a filepath on disk using the Fuse API's Clip:GetFrame() functionality. This fuse can be used as a learning tool should you need to re-create Loader node like approaches in your own fuses.
+
+This fuse is compatible with the 2D compositing nodes in Fusion Standalone v9/16+ and Resolve 15/16+.
+
+
+GUI Controls
+
+The Filename control supports the use of PathMaps.
+
+The "Static Frame" control allows you to load either a (static) single image, or an image sequence.
+
+
+Note
+
+There is a known bug with the Fusion v9-16.0 Fuse API's "Clip:GetFrame()" function. The 2D imagery output by the GetFrame function in the current Fuse API isn't able to be applied as a texture map on objects in the Fusion 3D workspace. This issue is noticeable if you connect the GetFrame.fuse's 2D image output datastream to a node like a 3D material input connection and try to view the 3D material in Fusion 3D's viewer context. This Fuse API bug will cause Fusion to insta-crash and exit immediately.
+
+--]]--
+
+FuRegisterClass('GetFrame', CT_Tool, {
+	REGS_Name = 'GetFrame',
+	REGS_Category = 'I/O',
+	REGS_OpIconString = 'Get',
+	REGS_OpDescription = 'Loads a jpg/png/bmp/exr/fusepic/raw/tga/tiff/mp4/mov format image.',
+	REGS_Company = 'Andrew Hazelden',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	REGS_HelpTopic = 'http://www.andrewhazelden.com',
+	
+	-- Should the current time setting be cached?
+	REG_TimeVariant = true,
+	REG_Unpredictable = true,
+	
+	REG_OpNoMask = true,
+	REG_NoBlendCtrls = true,
+	REG_NoObjMatCtrls = true,
+	REG_NoMotionBlurCtrls = true,
+	REG_SupportsDoD = true,
+	
+	-- Should the Edit and Reload buttons be hidden?
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	
+	-- Version number where 110 = v1.1
+	REG_Version = 110,
+	})
+
+function Create()
+	-- Remove the default "Controls" page from the Fuse GUI
+	self:RemoveControlPage('Controls')
+
+	-- Add a new "File" page to the Fuse GUI
+	self:AddControlPage('File')
+
+	InFilename = self:AddInput("Filename", "Filename", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FileControl",
+		FC_IsSaver = false,
+		FC_ClipBrowse = true,
+		ICS_ControlPage = "File",
+		})
+
+	InStaticFrame = self:AddInput("Static Frame", "StaticFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_DoNotifyChanged = true,
+		INP_Integer = true,
+		INP_Default = 1.0,
+		ICD_Width = 1,
+		ICS_ControlPage = 'File',
+		})
+
+	-- The output node connection where imagery is pushed out of the fuse
+	OutImage = self:AddOutput('Output', 'Output', {
+		LINKID_DataType = 'Image',
+		LINK_Main = 1,
+		})
+end
+
+function NotifyChanged(inp, param, time)
+end
+
+-- The OnAddToFlow() function is automatically run when the a new fuse node is added to the comp, or when the .comp file is opened up.
+function OnAddToFlow()
+end
+
+function Process(req)
+	-- Read the filename
+	local filename = self.Comp:MapPath(InFilename:GetValue(req).Value)
+
+	-- Read the frame mode
+	local staticFrame = InStaticFrame:GetValue(req).Value
+
+	-- Verify the file exists
+	if bmd.fileexists(filename) == true then
+		-- Get the image clip
+		local clip = Clip(filename)
+
+		-- Is this a static frame or an image sequence
+		if staticFrame == 1 then
+			-- Read the first frame of the image sequence
+			out = clip:GetFrame(0)
+		else
+			-- Read the image from disk
+			out = clip:GetFrame(req.Time)
+
+			-- Read the first frame of a movie
+			-- out = clip:GetFrame(self.Comp.CurrentTime - self.Comp.GlobalStart)
+		end
+
+		-- print('[GetFrame Filename]', clip.Filename)
+
+		-- Push the result to the node's output connection
+		OutImage:Set(req, out)
+	else
+		-- Fallback to a blank canvas when no image is found
+		local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width') or 1920
+		local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height') or 1080
+		
+		emptyImage = Image({
+			IMG_Width = compWidth,
+			IMG_Height = compHeight,
+			})
+		
+		-- Pixel defaults to black/clear
+		emptyImage:Fill(Pixel())
+		
+		-- Push the empty result to the node's output connection
+		OutImage:Set(req, emptyImage)
+		print('[GetFrame Filename] Missing Image: ' .. tostring(filename))
+	end
+end
+
