@@ -1,4 +1,5 @@
 -- Show Templates Folder menu item
+-- v3.14 - 2019-10-05
 
 local path = app:MapPath("Templates:/")
 if bmd.direxists(path) == false then

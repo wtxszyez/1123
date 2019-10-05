@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - 2018-05-22 01.58 AM
+Open Containing Folder v3.14 - 2019-10-05
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.

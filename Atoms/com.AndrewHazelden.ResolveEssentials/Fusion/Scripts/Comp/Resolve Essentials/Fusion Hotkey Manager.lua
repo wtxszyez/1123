@@ -1,3 +1,2 @@
--- 2018-05-14
--- Hotkey Manager
+-- Hotkey Manager v3.14 - 2019-10-05
 app:DoAction("App_CustomizeHotkeys", {})

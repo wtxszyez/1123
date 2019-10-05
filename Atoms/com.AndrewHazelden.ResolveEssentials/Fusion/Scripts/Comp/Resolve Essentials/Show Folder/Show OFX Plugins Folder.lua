@@ -1,4 +1,5 @@
 -- Show OFX Plugins Folder menu item
+-- v3.14 - 2019-10-05
 
 -- Check the current operating system platform
 platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
