@@ -1,6 +1,6 @@
-_VERSION = 'v4.03 2019-10-04'
+_VERSION = 'v4.03 2019-10-05'
 --[[--
-KartaVR Video Snapshot - v4.03 2019-10-04 3.01 PM
+KartaVR Video Snapshot - v4.03 2019-10-05 4.27 AM
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -8,7 +8,7 @@ Web: www.andrewhazelden.com
 
 Overview
 
-The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.
+The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.
 
 The script is compatible with Fusion 9/16 and Resolve 15/16.
 
@@ -17,7 +17,7 @@ Usage
 
 Step 1. Select the "Script > KartaVR > Movies > Video Snapshot" menu item in Fusion to launch the script.
 
-Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to the "Capture Duration" value to define if you want single frame or multi-frame recording.
+Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to adjust the "Capture Duration" value to define if you want single frame or multi-frame recording.
 
 Step 3. Click the "Capture Image" button to frame grab footage from your video input device.
 
@@ -53,13 +53,13 @@ The "Format" control allows you to customize the pixel format used in the video 
 
 PathMap
 
-The "PathMap" ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current "Comp:/" PathMap location, or to other places like your operating system's temp folder using "Temp:/".
+The "PathMap" ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current "Comp:/" PathMap location, or to other places like your operating system's temporary folder using the "Temp:/" PathMap.
 
 
 Image Prefix
 
 The "Image Prefix:" text field allows you to customzie the starting part of the Screenshot filename. By default this setting is "Snapshot" and will result in the incrementing filename of "Snapshot_Take_1.0001.jpg" being written to disk.
-Note: You can add intermediate folder names at the start of the "Image Prefix" field each of those folders will be created on-the-fly like "Project_77/Snapshot".
+Note: You can add intermediate folder names at the start of the "Image Prefix" field, and each of those folders will be created on-the-fly like "Project_77/Snapshot".
 
 
 Take
@@ -116,17 +116,17 @@ The "Add Loader Node" button will create a new Fusion Loader node in your compos
 
 Update Selected Loader
 
-The "Update Selected Loader" button allows you to refresh an existing loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the "Update Selected Loader".
+The "Update Selected Loader" button allows you to refresh an existing Loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the "Update Selected Loader".
 
 
 Show Output Folder
 
-The "Show Output Folder" button will open up the PathMap based directory where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.
+The "Show Output Folder" button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.
 
 
 Capture Log
 
-The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to can see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.
+The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.
 
 
 Reactor Dependencies
@@ -237,7 +237,7 @@ Todo List
 - Execute bg mode for hiding the command prompt during the FFmpeg capture process on Windows?
 - Collapse-able "Capture History" ui:Tree - format, frame, time, video settings?
 - For PNG format output - Show an optional preview window via a UI Manager driven HTML preview ui:TextEdit field?
-- Naming template like Movies to Image Sequence script has (####/Snapshot.mp4) or (Snapshot_Take_####.mp4):
+- Naming template like the "Movies to Image Sequence" script has (####/Snapshot.mp4) or (Snapshot_Take_####.mp4):
 # Put take image sequences into their own numbered folders (with frame padding too):
 local framePadding = 4
 local paddedImageNumber = string.format('%0' .. framePadding .. 'd', takeNumber)
@@ -438,7 +438,7 @@ function DisplayHoverToolTip(x,y, url)
 	local ui = fu.UIManager
 	local disp = bmd.UIDispatcher(ui)
 	local width,height = 900,50
-	
+
 	hoverwin = disp:AddWindow({
 		ID = 'HoverToolTipWin',
 		TargetID = "HoverToolTipWin",
@@ -520,7 +520,7 @@ function HelpWindow()
 <h1>About KartaVR Video Snapshot</h1>
 <h1>Version 4.1 - 2019-10-04</h1>
 
-<p>The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
+<p>The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
 
 <p>The script is compatible with Fusion 9/16 and Resolve 15/16.</p>
 
@@ -535,7 +535,7 @@ function HelpWindow()
 
 <p>Step 1. Select the "Script > KartaVR > Movies > Video Snapshot" menu item in Fusion to launch the script.</p>
 
-<p>Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to the "Capture Duration" value to define if you want single frame or multi-frame recording.</p>
+<p>Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to adjust the "Capture Duration" value to define if you want single frame or multi-frame recording.</p>
 
 <p>Step 3. Click the "Capture Image" button to frame grab footage from your video input device.</p>
 
@@ -584,7 +584,7 @@ function HelpWindow()
 
 <h2>PathMap</h2>
 
-<p>The "PathMap" ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current "Comp:/" PathMap location, or to other places like your operating system's temp folder using "Temp:/".</p>
+<p>The "PathMap" ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current "Comp:/" PathMap location, or to other places like your operating system's temporary folder using the "Temp:/" PathMap.</p>
 
 <!-- PathMap ComboBox Screenshot -->
 ]=] .. PathMapImage() ..[=[
@@ -594,7 +594,7 @@ function HelpWindow()
 
 <p>The "Image Prefix:" text field allows you to customzie the starting part of the Screenshot filename. By default this setting is "Snapshot" and will result in the incrementing filename of "Snapshot_Take_1.0001.jpg" being written to disk.</p>
 
-<p>Note: You can add intermediate folder names at the start of the "Image Prefix" field each of those folders will be created on-the-fly like "Project_77/Snapshot".</p>
+<p>Note: You can add intermediate folder names at the start of the "Image Prefix" field, and each of those folders will be created on-the-fly like "Project_77/Snapshot".</p>
 
 
 <h2>Take</h2>
@@ -651,17 +651,17 @@ function HelpWindow()
 
 <h2>Update Selected Loader</h2>
 
-<p>The "Update Selected Loader" button allows you to refresh an existing loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the "Update Selected Loader".</p>
+<p>The "Update Selected Loader" button allows you to refresh an existing Loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the "Update Selected Loader".</p>
 
 
 <h2>Show Output Folder</h2>
 
-<p>The "Show Output Folder" button will open up the PathMap based directory where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.</p>
+<p>The "Show Output Folder" button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.</p>
 
 
 <h2>Capture Log</h2>
 
-<p>The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to can see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.</p>
+<p>The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.</p>
 
 
 <h1>Reactor Dependencies</h1>
@@ -1333,16 +1333,6 @@ function VideoDeviceList()
 	itm.VideoDevicesCombo.CurrentIndex = defaultVideoDevice
 	-- Select "Temp:/KartaVR/"
 	itm.PathMapCombo.CurrentIndex = defaultPathMap
-	
-	-- Capture Preset Option 2
-	-- -- Select a 1280x720 video resolution
-	-- itm.VideoResolutionCombo.CurrentIndex = 6
-	-- -- Select a 30 fps frame rate
-	-- itm.VideoFrameRateCombo.CurrentIndex = 0
-	-- -- Select the "Default" device
-	-- itm.VideoDevicesCombo.CurrentText = 'Default'
-	-- -- Select "Temp:/KartaVR/"
-	-- itm.PathMapCombo.CurrentIndex = defaultPathMap
 
 	if platform == 'Mac' then
 		-- Select the "uyvy422" video format
@@ -1355,9 +1345,10 @@ function VideoDeviceList()
 
 	-- Restore the last media type
 	if defaultMediaType and defaultMediaType <= 14 then
-		-- valid range
+		-- Valid range
 		itm.MediaTypeCombo.CurrentIndex = defaultMediaType
 	else
+		-- Fallback to index value 1
 		itm.MediaTypeCombo.CurrentIndex = 1
 		print('[Media Type] Default value out of range. Reset to an index of 1')
 	end
@@ -1446,11 +1437,11 @@ function FrameCapture(outputFilenamePrefix)
 	-- Create the temporary output folder (Also create intermediate "Image Prefix" based folders too)
 	outputDirectory = cmp:MapPath(itm.PathMapCombo.CurrentText) or cmp:MapPath('Temp:/KartaVR/')
 	local outputDirectoryAndFilenamePrefix = tostring(outputDirectory) .. tostring(outputFilenamePrefix)
-	
+
 	-- Check if paths are non-nil
 	if outputDirectoryAndFilenamePrefix then
 		if platform == 'Windows' then
-		os.execute('mkdir "' .. dirname(outputDirectoryAndFilenamePrefix) .. '" &')
+			os.execute('mkdir "' .. dirname(outputDirectoryAndFilenamePrefix) .. '" &')
 		else
 			-- Mac and Linux
 			os.execute('mkdir -p "' .. dirname(outputDirectoryAndFilenamePrefix) .. '" &')
@@ -1599,13 +1590,13 @@ function FrameCapture(outputFilenamePrefix)
 		-- -dpi 72
 		-- -vcodec mjpeg -vsync 2
 		-- ' -pixel_format ' .. pixelFormat .. 
-		
+
 		-- FFmpeg standard options:
 		-- options = options .. ' ' .. '-y -f dshow -framerate ' .. frameRate .. ' -video_size ' .. resolution .. ' ' .. imageMode .. ' -vsync 2 -i video="' .. videoInputName .. '" ' .. captureCodec .. ' -ss ' .. warmupSeconds .. ' -vframes ' .. durationFrames .. ' -qscale:v ' .. quality .. ' "' .. tokenFilename .. '" 2>&1 | "' .. cmp:MapPath('Reactor:/Deploy/Bin/wintee/bin/wtee.exe') .. '" -a ' .. ' "' .. outputLog.. '"'
-		
+
 		-- Bat Script launching mode - escape the FFmpeg "%04d" specifier in the image sequence filename
 		escapedTokenFilename = string.gsub(tokenFilename, '%%', '%%%%')
-		
+
 		-- Bat Script commands
 		options = options .. ' ' .. '-y -f dshow -framerate ' .. frameRate .. ' -video_size ' .. resolution .. ' ' .. imageMode .. ' -vsync 2 -i video="' .. videoInputName .. '" ' .. captureCodec .. ' -ss ' .. warmupSeconds .. ' -vframes ' .. durationFrames .. ' -qscale:v ' .. quality .. ' "' .. escapedTokenFilename .. '" > "' .. outputLog .. '" ^2^>^&^1'
 
@@ -1613,29 +1604,27 @@ function FrameCapture(outputFilenamePrefix)
 		-- command = 'start "" ' .. ffmpegProgram .. options
 		-- print('[Launch Command] ' .. command)
 		-- os.execute(command)
-		
+
 		-- Write out a .bat script to do the capture and collect the CLI stdin/stdout/stderr text output 
 		captureBatPath = cmp:MapPath('Temp:/KartaVR/KartaVRCapture.bat')
 		captureBatFP = io.open(captureBatPath, "w")
 		if captureBatFP ~= nil then
-		 	captureBatFP:write('@echo off\n')
-		 	captureBatFP:write('@title KartaVR Video Snapshot\n')
-		 	captureBatFP:write('setlocal EnableDelayedExpansion\n\n')
-		 	captureBatFP:write('echo Video Snapshot Capture Script' .. _VERSION .. '\n')
-		 	captureBatFP:write('echo Created by:\n')
-		 	captureBatFP:write('echo Andrew Hazelden\n')
-		 	captureBatFP:write('echo ----------------------------------------------------------------------\n')
-		 	captureBatFP:write('echo This script uses FFmpeg to capture imagery from a live video feed.\n')
-		 	captureBatFP:write('echo The results are then loaded back into your active Fusion composite.\n')
-		 	captureBatFP:write('echo ----------------------------------------------------------------------\n\n')
-		 	captureBatFP:write('@echo on\n')
-		 	captureBatFP:write(ffmpegProgram .. options .. '\n')
+			captureBatFP:write('@echo off\n')
+			captureBatFP:write('@title KartaVR Video Snapshot\n')
+			captureBatFP:write('setlocal EnableDelayedExpansion\n\n')
+			captureBatFP:write('echo Video Snapshot Capture Script' .. _VERSION .. '\n')
+			captureBatFP:write('echo Created by:\n')
+			captureBatFP:write('echo Andrew Hazelden\n')
+			captureBatFP:write('echo ----------------------------------------------------------------------\n')
+			captureBatFP:write('echo This script uses FFmpeg to capture imagery from a live video feed.\n')
+			captureBatFP:write('echo The results are then loaded back into your active Fusion composite.\n')
+			captureBatFP:write('echo ----------------------------------------------------------------------\n\n')
+			captureBatFP:write('@echo on\n')
+			captureBatFP:write(ffmpegProgram .. options .. '\n')
 			captureBatFP:write('@echo off\n')
 			captureBatFP:write('\n')
 			captureBatFP:write('echo Done\n')
-			-- captureBatFP:write('goto :eof')
-			-- captureBatFP:write('exit /b')
-		 	captureBatFP:close()
+			captureBatFP:close()
 		end
 
 		-- Pause for a moment
@@ -1664,7 +1653,7 @@ function FrameCapture(outputFilenamePrefix)
 		end
 
 		-- Add the result to the FFmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFMpeg Results]\n'  .. tostring(response)
+		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFMpeg Results]\n' .. tostring(response)
 		itm.Result.PlainText = commandResults
 		print(commandResults)
 	elseif platform == 'Mac' then
@@ -1681,12 +1670,14 @@ function FrameCapture(outputFilenamePrefix)
 		print('[Launch Command] ' .. command)
 
 		handler = io.popen(command)
-		response = handler:read('*a')
-		handler:close()
-		
+		if handler then
+			response = handler:read('*a')
+			handler:close()
+		end
+
 		-- Add the result to the ffmpeg log results TextEdit field
 		-- Add the result to the ffmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(command) .. '\n[FFMpeg Results]\n'  .. tostring(response)
+		local commandResults = '[Launch Command]\n' .. tostring(command) .. '\n[FFMpeg Results]\n' .. tostring(response)
 		itm.Result.PlainText = commandResults
 		print(commandResults)
 	else
@@ -1699,8 +1690,10 @@ function FrameCapture(outputFilenamePrefix)
 		-- response = assert(io.open(outputLog, 'r'):read'*all'))
 		
 		handler = io.popen(command)
-		response = handler:read('*a')
-		handler:close()
+		if handler then
+			response = handler:read('*a')
+			handler:close()
+		end
 		
 		-- Add the result to the ffmpeg log results TextEdit field
 		itm.Result.PlainText = tostring(command) .. '\n' .. tostring(response)
@@ -1734,16 +1727,16 @@ overwriteMedia = getPreferenceData('KartaVR.VideoSnapshot.OverwriteMedia', tonum
 -- Initial PathMap index - Example: "1" ("Comp:/Media/")
 defaultPathMap = getPreferenceData('KartaVR.VideoSnapshot.PathMap', tonumber(1), printStatus)
 
--- video device index
+-- Video Input Device index
 defaultVideoDevice = getPreferenceData('KartaVR.VideoSnapshot.VideoDevice', tonumber(1), printStatus)
 
--- Image or movie format index
+-- Image or Movie format index
 defaultMediaType = getPreferenceData('KartaVR.VideoSnapshot.MediaType', tonumber(1), printStatus)
 
--- resolution index
+-- Resolution index
 defaultResolution = getPreferenceData('KartaVR.VideoSnapshot.Resolution', tonumber(6), printStatus)
 
--- fps index
+-- FPS index
 defaultFrameRate = getPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(0), printStatus)
 
 
@@ -1819,7 +1812,7 @@ win = disp:AddWindow({
 			-- Pixel Format list
 			ui:Label{ID = 'PixelFormatText', Text = 'Format: ', Weight = 0.001},
 			ui:ComboBox{ID = 'VideoPixelFormatCombo'},
-			
+
 			-- Help Button
 			ui:Button{ID = 'HelpButton', Text = '?', MinimumSize = {24, 24}, Weight = 0.001},
 		},
@@ -1827,11 +1820,11 @@ win = disp:AddWindow({
 		-- Frame Saving Settings
 		ui:HGroup{
 			Weight = 0.1,
-			
+
 			-- PathMap
 			ui:Label{ID = 'PathMapText', Text = 'PathMap: ', Weight = 0.001},
 			ui:ComboBox{ID = 'PathMapCombo'},
-			
+
 			-- Filename Prefix
 			ui:Label{ID = 'FilenamePrefixLabel', Text = 'Filename Prefix:', Weight = 0.001},
 			ui:LineEdit{ID = 'FilenamePrefixText', PlaceholderText = 'Enter a filename prefix.', Text = FilenamePrefix, Weight = 2, MinimumSize = {150, 24}},
@@ -1849,7 +1842,7 @@ win = disp:AddWindow({
 			-- Duration
 			ui:Label{ID = 'DurationLabel', Text = 'Capture Duration:', Weight = 0.001},
 			ui:LineEdit{ID = 'DurationText', PlaceholderText = 'Frames', Text = tostring(durationFrames), MinimumSize = {60, 24}, Weight = 0.20},
-			
+
 			-- Capture Mode (based upon duration being 1 frame or greater then 1 frame)
 			ui:Label{ID = 'CaptureText', Text = 'Capture Mode: ', Weight = 0.001},
 			ui:Label{ID = 'CaptureModeText', Text = captureMode, MinimumSize = {130, 24}, Weight = 0.001},
@@ -1912,7 +1905,7 @@ function win.On.DurationText.TextChanged(ev)
 	setPreferenceData('KartaVR.VideoSnapshot.DurationFrames', tonumber(itm.DurationText.Text), printStatus)
 	durationFrames = tonumber(itm.DurationText.Text)
 	print('[Capture Duration] ', durationFrames)
-	
+
 	-- List if this is a multi-frame, movie or stop-motion capture
 	local captureMode = 'Multi-Frame Take'
 	if itm.MediaTypeCombo.CurrentIndex >= 6 then
@@ -1922,7 +1915,6 @@ function win.On.DurationText.TextChanged(ev)
 	end
 	itm.CaptureModeText.Text = captureMode
 end
-
 
 -- Camera Warmup was changed
 function win.On.WarmupText.TextChanged(ev)
@@ -1940,7 +1932,7 @@ end
 -- Help (?) button was clicked
 function win.On.HelpButton.Clicked(ev)
 	print('[Show Help]')
-	
+
 	-- Displau a UI Manager based help window
 	HelpWindow()
 end
@@ -1954,7 +1946,7 @@ function win.On.OverwriteButton.Clicked(ev)
 		-- -- Captured media files will get a unique file name each time
 		overwriteMedia = 0
 	end
-	
+
 	setPreferenceData('KartaVR.VideoSnapshot.OverwriteMedia', tonumber(overwriteMedia), printStatus)
 	print('[Overwrite] ' .. tostring(itm.OverwriteButton.Checked))
 end
@@ -1997,6 +1989,7 @@ end
 -- The "PathMap" menu was changed
 function win.On.PathMapCombo.CurrentIndexChanged(ev)
 	print('[PathMap] ', itm.PathMapCombo.CurrentText)
+
 	-- Fallback to comp:MapPath('Temp:/KartaVR/') if this field is empty
 	outputDirectory = comp:MapPath(itm.PathMapCombo.CurrentText) or comp:MapPath('Temp:/KartaVR/')
 	setPreferenceData('KartaVR.VideoSnapshot.PathMap', tonumber(itm.PathMapCombo.CurrentIndex), printStatus)
@@ -2008,23 +2001,24 @@ end
 
 function win.On.VideoDevicesCombo.CurrentIndexChanged(ev)
 	print('[Video Input] ', tostring(itm.VideoDevicesCombo.CurrentText) .. ' @ ' .. tostring(itm.VideoResolutionCombo.CurrentText))
-	
+
 	setPreferenceData('KartaVR.VideoSnapshot.VideoDevice', tonumber(itm.VideoDevicesCombo.CurrentIndex), printStatus)
 end
 
 function win.On.VideoResolutionCombo.CurrentIndexChanged(ev)
 	print('[Video Input] ', tostring(itm.VideoDevicesCombo.CurrentText) .. ' @ ' .. tostring(itm.VideoResolutionCombo.CurrentText))
-	
+
 	setPreferenceData('KartaVR.VideoSnapshot.Resolution', tonumber(itm.VideoResolutionCombo.CurrentIndex), printStatus)
 end
 
 function win.On.VideoFrameRateCombo.CurrentIndexChanged(ev)
 	print('[FPS] ', tostring(itm.VideoFrameRateCombo.CurrentText))
-	
+
 	setPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(itm.VideoFrameRateCombo.CurrentIndex), printStatus)
 end
 
 function win.On.MediaTypeCombo.CurrentIndexChanged(ev)
+	-- Update the file extension based upon the Media Type index value
 	outputImageFormat = videoMediaType[itm.MediaTypeCombo.CurrentIndex + 1].extension
 	if itm.MediaTypeCombo.CurrentIndex >= 6 then
 		print('[Movie Format] ', tostring(itm.MediaTypeCombo.CurrentText) .. ' (.' .. tostring(outputImageFormat) .. ')')
@@ -2040,7 +2034,7 @@ function win.On.MediaTypeCombo.CurrentIndexChanged(ev)
 		captureMode = 'Stop-Motion Sequence'
 	end
 	itm.CaptureModeText.Text = captureMode
-	
+
 	setPreferenceData('KartaVR.VideoSnapshot.MediaType', tonumber(itm.MediaTypeCombo.CurrentIndex), printStatus)
 end
 
@@ -2077,4 +2071,3 @@ disp:RunLoop()
 win:Hide()
 app:RemoveConfig('SnapshotWin')
 collectgarbage()
-
