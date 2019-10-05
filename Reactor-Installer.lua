@@ -1,8 +1,8 @@
-_VERSION = [[Version 3.2 - October 5, 2019]]
+_VERSION = [[Version 3.14 - October 5, 2019]]
 _REPO_EDITION = [[Install Reactor v3.2]]
 --[[
 ==============================================================================
-Reactor Installer - v3.2 2019-10-05
+Reactor Installer - v3.14 2019-10-05
 ==============================================================================
 Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created By  : Andrew Hazelden [andrew@andrewhazelden.com]

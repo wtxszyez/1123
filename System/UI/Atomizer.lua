@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.2 - October 5, 2019]]
+_VERSION = [[Version 3.14 - October 5, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>

@@ -190,4 +190,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2019-05-23
+Last Revised 2019-10-05

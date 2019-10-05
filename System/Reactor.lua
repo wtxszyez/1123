@@ -1,9 +1,9 @@
-_VERSION = [[Version 3.2 - October 5, 2019]]
+_VERSION = [[Version 3.14 - October 5, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.2 2019-10-05
+Reactor Package Manager for Fusion - v3.14 2019-10-05
 ==============================================================================
-Requires    : Fusion 9.0.2+ or Resolve 15+
+Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
             : Andrew Hazelden                 [andrew@andrewhazelden.com]
