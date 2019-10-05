@@ -1,4 +1,4 @@
-VERSION = 'v1.0 2019-09-26'
+_VERSION = 'v3.2 2019-10-05'
 --[[--
 Fu Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -25,7 +25,7 @@ The "Fu Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15+ to be used.
 
 print('\n')
 print('---------------------------------------------')
-print('Fu Scanner - ' .. tostring(VERSION))
+print('Fu Scanner - ' .. tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com')
 print('---------------------------------------------')
 print('\n')
