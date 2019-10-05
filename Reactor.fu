@@ -1,8 +1,8 @@
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3 2019-08-14
+Reactor Package Manager for Fusion - v3.2 2019-10-05
 ==============================================================================
-Requires    : Fusion 9.0.2+
+Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created by  : We Suck Less Community   [https://www.steakunderwater.com]
             : Pieter Van Houte         [pieter@steakunderwater.com]
             : Andrew Hazelden          [andrew@andrewhazelden.com]
@@ -71,7 +71,7 @@ export REACTOR_INSTALL_PATHMAP=AllData:
 
 
 Note: If you are using macOS you will need to use an approach like a LaunchAgents file to define the environment variables as Fusion + Lua tends to ignore .bash_profile based environment variables entries.
-]]--
+--]]--
 
 {
 	Action
@@ -387,6 +387,36 @@ Note: If you are using macOS you will need to use an approach like a LaunchAgent
 
 					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Atomizer.lua")
+					if bmd.fileexists(scriptPath) == false then
+						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
+					else
+						target:RunScript(scriptPath)
+					end
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Reactor_Fu_Scanner",
+		Category = "Reactor",
+		Name = "Fu Scanner",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					local separator = package.config:sub(1,1)
+					-- Check for a pre-existing PathMap preference
+					local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+					if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+						-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+						reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+					end
+
+					local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
+					local scriptPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/UI/Fu Scanner.lua")
 					if bmd.fileexists(scriptPath) == false then
 						print("[Reactor Error] Open the Reactor window once to download the missing file: " .. scriptPath)
 					else
@@ -904,6 +934,7 @@ Note: If you are using macOS you will need to use an approach like a LaunchAgent
 				"_",
 				Sub "Tools" {
 					"Reactor_Atomizer{}",
+					"Reactor_Fu_Scanner{}",
 					"Reactor_Fuse_Scanner{}",
 					"Reactor_Macro_Scanner{}",
 					"Reactor_Plugin_Scanner{}",

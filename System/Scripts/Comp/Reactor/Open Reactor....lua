@@ -1,5 +1,5 @@
 --[[--
-Open Reactor... menu item - v3 2019-05-23
+Open Reactor... menu item - v3.2 2019-10-05
 By Andrew Hazelden <andrew@andrewhazelden.com>
 --]]--
 
@@ -24,9 +24,16 @@ ffi = require "ffi"
 curl = require "lj2curl"
 ezreq = require "lj2curl.CRLEasyRequest"
 
+
 local separator = package.config:sub(1,1)
+-- Check for a pre-existing PathMap preference
+local reactor_existing_pathmap = app:GetPrefs("Global.Paths.Map.Reactor:")
+if reactor_existing_pathmap and reactor_existing_pathmap ~= "nil" then
+	-- Clip off the "reactor_root" style trailing "Reactor/" subfolder
+	reactor_existing_pathmap = string.gsub(reactor_existing_pathmap, "Reactor" .. separator .. "$", "")
+end
+local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 local local_system = os.getenv("REACTOR_LOCAL_SYSTEM")
-local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or "AllData:"
 local path = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
 local destFile = path .. "Reactor.lua"
 bmd.createdir(path)

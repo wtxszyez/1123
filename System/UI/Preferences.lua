@@ -1,4 +1,4 @@
-_VERSION = [[v3 2019-08-14]]
+_VERSION = [[v3.2 2019-10-05]]
 --[[--
 Reactor Preferences Window
 --]]--

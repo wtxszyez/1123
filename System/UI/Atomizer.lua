@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.0.1 - October 5, 2019]]
+_VERSION = [[Version 3.2 - October 5, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -155,7 +155,7 @@ or
 - Added a new "Save as Defaults" button to save the current settings as an initial template.
 - Added clickable HTML links in the HTML Preview area.
 
-### 3.0.1 2019-10-05 ##
+### 3.2 2019-10-05 ##
 
 - Added a "Comps/CustomShader3D" category.
 - Added a "Comps/Krokodove" category.

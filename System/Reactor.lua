@@ -1,7 +1,7 @@
-_VERSION = [[Version 3.0.3 - August 14, 2019]]
+_VERSION = [[Version 3.2 - October 5, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.0.3 2019-08-14
+Reactor Package Manager for Fusion - v3.2 2019-10-05
 ==============================================================================
 Requires    : Fusion 9.0.2+ or Resolve 15+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -1630,6 +1630,7 @@ function Init()
 			"System/Scripts/Comp/Reactor/Open Reactor....lua",
 			"System/Scripts/Comp/Reactor/Reactor Preferences....lua",
 			"System/Scripts/Comp/Reactor/Tools/Atomizer.lua",
+			"System/Scripts/Comp/Reactor/Tools/Fu Scanner.lua",
 			"System/Scripts/Comp/Reactor/Tools/Fuse Scanner.lua",
 			"System/Scripts/Comp/Reactor/Tools/Macro Scanner.lua",
 			"System/Scripts/Comp/Reactor/Tools/Plugin Scanner.lua",
@@ -1647,6 +1648,7 @@ function Init()
 			-- Download the Reactor:/System/UI files
 			"System/UI/AboutWindow.lua",
 			"System/UI/Atomizer.lua",
+			"System/UI/Fu Scanner.lua",
 			"System/UI/Fuse Scanner.lua",
 			"System/UI/Macro Scanner.lua",
 			"System/UI/Plugin Scanner.lua",

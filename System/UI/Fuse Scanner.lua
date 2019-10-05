@@ -1,4 +1,4 @@
-VERSION = 'v3 2019-05-23'
+_VERSION = 'v3.2 2019-10-05'
 --[[--
 Fuse Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -48,7 +48,7 @@ REGS_Name = FUSE_NAME,
 
 print('\n')
 print('---------------------------------------------')
-print('Fuse Scanner - ' .. tostring(VERSION))
+print('Fuse Scanner - ' .. tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com')
 print('---------------------------------------------')
 print('\n')

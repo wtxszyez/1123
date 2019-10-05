@@ -1,23 +1,23 @@
 _VERSION = 'v3.2 2019-10-05'
 --[[--
-Macro Scanner
+Fu Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 ## Overview ##
 
-The Macro Scanner script creates a UI Manager tree view filled with details about all of the .setting files installed in your Fusion "Macros:" and "Templates:" PathMap folders.
+The .Fu Scanner script creates a UI Manager tree view filled with details about all of the .fu files installed in your Fusion "Config:" PathMap folders.
 
-The [x] Expand PathMaps checkbox at the top of the window allows you to see the filepath as a full absolute path, or as a relative PathMap location shortened down to a compact form. This is useful if you want to see in a quick glance if the macro is coming from a "Macros:" or "Templates:" location.
+The [x] Expand PathMaps checkbox at the top of the window allows you to see the filepath as a full absolute path, or as a relative PathMap location shortened down to a compact form. This is useful if you want to see in a quick glance if the .fu is coming from a user preferences "Config:" or Reactor "Config:" location.
 
-The [x] Show Duplicate checkbox at the top of the window filters the tree view contents so you only see macros that have matching (duplicate) filenames. This makes it easy to see when you have multiple macros installed that have the same base filename on disk.
+The [x] Show Duplicate checkbox at the top of the window filters the tree view contents so you only see .fu files that have matching (duplicate) filenames. This makes it easy to see when you have multiple .fu files installed that have the same base filename on disk.
 
 Single click on a row to copy the filepath to your clipboard. Double click on a row to open the containing folder. Scroll the Tree view horizontally to the right to see the extra columns.
 
 ## Installation ##
 
-This script was designed to be with the WSL Reactor package manager toolset. You will find "Macro Scanner" in Reactor's "Scripts/Reactor" Category.
+This script was designed to be with the WSL Reactor package manager toolset. You will find "Fu Scanner" in Reactor's "Scripts/Reactor" Category.
 
-The "Macro Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15 to be used.
+The "Fu Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15+ to be used.
 
 ## Known Issues ##
 
@@ -25,7 +25,7 @@ The "Macro Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15 to be used.
 
 print('\n')
 print('---------------------------------------------')
-print('Macro Scanner - ' .. tostring(_VERSION))
+print('Fu Scanner - ' .. tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com')
 print('---------------------------------------------')
 print('\n')
@@ -68,7 +68,7 @@ function Dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
--- The main function for Macro Scanner
+-- The main function for Fu Scanner
 function Main()
 	------------------------------------------------------------------------
 	-- Create a table with the results
@@ -81,15 +81,18 @@ function Main()
 
 
 	-- ------------------------------------------------------
-	-- Scan the Macros: and Templates: multipath locations for all .setting files
-	mp = MultiPath('Macros:;Templates:')
+	-- Scan the Config: multipath locations for all .fu files
+	mp = MultiPath('Config:')
 	mp:Map(comp:GetCompPathMap())
-	files = mp:ReadDir("*.setting", true, true) -- (string pattern, boolean recursive, boolean flat)
-	-- dump(files)
+	filesFu = mp:ReadDir("*.fu", true, true) -- (string pattern, boolean recursive, boolean flat)
+	filesZfu = mp:ReadDir("*.zfu", true, true) -- (string pattern, boolean recursive, boolean flat)
+	-- dump(filesFu)
+	-- dump(filesZfu)
 
 	c = 1
-	-- Add the Macros: PathMap files to the searchResults table
-	for i,val in ipairs(files) do
+	-- Add the Config: PathMap files to the searchResults table
+	-- fu files
+	for i,val in ipairs(filesFu) do
 		if val.IsDir == false then
 			-- The fulle absolute filepath
 			searchResults.filepath[c] = val.FullPath
@@ -99,42 +102,45 @@ function Main()
 			c = c + 1
 		end
 	end
-	-- dump(searchResults)
+	-- zfu files
+	for i,val in ipairs(filesZfu) do
+		if val.IsDir == false then
+			-- The fulle absolute filepath
+			searchResults.filepath[c] = val.FullPath
+
+			-- The base filename
+			searchResults.filename[c] = val.Name
+			c = c + 1
+		end
+	end
+	
+	dump(searchResults)
 
 	-- ------------------------------------------------------
 	-- Search inside the setting files
 	for i,val in ipairs(searchResults.filepath) do
 		local regsHelpPage = nil
 
-		-- Search inside of the setting file
+		-- Search inside of the fu/zfu file
 		for oneLine in io.lines(val) do
-			-- Display the macro file contents
+			-- Display the .fu file contents
 			-- print(oneLine)
-
-			-- Search for the HelpPage
-			if string.match(oneLine, 'HelpPage%s*=%s*(.*)%s*,') then
-				regsHelpPage = string.match(oneLine, 'HelpPage%s*=%s*(.*)%s*,')
-				regsHelpPage = string.gsub(regsHelpPage, '["\'%[%]]', '')
-			end
-
 		end
-
-		searchResults.regsHelpPage[i] = regsHelpPage
 	end
 
 	-- List the setting details
-	-- dump(searchResults)
+	dump(searchResults)
 
 	-- ------------------------------------------------------
 	-- Create the GUI
 	local ui = fu.UIManager
 	local disp = bmd.UIDispatcher(ui)
-	local width,height = 1920,600
+	local width,height = 1280,600
 
 	win = disp:AddWindow({
-		ID = 'MacroScanner',
-		TargetID = 'MacroScanner',
-		WindowTitle = 'Macro Scanner',
+		ID = 'FuScanner',
+		TargetID = 'FuScanner',
+		WindowTitle = 'Fu Scanner',
 		WindowFlags = {
 			Window = true,
 			WindowStaysOnTopHint = false,
@@ -166,7 +172,7 @@ function Main()
 				ui:CheckBox{
 					Weight = 0,
 					ID = 'ShowDuplicateCheckbox',
-					Text = 'Show Duplicate Macros',
+					Text = 'Show Duplicate .fu',
 					Checked = false,
 				},
 
@@ -201,7 +207,7 @@ function Main()
 	})
 
 	-- The window was closed
-	function win.On.MacroScanner.Close(ev)
+	function win.On.FuScanner.Close(ev)
 		disp:ExitLoop()
 	end
 
@@ -209,13 +215,13 @@ function Main()
 	itm = win:GetItems()
 
 	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
-	app:AddConfig("MacroScanner", {
+	app:AddConfig("FuScanner", {
 		Target {
-			ID = "MacroScanner",
+			ID = "FuScanner",
 		},
 
 		Hotkeys {
-			Target = "MacroScanner",
+			Target = "FuScanner",
 			Defaults = true,
 
 			CONTROL_W	 = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
@@ -245,7 +251,7 @@ function Main()
 	end
 
 
-	-- Open up the folder where the Macro is located when a Tree view row is clicked on
+	-- Open up the folder where the .fu is located when a Tree view row is clicked on
 	function win.On.Tree.ItemDoubleClicked(ev)
 		-- Column 1 = Filepath
 		sourceFile = ev.item.Text[1]
@@ -259,7 +265,7 @@ function Main()
 	end
 
 
-	-- Search for duplicate macros
+	-- Search for duplicate .fu
 	function FindDuplicates()
 		-- Clear the old duplicate table values
 		for i,v in ipairs(searchResults.duplicate) do
@@ -299,7 +305,6 @@ function Main()
 		hdr = itm.Tree:NewItem()
 		hdr.Text[0] = 'Filename'
 		hdr.Text[1] = 'Filepath'
-		hdr.Text[2] = 'Help'
 
 		itm.Tree:SetHeaderItem(hdr)
 
@@ -316,34 +321,32 @@ function Main()
 			itm.Tree.ColumnWidth[1] = 954
 		end
 
-		itm.Tree.ColumnWidth[2] = 510
-
 		-- Pause the onscreen updating
 		itm.Tree.UpdatesEnabled = false
 
 		c = 1
 		-- ------------------------------------------------------
 		-- Add an new entry to the list
-		dprint('[Listing Macro Files]')
+		dprint('[Listing Fu Files]')
 		for i,val in ipairs(searchResults.filepath) do
 			-- Filter the results in the tree view
 			-- If the "Show Only Duplicates" checkbox is checked then filter the tree view to display show duplicate entries
 			-- If the "Show Only Duplicates" checkbox is unchecked show all entries in the tree view
 			if ((ShowDuplicateCheckbox == true) and (searchResults.duplicate[i] == true)) or (ShowDuplicateCheckbox == false) then
-				itMacro = itm.Tree:NewItem()
+				itFu = itm.Tree:NewItem()
 
 				-- Should a relative PathMap or absolute path be used
 				if expandPathMapCheckbox == false then
 					if searchResults.filename[i] ~= nil then
-						itMacro.Text[1] = comp:ReverseMapPath(searchResults.filepath[i])
+						itFu.Text[1] = comp:ReverseMapPath(searchResults.filepath[i])
 					end
 				else
-					itMacro.Text[1] = searchResults.filepath[i]
+					itFu.Text[1] = searchResults.filepath[i]
 				end
 
-				itMacro.Text[0] = searchResults.filename[i]
-				itMacro.Text[2] = searchResults.regsHelpPage[i]
-				itm.Tree:AddTopLevelItem(itMacro)
+				itFu.Text[0] = searchResults.filename[i]
+				-- itFu.Text[2] = searchResults.regsHelpPage[i]
+				itm.Tree:AddTopLevelItem(itFu)
 				c = c + 1
 			end
 		end
@@ -355,8 +358,8 @@ function Main()
 		itm.Tree:SortByColumn(0, "AscendingOrder")
 		-- itm.Tree:SortByColumn(0, "DescendingOrder")
 
-		itm.MacroScanner.WindowTitle = 'Macro Scanner: ' .. c .. ' Files'
-		dprint('[Macro Files Displayed] ' .. c)
+		itm.FuScanner.WindowTitle = 'Fu Scanner: ' .. c .. ' Files'
+		dprint('[Fu Files Displayed] ' .. c)
 		dprint('---------------------------------------------')
 		dprint('---------------------------------------------')
 	end
@@ -367,7 +370,7 @@ function Main()
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
-	app:RemoveConfig('MacroScanner')
+	app:RemoveConfig('FuScanner')
 	collectgarbage()
 end
 

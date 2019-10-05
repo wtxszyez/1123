@@ -1,10 +1,10 @@
-_VERSION = [[Version 3.0.3 - August 14, 2019]]
-_REPO_EDITION = [[Install Reactor v3.0.3]]
+_VERSION = [[Version 3.2 - October 5, 2019]]
+_REPO_EDITION = [[Install Reactor v3.2]]
 --[[
 ==============================================================================
-Reactor Installer - v3 2019-08-14
+Reactor Installer - v3.2 2019-10-05
 ==============================================================================
-Requires    : Fusion 9.0.2+ or Resolve 15+
+Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
 
 ==============================================================================
@@ -32,17 +32,19 @@ Reactor Installer Usage
 
 Step 1. Drag the Reactor-Installer.lua script from your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Nodes" view. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
 
-Step 2. On Fusion 9+ you would click the "Install and Relaunch" button. On Resolve 15+ you would click the "Install and Launch" button.
+Note: Fusion Standalone v16.1 Beta and Resolve v16.1 Beta seem to have an issue with dragging the Reactor installer script from your desktop folder to the Nodes view to run it automatically so you will have to open the Console window to drag and drop run the script until this issue is solved.
 
-On Fusion 9+ the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+Step 2. On Fusion v9/16 you would click the "Install and Relaunch" button. On Resolve v15/16 you would click the "Install and Launch" button.
 
-The GitLab access token string is then written into a new "AllData:Reactor:/System/Reactor.cfg" file that is used to control what GitLab repositories are used with Reactor.
+On Fusion v9/16 the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+
+The GitLab repo string is then written into a new "AllData:Reactor:/System/Reactor.cfg" file that is used to control what GitLab repositories are used with Reactor.
 
 When the installer finishes, Fusion will restart automatically and the Reactor Package Manager is ready for use. :D
 
-On Resolve 15+ the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
+On Resolve v15/16 the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
 
-Step 3. When you open the Reactor Package Manager window in the future using the Reactor > Open Reactor... menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool.
+Step 3. When you open the Reactor Package Manager window in the future using the "Reactor > Open Reactor..." menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool.
 
 This sync information is all stored in the Reactor:/ folder on disk.
 
@@ -68,9 +70,11 @@ Windows Reactor Path:
 
 C:\ProgramData\Blackmagic Design\Fusion\Reactor\
 
+
 Mac Reactor Path:
 
 /Library/Application Support/Blackmagic Design/Fusion/Reactor/
+
 
 Linux Reactor Path:
 
@@ -84,9 +88,11 @@ Windows Reactor Path:
 
 C:\ProgramData\Blackmagic Design\DaVinci Resolve\Fusion\Reactor\
 
+
 Mac Reactor Path:
 
 /Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Reactor/
+
 
 Linux Reactor Path:
 
@@ -963,6 +969,9 @@ function Main()
 		if fu:GetVersion() and fu:GetVersion()[1] then
 			fuVersion = fu:GetVersion()[1]
 		end
+		
+		-- Now that we know Fusion 7/8 aren't being used, add the Fu 9+ requiring platform check to handle non Program Files folder based Resolve/Fusion OS detection
+		platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
 		
 		-- Resolve 15+ was detected - Note: Resolve 16 added "fu:GetVersion().app" so Fu 15 needs to be detected by fuVersion equalling "15"
 		if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
