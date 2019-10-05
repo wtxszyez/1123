@@ -114,14 +114,9 @@ function Process(req)
 		local clip = Clip(filename, saveBool)
 		
 		-- Write an image to disk if the Clip:Open() and Clip:Close() functions exist in Fusion
-		local fuVersion = tonumber(eyeon._VERSION)
-		if fuVersion >= 16 then
-			clip:Open()
-			local putResult = clip:PutFrame(currentFrame, result)
-			clip:Close()
-		else
-			print('[Fuse API Error] The Clip:Open() and Clip:Close() functions are missing from this version of Fusion\'s Fuse API. Please run the PutFrame.fuse inside of Fusion Standalone/Resolve v16+.\n')
-		end
+		clip:Open()
+		local putResult = clip:PutFrame(currentFrame, result)
+		clip:Close()
 		
 		-- print('[PutFrame Filename]', clip.Filename)
 		-- print('[PutFrame Result]', putResult)
