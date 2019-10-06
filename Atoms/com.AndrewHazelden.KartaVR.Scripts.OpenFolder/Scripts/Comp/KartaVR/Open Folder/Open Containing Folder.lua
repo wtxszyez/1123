@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - v4.0.1 2019-01-01
+Open Containing Folder - v4.0.3 2019-10-06
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -142,14 +142,14 @@ function Main()
 		print('[Open Containing Folder] No media node was selected. Please select a node in the Flow view and run this script again.')
 		return
 	end
+	
+	-- Unlock the comp flow area
+	comp:Unlock()
 end
 
 
 -- Run the main function
 Main()
-
--- Unlock the comp flow area
-comp:Unlock()
 
 print('[Done]')
 
