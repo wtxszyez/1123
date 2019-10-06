@@ -1,6 +1,6 @@
-_VERSION = 'v4.03 2019-10-05'
+_VERSION = 'v4.03 2019-10-06'
 --[[--
-KartaVR Video Snapshot - v4.03 2019-10-05 4.27 AM
+KartaVR Video Snapshot - v4.03 2019-10-06 8.15 AM
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -256,6 +256,13 @@ print('----------------------------------------')
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------
+
+-- Verify Fusion/Resolve's Fusion page is active and a comp scope is valid
+if not comp then
+	print('[Comp Error] Please run this script from inside the Fusion page.')
+
+	return
+end
 
 -- Where should the frame captures be stored
 local outputDirectory = comp:MapPath('Temp:/KartaVR/')
@@ -518,7 +525,7 @@ function HelpWindow()
 				Events = {AnchorClicked = true},
 				HTML = [=[
 <h1>About KartaVR Video Snapshot</h1>
-<h1>Version 4.1 - 2019-10-04</h1>
+<h1>]=] .. tostring(_VERSION) .. [=[</h1>
 
 <p>The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
 
@@ -1269,7 +1276,7 @@ function VideoDeviceList()
 		end
 
 		-- Add the result to the FFmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFMpeg Results]\n'  .. tostring(response)
+		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n'  .. tostring(response)
 		itm.Result.PlainText = commandResults
 		print(commandResults)
 		
@@ -1653,7 +1660,7 @@ function FrameCapture(outputFilenamePrefix)
 		end
 
 		-- Add the result to the FFmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFMpeg Results]\n' .. tostring(response)
+		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n' .. tostring(response)
 		itm.Result.PlainText = commandResults
 		print(commandResults)
 	elseif platform == 'Mac' then
