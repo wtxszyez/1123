@@ -1,5 +1,5 @@
 --[[--
-Restart Fusion - v2 2018-05-09
+Restart Fusion - v2 2019-10-06
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 ## Overview ##
