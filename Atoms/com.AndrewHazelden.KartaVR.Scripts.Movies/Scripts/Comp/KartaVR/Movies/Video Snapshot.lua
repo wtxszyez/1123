@@ -1,6 +1,6 @@
 _VERSION = 'v4.03 2019-10-06'
 --[[--
-KartaVR Video Snapshot - v4.03 2019-10-06 8.15 AM
+KartaVR Video Snapshot - v4.03 2019-10-06 10.21 AM
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -124,9 +124,18 @@ Show Output Folder
 The "Show Output Folder" button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.
 
 
+Edit
+The "Edit" button loads the "Video Snapshot.lua" script in the default script editor program that is defined in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.
+
+
+Help (?)
+If you click the "?" button at the top right of the Video Snapshow window, a new HTML based help documentation window will be displayed.
+
+
 Capture Log
 
 The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.
+
 
 
 Reactor Dependencies
@@ -354,17 +363,17 @@ end
 
 
 -- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
-function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
+-- Example: print(Dirname("/Users/Shared/file.txt"))
+function Dirname(mediaDirName)
+-- LUA Dirname command inspired by Stackoverflow code example:
 -- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
 -- Open a folder window up using your desktop file browser
-function openDirectory(mediaDirName)
+function OpenDirectory(mediaDirName)
 	command = nil
-	dir = dirname(mediaDirName)
+	dir = Dirname(mediaDirName)
 
 	-- Check if the folder exists and create it if required
 	if not bmd.direxists(dir) then
@@ -397,6 +406,25 @@ function openDirectory(mediaDirName)
 	end
 end
 
+function OpenDocument(title, appPath, docPath)
+	if platform == 'Windows' then
+		-- Running on Windows
+		command = 'start "" "' .. appPath .. '" "' .. docPath .. '" &'
+	elseif platform == 'Mac' then
+		-- Running on Mac
+		command = 'open -a "' .. appPath .. '" "' .. docPath .. '" &'
+	 elseif platform == "Linux" then
+		-- Running on Linux
+		command = '"' .. appPath .. '" "' .. docPath .. '" &'
+	else
+		print('[Error] There is an invalid Fusion platform detected')
+		return
+	end
+
+	comp:Print('[' .. title .. '] [App] "' .. appPath .. '" [Document] "' .. docPath .. '"\n')
+	-- comp:Print('[Launch Command] ' .. tostring(command) .. '\n')
+	os.execute(command)
+end
 
 -- Video Snapshot Window Image as Base64 content
 -- Example: itm.HTMLPreview.HTML = VideoSnapshotWindowImage()
@@ -540,7 +568,7 @@ function HelpWindow()
 
 <h1>Usage</h1>
 
-<p>Step 1. Select the "Script > KartaVR > Movies > Video Snapshot" menu item in Fusion to launch the script.</p>
+<p>Step 1. Select the "Script &gt; KartaVR &gt; Movies &gt; Video Snapshot" menu item in Fusion to launch the script.</p>
 
 <p>Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to adjust the "Capture Duration" value to define if you want single frame or multi-frame recording.</p>
 
@@ -664,6 +692,14 @@ function HelpWindow()
 <h2>Show Output Folder</h2>
 
 <p>The "Show Output Folder" button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.</p>
+
+
+<h2>Edit</h2>
+<p>The "Edit" button loads the "Video Snapshot.lua" script in the default script editor program that is defined in the Fusion Preferences "Global and Default Settings &gt; Script &gt; Editor Path" section.</p>
+
+
+<h2>Help (?)</h2>
+<p>If you click the "?" button at the top right of the Video Snapshow window, a new HTML based help documentation window will be displayed.</p>
 
 
 <h2>Capture Log</h2>
@@ -1066,8 +1102,8 @@ function UpdateLoader(nodeName, filename)
 end
 
 -- Convert a filepath to an HTML image tag
--- Example: html = html .. addImage('Temp:/Fusion/Screenshot.0001.jpg')
-function addImage(Imagename)
+-- Example: html = html .. AddImage('Temp:/Fusion/Screenshot.0001.jpg')
+function AddImage(Imagename)
 	return '<img style="padding:70px;" src="' .. comp:MapPath(Imagename) .. '" />\n'
 end
 
@@ -1180,46 +1216,52 @@ function VideoDeviceList()
 
 	-- Add the supported video input devices
 	if platform == 'Mac' then
-		-- Scan the ffmpeg terminal output line by line
-		local handler = io.popen(ffmpegProgram .. ' ' .. options)
 
 		-- Add a macOS based 'default' video device
 		videoDevicesTable[i] = {id = i, device = 'Default'}
 		i = i + 1
 
-		-- Scan the io.popen output for the remaining video devices
-		for line in handler:lines() do
-			-- [AVFoundation input device @ 0x7fbc99e00320] [0] Cisco VTCamera3
-			searchString = '%[%d%].*$'
-			rawResult = string.match(line, searchString)
-			if rawResult ~= nil then
-				-- print(rawResult)
-				-- Example: [0] Cisco VTCamera3
+		-- Verify FFmpeg is installed before trying to run it
+		if ffmpegMissing == false then
+			-- Scan the ffmpeg terminal output line by line
+			local handler = io.popen(ffmpegProgram .. ' ' .. options)
 
-				-- Trim off the ID Code trailing square bracket
-				searchString = '%].*$'
-				device = string.match(rawResult, searchString):sub(3)
-				-- print(device)
-				-- Example: Cisco VTCamera3
+			-- Scan the io.popen output for the remaining video devices
+			for line in handler:lines() do
+				-- [AVFoundation input device @ 0x7fbc99e00320] [0] Cisco VTCamera3
+				searchString = '%[%d%].*$'
+				rawResult = string.match(line, searchString)
+				if rawResult ~= nil then
+					-- print(rawResult)
+					-- Example: [0] Cisco VTCamera3
 
-				-- Add a new entry to the table
-				videoDevicesTable[i] = {id = i, device = device}
-				-- Example: videoDevicesTable[1] = {id = 1, device = 'Cisco VTCamera3'}
+					-- Trim off the ID Code trailing square bracket
+					searchString = '%].*$'
+					device = string.match(rawResult, searchString):sub(3)
+					-- print(device)
+					-- Example: Cisco VTCamera3
 
-				-- Increment the device counter
-				i = i + 1
+					-- Add a new entry to the table
+					videoDevicesTable[i] = {id = i, device = device}
+					-- Example: videoDevicesTable[1] = {id = 1, device = 'Cisco VTCamera3'}
+
+					-- Increment the device counter
+					i = i + 1
+				end
 			end
+			
+			-- Close the io.popen() pointer
+			handler:close()
+		else
+			response = 'The required executable was not found at: ', defaultFFmpegProgram
+			local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n'  .. tostring(response)
+			itm.Result.PlainText = commandResults
+			print(commandResults)
 		end
-		
-		-- Close the io.popen() pointer
-		handler:close()
 	elseif platform == 'Windows' then
 		-- Add a Windows based 'Integrated Camera' video device
 		videoDevicesTable[i] = {id = i, device = 'Default'}
 		i = i + 1
-
-		-- videoDevicesTable[i] = {id = i, device = 'Cisco VTCamera3'}
-		-- i = i + 1
 
 		-- Check if the "Temp:/KartaVR/" log folder exists. Create this folder if required
 		logDir = app:MapPath('Temp:/KartaVR/')
@@ -1228,77 +1270,86 @@ function VideoDeviceList()
 			print('[Created Folder] ', logDir, '\n')
 		end
 
-		-- Write out a .bat script to do the capture and collect the CLI stdin/stdout/stderr text output 
-		videoDevicesBatPath = app:MapPath('Temp:/KartaVR/KartaVRVideoDevices.bat')
-		videoDevicesBatFP = io.open(videoDevicesBatPath, "w")
-		if videoDevicesBatFP ~= nil then
-		 	videoDevicesBatFP:write('@echo off\n')
-		 	videoDevicesBatFP:write('@title KartaVR Video Snapshot\n')
-		 	videoDevicesBatFP:write('setlocal EnableDelayedExpansion\n\n')
-		 	videoDevicesBatFP:write('echo Video Device Scan Script' .. _VERSION .. '\n')
-		 	videoDevicesBatFP:write('echo Created by:\n')
-		 	videoDevicesBatFP:write('echo Andrew Hazelden\n')
-		 	videoDevicesBatFP:write('echo ----------------------------------------------------------------------\n')
-		 	videoDevicesBatFP:write('echo This script uses FFmpeg to scan for DirectShow video input devices.\n')
-		 	videoDevicesBatFP:write('echo echo The results are automatically loaded into the Video Snapshot GUI.\n')
-		 	videoDevicesBatFP:write('echo ----------------------------------------------------------------------\n\n')
-		 	videoDevicesBatFP:write('@echo on\n')
-		 	videoDevicesBatFP:write(ffmpegProgram .. options .. '\n')
-			videoDevicesBatFP:write('@echo off\n')
-			videoDevicesBatFP:write('\n')
-			videoDevicesBatFP:write('echo Done\n')
-		 	videoDevicesBatFP:close()
-		end
-
-		-- Pause for a moment
-		bmd.wait(0.1)
-		
-		-- Run the KartaVRVideoDevices.bat script
-		-- if os.execute('start cmd /k call "' .. videoDevicesBatPath .. '"') then
-		if os.execute('"' .. videoDevicesBatPath .. '"') then
-			print('[Capture Script] Started: ', videoDevicesBatPath)
-		else
-			print('[Capture Script] Failed to launch: ', videoDevicesBatPath)
-		end
-
-		-- Pause for a moment
-		bmd.wait(0.1)
-
-		-- Open the "Temp:/KartaVR/KartaVRVideoDeviceLog.txt" logfile saved by Wintee
-		responseFP = io.open(videoDevicesOutputLog, 'r')
-		if responseFP ~= nil then
-			-- valid file pointer for opening the output log file
-			response = responseFP:read('*all')
-			responseFP:close()
-		else
-			-- nil file pointer for the output log file
-			response = '[Error] No FFmpeg log file saved'
-		end
-
-		-- Add the result to the FFmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n'  .. tostring(response)
-		itm.Result.PlainText = commandResults
-		print(commandResults)
-		
-		-- Scan for individual video input devices
-		for line in io.lines(videoDevicesOutputLog) do
-			-- print(line)
-			-- [dshow @ 00000290ee4904c0]  "Cisco VTCamera3"
-			searchString = '%[.*%]%s+"(.*)".*$'
-			rawResult = string.match(line, searchString)
-			if rawResult ~= nil then
-				print('[Video Input Device] ', rawResult)
-				-- Example: Cisco VTCamera3
-				
-				device = rawResult
-				
-				-- Add a new entry to the table
-				videoDevicesTable[i] = {id = i, device = device}
-				-- Example: videoDevicesTable[1] = {id = 1, device = 'Cisco VTCamera3'}
-
-				-- Increment the device counter
-				i = i + 1
+		-- Verify FFmpeg is installed before trying to run it
+		if ffmpegMissing == false then
+			-- Write out a .bat script to do the capture and collect the CLI stdin/stdout/stderr text output 
+			videoDevicesBatPath = app:MapPath('Temp:/KartaVR/KartaVRVideoDevices.bat')
+			videoDevicesBatFP = io.open(videoDevicesBatPath, "w")
+			if videoDevicesBatFP ~= nil then
+				videoDevicesBatFP:write('@echo off\n')
+				videoDevicesBatFP:write('@title KartaVR Video Snapshot\n')
+				videoDevicesBatFP:write('setlocal EnableDelayedExpansion\n\n')
+				videoDevicesBatFP:write('echo Video Device Scan Script' .. _VERSION .. '\n')
+				videoDevicesBatFP:write('echo Created by:\n')
+				videoDevicesBatFP:write('echo Andrew Hazelden\n')
+				videoDevicesBatFP:write('echo ----------------------------------------------------------------------\n')
+				videoDevicesBatFP:write('echo This script uses FFmpeg to scan for DirectShow video input devices.\n')
+				videoDevicesBatFP:write('echo echo The results are automatically loaded into the Video Snapshot GUI.\n')
+				videoDevicesBatFP:write('echo ----------------------------------------------------------------------\n\n')
+				videoDevicesBatFP:write('@echo on\n')
+				videoDevicesBatFP:write(ffmpegProgram .. options .. '\n')
+				videoDevicesBatFP:write('@echo off\n')
+				videoDevicesBatFP:write('\n')
+				videoDevicesBatFP:write('echo Done\n')
+				videoDevicesBatFP:close()
 			end
+
+			-- Pause for a moment
+			bmd.wait(0.1)
+		
+			-- Run the KartaVRVideoDevices.bat script
+			-- if os.execute('start cmd /k call "' .. videoDevicesBatPath .. '"') then
+			if os.execute('"' .. videoDevicesBatPath .. '"') then
+				print('[Capture Script] Started: ', videoDevicesBatPath)
+			else
+				print('[Capture Script] Failed to launch: ', videoDevicesBatPath)
+			end
+
+			-- Pause for a moment
+			bmd.wait(0.1)
+
+			-- Open the "Temp:/KartaVR/KartaVRVideoDeviceLog.txt" logfile saved by Wintee
+			responseFP = io.open(videoDevicesOutputLog, 'r')
+			if responseFP ~= nil then
+				-- valid file pointer for opening the output log file
+				response = responseFP:read('*all')
+				responseFP:close()
+			else
+				-- nil file pointer for the output log file
+				response = '[Error] No FFmpeg log file saved'
+			end
+
+			-- Add the result to the FFmpeg log results TextEdit field
+			local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n'  .. tostring(response)
+			itm.Result.PlainText = commandResults
+			print(commandResults)
+		
+			-- Scan for individual video input devices
+			for line in io.lines(videoDevicesOutputLog) do
+				-- print(line)
+				-- [dshow @ 00000290ee4904c0]  "Cisco VTCamera3"
+				searchString = '%[.*%]%s+"(.*)".*$'
+				rawResult = string.match(line, searchString)
+				if rawResult ~= nil then
+					print('[Video Input Device] ', rawResult)
+					-- Example: Cisco VTCamera3
+				
+					device = rawResult
+				
+					-- Add a new entry to the table
+					videoDevicesTable[i] = {id = i, device = device}
+					-- Example: videoDevicesTable[1] = {id = 1, device = 'Cisco VTCamera3'}
+
+					-- Increment the device counter
+					i = i + 1
+				end
+			end
+		else
+			-- Add the result to the FFmpeg log results TextEdit field
+			response = 'The required executable was not found at: ', defaultFFmpegProgram
+			local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n' .. tostring(response)
+			itm.Result.PlainText = commandResults
+			print(commandResults)
 		end
 	end
 
@@ -1448,13 +1499,13 @@ function FrameCapture(outputFilenamePrefix)
 	-- Check if paths are non-nil
 	if outputDirectoryAndFilenamePrefix then
 		if platform == 'Windows' then
-			os.execute('mkdir "' .. dirname(outputDirectoryAndFilenamePrefix) .. '" &')
+			os.execute('mkdir "' .. Dirname(outputDirectoryAndFilenamePrefix) .. '" &')
 		else
 			-- Mac and Linux
-			os.execute('mkdir -p "' .. dirname(outputDirectoryAndFilenamePrefix) .. '" &')
+			os.execute('mkdir -p "' .. Dirname(outputDirectoryAndFilenamePrefix) .. '" &')
 		end
 
-		print('[Output Folder] ', dirname(outputDirectoryAndFilenamePrefix))
+		print('[Output Folder] ', Dirname(outputDirectoryAndFilenamePrefix))
 	end
 
 	-- ffmpeg Video Source
@@ -1634,35 +1685,39 @@ function FrameCapture(outputFilenamePrefix)
 			captureBatFP:close()
 		end
 
-		-- Pause for a moment
-		bmd.wait(0.1)
-		
-		-- Run the KartaVRCapture.bat script
-		-- if os.execute('start cmd /k call "' .. captureBatPath .. '"') then
-		if os.execute('"' .. captureBatPath .. '"') then
-			print('[Capture Script] Started: ', captureBatPath)
+		-- Verify FFmpeg is installed before trying to run it
+		if ffmpegMissing == false then
+			-- Pause for a moment
+			bmd.wait(0.1)
+
+			-- Run the KartaVRCapture.bat script
+			-- if os.execute('start cmd /k call "' .. captureBatPath .. '"') then
+			if os.execute('"' .. captureBatPath .. '"') then
+				print('[Capture Script] Started: ', captureBatPath)
+			else
+				print('[Capture Script] Failed to launch: ', captureBatPath)
+			end
+
+			-- Pause for a moment
+			bmd.wait(0.1)
+
+			-- Open the "Temp:/KartaVR/KartaVRCaptureLog.txt" logfile saved by Wintee
+			responseFP = io.open(outputLog, 'r')
+			if responseFP ~= nil then
+				-- valid file pointer for opening the output log file
+				response = responseFP:read('*all')
+				responseFP:close()
+			else
+				-- nil file pointer for the output log file
+				response = '[Error] No FFmpeg log file saved'
+			end
 		else
-			print('[Capture Script] Failed to launch: ', captureBatPath)
+			response = "The FFmpeg executable is not installed at the expected filepath: ", ffmpegProgram
 		end
-
-		-- Pause for a moment
-		bmd.wait(0.1)
-
-		-- Open the "Temp:/KartaVR/KartaVRCaptureLog.txt" logfile saved by Wintee
-		responseFP = io.open(outputLog, 'r')
-		if responseFP ~= nil then
-			-- valid file pointer for opening the output log file
-			response = responseFP:read('*all')
-			responseFP:close()
-		else
-			-- nil file pointer for the output log file
-			response = '[Error] No FFmpeg log file saved'
-		end
-
-		-- Add the result to the FFmpeg log results TextEdit field
-		local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n' .. tostring(response)
-		itm.Result.PlainText = commandResults
-		print(commandResults)
+			-- Add the result to the FFmpeg log results TextEdit field
+			local commandResults = '[Launch Command]\n' .. tostring(ffmpegProgram) .. tostring(options) .. '\n\n[FFmpeg Results]\n' .. tostring(response)
+			itm.Result.PlainText = commandResults
+			print(commandResults)
 	elseif platform == 'Mac' then
 		-- Running on Mac
 
@@ -1676,17 +1731,24 @@ function FrameCapture(outputFilenamePrefix)
 		command = ffmpegProgram .. options
 		print('[Launch Command] ' .. command)
 
-		handler = io.popen(command)
-		if handler then
-			response = handler:read('*a')
-			handler:close()
+		-- Verify FFmpeg is installed before trying to run it
+		if ffmpegMissing == false then
+			-- Run FFmpeg and grab the result
+			handler = io.popen(command)
+			if handler then
+				response = handler:read('*a')
+				handler:close()
+			end
+		else
+			response = "The FFmpeg executable is not installed at the expected filepath: ", ffmpegProgram
 		end
-
+		
 		-- Add the result to the ffmpeg log results TextEdit field
 		-- Add the result to the ffmpeg log results TextEdit field
 		local commandResults = '[Launch Command]\n' .. tostring(command) .. '\n[FFMpeg Results]\n' .. tostring(response)
 		itm.Result.PlainText = commandResults
 		print(commandResults)
+		
 	else
 		-- Running on Linux
 		options = options .. ' ' .. ''
@@ -1771,6 +1833,29 @@ end
 -- ffmpegProgram = '"' .. getPreferenceData('KartaVR.SendMedia.FFmpegFile', defaultFFmpegProgram, printStatus) .. '"'
 ffmpegProgram = '"' .. defaultFFmpegProgram .. '"'
 
+-- Was the FFmpeg executable located? 
+ffmpegMissing = false
+
+-- Check if FFmpeg was installed to a Reactor location
+if bmd.fileexists(defaultFFmpegProgram) == false then
+	-- FFmpeg couldn't be located on disk
+	ffmpegMissing = true
+
+	-- Fallback to using "Disabled" as the active Video Input Device index
+	defaultVideoDevice = 0
+
+	-- FFmpeg was not located
+	response = 'The FFmpeg executable is not installed at the expected filepath: ', ffmpegProgram
+
+	-- Add the result to the ffmpeg log results TextEdit field
+	-- Add the result to the ffmpeg log results TextEdit field
+	local commandResults = '\n[FFMpeg Results]\n' .. tostring(response)
+	print(commandResults)
+end
+
+
+
+
 -- Get the Snapshot filepath and verify the snapshot filename is unique
 filename, tokenFilename, startFrame = CheckFilename()
 
@@ -1819,6 +1904,9 @@ win = disp:AddWindow({
 			-- Pixel Format list
 			ui:Label{ID = 'PixelFormatText', Text = 'Format: ', Weight = 0.001},
 			ui:ComboBox{ID = 'VideoPixelFormatCombo'},
+
+			-- Edit Button
+			ui:Button{ID = 'EditButton', Text = 'Edit', MinimumSize = {40, 24}, Weight = 0.001},
 
 			-- Help Button
 			ui:Button{ID = 'HelpButton', Text = '?', MinimumSize = {24, 24}, Weight = 0.001},
@@ -1936,11 +2024,26 @@ function win.On.TakeText.TextChanged(ev)
 	print('[Take Number] ', takeNumber)
 end
 
+-- Edit button was clicked
+function win.On.EditButton.Clicked(ev)
+	scriptPath = app:MapPath('Reactor:/Deploy/Scripts/Comp/KartaVR/Movies/Video Snapshot.lua')
+
+	-- Open the script using Fusion's default editor in the Fusion preferences.
+	editorPath = fu:GetPrefs('Global.Script.EditorPath')
+	if editorPath == nil or editorPath == "" then
+		comp:Print('[Script Error] The "Editor Path" is empty. Please choose a text editor in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.\n')
+		app:ShowPrefs("PrefsScript")
+	else
+		-- Open the script for editing
+		OpenDocument('Edit Script', editorPath, scriptPath)
+	end
+end
+
 -- Help (?) button was clicked
 function win.On.HelpButton.Clicked(ev)
 	print('[Show Help]')
 
-	-- Displau a UI Manager based help window
+	-- Display a UI Manager based help window
 	HelpWindow()
 end
 
@@ -1974,7 +2077,7 @@ function win.On.ShowOutputFolderButton.Clicked(ev)
 	print('[Active Composite] ', tostring(cmp:GetAttrs()['COMPS_Name']))
 	
 	outputDirectory = cmp:MapPath(itm.PathMapCombo.CurrentText) or cmp:MapPath('Temp:/KartaVR/')
-	openDirectory(outputDirectory)
+	OpenDirectory(outputDirectory)
 end
 
 -- The "Add Loader Node" button was pressed
@@ -1983,7 +2086,7 @@ function win.On.AddLoaderButton.Clicked(ev)
 	AddSnapshotLoader('SnapshotLoader', itm.ImageFilepathText.Text)
 
 	-- Update the HTML based JPEG/PNG image preview
-	-- itm.HTMLPreview.HTML = addImage(itm.ImageFilepathText.Text)
+	-- itm.HTMLPreview.HTML = AddImage(itm.ImageFilepathText.Text)
 	-- print('[HTML Preview] ', itm.HTMLPreview.HTML)
 end
 
