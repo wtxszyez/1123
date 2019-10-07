@@ -242,9 +242,14 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Brushes
 - Collections
 - Comps
+- Comps/3D
 - Comps/CustomShader3D
+- Comps/Flow
 - Comps/Krokodove
+- Comps/Particles
+- Comps/Stereo
 - Comps/Templates
+- Comps/VR
 - Console
 - Docs
 - Fun
@@ -737,4 +742,4 @@ This example creates a desktop folder based shortcut to the Reactor Docs folder:
 			CreateShortcut("Reactor:/Deploy/Docs/ReactorDocs", "Desktop:", "ReactorDocs", "folder")]],
 		}
 
-Last Revised 2019-10-05
+Last Revised 2019-10-07

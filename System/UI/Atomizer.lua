@@ -902,7 +902,7 @@ function AtomWin()
 			WindowStaysOnTopHint = false,
 		},
 		Geometry = {0, 0, width, height},
-
+		Events = {Close = true, KeyPress = true, KeyRelease = true,},
 		ui:VGroup{
 			-- Author Name
 			ui:HGroup{
@@ -1910,7 +1910,7 @@ function AtomWin()
 
 	-- Open an HTML link when clicked on in the HTML preview zone
 	function win.On.HTMLPreview.AnchorClicked(ev)
-		bmd.openurl(ev.URL)
+		OpenURL("Clicked A HREF URL", ev.URL)
 	end
 
 	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
@@ -1958,6 +1958,8 @@ function AtomWin()
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('Atomizer')
 	collectgarbage()
 end
@@ -2232,6 +2234,8 @@ function AtomTextView(centerX, CenterY)
 	vwin:Show()
 	disp:RunLoop()
 	vwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('AtomView')
 	collectgarbage()
 
@@ -2500,6 +2504,8 @@ function NewPackageWin()
 	npwin:Show()
 	disp:RunLoop()
 	npwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('NewAtomPackage')
 	collectgarbage()
 
@@ -2721,6 +2727,8 @@ function StartupWin()
 	stwin:Show()
 	disp:RunLoop()
 	stwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('AtomStart')
 	collectgarbage()
 
