@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.14 - October 5, 2019]]
+_VERSION = [[Version 3.14 - October 7, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -155,11 +155,16 @@ or
 - Added a new "Save as Defaults" button to save the current settings as an initial template.
 - Added clickable HTML links in the HTML Preview area.
 
-### 3.2 2019-10-05 ##
+### 3.2 2019-10-07 ##
 
-- Added a "Comps/CustomShader3D" category.
-- Added a "Comps/Krokodove" category.
 - Sorted the category items Lua table alphabetically
+- Added a "Comps/3D" category.
+- Added a "Comps/CustomShader3D" category.
+- Added a "Comps/Flow" category.
+- Added a "Comps/Krokodove" category.
+- Added a "Comps/Particles" category.
+- Added a "Comps/Stereo" category.
+- Added a "Comps/VR" category.
 
 ## Todos ##
 
@@ -672,9 +677,14 @@ function AtomWin()
 		{text = 'Brushes'},
 		{text = 'Collections'},
 		{text = 'Comps'},
+		{text = 'Comps/3D'},
 		{text = 'Comps/CustomShader3D'},
+		{text = 'Comps/Flow'},
 		{text = 'Comps/Krokodove'},
+		{text = 'Comps/Particles'},
+		{text = 'Comps/Stereo'},
 		{text = 'Comps/Templates'},
+		{text = 'Comps/VR'},
 		{text = 'Console'},
 		{text = 'Docs'},
 		{text = 'Fun'},
