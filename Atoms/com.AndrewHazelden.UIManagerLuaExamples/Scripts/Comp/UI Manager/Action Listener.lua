@@ -1,5 +1,5 @@
 --[[
-Action Listener v2 - 2019-10-01
+Action Listener v2 - 2019-10-09
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -31,7 +31,7 @@ If you install the "Action Listener.fu" hotkey file you can use the (Command + R
 v1.3 - 2017-11-21
 - Action Listener WSL "Reactor Edition"
 
-v2.0 - 2019-10-01
+v2.0 - 2019-10-09
 - Added Fusion scope action listening to AddNotify, which massively expands the amount of actions reported by the "Action Listener" script compared to what the previous composite scope only action listening approach was able to output.
 - Added comp:DoAction() translation of generic actions to make the snippets runnable.
 
