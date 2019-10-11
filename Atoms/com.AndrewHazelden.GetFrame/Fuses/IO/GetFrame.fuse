@@ -1,10 +1,10 @@
 --[[--
-GetFrame - v1 2019-05-15 
+GetFrame - v1.2 2019-10-11
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 GetFrame.fuse allows you to load RGBA channel based BMP/GIF/JPEG/PNG/TGA/TIFF/ imagery from a filepath on disk using the Fuse API's Clip:GetFrame() functionality. This fuse can be used as a learning tool should you need to re-create Loader node like approaches in your own fuses.
 
-This fuse is compatible with the 2D compositing nodes in Fusion Standalone v9/16+ and Resolve 15/16+.
+This fuse is compatible with the 2D compositing nodes in Fusion Standalone v9/16+ and Resolve 15/16+. Do not use this node attached to a Fusion 3D workspace surface material!
 
 
 GUI Controls
@@ -72,6 +72,13 @@ function Create()
 		ICS_ControlPage = 'File',
 		})
 
+	InLink = self:AddInput("Link", "Link", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		INP_Required = false,
+		INP_SendRequest = true,
+		})
+
 	-- The output node connection where imagery is pushed out of the fuse
 	OutImage = self:AddOutput('Output', 'Output', {
 		LINKID_DataType = 'Image',
@@ -92,6 +99,10 @@ function Process(req)
 
 	-- Read the frame mode
 	local staticFrame = InStaticFrame:GetValue(req).Value
+
+	-- Link connection port
+	-- Todo: Possibly read and merge in the "Link" input connection's image metadata stream with the GetFrame native metadata Lua table values
+	local imgLinkConnection = InLink:GetSource(req.Time, req:GetFlags())
 
 	-- Verify the file exists
 	if bmd.fileexists(filename) == true then
