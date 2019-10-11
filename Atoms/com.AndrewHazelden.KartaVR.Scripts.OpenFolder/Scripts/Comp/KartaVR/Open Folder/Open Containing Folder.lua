@@ -1,5 +1,5 @@
 --[[--
-Open Containing Folder - v4.0.3 2019-10-06
+Open Containing Folder - v4.0.3 2019-10-10
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -12,12 +12,14 @@ Overview:
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
 
-This script works with the following types of nodes in the Resolve 15 Fusion page Nodes view / Fusion 9 Flow area:
+This script works with the following types of nodes in the Fusion 9-16.1 and Resolve 15-16.1 Fusion page Nodes view:
 
 - MediaIn
 - Loader
 - Saver
 - LifeSaver
+- PutFrame
+- GetFrame
 - External Matte Saver
 - AlembicMesh3D
 - FBXMesh3D
@@ -66,7 +68,7 @@ function Main()
 	end
 	
 	-- Lock the comp flow area
-	comp:Lock()
+	-- comp:Lock()
 	
 	local mediaDirName = nil
 	
@@ -109,6 +111,14 @@ function Main()
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = dirname(loadedImage)
 			result = '[ExternalMatteSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.PutFrame' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = dirname(loadedImage)
+			result = '[PutFrame file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.GetFrame' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = dirname(loadedImage)
+			result = '[GetFrame file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
 			if selectedNode.Output[comp.CurrentTime] then
 				loadedImage = selectedNode.Output[comp.CurrentTime].Metadata.Filename
@@ -144,7 +154,7 @@ function Main()
 	end
 	
 	-- Unlock the comp flow area
-	comp:Unlock()
+	-- comp:Unlock()
 end
 
 
