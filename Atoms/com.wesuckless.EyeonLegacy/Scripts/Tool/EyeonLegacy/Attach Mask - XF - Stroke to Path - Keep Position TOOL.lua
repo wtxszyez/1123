@@ -11,10 +11,11 @@
 -- Used with permission by Frantic Films (http://www.franticfilms.com)
 -- written by Sean Konrad (sean@eyeonline.com)
 -- Created May 5, 2005.
--- updated : Sept 27, 2005
--- changes : updated for 5
+-- updated: Sept 27, 2005
+-- changes: updated for 5
 -- updated: January, 4th 2017 Michael Vorberg (mv@empty98.de) to check for XYPath and PolyPath
 -- updated: August, 29th 2017 Michael Vorberg (mv@empty98.de) Fix for Fusion9
+-- updated: October, 12th 2019 Alex Bogomolov (mail@abogomolov.com) Fix for Davinci Resolve 16 compatibility
 ------------------------------------------------------------
 
 
@@ -60,7 +61,30 @@ trackerdump={}
 
 
 local var1= tool:GetAttrs()
+
+-- add isin() function to Davinci Resolve
+-- the function scans table t and returns true if the string val is found in the table.
+
+if not bmd.isin then
+    function bmd.isin(t, val)
+        if type(t) == "table" then
+            for i,v in pairs(t) do
+                if (type(v) == "string") and (type(val) == "string") then
+                    if string.lower(v) == string.lower(val) then
+                        return true
+                    end
+                else
+                    if v == val then
+                        return true
+                    end
+                end
+            end
+        return false
+        end
+    end
+end
 -- Check to see if the tool is even a mask.
+
 if not bmd.isin(mask_ids, var1.TOOLS_RegID) then
    print("ERROR: This is not a Mask / Paint Stroke.")
    return
