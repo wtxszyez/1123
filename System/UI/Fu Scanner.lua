@@ -1,4 +1,4 @@
-_VERSION = 'v3.14 2019-10-05'
+_VERSION = 'v3.14 2019-10-09'
 --[[--
 Fu Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -17,7 +17,7 @@ Single click on a row to copy the filepath to your clipboard. Double click on a 
 
 This script was designed to be with the WSL Reactor package manager toolset. You will find "Fu Scanner" in Reactor's "Scripts/Reactor" Category.
 
-The "Fu Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15+ to be used.
+The "Fu Scanner.lua" script requires Fusion 9.0.2/16+ or Resolve 15/16+ to be used.
 
 ## Known Issues ##
 
@@ -167,7 +167,7 @@ function Main()
 					Weight = 0,
 					ID = 'ExpandPathMapCheckbox',
 					Text = 'Expand PathMaps',
-					Checked = true,
+					Checked = false,
 				},
 				ui:CheckBox{
 					Weight = 0,
@@ -224,7 +224,7 @@ function Main()
 			Target = "FuScanner",
 			Defaults = true,
 
-			CONTROL_W	 = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+			CONTROL_W = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
 			CONTROL_F4 = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
 		},
 	})
@@ -355,7 +355,12 @@ function Main()
 		itm.Tree.SortingEnabled = true
 		itm.Tree.UpdatesEnabled = true
 
-		itm.Tree:SortByColumn(0, "AscendingOrder")
+		-- Sort by second column (filepath) to clump the "Reactor:/" PathMap entries together
+		itm.Tree:SortByColumn(1, "AscendingOrder")
+		-- itm.Tree:SortByColumn(1, "DescendingOrder")
+		
+		-- Sort by the first column (filename) to list the .fu files alphabetically
+		-- itm.Tree:SortByColumn(0, "AscendingOrder")
 		-- itm.Tree:SortByColumn(0, "DescendingOrder")
 
 		itm.FuScanner.WindowTitle = 'Fu Scanner: ' .. c .. ' Files'
