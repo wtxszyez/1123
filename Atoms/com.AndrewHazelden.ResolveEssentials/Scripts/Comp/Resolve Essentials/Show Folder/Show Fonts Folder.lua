@@ -1,4 +1,5 @@
 -- Show Fonts Folder menu item
+-- v3.14 - 2019-10-05
 
 local path = app:MapPath("Fonts:/")
 if bmd.direxists(path) == false then

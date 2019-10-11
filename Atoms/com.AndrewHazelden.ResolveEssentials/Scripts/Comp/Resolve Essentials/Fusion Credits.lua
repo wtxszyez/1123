@@ -1,5 +1,5 @@
 --[[--
-Fusion Credits v1.1 - 2018-05-27
+Fusion Credits v3.14 - 2019-10-05
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 Overview:

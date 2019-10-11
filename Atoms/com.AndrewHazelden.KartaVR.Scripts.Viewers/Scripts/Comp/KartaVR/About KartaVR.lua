@@ -1,4 +1,4 @@
-_VERSION = 'v4.0 - 2018-12-25'
+_VERSION = 'v4.1 - 2019-10-02'
 --[[
 ==============================================================================
 About KartaVR.lua
@@ -54,7 +54,7 @@ end
 -- Create the "About KartaVR" UI Manager dialog
 function AboutKartaVRWin()
 	-- Configure the window Size
-	local originX, originY, width, height = 200, 200, 775, 450
+	local originX, originY, width, height = 200, 200, 775, 455
 	
 	-- Create the new UI Manager Window
 	local win = disp:AddWindow({
@@ -132,7 +132,7 @@ function AboutKartaVRWin()
 					ID = 'AboutLabel',
 					Text = [["Karta" is the Swedish word for map. With KartaVR you can easily stitch, composite, retouch, and remap any kind of panoramic video: from any projection to any projection.
 
-The KartaVR plug-in works inside of Blackmagic Design's powerful node based Fusion Standalone 9 and Resolve 15.2 software. It provides the essential tools for VR, panoramic 360° video stitching, and image editing workflows.]],
+The KartaVR plug-in works inside of Blackmagic Design's powerful node based Fusion Standalone v9/16 and Resolve v15.2/16 software. It provides the essential tools for VR, panoramic 360° video stitching, and image editing workflows.]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {
@@ -146,7 +146,7 @@ The KartaVR plug-in works inside of Blackmagic Design's powerful node based Fusi
 				ui:Label {
 					ID = 'URLLabel',
 					Weight = 0,
-					Text = [[Copyright © 2014-2018 Andrew Hazelden.<br><a href="http://www.andrewhazelden.com/blog/"  style="color: rgb(139,155,216)">http://www.andrewhazelden.com/blog/</a>]],
+					Text = [[Copyright © 2014-2019 Andrew Hazelden.<br><a href="http://www.andrewhazelden.com/blog/"  style="color: rgb(139,155,216)">http://www.andrewhazelden.com/blog/</a>]],
 					OpenExternalLinks = true,
 					WordWrap = true,
 					Alignment = {

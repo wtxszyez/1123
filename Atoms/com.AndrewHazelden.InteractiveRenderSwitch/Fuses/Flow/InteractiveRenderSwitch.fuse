@@ -1,0 +1,167 @@
+--[[--
+Interactive Render Switch Fuse - v1.0.1 2019-10-08
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+# Overview #
+
+The "InteractiveRenderSwitch.fuse" toggles the image output stream between an "Interactive" image input, or a "BatchRender" image input. The interactive vs batch rendering input switching is toggled automatically by Fusion so you can have different content processed and displayed in your flow during an artist driven interactive GUI session vs when a batch rendering mode is happening inside Fusion/Fusion Render Node.
+
+This fuse was inspired "Switch.fuse" by Stefan Ihringer.
+
+Note: You might have to purge the active Fusion RAM cache for the entire comp timeline before the "Interactive Render Switch" fuse's output is truly swapped between interactive and batch mode. Automatic and seamless solutions to perform the timeline based RAM cache clearning are still being resarched.
+
+
+# Usage #
+
+1. Add the "InteractiveRenderSwitch" fuse to your composite.
+2. Connect an image that you want to view during an interactive Fusion GUI session to the "Interactive" input connection.
+3. Connect an image that you want to have used during a batch rendering job to the "BatchRender" input connection.
+4. Add a node like a BrightnessContrast node to the output connection of the InteractiveRenderSwitch node, and load it into the viewer window so you can see the uncached result from the InteractiveRenderSwitch fuse.
+5. Scrub the timeline to see the interactive image output. Then press the "Render" button near the timeline to see the BatchRender image output.
+
+
+# Dev Notes #
+
+No error handling is done when the required Interactive or BatchRender image input connection data becomes nil/void.
+
+
+# Version History #
+
+v1.0 - 2019-10-05
+- Initial release of the fuse
+
+V1.0.1 - 2019-10-08
+- Made input connections optional
+- Added error handling for cases when no imagery is available via "img_precalc:Crop(result, { })"
+- Made the two image inputs non-processing unless used via a "INP_SendRequest = false," tag
+- Added a commented out in the source code "Purge RAM Cache" button to the node's UI. Need to figure out the ButtonControl scope to be able to access "fusion.CacheManager:Purge()"... TBD.
+
+--]]--
+
+FuRegisterClass("IRSwitch", CT_Tool, {
+	REGS_Name = "Interactive Render Switch",
+	REGS_Category = "Flow",
+	REGS_OpIconString = "IRS",
+	REGS_OpDescription = "An Interactive Render mode switch fuse that toggles between two inputs",
+	REGS_Company = 'Andrew Hazelden',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	REGS_HelpTopic = 'https://www.steakunderwater.com/wesuckless/viewtopic.php?p=25833#p25833',
+	REG_OpNoMask = true,
+	REG_NoCommonCtrls = true,
+	REG_NoPreCalcProcess = true,
+	-- Edit butons
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	REG_SupportsDoD = true,
+	-- Should the content be cached
+	REG_TimeVariant = true,
+	REG_Unpredictable = true,
+	-- Fuse version tag
+	REG_Version = 101,
+	})
+	
+function Create()
+	-- Clearing the Fusion RAM cache before a large render helps to avoid visual issues in the InteractiveSwitch.fuse output.
+--	InPurgeRAMCacheButton = self:AddInput('Purge RAM Cache', 'PurgeRAMCacheButton', {
+--		LINKID_DataType = 'Number',
+--		INPID_InputControl = 'ButtonControl',
+--		INP_DoNotifyChanged = true,
+--		INP_External = false,
+--		INP_Default = 0.0,
+--		ICD_Width = 1,
+--		LINK_ForceSave = true,
+--	})
+
+	InInteractive = self:AddInput("Interactive", "Interactive", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		INP_Required = false,
+		INP_SendRequest = false,
+		})
+
+	InBatch = self:AddInput("BatchRender", "BatchRender", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		INP_Required = false,
+		INP_SendRequest = false,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+end
+
+
+-- The OnAddToFlow() function runs when the node is first added to the flow, or the comp file is opened
+function OnAddToFlow()
+end
+
+
+-- OnConnected gets called whenever a connection is made to the inputs. A new
+-- input is created if something has been connected to the highest input.
+function OnConnected(inp, old, new)
+end
+
+-- NotifyChanged is run when a Fuse GUI element is modified by the user and the "INP_DoNotifyChanged = true," flag is enabled on a GUI control.
+function NotifyChanged(inp, param, time)
+	if param and param.Value == 1 then
+		if inp == InPurgeRAMCacheButton then
+			-- The Purge RAM Cache ButtonControl was clicked
+			
+--			fusion = fusion.scriptapp("Fusion", "localhost")
+--			if (fusion) then
+--				print('[Interactive] Clearing the Fusion RAM Cache\n')
+--				fusion.CacheManager:Purge()
+--			else
+--				print('[Interactive] Could not connect to Fusion Studio process to run the purge cache command. Seems like a bit more work is needed...\n')
+--			end
+		end
+	end
+end
+
+-- Process is run whenever this fuse is rendering imagery in interactive or batch mode
+function Process(req)
+	local compWidth = self.Comp:GetPrefs('Comp.FrameFormat.Width') or 1920
+	local compHeight = self.Comp:GetPrefs('Comp.FrameFormat.Height') or 1080
+	
+	-- Is Fusion doing interactive rendering or batch rendering
+	if req:IsInteractive() then
+		-- Grab an image from the interactive input connection on the node
+		local imgInteractive = InInteractive:GetSource(req.Time, req:GetFlags())
+		
+		if imgInteractive ~= nil then
+			if req:IsPreCalc() then
+				-- precalculating or interactive image is nil
+				local img_precalc = Image({IMG_Like = imgInteractive, IMG_NoData = true})
+				
+				-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+				img_precalc:Crop(result, { })
+				
+				OutImage:Set(req, img_precalc)
+			else
+				-- return the interactive image
+				OutImage:Set(req, imgInteractive)
+			end
+		end
+	else
+		-- Grab an image from the batch input connection on the node
+		local imgBatch = InBatch:GetSource(req.Time, req:GetFlags())
+		
+		if imgBatch ~= nil then
+			if req:IsPreCalc() then
+				-- precalculating or interactive image is nil
+				local img_precalc = Image({IMG_Like = imgBatch, IMG_NoData = true})
+				
+				-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+				img_precalc:Crop(result, { })
+				
+				OutImage:Set(req, img_precalc)
+			else
+				-- return the batch image
+				OutImage:Set(req, imgBatch)
+			end
+		end
+	end
+end
+

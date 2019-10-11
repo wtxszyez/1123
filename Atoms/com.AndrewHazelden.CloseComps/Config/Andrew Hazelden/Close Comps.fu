@@ -1,0 +1,191 @@
+--[[--
+Close Comps - v1.1 2019-10-06
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+The "Close Other Comps" menu makes it easy to keep your foreground comp open in Fusion while closing all of the other open comps.
+
+The "Close Comps To Left" menu makes it easy to keep your foreground comp open in Fusion while closing the comps that are in tabs to the left of your current document.
+
+The "Close Comps To Right" menu makes it easy to keep your foreground comp open in Fusion while closing the comps that are in tabs to the right of your current document.
+
+
+## Installation ##
+
+Step 1. Move the "Close Comps.fu" file into the Fusion user prefs "Config:/" folder.
+
+Step 2. Restart Fusion so the config file is loaded.
+
+
+## Usage ##
+
+### Close Other Comps ###
+
+The "Control + Shift + W" hotkey can be used to run the "Close Other Comps" command. Alternatively, you can use the "File > Close Other Comps" menu item.
+
+### Close Comps To Left ###
+
+You can use the "File > Close Comps To Left" menu item.
+
+### Close Comps To Right ###
+
+You can use the "File > Close Comps To Right" menu item.
+
+--]]--
+
+{
+	Action
+	{
+		ID = "Close_Other_Comps",
+		Category = "File",
+		Name = "Close Other Comps",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+-- Close Other Comps
+obj:Comp():Print('[Close Other Comps]\n')
+compList = fu:GetCompList()
+for i = 1, #compList do
+	-- Set cmp to the pointer of the current composite
+	cmp = compList[i]
+	
+	-- Verify this comp isn't the active foreground comp
+	if cmp ~= obj:Comp() then
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Closing Comp\n')
+
+		-- If the comp is unlocked, it will ask if the comp should be saved before closing.
+		cmp:Unlock()
+
+		-- Close the active comp
+		cmp:Close()
+	else
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Keeping Comp Open\n')
+	end
+end
+				]=],
+			},
+		},
+	},
+	
+	Action
+	{
+		ID = "Close_Comps_To_Left",
+		Category = "File",
+		Name = "Close Comps To Left",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+-- Close Comps To Left
+foundComp = true
+obj:Comp():Print('[Close Comps to Left]\n')
+compList = fu:GetCompList()
+for i = 1, #compList do
+	-- Set cmp to the pointer of the current composite
+	cmp = compList[i]
+	
+	-- Check if the current comp is the active foreground comp
+	if cmp == obj:Comp() then
+		foundComp = false
+		
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Keeping Comp Open\n')
+	elseif foundComp == true then
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Closing Comp\n')
+
+		-- If the comp is unlocked, it will ask if the comp should be saved before closing.
+		cmp:Unlock()
+
+		-- Close the active comp
+		cmp:Close()
+	else
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Keeping Comp Open\n')
+	end
+end
+				]=],
+			},
+		},
+	},
+
+	Action
+	{
+		ID = "Close_Comps_To_Right",
+		Category = "File",
+		Name = "Close Comps To Right",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+-- Close Comps To Right
+foundComp = false
+obj:Comp():Print('[Close Comps to Right]\n')
+compList = fu:GetCompList()
+for i = 1, #compList do
+	-- Set cmp to the pointer of the current composite
+	cmp = compList[i]
+	
+	-- Check if the current comp is the active foreground comp
+	if cmp == obj:Comp() then
+		foundComp = true
+		
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Keeping Comp Open\n')
+	elseif foundComp == true then
+		-- Print out the active composite name
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Closing Comp\n')
+
+		-- If the comp is unlocked, it will ask if the comp should be saved before closing.
+		cmp:Unlock()
+
+		-- Close the active comp
+		cmp:Close()
+	else
+		obj:Comp():Print('\t[' .. cmp:GetAttrs()['COMPS_Name'] .. '] Keeping Comp Open\n')
+	end
+end
+				]=],
+			},
+		},
+	},
+
+	Hotkeys
+	{
+		Target = "FlowView",
+		CONTROL_SHIFT_W_RELEASED = "Close_Other_Comps{}",
+	},
+
+	Hotkeys
+	{
+		Target = "FuFrame",
+		CONTROL_SHIFT_W_RELEASED = "Close_Other_Comps{}",
+	},
+
+	Hotkeys
+	{
+		Target = "ConsoleView",
+		CONTROL_SHIFT_W_RELEASED = "Close_Other_Comps{}",
+	},
+
+	Menus
+	{
+		Target = "ChildFrame",
+
+		After "File\\Close"
+		{
+			"Close_Other_Comps{}",
+			"Close_Comps_To_Left{}",
+			"Close_Comps_To_Right{}",
+		},
+	},
+}

@@ -814,7 +814,7 @@ function CreateWebpageEditor()
 		itm.NavigationLineEdit.Text = tostring(savedFilename or '')
 	end
 
--- Open an HTML link when clicked on in the HTML preview zone
+	-- Open an HTML link when clicked on in the HTML preview zone
 	function win.On.HTMLPreview.AnchorClicked(ev)
 		if shiftKeyPressed == true then
 			-- The shift key was pressed

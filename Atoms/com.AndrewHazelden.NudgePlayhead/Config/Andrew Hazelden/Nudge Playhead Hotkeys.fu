@@ -1,0 +1,311 @@
+--[[--
+Nudge Playhead Hotkeys - v1.2 2019-10-06
+by Andrew Hazelden <andrew@andrewhazelden.com>
+
+Nudge Playhead is a Fusion 9 .fu hotkeys document that allows you to use the "Shift+Left Cursor" and "Shift+Right Cursor" keys to nudge the timeline playhead forwards/backwards.
+
+You can step through inbetween and real keyframes in the Viewer and Flow areas in Fusion using the Control+Alt+[ and Control+Alt+] hotkeys on Windows/Linux, and the Command+Option+[ and  Command+Option+] hotkeys on MacOS.
+
+You can step through inbetween keyframes in the Viewer and Flow areas in Fusion using the Control+Alt+Meta+[ and Control+Alt+Meta+] hotkeys on Windows/Linux, and the Control+Option+Command+[ and Control+Option+Command+] hotkeys on MacOS.
+
+
+## Nudge Playhead Tip ##
+
+The Fusion playhead will automatically wrap around the Render End Frame/Render Start Frame border zone in the timeline if you use the Nudge Playhead hotkeys to manually advance the timeline past the active render frame range.
+
+
+## Installation ##
+
+Step 1. Copy the "Nudge Playhead Hotkeys.fu" file into your Fusion user prefs "Config:/" folder.
+
+Step 2. Restart Fusion for the new "nudge" hotkeys to become active.
+
+--]]--
+{
+	Action {
+		ID = "Nudge_Playhead_Left",
+		Category = "Reactor",
+		Name = "Nudge Playhead Left",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					-- Current Frame in the timline
+					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+					
+					-- Read the render time frame ranges
+					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
+					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+
+					-- Read the global time frame ranges
+					-- startFrame = obj:Comp():GetAttrs().COMPN_GlobalStart
+					-- endFrame = obj:Comp():GetAttrs().COMPN_GlobalEnd
+
+					-- Increment the playhead by N frames
+					frameStep = 10
+
+					-- Nudge the timeline back by 10 frames
+					offsetTime = currentTime - frameStep
+
+					-- Wrap the timeline at the start/end render frame range boundaries
+					if startFrame > offsetTime then
+						-- Nudge Left = Wrap around start frame around to the end frame
+						difference = math.fmod(offsetTime, startFrame)
+						updatedTime = endFrame + difference
+					elseif endFrame < offsetTime then
+						-- Nudge Right = Wrap around the end frame around to the start frame
+						difference = math.fmod(offsetTime, endFrame)
+						updatedTime = startFrame + difference
+					else
+						-- Update the playhead position
+						difference = frameStep
+						updatedTime = offsetTime
+					end
+
+					-- Fix a NAN occurance
+					if updatedTime ~= updatedTime then
+						updatedTime = endFrame
+					end
+					
+					-- Move the acutal playhead
+					obj:Comp():SetAttrs({COMPN_CurrentTime = updatedTime})
+
+					-- Debugging
+					-- obj:Comp():Print("[Current Frame] " .. updatedTime)
+					-- obj:Comp():Print(" [Non Wrapped Frame] " .. offsetTime)
+					-- obj:Comp():Print(" [Previous Frame] " .. currentTime)
+					-- obj:Comp():Print(" [Frame Step Delta] " .. difference)
+					-- obj:Comp():Print(" [Start Frame] " .. startFrame)
+					-- obj:Comp():Print(" [End Frame] " .. endFrame)
+					-- obj:Comp():Print("\n")
+				]=],
+			},
+		},
+	},
+	Action {
+		ID = "Nudge_Playhead_Right",
+		Category = "Reactor",
+		Name = "Nudge Playhead Right",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+					-- Current Frame in the timline
+					currentTime = obj:Comp():GetAttrs().COMPN_CurrentTime
+
+					-- Read the render time frame ranges
+					startFrame = obj:Comp():GetAttrs().COMPN_RenderStart
+					endFrame = obj:Comp():GetAttrs().COMPN_RenderEnd
+
+					-- Read the global time frame ranges
+					-- startFrame = obj:Comp():GetAttrs().COMPN_GlobalStart
+					-- endFrame = obj:Comp():GetAttrs().COMPN_GlobalEnd
+
+					-- Increment the playhead by N frames
+					frameStep = 10
+
+					-- Nudge the timeline forward by 10 frames
+					offsetTime = currentTime + frameStep
+
+					-- Wrap the timeline at the start/end render frame range boundaries
+					if startFrame > offsetTime then
+						-- Nudge Left = Wrap around start frame around to the end frame
+						difference = math.fmod(offsetTime, startFrame)
+						updatedTime = endFrame + difference
+					elseif endFrame < offsetTime then
+						-- Nudge Right = Wrap around the end frame around to the start frame
+						difference = math.fmod(offsetTime, endFrame)
+						updatedTime = startFrame + difference
+					else
+						-- Update the playhead position
+						difference = frameStep
+						updatedTime = offsetTime
+					end
+					
+					-- Fix a NAN occurance
+					if updatedTime ~= updatedTime then
+						updatedTime = startFrame
+					end
+
+					-- Move the acutal playhead
+					obj:Comp():SetAttrs({COMPN_CurrentTime = updatedTime})
+
+					-- Debugging
+					-- obj:Comp():Print("[Current Frame] " .. updatedTime)
+					-- obj:Comp():Print(" [Non Wrapped Frame] " .. offsetTime)
+					-- obj:Comp():Print(" [Previous Frame] " .. currentTime)
+					-- obj:Comp():Print(" [Frame Step Delta] " .. difference)
+					-- obj:Comp():Print(" [Start Frame] " .. startFrame)
+					-- obj:Comp():Print(" [End Frame] " .. endFrame)
+					-- obj:Comp():Print("\n")
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Nudge_Only_Inbetwen_Keyframes_Left",
+		Category = "Reactor",
+		Name = "Nudge Only Inbetwen Keyframes Left",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
+				currentTime = obj:Comp().CurrentTime
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1, tool))/2)
+				
+				-- We are still on the same frame
+				if currentTime == offsetTime then
+					-- Step between real and inbetween keyframes
+					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool)
+					
+					-- [Optionally] Step between each of the inbetween keyframes
+					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime-.1, tool) + obj:Comp():GetNextKeyTime(offsetTime-.1, tool))/2)
+				end
+				
+				obj:Comp().CurrentTime = offsetTime
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Nudge_Only_Inbetwen_Keyframes_Right",
+		Category = "Reactor",
+		Name = "Nudge Only Inbetwen Keyframes Right",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
+				currentTime = obj:Comp().CurrentTime
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool))/2)
+				
+				-- We are still on the same frame
+				if currentTime == offsetTime then
+					-- Step between real and inbetween keyframes
+					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool)
+					
+					-- [Optionally] Step between each of the inbetween keyframes
+					offsetTime = math.floor((obj:Comp():GetPrevKeyTime(offsetTime+.1, tool) + obj:Comp():GetNextKeyTime(offsetTime+.1, tool))/2)
+				end
+				
+				obj:Comp().CurrentTime = offsetTime
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Nudge_Inbetwen_Keyframes_Left",
+		Category = "Reactor",
+		Name = "Nudge Inbetwen Keyframes Left",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
+				currentTime = obj:Comp().CurrentTime
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime-.1, tool))/2)
+				
+				-- We are still on the same frame
+				if currentTime == offsetTime then
+					-- Step between real and inbetween keyframes
+					offsetTime = obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime-.1, tool)
+				end
+				
+				obj:Comp().CurrentTime = offsetTime
+				]=],
+			},
+		},
+	},
+	Action
+	{
+		ID = "Nudge_Inbetwen_Keyframes_Right",
+		Category = "Reactor",
+		Name = "Nudge Inbetwen Keyframes Right",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+				-- Read the currently active tool selection
+				tool = obj:Comp().ActiveTool
+				
+				-- Read the current frame in the timeline
+				currentTime = obj:Comp().CurrentTime
+				offsetTime = math.floor((obj:Comp():GetPrevKeyTime(obj:Comp().CurrentTime+.1, tool) + obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool))/2)
+				
+				-- We are still on the same frame
+				if currentTime == offsetTime then
+					-- Step between real and inbetween keyframes
+					offsetTime = obj:Comp():GetNextKeyTime(obj:Comp().CurrentTime+.1, tool)
+				end
+				
+				obj:Comp().CurrentTime = offsetTime
+				]=],
+			},
+		},
+	},
+	Hotkeys {
+		Target = "FlowView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
+	},
+	Hotkeys {
+		Target = "GLView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
+	},
+	Hotkeys {
+		Target = "FuFrame",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
+	},
+	Hotkeys {
+		Target = "TimelineView",
+
+		SHIFT_LEFT = "Nudge_Playhead_Left{}",
+		SHIFT_RIGHT = "Nudge_Playhead_Right{}",
+		CONTROL_ALT_BRACKET_LEFT = "Nudge_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_BRACKET_RIGHT = "Nudge_Inbetwen_Keyframes_Right{}",
+		CONTROL_ALT_META_BRACKET_LEFT = "Nudge_Only_Inbetwen_Keyframes_Left{}",
+		CONTROL_ALT_META_BRACKET_RIGHT = "Nudge_Only_Inbetwen_Keyframes_Right{}",
+	},
+}

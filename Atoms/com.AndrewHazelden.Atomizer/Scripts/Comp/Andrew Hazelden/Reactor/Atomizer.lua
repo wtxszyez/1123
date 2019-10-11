@@ -1,5 +1,5 @@
-_VERSION = [[Version 3 - May 23, 2019]]
---[[
+_VERSION = [[Version 3.14 - October 7, 2019]]
+--[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
 http://www.andrewhazelden.com
@@ -13,9 +13,11 @@ https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229
 
 This script requires Fusion 9.0.2+ or Resolve 15+.
 
+
 ## Installation ##
 
 Use Reactor to install Atomizer.
+
 
 ## Usage ##
 
@@ -54,6 +56,7 @@ From the terminal with FuScript for Fusion:
 From the terminal with FuScript for Resolve:
 
 '/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fuscript' -l lua -x 'fusion = bmd.scriptapp("Fusion", "localhost");if fusion ~= nil then fu = fusion;app = fu;composition = fu.CurrentComp;comp = composition;SetActiveComp(comp) else print("[Error] Please open up the Fusion GUI before running this tool.") end comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})'
+
 
 # Atom Slash Command #
 
@@ -152,6 +155,17 @@ or
 - Added a new "Save as Defaults" button to save the current settings as an initial template.
 - Added clickable HTML links in the HTML Preview area.
 
+### 3.2 2019-10-07 ##
+
+- Sorted the category items Lua table alphabetically
+- Added a "Comps/3D" category.
+- Added a "Comps/CustomShader3D" category.
+- Added a "Comps/Flow" category.
+- Added a "Comps/Krokodove" category.
+- Added a "Comps/Particles" category.
+- Added a "Comps/Stereo" category.
+- Added a "Comps/VR" category.
+
 ## Todos ##
 
 - Add GUI editing support for the new Reactor Atom v1.1 specification tags:
@@ -161,7 +175,16 @@ or
 - Added "Platform" tag support for Fusion vs Resolve based installs.
 
 - If the CategoryCombo is set to "Custom" then show a (hidden) custom Category entry field to allow new categories to be created by the end user.
-]]
+
+- Add GUI editing support for the Resolve vs Fusion per platform deploy files with host versioning to target Fusion 9/16 and Resolve 15/16 specific deploy needs.
+
+- Add GUI editing support for collection tag regular expressions.
+
+- Add a popup menu that allows selecting dependency tag entries by scanning the active "Reactor:/Atoms/*" folder .atom files and generating a ComboBox menu from the.
+
+- Do a case sensitive filename check on deploy files against the capitalization on disk. Also look for missing file differences between the on-disk files in an atom package and what is in the deploy file sections.
+
+--]]--
 
 ------------------------------------------------------------------------
 -- Minimum version of Fusion required to run Reactor
@@ -575,6 +598,7 @@ function LoadAtom()
 	end
 end
 
+
 -- Atomizer Main window
 -- Example: local atmwin,atmitm = AtomWin()
 function AtomWin()
@@ -644,20 +668,34 @@ function AtomWin()
 		}
 	}
 
+
 	------------------------------------------------------------------------
 	-- Create a new table to hold the list of categories
 	-- Add an extra dummy "Testing" entry to the top of the list should the atom have a category set that doesn't exist in this Lua table list.
 	categoryTable = {
-		{text = 'Testing'},
-		{text = 'Brushes'},
 		{text = 'Bin'},
+		{text = 'Brushes'},
 		{text = 'Collections'},
 		{text = 'Comps'},
+		{text = 'Comps/3D'},
+		{text = 'Comps/CustomShader3D'},
+		{text = 'Comps/Flow'},
+		{text = 'Comps/Krokodove'},
+		{text = 'Comps/Particles'},
+		{text = 'Comps/Stereo'},
 		{text = 'Comps/Templates'},
+		{text = 'Comps/VR'},
 		{text = 'Console'},
 		{text = 'Docs'},
 		{text = 'Fun'},
 		{text = 'Hotkeys'},
+		{text = 'KartaVR'},
+		{text = 'KartaVR/Comps'},
+		{text = 'KartaVR/Docs'},
+		{text = 'KartaVR/Hotkeys'},
+		{text = 'KartaVR/Scripts'},
+		{text = 'KartaVR/Tools'},
+		{text = 'KartaVR/Viewshaders'},
 		{text = 'Layouts'},
 		{text = 'LUTs'},
 		{text = 'Menus'},
@@ -667,9 +705,9 @@ function AtomWin()
 		{text = 'Scripts'},
 		{text = 'Scripts/Comp'},
 		{text = 'Scripts/Flow'},
+		{text = 'Scripts/Intool'},
 		{text = 'Scripts/Reactor'},
 		{text = 'Scripts/Tool'},
-		{text = 'Scripts/Intool'},
 		{text = 'Scripts/Utility'},
 		{text = 'Scripts/We Suck Less'},
 		{text = 'Templates'},
@@ -685,13 +723,6 @@ function AtomWin()
 		{text = 'Tools/Filter'},
 		{text = 'Tools/Flow'},
 		{text = 'Tools/IO'},
-		{text = 'KartaVR'},
-		{text = 'KartaVR/Comps'},
-		{text = 'KartaVR/Docs'},
-		{text = 'KartaVR/Hotkeys'},
-		{text = 'KartaVR/Scripts'},
-		{text = 'KartaVR/Tools'},
-		{text = 'KartaVR/Viewshaders'},
 		{text = 'Tools/Mask'},
 		{text = 'Tools/Matte'},
 		{text = 'Tools/Metadata'},
@@ -699,8 +730,8 @@ function AtomWin()
 		{text = 'Tools/Modifier'},
 		{text = 'Tools/Optical Flow'},
 		{text = 'Tools/Particles'},
-		{text = 'Tools/Position'},
 		{text = 'Tools/Plugins'},
+		{text = 'Tools/Position'},
 		{text = 'Tools/Stereo'},
 		{text = 'Tools/Tracking'},
 		{text = 'Tools/Transform'},
@@ -708,6 +739,7 @@ function AtomWin()
 		{text = 'Tools/Warp'},
 		{text = 'Viewshaders'},
 	}
+
 
 	------------------------------------------------------------------------
 	-- Create a new table to hold the donation payment types
@@ -870,7 +902,7 @@ function AtomWin()
 			WindowStaysOnTopHint = false,
 		},
 		Geometry = {0, 0, width, height},
-
+		Events = {Close = true, KeyPress = true, KeyRelease = true,},
 		ui:VGroup{
 			-- Author Name
 			ui:HGroup{
@@ -1878,7 +1910,7 @@ function AtomWin()
 
 	-- Open an HTML link when clicked on in the HTML preview zone
 	function win.On.HTMLPreview.AnchorClicked(ev)
-		bmd.openurl(ev.URL)
+		OpenURL("Clicked A HREF URL", ev.URL)
 	end
 
 	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
@@ -1926,6 +1958,8 @@ function AtomWin()
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('Atomizer')
 	collectgarbage()
 end
@@ -2200,6 +2234,8 @@ function AtomTextView(centerX, CenterY)
 	vwin:Show()
 	disp:RunLoop()
 	vwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('AtomView')
 	collectgarbage()
 
@@ -2468,6 +2504,8 @@ function NewPackageWin()
 	npwin:Show()
 	disp:RunLoop()
 	npwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('NewAtomPackage')
 	collectgarbage()
 
@@ -2689,6 +2727,8 @@ function StartupWin()
 	stwin:Show()
 	disp:RunLoop()
 	stwin:Hide()
+
+	-- Cleanup after the window was closed
 	app:RemoveConfig('AtomStart')
 	collectgarbage()
 

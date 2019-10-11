@@ -1,4 +1,4 @@
-VERSION = 'v3 2019-05-23'
+_VERSION = 'v3.14 2019-10-05'
 --[[--
 Macro Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -25,7 +25,7 @@ The "Macro Scanner.lua" script requires Fusion 9.0.1+ or Resolve 15 to be used.
 
 print('\n')
 print('---------------------------------------------')
-print('Macro Scanner - ' .. tostring(VERSION))
+print('Macro Scanner - ' .. tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com')
 print('---------------------------------------------')
 print('\n')

@@ -283,4 +283,4 @@ Here are the macOS terminal commands to re-create the `AllData:` Pathmap folder:
 		# Open the Fusion Folder in a Finder browsing window
 		open "/Library/Application Support/Blackmagic Design/Fusion/"
 
-Last Revised 2019-05-23
+Last Revised 2019-10-05

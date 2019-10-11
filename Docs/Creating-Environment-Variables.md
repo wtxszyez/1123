@@ -143,4 +143,4 @@ You will then see a directory listing that looks something like this:
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2019-05-15
+Last Revised 2019-10-05

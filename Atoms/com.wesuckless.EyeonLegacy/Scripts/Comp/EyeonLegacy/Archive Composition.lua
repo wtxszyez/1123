@@ -1,5 +1,5 @@
 --[[--
-Archive Composition v2.3.1 2018-02-21 
+Archive Composition v2.3.2 2019-08-06 
 by Isaac Guenard and Sean Konrad
 
 -------------------------------------------------------------------------------
@@ -68,6 +68,9 @@ Version History
 	- Added a "Client Notes for ArchiveLog.txt" text field to the AskUser dialog. That textual message is saved into to the ArchiveLog.txt file.
 	- Added an "Open Archive Composition Folder" checkbox to the AskUser dialog that will open the output folder up in a desktop folder browsing window.
 	- Added the ability to save/restore the Archive Composition checkbox states in the AskUser dialog.
+* v2.3.2 2018-08-06 by Alex Bogomolov (mail@abogomolov.com)
+    - Fixed wrong sequence parsing if the filepath has dots. Use parseFilename(path).Extension instead of getextension(path)
+    - add LUTs export
 
 -------------------------------------------------------------------------------
 Wishlist

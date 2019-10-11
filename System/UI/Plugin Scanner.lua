@@ -1,4 +1,4 @@
-VERSION = 'v3 2019-05-23'
+_VERSION = 'v3.14 2019-10-05'
 --[[--
 Plugin Scanner
 By Andrew Hazelden
@@ -22,7 +22,7 @@ The "Plugin Scanner.lua" script requires Fusion 9.0.1+.
 
 print('\n')
 print('---------------------------------------------')
-print('Plugin Scanner - ' .. tostring(VERSION))
+print('Plugin Scanner - ' .. tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com')
 print('---------------------------------------------')
 print('\n')

@@ -1,0 +1,128 @@
+--[[--
+PutFrame - v1.2 2019-10-11
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+PutFrame.fuse allows you to save RGBA channel based BMP/GIF/JPEG/PNG/TGA/TIFF/ imagery to disk using the Fuse API's Clip:PutFrame() functionality. This fuse can be used as a learning tool should you need to re-create Saver node like approaches in your own fuses.
+
+This fuse is compatible with Fusion Standalone 16+ and Resolve 16+.
+
+GUI Controls
+
+The Filename control supports the use of PathMaps.
+
+--]]--
+
+FuRegisterClass("PutFrame", CT_Tool, {
+	REGS_Name = "PutFrame",
+	REGS_Category = "I/O",
+	REGS_OpIconString = "Put",
+	REGS_OpDescription = "Save a jpg/exr/png/bmp/raw/fusepic image to disk using Clip:PutFrame().",
+	REGS_Company = 'Andrew Hazelden',
+	REGS_URL = 'http://www.andrewhazelden.com',
+	REG_SupportsDoD = true,
+	REG_OpNoMask = true,
+	REG_NoMotionBlurCtrls = true,
+
+	-- Should the current time setting be cached?
+	REG_TimeVariant = true,
+	REG_Unpredictable = true,
+
+	-- Should the Edit and Reload buttons be hidden?
+	REG_Fuse_NoEdit = false,
+	REG_Fuse_NoReload = false,
+	
+	-- Sets the fuse version number (110 means v1.1) so newer fuses override older versions
+	REG_Version = 110,
+	})
+
+-- Find out the current directory from a file path
+-- Example: print(Dirname('/Users/Shared/image.0000.exr'))
+function Dirname(mediaDirName)
+	-- Add the platform specific folder slash character
+	local osSeparator = package.config:sub(1,1)
+	
+	if mediaDirName then
+		return mediaDirName:match('(.*' .. osSeparator .. ')')
+	else
+		return nil
+	end
+end
+
+
+function Create()
+	self:RemoveControlPage("Controls")
+	self:AddControlPage("File")
+	
+	InFilename = self:AddInput("Filename", "Filename", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "FileControl",
+		FC_IsSaver = true,
+		FC_ClipBrowse = true,
+		ICS_ControlPage = "File",
+		})
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+	})
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+end
+
+
+function NotifyChanged(inp, param, time)
+end
+
+
+-- The OnAddToFlow() function is automatically run when the a new fuse node is added to the comp, or when the .comp file is opened up.
+function OnAddToFlow()
+end
+
+
+function Process(req)
+	-- Grab an image from the input connection on the node
+	local img = InImage:GetValue(req)
+	
+	-- Crop (with no offset, ie. Copy) handles images having no data, so we don't need to put this within if/then/end
+	local result = Image({IMG_Like = img, IMG_NoData = req:IsPreCalc()})
+	img:Crop(result, { })
+	
+	-- Read the filename
+	local filename = self.Comp:MapPath(InFilename:GetValue(req).Value)
+	
+	-- Print a warning message when the filename field is empty
+	if filename == nil or filename == '' then
+		print('\n[PutFrame Error] The "Filename" field is empty!\n\n')
+	else
+		-- Get the 'final' frame number that will be written into the filename
+		local currentFrame = tonumber(req.Time)
+		
+		-- Create the folder if it doesn't exist yet
+		local folder = Dirname(self.Comp:MapPath(filename))
+		if bmd.fileexists(folder) == false then
+			bmd.createdir(folder)
+			print('[Created Directory]', folder)
+		end
+		-- Reverify if the folder was able to be created
+		if bmd.fileexists(folder) == false then
+			print('[Directory Missing]', folder)
+		end
+		
+		-- Create a new clip with a filename
+		local saveBool = true
+		local clip = Clip(filename, saveBool)
+		
+		-- Write an image to disk if the Clip:Open() and Clip:Close() functions exist in Fusion
+		clip:Open()
+		local putResult = clip:PutFrame(currentFrame, result)
+		clip:Close()
+		
+		-- print('[PutFrame Filename]', clip.Filename)
+		-- print('[PutFrame Result]', putResult)
+	end
+	
+	-- Pass the result image to the output connection
+	OutImage:Set(req, result)
+end
+

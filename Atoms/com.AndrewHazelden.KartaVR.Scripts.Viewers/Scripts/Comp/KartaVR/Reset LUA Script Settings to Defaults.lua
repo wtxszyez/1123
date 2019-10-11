@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults v4.0.1 2019-01-01
+Reset LUA Script Settings to Defaults v4.1 2019-10-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -25,7 +25,6 @@ Step 3. Click the "Okay" button in the dialog to clear the KartaVR script prefer
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
--- --------------------------------------------------------
 
 local printStatus = true
 -- local printStatus = false
@@ -48,13 +47,12 @@ function dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
-
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
 function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
-	
+
 	-- List the preference value
 	if status == 1 or status == true then
 		if value == nil then
@@ -64,7 +62,6 @@ function setPreferenceData(pref, value, status)
 		end
 	end
 end
-
 
 -- Read a fusion specific preference value. If nothing exists set and return a default value
 -- Example: getPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -94,28 +91,28 @@ function getPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
 -- Main Code
 function Main()
 	print ('Reset LUA Script Settings to Defaults is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
-	
+
 	-- Check if Fusion is running
 	if not fusion then
 		print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 	end
-	
+
 	msg = 'Would you like to clear the preferences for the KartaVR LUA scripts? This will reset every LUA script dialog setting back to their original defaults.'
-	
+
 	d = {}
 	d[1] = {'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 4, Wrap = true, Default = msg}
-	
+
 	dialog = comp:AskUser('Reset LUA Script Settings to Defaults', d)
 	if dialog == nil then
 		print('You cancelled the dialog!')
-		
+
 		-- Exit the script
 		return
 	else
@@ -128,7 +125,7 @@ function Main()
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.FrameRange', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.SoundEffect', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.OpenOutputFolder', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.ConvertMovies.FramePadding', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertMovies.MovieFolder', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertMovies.AudioFormat', nil, printStatus)
@@ -140,7 +137,7 @@ function Main()
 		setPreferenceData('KartaVR.ConvertMovies.FrameRate', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertMovies.StartOnFrameOne', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertMovies.SoundEffect', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.ConvertPFM.ImageName', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertPFM.ImageFormat', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertPFM.Compression', nil, printStatus)
@@ -150,7 +147,7 @@ function Main()
 		setPreferenceData('KartaVR.ConvertPFM.SoundEffect', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertPFM.OpenFolder', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertPFM.ProcesSubFolders', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.SoundEffect', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.BatchBuilderFolder', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.OutputFolder', nil, printStatus)
@@ -161,7 +158,7 @@ function Main()
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.FileManagement', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.FramePadding', nil, printStatus)
 		setPreferenceData('KartaVR.ConvertToBatchBuilder.OpenOutputFolder', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.PanoView.ShowMediaUsing', nil, printStatus)
 		setPreferenceData('KartaVR.PanoView.Format', nil, printStatus)
 		setPreferenceData('KartaVR.PanoView.SoundEffect', nil, printStatus)
@@ -185,7 +182,7 @@ function Main()
 		setPreferenceData('KartaVR.PanoView.WhirligigAngularFOV', nil, printStatus)
 		setPreferenceData('KartaVR.PanoView.WhirligigStereoMode', nil, printStatus)
 		setPreferenceData('KartaVR.PanoView.WhirligigEyeOrder', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.SendMedia.Format', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.SoundEffect', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.LayerOrder', nil, printStatus)
@@ -194,8 +191,8 @@ function Main()
 		setPreferenceData('KartaVR.SendMedia.PhotoshopVersion', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.MettleSkyBoxAE', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.MettleSkyBoxInputProjections', nil, printStatus)
-		setPreferenceData('KartaVR.SendMedia.MettleSkyBoxOutputProjections', nil, printStatus)	
-		
+		setPreferenceData('KartaVR.SendMedia.MettleSkyBoxOutputProjections', nil, printStatus)
+
 		setPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.AffinityPhotoFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.AutopanoProFile', nil, printStatus)
@@ -209,12 +206,12 @@ function Main()
 		setPreferenceData('KartaVR.SendMedia.SynthEyesFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.TouchDesignerFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendMedia.UseCurrentFrame', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.MeshlabFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.SoundEffect', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.GenerateMask.MaskOutputFolder', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateMask.MaskFilenamePrefix', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateMask.SoundEffect', nil, printStatus)
@@ -230,11 +227,10 @@ function Main()
 		setPreferenceData('KartaVR.GenerateMask.OpenOutputFolder', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateMask.FineMask', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateMask.GpuEnable', nil, printStatus)
-		
-		
+
 		-- This entry has been retired and instead the pref 'KartaVR.PTGuiImporter.File' is used
 		setPreferenceData('KartaVR.GenerateUVPass.File', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.GenerateUVPass.ImageFormat', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateUVPass.Width', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateUVPass.Height', nil, printStatus)
@@ -250,12 +246,12 @@ function Main()
 		setPreferenceData('KartaVR.GenerateUVPass.PanoHorizontalFOV', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateUVPass.SkipBatchAlign', nil, printStatus)
 		setPreferenceData('KartaVR.GenerateUVPass.BatchProcess', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.PTGuiMaskImporter.NodeDirection', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiMaskImporter.FramePadding', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiMaskImporter.startOnFrameOne', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiMaskImporter.OpenOutputFolder', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.PTGuiImporter.File', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiImporter.XRotation', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiImporter.YRotation', nil, printStatus)
@@ -278,7 +274,7 @@ function Main()
 		setPreferenceData('KartaVR.PTGuiImporter.StartOnFrameOne', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiImporter.UseRelativePaths', nil, printStatus)
 		setPreferenceData('KartaVR.PTGuiImporter.OpenOutputFolder', nil, printStatus)
-	
+
 		setPreferenceData('KartaVR.Photoscan.LayerOrder', nil, printStatus)
 		setPreferenceData('KartaVR.Photoscan.Chunk', nil, printStatus)
 		setPreferenceData('KartaVR.Photoscan.Width', nil, printStatus)
@@ -287,7 +283,7 @@ function Main()
 		setPreferenceData('KartaVR.Photoscan.UseRelativePaths', nil, printStatus)
 		setPreferenceData('KartaVR.Photoscan.OpenOutputFolder', nil, printStatus)
 		setPreferenceData('KartaVR.Compression.ZipFile', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.PublishVRView.Format', nil, printStatus)
 		setPreferenceData('KartaVR.PublishVRView.SoundEffect', nil, printStatus)
 		setPreferenceData('KartaVR.PublishVRView.WebSharingFolder', nil, printStatus)
@@ -300,9 +296,9 @@ function Main()
 		setPreferenceData('KartaVR.PublishVRView.CopyURLToClipboard', nil, printStatus)
 		setPreferenceData('KartaVR.PublishVRView.OpenPublishingFolder', nil, printStatus)
 		setPreferenceData('KartaVR.PublishVRView.OpenWebpage', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.Scripts.MaximizeImageViewFile', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.CombineStereoMovies.LeftMovie', nil, printStatus)
 		setPreferenceData('KartaVR.CombineStereoMovies.RightMovie', nil, printStatus)
 		setPreferenceData('KartaVR.CombineStereoMovies.StereoMovieOutput', nil, printStatus)
@@ -313,8 +309,18 @@ function Main()
 		setPreferenceData('KartaVR.CombineStereoMovies.EnableFaststart', nil, printStatus)
 		setPreferenceData('KartaVR.CombineStereoMovies.TrimDurationToShortestClip', nil, printStatus)
 		setPreferenceData('KartaVR.CombineStereoMovies.OpenOutputFolder', nil, printStatus)
+
+		setPreferenceData('KartaVR.VideoSnapshot.FilenamePrefix', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.DurationFrames', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.WarmupSeconds', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.OverwriteMedia', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.PathMap', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.VideoDevice', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.Resolution', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.FPS', nil, printStatus)
+		setPreferenceData('KartaVR.VideoSnapshot.MediaType', nil, printStatus)
 	end
-	
+
 	-- Unlock the comp flow area
 	comp:Unlock()
 end

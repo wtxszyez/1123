@@ -1,0 +1,132 @@
+--[[--
+Open a Copy - v1 2019-10-06
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+## Overview ##
+
+The "Open A Copy" menu creates a duplicate version of the current Fusion comp on disk and opens it up in a new tab in Fusion. This allows you to quickly experiment with another version of your comp in another view in Fusion will retaining the original that you can flip back to.
+
+When the copy is made, the file is automatically created with a unique filename. If the current comp was called "Example.comp" it would become "Example Copy.comp". If the destination filename already exists on disk then the filename is incremented to the next available unique filename like "Example Copy 2.comp", or "Example Copy 3.comp", etc...
+
+## Installation ##
+
+Step 1. Move the "Open a Copy.fu" file into the Fusion user prefs "Config:/" folder.
+
+Step 2. Restart Fusion so the config file is loaded.
+
+## Usage ##
+
+The Alt+O or Option+O hotkey can be used to run the "Open a Copy" command. Alternatively, you can use the "File > Open a Copy" menu item.
+
+--]]--
+
+{
+	Action
+	{
+		ID = "Open_A_Copy",
+		Category = "File",
+		Name = "Open a Copy",
+
+		Targets =
+		{
+			Composition =
+			{
+				Execute = _Lua [=[
+-- bmd.copyfile was sourced from bmd.scriptlib
+function copyfile(src_path, dest_path)
+	local read_size = 65536
+
+	src, errMsg = io.open(src_path, "rb")
+	if src == nil then
+		return 0, "SOURCE : " .. errMsg
+	end
+
+	local size = src:seek("end")
+	src:seek("set")
+
+	dest, errMsg = io.open(dest_path, "wb")
+	if dest == nil then
+		return 0, "DEST : " .. errMsg
+	end
+
+	src_data = src:read(read_size)
+	repeat
+		dest:write(src_data)
+		src_data = src:read(read_size)
+	until src_data == nil
+
+	src:close()
+	dest:close()
+	return size
+end
+
+-- Save the existing comp if it is untitled
+if obj:Comp():GetAttrs().COMPS_FileName == '' then
+	print('[Open a Copy] Saving the comp to disk.')
+	obj:Comp():Save()
+end
+
+-- [Optional] Force a save of the comp before making a copy
+-- obj:Comp():Save()
+
+-- Get the active comp filename
+sourceComp = app:MapPath(obj:Comp():GetAttrs().COMPS_FileName)
+
+-- Create a copy of the comp
+if sourceComp ~= nil or sourceComp ~= '' then
+	-- Remove the word " Copy" from the existing filename string
+	tempComp, count = sourceComp:gsub(' Copy.*%.', '%.')
+
+	-- Create the destination .comp filename
+	destComp = tempComp:gsub('%.comp$',' Copy%.comp')
+
+	-- Check if the new file exists and then increment the "Copy #" counter
+	c = 1
+	while bmd.fileexists(destComp) == true do
+		destComp = tempComp:gsub('%.comp$',' Copy ' .. c .. '%.comp')
+		c = c + 1
+	end
+
+	-- Copy the comp file on disk
+	copyfile(sourceComp, destComp)
+
+	-- Open the duplicated comp in Fusion
+	fusion:LoadComp(destComp, false, false, false)
+
+	print('[Open a Copy] ', destComp)
+else
+	print('[Open a Copy] Please save the untitled comp to disk first.')
+end
+				]=],
+			},
+		},
+	},
+
+	Hotkeys
+	{
+		Target = "FlowView",
+		ALT_O_RELEASED = "Open_A_Copy{}",
+	},
+
+	Hotkeys
+	{
+		Target = "FuFrame",
+		ALT_O_RELEASED = "Open_A_Copy{}",
+	},
+
+	Hotkeys
+	{
+		Target = "ConsoleView",
+		ALT_O_RELEASED = "Open_A_Copy{}",
+	},
+
+	Menus
+	{
+		Target = "ChildFrame",
+
+		After "File\\Open..."
+		{
+			"Open_A_Copy{}",
+		},
+	},
+}

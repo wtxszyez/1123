@@ -7,6 +7,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 
 ![Reactor GUI](Docs/Images/reactor-gui.png)
 
+
 ## Table Of Contents ##
 
 - [Overview](#overview)
@@ -42,6 +43,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 		- [Bitcoin Links](Docs/Creating-Atom-Packages.md#bitcoin-links)
 	- [Adding a Deploy Platform Requirement](Docs/Creating-Atom-Packages.md#adding-a-deploy-platform-requirement)
 		- [Platform Specific Deploy Entries](Docs/Creating-Atom-Packages.md#platform-specific-deploy-entries)
+		- [Host App Specific Deploy Entries](Docs/Creating-Atom-Packages.md#host-app-specific-deploy-entries)
 	- [Adding a Package Dependency](Docs/Creating-Atom-Packages.md#adding-a-package-dependency)
 	- [Adding Documentation](Docs/Creating-Atom-Packages.md#adding-documentation)
 	- [Adding Fusion Minimum/Maximum Compatibility](Docs/Creating-Atom-Packages.md#adding-fusion-minimum-maximum-compatibility)
@@ -55,4 +57,4 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Using a Linux BASH Profile](Docs/Creating-Environment-Variables.md#using-a-linux-bash-profile)
 	- [Using MacOS Launch Agent PLIST Files](Docs/Creating-Environment-Variables.md#using-macos-launch-agent-plist-files)
 
-Last Revised 2019-08-14
+Last Revised 2019-10-05
