@@ -1,7 +1,7 @@
-_VERSION = [[Version 3.14 - October 5, 2019]]
+_VERSION = [[Version 3.141 - October 12, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.14 2019-10-05
+Reactor Package Manager for Fusion - v3.141 2019-10-12
 ==============================================================================
 Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -1522,6 +1522,32 @@ function Init()
 	ui = app.UIManager
 	disp = bmd.UIDispatcher(ui)
 
+	-- Reactor startup Console message for troubleshooting "I don't see a Reactor Window" bug report
+	local time_stamp = tostring(os.date('[%Y-%m-%d|%I:%M:%S %p] ')) or ""
+	print(time_stamp .. "[Reactor Initializing] " .. tostring(_VERSION))
+
+	-- Location Reactor.Lua was started from
+	print(time_stamp .. "[Reactor.lua Script Path] " , tostring(debug.getinfo(1).source))
+	
+	-- GitLab Reactor Branch
+	local branch = os.getenv("REACTOR_BRANCH") or "master"
+	print(time_stamp .. "[Reactor Branch] " .. tostring(branch))
+
+	-- Repository ID
+	print(time_stamp .. "[Reactor Repository ID] " .. tostring(reactor_project_id))
+
+	print(time_stamp .. "[Reactor Copyright] (C) 2019 We Suck Less - https://www.steakunderwater.com/wesuckless/index.php" )
+	print(time_stamp .. "[Reactor Description] Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of \"Atom\" packages that are synced automatically with a Git repository. Now with 3x the magic!")
+	print(time_stamp .. "[Reactor Host] Detected " .. tostring(g_AppName) .. " ".. tostring(g_AppVersion) .. " running on " .. tostring(g_ThisPlatform) .. ".")
+
+	-- Check for environment variables
+	if os.getenv("REACTOR_DEBUG") == "true" then
+		print(time_stamp .. "[Reactor Log File] " .. tostring(reactor_log))
+		print(time_stamp .. "[Reactor Debug Env Variable] Enabled")
+	end
+
+
+
 	local msgwin,msgitm = MessageWin("Initializing...", "Fusion Reactor")
 
 	g_Config = bmd.readfile(reactor_root .. "System/Reactor.cfg")
@@ -1942,7 +1968,12 @@ function CreateMainWin()
 	end
 
 	function win.On.Description.AnchorClicked(ev)
-		bmd.openurl(ev.URL)
+		-- Use the OS native open URL handler via Lua "os.execute()" and the CLI
+		OpenURL("Clicked A HREF URL", ev.URL)
+		
+		-- The built-in URL function doesn't appear to handle URLs very well that have extended characters and encoded entities in them like Paypal payment links.
+		-- bmd.openurl(ev.URL)
+		
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
