@@ -1942,7 +1942,8 @@ function CreateMainWin()
 	end
 
 	function win.On.Description.AnchorClicked(ev)
-		bmd.openurl(ev.URL)
+		-- Use the OS native "http://", "https://", and "file://" URL handlers
+		OpenURL("Reactor", ev.URL)
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
