@@ -1,9 +1,9 @@
-_VERSION = [[Version 3.141 - October 12, 2019]]
+_VERSION = [[v3.141 - October 14, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.141 2019-10-12
+Reactor Package Manager for Fusion - v3.141 2019-10-14
 ==============================================================================
-Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
+Requires    : Fusion v9.0.2-16.1+ or Resolve v15-16.1+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
             : Pieter Van Houte                [pieter@steakunderwater.com]
             : Andrew Hazelden                 [andrew@andrewhazelden.com]
@@ -1522,13 +1522,22 @@ function Init()
 	ui = app.UIManager
 	disp = bmd.UIDispatcher(ui)
 
-	-- Reactor startup Console message for troubleshooting "I don't see a Reactor Window" bug report
+	-- Reactor startup Console message for troubleshooting "I don't see a Reactor Window" bug reports
 	local time_stamp = tostring(os.date('[%Y-%m-%d|%I:%M:%S %p] ')) or ""
-	print(time_stamp .. "[Reactor Initializing] " .. tostring(_VERSION))
+	print("\n--------------------------------------------------------------------------------\n\n")
+	print(time_stamp .. "[Reactor] " .. tostring(_VERSION))
 
 	-- Location Reactor.Lua was started from
-	print(time_stamp .. "[Reactor.lua Script Path] " , tostring(debug.getinfo(1).source))
-	
+	print(time_stamp .. "[Reactor.lua Path] " .. tostring(debug.getinfo(1).source))
+
+	-- PathMaps
+	print(time_stamp .. "[Reactor: PathMap] " .. tostring(reactor_pathmap))
+	if os.getenv("REACTOR_DEBUG") == "true" then
+		print(time_stamp .. "[Programs: PathMap] " .. tostring(app:MapPath("Programs:/")))
+		print(time_stamp .. "[Fusion: PathMap] " .. tostring(app:MapPath("Fusion:/")))
+		print(time_stamp .. "[Temp: PathMap] " .. tostring(app:MapPath("Temp:/")))
+	end
+
 	-- GitLab Reactor Branch
 	local branch = os.getenv("REACTOR_BRANCH") or "master"
 	print(time_stamp .. "[Reactor Branch] " .. tostring(branch))
@@ -1537,16 +1546,23 @@ function Init()
 	print(time_stamp .. "[Reactor Repository ID] " .. tostring(reactor_project_id))
 
 	print(time_stamp .. "[Reactor Copyright] (C) 2019 We Suck Less - https://www.steakunderwater.com/wesuckless/index.php" )
-	print(time_stamp .. "[Reactor Description] Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of \"Atom\" packages that are synced automatically with a Git repository. Now with 3x the magic!")
-	print(time_stamp .. "[Reactor Host] Detected " .. tostring(g_AppName) .. " ".. tostring(g_AppVersion) .. " running on " .. tostring(g_ThisPlatform) .. ".")
+	print(time_stamp .. "[Reactor Description] Reactor is a package manager for Fusion and Resolve.")
+	print(time_stamp .. "[Reactor Host] Detected " .. tostring(g_AppName) .. " v".. tostring(g_AppVersion) .. " running on " .. tostring(g_ThisPlatform) .. ".")
 
 	-- Check for environment variables
 	if os.getenv("REACTOR_DEBUG") == "true" then
 		print(time_stamp .. "[Reactor Log File] " .. tostring(reactor_log))
-		print(time_stamp .. "[Reactor Debug Env Variable] Enabled")
+		print(time_stamp .. "[Reactor Env Variable] REACTOR_DEBUG: Enabled")
 	end
-
-
+	if os.getenv("REACTOR_DEBUG_COLLECTIONS") == "true" then
+		print(time_stamp .. "[Reactor Env Variable] REACTOR_DEBUG_COLLECTIONS: Enabled")
+	end
+	if os.getenv("REACTOR_INSTALL_PATHMAP") == "true" then
+		print(time_stamp .. "[Reactor Env Variable] REACTOR_INSTALL_PATHMAP: Enabled")
+	end
+	if os.getenv("REACTOR_LOCAL_SYSTEM") == "true" then
+		print(time_stamp .. "[Reactor Env Variable] REACTOR_LOCAL_SYSTEM: Enabled")
+	end
 
 	local msgwin,msgitm = MessageWin("Initializing...", "Fusion Reactor")
 
@@ -1968,12 +1984,8 @@ function CreateMainWin()
 	end
 
 	function win.On.Description.AnchorClicked(ev)
-		-- Use the OS native open URL handler via Lua "os.execute()" and the CLI
-		OpenURL("Clicked A HREF URL", ev.URL)
-		
-		-- The built-in URL function doesn't appear to handle URLs very well that have extended characters and encoded entities in them like Paypal payment links.
-		-- bmd.openurl(ev.URL)
-		
+		-- Use the OS native open URL handler
+		OpenURL("Clicked URL", ev.URL)
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
