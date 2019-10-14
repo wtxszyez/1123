@@ -1985,7 +1985,7 @@ function CreateMainWin()
 
 	function win.On.Description.AnchorClicked(ev)
 		-- Use the OS native open URL handler
-		OpenURL("Clicked URL", ev.URL)
+		OpenURL("From Reactor Atom Description", ev.URL)
 	end
 
 	function win.On.AtomTree.CurrentItemChanged(ev)
