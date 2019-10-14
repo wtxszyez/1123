@@ -1,0 +1,67 @@
+--[[--
+Atomizer DragDrop.fu - v1.0 2019-10-13
+By Andrew Hazelden <andrew@andrewhazelden.com>
+
+The "Atomizer DragDrop.fu" file allows Fusion v16+ to open .atom documents that are draged into the Nodes view from a desktop Explorer/Finder/Nautilus folder browsing window.
+
+
+## Installation ##
+
+Use Reactor to install Atomizer DragDrop into the "Config:/DragDrop/" folder.
+
+
+## Usage ##
+
+1. Select an .atom file from a desktop Explorer/Finder/Nautilus folder browsing window.
+
+2. Drag the .atom file to the Nodes view. The document will be opened up automatically in the "Atom Package Editor" window.
+
+
+--]]--
+{
+	Event
+	{
+		Action = 'Drag_Drop',
+		
+		Targets =
+		{
+			FuView =
+			{
+				Execute = _Lua [=[
+					dump(self:Default())
+					
+					-- Call other chained events and default action
+					rets = self:Default(ctx, args) 
+
+					-- No one else handled this?
+					if not rets.handled then
+						-- Get the current comp
+						comp = app:GetAttrs().FUSIONH_CurrentComp
+
+						-- Get the list of files dropped onto Fusion
+						files = args.urilist
+
+						-- Scan through each of the files
+						for i, file in ipairs(files) do
+							-- Get the file extension
+							ext = string.match(file, '^.+(%..+)$')
+
+							-- List each of the drag/dropped files
+							print('[Ext] "' .. tostring(ext) .. '" [File] "' .. tostring(file) .. '"')
+
+							-- Process any .atom files dropped into Fusion
+							if ext == '.atom' then
+								-- Accept the Drag and Drop event
+								rets.handled = true
+
+								-- Load the Atomizer file
+								print('\n[Load Atom Package] ' .. tostring(file))
+								comp:RunScript(app:MapPath('Reactor:/System/UI/Atomizer.lua'), {atomFile = file})
+							end
+						end
+					end
+					]=]
+			},
+		},
+	},
+}
