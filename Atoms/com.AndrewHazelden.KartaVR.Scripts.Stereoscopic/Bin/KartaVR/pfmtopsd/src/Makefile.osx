@@ -1,0 +1,38 @@
+# macOS - pfmtopsd Makefile
+# by Andrew Hazelden
+# Email: andrew@andrewhazelden.com
+# Web: http://www.andrewhazelden.com
+
+# You can compile this file from the command line using:
+# cd "/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/Bin/KartaVR/pfmtopsd/src/"
+# make -f Makefile.osx
+
+# You can install the files using the command
+# sudo make -f Makefile.osx install
+
+KARTAVR_DIR="/Library/Application Support/Blackmagic Design/Fusion/Reactor/Deploy/Bin/KartaVR/mac_tools/"
+
+LIBDIR  = 
+COMPILERFLAGS =
+
+CC = gcc
+CFLAGS = $(COMPILERFLAGS) $(INCLUDE)
+LIBRARIES = -lm
+all:  pfmtopsd
+
+pfmtopsd : pfmtopsd.o
+	$(CC) $(CFLAGS) pfmtopsd.c $(LIBRARIES) -o pfmtopsd 
+
+clean:
+	rm -rf pfmtopsd *.o
+
+install:
+	# KartaVR macOS Folder
+	chmod 777 ./pfmtopsd
+	mkdir -p $(KARTAVR_DIR)
+	cp ./pfmtopsd $(KARTAVR_DIR)
+
+run:
+	$(KARTAVR_DIR)pfmtopsd
+
+go: clean all install run
