@@ -1,5 +1,5 @@
 --[[--
-KartaVR DragDrop.fu - v1.0 2019-10-14
+KartaVR DragDrop.fu - v1.0.1 2019-10-16
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 The "KartaVR DragDrop.fu" file allows Fusion v16+ and the KartaVR "PTGui Project Importer" script to easily import PTGui Pro v10 .pts documents that are draged into the Nodes view from a desktop Explorer/Finder/Nautilus folder browsing window.
@@ -33,9 +33,6 @@ Usage
 
 					-- No one else handled this?
 					if not rets.handled then
-						-- Get the current comp
-						comp = app:GetAttrs().FUSIONH_CurrentComp
-
 						-- Get the list of files dropped onto Fusion
 						files = args.urilist
 
@@ -49,6 +46,15 @@ Usage
 
 							-- Process any PTGui Pro.pts files dropped into Fusion
 							if ext == '.pts' then
+								-- Get the current comp
+								comp = app:GetAttrs().FUSIONH_CurrentComp
+
+								-- Verify the comp pointer is valid
+								if not comp then
+									print('[KartaVR DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
+									return
+								end
+
 								-- Accept the Drag and Drop event
 								rets.handled = true
 

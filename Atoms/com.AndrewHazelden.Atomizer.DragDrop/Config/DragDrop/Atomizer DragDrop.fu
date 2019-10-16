@@ -1,5 +1,5 @@
 --[[--
-Atomizer DragDrop.fu - v1.0 2019-10-14
+Atomizer DragDrop.fu - v1.0.1 2019-10-16
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 "Atomizer DragDrop.fu" allows Fusion/Resolve v16+ to open up Reactor .atom packages for editing when the documents are dragged into the Nodes view from an Explorer/Finder/Nautilus based desktop folder browsing window. This aproach can help cut down the amount of time you spend navigating inside the Fusion filer picker dialog if you need to re-edit your atoms.</p>
@@ -28,15 +28,12 @@ Usage
 			{
 				Execute = _Lua [=[
 					dump(self:Default())
-					
+
 					-- Call other chained events and default action
 					rets = self:Default(ctx, args) 
 
 					-- No one else handled this?
 					if not rets.handled then
-						-- Get the current comp
-						comp = app:GetAttrs().FUSIONH_CurrentComp
-
 						-- Get the list of files dropped onto Fusion
 						files = args.urilist
 
@@ -50,6 +47,15 @@ Usage
 
 							-- Process any .atom files dropped into Fusion
 							if ext == '.atom' then
+								-- Get the current comp
+								comp = app:GetAttrs().FUSIONH_CurrentComp
+
+								-- Verify the comp pointer is valid
+								if not comp then
+									print('[Atomizer DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
+									return
+								end
+
 								-- Accept the Drag and Drop event
 								rets.handled = true
 
