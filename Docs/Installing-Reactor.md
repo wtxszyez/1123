@@ -140,7 +140,7 @@ On MacOS this works out to:
 
 ![Reactor Folder](Images/reactor-pathmap-folder.png)
 
-### Step 1.###
+### Step 1. ###
 
 To uninstall Reactor from your system you need to remove the downloaded Reactor "atom" content by deleting the Reactor folder that is located in your shared Fusion `AllData:/Reactor:/` folder.
 
@@ -190,4 +190,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2019-10-05
+Last Revised 2019-10-15

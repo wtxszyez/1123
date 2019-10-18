@@ -1,0 +1,38 @@
+# IRIX - pfmtopsd Makefile
+# Email: andrew@andrewhazelden.com
+# Web: http://www.andrewhazelden.com
+
+
+# You can compile this file from the command line using:
+# cd $HOME/Documents/Git/Reactor/Atoms/com.AndrewHazelden.KartaVR.Scripts.Stereoscopic/Bin/KartaVR/tools/pfmtopsd_src/src
+# make -f Makefile.irix
+
+# You can install the files using the command
+# sudo make -f Makefile.irix install
+
+KARTAVR_DIR="/opt/"
+
+LIBDIR  = 
+COMPILERFLAGS =
+
+CC = /usr/nekoware/bin/gcc
+CFLAGS = $(COMPILERFLAGS) $(INCLUDE)
+LIBRARIES = -lm
+all:  pfmtopsd
+
+pfmtopsd : pfmtopsd.o
+	$(CC) $(CFLAGS) pfmtopsd.c $(LIBRARIES) -o pfmtopsd 
+
+clean:
+	rm -rf pfmtopsd *.o
+
+install:
+	# KartaVR for IRIX Tools Folder
+	chmod 777 ./pfmtopsd
+	mkdir -p $(KARTAVR_DIR)
+	cp ./pfmtopsd $(KARTAVR_DIR)
+
+run:
+	$(KARTAVR_DIR)pfmtopsd
+
+go: clean all install run

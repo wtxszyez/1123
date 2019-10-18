@@ -1,0 +1,558 @@
+{
+	Tools = ordered() {
+		UVPositioner = MacroOperator {
+			CtrlWZoom = false,
+			CustomData = {
+				HelpPage = "https://www.steakunderwater.com/VFXPedia/96.0.243.189/index4035.html?title=Settings_and_Macros%2FUVPositioner_Description",
+			},
+			Inputs = ordered() {
+				Comments = Input {
+					Value = "Applies a texture (distorts an image) according to the UV data\r\nv04-2 - Pre-Divide / Post-Multiply, Folds Width\r\nby Gregory Chalenko\r\nwww.compositing.ru",
+				},
+				UVMap = InstanceInput {
+					SourceOp = "Bol_ChannelSelector",
+					Source = "Background",
+					Name = "UVMap",
+				},
+				Texture = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "Image2",
+					Name = "Texture",
+				},
+				UChannel = InstanceInput {
+					SourceOp = "Bol_ChannelSelector",
+					Source = "UChannel",
+				},
+				VChannel = InstanceInput {
+					SourceOp = "Bol_ChannelSelector",
+					Source = "VChannel",
+				},
+				FlipU = InstanceInput {
+					SourceOp = "Bol_Flip",
+					Source = "FlipU",
+					Default = 0,
+				},
+				FlipV = InstanceInput {
+					SourceOp = "Bol_Flip",
+					Source = "FlipV",
+					Default = 0,
+				},
+				Offset = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "PointIn1",
+				},
+				HorRepeats = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "NumberIn1",
+					Default = 1,
+				},
+				VertRepeats = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "NumberIn2",
+					Default = 1,
+				},
+				CombRepeats = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "NumberIn3",
+					Default = 1,
+				},
+				Tiling = InstanceInput {
+					SourceOp = "CT_UVPlacer",
+					Source = "Tiling",
+				},
+				PreDivideUVbyAlpha = InstanceInput {
+					SourceOp = "Bol_PreDivide",
+					Source = "MultiplyByMask",
+					Default = 1,
+					Name = "Pre-Divide UV by Alpha",
+				},
+				PostMultiplyRGBbyAlpha = InstanceInput {
+					SourceOp = "Bol_PostMultiply",
+					Source = "MultiplyByMask",
+					Default = 1,
+					Name = "Post-Multiply RGB by Alpha",
+				},
+				CorrectFolds = InstanceInput {
+					SourceOp = "CT_Folds",
+					Source = "CorrectFolds",
+				},
+				FoldsThreshold = InstanceInput {
+					SourceOp = "Bmp_Red",
+					Source = "FoldsThreshold",
+					Default = 0.15,
+				},
+				FoldsWidth = InstanceInput {
+					SourceOp = "Blur_Folds",
+					Source = "XBlurSize",
+					Default = 0.01,
+					Name = "Folds Width",
+				},
+			},
+			Outputs = {
+				Output = InstanceOutput {
+					SourceOp = "Bol_PostMultiply",
+					Source = "Output",
+				},
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 961.188, 102.445, },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					ForceSource = true,
+					FullIndicator = true,
+				},
+				Size = { 534.568, 229.725, },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -37.3184, 112.555, },
+			},
+			Tools = ordered() {
+				Bol_ChannelSelector = ChannelBoolean {
+					CtrlWShown = false,
+					Inputs = {
+						ToRed = Input {
+							Expression = "iif(UChannel<3,UChannel,iif(UChannel<4,22,18))",
+						},
+						ToGreen = Input {
+							Expression = "iif(VChannel<3,VChannel,iif(VChannel<4,23,18))",
+						},
+						ToBlue = Input {
+							Value = 4,
+						},
+						ToAlpha = Input {
+							Value = 4,
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -162.49, -19.8868, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						UChannel = {
+							{ MBTNC_AddButton = "Red", },
+							{ MBTNC_AddButton = "Green", },
+							{ MBTNC_AddButton = "Blue", },
+							{ MBTNC_AddButton = "U Texture", },
+							{ MBTNC_AddButton = "Z", },
+							LINKID_DataType = "Number",
+							INPID_InputControl = "MultiButtonControl",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							LINKS_Name = "U Channel",
+							INP_Default = 0,
+						},
+						VChannel = {
+							{ MBTNC_AddButton = "Red", },
+							{ MBTNC_AddButton = "Green", },
+							{ MBTNC_AddButton = "Blue", },
+							{ MBTNC_AddButton = "V Texture", },
+							{ MBTNC_AddButton = "Z", },
+							LINKID_DataType = "Number",
+							INPID_InputControl = "MultiButtonControl",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							LINKS_Name = "V Channel",
+							INP_Default = 1,
+						},
+					},
+				},
+				Bol_PreDivide = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "MultiplyByMask",
+						},
+						MultiplyByMask = Input { Value = 1, },
+						Operation = Input { Value = 7, },
+						ToRed = Input { Value = 8, },
+						ToGreen = Input { Value = 8, },
+						ToBlue = Input { Value = 4, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "Bol_ChannelSelector",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -42.6378, -19.522, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.501960784313725, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Bol_Flip = ChannelBoolean {
+					CtrlWShown = false,
+					Inputs = {
+						Operation = Input {
+							Value = 10,
+						},
+						Blend = Input {
+							Expression = "iif(FlipU+FlipV==0,0,1)",
+						},
+						ProcessRed = Input {
+							Expression = "FlipU", 
+						},
+						ProcessGreen = Input {
+							Expression = "FlipV", 
+						},
+						Background = Input {
+							SourceOp = "Bol_PreDivide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -105.649, -72.7488, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.498039215686275, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						FlipU = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Flip U",
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							ICD_Width = 0.5,
+							INP_Default = 0,
+						},
+						FlipV = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Flip V",
+							IC_ControlPage = 0,
+							INPID_InputControl = "CheckboxControl",
+							ICD_Width = 0.5,
+							INP_Default = 0,
+						},
+					},
+				},
+				Fltr_Folds = Filter {
+					CtrlWZoom = false,
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Expression = "math.max(Mat_CleanEdges.CleanEdges, CT_Folds.CorrectFolds)",
+						},
+						FilterType = Input {
+							Value = 3,
+						},
+						Power = Input {
+							Disabled = true,
+						},
+						BlendClone = Input {
+							Expression = "math.max(Mat_CleanEdges.CleanEdges, CT_Folds.CorrectFolds)",
+						},
+						Angle = Input {
+							Disabled = true,
+						},
+						Randomize = Input {
+							Disabled = true,
+						},
+						Seed = Input {
+							Disabled = true,
+						},
+						Animated = Input {
+							Disabled = true,
+						},
+						Input = Input {
+							SourceOp = "Bol_PreDivide",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -149.231, 40.6419, }, },
+					Colors = {
+						TileColor = { R = 0.490196078431373, G = 0.513725490196078, B = 0.298039215686275, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+				Mat_CleanEdges = MatteControl {
+					CtrlWShown = false,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "CT_Folds.CorrectFolds",
+						},
+						MatteCombine = Input {
+							Value = 6,
+						},
+						PostMultiplyImage = Input {
+							Value = 1,
+						},
+						Background = Input {
+							SourceOp = "CT_UVPlacer",
+							Source = "Output",
+						},
+						CleanEdges = Input {
+							Value = 0,
+						},
+						EffectMask = Input {
+							SourceOp = "Bmp_Alpha",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 170.878, -10.2217, }, },
+					Colors = {
+						TileColor = { R = 0.443137254901961, G = 0.36078431372549, B = 0.533333333333333, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						CleanEdges = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Clean Edges",
+							IC_ControlPage = 2,
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 1,
+						},
+					},
+				},
+				CT_UVPlacer = Custom {
+					Inputs = {
+						ApplyMaskInverted = Input {
+							Value = 1,
+						},
+						NumberIn1 = Input {
+							Value = 1,
+						},
+						NumberIn2 = Input {
+							Value = 1,
+						},
+						NumberIn3 = Input {
+							Value = 1,
+						},
+						RedExpression = Input {
+							Expression = "Text(iif(Tiling==0,\"getr2b\",iif(Tiling==1,\"getr2d\",\"getr2w\"))..\"(r1*n1*n3-p1x+0.5,g1*n2*n3-p1y+0.5)\")",
+						},
+						GreenExpression = Input {
+							Expression = "Text(iif(Tiling==0,\"getg2b\",iif(Tiling==1,\"getg2d\",\"getg2w\"))..\"(r1*n1*n3-p1x+0.5,g1*n2*n3-p1y+0.5)\")",
+						},
+						BlueExpression = Input {
+							Expression = "Text(iif(Tiling==0,\"getb2b\",iif(Tiling==1,\"getb2d\",\"getb2w\"))..\"(r1*n1*n3-p1x+0.5,g1*n2*n3-p1y+0.5)\")",
+						},
+						AlphaExpression = Input {
+							Expression = "Text(iif(Tiling==0,\"geta2b\",iif(Tiling==1,\"geta2d\",\"geta2w\"))..\"(r1*n1*n3-p1x+0.5,g1*n2*n3-p1y+0.5)*a1\")",
+						},
+						NumberControls = Input {
+							Value = 1,
+						},
+						NameforNumber1 = Input {
+							Value = "Horizontal Repeats",
+						},
+						NameforNumber2 = Input {
+							Value = "Vertical Repeats",
+						},
+						NameforNumber3 = Input {
+							Value = "Combined Repeats",
+						},
+						NameforNumber4 = Input {
+							Value = "Tiling",
+						},
+						NameforPoint1 = Input {
+							Value = "Offset",
+						},
+						Image1 = Input {
+							SourceOp = "Bol_Flip",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 30.2304, -72.0861, }, },
+					UserControls = ordered() {
+						Tiling = {
+							{ MBTNC_AddButton = "Transparent", },
+							{ MBTNC_AddButton = "Extend", },
+							{ MBTNC_AddButton = "Tile", },
+							INPID_InputControl = "MultiButtonControl",
+							IC_ControlPage = 0,
+							MBTNC_StretchToFit = true,
+							LINKID_DataType = "Number",
+							INP_Default = 0,
+						},
+					},
+				},
+				Bmp_Red = BitmapMask {
+					Inputs = {
+						Image = Input {
+							SourceOp = "Fltr_Folds",
+							Source = "Output",
+						},
+						Channel = Input {
+							Value = FuID { "Red", },
+						},
+						High = Input {
+							Expression = "FoldsThreshold",
+						},
+						Low = Input {
+							Expression = "FoldsThreshold",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -43.0808, 24.0559, }, },
+					UserControls = ordered() {
+						FoldsThreshold = {
+							LINKID_DataType = "Number",
+							LINKS_Name = "Folds Threshold",
+							IC_ControlPage = 0,
+							INPID_InputControl = "SliderControl",
+							INP_Default = 0.15,
+						},
+					},
+				},
+				Blur_Folds = Blur {
+					Inputs = {
+						Blend = Input {
+							Expression = "CT_Folds.CorrectFolds",
+						},
+						Filter = Input {
+							Value = FuID { "Multi-box", },
+						},
+						XBlurSize = Input {
+							Value = 0.01,
+						},
+						YBlurSize = Input {
+							Disabled = true,
+						},
+						BlendClone = Input {
+							Expression = "CT_Folds.CorrectFolds",
+						},
+						Input = Input {
+							SourceOp = "Mat_CleanEdges",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "CT_UVPlacer",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 170.878, 18.5273, }, },
+					Colors = {
+						TileColor = { R = 0.423529411764706, G = 0.545098039215686, B = 0.376470588235294, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+					UserControls = ordered() {
+						XBlurSize = {
+							ICD_Center = 0.01,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "SliderControl",
+							IC_ControlPage = 0,
+							INP_MaxScale = 0.1,
+							INP_Default = 0.01,
+						},
+					},
+				},
+				Bmp_Green = BitmapMask {
+					NameSet = true,
+					Inputs = {
+						PaintMode = Input {
+							Value = FuID { "Maximum", },
+						},
+						Image = Input {
+							SourceOp = "Fltr_Folds",
+							Source = "Output",
+						},
+						Channel = Input {
+							Value = FuID { "Green", },
+						},
+						High = Input {
+							Value = 0.15,
+							Expression = "Bmp_Red.High",
+						},
+						Low = Input {
+							Value = 0.15,
+							Expression = "Bmp_Red.Low",
+						},
+						EffectMask = Input {
+							SourceOp = "Bmp_Red",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -42.5279, 43.4062, }, },
+				},
+				Bmp_Alpha = BitmapMask {
+					CtrlWZoom = false,
+					Inputs = {
+						PaintMode = Input {
+							Value = FuID { "Subtract", },
+						},
+						Image = Input {
+							SourceOp = "Fltr_Folds",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bmp_Green",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -46.398, 62.2036, }, },
+				},
+				CT_Folds = Custom {
+					Inputs = {
+						Blend = Input {
+							Expression = "CT_Folds.CorrectFolds",
+						},
+						RedExpression = Input {
+							Value = "if(a1>0,if(r1>0,r1/a1,0),0)",
+						},
+						GreenExpression = Input {
+							Value = "if(a1>0,if(g1>0,g1/a1,0),0)",
+						},
+						BlueExpression = Input {
+							Value = "if(a1>0,if(b1>0,b1/a1,0),0)",
+						},
+						AlphaExpression = Input {
+							Value = "if(a1>0,if(a1>0,a1/a1,0),0)",
+						},
+						Image1 = Input {
+							SourceOp = "Blur_Folds",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Bmp_Alpha",
+							Source = "Mask",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 171.431, 48.9349, }, },
+					UserControls = ordered() {
+						CorrectFolds = {
+							LINKS_Name = "Correct Folds",
+							LINKID_DataType = "Number",
+							IC_ControlPage = 5,
+							INPID_InputControl = "CheckboxControl",
+							INP_Default = 0,
+						},
+					},
+				},
+				Bol_PostMultiply = ChannelBoolean {
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "MultiplyByMask",
+						},
+						MultiplyByMask = Input { Value = 1, },
+						Operation = Input { Value = 6, },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						ToAlpha = Input { Value = 4, },
+						Background = Input {
+							SourceOp = "CT_Folds",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Bol_Flip",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 289.439, 49.2393, }, },
+					Colors = {
+						TileColor = { R = 0.666666666666667, G = 0.501960784313725, B = 0.235294117647059, },
+						TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+					},
+				},
+			},
+			Colors = {
+				TileColor = { R = 0.501960784313725, G = 0.333333333333333, B = 0.498039215686275, },
+				TextColor = { R = 0.862745098039216, G = 0.862745098039216, B = 0.862745098039216, },
+			},
+		},
+	},
+}

@@ -2,11 +2,32 @@ Atom {
 	Name = "GetFrame",
 	Category = "Tools/IO",
 	Author = "Andrew Hazelden",
-	Version = 1,
-	Date = {2019, 10, 5},
-	Description = [[<p>GetFrame.fuse allows you to load RGBA channel based BMP/GIF/JPEG/PNG/TGA/TIFF/ imagery from a filepath on disk using the Fuse API's Clip:GetFrame() functionality. This fuse can be used as a learning tool should you need to re-create Loader node like approaches in your own fuses.</p>
+	Version = 1.01,
+	Date = {2019, 10, 15},
+	Description = [[<p>GetFrame.fuse allows you to load RGBA channel based BMP/GIF/JPEG/PNG/TGA/TIFF/ imagery from a filepath on disk using the Fuse API's Clip:GetFrame() functionality. This fuse can be used as a learning tool should you need to re-create Loader node like approaches in your own fuses. The source code is kept to an absolute minimum to make this fuse easier to re-integrate into your own custom fuse based tools.</p>
 	
-<p>This fuse is compatible with the 2D compositing nodes in Fusion Standalone v9/16+ and Resolve 15/16+. The Filename control supports the use of PathMaps.</p>]],
+<p>The Filename control supports the use of PathMaps.</p>
+
+<h2>Why does this fuse exist?</h2>
+
+<p>The "GetFrame.fuse" provided by this atom package, along with the "PutFrame.fuse" that is available separately in Reactor, can be used as a pair of learning tools should you need to re-create Saver node like approaches in your own fuses. The design idea of those two fuses is to enable Fusion based TDs to take on workflow tasks that need an interactive CLI (command-line) based "image pipe" equavalent to the built-in "RunCommand" node.</p>
+
+<p>This concept is very powerful in that it makes it possible to create new fuses that could interactively push live image content from the Fusion node graph out to external CLI tools, and then automatically and seamlessly bring the resulting imagery back into the flow, on-the-fly, in a dynamic and unbroken, per-timeline frame based approach that would work equally well on Fusion Render Nodes and artist based Fusion GUI sessions.</p>
+
+<p>If fuse writing TDs ever wanted to access external CLI based image denoiser libraries, OpenCV, Tensor AI/machine learning tools, hardware video I/O tools, NDI network frame sharing tools, Syphon, imagemagick, ffmpeg, or anything else that takes an image input and generates an image output, you'd need this special GetFrame and PutFrame combo of techniques.</p>
+
+<p><img src="Emoticons:/buttrock.png"></p>
+
+
+<h2>Fusion/Resolve Requirements</h2>
+
+<p>This fuse is compatible with the 2D compositing nodes in Fusion Standalone v9-16.1+ and Resolve v15-16.1+. There is a known bug in Fusion and Resolve that occurs with the Fuse API's "Clip:GetFrame()" functionality if you apply the imagery loaded by this fuse as a 3D surface material texture map in Fusion's 3D workspace. This Fuse API issue has been reported to BMD, and there is a WSL Bug Tracker entry for it too, so you will be able to watch the progress on this issue to see when it is resolved by BMD's Resolve dev team.</p>
+
+<p><i>An ETA for the bug is unknown at this time.</i><p>
+
+<h2>Email Andrew Hazelden</h2>
+<p><a href="mailto:andrew@andrewhazelden.com">andrew@andrewhazelden.com</a></p>
+]],
 	Deploy = {
 		"Fuses/IO/GetFrame.fuse",
 	},

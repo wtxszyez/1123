@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.14 - October 7, 2019]]
+_VERSION = [[Version 3.14 - October 17, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -155,7 +155,7 @@ or
 - Added a new "Save as Defaults" button to save the current settings as an initial template.
 - Added clickable HTML links in the HTML Preview area.
 
-### 3.2 2019-10-07 ##
+### 3.14 2019-10-14 ##
 
 - Sorted the category items Lua table alphabetically
 - Added a "Comps/3D" category.
@@ -165,6 +165,11 @@ or
 - Added a "Comps/Particles" category.
 - Added a "Comps/Stereo" category.
 - Added a "Comps/VR" category.
+- Reactor.lua now supports the same clicklable "http://"" and "file://"" centric atom desription hyperlinks like: <a href="file://Reactor:/Deploy/Config/">Reactor:/Deploy/Config/</a>
+
+### 3.141 2019-10-17 ##
+
+- Added a "Tools/Deep Pixel" Category
 
 ## Todos ##
 
@@ -176,7 +181,7 @@ or
 
 - If the CategoryCombo is set to "Custom" then show a (hidden) custom Category entry field to allow new categories to be created by the end user.
 
-- Add GUI editing support for the Resolve vs Fusion per platform deploy files with host versioning to target Fusion 9/16 and Resolve 15/16 specific deploy needs.
+- Add GUI editing support for the Resolve vs Fusion per platform deploy files with host versioning to target Fusion v9-16.1 and Resolve v15-16.1 specific deploy needs.
 
 - Add GUI editing support for collection tag regular expressions.
 
@@ -718,6 +723,7 @@ function AtomWin()
 		{text = 'Tools/Color'},
 		{text = 'Tools/Composite'},
 		{text = 'Tools/Creator'},
+		{text = 'Tools/Deep Pixel'},
 		{text = 'Tools/Effect'},
 		{text = 'Tools/Film'},
 		{text = 'Tools/Filter'},
