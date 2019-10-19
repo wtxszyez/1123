@@ -1,17 +1,27 @@
 --[[--
-Render Selected.lua - 2018-05-18
+Render Selected.lua v3.14 - 2019-10-19
 
 The "Render Selected" script will render the active node in Resolve's Fusion page Nodes view. This means you can still output content in Resolve's Fusion Page directly to disk using nodes like the FBXExporter node, or a custom EXRIO based Fuse.
 
 --]]--
 
-if not tool then
-	tool = comp.ActiveTool
-end
+-- Is a Fusion comp open?
+if comp then
+	-- The "tool" variable is empty
+	if not tool then
+		-- Get the selected tool when running as a comp script
+		tool = comp.ActiveTool
+	end
 
-if tool then
-	print('[Render Selected] ' .. tool.Name)
-	comp:Render({Tool = tool})
+	-- Was a node selected in the Nodes view?
+	if tool then
+		print('[Render Selected] ' .. tool.Name)
+
+		-- Render only the selected tool
+		comp:Render({Tool = tool})
+	else
+		print('[Render Selected] [Selection Error] Please select a node before running this script.')
+	end
 else
-	print('[Render Selected] Selection Error - Please select a node before running this script.')
+	print('[Render Selected] [Comp Error] Please open a new Fusion composite before trying to render it.')
 end
