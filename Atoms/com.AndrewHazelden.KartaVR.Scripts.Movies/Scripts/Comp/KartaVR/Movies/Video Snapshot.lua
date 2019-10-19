@@ -1,6 +1,6 @@
-_VERSION = 'v4.03 2019-10-06'
+_VERSION = 'v4.03 2019-10-18'
 --[[--
-KartaVR Video Snapshot - v4.03 2019-10-06 10.21 AM
+KartaVR Video Snapshot - v4.03 2019-10-18
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -922,80 +922,82 @@ function AddSnapshotLoader(nodeName, filename)
 
 	-- Add a new loader node at the default coordinates in the Flow
 	local snapshotLoader = composition:AddTool('Loader', -32768, -32768)
+	if snapshotLoader then
+		-- Re-enable the file browser dialog
+		fusion:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
 
-	-- Re-enable the file browser dialog
-	fusion:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
+		-- Rename the loader node
+		snapshotLoader:SetAttrs({TOOLS_Name = nodeName, TOOLB_NameSet = true})
 
-	-- Rename the loader node
-	snapshotLoader:SetAttrs({TOOLS_Name = nodeName, TOOLB_NameSet = true})
+		-- Update the loader's clip filename
+		snapshotLoader.Clip[TIME_UNDEFINED] = filename
 
-	-- Update the loader's clip filename
-	snapshotLoader.Clip[TIME_UNDEFINED] = filename
+		-- Loop the Loader node
+		-- snapshotLoader:SetAttrs({TOOLBT_Clip_Loop = true})
+		-- snapshotLoader.Loop = true
 
-	-- Loop the Loader node
-	-- snapshotLoader:SetAttrs({TOOLBT_Clip_Loop = true})
-	-- snapshotLoader.Loop = true
+		-- Adjust the Loader node frame range
+		if math.floor(durationFrames) >= 2 then
+			-- Multi-frame (take) capture
+			snapshotLoader:SetAttrs({GlobalStart = 1})
+			snapshotLoader:SetAttrs({GlobalEnd = durationFrames})
 
-	-- Adjust the Loader node frame range
-	if math.floor(durationFrames) >= 2 then
-		-- Multi-frame (take) capture
-		snapshotLoader:SetAttrs({GlobalStart = 1})
-		snapshotLoader:SetAttrs({GlobalEnd = durationFrames})
+			-- Update the timeline render and global ranges
+			cmp:SetAttrs({COMPN_RenderStart = 1})
+			cmp:SetAttrs({COMPN_RenderEnd = durationFrames})
 
-		-- Update the timeline render and global ranges
-		cmp:SetAttrs({COMPN_RenderStart = 1})
-		cmp:SetAttrs({COMPN_RenderEnd = durationFrames})
+			cmp:SetAttrs({COMPN_GlobalStart = 1})
+			cmp:SetAttrs({COMPN_GlobalEnd = durationFrames - 1})
+		else
+			-- Single frame stop-motion capture
+			snapshotLoader:SetAttrs({GlobalStart = 1})
+			snapshotLoader:SetAttrs({GlobalEnd = takeNumber})
 
-		cmp:SetAttrs({COMPN_GlobalStart = 1})
-		cmp:SetAttrs({COMPN_GlobalEnd = durationFrames - 1})
+			-- Update the timeline render and global ranges
+			cmp:SetAttrs({COMPN_RenderStart = 1})
+			cmp:SetAttrs({COMPN_RenderEnd = takeNumber})
+
+			cmp:SetAttrs({COMPN_GlobalStart = 1})
+			cmp:SetAttrs({COMPN_GlobalEnd = takeNumber - 1})
+		end
+
+		-- Enable HiQ mode
+		cmp:SetAttrs{COMPB_HiQ = true}
+
+		-- Display the Loader node in the Viewer 1 window
+		if appVersion >= 15 then
+			-- Fusion 16 compatible viewer
+			cmp:GetPreviewList().LeftView:ViewOn(snapshotLoader, 1)
+		else
+			-- Fusion 9 compatible viewer
+			cmp:GetPreviewList().Left:ViewOn(snapshotLoader, 1)
+		end
+
+		-- Get the Loader frame range
+		local toolAttrs = snapshotLoader:GetAttrs()
+		local currentMediaStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
+		local currentMediaEndFrameRange = toolAttrs.TOOLNT_Clip_End[1]
+		if currentMediaEndFrameRange <= -100000 then
+			currentMediaEndFrameRange = currentMediaStartFrameRange
+			snapshotLoader.GlobalEnd = currentMediaEndFrameRange 
+		end
+
+		print('[Selected Node] ', snapshotLoader.Name, '[Frame Range] ' .. tostring(currentMediaStartFrameRange) .. '-' .. tostring(currentMediaEndFrameRange))
+
+		-- Move the timeline playhead to the current snapshot frame
+		if outputImageFormat == 'mp4' or outputImageFormat == 'mov' or outputImageFormat == 'gif' then
+			-- movie (take) capture
+			cmp.CurrentTime = 1
+		elseif math.floor(durationFrames) >= 2 then
+			-- Multi-frame (take) capture
+			cmp.CurrentTime = 1
+		else
+			-- Single frame stop-motion capture
+			comp.CurrentTime = takeNumber - 1
+		end
 	else
-		-- Single frame stop-motion capture
-		snapshotLoader:SetAttrs({GlobalStart = 1})
-		snapshotLoader:SetAttrs({GlobalEnd = takeNumber})
-
-		-- Update the timeline render and global ranges
-		cmp:SetAttrs({COMPN_RenderStart = 1})
-		cmp:SetAttrs({COMPN_RenderEnd = takeNumber})
-
-		cmp:SetAttrs({COMPN_GlobalStart = 1})
-		cmp:SetAttrs({COMPN_GlobalEnd = takeNumber - 1})
+		print("[Add Loader Node] Loader node pointer is a nil value.")
 	end
-
-	-- Enable HiQ mode
-	cmp:SetAttrs{COMPB_HiQ = true}
-
-	-- Display the Loader node in the Viewer 1 window
-	if appVersion >= 15 then
-		-- Fusion 16 compatible viewer
-		cmp:GetPreviewList().LeftView:ViewOn(snapshotLoader, 1)
-	else
-		-- Fusion 9 compatible viewer
-		cmp:GetPreviewList().Left:ViewOn(snapshotLoader, 1)
-	end
-
-	-- Get the Loader frame range
-	local toolAttrs = snapshotLoader:GetAttrs()
-	local currentMediaStartFrameRange = toolAttrs.TOOLNT_Clip_Start[1]
-	local currentMediaEndFrameRange = toolAttrs.TOOLNT_Clip_End[1]
-	if currentMediaEndFrameRange <= -100000 then
-		currentMediaEndFrameRange = currentMediaStartFrameRange
-		snapshotLoader.GlobalEnd = currentMediaEndFrameRange 
-	end
-
-	print('[Selected Node] ', snapshotLoader.Name, '[Frame Range] ' .. tostring(currentMediaStartFrameRange) .. '-' .. tostring(currentMediaEndFrameRange))
-
-	-- Move the timeline playhead to the current snapshot frame
-	if outputImageFormat == 'mp4' or outputImageFormat == 'mov' or outputImageFormat == 'gif' then
-		-- movie (take) capture
-		cmp.CurrentTime = 1
-	elseif math.floor(durationFrames) >= 2 then
-		-- Multi-frame (take) capture
-		cmp.CurrentTime = 1
-	else
-		-- Single frame stop-motion capture
-		comp.CurrentTime = takeNumber - 1
-	end
-
 	-- Unlock the comp flow area
 	cmp:Unlock()
 end
