@@ -582,7 +582,7 @@
 
 - Added new panoramic 360&deg; geometry OBJ format meshes and demo files to the `Macros:/Domemaster Fusion Macros/Images/` folder:
 
-    - `3x2cubemap.obj`
+    - `cubemap3x2.obj`
     - `angular360degree.obj`
     - `cylinder.obj`
     - `facebook_cubemap3x2.obj`
