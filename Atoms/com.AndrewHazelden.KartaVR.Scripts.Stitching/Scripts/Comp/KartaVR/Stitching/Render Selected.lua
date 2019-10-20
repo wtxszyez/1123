@@ -1,7 +1,7 @@
 --[[--
 Render Selected.lua v3.14 - 2019-10-19
 
-The "Render Selected" script will render the active node in Resolve's Fusion page Nodes view. This means you can still output content in Resolve's Fusion Page directly to disk using nodes like the FBXExporter node, or a custom EXRIO based Fuse.
+The "Render Selected" script will render the actively selected node in Fusion Standalone/Resolve's Fusion page Nodes view. This means you can output content in Resolve's Fusion Page directly to disk using nodes like the FBXExporter, Saver, LifeSaver, PutFrame, or custom EXRIO based Fuse.
 
 --]]--
 
