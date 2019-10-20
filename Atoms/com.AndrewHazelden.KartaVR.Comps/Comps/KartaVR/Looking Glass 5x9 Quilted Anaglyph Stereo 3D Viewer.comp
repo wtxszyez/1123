@@ -2,11 +2,11 @@ Composition {
 	CurrentTime = 0,
 	RenderRange = { 0, 43 },
 	GlobalRange = { 0, 45 },
-	CurrentID = 361,
+	CurrentID = 396,
 	HiQ = true,
 	MotionBlur = false,
 	PlaybackUpdateMode = 0,
-	Version = "Fusion Studio 9.0.2 build 15",
+	Version = "Fusion 9.0.2 build 15",
 	SavedOutputs = 2,
 	HeldTools = 0,
 	DisabledTools = 0,
@@ -40,7 +40,7 @@ Composition {
 			Inputs = {
 				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
 			},
-			ViewInfo = OperatorInfo { Pos = { -495, -14.8722 } },
+			ViewInfo = OperatorInfo { Pos = { -495, -16.5 } },
 		},
 		ImageGridExtractorRight = GroupOperator {
 			NameSet = true,
@@ -104,11 +104,11 @@ Composition {
 					CtrlWShown = false,
 					NameSet = true,
 					Inputs = {
-						XOffset = Input {
-							Value = 800,
-							Expression = "((time+1)%ImageGridCustomTool_1.HorizontalTiles)  * (ImageGridCustomTool_1.Image1.Width / ImageGridCustomTool_1.HorizontalTiles) % ImageGridCustomTool_1.Image1.Width",
+						XOffset = Input { Expression = "((time+1)%ImageGridCustomTool_1.HorizontalTiles)  * (ImageGridCustomTool_1.Image1.Width / ImageGridCustomTool_1.HorizontalTiles) % ImageGridCustomTool_1.Image1.Width", },
+						YOffset = Input {
+							Value = 4800,
+							Expression = "(floor((time+1)/(ImageGridCustomTool_1.HorizontalTiles)) * (ImageGridCustomTool_1.Image1.Height / ImageGridCustomTool_1.VerticalTiles)) % ImageGridCustomTool_1.Image1.Height",
 						},
-						YOffset = Input { Expression = "(floor((time+1)/(ImageGridCustomTool_1.HorizontalTiles)) * (ImageGridCustomTool_1.Image1.Height / ImageGridCustomTool_1.VerticalTiles)) % ImageGridCustomTool_1.Image1.Height", },
 						XSize = Input {
 							Value = 800,
 							Expression = "ImageGridCustomTool_1.Image1.Width / ImageGridCustomTool_1.HorizontalTiles",
@@ -219,6 +219,7 @@ Composition {
 			},
 		},
 		StereoAnaglyphHalfColorMerge = GroupOperator {
+			CtrlWZoom = false,
 			CustomData = {
 				Settings = {
 				},
@@ -445,7 +446,7 @@ Composition {
 				Comments = Input { Value = "This comp will decode a static Looking Glass display 5x9 quilted grid based linear array image and preview it on a desktop monitor as anagyph stereo 3D imagery.\n\nThe comp uses a pair of TimeStretcher + Crop nodes the clip out each of the quilted grid images into their own separate images. The stereo display works by having the right eye stereo view display one image view later in the linear camera array sequence then the left eye sees.\n\nThere are 5x9 quilted views so the timeline starts on frame  \"Global In -45\"", }
 			},
 			ViewInfo = StickyNoteInfo {
-				Pos = { -330, -149.149 },
+				Pos = { -330, -148.5 },
 				Flags = {
 					Expanded = true
 				},
@@ -779,8 +780,14 @@ Composition {
 					CtrlWShown = false,
 					NameSet = true,
 					Inputs = {
-						XOffset = Input { Expression = "(time%ImageGridCustomTool.HorizontalTiles)  * (ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles) % ImageGridCustomTool.Image1.Width", },
-						YOffset = Input { Expression = "(floor(time/(ImageGridCustomTool.HorizontalTiles)) * (ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles)) % ImageGridCustomTool.Image1.Height", },
+						XOffset = Input {
+							Value = 3200,
+							Expression = "(time%ImageGridCustomTool.HorizontalTiles)  * (ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles) % ImageGridCustomTool.Image1.Width",
+						},
+						YOffset = Input {
+							Value = 4200,
+							Expression = "(floor(time/(ImageGridCustomTool.HorizontalTiles)) * (ImageGridCustomTool.Image1.Height / ImageGridCustomTool.VerticalTiles)) % ImageGridCustomTool.Image1.Height",
+						},
 						XSize = Input {
 							Value = 800,
 							Expression = "ImageGridCustomTool.Image1.Width / ImageGridCustomTool.HorizontalTiles",
@@ -823,8 +830,8 @@ Composition {
 			LayoutPreset = 0,
 			Left = 0,
 			Top = 27,
-			Width = 2670,
-			Height = 1059,
+			Width = 1934,
+			Height = 1233,
 			Views = ordered() {
 				Main = MultiView {
 					Active = "Flow",
@@ -845,7 +852,7 @@ Composition {
 						Direction = "Horizontal",
 						PipeStyle = "Direct",
 						Scale = 1.9123,
-						Offset = { 771.204, 179.141 }
+						Offset = { 562.555, 169.205 }
 					},
 					Timeline = TimelineView {
 						TreeControlState = {
@@ -908,17 +915,17 @@ Composition {
 				RatioY = 1,
 				{
 					Rows = 3,
-					RatioX = 0.827549575070821,
-					RatioY = 0.00988319856244385,
+					RatioX = 0.747537584240539,
+					RatioY = 101.181965881397,
 					{
 						Columns = 2,
 						RatioX = 1,
-						RatioY = 0.552170523383649,
-						{ ID = "Left", RatioX = 0.432183908045977, RatioY = 172, Pop = true },
-						{ ID = "Right", RatioX = 0.567816091954023, Pop = true },
+						RatioY = 0.555102040816327,
+						{ ID = "Left", RatioX = 0.432244614315497, RatioY = 0.00588235294117647, Pop = true },
+						{ ID = "Right", RatioX = 0.567755385684503, Pop = true },
 						Pop = true
 					},
-					{ ID = "Main", RatioY = 0.395435619344444, Pop = true },
+					{ ID = "Main", RatioY = 0.397551020408163, Pop = true },
 					{ ID = "Time", SnapY = 56, Flat = true }
 				},
 				{
@@ -928,8 +935,8 @@ Composition {
 						Rows = 2,
 						RatioX = 1,
 						RatioY = 1,
-						{ ID = "Controls", RatioX = 1, RatioY = 0.624324324324324, Pop = true },
-						{ ID = "ConsoleView", RatioY = 0.375675675675676, Pop = true }
+						{ ID = "Controls", RatioX = 1, RatioY = 0.624592833876222, Pop = true },
+						{ ID = "ConsoleView", RatioY = 0.375407166123779, Pop = true }
 					},
 					{ ID = "Transport", FixedY = -2 }
 				}
@@ -959,7 +966,7 @@ Composition {
 				Right = {
 					Viewer = {
 						ShowControls = false,
-						ScaleMode = 0,
+						ScaleMode = 0
 					},
 					SideB = {
 						PrevCtrlInactiveColor = 4278255360,
@@ -969,11 +976,11 @@ Composition {
 						Viewer = {
 							EnableLUTs = false,
 							LUTPlugin = "FusionViewLUT",
-							NearZ = 0,
+							FitMarginY = 0,
 							FitMarginX = 0,
 							FitMarginType = 0,
 							FarZ = -1000,
-							FitMarginY = 0
+							NearZ = 0
 						}
 					},
 				},
@@ -990,18 +997,21 @@ Composition {
 						Viewer = {
 							EnableLUTs = false,
 							LUTPlugin = "FusionViewLUT",
-							NearZ = 0,
+							FitMarginY = 0,
 							FitMarginX = 0,
 							FitMarginType = 0,
 							FarZ = -1000,
-							FitMarginY = 0
+							NearZ = 0
 						}
 					},
 				},
 				View1 = {
 					PrevCtrlInactiveColor = 0,
 					PickW = 1,
+					FullScreen = false,
 					PickH = 1,
+					AlwaysOnTop = true,
+					PrevCtrlActiveColor = 0,
 					SideB = {
 						PrevCtrlInactiveColor = 4278255360,
 						PickW = 1,
@@ -1010,40 +1020,37 @@ Composition {
 						Viewer = {
 							EnableLUTs = false,
 							LUTPlugin = "FusionViewLUT",
-							NearZ = 0,
+							FitMarginY = 0,
 							FitMarginX = 0,
 							FitMarginType = 0,
 							FarZ = -1000,
-							FitMarginY = 0
+							NearZ = 0
 						}
-					},
-					PrevCtrlActiveColor = 0,
-					AlwaysOnTop = true,
-					FullScreen = false
+					}
 				},
 				View2 = {
 					PickH = 1,
+					PickW = 1,
 					AlwaysOnTop = true,
-					FullScreen = false,
-					PickW = 1
+					FullScreen = false
 				},
 				View5 = {
 					PickH = 1,
+					PickW = 1,
 					AlwaysOnTop = true,
-					FullScreen = false,
-					PickW = 1
+					FullScreen = false
 				},
 				View3 = {
 					PickH = 1,
+					PickW = 1,
 					AlwaysOnTop = true,
-					FullScreen = false,
-					PickW = 1
+					FullScreen = false
 				},
 				View4 = {
 					PickH = 1,
+					PickW = 1,
 					AlwaysOnTop = true,
-					FullScreen = false,
-					PickW = 1
+					FullScreen = false
 				}
 			},
 			FrameFormat = {
