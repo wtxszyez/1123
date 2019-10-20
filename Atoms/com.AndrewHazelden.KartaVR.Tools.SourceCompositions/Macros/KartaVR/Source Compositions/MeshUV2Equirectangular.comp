@@ -1,0 +1,977 @@
+Composition {
+	CurrentTime = 0,
+	RenderRange = { 0, 0 },
+	GlobalRange = { 0, 1 },
+	CurrentID = 263,
+	PlaybackUpdateMode = 0,
+	Version = "Fusion 9.0.2 build 15",
+	SavedOutputs = 2,
+	HeldTools = 0,
+	DisabledTools = 0,
+	LockedTools = 0,
+	AudioOffset = 0,
+	Resumable = true,
+	OutputClips = {
+	},
+	Tools = {
+		Loader1 = Loader {
+			Clips = {
+				Clip {
+					ID = "Clip1",
+					Filename = "Macros:/KartaVR/Images/youtube_cubemap3x2.jpg",
+					FormatID = "JpegFormat",
+					StartFrame = 2,
+					LengthSetManually = true,
+					TrimIn = 0,
+					TrimOut = 0,
+					ExtendFirst = 0,
+					ExtendLast = 0,
+					Loop = 0,
+					AspectMode = 0,
+					Depth = 0,
+					TimeCode = 0,
+					GlobalStart = 0,
+					GlobalEnd = 0
+				}
+			},
+			Inputs = {
+				["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+			},
+			ViewInfo = OperatorInfo { Pos = { 880, 49.5 } },
+		},
+		MeshUV2Equirectangular = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			CustomData = {
+				HelpPage = "http://www.andrewhazelden.com/projects/kartavr/docs/macros-guide-conversions.html#MeshUV2Equirectangular"
+			},
+			Inputs = ordered() {
+				MainInput1 = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "MaterialInput",
+				},
+				FileInput = InstanceInput {
+					SourceOp = "Mesh3DLoader",
+					Source = "ImportFile",
+				},
+				HeightInput = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Height",
+					MaxScale = 8192,
+					Default = 1920,
+				},
+				DepthInput = InstanceInput {
+					SourceOp = "UVRenderer3D",
+					Source = "Depth",
+					Default = 3,
+				},
+				RendererTypeInput = InstanceInput {
+					SourceOp = "EquirectRenderer3DFront",
+					Source = "RendererType",
+				},
+				TranslateXInput = InstanceInput {
+					SourceOp = "EquirectCamera3DFront",
+					Source = "Transform3DOp.Translate.X",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				TranslateYInput = InstanceInput {
+					SourceOp = "EquirectCamera3DFront",
+					Source = "Transform3DOp.Translate.Y",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				TranslateZInput = InstanceInput {
+					SourceOp = "EquirectCamera3DFront",
+					Source = "Transform3DOp.Translate.Z",
+					MinScale = -1000,
+					MaxScale = 1000,
+					Default = 0,
+				},
+				RotOrderInput = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.RotOrder",
+				},
+				RotateXInput = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.X",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				RotateYInput = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.Y",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				},
+				RotateZInput = InstanceInput {
+					SourceOp = "CubeMap",
+					Source = "Rotate.Z",
+					MinScale = -360,
+					MaxScale = 360,
+					Default = 0,
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "UVRenderer3D",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 1045, 49.5 },
+				Flags = {
+					AllowPan = false,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 1164, 492.364, 678, 24.2424 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -97.9528, -8.19027 }
+			},
+			Tools = ordered() {
+				UVRenderer3D = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						GlobalOut = Input { Value = 1, },
+						Width = Input {
+							Value = 3840,
+							Expression = "Height*2",
+						},
+						Height = Input { Value = 1920, },
+						Depth = Input { Value = 3, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "Shape3DSphere",
+							Source = "Output",
+						},
+						RendererType = Input { Value = FuID { "RendererOpenGLUV" }, },
+						["RendererOpenGLUV.UVGutterSize"] = Input { Value = 0, },
+						["RendererOpenGLUV.Texturing"] = Input { Value = 1, },
+						["RendererOpenGLUV.TextureDepth"] = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 385, 346.5 } },
+				},
+				Shape3DSphere = Shape3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 7, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 270, },
+						["Transform3DOp.ScaleLock"] = Input { Value = 0, },
+						["Transform3DOp.Scale.X"] = Input { Value = -1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						Shape = Input { Value = FuID { "SurfaceSphereInputs" }, },
+						MaterialInput = Input {
+							SourceOp = "CubeMap",
+							Source = "MaterialOutput",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 6, },
+						["SurfaceSphereInputs.Radius"] = Input { Value = 500, },
+						["SurfaceSphereInputs.SubdivisionLevelBase"] = Input { Value = 256, },
+						["SurfaceSphereInputs.SubdivisionLevelHeight"] = Input { Value = 256, },
+						["SurfaceSphereInputs.ObjectID.ObjectID"] = Input { Value = 8, }
+					},
+					ViewInfo = OperatorInfo { Pos = { 275, 346.5 } },
+				},
+				CubeMap = CubeMap {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Layout = Input { Value = 0, },
+						Rotation = Input { Value = 1, },
+						["Rotate.RotOrder"] = Input { Value = FuID { "YZX" }, },
+						["FilterMode.Nest"] = Input { Value = 1, },
+						["FilterMode.SW.LowQ"] = Input { Value = FuID { "Bilinear" }, },
+						PositiveX = Input {
+							SourceOp = "Instance_EquirectRenderer3DLeft",
+							Source = "Output",
+						},
+						NegativeX = Input {
+							SourceOp = "Instance_EquirectRenderer3DRight",
+							Source = "Output",
+						},
+						PositiveY = Input {
+							SourceOp = "Instance_EquirectRenderer3DTop",
+							Source = "Output",
+						},
+						NegativeY = Input {
+							SourceOp = "Instance_EquirectRenderer3DBottom",
+							Source = "Output",
+						},
+						PositiveZ = Input {
+							SourceOp = "EquirectRenderer3DFront",
+							Source = "Output",
+						},
+						NegativeZ = Input {
+							SourceOp = "Instance_EquirectRenderer3DBack",
+							Source = "Output",
+						},
+						MaterialID = Input { Value = 3, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 346.5 } },
+				},
+				EquirectRenderer3DFront = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					Inputs = {
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
+						["RendererOpenGLUV.LightingEnabled"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
+						["RendererOpenGLUV.ShadowsEnabled"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Channels.RGBA.HighQuality.Enable"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
+						["RendererOpenGL.AccumQuality"] = Input { Value = 10, },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						GlobalOut = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5",
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5",
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "EquirectCamera3DFront" }, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 280.5 } },
+				},
+				CameraViewInput = Merge3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						PassThroughLights = Input { Value = 1, },
+						SceneInput1 = Input {
+							SourceOp = "ViewTransform3D",
+							Source = "Output",
+						},
+						SceneInput2 = Input {
+							SourceOp = "EquirectCamera3DFront",
+							Source = "Output",
+						},
+						SceneInput3 = Input {
+							SourceOp = "Instance_EquirectCamera3DRight",
+							Source = "Output",
+						},
+						SceneInput5 = Input {
+							SourceOp = "Instance_EquirectCamera3DLeft",
+							Source = "Output",
+						},
+						SceneInput6 = Input {
+							SourceOp = "Instance_EquirectCamera3DTop",
+							Source = "Output",
+						},
+						SceneInput7 = Input {
+							SourceOp = "Instance_EquirectCamera3DBottom",
+							Source = "Output",
+						},
+						SceneInput4 = Input {
+							SourceOp = "Instance_EquirectCamera3DBack",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -220, 280.5 } },
+				},
+				EquirectCamera3DFront = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						AoV = Input { Value = 90, },
+						FLength = Input { Value = 12.7, },
+						["Stereo.Mode"] = Input { Value = FuID { "Mono" }, },
+						FilmBack = Input { Value = 1, },
+						FilmGate = Input { Value = FuID { "User" }, },
+						ApertureW = Input { Value = 1, },
+						ApertureH = Input { Value = 1, },
+						["SurfacePlaneInputs.ObjectID.ObjectID"] = Input { Value = 1, },
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 16.5 } },
+				},
+				Mesh3DLoader = SurfaceFBXMesh {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						["Transform3DOp.Scale.X"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
+						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
+						ImportFile = Input { Value = "Reactor:/Deploy/Macros/KartaVR/Images/youtube_cubemap3x2.obj", },
+						TransformToWorld = Input { Value = 0, },
+						["ObjectID.ObjectID"] = Input { Value = 1, },
+						MaterialInput = Input {
+							SourceOp = "Loader1",
+							Source = "Output",
+						},
+						["MtlStdInputs.MaterialID"] = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -550, 280.5 } },
+				},
+				ViewTransform3D = Transform3D {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						SceneInput = Input {
+							SourceOp = "Mesh3DLoader",
+							Source = "Output",
+						},
+						["Transform3DOp.Rotate.RotOrder"] = Input { Value = FuID { "YZX" }, },
+						["Transform3DOp.Rotate.X"] = Input { Value = -90, },
+						["Transform3DOp.Rotate.Y"] = Input { Value = 90, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 280.5 } },
+				},
+				Instance_EquirectRenderer3DRight = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "EquirectRenderer3DFront",
+					Inputs = {
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DRight" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 313.5 } },
+				},
+				Instance_EquirectRenderer3DBack = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "EquirectRenderer3DFront",
+					Inputs = {
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DBack" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 346.5 } },
+				},
+				Instance_EquirectRenderer3DLeft = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "EquirectRenderer3DFront",
+					Inputs = {
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DLeft" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 379.5 } },
+				},
+				Instance_EquirectRenderer3DTop = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "EquirectRenderer3DFront",
+					Inputs = {
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DTop" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 412.5 } },
+				},
+				Instance_EquirectRenderer3DBottom = Renderer3D {
+					CtrlWShown = false,
+					NameSet = true,
+					CustomData = {
+						ToolVersion = 1
+					},
+					SourceOp = "EquirectRenderer3DFront",
+					Inputs = {
+						["RendererOpenGL.Lighting"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AccumulationEffects"] = Input { },
+						["RendererOpenGL.Texturing"] = Input { Value = 1, },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
+						Width = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Height = Input {
+							Value = 960,
+							Expression = "UVRenderer3D.Height*0.5"
+						},
+						Depth = Input {
+							Value = 3,
+							Expression = "UVRenderer3D.Depth"
+						},
+						["Gamut.ColorSpaceNest"] = Input { },
+						["Gamut.GammaSpaceNest"] = Input { },
+						SceneInput = Input {
+							SourceOp = "CameraViewInput",
+							Source = "Output",
+						},
+						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DBottom" }, },
+						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Lighting"] = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 0, 445.5 } },
+				},
+				Instance_EquirectCamera3DRight = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "EquirectCamera3DFront",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = 90,
+							Expression = "EquirectCamera3DFront.Transform3DOp.Rotate.Z+90"
+						},
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 49.5 } },
+				},
+				Instance_EquirectCamera3DBack = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "EquirectCamera3DFront",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = 180,
+							Expression = "EquirectCamera3DFront.Transform3DOp.Rotate.Z+180.0"
+						},
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 82.5 } },
+				},
+				Instance_EquirectCamera3DLeft = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "EquirectCamera3DFront",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.Rotate.Z"] = Input {
+							Value = -90,
+							Expression = "EquirectCamera3DFront.Transform3DOp.Rotate.Z-90.0"
+						},
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 115.5 } },
+				},
+				Instance_EquirectCamera3DTop = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "EquirectCamera3DFront",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.Rotate.X"] = Input { Expression = "EquirectCamera3DFront.Transform3DOp.Rotate.X+90" },
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 148.5 } },
+				},
+				Instance_EquirectCamera3DBottom = Camera3D {
+					CtrlWShown = false,
+					NameSet = true,
+					SourceOp = "EquirectCamera3DFront",
+					Inputs = {
+						SceneInput = Input { },
+						["Transform3DOp.Translation"] = Input { },
+						["Transform3DOp.Rotation"] = Input { },
+						["Transform3DOp.Rotate.X"] = Input {
+							Value = -180,
+							Expression = "EquirectCamera3DFront.Transform3DOp.Rotate.X-90"
+						},
+						["Transform3DOp.PivotNest"] = Input { },
+						["Transform3DOp.ScaleNest"] = Input { },
+						["Transform3DOp.TargetNest"] = Input { },
+						["Transform3DOp.Import"] = Input { },
+						["Stereo.Nest"] = Input { },
+						["Stereo.RightCamera"] = Input { },
+						FilmBack = Input { Value = 1, },
+						ControlVis = Input { },
+						Import = Input { },
+						["SurfacePlaneInputs.Visibility.Nest"] = Input { },
+						["SurfacePlaneInputs.Lighting.Nest"] = Input { },
+						["SurfacePlaneInputs.Matte.Nest"] = Input { },
+						["SurfacePlaneInputs.BlendMode.Nest"] = Input { },
+						["SurfacePlaneInputs.Controls.Nest"] = Input { },
+						["SurfacePlaneInputs.ObjectID.Nest"] = Input { },
+						ImageInput = Input { },
+						["MtlStdInputs.Diffuse.Nest"] = Input { },
+						["MtlStdInputs.Specular.Nest"] = Input { },
+						["MtlStdInputs.Transmittance.Nest"] = Input { },
+						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
+					},
+					ViewInfo = OperatorInfo { Pos = { -385, 181.5 } },
+				}
+			},
+		},
+		Note1 = Note {
+			Inputs = {
+				Comments = Input { Value = "The MeshUV2Equirectangular macro allows you to do panoramic texture baking with the input being an image in an arbitrary image projection. The MeshUV2Equirectangular macro uses a MeshUV based .obj model for the panoramic transform that is defined via the \"FBX File\" attribute. The output from this macro is an equirectanglar 360x180° panoramic image.", }
+			},
+			ViewInfo = StickyNoteInfo {
+				Pos = { 715, -148.5 },
+				Flags = {
+					Expanded = true
+				},
+				Size = { 636, 153.3 }
+			},
+		}
+	},
+	Views = {
+		{
+			FrameTypeID = "ChildFrame",
+			Mode = 3,
+			LayoutPreset = 0,
+			Left = 0,
+			Top = 27,
+			Width = 3440,
+			Height = 1313,
+			Views = ordered() {
+				Main = MultiView {
+					Active = "Flow",
+					ViewList = ordered() {
+						Flow = "FlowView",
+						Timeline = "TimelineView",
+						Spline = "SplineEditorView",
+						Info = "InfoView",
+						Chat = "ChatView"
+					},
+					Flow = FlowView {
+						Flags = {
+							AutoHideNavigator = true,
+							AutoSnap = true,
+							RemoveRouters = true
+						},
+						NavigatorSize = { 200, 140 },
+						Direction = "Horizontal",
+						PipeStyle = "Direct",
+						Scale = 1.2102,
+						Offset = { -280.914, 393.322 }
+					},
+					Timeline = TimelineView {
+						TreeControlState = {
+						},
+						DisplayMode = "All Tools",
+						ShowCurrentTimeTools = false,
+						Filter = "Show All",
+						ShowSelectedTools = false,
+						ShowAnimatedToolsOnly = false,
+						ShowEditBoxes = false,
+						KeyFrameView = {
+							Position = { Left = 150, Bottom = 791 },
+							ScaleX = 0.00214424951267057,
+							OffsetX = -0.0514619883040936,
+							OffsetY = 0,
+							AutoScaling = "scroll",
+							AutoSnapTo = "frame",
+							AutoSnapToGuidelines = false,
+							GuidelinesGrabEnabled = true,
+							GuidelinesSnapTo = "frame"
+						},
+						Spreadsheet = { LeftPos = 150, Visible = false }
+					},
+					Spline = SplineEditorView {
+						LeftPos = 256,
+						ScaleX = 0.2,
+						ScaleY = 0.00338983050847458,
+						OffsetX = -4,
+						OffsetY = 0,
+						AutoScaling = "scroll",
+						AutoSnapTo = "frame",
+						AutoSnapToGuidelines = false,
+						GuidelinesSnapTo = "frame",
+						ShowKeyMarkers = false,
+						IndependentHandles = false,
+						ShowNonSplineModifiers = false,
+						GuidelinesGrabEnabled = true,
+						ShowOneToolOnly = false,
+						ShowSelectedTools = false,
+						ShowAllInputs = false,
+						Filter = "Show All"
+					},
+				},
+				Controls = MultiView {
+					Active = "Tools",
+					ViewList = ordered() {
+						Tools = "ControlView",
+						Modifiers = "ModifierView"
+					},
+				},
+				Left = "PreviewContainer",
+				Right = "PreviewContainer",
+				Transport = "TransportView",
+				Time = "TimeView",
+				Console = "ConsoleView"
+			},
+			Layout = {
+				Columns = 2,
+				RatioX = 1,
+				RatioY = 1,
+				{
+					Rows = 3,
+					RatioX = 0.770305676855895,
+					RatioY = 0.0091533180778032,
+					{
+						Columns = 2,
+						RatioX = 1,
+						RatioY = 0.339463601532567,
+						{ ID = "Left", RatioX = 0.500189178963299, RatioY = 0.0112866817155756, Pop = true },
+						{ ID = "Right", RatioX = 0.499810821036701, Pop = true },
+						Pop = true
+					},
+					{ ID = "Main", RatioY = 0.616091954022989, Pop = true },
+					{ ID = "Time", SnapY = 56, Flat = true }
+				},
+				{
+					Rows = 2,
+					PixelX = 787,
+					{
+						Rows = 2,
+						RatioX = 1,
+						RatioY = 1,
+						{ ID = "Controls", RatioX = 1, RatioY = 0.717125382262997, Pop = true },
+						{ ID = "Console", RatioY = 0.282874617737003, Pop = true }
+					},
+					{ ID = "Transport", FixedY = -2 }
+				}
+			}
+		}
+	},
+	Prefs = {
+		Comp = {
+			Views = {
+				Right = {
+				},
+				Left = {
+					Viewer = {
+						ScaleMode = 1
+					},
+					MaterialViewer = {
+						Camera = {
+							Rotation = {
+								Y = -20,
+								X = 15,
+								Z = 0
+							}
+						}
+					},
+					View3D = {
+						CamFront = {
+							Rotation = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamLeft = {
+							Rotation = {
+								Y = 90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamRight = {
+							Rotation = {
+								Y = -90,
+								X = 0,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamPersp = {
+							Rotation = {
+								Y = 0,
+								X = 30.0000019073486,
+								Z = 0
+							},
+							Scale = 0.00081879913341254,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CamTop = {
+							Rotation = {
+								Y = 0,
+								X = 90,
+								Z = 0
+							},
+							Scale = 1,
+							Position = {
+								Y = 0,
+								X = 0,
+								Z = 0
+							}
+						},
+						CameraName = "Perspective"
+					},
+				},
+				View1 = {
+				},
+			},
+			Unsorted = {
+				GlobalEnd = 1
+			},
+			Paths = {
+			},
+			QuickTime = {
+			},
+		}
+	}
+}
+
+ 
