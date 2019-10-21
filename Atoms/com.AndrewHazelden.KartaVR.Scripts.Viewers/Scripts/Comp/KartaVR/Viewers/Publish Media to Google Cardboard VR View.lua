@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Publish Media to Google Cardboard VR View v4.0.1 - 2019-01-01
+Publish Media to Google Cardboard VR View v4.1 - 2019-10-21
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

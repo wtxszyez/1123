@@ -1,8 +1,8 @@
 --[[--
 ----------------------------------------------------------------------------
-PanoView v4.0.1 - 2019-01-06
-
-by Andrew Hazelden -- www.andrewhazelden.com
+PanoView v4.1 - 2019-10-21
+by Andrew Hazelden
+www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
@@ -1016,14 +1016,26 @@ if selectedNode then
 		
 		if fu_major_version >= 15 then
 			-- Resolve 15 workflow for saving an image
-			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+			if comp:GetPreviewList() and comp:GetPreviewList().LeftView.View and comp:GetPreviewList().LeftView.View.CurrentViewer then
+				comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
+			else
+				print('[PanoView] No left viewer window graphics context')
+			end
 		elseif fu_major_version >= 8 then
-			-- Fusion 8 workflow for saving an image
-			comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
+			-- Fusion 8/9 workflow for saving an image
+			if comp:GetPreviewList() and comp:GetPreviewList().Left.View and comp:GetPreviewList().Left.View.CurrentViewer then
+				comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(localFilepath)
+			else
+				print('[PanoView] No left viewer window graphics context')
+			end
 		else
 			-- Fusion 7 workflow for saving an image
 			-- Save the image in the Viewer A buffer
-			comp.CurrentFrame.LeftView.CurrentViewer:SaveFile(localFilepath)
+			if comp.CurrentFrame and comp.CurrentFrame.LeftView and comp.CurrentFrame.LeftView.CurrentViewer then
+				comp.CurrentFrame.LeftView.CurrentViewer:SaveFile(localFilepath)
+			else
+				print('[PanoView] No left viewer window graphics context')
+			end
 		end
 		
 		-- Everything worked fine and an image was saved

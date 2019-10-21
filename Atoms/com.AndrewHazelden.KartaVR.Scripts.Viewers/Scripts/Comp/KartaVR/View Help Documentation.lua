@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-View Help Documentation v4.1 2019-10-02
+View Help Documentation v4.1 2019-10-21
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
