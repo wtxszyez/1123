@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui BatchBuilder Extractor v4.0.1 2019-01-01
+PTGui BatchBuilder Extractor v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The PTGui BatchBuilder Extractor script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) will convert your currently selected loader and saver node based media from inside numbered PTGui BatchBuilder folders into a flat image sequence.
+The PTGui BatchBuilder Extractor script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) will convert your currently selected loader and saver node based media from inside numbered PTGui BatchBuilder folders into a flat image sequence.
 
 As an example a PTGui BatchBuilder "folderized" image sequence named in the format of: `####/name.ext` will be copied and placed into a standard image sequence: `name.####.ext`
 

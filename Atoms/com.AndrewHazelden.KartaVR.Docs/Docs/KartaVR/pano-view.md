@@ -4,7 +4,7 @@
 
 ![PanoView Script](images/panoview-gopro.png)
 
-The PanoView script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send the imagery from the currently selected Fusion node to an Oculus Rift HMD or an HTC VIVE/OSVR HMD using an external media viewer / playback tool.
+The PanoView script is a module from the [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send the imagery from the currently selected Fusion node to an Oculus Rift HMD or an HTC VIVE/OSVR HMD using an external media viewer / playback tool.
 
 This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system.
 

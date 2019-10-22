@@ -1,17 +1,16 @@
 --[[--
 ------------------------------------------------------------------------------
-Combine Stereo Movies v4.0.1 2019-01-01
+Combine Stereo Movies v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ------------------------------------------------------------------------------
-
 Overview:
 
-The Combine Stereo Movies script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. You can also transcode the video into MP4 H.264, H.265, and QuickTime ProRes video formats.
+The Combine Stereo Movies script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. You can also transcode the video into MP4 H.264, H.265, and QuickTime ProRes video formats.
 
 How to use the Script:
 

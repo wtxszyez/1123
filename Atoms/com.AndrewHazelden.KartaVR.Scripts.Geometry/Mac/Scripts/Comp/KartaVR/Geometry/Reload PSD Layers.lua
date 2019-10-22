@@ -1,13 +1,13 @@
 --[[--
-Reload PSD Layers v4.0.1 - 2019-01-01
+----------------------------------------------------------------------------
+Reload PSD Layers v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
 Select a Loader node in your comp that has a psd image active. Then run this script. The nodes will be re-generated using Fusion's "File > Import > PSD..." menu item.

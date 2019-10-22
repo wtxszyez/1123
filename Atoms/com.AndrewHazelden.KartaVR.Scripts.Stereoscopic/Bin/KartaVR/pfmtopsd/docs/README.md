@@ -1,13 +1,11 @@
 # pfmtopsd #
 
 ----
-**Version 1.0** - Released 2019-10-15  
+**Version 1.0** - Released 2019-10-22  
 by Andrew Hazelden  
 
-Twitter: [@AndrewHazelden](https://twitter.com/andrewhazelden)  
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
 Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)  
-Google+: [plus.google.com/+AndrewHazelden/](https://plus.google.com/+AndrewHazelden/)  
 
 Based upon original proof of concept PFM code by Paul Bourke [paul.bourke@gmail.com](mailto:paul.bourke@gmail.com)
 

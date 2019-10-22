@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to After Effects v4.0.1 - 2019-01-01
+Send Media to After Effects v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Media to After Effects script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send all of the selected loader node files to Adobe After Effects.
+The Send Media to After Effects script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send all of the selected loader node files to Adobe After Effects.
 
 How to use the Script:
 

@@ -1,17 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to AC3D v4.0.1 - 2019-01-01
+Send Geometry to AC3D v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
-The Send Geometry to AC3D script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to AC3D.
+The Send Geometry to AC3D script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to AC3D.
 
 Note: AC3D is primarily used to load OBJ meshes and perform simple editing and UV layout tasks.
 

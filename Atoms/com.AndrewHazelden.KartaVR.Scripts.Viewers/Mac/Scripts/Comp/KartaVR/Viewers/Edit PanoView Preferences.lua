@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Edit PanoView Preferences v4.0.1 2019-01-06
+Edit PanoView Preferences v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Edit PanoView Preferences script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the default settings for the PanoView image viewing script.
+The Edit PanoView Preferences script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you customize the default settings for the PanoView image viewing script.
 
 How to use the Script:
 

@@ -1,17 +1,17 @@
 --[[--
 ----------------------------------------------------------------------------
-Convert PFM Depth Images v4.0.1 - 2019-01-01
+Convert PFM Depth Images v4.1 2019-10-22
 
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Convert PFM Depth Images script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you extract 16-bit per channel greyscale images from a folder's worth of Portable Float Map .pfm depth imagery.
+The Convert PFM Depth Images script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you extract 16-bit per channel greyscale images from a folder's worth of Portable Float Map .pfm depth imagery.
 
 How to use the Script:
 

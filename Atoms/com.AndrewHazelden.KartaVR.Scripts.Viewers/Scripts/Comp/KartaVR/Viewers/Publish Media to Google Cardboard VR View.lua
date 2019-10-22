@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Publish Media to Google Cardboard VR View v4.1 - 2019-10-21
+Publish Media to Google Cardboard VR View v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Publish Media to Google Cardboard VR View script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the settings and generate a Google Cardboard VR View webpage.
+The Publish Media to Google Cardboard VR View script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you customize the settings and generate a Google Cardboard VR View webpage.
 
 How to use the Script:
 

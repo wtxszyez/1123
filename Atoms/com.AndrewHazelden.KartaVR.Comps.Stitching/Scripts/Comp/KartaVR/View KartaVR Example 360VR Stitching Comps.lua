@@ -1,22 +1,23 @@
+--[[--
 ------------------------------------------------------------------------------
--- View KartaVR Example 360VR Stitching Comps v4 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
+View KartaVR Example 360VR Stitching Comps v4.1 2019-10-22
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
+
+KartaVR
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ------------------------------------------------------------------------------
--- Overview:
+Overview:
 
--- This script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a web browser window to and display the HTML formatted 360° video stitching media download webpage.
+This script is a module from the [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will open a web browser window to and display the HTML formatted 360° video stitching media download webpage.
 
--- How to use the Script:
+How to use the Script:
 
--- Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Example 360VR Stitching Comps" menu item.
+Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Example 360VR Stitching Comps" menu item.
 
 ------------------------------------------------------------------------------
-
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------

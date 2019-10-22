@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to MeshLab v4.0.1 - 2019-01-01
+Send Geometry to MeshLab v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Geometry to MeshLab script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take a AlembicMesh3D / FBXMesh3D / ExporterFBX node that is selected in the flow and send them to MeshLab via a new MeshLab .mlp project file.
+The Send Geometry to MeshLab script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will take a AlembicMesh3D / FBXMesh3D / ExporterFBX node that is selected in the flow and send them to MeshLab via a new MeshLab .mlp project file.
 
 How to use the Script:
 

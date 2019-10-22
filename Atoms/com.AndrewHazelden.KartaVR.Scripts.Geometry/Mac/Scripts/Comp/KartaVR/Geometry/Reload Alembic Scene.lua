@@ -1,13 +1,13 @@
 --[[--
-Reload Alembic Scene v4.0.1 - 2019-01-01
+----------------------------------------------------------------------------
+Reload Alembic Scene v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
 Select an ABC Mesh node in your comp that has an alembic filepath entered. Then run this script. The nodes will be re-generated using Fusion's "File > Import > Alembic Scene..." menu item.

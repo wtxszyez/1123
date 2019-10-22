@@ -1,32 +1,32 @@
+--[[--
 ------------------------------------------------------------------------------
--- Zoom New Image View v4.0.1 2019-01-01
--- 
--- by Andrew Hazelden -- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
+Zoom New Image View v4.1 2019-10-22
+by Andrew Hazelden -- www.andrewhazelden.com
+andrew@andrewhazelden.com
+
+KartaVR
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ------------------------------------------------------------------------------
--- Overview:
+Overview:
 
--- The Zoom New Image View script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will minimize/maximize the floating New Image View window.
+The Zoom New Image View script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will minimize/maximize the floating New Image View window. The "Fusion-Maximize-Image-View.app" AppleScript program works with Fusion v8.2.1 to v9.0.2 on macOS.
 
--- How to use the Script:
+How to use the Script:
+Step 1. Start Fusion and open a new comp. Open the Window menu and then select the "New Image View" menu item to create a new floating viewer window.
 
--- Step 1. Start Fusion and open a new comp. Open the Window menu and then select the "New Image View" menu item to create a new floating viewer window.
+Step 2. Run the Script > KartaVR > Viewers > Zoom New Image View. 
 
--- Step 2. Run the Script > KartaVR > Viewers > Zoom New Image View. 
+Installation: 
 
--- Installation: 
+To use this tool you need to enable Assistive Access on macOS. This is controlled through the System Preferences > Security & Privacy > Privacy > Accessibility preferences panel view on macOS 10.11+. 
 
--- To use this tool you need to enable Assistive Access on macOS. This is controlled through the System Preferences > Security & Privacy > Privacy > Accessibility preferences panel view on macOS 10.11+. 
+Unlock the Accessibility preferences panel and then drag the following file from a folder window in the Accessibility Preferences panel view:
+/Applications/KartaVR/mac_tools/applescript/Fusion-Maximize-Image-View.app
 
--- Unlock the Accessibility preferences panel and then drag the following file from a folder window in the Accessibility Preferences panel view:
--- /Applications/KartaVR/mac_tools/applescript/Fusion-Maximize-Image-View.app
-
--- Hotkeys.fu binding: SHIFT_3 = "RunScript{filename = 'Scripts:/Comp/KartaVR/Viewers/Zoom New Image View.lua'}",
+Hotkeys.fu binding: SHIFT_3 = "RunScript{filename = 'Scripts:/Comp/KartaVR/Viewers/Zoom New Image View.lua'}",
 
 ------------------------------------------------------------------------------
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -48,7 +48,7 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
-	
+
 	-- List the preference value
 	if status == 1 or status == true then
 		if value == nil then
@@ -79,7 +79,7 @@ function getPreferenceData(pref, defaultValue, status)
 		newPreference = defaultValue
 		-- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
-		
+
 		if status == 1 or status == true then
 			if newPreference == nil then
 				print('[Creating ' .. pref .. ' Preference Data] ' .. 'nil')
@@ -88,7 +88,7 @@ function getPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
@@ -97,25 +97,25 @@ function MaximizeView()
 	-- Viewer Variables
 	viewerProgram = nil
 	command = nil
-	
+
 	-- Maximize View
 	if platform == 'Windows' then
 		-- Running on Linux
-		print('Maximize New Image View is not available for Windows yet.')
+		print('[Error] Maximize New Image View is not available for Windows yet.')
 	elseif platform == 'Mac' then
 		-- Running on Mac
 		defaultViewerProgram = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/mac_tools/applescript/') .. 'Fusion-Zoom-New-Image-View.app'
 		viewerProgram = '"' .. getPreferenceData('KartaVR.Scripts.MaximizeImageViewFile', defaultViewerProgram, printStatus) .. '"'
 		command = 'open -a ' .. viewerProgram
-		
+
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		print('Maximize New Image View is not available for Linux yet.')
+		print('[Error] Maximize New Image View is not available for Linux yet.')
 	else
 		print('[Platform] ', platform)
-		print('There is an invalid platform defined in the local platform variable at the top of the code.')
+		print('[Error] There is an invalid platform defined in the local platform variable at the top of the code.')
 	end
 end
 
@@ -126,15 +126,16 @@ function Main()
 
 	-- Check if Fusion is running
 	if not fusion then
-		print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
+		print('[Error] This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 	
 	end
-	
+
 	-- Run a script to maximize the foreground window
-	MaximizeView()
-	
-	-- Unlock the comp flow area
-	comp:Unlock()
+	if math.floor(tonumber(eyeon._VERSION)) <= 9 then
+		MaximizeView()
+	else
+		print("[Error] This script is designed for use in Fusion v8.2.1 to v9.0.2")
+	end
 end
 
 Main()

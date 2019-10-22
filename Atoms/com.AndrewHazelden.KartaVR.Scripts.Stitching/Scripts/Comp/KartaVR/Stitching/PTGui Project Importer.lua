@@ -1,17 +1,17 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Project Importer v4.0.2 2019-04-28
+PTGui Project Importer v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 
 Overview:
 
-The PTGui Project Importer script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will load the source image data from a PTGui .pts project file and create a node based panoramic 360° stitching composite.
+The PTGui Project Importer script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will load the source image data from a PTGui .pts project file and create a node based panoramic 360° stitching composite.
 
 How to use the Script:
 

@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Corel Photo Paint v4.0.1 - 2019-01-01
+Send Media to Corel Photo Paint v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Media to Corel Photo Paint script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send all of the selected loader node files to Corel Photo Paint. 
+The Send Media to Corel Photo Paint script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send all of the selected loader node files to Corel Photo Paint. 
 
 How to use the Script:
 

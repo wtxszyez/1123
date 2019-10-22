@@ -1,17 +1,17 @@
 --[[--
 ----------------------------------------------------------------------------
-Convert Movies to Image Sequences v4.0.1 2019-01-01
+Convert Movies to Image Sequences v4.1 2019-10-22
 
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Convert Movies to Image Sequences script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you extract image sequences from a folder's worth of movie files.
+The Convert Movies to Image Sequences script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you extract image sequences from a folder's worth of movie files.
 
 How to use the Script:
 

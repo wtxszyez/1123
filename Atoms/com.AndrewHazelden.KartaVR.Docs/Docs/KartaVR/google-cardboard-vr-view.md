@@ -21,7 +21,7 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ![Google Cardboard VR View Script](images/vrview-screenshot.jpg)
 
-The "Publish Media to Google Cardboard VR View" script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the settings and generate a Google Cardboard VR View webpage that can be viewed locally or pushed via Apache web sharing and WiFi to a smartphone with a Google Cardboard HMD.
+The "Publish Media to Google Cardboard VR View" script is a module from the [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you customize the settings and generate a Google Cardboard VR View webpage that can be viewed locally or pushed via Apache web sharing and WiFi to a smartphone with a Google Cardboard HMD.
 
 For more details on the Google VR View technology itself check out the [Google VR View Developers](https://developers.google.com/vr/concepts/vrview-web) page.
 

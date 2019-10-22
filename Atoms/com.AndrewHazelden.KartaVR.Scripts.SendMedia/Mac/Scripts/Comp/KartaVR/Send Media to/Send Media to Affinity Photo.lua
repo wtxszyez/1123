@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Affinity Photo v4.0.2 - 2019-02-10
+Send Media to Affinity Photo v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Media to Affinity Photo script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send all of the selected loader node files to Affinity Photo. 
+The Send Media to Affinity Photo script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send all of the selected loader node files to Affinity Photo. 
 
 How to use the Script:
 

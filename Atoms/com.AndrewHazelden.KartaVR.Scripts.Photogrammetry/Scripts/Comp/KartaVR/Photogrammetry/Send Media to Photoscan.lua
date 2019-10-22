@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Photoscan v4.0.1 2019-01-01
+Send Media to Photoscan v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Media to Photoscan script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send the selected Fusion imagery to a Photoscan .psx file. The Photoscan .psx project is the starting point for creating a photogrammetry based mesh reconstruction.
+The Send Media to Photoscan script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send the selected Fusion imagery to a Photoscan .psx file. The Photoscan .psx project is the starting point for creating a photogrammetry based mesh reconstruction.
 
 How to use the Script:
 

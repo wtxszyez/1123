@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Illustrator v4.0.1 - 2019-01-01
+Send Frame to Illustrator v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Frame to Illustrator script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send your currently selected file loader or saver node files to Adobe Illustrator. 
+The Send Frame to Illustrator script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send your currently selected file loader or saver node files to Adobe Illustrator. 
 
 How to use the Script:
 

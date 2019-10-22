@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui BatchBuilder Creator v4.0.1 2019-01-01
+PTGui BatchBuilder Creator v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The PTGui BatchBuilder Creator script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that converts your currently selected loader and saver node based image sequences into a format that works easily with PTGui's BatchBuilder mode that is used for panoramic sequence stitching. 
+The PTGui BatchBuilder Creator script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that converts your currently selected loader and saver node based image sequences into a format that works easily with PTGui's BatchBuilder mode that is used for panoramic sequence stitching. 
 
 As an example an image sequence named in the format of: `name.####.ext` will be renamed and placed in a PTGui BatchBuilder sequence numbered folder with a hierarchy of: `####/name.ext`
 

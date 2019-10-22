@@ -1,12 +1,12 @@
 --[[--
 ----------------------------------------------------------------------------
-View Help Documentation v4.1 2019-10-21
+View Help Documentation v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 

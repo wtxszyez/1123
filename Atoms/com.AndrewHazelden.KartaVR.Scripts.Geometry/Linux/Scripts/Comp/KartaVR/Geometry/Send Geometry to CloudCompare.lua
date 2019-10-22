@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to CloudCompare v4.0.1 - 2019-01-01
+Send Geometry to CloudCompare v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
+The Send Geometry to CloudCompare script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
 
 Note: CloudCompare is primarily used to examine meshes and point clouds
 

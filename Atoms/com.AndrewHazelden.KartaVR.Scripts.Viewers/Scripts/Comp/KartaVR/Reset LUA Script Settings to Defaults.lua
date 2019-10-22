@@ -1,17 +1,17 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults v4.1 2019-10-03
+Reset LUA Script Settings to Defaults v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 
 Overview:
 
-The Reset LUA Script Settings to Defaults script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will clear all of the custom settings for the scripts included with the KartaVR.
+The Reset LUA Script Settings to Defaults script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will clear all of the custom settings for the scripts included with the KartaVR.
 
 How to use the Script:
 

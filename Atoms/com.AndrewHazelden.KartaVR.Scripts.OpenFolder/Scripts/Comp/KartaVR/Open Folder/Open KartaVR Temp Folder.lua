@@ -1,17 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Temp Folder v4.0.1 2019-01-01
+Open KartaVR Temp Folder v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
-The Open KartaVR Temp Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the temporary directory that the KartaVR uses to write out viewer snapshots and other files.
+The Open KartaVR Temp Folder script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will open a file browser window to show the temporary directory that the KartaVR uses to write out viewer snapshots and other files.
 
 How to use the Script:
 
