@@ -1,12 +1,13 @@
 --[[--
-Snapshot SlashCommand - v1.0 2018-01-09
+Snapshot SlashCommand - v2 2019-10-24
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 ## Overview ##
 
 Snapshot is a console slash command that saves out snapshot images from Fusion's left image viewer window.
 
-This script requires Fusion 9.0.1+ and the SlashCommand.fuse to be installed.
+This script requires Fusion v9.0.1-16.1+ / Resolve v15-16.1+ and the SlashCommand.fuse to be installed.
+
 
 ## Installation ##
 
@@ -15,6 +16,8 @@ Step 1. Copy the "snapshot.lua" file to the Fusion "Scripts:/SlashCommand/" fold
 Step 2. Install a copy of the "SlashCommand.fuse" using the WeSuckLess forum's "Reactor" package manager. This atom package is found in the Reactor "Console" category.
 
 Step 3. Restart Fusion. The SlashCommand.fuse module will load and then you can use the Snapshot Slash Command
+
+
 
 ## Usage ##
 
@@ -35,9 +38,19 @@ Alternatively, to save an image to disk of a specific image format add the file 
 /snapshot tga
 /snapshot tif
 
+
 ## Notes ##
 
 You can change the default image format written to disk by the "/snapshot" command by uncommenting a specific "snapshotImageFormat" image format line at the top of the script.
+
+
+## Version History ##
+
+v1.0 2018-01-09
+- Initial Release
+
+v2.0 2019-10-24
+- Added support for Fusion v9.01-16.1+ and Resolve v15-16.1+
 
 --]]--
 
@@ -80,7 +93,7 @@ end
 function Main()
 	-- Create the snapshot filename prefix
 	selectedNode = comp.ActiveTool
-	if selectedNode ~= nil then
+	if selectedNode then
 		selectedNodeName = selectedNode.Name
 	else
 		selectedNodeName = 'snapshot'
@@ -100,26 +113,28 @@ function Main()
 		imageName = tostring(workingDir .. compName .. '_' .. selectedNodeName .. '.' .. c .. '.' .. snapshotImageFormat):gsub(' ','_')
 		c = c + 1
 	end
-	
-	-- Get the name of the Fusion left image viewer context
-	local viewer = comp:GetPreviewList().Left.View.CurrentViewer
+
+	-- Create the temporary directory
+	bmd.createdir(Dirname(imageName))
 
 	-- Check if the viewer has an image in it
-	if viewer ~= nil then
-		-- Create the temporary directory
-		bmd.createdir(Dirname(imageName))
-
+	if comp:GetPreviewList() and comp:GetPreviewList().Left and comp:GetPreviewList().Left.View and comp:GetPreviewList().Left.View.CurrentViewer then
 		-- Write the left image viewer content to disk
+		-- Fusion 9 CurrentViewer command:
 		comp:GetPreviewList().Left.View.CurrentViewer:SaveFile(imageName)
-		
-		-- Change the printed output message if a node is selected in the flow area
-		if selectedNode ~= nil then
-			print('[Selected Node] ' .. tostring(selectedNodeName) .. ' [Image] ' .. tostring(imageName))
-		else
-			print('[Image] ' .. tostring(imageName))
-		end
+	elseif comp:GetPreviewList() and comp:GetPreviewList().LeftView and comp:GetPreviewList().LeftView.View and comp:GetPreviewList().LeftView.View.CurrentViewer then
+		-- Resolve 15+/Fusion Standalone v16+ CurrentViewer command:
+		comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(imageName)
 	else
-		print('No footage was loaded in the left viewer window.')
+		print('[Snapshot Error] No footage was loaded in the left viewer window.')
+		return
+	end
+
+	-- Change the printed output message if a node is selected in the flow area
+	if selectedNode then
+		print('[Selected Node] ' .. tostring(selectedNodeName) .. ' [Image] ' .. tostring(imageName))
+	else
+		print('[Image] ' .. tostring(imageName))
 	end
 end
 
