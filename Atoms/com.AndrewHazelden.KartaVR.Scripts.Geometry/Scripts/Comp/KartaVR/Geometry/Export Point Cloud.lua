@@ -166,7 +166,11 @@ function ExportPointCloudWin()
 
 	-- Track the current node selection
 	local selectedNode = comp.ActiveTool
-
+	local selectedNodeName = ''
+	
+	if selectedNode then
+		selectedNodeName = selectedNode.Name
+	end 
 	------------------------------------------------------------------------
 	-- Create the new window
 	local epcwin = disp:AddWindow({
@@ -199,7 +203,7 @@ function ExportPointCloudWin()
 				ui:LineEdit{
 					ID = 'NodeNameText',
 					PlaceholderText = '[Select a PointCloud3D Node]',
-					Text = selectedNode.Name or '',
+					Text = selectedNodeName,
 					ReadOnly = true,
 				},
 			},
