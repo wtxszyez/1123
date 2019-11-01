@@ -1,10 +1,10 @@
-_VERSION = [[Version 3.14 - October 5, 2019]]
+_VERSION = [[Version 3.141 - October 31, 2019]]
 _REPO_EDITION = [[Install Reactor Version π (3.14)]]
 --[[
 ==============================================================================
-Reactor Installer - v3.14 2019-10-05
+Reactor Installer - v3.141 2019-10-31
 ==============================================================================
-Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
+Requires    : Fusion v9.0.2 to v16.1+ or Resolve v15 to v16.1+
 Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
 
 ==============================================================================
@@ -30,19 +30,21 @@ https://gitlab.com/WeSuckLess/Reactor
 Reactor Installer Usage
 ==============================================================================
 
-Step 1. Drag the Reactor-Installer.lua script from your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Nodes" view. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
+Step 1. Drag the Reactor-Installer.lua script from your desktop into the Fusion Standalone or the Resolve Fusion page "Console" view. Alternatively, you could copy and then paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
 
 Note: Fusion Standalone v16.1 Beta and Resolve v16.1 Beta seem to have an issue with dragging the Reactor installer script from your desktop folder to the Nodes view to run it automatically so you will have to open the Console window to drag and drop run the script until this issue is solved.
 
-Step 2. On Fusion v9/16 you would click the "Install and Relaunch" button. On Resolve v15/16 you would click the "Install and Launch" button.
+Step 2. Click the "Install and Launch" button.
 
-On Fusion v9/16 the Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
+The Reactor.fu file will be downloaded from GitLab and saved into the "Config:/Reactor.fu" folder.
 
 The GitLab repo string is then written into a new "AllData:Reactor:/System/Reactor.cfg" file that is used to control what GitLab repositories are used with Reactor.
 
-When the installer finishes, Fusion will restart automatically and the Reactor Package Manager is ready for use. :D
+When the installer finishes, Fusion will open the Reactor Package Manager so it is ready for use. 
 
-On Resolve v15/16 the Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
+If you are running Fusion Standalone v9-16.1+ you will see Reactor installed under the "Script > Reactor > Open Reactor..." menu immediately after the installer completes. The root level Reactor menu will only appear after you re-launch Fusion once since it is added by a "Reactor.fu" file. :D
+
+In Resolve you can launch Reactor from the "Workspaces > Scripts > Reactor > Open Reactor..." menu item. The Reactor menu items will be installed to "Reactor:/System/Scripts/Comp/Reactor/".
 
 Step 3. When you open the Reactor Package Manager window in the future using the "Reactor > Open Reactor..." menu item the tool will sync up with the GitLab website and download the newest details about the git commits that have happened on the Reactor repository since the last time you ran the tool.
 
@@ -146,39 +148,15 @@ end
 -- Default Reactor install location
 local reactor_pathmap = os.getenv("REACTOR_INSTALL_PATHMAP") or reactor_existing_pathmap or "AllData:"
 
--- Minimum version of Fusion required to run Reactor
-local reactorMinVersion = 9.02
-
--- Fusion Product Webpage
-local fusionDownloadURL = "https://www.blackmagicdesign.com/products/fusion/"
-
--- Resolve Product Webpage
--- local fusionDownloadURL = "https://www.blackmagicdesign.com/products/davinciresolve"
-
--- Note: The Reactor Installer wants fuVersion to be a number like "9.02" or higher
-local fuVersion = tonumber(eyeon._VERSION)
-
--- Fusion legacy version debug testing
--- local fuVersion = tonumber(8.21)
--- local fuVersion = tonumber(9.00)
--- local fuVersion = tonumber(9.01)
--- local fuVersion = tonumber(9.02)
--- local fuVersion = tonumber(15.0)
-
-
 function dprint(str)
 	-- Display the debug output in the Console tab
-	if math.floor(fuVersion) == 9 then
-		local cmp = fusion.CurrentComp
-		if cmp then
-			cmp:Print(tostring(str) .. "\n\n")
-		else
-			print(tostring(str) .. "\n")
-		end
+	local cmp = fusion.CurrentComp
+	if cmp then
+		cmp:Print(tostring(str) .. "\n\n")
 	else
 		print(tostring(str) .. "\n")
 	end
-	
+
 	-- Add the platform specific folder slash character
 	local osSeparator = package.config:sub(1,1)
 	
@@ -232,14 +210,14 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 
 		-- Check if the file was downloaded correctly
 		if table.concat(body) == [[{"message":"401 Unauthorized"}]] then
-			text = "[Error] The \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Relaunch\" button again.\n"
+			text = "[Error] The \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Launch\" button again.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
 			exit()
 			return
 		elseif table.concat(body) == [[{"message":"404 Project Not Found"}]] then
-			text = "[Error] The \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Relaunch\" button again.\n"
+			text = "[Error] The \"Token ID\" field is empty. Please enter a GitLab personal access token and then click the \"Install and Launch\" button again.\n"
 			errwin,erritm = ErrorWin("Installation Error", text)
 			win:Hide()
 			errwin:Hide()
@@ -296,7 +274,7 @@ function DownloadURL(url, fuDestFilename, shortFilename, win, itm, title, text, 
 end
 
 
--- The Install & Relaunch button was pressed
+-- The Install & Launch button was pressed
 function Install(token)
 	-- ==============================================================================
 	-- Setup the installation variables
@@ -312,7 +290,7 @@ function Install(token)
 	local tempPath = app:MapPath("Temp:/Reactor/")
 	bmd.createdir(tempPath)
 
-	local autorunLuaDestFile = tempPath .. "AutorunReactor.lua"
+	local autorunLuaDestFile = sysPath .. "Reactor.lua"
 
 	-- Delay in seconds
 	statusDelay = 1
@@ -338,47 +316,18 @@ function Install(token)
 	local autorunComp = ''
 	local compFile = nil
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
-		-- Resolve 15+ is running
-		dprint("\n")
-	else
-		-- Fusion Standalone is running (Skip this step on Resolve 15+)
-
-		-- ==============================================================================
-		-- Download Reactor.fu
-		-- ==============================================================================
-		local req = ezreq(fuURL)
-		statusMsg = "[Download URL]\n" .. tostring(fuURL) .. "\n"
-		DownloadURL(fuURL, fuDestFile, "Reactor.fu", msgwin, msgitm, "Installation Status", statusMsg, 2, totalSteps, 1)
-
-		-- ==============================================================================
-		-- Create AutorunReactor.comp
-		-- The comp file triggers AutorunReactor.lua to run in Fusion (Free) / Fusion Studio
-		-- ==============================================================================
-
-		-- Save the Temp:/Reactor/AutorunReactor.comp file to disk
-		autorunComp = tempPath .. "AutorunReactor.comp"
-		compFile = io.open(autorunComp, "w")
-		if compFile ~= nil then
-			compFile:write("Composition {}")
-			compFile:close()
-			statusMsg = "[AutorunReactor.comp Saved]\n" .. autorunComp .. "\n"
-			ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 3, totalSteps, statusDelay)
-		else
-			statusMsg = "[AutorunReactor.comp Write Error]\n" .. autorunComp .. "\n"
-			errwin,erritm = ErrorWin("Installation Error", statusMsg)
-			msgwin:Hide()
-			errwin:Hide()
-			exit()
-			return
-		end
-	end
+	-- ==============================================================================
+	-- Download Reactor.fu
+	-- ==============================================================================
+	local req = ezreq(fuURL)
+	statusMsg = "[Download URL]\n" .. tostring(fuURL) .. "\n"
+	DownloadURL(fuURL, fuDestFile, "Reactor.fu", msgwin, msgitm, "Installation Status", statusMsg, 2, totalSteps, 1)
 
 	-- ==============================================================================
 	-- Download Reactor.lua and save it as AutorunReactor.lua
 	-- ==============================================================================
 	statusMsg = "[Download URL]\n" .. tostring(luaURL)
-	DownloadURL(luaURL, autorunLuaDestFile, "AutorunReactor.lua", msgwin, msgitm, "Installation Status", statusMsg, 4, totalSteps, 1)
+	DownloadURL(luaURL, autorunLuaDestFile, "Reactor.lua", msgwin, msgitm, "Installation Status", statusMsg, 3, totalSteps, 1)
 
 	-- ==============================================================================
 	-- Create Reactor.cfg
@@ -412,7 +361,7 @@ function Install(token)
 		cfgFile:close()
 
 		statusMsg = "[Reactor.cfg Saved]\n" .. tostring(cfgDestFile)
-		ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 5, totalSteps, statusDelay*2)
+		ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 4, totalSteps, statusDelay*2)
 	else
 		statusMsg = "[Reactor.cfg Write Error]\n" .. cfgDestFile
 		errwin,erritm = ErrorWin("Installation Error", statusMsg)
@@ -423,104 +372,25 @@ function Install(token)
 	end
 
 	statusMsg = "[Reactor]\nAll Downloads Completed"
-	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 6, totalSteps, statusDelay*2)
+	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 5, totalSteps, statusDelay*2)
 
 	-- Open Reactor:/System/ folder in a desktop file browser window
 	statusMsg = "[Showing Reactor Folder]\n" .. tostring(sysPath)
-	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 7, totalSteps, statusDelay*2)
+	ProgressWinUpdate(msgwin, msgitm, "Installation Status", statusMsg, 6, totalSteps, statusDelay*2)
 	bmd.openfileexternal("Open", sysPath)
 
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
-		-- Resolve 15+ is running
-		dprint("\n")
+	-- ==============================================================================
+	-- Open the Reactor GUI - Run the script Temp:/Reactor/AutorunReactor.lua
+	-- ==============================================================================
 
-		-- ==============================================================================
-		-- Open the Reactor GUI - Run the script Temp:/Reactor/AutorunReactor.lua
-		-- ==============================================================================
+	ProgressWinUpdate(msgwin, msgitm, "Installation Complete", "Opening Reactor...", 7, totalSteps, statusDelay)
 
-		ProgressWinUpdate(msgwin, msgitm, "Installation Complete", "Opening Reactor...", 8, totalSteps, statusDelay)
+	-- Hide the progress window
+	msgwin:Hide()
 
-		-- Hide the progress window
-		msgwin:Hide()
-
-		ldofile(autorunLuaDestFile)
-	else
-		-- Fusion Standalone is running (Skip the restarting step on Resolve 15+)
-
-		-- ==============================================================================
-		-- Restart Fusion
-		-- ==============================================================================
-		-- Show a Restarting Fusion dialog and wait a few seconds so you can look at the Console tab output
-		ProgressWinUpdate(msgwin, msgitm, "Installation Complete", "Restarting Fusion in 4 seconds...", 8, totalSteps, 4)
-
-		-- Get the Fusion program path:
-		-- /Applications/Blackmagic Fusion 9/Fusion.app/Contents/MacOS/Fusion
-		fusionApp = fusion:GetAttrs().FUSIONS_FileName
-
-		if fusionApp then
-			-- Create the Fusion launching command
-			if platform == "Windows" then
-				command = "start \"\" " .. "\"" .. tostring(fusionApp) .. "\" \"" .. tostring(autorunComp) .. "\" 2>&1 &"
-			else
-				command = "\"" .. tostring(fusionApp) .. "\" \"" .. tostring(autorunComp) .. "\" 2>&1 &"
-			end
-			dprint("[Launch Command] " .. tostring(command))
-		else
-			dprint("[Launch Command Error] Fusion program filename is nil")
-		end
-
-		-- Start up a new instance of Fusion
-		os.execute(command)
-
-		-- Hide the progress window
-		msgwin:Hide()
-
-		-- Quit the current Fusion session
-		fusion:Quit()
-	end
-end
-
--- Open a Webpage
--- Example: OpenURL("We Suck Less", "https://www.steakunderwater.com/")
-function OpenURL(siteName, path)
-	if platform == "Windows" then
-		-- Running on Windows
-		command = "explorer \"" .. path .. "\""
-	elseif platform == "Mac" then
-		-- Running on Mac
-		command = "open \"" .. path .. "\" &"
-	elseif platform == "Linux" then
-		-- Running on Linux
-		command = "xdg-open \"" .. path .. "\" &"
-	else
-		dprint("[Error] There is an invalid Fusion platform detected")
-		return
-	end
-
-	os.execute(command)
-
-	-- dprint("[Launch Command] " tostring(command))
-	dprint("[Opening URL] " .. tostring(path))
-end
-
--- Wrong version of Fusion detected
-function VersionError(ver, minVer, os)
-	local msg = "Detected Fusion " .. ver .. " running on " .. os .. ".\n\nReactor requires Fusion " .. minVer .. " or higher!\n\nPlease update your copy of Fusion."
-	dprint("[Reactor Installer Error] " .. msg)
-
-	-- Show a warning message in an AskUser dialog
-	dlg = {
-		{'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 8, Wrap = true, Default = msg},
-	}
-	
-	if comp then
-		dialog = comp:AskUser('Reactor Installer Error', dlg)
-	else
-		dprint(msg)
-	end
-	
-	-- Open the Blackmagic Fusion Webpage using your OS native http URL handler
-	OpenURL("Blackmagic Fusion Webpage", fusionDownloadURL)
+	-- Auto open the Reactor window
+	-- The old Reactor Installer era "restart to load the Reactor.fu menu thing is over now".
+	app:RunScript(autorunLuaDestFile)
 end
 
 -- Correct version of Fusion detected
@@ -536,12 +406,6 @@ end
 function InstallReactorWin()
 	-- Reactor logo size in px
 	local logoSize = {80,80}
-
-	-- Install button label
-	local installLabel = "Install and Relaunch"
-	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
-		installLabel = "Install and Launch"
-	end
 
 	-- Configure the window Size
 	local originX, originY, width, height = 450, 300, 525, 150
@@ -623,10 +487,10 @@ function InstallReactorWin()
 							Text = "Custom Install Path",
 						},
 
-						-- Install and Relaunch Button
+						-- Install and Launch Button
 						ui:Button{
 							ID = "InstallButton",
-							Text = installLabel,
+							Text = "Install and Launch",
 						},
 					},
 
@@ -959,52 +823,43 @@ function Main()
 		platform = 'Linux'
 	end
 
-	if math.floor(fuVersion) < 9 then
-		-- Fusion 7 or 8 was detected
-		VersionError(fuVersion, reactorMinVersion, platform)
-	elseif fuVersion < reactorMinVersion then
-		-- Fusion 9.00 or 9.01 was detected
-		VersionError(fuVersion, reactorMinVersion, platform)
+	-- Now that we know Fusion 7/8 aren't being used, add the Fu 9+ requiring platform check to handle non Program Files folder based Resolve/Fusion OS detection
+	platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
+
+	local ver = app:GetVersion()
+	local fuVersion = ver[1] + ver[2]/10 + ver[3]/100
+
+	-- Resolve 15+ was detected - Note: Resolve 16 added "fu:GetVersion().app" so Fu 15 needs to be detected by fuVersion equalling "15"
+	if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
+		-- Show the version info
+		VersionOK("Resolve", fuVersion, platform)
 	else
-		if fu:GetVersion() and fu:GetVersion()[1] then
-			fuVersion = fu:GetVersion()[1]
-		end
-		
-		-- Now that we know Fusion 7/8 aren't being used, add the Fu 9+ requiring platform check to handle non Program Files folder based Resolve/Fusion OS detection
-		platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
-		
-		-- Resolve 15+ was detected - Note: Resolve 16 added "fu:GetVersion().app" so Fu 15 needs to be detected by fuVersion equalling "15"
-		if fu:GetVersion() and fu:GetVersion().App == "Resolve" or math.floor(fuVersion) == 15 then
-			-- Show the version info
-			VersionOK("Resolve", fuVersion, platform)
-		else
-			-- Show the version info
-			VersionOK("Fusion", fuVersion, platform)
-			
-			-- Close all of the active comps
-			closedLst = CloseComps()
+		-- Show the version info
+		VersionOK("Fusion", fuVersion, platform)
+	
+		-- Close all of the active comps
+		closedLst = CloseComps()
 
-			-- Print out a list of the comps that were closed
-			dprint(closedLst)
-			
-			-- Show the version info
-			VersionOK("Fusion", fuVersion, platform)
-		end
-		dprint("[GitLab Branch] \"" .. tostring(branch) .. "\"")
-
-		-- Check Reactor.cfg
-		local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
-		local cfgDestFile = sysPath .. "Reactor.cfg"
-		if eyeon.fileexists(cfgDestFile) == false then
-			dprint("[Reactor.cfg] Does not exist yet")
-			bmd.createdir(sysPath)
-		end
-
-		-- Display the "Install Reactor" dialog
-		ui = app.UIManager
-		disp = bmd.UIDispatcher(ui)
-		InstallReactorWin()
+		-- Print out a list of the comps that were closed
+		dprint(closedLst)
+	
+		-- Show the version info in the Fusion 9 Console tab that is remaining open after closing other tabs
+		VersionOK("Fusion", fuVersion, platform)
 	end
+	dprint("[GitLab Branch] \"" .. tostring(branch) .. "\"")
+
+	-- Check Reactor.cfg
+	local sysPath = app:MapPath(tostring(reactor_pathmap) .. "Reactor/System/")
+	local cfgDestFile = sysPath .. "Reactor.cfg"
+	if eyeon.fileexists(cfgDestFile) == false then
+		dprint("[Reactor.cfg] Does not exist yet")
+		bmd.createdir(sysPath)
+	end
+
+	-- Display the "Install Reactor" dialog
+	ui = app.UIManager
+	disp = bmd.UIDispatcher(ui)
+	InstallReactorWin()
 end
 
 -- Progressbar ON cell encoded as Base64 content
