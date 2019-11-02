@@ -7,15 +7,15 @@ win = disp:AddWindow({
 	WindowTitle = 'My First Window',
 	Geometry = {100, 100, width, height},
 	Spacing = 10,
-	
+	Margin = 10,
+
 	ui:VGroup{
 		ID = 'root',
-		Margin = 50,
-		
+
 		-- Add your GUI elements here:
 		ui:TextEdit{
-			ID='MyTxt', 
-			Text = 'Hello', 
+			ID = 'MyTxt',
+			Text = 'Hello',
 			PlaceholderText = 'Please Enter a few words.',
 			Lexer = 'fusion',
 		},
@@ -24,7 +24,7 @@ win = disp:AddWindow({
 
 -- The window was closed
 function win.On.MyWin.Close(ev)
-		disp:ExitLoop()
+	disp:ExitLoop()
 end
 
 -- Add your GUI element based event functions here:

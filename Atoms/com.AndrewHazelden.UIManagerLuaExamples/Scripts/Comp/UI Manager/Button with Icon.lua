@@ -1,11 +1,11 @@
 --[[
-Button with Icon v1.0 2017-09-28 12.02 PM
+Button with Icon v2 2019-11-02
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
 ## Overview ## 
 
-This script is a Fusion Lua UI Manager GUI building based example that works in Fusion 9.0.1+ that shows how you can attach an image to a ui:Button with the help of a ui:Icon resource.
+This script attaches an image to a ui:Button with the help of a ui:Icon resource.
 
 ## Installation ## 
 
@@ -22,99 +22,108 @@ local disp = bmd.UIDispatcher(ui)
 local width,height = 500,200
 
 win = disp:AddWindow({
-  ID = 'MyWin',
-  WindowTitle = 'Button With Icon',
-  Geometry = {100, 100, width, height},
-  Spacing = 10,
-  Margin = 10,
-  
-  ui:VGroup{
-    ID = 'root',
-    
-    -- Add your GUI elements here:
-    
-    ui:HGroup{
-      -- Add three buttons that have an icon resource attached and no border shading
-      ui:Button{
-        ID = 'IconButton1', 
-        Flat = true,
-        IconSize = {64,64},
-        Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/fusion-logo.png'},
-      },
-      ui:Button{
-        ID = 'IconButton2', 
-        Flat = true,
-        IconSize = {64,64},
-        Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/fusion-logo.png'},
-      },
-      ui:Button{
-        ID = 'IconButton3', 
-        Flat = true,
-        IconSize = {64,64},
-        Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/fusion-logo.png'},
-      },
-      ui:Button{
-        ID = 'IconButton4', 
-        Flat = true,
-        IconSize = {64,64},
-        Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/fusion-logo.png'},
-      },
-    },
-    
-    -- Add a button with an icon and a text label. 
-    -- The Text label on the button uses the Droid Sans Mono font at 24 px in size
-    ui:Button{
-      ID = 'IconTextButton', 
-      Text = '\tClickable Button',
-      Font = ui:Font{
-        Family = 'Droid Sans Mono',
-        StyleName = 'Regular',
-        PixelSize = 24,
-        MonoSpaced = true,
-        StyleStrategy = {ForceIntegerMetrics = true},
-      },
-      -- Flat = true,
-      IconSize = {64,64},
-      Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/fusion-logo.png'},
-      Margin = 50,
-    },
-      
+	ID = 'MyWin',
+	WindowTitle = 'Button With Icon',
+	Geometry = {100, 100, width, height},
+	Spacing = 10,
+	Margin = 0,
 
-    
-  },
+	ui:VGroup{
+		ID = 'root',
+
+		-- Add your GUI elements here:
+
+		ui:HGroup{
+			-- Add three buttons that have an icon resource attached and no border shading
+			ui:Button{
+				ID = 'IconButton1', 
+				Flat = true,
+				IconSize = {64,64},
+				Icon = ui:Icon{
+					File = 'Scripts:/Comp/UI Manager/fusion-logo.png',
+				},
+			},
+			ui:Button{
+				ID = 'IconButton2', 
+				Flat = true,
+				IconSize = {64,64},
+				Icon = ui:Icon{
+					File = 'Scripts:/Comp/UI Manager/fusion-logo.png',
+				},
+			},
+			ui:Button{
+				ID = 'IconButton3', 
+				Flat = true,
+				IconSize = {64,64},
+				Icon = ui:Icon{
+					File = 'Scripts:/Comp/UI Manager/fusion-logo.png',
+				},
+			},
+			ui:Button{
+				ID = 'IconButton4', 
+				Flat = true,
+				IconSize = {64,64},
+				Icon = ui:Icon{
+					File = 'Scripts:/Comp/UI Manager/fusion-logo.png',
+				},
+			},
+		},
+		
+		-- Add a button with an icon and a text label. 
+		-- The Text label on the button uses the Droid Sans Mono font at 24 px in size
+		ui:Button{
+			ID = 'IconTextButton', 
+			Text = '\tClickable Button',
+			Font = ui:Font{
+				Family = 'Droid Sans Mono',
+				StyleName = 'Regular',
+				PixelSize = 24,
+				MonoSpaced = true,
+				StyleStrategy = {
+					ForceIntegerMetrics = true,
+				},
+			},
+			-- Flat = true,
+			IconSize = {64,64},
+			Icon = ui:Icon{
+				File = 'Scripts:/Comp/UI Manager/fusion-logo.png',
+			},
+			Margin = 10,
+		},
+	},
 })
 
 -- The window was closed
 function win.On.MyWin.Close(ev)
-    disp:ExitLoop()
+	disp:ExitLoop()
 end
 
 -- Add your GUI element based event functions here:
 itm = win:GetItems()
 
 function win.On.IconTextButton.Clicked(ev)
-  print('Button Clicked')
-  -- disp:ExitLoop()
+	print('Button Clicked')
+	-- disp:ExitLoop()
 end
 
 function win.On.IconButton1.Clicked(ev)
-  print('Icon Clicked')
-  -- disp:ExitLoop()
+	print('Icon Clicked')
+	-- disp:ExitLoop()
 end
 
 function win.On.IconButton2.Clicked(ev)
-  print('Icon Clicked')
-  -- disp:ExitLoop()
+	print('Icon Clicked')
+	-- disp:ExitLoop()
 end
 
 function win.On.IconButton3.Clicked(ev)
-  print('Icon Clicked')
-  -- disp:ExitLoop()
+	print('Icon Clicked')
+	-- disp:ExitLoop()
 end
 
 function win.On.IconButton4.Clicked(ev)
-  print('Icon Clicked')
-  -- disp:ExitLoop()
+	print('Icon Clicked')
+	-- disp:ExitLoop()
 end
 
 win:Show()

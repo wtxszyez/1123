@@ -1,5 +1,5 @@
 --[[
-Action Listener v2 - 2019-10-09
+Action Listener v2.1 - 2019-11-02
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -7,7 +7,7 @@ www.andrewhazelden.com
 
 The Action Listener script uses the Fusion ActionManager and ui:AddNotify() functions to log events as they happen inside the Fusion GUI. Only a small percentage of the compositing tasks you carry out in Fusion will show up in the "Recorded Action Log" view since the window is only able to track tools and commands that are applied using the new "action" system.
 
-This script makes use of the fact Lua is a dynamic programming language by creating new functions for handling each ui:AddNotify event on the fly. This script is a Fusion Lua based UI Manager example that works in Fusion 9+ and Resolve 15+
+This script makes use of the fact Lua is a dynamic programming language by creating new functions for handling each ui:AddNotify event on the fly. This script is a Fusion Lua based UI Manager example that works in Fusion v9-16.1+ and Resolve v15-16.1+.
 
 Version 2 of Action listener now tracks "Fusion" scope actions, in addition to the previous "comp" scope actions. This means creating new comps, saving comps, opening a new image view, and other tasks are captured more accurately now. Also, "comp:DoAction()" is used for translating generic actions.
 
@@ -34,6 +34,9 @@ v1.3 - 2017-11-21
 v2.0 - 2019-10-09
 - Added Fusion scope action listening to AddNotify, which massively expands the amount of actions reported by the "Action Listener" script compared to what the previous composite scope only action listening approach was able to output.
 - Added comp:DoAction() translation of generic actions to make the snippets runnable.
+
+v2.1 - 2019-11-02
+- Updated script formatting
 
 ## GUI Controls ##
 
@@ -296,15 +299,15 @@ local prev_when = 0
 function TableToString(tbl)
 	if type(tbl) == 'table' then
 		local str = '\n'
-		
+
 		for i,val in pairs(tbl) do
 			if i == 1 then
 				str = str .. 'table: ' .. TableToString(val) .. '\n'
 			else
-				str = str .. '	' .. i .. ' = ' .. TableToString(val) .. '\n'
+				str = str .. '\t' .. i .. ' = ' .. TableToString(val) .. '\n'
 			end
 		end
-		
+
 		return str
 	else
 		return tostring(tbl)
@@ -347,7 +350,9 @@ win = disp:AddWindow({
 				StyleName = 'Regular',
 				PixelSize = 12,
 				MonoSpaced = true,
-				StyleStrategy = {ForceIntegerMetrics = true},
+				StyleStrategy = {
+					ForceIntegerMetrics = true,
+				},
 			},
 			TabStopWidth = 28,
 			LineWrapMode = 'NoWrap',
@@ -395,13 +400,15 @@ win = disp:AddWindow({
 				StyleName = 'Regular',
 				PixelSize = 12,
 				MonoSpaced = true,
-				StyleStrategy = {ForceIntegerMetrics = true},
+				StyleStrategy = {
+					ForceIntegerMetrics = true,
+				},
 			},
 			TabStopWidth = 28,
 			LineWrapMode = 'NoWrap',
 			AcceptRichText = false,
 			ReadOnly = true,
-			
+
 			-- Use the Fusion hybrid lexer module to add syntax highlighting
 			Lexer = 'fusion',
 		},
@@ -627,7 +634,7 @@ function ProcessAction(a, win)
 			luaCommand = 'comp:DoAction("Console_Show", {}) -- Toggle the display of the Console view'
 		elseif what == 'Playback_Mode' then
 			-- Play the sequence
-			
+
 			-- Check if play in reverse is active
 			if ev.Args.play == false then
 				-- Stop playing the sequence
@@ -656,7 +663,7 @@ function ProcessAction(a, win)
 			luaCommand = what .. '("' .. argsId .. '")'
 		end
 	end
-	
+
 	-- Should time be tracked in the logging window
 	--if trackTime == true then 
 	if itm.TrackElapsedTimeCheckbox.Checked then 
@@ -664,42 +671,42 @@ function ProcessAction(a, win)
 	else
 		logEntry = luaCommand
 	end
-	
+
 	-- Append the record to the event log
 	itm.LogTextEdit.PlainText = logEntry .. '\n' .. itm.LogTextEdit.PlainText
-	
+
 	-- List the raw event table
 	itm.EventTextEdit.PlainText = TableToString(ev)
-	
+
 	-- Print Action Log to Console
 	if itm.PrintToConsoleCheckbox.Checked then
 		print('[Action] ' .. luaCommand)
 		print('[Event]')
 		dump(ev)
-		
+
 		if ev.Args.tool ~= nil then
 			print('[ev.Args.tool]')
 			dump(ev.Args.tool:GetAttrs())
 		end
-		
+
 		if ev.Args.prev ~= nil then
 			print('[ev.Args.prev]')
 			dump(ev.Args.prev:GetAttrs())
 		end
-		
+
 		if ev.Rets.tool ~= nil then
 			print('[ev.Rets.tool]')
 			dump(ev.Rets.tool:GetAttrs())
 		end
-		
+
 		if ev.sender ~= nil then
 			print('[ev.sender]')
 			dump(ev.sender:GetAttrs())
 		end
-		
+
 		print('-------------------------------------------------------------------------------')
 	end
-	
+
 	-- Track the time interval between actions
 	prev_when = when
 	end
@@ -758,5 +765,6 @@ Main()
 -- Keep the window updating until the script is quit
 disp:RunLoop()
 win:Hide()
+
 app:RemoveConfig('ActionListener')
 collectgarbage()

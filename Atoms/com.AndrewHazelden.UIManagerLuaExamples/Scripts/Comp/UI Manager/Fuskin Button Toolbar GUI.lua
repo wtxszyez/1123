@@ -108,7 +108,9 @@ function DisplayToolbar(destFolder)
 						Text = "Camera",
 						Flat = true,
 						IconSize = {60, 60},
-						Icon = ui:Icon{File = destFolder .. "camera@2x.png"},
+						Icon = ui:Icon{
+							File = destFolder .. "camera@2x.png",
+						},
 						MinimumSize = iconsMediumLong,
 						Checkable = false,
 					},
@@ -117,7 +119,9 @@ function DisplayToolbar(destFolder)
 						Text = "Cube",
 						Flat = true,
 						IconSize = {60, 60},
-						Icon = ui:Icon{File = destFolder .. "cube@2x.png"},
+						Icon = ui:Icon{
+							File = destFolder .. "cube@2x.png",
+						},
 						MinimumSize = iconsMediumLong,
 						Checkable = false,
 					},
@@ -126,7 +130,9 @@ function DisplayToolbar(destFolder)
 						Text = "CubeMap",
 						Flat = true,
 						IconSize = {60, 60},
-						Icon = ui:Icon{File = destFolder .. "cubemap@2x.png"},
+						Icon = ui:Icon{
+							File = destFolder .. "cubemap@2x.png",
+						},
 						MinimumSize = iconsMediumLong,
 						Checkable = false,
 					},
@@ -135,7 +141,9 @@ function DisplayToolbar(destFolder)
 						Text = "Directional Light",
 						Flat = true,
 						IconSize = {60, 60},
-						Icon = ui:Icon{File = destFolder .. "directional_light@2x.png"},
+						Icon = ui:Icon{
+							File = destFolder .. "directional_light@2x.png",
+						},
 						MinimumSize = iconsMediumLong,
 						Checkable = false,
 					},

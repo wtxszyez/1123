@@ -4,25 +4,25 @@ local disp = bmd.UIDispatcher(ui)
 local width,height = 400,200
 
 win = disp:AddWindow({
-  ID = 'MyWin',
-  WindowTitle = 'My First Window',
-  Geometry = {100, 100, width, height},
-  Spacing = 10,
-  
-  ui:VGroup{
-    ID = 'root',
-    
-    -- Add your GUI elements here:
-    ui:Label{
-      ID = 'TextLabel',
-      Text = 'This is a Label',
-    },
-  },
+	ID = 'MyWin',
+	WindowTitle = 'My First Window',
+	Geometry = {100, 100, width, height},
+	Spacing = 10,
+	
+	ui:VGroup{
+		ID = 'root',
+
+		-- Add your GUI elements here:
+		ui:Label{
+			ID = 'TextLabel',
+			Text = 'This is a Label',
+		},
+	},
 })
 
 -- The window was closed
 function win.On.MyWin.Close(ev)
-  disp:ExitLoop()
+	disp:ExitLoop()
 end
 
 -- Add your GUI element based event functions here:

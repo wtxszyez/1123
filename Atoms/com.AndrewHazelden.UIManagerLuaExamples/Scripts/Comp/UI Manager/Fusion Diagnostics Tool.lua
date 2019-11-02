@@ -1,5 +1,5 @@
 --[[
-Fusion Diagnostics Tool - v1.1 2018-03-13
+Fusion Diagnostics Tool - v2 2019-11-02
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -7,7 +7,9 @@ Web: www.andrewhazelden.com
 -------------------------------------------------
 
 Overview:
-This Fusion Lua script works on Windows/Mac/Linux and allows you to generate a Fusion centric diagnostics report in HTML format. The script uses a new UI Manager based GUI in Fusion 8.2.1 and Fusion 9 to show the results with styled text.
+This Fusion Lua script works on Windows/Mac/Linux and allows you to generate a Fusion centric diagnostics report in HTML format.
+
+This script is a Fusion Lua based UI Manager example that works in Fusion v9-16.1+ and Resolve v15-16.1+.
 
 Installation:
 Step 1. Copy the "Fusion Diagnostics Tool.lua" script to your Fusion user preferences "Scripts/Comp/" folder.
@@ -25,20 +27,8 @@ Step 3. You can click the "View in Webbrowser" button to send the HTML report to
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
 
--- Find out the current operating system platform. The platform local variable should be set to either 'Windows', 'Mac', or 'Linux'.
-local platform = ''
-if string.find(comp:MapPath('Fusion:\\'), 'Program Files', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'PROGRA~1', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-elseif string.find(comp:MapPath('Fusion:\\'), 'Applications', 1) then
-	-- Check if the OS is Mac by searching for the Applications folder
-	platform = 'Mac'
-else
-	platform = 'Linux'
-end
+-- Find out the current operating system platform. The platform variable should be set to either 'Windows', 'Mac', or 'Linux'.
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
 -- Run a system command and get the result back from the terminal session
 -- Example: print(System('/usr/bin/env')
@@ -263,15 +253,16 @@ end
 function CreateReport()
 	local reportString = ''
 	local spaceIndent = ' &nbsp; '
-	local fuVersion = tostring(eyeon._VERSION)
-	local fuMajorVersion = math.floor(tonumber(eyeon._VERSION))
+	local ver = app:GetVersion()
+	local fuVersion = ver[1] + ver[2]/10 + ver[3]/100
+	local fuMajorVersion = tonumber(app:GetVersion()[1])
 	local fuPath = comp:MapPath('Fusion:\\')
 	local fuProfile = comp:MapPath('Profile:\\')
 
 	-- -------------------------------------------------
 	-- Build the report
 	-- -------------------------------------------------
-	reportString = reportString .. h1('Fusion Diagnostics Tool v0.1')
+	reportString = reportString .. h1('Fusion Diagnostics Tool')
 	reportString = reportString .. po() -- Open the paragraph
 
 	-- Add a date + time stamp - Example: Sun Sep 3 15:47:33 2017 
@@ -395,7 +386,12 @@ function CreateReport()
 	reportString = reportString .. br(strong('FUSION_PLUGIN_PATH:') .. spaceIndent .. tostring(os.getenv('FUSION_PLUGIN_PATH')))
 	reportString = reportString .. br(strong('FUSION_OFX_PLUGIN_PATH:') .. spaceIndent .. tostring(os.getenv('FUSION_OFX_PLUGIN_PATH')))
 
-	if fuMajorVersion == 9 then
+	if fuMajorVersion == 16 then
+		-- Fusion 16
+		reportString = reportString .. br(strong('FUSION16_PROFILE:') .. spaceIndent .. tostring(os.getenv('FUSION16_PROFILE')))
+		reportString = reportString .. br(strong('FUSION16_PROFILE_DIR:') .. spaceIndent .. tostring(os.getenv('FUSION16_PROFILE_DIR')))
+		reportString = reportString .. br(strong('FUSION16_MasterPrefs:') .. spaceIndent .. tostring(os.getenv('FUSION16_MasterPrefs')))
+	elseif fuMajorVersion == 9 then
 		-- Fusion 9
 		reportString = reportString .. br(strong('FUSION9_PROFILE:') .. spaceIndent .. tostring(os.getenv('FUSION9_PROFILE')))
 		reportString = reportString .. br(strong('FUSION9_PROFILE_DIR:') .. spaceIndent .. tostring(os.getenv('FUSION9_PROFILE_DIR')))
@@ -741,12 +737,18 @@ function CreateReportWindow()
 			-- Add your GUI elements here:
 			ui:HGroup{
 				Weight = 0,
-				ui:Button{ID = 'OpenButton', Text = 'View in Webbrowser',},
+				ui:Button{
+					ID = 'OpenButton',
+					Text = 'View in Webbrowser',
+				},
 			},
 
 			ui:HGroup{
 				Weight = 1,
-				ui:TextEdit{ID = 'HTMLPreview', ReadOnly = true,},
+				ui:TextEdit{
+					ID = 'HTMLPreview',
+					ReadOnly = true,
+				},
 			},
 		},
 	})
@@ -754,21 +756,6 @@ function CreateReportWindow()
 
 	-- Add your GUI element based event functions here:
 	itm = win:GetItems()
-
-	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
-	app:AddConfig('Report', {
-		Target {
-			ID = 'Report',
-		},
-
-		Hotkeys {
-			Target = 'Report',
-			Defaults = true,
-
-			CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-			CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-		},
-	})
 
 	-- The window was closed
 	function win.On.Report.Close(ev)
@@ -792,9 +779,27 @@ function CreateReportWindow()
 	print('[HTML View] Updating the HTML formatted preview.')
 	itm.HTMLPreview.HTML = CreateReport()
 
+	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Atomizer window instead of closing the foreground composite.
+	app:AddConfig('Report', {
+		Target {
+			ID = 'Report',
+		},
+
+		Hotkeys {
+			Target = 'Report',
+			Defaults = true,
+
+			CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+			CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+		},
+	})
+
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
+	app:RemoveConfig('Report')
+	collectgarbage()
 end
 
 function Main()

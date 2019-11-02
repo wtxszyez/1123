@@ -70,7 +70,7 @@ function parseFilename(filename)
 		seq.Name = seq.FullName
 	end
 
-	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	string.gsub(seq.Name, "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
 
 	if seq.SNum then
 		seq.Number = tonumber(seq.SNum)

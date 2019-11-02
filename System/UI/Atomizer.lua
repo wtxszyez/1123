@@ -289,9 +289,10 @@ function OpenURL(siteName, path)
 		print('[Error] There is an invalid Fusion platform detected')
 		return
 	end
-	os.execute(command)
+
 	-- print('[Launch Command] ', command)
 	print('[Opening URL] ' .. path)
+	os.execute(command)
 end
 
 ------------------------------------------------------------------------

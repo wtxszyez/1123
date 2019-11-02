@@ -1,13 +1,13 @@
 --[[
-HTML Code Editor v2.2 2019-10-01
+HTML Code Editor Deluxe v3 2019-11-02
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
 ## Overview ##
 
-This script is a Fusion Lua based HTML code editor that works in Fusion 9+ and Resolve 15+. It allows you to edit HTML in the edit field at the top of the view and see a live preview rendered at the bottom of the window.
+This script is a Fusion Lua based HTML code editor. It allows you to edit HTML in the edit field at the top of the view and see a live preview rendered at the bottom of the window.
 
-This post is a version 2.1 update to the previous HTML Code Editor example (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10496#p10496). There is now a fancy new HTML code formatting toolbar at the top of the window. Pressing any of these formatting buttons will append short chunks of HTML code to the bottom of the text editing window.
+This post is an update to the previous HTML Code Editor example (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=10496#p10496). There is now a fancy new HTML code formatting toolbar at the top of the window. Pressing any of these formatting buttons will append short chunks of HTML code to the bottom of the text editing window.
 
 The HTML Code Editor uses Fusion's UI Manager system to create the GUI and a ui:TextEdit field to render the webpage elements. You can look at the QT Window Manager documentation to see a list of the supported HTML codes:
 
@@ -24,6 +24,7 @@ Step 1. In Fusion you can run the script by selecting the "Script > HTML Code Ed
 Step 2. Type your code into the HTML Code Editor section at the top of the editing window. The final HTML rendered webpage is shown at the bottom of the view in the HTML Live Preview section.
 
 Step 3. You can use the formatting buttons in the button bar at the top of the window to add little pre-made chunks of HTML code to your document. This text is inserted at the bottom of the HTML Code Editor text area. These code chunks make it easier to add HTML formatting tags if you are new to programming HTML.
+
 
 ## What's new in V2 ##
 
@@ -42,6 +43,10 @@ Resolve 15 support was added to this script by removing the dependency on the bm
 ## What's new in V2.1 2019-10-01 ##
 
 Added support for clickable hyperlinks in the HTML Live Preview window. If you hold down the Shift key as you click on a hyperlink in the HTML Live preview window you will see a URL address preview hover caption.
+
+## What's new in V3 2019-11-02 ##
+
+Improved the formatting of the script. Renamed the script to "HTML Code Editor Deluxe".
 
 ## Notes ##
 
@@ -204,7 +209,7 @@ end
 ------------------------------------------------------------------------
 -- Return a string with the directory path where the Lua script was run from
 -- If the script is run by pasting it directly into the Fusion Console define a fallback path
--- fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor/HTML Code Editor.lua')
+-- fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor Deluxe/HTML Code Editor Deluxe.lua')
 function GetScriptDir(fallback)
 	if debug.getinfo(1).source == '???' then
 		-- Fallback absolute filepath
@@ -243,14 +248,14 @@ function parseFilename(filename)
 		seq.Name = seq.FullName
 	end
 
-	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	string.gsub(seq.Name, "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
 
 	if seq.SNum then
 		seq.Number = tonumber(seq.SNum)
 		seq.Padding = string.len(seq.SNum)
 	else
-	   seq.SNum = ""
-	   seq.CleanName = seq.Name
+		seq.SNum = ""
+		seq.CleanName = seq.Name
 	end
 
 	if seq.Extension == nil then seq.Extension = "" end
@@ -323,14 +328,13 @@ docsFolder = homeFolder .. 'Documents'
 
 ------------------------------------------------------------------------
 -- Find the icons folder
-fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor/HTML Code Editor.lua')
+fileTable = GetScriptDir('Reactor:/Deploy/Scripts/Comp/UI Manager/HTML Code Editor Deluxe/HTML Code Editor Deluxe.lua')
 iconsDir = fileTable.Path .. 'icons' .. osSeparator
 -- print('[Icons Dir] ' .. tostring(iconsDir))
 
 
 -- Create an HTML editing window with a button bar
 function CreateWebpageEditor()
-
 	------------------------------------------------------------------------
 	-- Calculate the size of the buttons and window
 	local buttonIconWidth = 83
@@ -402,7 +406,9 @@ function CreateWebpageEditor()
 						StyleName = 'Regular',
 						PixelSize = 12,
 						MonoSpaced = true,
-						StyleStrategy = {ForceIntegerMetrics = true}, 
+						StyleStrategy = {
+							ForceIntegerMetrics = true,
+						},
 					},
 					TabStopWidth = 28,
 					AcceptRichText = false,
@@ -433,7 +439,6 @@ function CreateWebpageEditor()
 					},
 				},
 			},
-
 		},
 	})
 
@@ -562,10 +567,10 @@ function CreateWebpageEditor()
 	-- Sample HTML Code Block
 	itm.CodeEntry.PlainText = "<h2>Hello Fusioneers</h2>\n<p>Please enjoy this complimentary HTML code editor. &#x1F600;</p>"
 
-
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
 	app:RemoveConfig('htmlEditor')
 	collectgarbage()
 end

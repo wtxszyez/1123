@@ -197,6 +197,9 @@ function CompBrowser()
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
+	app:RemoveConfig('CompBrowserWin')
+	collectgarbage()
 end
 
 

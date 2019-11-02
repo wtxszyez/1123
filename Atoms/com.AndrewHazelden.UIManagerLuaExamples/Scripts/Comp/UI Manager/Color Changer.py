@@ -71,7 +71,6 @@ def _func(ev):
 	SetToolColors(ev['Color'], None)
 dlg.On.BackColor.ColorChanged = _func
 
-
 dlg.Show()
 disp.RunLoop()
 dlg.Hide()

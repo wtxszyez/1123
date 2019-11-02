@@ -13,20 +13,20 @@ local body = {}
 req:setOption(curl.CURLOPT_SSL_VERIFYPEER, 0)
 req:setOption(curl.CURLOPT_WRITEFUNCTION, ffi.cast("curl_write_callback",
  function(buffer, size, nitems, userdata) 
-  table.insert(body, ffi.string(buffer, size*nitems))
-  return nitems
+	table.insert(body, ffi.string(buffer, size*nitems))
+	return nitems
  end))
 
 -- Download the file from the "sourceURL" address
 print('[Downloading] ' .. sourceURL)
 ok, err = req:perform()
 if ok then
-  -- Write the file to disk
-  local file = io.open(fuDestFile, "w")
-  file:write(table.concat(body));
-  file:close();
-  
-  -- Show the file we just downloaded in the default HTML viewer on your system:
-  print('[Opening File] ' .. fuDestFile)
-  bmd.openfileexternal('Open', fuDestFile)
+	-- Write the file to disk
+	local file = io.open(fuDestFile, "w")
+	file:write(table.concat(body));
+	file:close();
+	
+	-- Show the file we just downloaded in the default HTML viewer on your system:
+	print('[Opening File] ' .. fuDestFile)
+	bmd.openfileexternal('Open', fuDestFile)
 end

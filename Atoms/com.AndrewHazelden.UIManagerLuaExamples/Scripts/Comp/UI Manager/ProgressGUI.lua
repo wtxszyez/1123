@@ -1,16 +1,15 @@
-_VERSION = [[Version 1.0 - March 13, 2018]]
+_VERSION = [[Version 2.0 - 2019-11-02]]
 --[[--
 ==============================================================================
-ProgressGUI - v1.1 2018-03-13 
+ProgressGUI - v2 2019-11-02
 ==============================================================================
-Fu Required: Fusion 9.0.1+
 Created By : Andrew Hazelden[andrew@andrewhazelden]
 
 ==============================================================================
 Overview
 ==============================================================================
 
-This Lua script example creates a progress window using Fusion 9's UI Manager library.
+This Lua script example creates a progress window using Fusion's UI Manager library.
 
 I think the example is interesting because it shows how you can use two functions to interact with the window. One function creates the new window and returns pointers to the window, and to the win:GetItems() based controls in the view. Then the 2nd function allows you to update the view as you run through a loop in your script.
 
@@ -35,49 +34,40 @@ function Main()
 	if fusion == nil then
 		print("[Fusion] Error: Please open up the Fusion GUI before running this tool.\n")
 	else
-		-- Check what version of Fusion is active
-		local fuVersion = math.floor(tonumber(eyeon._VERSION))
-		if fuVersion < 9 and fuVersion ~= 0 then
-			-- Fusion 7 or 8 was detected
-			print("[UI Manager] Fusion 9.0.1 or higher is required. Detected Fusion " .. tostring(eyeon._VERSION) .. "\n")
-		else
-			-- Fusion 9+ is running
+		-- Find out the current Fusion host platform (Windows/Mac/Linux)
+		platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
 
-			-- Find out the current Fusion host platform (Windows/Mac/Linux)
-			platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (FuPLATFORM_LINUX and "Linux")
+		-- Display the progress dialog
+		ui = app.UIManager
+		disp = bmd.UIDispatcher(ui)
 
-			-- Display the progress dialog
-			ui = app.UIManager
-			disp = bmd.UIDispatcher(ui)
+		-- Show the progress window
+		local msgwin,msgitm = ProgressWinCreate()
 
-			-- Show the progress window
-			local msgwin,msgitm = ProgressWinCreate()
+		local progressTable = {
+			"Creating a New Fusion Project...",
+			"Downloading Cool Font Used in Behance Frontpage Artwork...",
+			"Creating Procedural Node Based Animation...",
+			"Searching for new iStock Soundtrack...",
+			"Opening Google Image Search With Usage Rights Specified...",
+			"Rendering Comp...",
+			"Creating Movie Encode...",
+			"Uploading Content to Customer...",
+			"Sending Billing Message...",
+			"Receiving Bitcoin Payment...",
+			"Booking Plane Ticket to Island Paradise...",
+		}
 
-			local progressTable = {
-				"Creating a New Fusion Project...",
-				"Downloading Cool Font Used in Behance Frontpage Artwork...",
-				"Creating Procedural Node Based Animation...",
-				"Searching for new iStock Soundtrack...",
-				"Opening Google Image Search With Usage Rights Specified...",
-				"Rendering Comp...",
-				"Creating Movie Encode...",
-				"Uploading Content to Customer...",
-				"Sending Billing Message...",
-				"Receiving Bitcoin Payment...",
-				"Booking Plane Ticket to Island Paradise...",
-			}
+		-- How many steps does this task require
+		totalSteps = 11
 
-			-- How many steps does this task require
-			totalSteps = 11
-
-			-- Run the progress dialog updating cycle
-			for step = 1, totalSteps do
-				ProgressWinUpdate(msgwin, msgitm, "ProgressGUI Example", progressTable[step], step, totalSteps, 2)
-			end
-
-			-- Hide the progress window
-			msgwin:Hide()
+		-- Run the progress dialog updating cycle
+		for step = 1, totalSteps do
+			ProgressWinUpdate(msgwin, msgitm, "ProgressGUI Example", progressTable[step], step, totalSteps, 2)
 		end
+
+		-- Hide the progress window
+		msgwin:Hide()
 	end
 end
 

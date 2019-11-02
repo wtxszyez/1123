@@ -25,7 +25,7 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 -- Create the appropriate hotkey message if you are on Windows/Linux or Mac
 local hotkeyTextMessage = 'Press (Control + W) or (Control + F4) to close this window.'
 if platform == 'Mac' then
-  hotkeyTextMessage = 'Press (Command + W) or (Command + F4) to close this window.'
+	hotkeyTextMessage = 'Press (Command + W) or (Command + F4) to close this window.'
 end
 
 -- Create the UI Manager GUI
@@ -34,32 +34,36 @@ local disp = bmd.UIDispatcher(ui)
 local width,height = 900,132
 
 win = disp:AddWindow({
-  ID = 'HotkeysWin',
-  TargetID = 'HotkeysWin',
-  WindowTitle = 'Dynamic Hotkeys',
-  Geometry = {0, 100, width, height},
-  Margin = 20,
-  Spacing = 0,
-  
-  ui:HGroup{
-    ID = 'root',
-     
-    -- Add your GUI elements here:
-    
-    ui:Label{
-      ID = 'HotkeysLabel',
-      Alignment = {AlignHCenter = true, AlignTop = true},
-      Text = hotkeyTextMessage,
-      Font = ui:Font{
-        Family = 'Droid Sans Mono',
-        StyleName = 'Regular',
-        PixelSize = 24,
-        MonoSpaced = true,
-        StyleStrategy = {ForceIntegerMetrics = true},
-      },
-    },
-    
-  },
+	ID = 'HotkeysWin',
+	TargetID = 'HotkeysWin',
+	WindowTitle = 'Dynamic Hotkeys',
+	Geometry = {0, 100, width, height},
+	Margin = 20,
+	Spacing = 0,
+
+	ui:HGroup{
+		ID = 'root',
+
+		-- Add your GUI elements here:
+
+		ui:Label{
+			ID = 'HotkeysLabel',
+			Alignment = {
+				AlignHCenter = true,
+				AlignTop = true,
+			},
+			Text = hotkeyTextMessage,
+			Font = ui:Font{
+				Family = 'Droid Sans Mono',
+				StyleName = 'Regular',
+				PixelSize = 24,
+				MonoSpaced = true,
+				StyleStrategy = {
+					ForceIntegerMetrics = true,
+				},
+			},
+		},
+	},
 })
 
 
@@ -68,26 +72,28 @@ itm = win:GetItems()
 
 -- The window was closed
 function win.On.HotkeysWin.Close(ev)
-    disp:ExitLoop()
+		disp:ExitLoop()
 end
 
 -- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the Dynamic Hotkeys window instead of closing the foreground composite.
 app:AddConfig('Hotkeys', {
-  Target {
-    ID = 'HotkeysWin',
-  },
+	Target {
+		ID = 'HotkeysWin',
+	},
 
-  Hotkeys {
-    Target = 'HotkeysWin',
-    Defaults = true,
-    
-    CONTROL_W  = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-    CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-  },
+	Hotkeys {
+		Target = 'HotkeysWin',
+		Defaults = true,
+		
+		CONTROL_W	 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+		CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+	},
 })
 
 win:Show()
 disp:RunLoop()
 win:Hide()
+
 app:RemoveConfig('Hotkeys')
 collectgarbage()
+

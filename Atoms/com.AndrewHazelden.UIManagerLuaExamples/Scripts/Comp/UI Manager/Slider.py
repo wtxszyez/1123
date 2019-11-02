@@ -1,9 +1,9 @@
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
-dlg = disp.AddWindow({ "WindowTitle": "My First Window", "ID": "MyWin", "Geometry": [ 100, 100, 400, 200 ], },
+dlg = disp.AddWindow({ "WindowTitle": "My First Window", "ID": "MyWin", "Geometry": [ 100, 100, 400, 100 ], },
 	[
-		ui.VGroup({ "Spacing": 0, },
+		ui.HGroup({ "Spacing": 0, },
 		[
 			# Add your GUI elements here:
 			ui.Slider({ "ID": "MySlider", }),
@@ -26,6 +26,7 @@ itm['MySlider'].Maximum = 100
 
 def _func(ev):
 	itm['MyLabel'].Text = "Slider Value: " + str(ev['Value'])
+	print("Slider Value: " + str(ev['Value']))
 dlg.On.MySlider.ValueChanged = _func
 
 
