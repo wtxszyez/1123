@@ -1,6 +1,6 @@
-_VERSION = 'v2 2019-11-02'
+_VERSION = 'v3 2019-11-04'
 --[[--
-FuScript Subtype Essentials - v2 2019-11-02
+FuScript Subtype Essentials - v3 2019-11-04
 By Andrew Hazelden <andrew@andrewhazelden.com>
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 

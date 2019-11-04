@@ -1,5 +1,5 @@
 --[[
-About Dialog v2 - 2019-11-02
+About Dialog - v3 2019-11-04
 
 Overview:
 This script uses two custom functions named MainWindow() and AboutWindow() to create multiple windows inside the same script. It is a Fusion Lua based UI Manager example that works in Fusion v9-16.1+ and Resolve v15-16.1+.

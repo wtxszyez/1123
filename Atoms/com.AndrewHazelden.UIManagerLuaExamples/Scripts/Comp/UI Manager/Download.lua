@@ -1,3 +1,11 @@
+--[[--
+Download - v3 2019-11-04
+by Andrew Hazelden <andrew@andrewhazelden.com>
+www.andrewhazelden.com
+
+This example uses the cURL library to download a file.
+--]]--
+
 -- The URL for the cURL based download:
 local sourceURL = [[https://www.steakunderwater.com/wesuckless/index.php]]
 

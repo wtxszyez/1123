@@ -1,6 +1,6 @@
 _author = "Andrew Hazelden <andrew@andrewhazelden.com>"
-_date = "2019-11-02 "
-_VERSION = "2.0"
+_date = "2019-11-04"
+_VERSION = "3.0"
 
 --[[--
 ==============================================================================
@@ -63,6 +63,18 @@ dump(mainWindow)
 --		Height = 1214
 
 
+An unset value for the Fusion window position preference looks like:
+
+mainWindow = fusion:GetPrefs("Global.Main.Window")
+dump(mainWindow)
+table: 0x6f3e1770
+	Left = -1
+	Width = -1
+	Top = -1
+	UseWindowsDefaults = true
+	Mode = 3
+	Height = -1
+
 
 The "CenterIconButton" ui:Button icon image is updated on the fly using:
 
@@ -87,6 +99,12 @@ platform = (FuPLATFORM_WINDOWS and "Windows") or (FuPLATFORM_MAC and "Mac") or (
 
 -- Read the previously saved window position + size from the Fusion user prefs "Profiles:/Default/Fusion.prefs" file.
 mainWindow = fusion:GetPrefs("Global.Main.Window")
+if not mainWindow or mainWindow.Width == -1 or mainWindow.Height == -1 then
+	print("[Error] The Window preference is undefined. Please save a initial window position in the Layout Preference section.")
+	app:ShowPrefs("PrefsLayout")
+
+	return
+end
 
 -- Update the default window position
 minWidth, minHeight = 300, 200

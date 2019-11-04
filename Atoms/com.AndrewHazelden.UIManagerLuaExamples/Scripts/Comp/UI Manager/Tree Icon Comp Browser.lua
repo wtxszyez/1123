@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Comp Browser for Fusion - v1.0 2019-08-22 8.33 PM
+Comp Browser for Fusion - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 -- ----------------------------------------------------------------------------

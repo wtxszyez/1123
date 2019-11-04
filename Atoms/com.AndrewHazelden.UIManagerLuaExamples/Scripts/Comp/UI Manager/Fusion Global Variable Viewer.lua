@@ -1,5 +1,5 @@
---[[
-Fusion Global Variable Viewer - v2 2019-11-02
+--[[--
+Fusion Global Variable Viewer - v3 2019-11-04
 by Andrew Hazelden
 Email: <andrew@andrewhazelden.com>
 Web: www.andrewhazelden.com
@@ -31,7 +31,7 @@ Lexer = 'fusion',
 --]]--
 
 print('----------------------------------------------')
-print('Fusion Global Variable Viewer - v2 2019-11-02 ')
+print('Fusion Global Variable Viewer - v3 2019-11-04')
 print('by Andrew Hazelden')
 print('Email: <andrew@andrewhazelden.com>')
 print('Web: www.andrewhazelden.com')

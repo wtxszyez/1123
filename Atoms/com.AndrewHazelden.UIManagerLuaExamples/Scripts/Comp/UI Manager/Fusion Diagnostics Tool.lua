@@ -1,5 +1,5 @@
---[[
-Fusion Diagnostics Tool - v2 2019-11-02
+--[[--
+Fusion Diagnostics Tool - v3 2019-11-04
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -18,7 +18,7 @@ Step 2. Once the script is copied into the "Scripts/Comp/" folder you can then r
 
 Step 3. You can click the "View in Webbrowser" button to send the HTML report to your default HTML viewing program (typically either: FireFox/Chrome/Safari/Internet Explorer).
 
-]]
+--]]--
 
 -- -------------------------------------------------
 -- Utility Functions

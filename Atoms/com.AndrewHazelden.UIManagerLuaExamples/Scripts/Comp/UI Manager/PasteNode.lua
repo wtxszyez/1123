@@ -1,6 +1,6 @@
-_VERSION = [[Version 1.1 - February 17, 2018]]
---[[
-PasteNode.lua - v1.1 2017-10-02 10.43 AM
+_VERSION = [[Version 3.0 - November 4, 2019]]
+--[[--
+PasteNode.lua - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 http://www.andrewhazelden.com
 
@@ -29,7 +29,7 @@ Step 5. (Optional) If you want to edit the PasteNode.lua script to add your own 
 There is a "Copies to Paste" DoubleSpinBox control at the top of the window. If you set this value above 1 it will allow you to repeat the paste action multiple times in a row.
 
 Note: When customizing the text in the SampleNodeBlock() function make sure to keep the multi-line text string friendly double square brackets around your embedded code snippet.
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------
@@ -39,6 +39,7 @@ Note: When customizing the text in the SampleNodeBlock() function make sure to k
 -- Note: When customizing the text in the SampleNodeBlock() function make sure to keep the
 -- multi-line text string friendly double square brackets around your embedded code snippet.
 -- Example: return [[{Tools = ordered() {PastedMerge = Merge {},},}]]
+
 function SampleNodeBlock()
 	return [[{
 	Tools = ordered() {

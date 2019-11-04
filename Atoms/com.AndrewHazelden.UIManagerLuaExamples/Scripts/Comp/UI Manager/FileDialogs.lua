@@ -1,8 +1,10 @@
--- File Dialogs.lua - v1 2017-09-19 11.14 AM
--- by Andrew Hazelden <andrew@andrewhazelden.com>
--- http://www.andrewhazelden.com
+--[[--
+File Dialogs.lua - v3 2019-11-04
+by Andrew Hazelden <andrew@andrewhazelden.com>
+http://www.andrewhazelden.com
 
--- Builds a GUI that uses the Fusion 9.0.1+ UI Manager based "Open File" and "Open Folder" dialogs
+Builds a GUI that uses the Fusion 9.0.1+ UI Manager based "Open File" and "Open Folder" dialogs
+--]]--
 
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)

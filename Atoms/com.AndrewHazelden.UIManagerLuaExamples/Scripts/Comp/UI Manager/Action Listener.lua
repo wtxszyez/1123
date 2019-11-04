@@ -1,5 +1,5 @@
---[[
-Action Listener v2.1 - 2019-11-02
+--[[--
+Action Listener - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -280,7 +280,7 @@ Viewer_SubView_Swap
 Viewer_Tools_Disable
 Viewer_Unview_All
 
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-_VERSION = '2.0 2019-11-02'
+_VERSION = 'v3 2019-11-04'
 --[[--
 Fusion Registry Scanner.lua 
 By Andrew Hazelden <andrew@andrewhazelden.com>

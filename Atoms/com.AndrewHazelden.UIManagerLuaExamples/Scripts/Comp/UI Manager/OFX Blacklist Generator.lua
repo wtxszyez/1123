@@ -1,5 +1,5 @@
-_VERSION = [[v1.2 - 2019-11-02]]
---[[
+_VERSION = [[v3 2019-11-04]]
+--[[--
 OFX Blacklist Generator 
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
@@ -31,7 +31,7 @@ Mac:
 
 Linux:
 /usr/OFX/Plugins/
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------

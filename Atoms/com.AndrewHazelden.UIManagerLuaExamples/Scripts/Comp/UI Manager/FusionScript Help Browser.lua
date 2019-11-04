@@ -1,5 +1,5 @@
 --[[--
-FusionScript Help Browser - v2 2019-11-02
+FusionScript Help Browser - v3 2019-11-04
 By Andrew Hazelden with *major* assistance from Peter Loveday
 
 # Overview #

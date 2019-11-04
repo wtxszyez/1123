@@ -1,5 +1,5 @@
---[[
-Dynamic Hotkeys v1.0 - 2017-10-02 9.01 PM
+--[[--
+Dynamic Hotkeys - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -12,7 +12,7 @@ Copy the "Dynamic Hotkeys.lua" script into your Fusion user preferences "Scripts
 Usage:
 In Fusion you can then run the script from inside Fusion's GUI by selecting the "Script > Dynamic Hotkeys" item.
 
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 --[[--
-Hex Dump v1.1 2019-11-02 
+Hex Dump - v3 2019-11-04
 Based upon the Lua5.1 'xl.lua' example script
 
-Hex Dump Fusion port by Andrew Hazelden	 
-Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)	
-Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)	
+Hex Dump Fusion port by Andrew Hazelden
+Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)
+Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 Overview:
 This script works in Fusion 8.2.1+ and allows you you quickly view the hex formatted contents of the currently selected Saver, Loader, or Geometry nodes in your composite in a UI Manager based Tree view list.

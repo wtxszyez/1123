@@ -1,5 +1,5 @@
---[[
-Button with Icon v2 2019-11-02
+--[[--
+Button with Icon - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -15,7 +15,7 @@ Step 2. Copy the "Button with Icon.lua" script and the "fusion-logo.png" image i
 
 Step 3. In Fusion select the "Script > UI Manager > Button with Icon" menu item.
 
-]]
+--]]--
 
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)

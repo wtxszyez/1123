@@ -1,5 +1,5 @@
 --[[--
-Control Pages v1.0 - 2018-07-05 
+Control Pages - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
