@@ -13,9 +13,11 @@ If you would like to learn how to use the custom "a href" anchor codes, look in 
 
 Hypertext Compositor was inpired by an old-school Fusion term called "SBS" or Side-by-Side that was used to represent an approach where a lua script could be run by Fusion as soon as a .comp file of the same name was opened. The Hypertext Compositor extends this Side-by-Side system to support comp specific documentation.
 
+
 ## Hypertext Compositor Usage ##
 
 If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.
+
 
 ## Images ##
 

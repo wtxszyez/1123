@@ -1782,6 +1782,7 @@ buttonTbl = {
 
 -- Cursor icon
 cursorImg = comp:MapPath('Config:/HypertextCompositor/icons/sbs-cursor.png')
+
 -- Cursor "click zone" offset
 iconWidth = 15
 
