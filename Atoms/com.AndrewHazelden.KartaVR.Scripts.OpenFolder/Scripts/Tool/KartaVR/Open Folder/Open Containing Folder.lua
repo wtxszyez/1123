@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open Containing Folder - v4.0.3 2019-10-10
+Open Containing Folder - v4.1 2019-11-04
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -27,9 +27,6 @@ This script works with the following types of nodes in the Fusion 9-16.1 and Res
 
 --]]--
 
--- Find out if we are running in Fusion 9+.
-local fu_version = math.floor(tonumber(eyeon._VERSION))
-
 -- Check the current operating system platform
 platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
@@ -37,14 +34,14 @@ platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (
 osSeparator = package.config:sub(1,1)
 
 -- Find out the current directory from a file path
--- Example: print(dirname('/Volumes/Media/image.0000.exr'))
-function dirname(filename)
+-- Example: print(Dirname('/Volumes/Media/image.0000.exr'))
+function Dirname(filename)
 	return filename:match('(.*' .. tostring(osSeparator) .. ')')
 end
 
 -- Open a folder window up using your desktop file browser
 function OpenDirectory(mediaDirName)
-	path = dirname(mediaDirName)
+	path = Dirname(mediaDirName)
 	-- print('[Open Containing Folder] ' .. path)
 	bmd.openfileexternal('Open', path)
 end
@@ -59,65 +56,59 @@ end
 
 -- The main function
 function Main()
-	-- print ('[Open Containing Folder] Running on ' .. platform .. ' with ' .. hostOS .. ' ' .. eyeon._VERSION)
-	
 	-- Check if Fusion is running
 	if not fusion then
 		print('[Error] This is a Blackmagic Fusion Lua script. It should be run from within Fusion.')
 		return
 	end
-	
-	-- Lock the comp flow area
-	-- comp:Lock()
-	
+
 	local mediaDirName = nil
-	
+
 	-- List the selected Node in Fusion 
 	if not tool then
 		tool = comp.ActiveTool
 	end
-	
+
 	local selectedNode = tool
 	if selectedNode then
 		toolAttrs = selectedNode:GetAttrs()
-		
 		local result = nil
 		-- Read the file path data from the node
 		if toolAttrs.TOOLS_RegID == 'MediaIn' then
 			loadedImage = comp:MapPath(selectedNode:GetData('MediaProps.MEDIA_PATH'))
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[MediaIn file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Loader' then
 			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[Loader file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Saver' then
 			loadedImage = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[Saver file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceFBXMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('ImportFile'))
-			mediaDirName = dirname(loadedMesh)
+			mediaDirName = Dirname(loadedMesh)
 			result = '[FBXMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'SurfaceAlembicMesh' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = dirname(loadedMesh)
+			mediaDirName = Dirname(loadedMesh)
 			result = '[AlembicMesh3D file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'ExporterFBX' then
 			loadedMesh = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = dirname(loadedMesh)
+			mediaDirName = Dirname(loadedMesh)
 			result = '[ExporterFBX file] ' .. tostring(loadedMesh)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.ExternalMatteSaver' then
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[ExternalMatteSaver file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.PutFrame' then
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[PutFrame file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.GetFrame' then
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[GetFrame file] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
 			if selectedNode.Output[comp.CurrentTime] then
@@ -125,12 +116,12 @@ function Main()
 			else
 				loadedImage = ''
 			end
-			mediaDirName = dirname(loadedImage)
+			mediaDirName = Dirname(loadedImage)
 			result = '[LifeSaver file] ' .. tostring(loadedImage)
 		else
 			result = '[Invalid Node Type] '
 		end
-		
+
 		print(result .. '\t[Selected Node] '.. selectedNode.Name .. '\t[Node Type] ' .. toolAttrs.TOOLS_RegID)
 		-- Check if the value is nil
 		if mediaDirName then
@@ -139,7 +130,7 @@ function Main()
 				bmd.createdir(mediaDirName)
 				print('[Created Folder] ' .. mediaDirName .. '\n')
 			end
-			
+
 			-- Open the folder
 			if bmd.fileexists(mediaDirName) then
 				OpenDirectory(mediaDirName)
@@ -152,14 +143,9 @@ function Main()
 		print('[Open Containing Folder] No media node was selected. Please select a node in the Flow view and run this script again.')
 		return
 	end
-	
-	-- Unlock the comp flow area
-	-- comp:Unlock()
 end
-
 
 -- Run the main function
 Main()
-
 print('[Done]')
 

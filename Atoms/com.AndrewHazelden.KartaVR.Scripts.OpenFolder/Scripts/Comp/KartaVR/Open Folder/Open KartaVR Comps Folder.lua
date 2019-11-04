@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Comps Folder menu item v4.1 2019-10-22
+Open KartaVR Comps Folder menu item - v4.1 2019-11-04
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
