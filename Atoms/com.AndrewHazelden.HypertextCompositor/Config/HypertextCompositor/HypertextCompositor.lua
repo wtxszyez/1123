@@ -170,7 +170,7 @@ emoticonsDir = app:MapPath('Reactor:/System/UI/Emoticons/')
 -- Added image loading support for local images like <img src="Reactor:/Deploy/Docs/ReactorDocs/Images/atomizer-welcome.png">
 function URLParse(str, filePath)
 	local path, basename = nil, nil
-	
+
 	local htmlstr = ''
 	htmlstr = string.gsub(str, '[Ee]moticons:/', emoticonsDir)
 	htmlstr = string.gsub(htmlstr, "[Rr]eactor:/", reactorDir)
@@ -185,7 +185,7 @@ function URLParse(str, filePath)
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
-			
+
 			if not path then
 				path = comp:MapPath('Comp:/')
 				print('[Empty Path Match] Falling back to Comp:MapPath("Comp:/")')
@@ -198,7 +198,7 @@ function URLParse(str, filePath)
 		-- Fusion Standalone should use the base filepath for the htm document
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", comp:MapPath('Comp:/'))
-		
+
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
@@ -236,7 +236,7 @@ function LoadHTML(filepath)
 			return ''
 		end
 	end
-	
+
 	return ''
 end
 
@@ -244,7 +244,7 @@ end
 -- Show a preview of the URL address when you "Shift + Click" a link
 function DisplayHoverToolTip(x,y, url)
 	local width,height = 900,50
-	
+
 	hoverwin = disp:AddWindow({
 		ID = 'HoverToolTipWin',
 		TargetID = "HoverToolTipWin",
@@ -359,10 +359,10 @@ function DisplayHTML(webpage)
 
 	-- Add your GUI element based event functions here:
 	local itm = win:GetItems()
-	
+
 	-- Track if the shift key is currently held down
 	shiftKeyPressed = false
-	
+
 	-- The shift key was held down
 	function win.On.htmlWin.KeyPress(ev)
 		if ev.Key == 0x1000020 then
@@ -376,7 +376,7 @@ function DisplayHTML(webpage)
 			shiftKeyPressed = false
 		end
 	end
-	
+
 	-- Reload the HTML contents of the webpage
 	function RefreshHTML()
 		print('[Hypertext Compositor] ', webpage)
@@ -395,7 +395,7 @@ function DisplayHTML(webpage)
 	function win.On.RefreshButton.Clicked(ev)
 		RefreshHTML()
 	end
-	
+
 	-- Edit Button
 	function win.On.EditButton.Clicked(ev)
 		disp:ExitLoop()
@@ -730,7 +730,7 @@ function DisplayHTML(webpage)
 				-- Re-enable the file browser dialog
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
 
-				-- Loop 
+				-- Loop
 				previewLoader:SetAttrs({TOOLBT_Clip_Loop = true})
 
 				-- Hold on missing frames
@@ -906,7 +906,7 @@ function AnimateCursor(animatedWin, moveSteps, delay, srcx, srcy, targetx, targe
 		-- Update the virtual mouse move destination
 		local deltax = srcx - targetx
 		local deltay = srcy - targety
-	
+
 		local movex = (srcx - (deltax * (j / moveSteps)))
 		local movey = (srcy - (deltay * (j / moveSteps)))
 
@@ -1193,9 +1193,15 @@ if not comp then
 	comp = fusion.CurrentComp
 end
 
+-- Debug print comp filename
+if dragDropCompFile then
+	print('\n[Drag and Drop] ', dragDropCompFile)
+end
+
 sourceComp = app:MapPath(comp:GetAttrs().COMPS_FileName)
-print('\n[Drag and Drop] ', dragDropCompFile)
-print('\n[Source Comp] ', sourceComp)
+if sourceComp then
+	print('\n[Source Comp] ', sourceComp)
+end
 
 -- Cursor icon
 cursorImg = comp:MapPath('Config:/HypertextCompositor/icons/sbs-cursor.png')
@@ -1211,7 +1217,7 @@ if dragDropCompFile or sourceComp then
 	-- Look for a drag & dropped .htm file or a sidecar html file
 	htmlFile = dragDropCompFile or string.gsub(sourceComp, '%.comp$', '.htm')
 	if bmd.fileexists(htmlFile) then
-		-- Create an Hypertext Compositor window 
+		-- Create an Hypertext Compositor window
 		DisplayHTML(htmlFile)
 	end
 end

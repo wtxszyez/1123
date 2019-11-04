@@ -210,7 +210,7 @@ function GetPreferenceData(pref, defaultValue, status)
 		newPreference = defaultValue
 		-- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
-		
+
 		if status == 1 or status == true then
 			if newPreference == nil then
 				print('[Creating ' .. pref .. ' Preference Data] ' .. 'nil')
@@ -423,7 +423,7 @@ function URLParse(str, filePath)
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
-			
+
 			if not path then
 				path = comp:MapPath('Comp:/')
 				print('[Empty Path Match] Falling back to Comp:MapPath("Comp:/")')
@@ -436,10 +436,10 @@ function URLParse(str, filePath)
 
 	-- What filepath is the relative "Comp:/" Pathmap resolved to in the HTML document?
 	print('[Basepath] ', path, '[FilePath] ', filePath)
-	
+
 	-- Use the base filepath for the htm document
 	htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
-	
+
 	return htmlstr
 end
 
@@ -447,7 +447,7 @@ end
 -- Show a preview of the URL address when you "Shift + Click" a link
 function DisplayHoverToolTip(x,y, url)
 	local width,height = 900,50
-	
+
 	hoverwin = disp:AddWindow({
 		ID = 'HoverToolTipWin',
 		TargetID = "HoverToolTipWin",
@@ -477,7 +477,7 @@ function DisplayHoverToolTip(x,y, url)
 	-- Add your GUI element based event functions here:
 	local itm = hoverwin:GetItems()
 
-	-- Add support for manually closing the window on Windows 7 
+	-- Add support for manually closing the window on Windows 7
 	function hoverwin.On.HoverToolTipWin.Clicked(ev)
 		disp:ExitLoop()
 	end
@@ -584,7 +584,7 @@ function CreateWebpageEditor()
 					Flat = true,
 				},
 			},
-			
+
 			-- Button Bar, Code Editor/Preview Window
 			ui:HGroup{
 
@@ -704,7 +704,7 @@ function CreateWebpageEditor()
 		RefreshHTML()
 	end
 
-	-- The SBS Anchor ComboBox was selected 
+	-- The SBS Anchor ComboBox was selected
 	function win.On.AnchorCombo.CurrentIndexChanged(ev)
 		if itm.AnchorCombo.CurrentIndex ~= 0 then
 			-- Try to append the SBS anchors before the close body HTML tag (if one is exists)
@@ -1142,7 +1142,7 @@ function CreateWebpageEditor()
 				-- Re-enable the file browser dialog
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
 
-				-- Loop 
+				-- Loop
 				previewLoader:SetAttrs({TOOLBT_Clip_Loop = true})
 
 				-- Hold on missing frames
@@ -1252,7 +1252,7 @@ function CreateWebpageEditor()
 	-- Create the handler functions for the ui:Buttons from a Lua table
 	function AddButtonHandler(srcTableIcons, srcTableHTML, srcTableName)
 		for k,v in pairs(srcTableIcons) do
-			-- Create the button ID 
+			-- Create the button ID
 			-- Tip: These two variables have to be local in scope so they are stored inside the button handler
 			local btnID = 'IconButton' .. tostring(k)
 
@@ -1269,7 +1269,7 @@ function CreateWebpageEditor()
 			-- Try to append the SBS anchors before the close body HTML tag (if one is exists)
 			if string.match(itm.CodeEntry.PlainText, '</body>') then
 				local buttonString = '\n\t\t' .. buttonCode .. '\n\t</body>'
-				
+
 				itm.CodeEntry.PlainText = string.gsub(itm.CodeEntry.PlainText , '</body>', buttonString)
 			else
 				-- no close body HTML tag exists
@@ -1330,7 +1330,7 @@ function CreateWebpageEditor()
 		<p>Welcome to a quick tutorial presented using a SBS sidecar webpage.</p>
 
 		<h2>Overview</h2>
-		
+
 	</body>
 </html>]]
 	end
