@@ -12,18 +12,20 @@ Overview:
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
 
-This script works with the following types of nodes in the Fusion 9-16.1 and Resolve 15-16.1 Fusion page Nodes view:
+This script works with the following types of nodes in the Fusion 9-16.1+ and Resolve 15-16.1+ Fusion page Nodes view:
 
-- MediaIn
-- Loader
-- Saver
-- LifeSaver
-- PutFrame
-- GetFrame
-- External Matte Saver
 - AlembicMesh3D
-- FBXMesh3D
 - ExporterFBX
+- External Matte Saver (fuse)
+- FBXMesh3D
+- GetFrame (fuse)
+- LifeSaver (fuse)
+- Loader
+- MediaIn
+- Metadata "Filename"
+- NetLoader (fuse)
+- PutFrame (fuse)
+- Saver
 
 --]]--
 
@@ -72,6 +74,7 @@ function Main()
 	local selectedNode = tool
 	if selectedNode then
 		toolAttrs = selectedNode:GetAttrs()
+
 		local result = nil
 		-- Read the file path data from the node
 		if toolAttrs.TOOLS_RegID == 'MediaIn' then
@@ -102,6 +105,14 @@ function Main()
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = Dirname(loadedImage)
 			result = '[ExternalMatteSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = Dirname(loadedImage)
+			result = '[LifeSaver file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.NetLoader' then
+			loadedImage = comp:MapPath('Temp:/NetLoader/')
+			mediaDirName = Dirname(loadedImage)
+			result = '[NetLoader File] ' .. tostring(loadedImage)
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.PutFrame' then
 			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
 			mediaDirName = Dirname(loadedImage)
@@ -119,7 +130,16 @@ function Main()
 			mediaDirName = Dirname(loadedImage)
 			result = '[LifeSaver file] ' .. tostring(loadedImage)
 		else
-			result = '[Invalid Node Type] '
+			-- Check if there is an image Metadata "Filename" entry
+			if selectedNode and selectedNode.Output[comp.CurrentTime] and selectedNode.Output[comp.CurrentTime].Metadata and selectedNode.Output[comp.CurrentTime].Metadata.Filename then
+				-- Fall back for any other node by checking for a Metadata "Filename" entry
+				loadedImage = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+				mediaDirName = Dirname(loadedImage)
+				result = '[Metadata "Filename" file] ' .. tostring(loadedImage)
+			else
+				-- No dice. No filename support
+				result = '[Invalid Node Type] '
+			end
 		end
 
 		print(result .. '\t[Selected Node] '.. selectedNode.Name .. '\t[Node Type] ' .. toolAttrs.TOOLS_RegID)
@@ -148,4 +168,3 @@ end
 -- Run the main function
 Main()
 print('[Done]')
-
