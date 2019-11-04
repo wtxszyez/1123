@@ -1,5 +1,5 @@
 --[[--
-Hypertext Compositor - v1.0.1 2019-05-24
+Hypertext Compositor - v1.1 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -152,7 +152,11 @@ Toggle the display of the Render Manager window:
 
 --]]--
 
-
+-- Check if Fusion's app class exists
+if not app then
+	print("[Error] This script runs inside of Fusion.")
+	return
+end
 
 ------------------------------------------------------------------------
 -- Check the current computer platform
@@ -215,7 +219,7 @@ function GetPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
@@ -245,9 +249,8 @@ end
 -- Example: == TableToCSV('\t\t', { '1', '2', '3'})
 function TableToCSV(indentString, srcTable)
 	local tblString = ''
-
 	table.sort(srcTable)
-	
+
 	for k,v in pairs(srcTable) do
 		tblString = tblString .. indentString .. '"' .. v .. '",\n'
 	end
@@ -264,7 +267,7 @@ function TableToText(srcTable)
 	if srcTable ~= nil then
 		-- Sort the Lua table
 		table.sort(srcTable)
-		
+
 		-- Break the table down in to single line rows
 		tblString = table.concat(srcTable, '\n')
 	else
@@ -307,52 +310,52 @@ end
 function GetScriptDir(fallback)
 	if debug.getinfo(1).source == '???' then
 		-- Fallback absolute filepath
-		return parseFilename(app:MapPath(fallback))
+		return ParseFilename(app:MapPath(fallback))
 	else
 		-- Filepath coming from the Lua script's location on disk
-		return parseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
+		return ParseFilename(app:MapPath(string.sub(debug.getinfo(1).source, 2)))
 	end
 end
 
 
 ------------------------------------------------------------------------------
--- parseFilename() from bmd.scriptlib
+-- ParseFilename() from bmd.scriptlib
 --
 -- this is a great function for ripping a filepath into little bits
 -- returns a table with the following
 --
--- FullPath	: The raw, original path sent to the function
--- Path		: The path, without filename
--- FullName	: The name of the clip w\ extension
--- Name     : The name without extension
+-- FullPath : The raw, original path sent to the function
+-- Path : The path, without filename
+-- FullName : The name of the clip w\ extension
+-- Name : The name without extension
 -- CleanName: The name of the clip, without extension or sequence
--- SNum		: The original sequence string, or "" if no sequence
--- Number 	: The sequence as a numeric value, or nil if no sequence
+-- SNum : The original sequence string, or "" if no sequence
+-- Number : The sequence as a numeric value, or nil if no sequence
 -- Extension: The raw extension of the clip
--- Padding	: Amount of padding in the sequence, or nil if no sequence
--- UNC		: A true or false value indicating whether the path is a UNC path or not
+-- Padding : Amount of padding in the sequence, or nil if no sequence
+-- UNC : A true or false value indicating whether the path is a UNC path or not
 ------------------------------------------------------------------------------
-function parseFilename(filename)
+function ParseFilename(filename)
 	local seq = {}
 	seq.FullPath = filename
-	string.gsub(seq.FullPath, "^(.+[/\\])(.+)", function(path, name) seq.Path = path seq.FullName = name end)
-	string.gsub(seq.FullName, "^(.+)(%..+)$", function(name, ext) seq.Name = name seq.Extension = ext end)
+	string.gsub(seq.FullPath, '^(.+[/\\])(.+)', function(path, name) seq.Path = path seq.FullName = name end)
+	string.gsub(seq.FullName, '^(.+)(%..+)$', function(name, ext) seq.Name = name seq.Extension = ext end)
 
 	if not seq.Name then -- no extension?
 		seq.Name = seq.FullName
 	end
 
-	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	string.gsub(seq.Name, '^(.-)(%d+)$', function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
 
 	if seq.SNum then
 		seq.Number = tonumber(seq.SNum)
 		seq.Padding = string.len(seq.SNum)
 	else
-	   seq.SNum = ""
-	   seq.CleanName = seq.Name
+		seq.SNum = ''
+		seq.CleanName = seq.Name
 	end
 
-	if seq.Extension == nil then seq.Extension = "" end
+	if seq.Extension == nil then seq.Extension = '' end
 	seq.UNC = (string.sub(seq.Path, 1, 2) == [[\\]])
 
 	return seq
@@ -388,7 +391,7 @@ iconsDir = fileTable.Path .. 'icons' .. osSeparator
 -- Added image loading support for local images like <img src="Reactor:/Deploy/Docs/ReactorDocs/Images/atomizer-welcome.png">
 function URLParse(str, filePath)
 	local path, basename = nil, nil
-	
+
 	local htmlstr = ''
 	htmlstr = string.gsub(str, '[Ee]moticons:/', emoticonsDir)
 	htmlstr = string.gsub(htmlstr, "[Rr]eactor:/", reactorDir)
@@ -399,11 +402,11 @@ function URLParse(str, filePath)
 		-- Resolve should use the base filepath for the htm document
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", comp:MapPath('Comp:/'))
-		
+
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
-			
+
 			if not path then
 				path = comp:MapPath('Comp:/')
 				print('[Empty Path Match] Falling back to Comp:MapPath("Comp:/")')
@@ -416,7 +419,7 @@ function URLParse(str, filePath)
 		-- Fusion Standalone should use the base filepath for the htm document
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", comp:MapPath('Comp:/'))
-		
+
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
@@ -507,7 +510,7 @@ function CreateWebpageEditor()
 		-- Capitalize the tooltip text
 		tooltipStr = string.gsub(string.match(filename or 'Formatting Button', '^(.+)_32') or '', '_', ' ')
 		tooltipCapitalizedStr = tooltipStr:gsub([[(%a)([%w_']*)]], TitleCase) .. ' Formatting Button'
-		
+
 		return ui:Button{
 			-- Weight = 0.1,
 			ID = 'IconButton' .. tostring(index),
@@ -533,7 +536,7 @@ function CreateWebpageEditor()
 		Geometry = {10, 100, width, height},
 		Spacing = 0,
 		Margin = 0,
-	
+
 		ui:VGroup{
 			-- Navigation bar
 			ui:HGroup{
@@ -623,7 +626,7 @@ function CreateWebpageEditor()
 								StyleName = 'Regular',
 								PixelSize = 12,
 								MonoSpaced = true,
-								StyleStrategy = {ForceIntegerMetrics = true}, 
+								StyleStrategy = {ForceIntegerMetrics = true},
 							},
 							TabStopWidth = 28,
 							AcceptRichText = false,
@@ -666,10 +669,10 @@ function CreateWebpageEditor()
 
 	-- Add your GUI element based event functions here:
 	local itm = win:GetItems()
-	
+
 	-- Track if the shift key is currently held down
 	shiftKeyPressed = false
-	
+
 	-- The shift key was held down
 	function win.On.htmlWin.KeyPress(ev)
 		if ev.Key == 0x1000020 then
@@ -694,29 +697,29 @@ function CreateWebpageEditor()
 		itm.HTMLPreview.HTML = html
 		print(html)
 	end
-	
+
 	-- New text was typed into the Code Entry view
 	function win.On.CodeEntry.TextChanged(ev)
 		-- Update the HTML View
 		RefreshHTML()
 	end
-	
+
 	-- The SBS Anchor ComboBox was selected 
 	function win.On.AnchorCombo.CurrentIndexChanged(ev)
 		if itm.AnchorCombo.CurrentIndex ~= 0 then
 			-- Try to append the SBS anchors before the close body HTML tag (if one is exists)
 			if string.match(itm.CodeEntry.PlainText, '</body>') then
 				local anchorString = '\n\t\t' .. '<p><a href="' .. itm.AnchorCombo.CurrentText .. '">' .. string.gsub(itm.AnchorCombo.CurrentText, '://', '') .. '</a></p>\n\t</body>'
-				
+
 				itm.CodeEntry.PlainText = string.gsub(itm.CodeEntry.PlainText , '</body>', anchorString)
 			else
 				-- no close body HTML tag exists
 				itm.CodeEntry.PlainText = itm.CodeEntry.PlainText .. '\n' .. '<p><a href="' .. itm.AnchorCombo.CurrentText .. '">' .. string.gsub(itm.AnchorCombo.CurrentText, '://', '') .. '</a></p>\n'
 			end
-			
+
 			-- Update the HTML View
 			RefreshHTML()
-			
+
 			-- Reset the ComboBox back to the first entry:
 			bmd.wait(0.5)
 			itm.AnchorCombo.CurrentIndex = 0
@@ -732,19 +735,19 @@ function CreateWebpageEditor()
 	function OpenWebpage(htmlFile)
 		if bmd.fileexists(htmlFile) then
 			print('[Open File] ', htmlFile)
-		
+
 			-- Push the filepath URL into the Path textfield onscreen
 			itm.NavigationLineEdit.Text = htmlFile
-		
+
 			-- Read the file off disk into a variable
 			local file = io.open(htmlFile, "r")
 			if file then
 				local ret = file:read("*all")
 				file:close()
-			
+
 				-- Push the webpage into the Code Entry textfield
 				itm.CodeEntry.PlainText = ret
-			
+
 				RefreshHTML()
 			else
 				print('[Error Opening Webpage]')
@@ -769,15 +772,15 @@ function CreateWebpageEditor()
 	-- Document Save
 	function win.On.SaveButton.Clicked(ev)
 		local savedFilename = itm.NavigationLineEdit.Text
-		
+
 		-- If no document is open, let the user pick a filename
 		if savedFilename == '' then
 			-- Pre-fill the the file browser dialog with a default folder and filename
 			local suggestedFolder = comp:MapPath('Comp:/')
 			local suggestedFilename = string.gsub(app:MapPath(comp:GetAttrs().COMPS_FileName) or '', '%.comp$', '.htm')
-			
+
 			savedFilename = fu:RequestFile(suggestedFolder, suggestedFilename, { FReqB_Saving = true })
-			
+
 			-- Validate filename has the .htm extension at the end
 			local path, basename = string.match(savedFilename or '', '^(.+[/\\])(.+)')
 			local name, extension = nil, nil
@@ -790,7 +793,7 @@ function CreateWebpageEditor()
 				end
 			end
 		end
-		
+
 		if savedFilename then
 			-- Open up a file pointer for the output HTML file
 			outFile, err = io.open(savedFilename,'w')
@@ -799,17 +802,17 @@ function CreateWebpageEditor()
 				return
 			else
 				print('[Saving Document] ' .. savedFilename)
-				
+
 				--- Write out the .htm document
 				if itm.CodeEntry.PlainText then
 					outFile:write(itm.CodeEntry.PlainText)
 				end
-				
+
 				-- Close the HTML document file pointer
 				outFile:close()
 			end
 		end
-		
+
 		-- Push the newly saved filename back in into the path URL field
 		itm.NavigationLineEdit.Text = tostring(savedFilename or '')
 	end
@@ -819,14 +822,13 @@ function CreateWebpageEditor()
 		if shiftKeyPressed == true then
 			-- The shift key was pressed
 			print('[URL Preview] ', ev.URL)
-			
 			-- Refresh the mouse position
 			local mousex = fu:GetMousePos()[1] - (iconWidth)
 			local mousey = fu:GetMousePos()[2] - (iconWidth)
-	
+
 			-- Show a preview of the URL address when you "Shift + Click" a link
 			DisplayHoverToolTip(mousex,mousey, ev.URL)
-			
+
 			-- Force unset the Shift key pressed flag
 			shiftKeyPressed = false
 		else
@@ -835,7 +837,6 @@ function CreateWebpageEditor()
 				-- Select a node
 				-- Extract the node name
 				node = string.gsub(ev.URL, '^[Ss]elect://', '')
-			
 				-- Select a node in the comp
 				print('[Selecting Node] ', node)
 				comp:SetActiveTool(comp:FindTool(node))
@@ -848,7 +849,7 @@ function CreateWebpageEditor()
 					-- use the selected node
 					print('[Viewing Selected] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -857,7 +858,7 @@ function CreateWebpageEditor()
 					-- Select and view a node in the comp
 					print('[Viewing Node] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -872,7 +873,7 @@ function CreateWebpageEditor()
 					-- use the selected node
 					print('[Viewing Selected on Left Viewer] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -881,7 +882,7 @@ function CreateWebpageEditor()
 					-- Select and view a node in the comp
 					print('[Viewing Node on Left Viewer] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -896,7 +897,7 @@ function CreateWebpageEditor()
 					-- use the selected node
 					print('[Viewing Selected on Right Viewer] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().RightView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -905,7 +906,7 @@ function CreateWebpageEditor()
 					-- Select and view a node in the comp
 					print('[Viewing Node on Right Viewer] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().RightView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -915,15 +916,15 @@ function CreateWebpageEditor()
 				-- View a node
 				-- Extract the node name
 				newName = string.gsub(ev.URL, '^[Re]ename://', '')
-				
+
 				-- Read the current node selection
 				local sel = comp.ActiveTool
 				if sel and newName then
 					oldName = sel.Name
 					print('[Rename Node] "' .. tostring(oldName) .. '" to "' .. tostring(newName) .. '"')
-					
+
 					DisplayGuidedRenameTool(oldName, newName)
-					
+
 					-- Rename the selected node
 					sel:SetAttrs({TOOLS_Name = newName})
 				else
@@ -933,7 +934,6 @@ function CreateWebpageEditor()
 				-- View a node
 				-- Extract the node name
 				node = string.gsub(ev.URL, '^[Re]ender://', '')
-				
 				-- Render node in the comp
 				print('[Rendering Node] ', node)
 				comp:Render({Tool = comp:FindTool(node)})
@@ -956,25 +956,21 @@ function CreateWebpageEditor()
 			elseif string.match(ev.URL, '^[Ss]hell://') then
 				-- Run a shell command from the terminal
 				command = string.gsub(ev.URL, '^[Ss]hell://', '')
-				
 				print('[Shell Command] ', command)
 				print(io.popen(command):read("*all"))
 			elseif string.match(ev.URL, '^[Ee]xecute://') then
 				-- Run a Lua/Python command
 				command = string.gsub(ev.URL, '^[Ee]xecute://', '')
-				
 				print('[Excute Lua/Python Command] ', command)
 				comp:Execute(command)
 			elseif string.match(ev.URL, '^[Dd]o[Aa]ction://') then
 				-- Run an action
 				command = string.gsub(ev.URL, '^[Dd]o[Aa]ction://', '')
-				
 				print('[Do Action] ', command)
 				comp:DoAction(command, {})
 			elseif string.match(ev.URL, '^[Ss]how[Pp]refs://') then
 				-- Show a preference window
 				command = string.gsub(ev.URL, '^[Ss]how[Pp]refs://', '')
-				
 				print('[Show Preference] ', command)
 				app:ShowPrefs(command)
 			elseif string.match(ev.URL, '^[Aa][Bb][Cc][Ii]mport://') then
@@ -1015,10 +1011,8 @@ function CreateWebpageEditor()
 				app:ToggleRenderManager()
 			elseif string.match(ev.URL, '^[Ff]rame[Aa]ll://') then
 				-- Frame a view to All
-				
 				-- Extract the view name
 				view = string.gsub(ev.URL, '^[Ff]rame[Aa]ll://', '')
-				
 				if view == '' or view == 'FlowView' then
 					print('[Frame All] ', view)
 					comp.CurrentFrame.FlowView:FrameAll()
@@ -1028,11 +1022,11 @@ function CreateWebpageEditor()
 					-- comp:GetPreviewList().LeftView
 					-- comp:GetPreviewList().LeftView.GetViewList()
 				elseif view == 'SplineEditor' then
-				-- Todo SplineEditor.ZoomFit()
+					-- Todo SplineEditor.ZoomFit()
 				elseif view == 'Timeline' then
-				-- Todo Timeline.ZoomFit()
+					-- Todo Timeline.ZoomFit()
 				elseif view == 'LUTView' then
-				-- Todo LUTView.ZoomFit()
+					-- Todo LUTView.ZoomFit()
 				end
 			elseif string.match(ev.URL, '^[Pp]lay://') then
 				-- Play the sequence
@@ -1055,114 +1049,105 @@ function CreateWebpageEditor()
 				comp.CurrentTime = tonumber(frame)
 			elseif string.match(ev.URL, '^[Nn]udge[Pp]layhead://') then
 				-- Nudge the playhead
-				
 				-- Extract the nudge direction name
 				nudge = string.gsub(ev.URL, '^[Nn]udge[Pp]layhead://', '')
-				
 				if nudge == 'Left' or nudge == 'left' then
 					-- Jump to the next keyframe
-					
 					-- Read the currently active tool selection
 					tool = comp.ActiveTool
-				
+
 					-- Read the current frame in the timeline
 					currentTime = comp.CurrentTime
 					offsetTime = math.floor((comp:GetPrevKeyTime(comp.CurrentTime-.1, tool) + comp:GetNextKeyTime(comp.CurrentTime-.1, tool))/2)
-				
+
 					-- We are still on the same frame
 					if currentTime == offsetTime then
 						-- Step between real and inbetween keyframes
 						offsetTime = comp:GetPrevKeyTime(comp.CurrentTime-.1, tool)
-					
 						-- [Optionally] Step between each of the inbetween keyframes
 						-- offsetTime = math.floor((comp:GetPrevKeyTime(offsetTime-.1, tool) + comp:GetNextKeyTime(offsetTime-.1, tool))/2)
 					end
-					
+
 					comp.CurrentTime = offsetTime
 					print('[Nudge Playhead Left] ', comp.CurrentTime)
 			elseif nudge == 'Right' or nudge == 'right' then
 					-- Jump to the next keyframe
-					
 					-- Read the currently active tool selection
 					tool = comp.ActiveTool
-				
+
 					-- Read the current frame in the timeline
 					currentTime = comp.CurrentTime
 					offsetTime = math.floor((comp:GetPrevKeyTime(comp.CurrentTime+.1, tool) + comp:GetNextKeyTime(comp.CurrentTime+.1, tool))/2)
-				
+
 					-- We are still on the same frame
 					if currentTime == offsetTime then
 						-- Step between real and inbetween keyframes
 						offsetTime = comp:GetNextKeyTime(comp.CurrentTime+.1, tool)
-					
 						-- [Optionally] Step between each of the inbetween keyframes
 						-- offsetTime = math.floor((comp:GetPrevKeyTime(offsetTime+.1, tool) + comp:GetNextKeyTime(offsetTime+.1, tool))/2)
 					end
-				
+
 					comp.CurrentTime = offsetTime
 					print('[Nudge Playhead Right] ', comp.CurrentTime)
 				end
 			elseif string.match(ev.URL, '^[Ss]ave://') then
 				-- Save the comp
-			
 				print('[Save Comp] ')
 				comp:Save()
 			elseif string.match(ev.URL, '^[Ll]oad://') then
 				-- Load a comp
 				filepath = string.gsub(ev.URL, '^[Ll]oad://', '')
-			
 				print('[Load Comp] ', filepath)
 				fusion:LoadComp(filepath, true, false, false)
 			elseif string.match(ev.URL, '^[Aa]dd[Ss]etting://') then
 				-- Add a macro node
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Aa]dd[Ss]etting://', ''))
 				print('[Adding Macro] ', filepath)
-			
+
 				-- Show the Select Tool window
 				local path, basename, extension = string.match(filepath, '^(.+[/\\])(.+)(%..+)$')
 				if not basename then
 					basename = 'Macro'
 				end
 				DisplayGuidedSelectTool(basename)
-			
+
 				-- Copy/Paste the macro into the foreground comp
 				comp:Paste(bmd.readfile(filepath))
 			elseif string.match(ev.URL, '^[Aa]dd[Tt]ool://') then
 				-- Add a node
 				node = string.gsub(ev.URL, '^[Aa]dd[Tt]ool://', '')
 				print('[Adding Node] ', node)
-			
+
 				-- Show the Select Tool window
 				DisplayGuidedSelectTool(node)
-			
 				comp:AddTool(node, -32768, -32768)
 			elseif string.match(ev.URL, '^[Aa]dd[Mm]edia://') then
 				-- Add a Loader node and footage
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Aa]dd[Mm]edia://', ''))
-			
+
 				print('[Adding Media] ', filepath)
 				-- Disable the file browser dialog
 				AutoClipBrowse = app:GetPrefs('Global.UserInterface.AutoClipBrowse')
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', false)
-			
+
 				-- Show the Select Tool window
 				local nodeName = 'Loader'
 				DisplayGuidedSelectTool(nodeName)
-			
+
 				-- Add a new loader node at the default coordinates in the Flow
 				local previewLoader = comp:AddTool('Loader', -32768, -32768)
-			
+
 				-- Update the loader's clip filename
 				previewLoader.Clip[fu.TIME_UNDEFINED] = filepath
 				-- Re-enable the file browser dialog
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
-			
+
 				-- Loop 
 				previewLoader:SetAttrs({TOOLBT_Clip_Loop = true})
-			
+
 				-- Hold on missing frames
-				previewLoader.MissingFrames = 1 
-			
+				previewLoader.MissingFrames = 1
+
 				-- Enable HiQ mode
 				comp:SetAttrs{COMPB_HiQ = true}
 			elseif string.match(ev.URL, '^[Pp]assthrough[Oo]n://') then
@@ -1192,12 +1177,10 @@ function CreateWebpageEditor()
 			elseif string.match(ev.URL, '^[Rr]un[Ss]cript://') then
 				-- Run a script
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Rr]un[Ss]cript://', ''))
-			
 				print('[Run Script] ', filepath)
 				comp:RunScript(filepath)
 			elseif string.match(ev.URL, '^[Aa]dd[Aa]tom://') then
 				-- Open Reactor
-			
 				print('[Open Reactor] ')
 				comp:RunScript('Reactor:/System/Scripts/Comp/Reactor/Open Reactor....lua')
 			else
@@ -1257,12 +1240,13 @@ function CreateWebpageEditor()
 		{text = 'ViewLeft://'},
 		{text = 'ViewRight://'},
 	}
+
 	for i = 1, table.getn(anchorTable) do
 		if anchorTable[i].text ~= nil then
 			itm.AnchorCombo:AddItem(anchorTable[i].text)
 		end
 	end
-	
+
 
 	------------------------------------------------------------------------
 	-- Create the handler functions for the ui:Buttons from a Lua table
@@ -1271,17 +1255,17 @@ function CreateWebpageEditor()
 			-- Create the button ID 
 			-- Tip: These two variables have to be local in scope so they are stored inside the button handler
 			local btnID = 'IconButton' .. tostring(k)
-			
+
 			-- This is a local variable with the name of the button that was clicked
 			local btnName = srcTableName[k]
-			
+
 			-- This is a local variable with the HTML code that will be written into the Edit window
 			local buttonCode = srcTableHTML[k]
 
 			-- Start adding the handler function
 			win.On[btnID].Clicked = function(ev)
 				print('[' .. btnName .. ' Tag]')
-				
+
 			-- Try to append the SBS anchors before the close body HTML tag (if one is exists)
 			if string.match(itm.CodeEntry.PlainText, '</body>') then
 				local buttonString = '\n\t\t' .. buttonCode .. '\n\t</body>'
@@ -1291,7 +1275,7 @@ function CreateWebpageEditor()
 				-- no close body HTML tag exists
 				itm.CodeEntry.PlainText = itm.CodeEntry.PlainText .. '\n' .. buttonCode
 			end
-			
+
 			end
 			-- End the handler function
 		end
@@ -1312,17 +1296,17 @@ function CreateWebpageEditor()
 		Hotkeys {
 			Target = 'htmlWin',
 			Defaults = true,
-			
+
 			CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 			CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 		},
 	})
 
-	-- Adjust the syntax highlighting colors 
+	-- Adjust the syntax highlighting colors
 	bgcol = {
-		R = 0.125, 
-		G = 0.125, 
-		B = 0.125, 
+		R = 0.125,
+		G = 0.125,
+		B = 0.125,
 		A = 1
 	}
 
@@ -1336,7 +1320,7 @@ function CreateWebpageEditor()
 	else
 		-- This is a new HTML editing session
 		-- Sample HTML Code Block
-	itm.CodeEntry.PlainText = [[
+		itm.CodeEntry.PlainText = [[
 <html>
 	<head>
 	</head>
@@ -1351,10 +1335,10 @@ function CreateWebpageEditor()
 </html>]]
 	end
 
-
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
+
 	app:RemoveConfig('htmlEditor')
 	collectgarbage()
 end
@@ -1363,7 +1347,7 @@ function DisplayVirtualCursor()
 	-- Refresh the mouse position
 	local mousex = fu:GetMousePos()[1] - (iconWidth)
 	local mousey = fu:GetMousePos()[2] - (iconWidth)
-	
+
 	-- Create a new window
 	local width,height = 32,32
 	local cwin = disp:AddWindow({
@@ -1376,10 +1360,10 @@ function DisplayVirtualCursor()
 			Popup = true,
 			WindowStaysOnTopHint = true,
 		},
-	
+
 		ui:VGroup{
 			ID = 'root',
-		
+
 		-- Add a mouse cursor image here
 			ui:Button{
 				ID = 'CursorButton',
@@ -1416,7 +1400,7 @@ function DisplayVirtualCursor()
 	end
 
 	cwin:Show()
-	
+
 	-- Provide the window handle back to the calling function
 	return cwin
 end
@@ -1428,14 +1412,14 @@ function AnimateCursor(animatedWin, moveSteps, delay, srcx, srcy, targetx, targe
 	-- Refresh the mouse position
 	-- local srcx = fu:GetMousePos()[1] - (iconWidth)
 	-- local srcy = fu:GetMousePos()[2] - (iconWidth)
-	
+
 	-- Move the cursor over to the Select Tool window text entry field area
 	-- local targetx = x + (width/2)
 	-- local targety = y + (height - 60)
-	
+
 	print('[Mouse Source] [X]', srcx .. ' [Y] ' .. srcy)
 	print('[Mouse Target] [X]', targetx .. ' [Y] ' .. targety)
-	
+
 	-- Move to the target location in X steps
 	for j = 0,moveSteps,1
 	do
@@ -1446,15 +1430,15 @@ function AnimateCursor(animatedWin, moveSteps, delay, srcx, srcy, targetx, targe
 		-- Update the virtual mouse move destination
 		local deltax = srcx - targetx
 		local deltay = srcy - targety
-	
+
 		local movex = (srcx - (deltax * (j / moveSteps)))
 		local movey = (srcy - (deltay * (j / moveSteps)))
-	
+
 		print('[Mouse Move Delta] [X]' .. movex .. ' [Y] ' ..  movey)
-	
+
 		-- Update the cursor position
 		animatedWin:Move({movex, movey})
-	
+
 		-- Pause for a moment
 		bmd.wait(delay)
 	end
@@ -1476,7 +1460,7 @@ function DisplayGuidedSelectTool(nodeNameStr)
 			-- Add your GUI elements here:
 			ui:TextEdit{
 				Weight = 4.0,
-				ID='ToolListTextEdit', 
+				ID='ToolListTextEdit',
 				Text = [[
 					<html>
 		<style>
@@ -1505,7 +1489,6 @@ function DisplayGuidedSelectTool(nodeNameStr)
 				PlaceholderText = 'Tools List',
 				ReadOnly = true,
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(5),
@@ -1517,7 +1500,6 @@ function DisplayGuidedSelectTool(nodeNameStr)
 				},
 				ui:HGap(5),
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(120),
@@ -1539,7 +1521,7 @@ function DisplayGuidedSelectTool(nodeNameStr)
 
 	-- The window was closed
 	function win.On.GuidedSelectToolWin.Close(ev)
-			disp:ExitLoop()
+		disp:ExitLoop()
 	end
 
 	-- Add your GUI element based event functions here:
@@ -1641,7 +1623,6 @@ function DisplayGuidedRenameTool(srcNameStr, nodeNameStr)
 				},
 				ui:HGap(5),
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(120),
@@ -1663,7 +1644,7 @@ function DisplayGuidedRenameTool(srcNameStr, nodeNameStr)
 
 	-- The window was closed
 	function win.On.DisplayGuidedRenameTool.Close(ev)
-			disp:ExitLoop()
+		disp:ExitLoop()
 	end
 
 	-- Add your GUI element based event functions here:
