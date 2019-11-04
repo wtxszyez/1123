@@ -1,5 +1,5 @@
 --[[--
-Hypertext Compositor Editor v1.0.1 2019-05-24
+Hypertext Compositor Editor v1.1 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 --]]--

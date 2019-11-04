@@ -1,22 +1,23 @@
+--[[--
 ------------------------------------------------------------------------------
--- View KartaVR Cowgrammetry Comp v4 for Fusion - 2018-12-16
--- by Andrew Hazelden
--- www.andrewhazelden.com
--- andrew@andrewhazelden.com
---
--- KartaVR
--- http://www.andrewhazelden.com/blog/downloads/kartavr/
+View KartaVR Cowgrammetry Comp v4.1 2019-10-22
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
+
+KartaVR
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ------------------------------------------------------------------------------
--- Overview:
+Overview:
 
--- This script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a web browser window to and display the HTML formatted 360° video stitching media download webpage.
+This script is a module from the [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will open a web browser window to display the "Cowgrammetry" example composite folder.
 
--- How to use the Script:
+How to use the Script:
 
--- Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Cowgrammetry Comp" menu item.
+Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Cowgrammetry Comp" menu item.
 
 ------------------------------------------------------------------------------
-
+--]]--
 
 -- --------------------------------------------------------
 -- --------------------------------------------------------
@@ -199,12 +200,9 @@ if not fusion then
 	print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 end
 
--- Lock the comp flow area
-comp:Lock()
-
 -- Open a web browser window up with the help documentation
 openBrowser()
-	
+
 -- Play a sound effect
 soundEffect = getPreferenceData('KartaVR.SendMedia.SoundEffect', 1, printStatus)
 if err == true or err == 1 then
@@ -234,10 +232,6 @@ else
 		playDFMWaveAudio(audioFile)
 	end
 end
-
-
--- Unlock the comp flow area
-comp:Unlock()
 
 -- End of the script
 print('[Done]')

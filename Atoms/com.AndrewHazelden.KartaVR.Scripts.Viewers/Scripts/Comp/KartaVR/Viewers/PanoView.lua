@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-PanoView v4.1 - 2019-10-21
+PanoView v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The PanoView script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send your currently selected file loader or saver node media files to an Oculus Rift HMD using an external media viewer / playback tool. This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system. 
+The PanoView script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send your currently selected file loader or saver node media files to an Oculus Rift HMD using an external media viewer / playback tool. This script can be used with Windows, Mac, or Linux versions of Blackmagic Design's Fusion compositing system. 
 
 Note: The PanoView script supports sending any kind of node from the flow view to the your media viewer tool.
 

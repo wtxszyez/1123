@@ -1,17 +1,17 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate UV Pass in PTGui v4.0.1 2019-01-01
+Generate UV Pass in PTGui v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 
 Overview:
 
-The Generate UV Pass in PTGui script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will use Imagemagick and PTGui Pro to create a collection of UV Pass maps that can be used in Fusion to quickly and efficiently warp and stitch multi-camera rig panoramic 360 degree imagery.
+The Generate UV Pass in PTGui script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will use Imagemagick and PTGui Pro to create a collection of UV Pass maps that can be used in Fusion to quickly and efficiently warp and stitch multi-camera rig panoramic 360 degree imagery.
 
 How to use the Script:
 

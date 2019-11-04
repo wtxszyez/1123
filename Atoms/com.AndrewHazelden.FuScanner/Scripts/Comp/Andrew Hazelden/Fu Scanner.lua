@@ -1,4 +1,4 @@
-_VERSION = 'v3.14 2019-10-09'
+_VERSION = 'v3.141 2019-11-02'
 --[[--
 Fu Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -114,7 +114,7 @@ function Main()
 		end
 	end
 	
-	dump(searchResults)
+	-- dump(searchResults)
 
 	-- ------------------------------------------------------
 	-- Search inside the setting files
@@ -129,7 +129,7 @@ function Main()
 	end
 
 	-- List the setting details
-	dump(searchResults)
+	-- dump(searchResults)
 
 	-- ------------------------------------------------------
 	-- Create the GUI

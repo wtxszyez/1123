@@ -1,24 +1,30 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to CloudCompare v4.0.1 - 2019-01-01
+Send Geometry to MeshLab v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
-
-Note: CloudCompare is primarily used to examine meshes and point clouds
+The Send Geometry to MeshLab script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will take a AlembicMesh3D / FBXMesh3D / ExporterFBX node that is selected in the flow and send them to MeshLab via a new MeshLab .mlp project file.
 
 How to use the Script:
 
 Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
-Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" menu item.
+Step 2. Run the Script > KartaVR > Geometry > Send Geometry to MeshLab menu item.
+
+----------------------------------------------------------------------------
+Todos:
+
+Add Fusion loader/saver node based <RasterGroup> support for texture projections
+Add support with a file table for loading in multiple meshes at once
+Add FBXExporter mesh sequence handling. Look at work-arounds for the extra zero digit that gets added by fusion to the output generated mesh filename where "Comp:/torus_chain_0.obj" gets saved out as "Comp:/torus_chain_00.obj"
+----------------------------------------------------------------------------
 
 --]]--
 
@@ -31,11 +37,75 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
+-- Find out if we are running Fusion 7, 8, 9, or 15
 local fu_major_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+-- Add the platform specific folder slash character
+local osSeparator = package.config:sub(1,1)
+
+-- Duplicate a file
+function copyFile(src, dest)
+	host = app:MapPath('Fusion:/')
+	if string.lower(host):match('resolve') then
+		hostOS = 'Resolve'
+		
+		if platform == 'Windows' then
+			command = 'copy /Y "' .. src .. '" "' .. dest .. '" '
+		else
+			-- Mac / Linux
+			command = 'cp "' .. src .. '" "' .. dest .. '" '
+		end
+		
+		print('[Copy File Command] ' .. command)
+		os.execute(command)
+	else
+		hostOS = 'Fusion'
+		
+		-- Perform a file copy using the Fusion 7 "eyeon.scriptlib" or Fusion 8/9 "bmd.scriptlib" libraries
+		eyeon.copyfile(src, dest)
+	end
+end
+
+-- Get the file extension from a filepath
+function getExtension(src)
+	local extension = string.match(src, '(%..+)$')
+	
+	return extension or ''
+end
+
+-- Get the base filename from a filepath
+function getFilename(src)
+	local path, basename = string.match(src, "^(.+[/\\])(.+)")
+	
+	return basename or ''
+end
+
+-- Get the base filename without the file extension or frame number from a filepath
+function getFilenameNoExt(mediaDirName)
+	local path, basename = string.match(mediaDirName, "^(.+[/\\])(.+)")
+	local name, extension = string.match(basename, "^(.+)(%..+)$")
+	local barename, sequence = string.match(name, "^(.-)(%d+)$")
+	
+	return barename or ''
+end
+
+-- Read a binary file to calculate the filesize in bytes
+-- Example: size = getFilesize('/image.png')
+function getFilesize(filename)
+	fp, errMsg = io.open(filename, "rb")
+	if fp == nil then
+		print('[Filesize] Error reading the file: ' .. filename)
+		return 0
+	end
+	
+	local filesize = fp:seek('end')
+	fp:close()
+	
+	return filesize
+end
 
 -- Set a fusion specific preference value
 -- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
@@ -90,10 +160,8 @@ end
 -- Find out the current directory from a file path
 -- Example: print(dirname("/Users/Shared/file.txt"))
 function dirname(mediaDirName)
--- LUA dirname command inspired by Stackoverflow code example:
--- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-	-- Add the platform specific folder slash character
-	osSeparator = package.config:sub(1,1)
+	-- LUA dirname command inspired by Stackoverflow code example:
+	-- http://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
 	
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
@@ -117,7 +185,7 @@ function openDirectory(mediaDirName)
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
-	elseif platform == "Linux" then
+	elseif platform == 'Linux' then
 		-- Running on Linux
 		command = 'nautilus "' .. dir .. '" &'
 		
@@ -221,40 +289,37 @@ function openGeometry(filename, nodeType, status)
 	-- ------------------------------------
 	-- Load the preferences
 	-- ------------------------------------
-	local defaultCloudCompareViewerFile = ''
-	local command = ''
 	
 	if platform == 'Windows' then
-		-- Reactor Install
-		defaultCloudCompareViewerFile = comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.exe')
-		-- defaultCloudCompareViewerFile = comp:MapPath('C:\\Program Files\\CloudCompare\\ccViewer.exe')
+		meshlabFile = comp:MapPath('Reactor:/Deploy/Bin/meshlab//meshlab.exe')
+		-- meshlabFile = 'C:\\Program Files\\VCG\\MeshLab\\meshlab.exe'
 	elseif platform == 'Mac' then
-		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
-		defaultCloudCompareViewerFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.app'), '[/]$', '')
-		-- -- defaultCloudCompareViewerFile = '/Applications/ccViewer.app'
+		-- Take the trailing slash off the end of the final meshlab.app path after the pathmap lookup
+		meshlabFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/meshlab/meshlab.app'), '[/]$', '')
+		-- meshlabFile = '/Applications/meshlab.app'
 	else
-		defaultCloudCompareViewerFile = '/usr/bin/ccViewer'
-		-- defaultCloudCompareViewerFile = 'ccViewer'
+		meshlabFile = '/usr/bin/meshlab'
+		-- meshlabFile = 'meshlab'
 	end
 	
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
 	compPath = dirname(comp:GetAttrs().COMPS_FileName)
 	
-	-- Location of CloudCompare
-	CloudCompareViewerFile = getPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', defaultCloudCompareViewerFile, printStatus)
+	-- Location of MeshLab
+	meshlabFile = getPreferenceData('KartaVR.SendGeometry.MeshlabFile', meshlabFile, printStatus)
 	soundEffect = getPreferenceData('KartaVR.SendGeometry.SoundEffect', 1, printStatus)
 	
-	msg = 'Customize the settings for sending geometry files to CloudCompare. Please close CloudCompare before running this tool.'
+	msg = 'Customize the settings for sending geometry files to MeshLab. Please close MeshLab before running this tool.'
 	
 	-- Sound effect list
 	soundEffectList = {'None', 'On Error Only', 'Steam Train Whistle Sound', 'Trumpet Sound', 'Braam Sound'}
 	
 	d = {}
 	d[1] = {'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 4, Wrap = true, Default = msg}
-	d[2] = {'CloudCompareViewerFile', Name = 'CloudCompare Path', 'PathBrowse', Default = CloudCompareViewerFile}
+	d[2] = {'MeshlabFile', Name = 'MeshLab Path', 'PathBrowse', Default = meshlabFile}
 	d[3] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect, Options = soundEffectList}
 	
-	dialog = comp:AskUser('Send Geometry to CloudCompare', d)
+	dialog = comp:AskUser('Send Geometry to MeshLab', d)
 	if dialog == nil then
 		print('You cancelled the dialog!')
 		
@@ -266,38 +331,87 @@ function openGeometry(filename, nodeType, status)
 		-- Debug - List the output from the AskUser dialog window
 		dump(dialog)
 		
-		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
+		-- Take the trailing slash off the end of the final meshlab.app path after the pathmap lookup
 		if platform == 'Mac' then
-			CloudCompareViewerFile = string.gsub(comp:MapPath(dialog.CloudCompareViewerFile), '[/]$', '')
+			meshlabFile = string.gsub(comp:MapPath(dialog.MeshlabFile), '[/]$', '')
 		else
-			CloudCompareViewerFile = comp:MapPath(dialog.CloudCompareViewerFile)
+			meshlabFile = comp:MapPath(dialog.MeshlabFile)
 		end
 		
-		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', CloudCompareViewerFile, printStatus)
-			
+		setPreferenceData('KartaVR.SendGeometry.MeshlabFile', meshlabFile, printStatus)
+		
 		soundEffect = dialog.SoundEffect
 		setPreferenceData('KartaVR.SendGeometry.SoundEffect', soundEffect, printStatus)
 		
-		print('[CloudCompareViewerFile] ' .. CloudCompareViewerFile)
+		print('[MeshlabFile] ' .. meshlabFile)
 		print('[SoundEffect] ' .. soundEffect)
 	end
 	
-	-- Open the CloudCompare tool
+	
+	-- The system temporary directory path (Example: $TEMP/KartaVR/)
+	outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+	os.execute('mkdir "' .. outputDirectory ..'"')
+	
+	-- Save a copy of the MeshLab .mlp file in the $TEMP/KartaVR/ folder
+	mlpFile = outputDirectory .. nodeType .. '.mlp'
+	print('[MeshLab Project File] ' .. mlpFile)
+	
+	-- Open up the file pointer for the output textfile
+	outFile, err = io.open(mlpFile,'w')
+	if err then
+		print("[Error Opening File for Writing]")
+		return
+	end
+	
+	-- Extract the base filename without the path
+	meshFilename = getFilename(filename)
+	
+	-- Write out the .MLP (MeshLab Project File)
+	outFile:write('<!DOCTYPE MeshLabDocument>\n')
+	outFile:write('<MeshLabProject>\n')
+	outFile:write('  <MeshGroup>\n')
+	outFile:write('    <MLMesh label="' .. meshFilename .. '" filename="' .. filename ..'">\n')
+	outFile:write('      <MLMatrix44>\n')
+	outFile:write('1 0 0 0 \n')
+	outFile:write('0 1 0 0 \n')
+	outFile:write('0 0 1 0 \n')
+	outFile:write('0 0 0 1 \n')
+	outFile:write('</MLMatrix44>\n')
+	outFile:write('    </MLMesh>\n')
+	outFile:write('  </MeshGroup>\n')
+	outFile:write('  <RasterGroup/>\n')
+
+	-- Start of MeshLab raster based texture projection support
+	--	outFile:write('  <RasterGroup>\n')
+	--	outFile:write('  </RasterGroup>\n')
+	--	outFile:write('    <MLRaster label="dfm_preview.jpg">
+	--	outFile:write('      <VCGCamera LensDistortion="0 0" FocalMm="119.362" PixelSizeMm="0.0369161 0.0369161" ViewportPx="3066 1164" CenterPx="1533 582" TranslationVector="0 0 -11.2263 1" CameraType="0" RotationMatrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 "/>
+	--	outFile:write('    <Plane semantic="1" fileName="/dfm_preview.jpg"/>
+	--	outFile:write('    </MLRaster>
+	-- End of MeshLab raster based texture projection support
+	
+	outFile:write('</MeshLabProject>\n')
+	outFile:write('\n')
+	
+	-- Close the file pointer on our input and output textfiles
+	outFile:close()
+	
+	-- Open the MeshLab tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		command = 'start "" "' .. CloudCompareViewerFile .. '" ' .. '"' .. filename .. '" '
+		command = 'start "" "' .. meshlabFile .. '" "' .. mlpFile .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a "' .. CloudCompareViewerFile .. '" --args ' .. '"' .. filename .. '" '
+		command = 'open -a "' .. meshlabFile .. '" --args "' .. mlpFile .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = '"' .. CloudCompareViewerFile .. '" ' .. '"' .. filename .. '" '
+		command = '"' .. meshlabFile .. '"" "' .. mlpFile .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else
@@ -306,20 +420,19 @@ function openGeometry(filename, nodeType, status)
 	end
 end
 
-print ('Send Geometry to CloudCompare is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print('Send Geometry to MeshLab is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then
 	print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 end
 
-
 -- Lock the comp flow area
 comp:Lock()
 
 local mediaDirName = nil
 
--- List the selected Node in Fusion 
+-- List the selected Node in Fusion
 selectedNode = comp.ActiveTool
 
 if selectedNode then
@@ -352,9 +465,8 @@ if selectedNode then
 			err = true
 		end
 	end
-
 else
-	print('[Send Geometry to CloudCompare] No geometry node was selected. Please select and activate a FBXMesh3D, ExporterFBX or AlembicMesh3D node in the flow view.')
+	print('[Send Geometry to MeshLab] No geometry node was selected. Please select and activate a FBXMesh3D, ExporterFBX, or AlembicMesh3D node in the flow view.')
 	err = true
 end
 

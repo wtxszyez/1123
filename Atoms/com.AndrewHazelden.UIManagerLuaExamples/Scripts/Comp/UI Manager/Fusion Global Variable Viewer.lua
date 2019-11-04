@@ -1,5 +1,5 @@
---[[
-Fusion Global Variable Viewer - v1 2018-12-07
+--[[--
+Fusion Global Variable Viewer - v3 2019-11-04
 by Andrew Hazelden
 Email: <andrew@andrewhazelden.com>
 Web: www.andrewhazelden.com
@@ -9,7 +9,7 @@ Web: www.andrewhazelden.com
 
 This code snippet writes out the value of *all* Fusion internal global variables to disk by saving it to a PathMap file located at "Temp:/FusionGlobals.txt".
 
-This script is compatible with Fusion 9.0.2+ and uses UI Manager for the GUI.
+This script is a Fusion Lua based UI Manager example that works in Fusion v9-16.1+ and Resolve v15-16.1+
 
 # Usage #
 
@@ -26,12 +26,12 @@ If you run this script on Linux and it crashes Fusion the error is likey related
 
 Try disabling this line of code by adding two dashes -- as comment to the start of the line:
 
-Lexer = 'fusion',}, 
+Lexer = 'fusion',
 
 --]]--
 
 print('----------------------------------------------')
-print('Fusion Global Variable Viewer - v1 2018-12-07')
+print('Fusion Global Variable Viewer - v3 2019-11-04')
 print('by Andrew Hazelden')
 print('Email: <andrew@andrewhazelden.com>')
 print('Web: www.andrewhazelden.com')
@@ -47,36 +47,39 @@ win = disp:AddWindow({
 	WindowTitle = 'Fusion Global Variable Viewer',
 	ui:VGroup{
 		ID = "root",
-		
+
 		-- Add your GUI elements here:
 		ui:HGroup{
-		Weight = 1,
-		ui:TextEdit{
-			ID = 'TextEdit',
-			TabStopWidth = 28,
-			Font = ui:Font{
-				Family = 'Droid Sans Mono', 
-				StyleName = 'Regular', 
-				PixelSize = 12, 
-				MonoSpaced = true, 
-				StyleStrategy = {
-					ForceIntegerMetrics = true
-				}, 
-				ReadOnly = true,
-			},
-			LineWrapMode = 'NoWrap',
-			AcceptRichText = false,
+			Weight = 1,
+			ui:TextEdit{
+				ID = 'TextEdit',
+				TabStopWidth = 28,
+				Font = ui:Font{
+					Family = 'Droid Sans Mono',
+					StyleName = 'Regular',
+					PixelSize = 12,
+					MonoSpaced = true,
+					StyleStrategy = {
+						ForceIntegerMetrics = true
+					},
+					ReadOnly = true,
+				},
+				LineWrapMode = 'NoWrap',
+				AcceptRichText = false,
 
-			-- Use the Fusion hybrid lexer module to add syntax highlighting
-			Lexer = 'fusion',
+				-- Use the Fusion hybrid lexer module to add syntax highlighting
+				Lexer = 'fusion',
 			},
 		},
-		
+
 		ui:HGroup{
 			Weight = 0.1,
-			ui:Button{ID = "Refesh", Text = "Refresh Document",},
+			ui:Button{
+				ID = 'Refesh',
+				Text = 'Refresh Document',
+			},
 		},
-		
+
 	},
 })
 
@@ -85,11 +88,11 @@ itm = win:GetItems()
 -- Add your GUI element based event functions here:
 
 -- Track the Fusion save events
-ui:AddNotify("Comp_Save", comp)
-ui:AddNotify("Comp_SaveVersion", comp)
-ui:AddNotify("Comp_SaveAs", comp)
-ui:AddNotify("Comp_SaveCopyAs", comp)
- 
+notify1 = ui:AddNotify('Comp_Save')
+notify2 = ui:AddNotify('Comp_SaveVersion')
+notify3 = ui:AddNotify('Comp_SaveAs')
+notify4 = ui:AddNotify('Comp_SaveCopyAs')
+
 -- The window was closed
 function win.On.EditWin.Close(ev)
 	disp:ExitLoop()
@@ -128,44 +131,44 @@ end
 -- Load the current Fusion composite source contents into the viewer:
 function RefeshDocument()
 	print('Please be patient for about 10 seconds as this script runs. A 5 MB text file will be saved and opened.')
-	
+
 	-- The Fusion "Temp:/Fusion/" PathMap folder is created.
 	local pathFolder = app:MapPath('Temp:/Fusion/')
 	if bmd.direxists(pathFolder) == false then
 		bmd.createdir(pathFolder)
 		print('[Created Temp Folder] ' .. pathFolder)
 	end
-	
+
 	-- File to save to disk
 	globalsExportFile = app:MapPath(pathFolder .. 'FusionGlobals.txt')
-	
+
 	-- Write the Fusion internal global variables to disk
 	print('[Saving file] ' .. tostring(globalsExportFile))
 	bmd.writefile(globalsExportFile, dumptostring(getfenv()):gsub('\t', [[
 	]]))
-	
+
 	-- Read in the active .txt as a file from disk then trim off the final null character from the file
 	print('[Reading file]')
 	rawDocument = io.open(globalsExportFile, 'r'):read('*all')
-	--document = rawDocument:sub(1,-2)
+	-- document = rawDocument:sub(1,-2)
 	document = rawDocument:sub(1,-2):gsub([[\\n]], '\n')
-	
+	document = document:sub(1,-2):gsub([[\n]], '\n')
+	document = document:sub(1,-2):gsub([[\\\\\\\]], '')
+
 	-- Update the TextEdit field contents
 	itm.TextEdit.PlainText = document
-	
+
 	-- Update the window title caption with the filename
 	-- itm.EditWin.WindowTitle = 'Fusion Global Variable Viewer: ' .. globalsExportFile
-	
-	-- Open up a desktop folder browsing window to this location
-	print('[Show Temp Folder] ' .. pathFolder)
-	bmd.openfileexternal("Open", pathFolder)
-end
 
+	-- Open up a desktop folder browsing window to this location
+	print('[Show Temp Folder] ', pathFolder)
+	bmd.openfileexternal('Open', pathFolder)
+end
 
 RefeshDocument()
 
-win:Show()
-bgcol = { R=0.125, G=0.125, B=0.125, A=1 }
+bgcol = {R = 0.125, G = 0.125, B = 0.125, A = 1}
 itm.TextEdit.BackgroundColor = bgcol
 itm.TextEdit:SetPaletteColor('All', 'Base', bgcol)
 
@@ -178,11 +181,16 @@ app:AddConfig('EditWin', {
 	Hotkeys {
 		Target = 'EditWin',
 		Defaults = true,
-		
+
 		CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 		CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 	},
 })
 
+win:Show()
 disp:RunLoop()
 win:Hide()
+
+
+app:RemoveConfig('EditWin')
+collectgarbage()

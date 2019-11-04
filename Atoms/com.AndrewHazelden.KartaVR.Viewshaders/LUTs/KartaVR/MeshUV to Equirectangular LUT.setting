@@ -79,7 +79,7 @@
 				}
 			},
 			ViewInfo = GroupInfo {
-				Pos = { -161.274, 677.577 },
+				Pos = { 431, 203 },
 				Flags = {
 					AllowPan = false,
 					AutoSnap = true,
@@ -93,9 +93,10 @@
 			},
 			Tools = ordered() {
 				UVRenderer3D = Renderer3D {
+					CtrlWShown = false,
 					NameSet = true,
 					CustomData = {
-						ToolVersion = 1,
+						ToolVersion = 1
 					},
 					Inputs = {
 						Width = Input {
@@ -186,8 +187,18 @@
 						ToolVersion = 1
 					},
 					Inputs = {
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
 						["RendererOpenGLUV.LightingEnabled"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
+						["RendererOpenGL.AntiAliasing.Channels.RGBA.HighQuality.Enable"] = Input { Value = 1, },
 						["RendererOpenGLUV.ShadowsEnabled"] = Input { Value = 1, },
+						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
+						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5",
@@ -207,26 +218,11 @@
 						},
 						CameraSelector = Input { Value = FuID { "EquirectCamera3DFront" }, },
 						RendererType = Input { Value = FuID { "RendererOpenGL" }, },
-						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Channels.RGBA.HighQuality.Enable"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
-						["RendererOpenGL.AntiAliasing.Presets.Color.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
-						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
-						["RendererOpenGL.AntiAliasing.Presets.Color.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
-						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateX"] = Input { Value = 3, },
-						["RendererOpenGL.AntiAliasing.Presets.Aux.Supersampling.HighQuality.RateY"] = Input { Value = 3, },
-						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.LowQuality.SampleCount"] = Input { Value = 2, },
-						["RendererOpenGL.AntiAliasing.Presets.Aux.Multisampling.HighQuality.SampleCount"] = Input { Value = 3, },
 						["RendererOpenGL.AccumQuality"] = Input { Value = 10, },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 280.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				CameraViewInput = Merge3D {
 					CtrlWShown = false,
@@ -249,16 +245,16 @@
 							SourceOp = "Instance_EquirectCamera3DLeft",
 							Source = "Output",
 						},
-						SceneInput4 = Input {
-							SourceOp = "Instance_EquirectCamera3DBack",
+						SceneInput6 = Input {
+							SourceOp = "Instance_EquirectCamera3DTop",
 							Source = "Output",
 						},
 						SceneInput7 = Input {
 							SourceOp = "Instance_EquirectCamera3DBottom",
 							Source = "Output",
 						},
-						SceneInput6 = Input {
-							SourceOp = "Instance_EquirectCamera3DTop",
+						SceneInput4 = Input {
+							SourceOp = "Instance_EquirectCamera3DBack",
 							Source = "Output",
 						},
 					},
@@ -282,13 +278,12 @@
 					ViewInfo = OperatorInfo { Pos = { -385, 16.5 } },
 				},
 				Mesh3DLoader = SurfaceFBXMesh {
-					CtrlWShown = false,
 					NameSet = true,
 					Inputs = {
+						["Transform3DOp.Rotate.Y"] = Input { Value = -90, },
 						["Transform3DOp.Scale.X"] = Input { Value = 1000, },
 						["Transform3DOp.Scale.Y"] = Input { Value = 1000, },
 						["Transform3DOp.Scale.Z"] = Input { Value = 1000, },
-						ImportFile = Input { Value = "", },
 						TransformToWorld = Input { Value = 0, },
 						["ObjectID.ObjectID"] = Input { Value = 1, },
 						MaterialInput = Input {
@@ -321,11 +316,10 @@
 					},
 					SourceOp = "EquirectRenderer3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
-						["RendererOpenGL.AuxSS.Nest"] = Input { },
-						["RendererOpenGL.ColorSS"] = Input { },
-						["RendererOpenGL.Supersampling"] = Input { },
-						EffectMask = Input { },
+						["RendererOpenGL.Internal"] = Input { },
+						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5"
@@ -346,23 +340,33 @@
 						},
 						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DRight" }, },
 						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
 						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
 						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
 						["RendererOpenGL.AccumulationEffects"] = Input { },
 						["RendererOpenGL.Lighting"] = Input { },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
-						["RendererOpenGL.Internal"] = Input { },
+						EffectMask = Input { }
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 313.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				Instance_EquirectRenderer3DBack = Renderer3D {
 					CtrlWShown = false,
@@ -372,11 +376,10 @@
 					},
 					SourceOp = "EquirectRenderer3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
-						["RendererOpenGL.AuxSS.Nest"] = Input { },
-						["RendererOpenGL.ColorSS"] = Input { },
-						["RendererOpenGL.Supersampling"] = Input { },
-						EffectMask = Input { },
+						["RendererOpenGL.Internal"] = Input { },
+						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5"
@@ -397,23 +400,33 @@
 						},
 						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DBack" }, },
 						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
 						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
 						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
 						["RendererOpenGL.AccumulationEffects"] = Input { },
 						["RendererOpenGL.Lighting"] = Input { },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
-						["RendererOpenGL.Internal"] = Input { },
+						EffectMask = Input { }
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 346.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				Instance_EquirectRenderer3DLeft = Renderer3D {
 					CtrlWShown = false,
@@ -423,11 +436,10 @@
 					},
 					SourceOp = "EquirectRenderer3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
-						["RendererOpenGL.AuxSS.Nest"] = Input { },
-						["RendererOpenGL.ColorSS"] = Input { },
-						["RendererOpenGL.Supersampling"] = Input { },
-						EffectMask = Input { },
+						["RendererOpenGL.Internal"] = Input { },
+						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5"
@@ -448,23 +460,33 @@
 						},
 						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DLeft" }, },
 						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
 						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
 						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
 						["RendererOpenGL.AccumulationEffects"] = Input { },
 						["RendererOpenGL.Lighting"] = Input { },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
-						["RendererOpenGL.Internal"] = Input { },
+						EffectMask = Input { }
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 379.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				Instance_EquirectRenderer3DTop = Renderer3D {
 					CtrlWShown = false,
@@ -474,11 +496,10 @@
 					},
 					SourceOp = "EquirectRenderer3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
-						["RendererOpenGL.AuxSS.Nest"] = Input { },
-						["RendererOpenGL.ColorSS"] = Input { },
-						["RendererOpenGL.Supersampling"] = Input { },
-						EffectMask = Input { },
+						["RendererOpenGL.Internal"] = Input { },
+						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5"
@@ -499,23 +520,33 @@
 						},
 						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DTop" }, },
 						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
 						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
 						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
 						["RendererOpenGL.AccumulationEffects"] = Input { },
 						["RendererOpenGL.Lighting"] = Input { },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
-						["RendererOpenGL.Internal"] = Input { },
+						EffectMask = Input { }
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 412.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				Instance_EquirectRenderer3DBottom = Renderer3D {
 					CtrlWShown = false,
@@ -525,11 +556,10 @@
 					},
 					SourceOp = "EquirectRenderer3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
-						["RendererOpenGL.AuxSS.Nest"] = Input { },
-						["RendererOpenGL.ColorSS"] = Input { },
-						["RendererOpenGL.Supersampling"] = Input { },
-						EffectMask = Input { },
+						["RendererOpenGL.Internal"] = Input { },
+						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
+						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
 						Width = Input {
 							Value = 1536,
 							Expression = "UVRenderer3D.Height*0.5"
@@ -550,30 +580,39 @@
 						},
 						CameraSelector = Input { Value = FuID { "Instance_EquirectCamera3DBottom" }, },
 						Reporting = Input { },
+						StartEndRenderScripts = Input { },
+						["RendererSoftware.Nest"] = Input { },
 						["RendererSoftware.Channels.Nest"] = Input { Value = 1, },
+						["RendererSoftware.Channels.RGBA"] = Input { },
+						["RendererSoftware.Channels.Z"] = Input { },
+						["RendererSoftware.Channels.Coverage"] = Input { },
+						["RendererSoftware.Channels.BgColor"] = Input { },
+						["RendererSoftware.Channels.Normal"] = Input { },
+						["RendererSoftware.Channels.TexCoord0"] = Input { },
+						["RendererSoftware.Channels.ObjectID"] = Input { },
+						["RendererSoftware.Channels.MaterialID"] = Input { },
+						["RendererSoftware.Channels.WorldCoord"] = Input { },
+						["RendererSoftware.Channels.Vector"] = Input { },
+						["RendererSoftware.Channels.BackVector"] = Input { },
 						["RendererSoftware.Lighting"] = Input { },
+						["RendererSoftware.LightingEnabled"] = Input { },
+						["RendererSoftware.ShadowsEnabled"] = Input { },
 						["RendererOpenGL.Channels.Nest"] = Input { Value = 1, },
-						["RendererOpenGL.AntiAliasing.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Channels.Nest"] = Input { },
-						["RendererOpenGL.AntiAliasing.Presets.Nest"] = Input { },
+						["RendererOpenGL.Supersampling"] = Input { },
+						["RendererOpenGL.ColorSS"] = Input { },
+						["RendererOpenGL.AuxSS.Nest"] = Input { },
 						["RendererOpenGL.AccumulationEffects"] = Input { },
 						["RendererOpenGL.Lighting"] = Input { },
 						["RendererOpenGL.Texturing"] = Input { Value = 1, },
-						["RendererOpenGL.Internal"] = Input { },
+						EffectMask = Input { }
 					},
 					ViewInfo = OperatorInfo { Pos = { 0, 445.5 } },
-					SubInputsData = {
-						RendererOpenGL = {
-							Version = 1
-						}
-					}
 				},
 				Instance_EquirectCamera3DRight = Camera3D {
 					CtrlWShown = false,
 					NameSet = true,
 					SourceOp = "EquirectCamera3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
 						SceneInput = Input { },
 						["Transform3DOp.Translation"] = Input { },
 						["Transform3DOp.Rotation"] = Input { },
@@ -601,6 +640,7 @@
 						["MtlStdInputs.Specular.Nest"] = Input { },
 						["MtlStdInputs.Transmittance.Nest"] = Input { },
 						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
 					},
 					ViewInfo = OperatorInfo { Pos = { -385, 49.5 } },
 				},
@@ -609,7 +649,6 @@
 					NameSet = true,
 					SourceOp = "EquirectCamera3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
 						SceneInput = Input { },
 						["Transform3DOp.Translation"] = Input { },
 						["Transform3DOp.Rotation"] = Input { },
@@ -637,6 +676,7 @@
 						["MtlStdInputs.Specular.Nest"] = Input { },
 						["MtlStdInputs.Transmittance.Nest"] = Input { },
 						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
 					},
 					ViewInfo = OperatorInfo { Pos = { -385, 82.5 } },
 				},
@@ -645,7 +685,6 @@
 					NameSet = true,
 					SourceOp = "EquirectCamera3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
 						SceneInput = Input { },
 						["Transform3DOp.Translation"] = Input { },
 						["Transform3DOp.Rotation"] = Input { },
@@ -673,6 +712,7 @@
 						["MtlStdInputs.Specular.Nest"] = Input { },
 						["MtlStdInputs.Transmittance.Nest"] = Input { },
 						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
 					},
 					ViewInfo = OperatorInfo { Pos = { -385, 115.5 } },
 				},
@@ -681,7 +721,6 @@
 					NameSet = true,
 					SourceOp = "EquirectCamera3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
 						SceneInput = Input { },
 						["Transform3DOp.Translation"] = Input { },
 						["Transform3DOp.Rotation"] = Input { },
@@ -706,6 +745,7 @@
 						["MtlStdInputs.Specular.Nest"] = Input { },
 						["MtlStdInputs.Transmittance.Nest"] = Input { },
 						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
 					},
 					ViewInfo = OperatorInfo { Pos = { -385, 148.5 } },
 				},
@@ -714,7 +754,6 @@
 					NameSet = true,
 					SourceOp = "EquirectCamera3DFront",
 					Inputs = {
-						StartEndRenderScripts = Input { },
 						SceneInput = Input { },
 						["Transform3DOp.Translation"] = Input { },
 						["Transform3DOp.Rotation"] = Input { },
@@ -742,6 +781,7 @@
 						["MtlStdInputs.Specular.Nest"] = Input { },
 						["MtlStdInputs.Transmittance.Nest"] = Input { },
 						["MtlStdInputs.MaterialIDNest"] = Input { },
+						StartEndRenderScripts = Input { },
 					},
 					ViewInfo = OperatorInfo { Pos = { -385, 181.5 } },
 				},

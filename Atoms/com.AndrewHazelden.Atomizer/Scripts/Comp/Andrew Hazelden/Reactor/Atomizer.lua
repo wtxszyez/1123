@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.14 - October 17, 2019]]
+_VERSION = [[Version 3.141 - November 2, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -11,7 +11,7 @@ Welcome to Atomizer: The Atom Package Editor.
 Atomizer is an editing tool that simplifies the process of creating a Reactor "Atom" package:
 https://www.steakunderwater.com/wesuckless/viewtopic.php?p=13229#p13229
 
-This script requires Fusion 9.0.2+ or Resolve 15+.
+This script requires Fusion v9.0.2-16.1+ or Resolve v15-16.1+.
 
 
 ## Installation ##
@@ -49,9 +49,15 @@ From the Fusion Console tab:
 
 comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})
 
-From the terminal with FuScript for Fusion:
+From the terminal with FuScript for Fusion 9:
 
 '/Applications/Blackmagic Fusion 9/Fusion.app/Contents/MacOS/fuscript' -l lua -x 'fusion = bmd.scriptapp("Fusion", "localhost");if fusion ~= nil then fu = fusion;app = fu;composition = fu.CurrentComp;comp = composition;SetActiveComp(comp) else print("[Error] Please open up the Fusion GUI before running this tool.") end comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})'
+
+
+From the terminal with FuScript for Fusion 16:
+
+'/Applications/Blackmagic Fusion 16/Fusion.app/Contents/MacOS/fuscript' -l lua -x 'fusion = bmd.scriptapp("Fusion", "localhost");if fusion ~= nil then fu = fusion;app = fu;composition = fu.CurrentComp;comp = composition;SetActiveComp(comp) else print("[Error] Please open up the Fusion GUI before running this tool.") end comp:RunScript(fusion:MapPath("Reactor:/System/UI/Atomizer.lua"), {atomFile = "Reactor:/Atoms/Reactor/com.AndrewHazelden.Atomizer.atom"})'
+
 
 From the terminal with FuScript for Resolve:
 
@@ -167,9 +173,10 @@ or
 - Added a "Comps/VR" category.
 - Reactor.lua now supports the same clicklable "http://"" and "file://"" centric atom desription hyperlinks like: <a href="file://Reactor:/Deploy/Config/">Reactor:/Deploy/Config/</a>
 
-### 3.141 2019-10-17 ##
+### 3.141 2019-11-02 ##
 
 - Added a "Tools/Deep Pixel" Category
+- Added support for Resolve/Fusion v16.1.1
 
 ## Todos ##
 
@@ -192,40 +199,12 @@ or
 --]]--
 
 ------------------------------------------------------------------------
--- Minimum version of Fusion required to run Reactor
-local reactorMinVersion = 9.02
-
-------------------------------------------------------------------------
--- Fusion Product Webpage
-local fusionDownloadURL = 'https://www.blackmagicdesign.com/products/fusion/'
--- local fusionDownloadURL = 'https://www.blackmagicdesign.com/products/davinciresolve/'
+-- Find out the current operating system platform. The platform variable should be set to either 'Windows', 'Mac', or 'Linux'.
+platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
 ------------------------------------------------------------------------
 -- Add the platform specific folder slash character
 osSeparator = package.config:sub(1,1)
-
-
-------------------------------------------------------------------------
--- Wrong version of Fusion detected
-function VersionError(ver, minVer, os)
-	local msg = 'Detected Fusion ' .. ver .. ' running on ' .. os .. '.\n\nReactor requires Fusion ' .. minVer .. ' or higher. It also works in Resolve Studio 15+!\n\nPlease update your copy of Fusion.\n'
-	comp:Print('[Reactor Installer Error] ' .. msg)
-
-	-- Show a warning message in an AskUser dialog
-	dlg = {
-		{'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 8, Wrap = true, Default = msg},
-	}
-	dialog = comp:AskUser('Reactor Installer Error', dlg)
-
-	-- Open the Blackmagic Fusion Webpage using your OS native http URL handler
-	OpenURL("Blackmagic Fusion Webpage", fusionDownloadURL)
-end
-
-------------------------------------------------------------------------
--- Correct version of Fusion detected
-function VersionOK(ver, os)
-	comp:Print('[Reactor Installer] Detected Fusion ' .. ver .. ' running on ' .. os .. '.\n\n')
-end
 
 ------------------------------------------------------------------------
 -- Find out the current directory from a file path
@@ -310,9 +289,10 @@ function OpenURL(siteName, path)
 		print('[Error] There is an invalid Fusion platform detected')
 		return
 	end
-	os.execute(command)
+
 	-- print('[Launch Command] ', command)
 	print('[Opening URL] ' .. path)
+	os.execute(command)
 end
 
 ------------------------------------------------------------------------
@@ -2742,81 +2722,54 @@ function StartupWin()
 end
 
 function Main()
-	-- Note: fuVersion is a number like "9.02" or higher
-	local fuVersion = tonumber(eyeon._VERSION)
+	-- Load UI Manager
+	ui = app.UIManager
+	disp = bmd.UIDispatcher(ui)
 
-	-- Fusion legacy version debug testing line
-	-- local fuVersion = tonumber(8.21)
+	-- Find the Icons folder
+	-- If the script is run by pasting it directly into the Fusion Console define a fallback path
+	fileTable = GetScriptDir('Reactor:/System/UI/Atomizer.lua')
 
-	-- Find out the current Fusion host platform (Windows/Mac/Linux)
-	if string.find(fusion:MapPath('Fusion:/'), 'Program Files', 1) then
-		platform = 'Windows'
-	elseif string.find(fusion:MapPath('Fusion:/'), 'PROGRA~1', 1) then
-		platform = 'Windows'
-	elseif string.find(fusion:MapPath('Fusion:/'), 'Applications', 1) then
-		platform = 'Mac'
-	else
-		platform = 'Linux'
-	end
+	-- Load the emoticons as standalone PNG image resources
+	emoticonsDir = fileTable.Path .. 'Emoticons' .. osSeparator
+	-- Load the Atomizer script icons as from a single ZIPIO bundled resource
+	iconsDir = fileTable.Path .. 'Images' .. osSeparator .. 'icons.zip' .. osSeparator
 
-	if math.floor(fuVersion) < 9 and math.floor(fuVersion) ~= 0 then
-		-- Fusion 7 or 8 was detected
-		VersionError(fuVersion, reactorMinVersion, platform)
-	elseif fuVersion < reactorMinVersion and math.floor(fuVersion) ~= 0 then
-		-- Fusion 9.00 or 9.01 was detected
-		VersionError(fuVersion, reactorMinVersion, platform)
-	else
-		-- Fusion 9.02+ was detected
+	-- Create a list of the standard PNG format ui:Icon/ui:Button Sizes/MinimumSizes in px
+	tiny = 14
+	small = 16
+	toolbarSmall = 24
+	medium = 24
+	large = 32
+	long = 110
+	big = 150
 
-		-- Load UI Manager
-		ui = app.UIManager
-		disp = bmd.UIDispatcher(ui)
+	-- Create Lua tables with X/Y defined Icon Sizes
+	iconsTiny = {tiny, tiny}
+	iconsSmall = {small, small}
+	iconsToolbarSmall = {toolbarSmall, toolbarSmall}
+	iconsMedium = {large,large}
+	iconsMediumLong = {big,large}
+	iconsLarge = {large,large}
+	iconsLong = {long,large}
+	iconsBigLong = {big,large}
 
-		-- Find the Icons folder
-		-- If the script is run by pasting it directly into the Fusion Console define a fallback path
-		fileTable = GetScriptDir('Reactor:/System/UI/Atomizer.lua')
+	comp:Print('\n[Atomizer] ' .. tostring(_VERSION) .. '\n')
+	comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
 
-		-- Load the emoticons as standalone PNG image resources
-		emoticonsDir = fileTable.Path .. 'Emoticons' .. osSeparator
-		-- Load the Atomizer script icons as from a single ZIPIO bundled resource
-		iconsDir = fileTable.Path .. 'Images' .. osSeparator .. 'icons.zip' .. osSeparator
+	-- Was FuScript from the command line used to specify an atom filepath?
+	if atomFile ~= nil then
+		-- Load an atom file into a variable
+		LoadAtom()
 
-		-- Create a list of the standard PNG format ui:Icon/ui:Button Sizes/MinimumSizes in px
-		tiny = 14
-		small = 16
-		toolbarSmall = 24
-		medium = 24
-		large = 32
-		long = 110
-		big = 150
-
-		-- Create Lua tables with X/Y defined Icon Sizes
-		iconsTiny = {tiny, tiny}
-		iconsSmall = {small, small}
-		iconsToolbarSmall = {toolbarSmall, toolbarSmall}
-		iconsMedium = {large,large}
-		iconsMediumLong = {big,large}
-		iconsLarge = {large,large}
-		iconsLong = {long,large}
-		iconsBigLong = {big,large}
-
-		comp:Print('\n[Atomizer] ' .. tostring(_VERSION) .. '\n')
-		comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
-
-		-- Was FuScript from the command line used to specify an atom filepath?
-		if atomFile ~= nil then
-			-- Load an atom file into a variable
-			LoadAtom()
-
-			if atomData ~= nil then
-				-- Show the Atomizer window
-				local atmwin,atmitm = AtomWin()
-			end
+		if atomData ~= nil then
+			-- Show the Atomizer window
+			local atmwin,atmitm = AtomWin()
 		end
-
-		-- Show the Atomizer new session message dialog
-		StartupWin()
 	end
+
+	-- Show the Atomizer new session message dialog
+	StartupWin()
 end
 
 Main()

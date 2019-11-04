@@ -1,17 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Temp Folder v4.0.1 2019-01-01
+Open KartaVR Temp Folder - v4.1 2019-11-04
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
-The Open KartaVR Temp Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the temporary directory that the KartaVR uses to write out viewer snapshots and other files.
+The Open KartaVR Temp Folder script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will open a file browser window to show the temporary directory that the KartaVR uses to write out viewer snapshots and other files.
 
 How to use the Script:
 
@@ -30,9 +29,6 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
-
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
@@ -40,8 +36,8 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 osSeparator = package.config:sub(1,1)
 
 -- Set a fusion specific preference value
--- Example: setPreferenceData('KartaVR.SendMedia.Format', 3, true)
-function setPreferenceData(pref, value, status)
+-- Example: SetPreferenceData('KartaVR.SendMedia.Format', 3, true)
+function SetPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
 	
@@ -57,8 +53,8 @@ end
 
 
 -- Read a fusion specific preference value. If nothing exists set and return a default value
--- Example: getPreferenceData('KartaVR.SendMedia.Format', 3, true)
-function getPreferenceData(pref, defaultValue, status)
+-- Example: GetPreferenceData('KartaVR.SendMedia.Format', 3, true)
+function GetPreferenceData(pref, defaultValue, status)
 	-- local newPreference = comp:GetData(pref)
 	local newPreference = fusion:GetData(pref)
 	if newPreference then
@@ -84,23 +80,22 @@ function getPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
 
 -- Find out the current directory from a file path
--- Example: print(dirname("/Users/Shared/file.txt"))
-function dirname(mediaDirName)
+-- Example: print(Dirname("/Users/Shared/file.txt"))
+function Dirname(mediaDirName)
 	return mediaDirName:match('(.*' .. osSeparator .. ')')
 end
 
 
 -- Open a folder window up using your desktop file browser
-function openDirectory(mediaDirName)
+function OpenDirectory(mediaDirName)
 	command = nil
-	
-	dir = dirname(mediaDirName)
+	dir = Dirname(mediaDirName)
 	
 	if platform == 'Windows' then
 		-- Running on Windows
@@ -131,7 +126,7 @@ end
 -- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
 -- Example: playWaveAudio('trumpet-fanfare.wav', true)
-function playDFMWaveAudio(filename, status)
+function PlayDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
 	end
@@ -204,48 +199,35 @@ function playDFMWaveAudio(filename, status)
 			err = true
 		end
 	end
-	
+
 	if status == true or status == 1 then 
 		print('[Playing a KartaVR based sound file using System] ' .. audioFilePath)
 	end
 end
 
 
--- Lock the comp flow area
-comp:Lock()
-
 -- Find out the Fusion temporary directory path
 tempDirName = comp:MapPath('Temp:\\KartaVR\\')
 
 -- Create the temporary directory
 os.execute('mkdir "' .. tempDirName..'"')
-if fu_major_version >= 8 then
-	-- The script is running on Fusion 8+ so we will use the fileexists command
-	if eyeon.fileexists(tempDirName) then
-		openDirectory(tempDirName)
-	else
-		print('[Temporary Directory Missing] ', tempDirName)
-		err = true
-	end
+-- The script is running on Fusion 8+ so we will use the fileexists command
+if eyeon.fileexists(tempDirName) then
+	OpenDirectory(tempDirName)
 else
-	-- The script is running on Fusion 6/7 so we will use the direxists command
-	if eyeon.direxists(tempDirName) then
-		openDirectory(tempDirName)
-	else
-		print('[Temporary Directory Missing] ', tempDirName)
-		err = true
-	end
+	print('[Temporary Directory Missing] ', tempDirName)
+	err = true
 end
 
 
 -- Play a sound effect
-soundEffect = getPreferenceData('KartaVR.SendMedia.SoundEffect', 1, printStatus)
+soundEffect = GetPreferenceData('KartaVR.SendMedia.SoundEffect', 1, printStatus)
 if err == true or err == 1 then
 	-- An error happend when trying to open the media file
 	if soundEffect >= 1 then
 		-- If the sound Effect mode is 1 or greater (not set to "None" ) than play a braam sound when an error happens
 		local audioFile = 'cinematic-musical-sting-braam.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	end
 else
 	if soundEffect == 0 then
@@ -256,20 +238,17 @@ else
 	elseif soundEffect == 2 then
 		-- Steam Train Whistle Sound
 		local audioFile = 'steam-train-whistle.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	elseif soundEffect == 3 then
 		-- Trumpet Sound
 		local audioFile = 'trumpet-fanfare.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	elseif soundEffect == 4 then
 		-- Braam Sound
 		local audioFile = 'cinematic-musical-sting-braam.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	end
 end
-
--- Unlock the comp flow area
-comp:Unlock()
 
 -- End of the script
 print('[Done]')

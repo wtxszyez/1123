@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Autopano Pro v4.0.1 - 2019-01-01
+Send Media to Autopano Pro v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Media to Autopano Pro hop script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will send all of the selected loader node files to Autopano Pro . 
+The Send Media to Autopano Pro hop script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will send all of the selected loader node files to Autopano Pro . 
 
 How to use the Script:
 

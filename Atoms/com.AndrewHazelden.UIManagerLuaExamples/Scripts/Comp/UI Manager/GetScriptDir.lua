@@ -1,7 +1,7 @@
-_version = 'v1.1 2018-05-15'
+_VERSION = 'v3 2019-11-04'
 --[[--
 ----------------------------------------------------------------------------
-GetScriptDir v1.1 2018-05-15
+GetScriptDir - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 ----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ function parseFilename(filename)
 		seq.Name = seq.FullName
 	end
 
-	string.gsub(seq.Name,     "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
+	string.gsub(seq.Name, "^(.-)(%d+)$", function(name, SNum) seq.CleanName = name seq.SNum = SNum end)
 
 	if seq.SNum then
 		seq.Number = tonumber(seq.SNum)

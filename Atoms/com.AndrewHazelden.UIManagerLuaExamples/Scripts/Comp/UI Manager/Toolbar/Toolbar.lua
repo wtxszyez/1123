@@ -18,12 +18,13 @@ This is a Viewer window toolbar demo that re-creates the look of the Fusion 9 to
 
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
+
 -- local width,height = 1920,26
 local width,height = 1000,26
 local iconsMedium = {16,26}
 local iconsMediumLong = {50,26}
 
-win = disp:AddWindow({
+local win = disp:AddWindow({
 	ID = 'ToolbarWin',
 	TargetID = 'ToolbarWin',
 	WindowTitle = 'Viewer Toolbar',
@@ -34,20 +35,20 @@ win = disp:AddWindow({
 	
 	ui:VGroup{
 		ID = 'root',
-		
+
 		-- Add your GUI elements here:
-		
 		ui:HGroup{
 			ui:HGroup{
 				Weight = 0.7,
-				
 				-- Add three buttons that have an icon resource attached and no border shading
 				ui:Button{
 					ID = 'IconButtonSubV',
 					Text = 'SubV',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					MinimumSize = iconsMediumLong,
 					Checkable = true,
 				},
@@ -56,7 +57,9 @@ win = disp:AddWindow({
 					Text = '100%',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					MinimumSize = iconsMediumLong,
 					Checkable = false,
 				},
@@ -71,7 +74,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonPolyline',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Polyline.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Polyline.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -79,7 +84,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonBSpline',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_BSpline.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_BSpline.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -87,7 +94,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonBitmap',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Bitmap.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Bitmap.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -95,7 +104,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonPaint',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Paint.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Paint.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -103,7 +114,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonWand',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Wand.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Wand.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -111,7 +124,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonRectangle',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Rectangle.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Rectangle.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -119,7 +134,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonCircle',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Circle.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Circle.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = false,
 				},
@@ -127,7 +144,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonABuffer',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_ABuffer.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_ABuffer.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 					Checked = true,
@@ -136,7 +155,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonSplitBuffer',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_SplitBuffer.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_SplitBuffer.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -144,7 +165,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonBBuffer',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_BBuffer.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_BBuffer.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -152,7 +175,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonStereo',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Stereo.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Stereo.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -167,7 +192,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonColour',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Colour.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Colour.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 					Checked = true,
@@ -177,7 +204,9 @@ win = disp:AddWindow({
 					Text = 'LUT',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					MinimumSize = iconsMediumLong,
 					Checkable = true,
 				},
@@ -186,7 +215,9 @@ win = disp:AddWindow({
 					Text = '360°',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					MinimumSize = iconsMediumLong,
 					Checkable = true,
 				},
@@ -195,7 +226,9 @@ win = disp:AddWindow({
 					Text = 'RoI',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					MinimumSize = iconsMediumLong,
 					Checkable = true,
 				},
@@ -210,7 +243,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonLockCold',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_LockCold.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_LockCold.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -218,7 +253,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonControls',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Controls.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Controls.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 					Checked = true,
@@ -227,7 +264,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonChequers',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Chequers.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Chequers.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -242,7 +281,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonOne2One',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_One2One.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_One2One.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -250,7 +291,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonNormalise',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Normalise.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Normalise.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -258,7 +301,9 @@ win = disp:AddWindow({
 					ID = 'IconButtonSliders',
 					Flat = true,
 					IconSize = {16,16},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Sliders.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/PT_Sliders.png',
+					},
 					MinimumSize = iconsMedium,
 					Checkable = true,
 				},
@@ -270,7 +315,9 @@ win = disp:AddWindow({
 					Text = 'Background 1',
 					Flat = true,
 					IconSize = {10,10},
-					Icon = ui:Icon{File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png'},
+					Icon = ui:Icon{
+						File = 'Scripts:/Comp/UI Manager/Toolbar/Icons.zip/TriangleUp.png',
+					},
 					Checkable = false,
 				},
 			},
@@ -339,7 +386,7 @@ end
 
 function win.On.IconButtonABuffer.Clicked(ev)
 	state = itm.IconButtonABuffer.Checked
-	
+
 	itm.IconButtonSplitBuffer.Checked = false
 	itm.IconButtonBBuffer.Checked = false
 	print('[ABuffer][Button State] ', state)
@@ -347,7 +394,7 @@ end
 
 function win.On.IconButtonSplitBuffer.Clicked(ev)
 	state = itm.IconButtonSplitBuffer.Checked
-	
+
 	itm.IconButtonABuffer.Checked = false
 	itm.IconButtonBBuffer.Checked = false
 	print('[SplitBuffer][Button State] ', state)
@@ -355,7 +402,7 @@ end
 
 function win.On.IconButtonBBuffer.Clicked(ev)
 	state = itm.IconButtonBBuffer.Checked
-	
+
 	itm.IconButtonABuffer.Checked = false
 	itm.IconButtonSplitBuffer.Checked = false
 	print('[BBuffer][Button State] ', state)
@@ -437,26 +484,26 @@ function win.On.IconButtonTool.Clicked(ev)
 end
 
 -- The app:AddConfig() command that will capture the "Shift + Control + W" or "Shift + Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
-	app:AddConfig('ToolbarWin', {
-		Target {
-			ID = 'ToolbarWin',
-		},
+app:AddConfig('ToolbarWin', {
+	Target {
+		ID = 'ToolbarWin',
+	},
 
-		Hotkeys {
-			Target = 'ToolbarWin',
-			Defaults = true,
-			
-			SHIFT_CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-			SHIFT_CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-		},
-	})
+	Hotkeys {
+		Target = 'ToolbarWin',
+		Defaults = true,
+		
+		SHIFT_CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+		SHIFT_CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+	},
+})
 
 -- Display the window
 win:Show()
-
--- Keep the window updating until the script is quit
 disp:RunLoop()
 win:Hide()
+
 app:RemoveConfig('ToolbarWin')
 collectgarbage()
+
 print('[Done]')

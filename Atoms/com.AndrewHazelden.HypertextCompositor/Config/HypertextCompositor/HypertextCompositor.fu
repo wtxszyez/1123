@@ -1,5 +1,5 @@
 --[[--
-Hypertext Compositor - v1.0.1 2019-05-24
+Hypertext Compositor - v1.1 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -13,9 +13,11 @@ If you would like to learn how to use the custom "a href" anchor codes, look in 
 
 Hypertext Compositor was inpired by an old-school Fusion term called "SBS" or Side-by-Side that was used to represent an approach where a lua script could be run by Fusion as soon as a .comp file of the same name was opened. The Hypertext Compositor extends this Side-by-Side system to support comp specific documentation.
 
+
 ## Hypertext Compositor Usage ##
 
 If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.
+
 
 ## Images ##
 
@@ -153,38 +155,67 @@ Toggle the display of the Render Manager window:
 --]]--
 
 
-
 {
 	Event {
 		-- Add a new event that intercepts the Action
-		-- Comp_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
-		Action = "Comp_Open",
+		-- Comp_Opened needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
+		-- This event triggers on both "Comp_Open" and "Comp_Recent_Open" actions.
+		Action = "Comp_Opened",
 		Targets = {
 			Fusion = {
 				Execute = [[
 -- Run the Action as the first step
 rets = self:Default(ctx, args)
 
-target:RunScript("$CFG/SBS_HTML_Viewer.lua")
-]]
-			},
-		},
-	},
-	Event {
-		-- Add a new event that intercepts the Action
-		-- Comp_Recent_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
-		Action = "Comp_Recent_Open",
-		Targets = {
-			Fusion = {
-				Execute = [[
--- Run the Action as the first step
-rets = self:Default(ctx, args)
+-- Get the current comp
+comp = app:GetAttrs().FUSIONH_CurrentComp
 
+-- Open the Hypertext Compositor view
 target:RunScript("$CFG/HypertextCompositor.lua")
 ]]
 			},
 		},
 	},
+--	Event {
+--		-- Add a new event that intercepts the Action
+--		-- Comp_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
+--		Action = "Comp_Open",
+--		Targets = {
+--			Fusion = {
+--				Execute = [[
+--	-- Note: We are using "Comp_Opened" instead of "Comp_Open" now
+--	-- Run the Action as the first step
+--	rets = self:Default(ctx, args)
+--
+--	-- Get the current comp
+--	comp = app:GetAttrs().FUSIONH_CurrentComp
+--
+--	-- Open the Hypertext Compositor view
+--	target:RunScript("$CFG/HypertextCompositor.lua")
+--]]
+--			},
+--		},
+--	},
+--	Event {
+--		-- Add a new event that intercepts the Action
+--		-- Comp_Recent_Open needs to use the "Fusion" target since a "Composition" target would not yet exist for the document.
+--		Action = "Comp_Recent_Open",
+--		Targets = {
+--			Fusion = {
+--				Execute = [[
+---- Note: We are using "Comp_Opened" instead of "Comp_Open" now
+---- Run the Action as the first step
+--rets = self:Default(ctx, args)
+--
+---- Get the current comp
+--comp = app:GetAttrs().FUSIONH_CurrentComp
+--
+---- Open the Hypertext Compositor view
+--target:RunScript("$CFG/HypertextCompositor.lua")
+--]]
+--			},
+--		},
+--	},
 	Event {
 		Action = 'Drag_Drop',
 		Targets = {
@@ -224,7 +255,7 @@ if not rets.handled then
 		end
 	end
 end
-				]=]
+]=]
 			},
 		},
 	},

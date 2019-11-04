@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-PTGui Mask Importer v4.0.1 2019-01-01
+PTGui Mask Importer v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The PTGui Mask Importer script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will export and save the .png image format masking data from a PTGui .pts project file.
+The PTGui Mask Importer script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will export and save the .png image format masking data from a PTGui .pts project file.
 
 How to use the Script:
 

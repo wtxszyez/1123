@@ -1,25 +1,33 @@
 --[[--
-Open Containing Folder - 2018-07-13 09.11 PM
-by Andrew Hazelden <andrew@andrewhazelden.com>
+----------------------------------------------------------------------------
+Open Containing Folder - v4.1 2019-11-04
+by Andrew Hazelden
+www.andrewhazelden.com
+andrew@andrewhazelden.com
+
+KartaVR
+https://www.andrewhazelden.com/projects/kartavr/docs/
+----------------------------------------------------------------------------
+Overview:
 
 The "Open Containing Folder" script reads the active Nodes view selection and then opens a desktop Explorer/Finder/Nautilus file browser window to show the containing folder that holds the selected media.
 
-This script works with the following types of nodes in the Resolve 15 Fusion page Nodes view / Fusion 9 Flow area:
+This script works with the following types of nodes in the Fusion 9-16.1+ and Resolve 15-16.1+ Fusion page Nodes view:
 
-- MediaIn
+- AlembicMesh3D
+- ExporterFBX
+- External Matte Saver (fuse)
+- FBXMesh3D
+- GetFrame (fuse)
 - LifeSaver (fuse)
 - Loader
+- MediaIn
+- Metadata "Filename"
 - NetLoader (fuse)
+- PutFrame (fuse)
 - Saver
-- External Matte Saver (fuse)
-- AlembicMesh3D
-- FBXMesh3D
-- ExporterFBX
 
 --]]--
-
--- Find out if we are running in Fusion 9+.
-local fu_version = math.floor(tonumber(eyeon._VERSION))
 
 -- Check the current operating system platform
 platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
@@ -50,16 +58,11 @@ end
 
 -- The main function
 function Main()
-	-- print ('[Open Containing Folder] Running on ' .. platform .. ' with ' .. hostOS .. ' ' .. eyeon._VERSION)
-
 	-- Check if Fusion is running
 	if not fusion then
 		print('[Error] This is a Blackmagic Fusion Lua script. It should be run from within Fusion.')
 		return
 	end
-
-	-- Lock the comp flow area
-	comp:Lock()
 
 	local mediaDirName = nil
 
@@ -67,11 +70,11 @@ function Main()
 	if not tool then
 		tool = comp.ActiveTool
 	end
-	
+
 	local selectedNode = tool
 	if selectedNode then
 		toolAttrs = selectedNode:GetAttrs()
-		
+
 		local result = nil
 		-- Read the file path data from the node
 		if toolAttrs.TOOLS_RegID == 'MediaIn' then
@@ -109,12 +112,37 @@ function Main()
 		elseif toolAttrs.TOOLS_RegID == 'Fuse.NetLoader' then
 			loadedImage = comp:MapPath('Temp:/NetLoader/')
 			mediaDirName = Dirname(loadedImage)
-			result = '[NetLoader Temp Folder] ' .. tostring(loadedImage)
+			result = '[NetLoader File] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.PutFrame' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = Dirname(loadedImage)
+			result = '[PutFrame file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.GetFrame' then
+			loadedImage = comp:MapPath(selectedNode:GetInput('Filename'))
+			mediaDirName = Dirname(loadedImage)
+			result = '[GetFrame file] ' .. tostring(loadedImage)
+		elseif toolAttrs.TOOLS_RegID == 'Fuse.LifeSaver' then
+			if selectedNode.Output[comp.CurrentTime] then
+				loadedImage = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+			else
+				loadedImage = ''
+			end
+			mediaDirName = Dirname(loadedImage)
+			result = '[LifeSaver file] ' .. tostring(loadedImage)
 		else
-			result = '[Invalid Node Type] '
+			-- Check if there is an image Metadata "Filename" entry
+			if selectedNode and selectedNode.Output[comp.CurrentTime] and selectedNode.Output[comp.CurrentTime].Metadata and selectedNode.Output[comp.CurrentTime].Metadata.Filename then
+				-- Fall back for any other node by checking for a Metadata "Filename" entry
+				loadedImage = selectedNode.Output[comp.CurrentTime].Metadata.Filename
+				mediaDirName = Dirname(loadedImage)
+				result = '[Metadata "Filename" file] ' .. tostring(loadedImage)
+			else
+				-- No dice. No filename support
+				result = '[Invalid Node Type] '
+			end
 		end
-		
-		print(result .. '\t[Selected Node] '..  selectedNode.Name .. '\t[Node Type] ' .. toolAttrs.TOOLS_RegID)
+
+		print(result .. '\t[Selected Node] '.. selectedNode.Name .. '\t[Node Type] ' .. toolAttrs.TOOLS_RegID)
 		-- Check if the value is nil
 		if mediaDirName then
 			-- Check if the folder exists and create it if required
@@ -139,8 +167,4 @@ end
 
 -- Run the main function
 Main()
-
--- Unlock the comp flow area
-comp:Unlock()
-
-print('Done\n')
+print('[Done]')

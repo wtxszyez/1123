@@ -1,5 +1,5 @@
 --[[--
-Hypertext Compositor - v1.0.1 2019-05-24
+Hypertext Compositor - v1.1 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 
@@ -13,9 +13,11 @@ If you would like to learn how to use the custom "a href" anchor codes, look in 
 
 Hypertext Compositor was inpired by an old-school Fusion term called "SBS" or Side-by-Side that was used to represent an approach where a lua script could be run by Fusion as soon as a .comp file of the same name was opened. The Hypertext Compositor extends this Side-by-Side system to support comp specific documentation.
 
+
 ## Hypertext Compositor Usage ##
 
 If you had a composite called "wesuckless.comp", the SBS HTML formatted sidecar file would be named "wesuckless.htm". When the composite is opened using the "File &gt; Open..." or "File &gt; Open Recent &gt; " menu items, the matching HTML guide would be displayed automatically.
+
 
 ## Images ##
 
@@ -152,7 +154,11 @@ Toggle the display of the Render Manager window:
 
 --]]--
 
-
+-- Check if Fusion's app class exists
+if not app then
+	print("[Error] This script runs inside of Fusion.")
+	return
+end
 
 ------------------------------------------------------------------------
 -- Reactor Deploy Folder
@@ -175,7 +181,7 @@ function URLParse(str, filePath)
 		-- Resolve should use the base filepath for the htm document
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
 		-- htmlstr = string.gsub(htmlstr, "[Cc]omp:/", comp:MapPath('Comp:/'))
-		
+
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
@@ -196,7 +202,7 @@ function URLParse(str, filePath)
 		-- If a filename is entered in the Pathfield, use it
 		if filePath and filePath ~= '' then
 			path, basename = string.match(filePath, '^(.+[/\\])(.+)')
-			
+
 			if not path then
 				path = comp:MapPath('Comp:/')
 				print('[Empty Path Match] Falling back to Comp:MapPath("Comp:/")')
@@ -209,10 +215,10 @@ function URLParse(str, filePath)
 
 	-- What filepath is the relative "Comp:/" Pathmap resolved to in the HTML document?
 	print('[Basepath] ', path, '[FilePath] ', filePath)
-	
+
 	-- Use the base filepath for the htm document
 	htmlstr = string.gsub(htmlstr, "[Cc]omp:/", path)
-	
+
 	return htmlstr
 end
 
@@ -298,11 +304,11 @@ function DisplayHTML(webpage)
 		Events = {Close = true, KeyPress = true, KeyRelease = true,},
 		Spacing = 0,
 		Margin = 0,
-		
+
 		-- The regular GUI elements will be added here
 		ui:VGroup{
 			ID = 'root',
-			
+
 			-- Navigation bar
 			ui:HGroup{
 				Weight = 0.01,
@@ -377,14 +383,14 @@ function DisplayHTML(webpage)
 		-- Convert the "Comp:/" based images and a href links in the html document to relative paths
 		html = URLParse(LoadHTML(webpage), webpage)
 		print(html)
-		
+
 		-- Load the webpage
 		itm.HTMLPreview.HTML = html
-		
+
 		-- Update the URL bar
 		itm.NavigationLineEdit.Text = tostring(webpage)
 	end
-	
+
 	-- Refresh button
 	function win.On.RefreshButton.Clicked(ev)
 		RefreshHTML()
@@ -393,7 +399,7 @@ function DisplayHTML(webpage)
 	-- Edit Button
 	function win.On.EditButton.Clicked(ev)
 		disp:ExitLoop()
-		
+
 		-- Run the HypertextCompositor Editor script
 		comp:RunScript('Config:/HypertextCompositor/HypertextCompositorEditor.lua', {webpageFile = itm.NavigationLineEdit.Text})
 	end
@@ -403,14 +409,14 @@ function DisplayHTML(webpage)
 		if shiftKeyPressed == true then
 			-- The shift key was pressed
 			print('[URL Preview] ', ev.URL)
-			
+
 			-- Refresh the mouse position
 			local mousex = fu:GetMousePos()[1] - (iconWidth)
 			local mousey = fu:GetMousePos()[2] - (iconWidth)
-	
+
 			-- Show a preview of the URL address when you "Shift + Click" a link
 			DisplayHoverToolTip(mousex,mousey, ev.URL)
-			
+
 			-- Force unset the Shift key pressed flag
 			shiftKeyPressed = false
 		else
@@ -419,7 +425,7 @@ function DisplayHTML(webpage)
 				-- Select a node
 				-- Extract the node name
 				node = string.gsub(ev.URL, '^[Ss]elect://', '')
-			
+
 				-- Select a node in the comp
 				print('[Selecting Node] ', node)
 				comp:SetActiveTool(comp:FindTool(node))
@@ -432,7 +438,7 @@ function DisplayHTML(webpage)
 					-- use the selected node
 					print('[Viewing Selected] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -441,7 +447,7 @@ function DisplayHTML(webpage)
 					-- Select and view a node in the comp
 					print('[Viewing Node] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -456,7 +462,7 @@ function DisplayHTML(webpage)
 					-- use the selected node
 					print('[Viewing Selected on Left Viewer] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -465,7 +471,7 @@ function DisplayHTML(webpage)
 					-- Select and view a node in the comp
 					print('[Viewing Node on Left Viewer] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().LeftView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -475,12 +481,12 @@ function DisplayHTML(webpage)
 				-- View a node
 				-- Extract the node name
 				node = string.gsub(ev.URL, '^[Vv]iew[Rr]ight://', '')
-							sel = comp.ActiveTool
+				sel = comp.ActiveTool
 				if node == '' and sel then
 					-- use the selected node
 					print('[Viewing Selected on Right Viewer] ', sel.Name)
 					comp:SetActiveTool(sel)
-					
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().RightView:ViewOn(sel, 1)
 					-- Fusion 9 compatible
@@ -489,7 +495,7 @@ function DisplayHTML(webpage)
 					-- Select and view a node in the comp
 					print('[Viewing Node on Right Viewer] ', node)
 					comp:SetActiveTool(comp:FindTool(node))
-			
+
 					-- Fusion 16 compatible
 					comp:GetPreviewList().RightView:ViewOn(comp:FindTool(node), 1)
 					-- Fusion 9 compatible
@@ -499,15 +505,15 @@ function DisplayHTML(webpage)
 				-- View a node
 				-- Extract the node name
 				newName = string.gsub(ev.URL, '^[Re]ename://', '')
-				
+
 				-- Read the current node selection
 				local sel = comp.ActiveTool
 				if sel and newName then
 					oldName = sel.Name
 					print('[Rename Node] "' .. tostring(oldName) .. '" to "' .. tostring(newName) .. '"')
-					
+
 					DisplayGuidedRenameTool(oldName, newName)
-					
+
 					-- Rename the selected node
 					sel:SetAttrs({TOOLS_Name = newName})
 				else
@@ -517,7 +523,7 @@ function DisplayHTML(webpage)
 				-- View a node
 				-- Extract the node name
 				node = string.gsub(ev.URL, '^[Re]ender://', '')
-				
+
 				-- Render node in the comp
 				print('[Rendering Node] ', node)
 				comp:Render({Tool = comp:FindTool(node)})
@@ -540,25 +546,21 @@ function DisplayHTML(webpage)
 			elseif string.match(ev.URL, '^[Ss]hell://') then
 				-- Run a shell command from the terminal
 				command = string.gsub(ev.URL, '^[Ss]hell://', '')
-				
 				print('[Shell Command] ', command)
 				print(io.popen(command):read("*all"))
 			elseif string.match(ev.URL, '^[Ee]xecute://') then
 				-- Run a Lua/Python command
 				command = string.gsub(ev.URL, '^[Ee]xecute://', '')
-				
 				print('[Excute Lua/Python Command] ', command)
 				comp:Execute(command)
 			elseif string.match(ev.URL, '^[Dd]o[Aa]ction://') then
 				-- Run an action
 				command = string.gsub(ev.URL, '^[Dd]o[Aa]ction://', '')
-				
 				print('[Do Action] ', command)
 				comp:DoAction(command, {})
 			elseif string.match(ev.URL, '^[Ss]how[Pp]refs://') then
 				-- Show a preference window
 				command = string.gsub(ev.URL, '^[Ss]how[Pp]refs://', '')
-				
 				print('[Show Preference] ', command)
 				app:ShowPrefs(command)
 			elseif string.match(ev.URL, '^[Aa][Bb][Cc][Ii]mport://') then
@@ -599,10 +601,8 @@ function DisplayHTML(webpage)
 				app:ToggleRenderManager()
 			elseif string.match(ev.URL, '^[Ff]rame[Aa]ll://') then
 				-- Frame a view to All
-				
 				-- Extract the view name
 				view = string.gsub(ev.URL, '^[Ff]rame[Aa]ll://', '')
-				
 				if view == '' or view == 'FlowView' then
 					print('[Frame All] ', view)
 					comp.CurrentFrame.FlowView:FrameAll()
@@ -612,11 +612,11 @@ function DisplayHTML(webpage)
 					-- comp:GetPreviewList().LeftView
 					-- comp:GetPreviewList().LeftView.GetViewList()
 				elseif view == 'SplineEditor' then
-				-- Todo SplineEditor.ZoomFit()
+					-- Todo SplineEditor.ZoomFit()
 				elseif view == 'Timeline' then
-				-- Todo Timeline.ZoomFit()
+					-- Todo Timeline.ZoomFit()
 				elseif view == 'LUTView' then
-				-- Todo LUTView.ZoomFit()
+					-- Todo LUTView.ZoomFit()
 				end
 			elseif string.match(ev.URL, '^[Pp]lay://') then
 				-- Play the sequence
@@ -639,114 +639,103 @@ function DisplayHTML(webpage)
 				comp.CurrentTime = tonumber(frame)
 			elseif string.match(ev.URL, '^[Nn]udge[Pp]layhead://') then
 				-- Nudge the playhead
-				
 				-- Extract the nudge direction name
 				nudge = string.gsub(ev.URL, '^[Nn]udge[Pp]layhead://', '')
-				
 				if nudge == 'Left' or nudge == 'left' then
 					-- Jump to the next keyframe
-					
 					-- Read the currently active tool selection
 					tool = comp.ActiveTool
-				
 					-- Read the current frame in the timeline
 					currentTime = comp.CurrentTime
 					offsetTime = math.floor((comp:GetPrevKeyTime(comp.CurrentTime-.1, tool) + comp:GetNextKeyTime(comp.CurrentTime-.1, tool))/2)
-				
 					-- We are still on the same frame
 					if currentTime == offsetTime then
 						-- Step between real and inbetween keyframes
 						offsetTime = comp:GetPrevKeyTime(comp.CurrentTime-.1, tool)
-					
 						-- [Optionally] Step between each of the inbetween keyframes
 						-- offsetTime = math.floor((comp:GetPrevKeyTime(offsetTime-.1, tool) + comp:GetNextKeyTime(offsetTime-.1, tool))/2)
 					end
-					
+
 					comp.CurrentTime = offsetTime
 					print('[Nudge Playhead Left] ', comp.CurrentTime)
-			elseif nudge == 'Right' or nudge == 'right' then
+				elseif nudge == 'Right' or nudge == 'right' then
 					-- Jump to the next keyframe
-					
 					-- Read the currently active tool selection
 					tool = comp.ActiveTool
-				
 					-- Read the current frame in the timeline
 					currentTime = comp.CurrentTime
 					offsetTime = math.floor((comp:GetPrevKeyTime(comp.CurrentTime+.1, tool) + comp:GetNextKeyTime(comp.CurrentTime+.1, tool))/2)
-				
 					-- We are still on the same frame
 					if currentTime == offsetTime then
 						-- Step between real and inbetween keyframes
 						offsetTime = comp:GetNextKeyTime(comp.CurrentTime+.1, tool)
-					
 						-- [Optionally] Step between each of the inbetween keyframes
 						-- offsetTime = math.floor((comp:GetPrevKeyTime(offsetTime+.1, tool) + comp:GetNextKeyTime(offsetTime+.1, tool))/2)
 					end
-				
+
 					comp.CurrentTime = offsetTime
 					print('[Nudge Playhead Right] ', comp.CurrentTime)
 				end
 			elseif string.match(ev.URL, '^[Ss]ave://') then
 				-- Save the comp
-			
 				print('[Save Comp] ')
 				comp:Save()
 			elseif string.match(ev.URL, '^[Ll]oad://') then
 				-- Load a comp
 				filepath = string.gsub(ev.URL, '^[Ll]oad://', '')
-			
 				print('[Load Comp] ', filepath)
 				fusion:LoadComp(filepath, true, false, false)
 			elseif string.match(ev.URL, '^[Aa]dd[Ss]etting://') then
 				-- Add a macro node
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Aa]dd[Ss]etting://', ''))
 				print('[Adding Macro] ', filepath)
-			
+
 				-- Show the Select Tool window
 				local path, basename, extension = string.match(filepath, '^(.+[/\\])(.+)(%..+)$')
 				if not basename then
 					basename = 'Macro'
 				end
+
 				DisplayGuidedSelectTool(basename)
-			
+
 				-- Copy/Paste the macro into the foreground comp
 				comp:Paste(bmd.readfile(filepath))
 			elseif string.match(ev.URL, '^[Aa]dd[Tt]ool://') then
 				-- Add a node
 				node = string.gsub(ev.URL, '^[Aa]dd[Tt]ool://', '')
 				print('[Adding Node] ', node)
-			
+
 				-- Show the Select Tool window
 				DisplayGuidedSelectTool(node)
-			
+
 				comp:AddTool(node, -32768, -32768)
 			elseif string.match(ev.URL, '^[Aa]dd[Mm]edia://') then
 				-- Add a Loader node and footage
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Aa]dd[Mm]edia://', ''))
-			
+
 				print('[Adding Media] ', filepath)
 				-- Disable the file browser dialog
 				AutoClipBrowse = app:GetPrefs('Global.UserInterface.AutoClipBrowse')
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', false)
-			
+
 				-- Show the Select Tool window
 				local nodeName = 'Loader'
 				DisplayGuidedSelectTool(nodeName)
-			
+
 				-- Add a new loader node at the default coordinates in the Flow
 				local previewLoader = comp:AddTool('Loader', -32768, -32768)
-			
+
 				-- Update the loader's clip filename
 				previewLoader.Clip[fu.TIME_UNDEFINED] = filepath
 				-- Re-enable the file browser dialog
 				app:SetPrefs('Global.UserInterface.AutoClipBrowse', AutoClipBrowse)
-			
+
 				-- Loop 
 				previewLoader:SetAttrs({TOOLBT_Clip_Loop = true})
-			
+
 				-- Hold on missing frames
-				previewLoader.MissingFrames = 1 
-			
+				previewLoader.MissingFrames = 1
+
 				-- Enable HiQ mode
 				comp:SetAttrs{COMPB_HiQ = true}
 			elseif string.match(ev.URL, '^[Pp]assthrough[Oo]n://') then
@@ -776,12 +765,11 @@ function DisplayHTML(webpage)
 			elseif string.match(ev.URL, '^[Rr]un[Ss]cript://') then
 				-- Run a script
 				filepath = comp:MapPath(string.gsub(ev.URL, '^[Rr]un[Ss]cript://', ''))
-			
+
 				print('[Run Script] ', filepath)
 				comp:RunScript(filepath)
 			elseif string.match(ev.URL, '^[Aa]dd[Aa]tom://') then
 				-- Open Reactor
-			
 				print('[Open Reactor] ')
 				comp:RunScript('Reactor:/System/Scripts/Comp/Reactor/Open Reactor....lua')
 			else
@@ -803,23 +791,23 @@ function DisplayHTML(webpage)
 		Hotkeys {
 			Target = 'htmlWin',
 			Defaults = true,
-			
+
 			CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 			CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
 		},
 	})
 
-	-- Adjust the syntax highlighting colors 
+	-- Adjust the syntax highlighting colors
 	bgcol = {
-		R = 0.125, 
-		G = 0.125, 
-		B = 0.125, 
+		R = 0.125,
+		G = 0.125,
+		B = 0.125,
 		A = 1
 	}
 
 	itm.HTMLPreview.BackgroundColor = bgcol
 	itm.HTMLPreview:SetPaletteColor('All', 'Base', bgcol)
-	
+
 	win:Show()
 	disp:RunLoop()
 	win:Hide()
@@ -832,7 +820,7 @@ function DisplayVirtualCursor()
 	-- Refresh the mouse position
 	local mousex = fu:GetMousePos()[1] - (iconWidth)
 	local mousey = fu:GetMousePos()[2] - (iconWidth)
-	
+
 	-- Create a new window
 	local width,height = 32,32
 	local cwin = disp:AddWindow({
@@ -845,10 +833,10 @@ function DisplayVirtualCursor()
 			Popup = true,
 			WindowStaysOnTopHint = true,
 		},
-	
+
 		ui:VGroup{
 			ID = 'root',
-		
+
 		-- Add a mouse cursor image here
 			ui:Button{
 				ID = 'CursorButton',
@@ -885,7 +873,7 @@ function DisplayVirtualCursor()
 	end
 
 	cwin:Show()
-	
+
 	-- Provide the window handle back to the calling function
 	return cwin
 end
@@ -896,18 +884,18 @@ end
 function AnimateCursor(animatedWin, moveSteps, delay, srcx, srcy, targetx, targety)
 	-- Cursor icon "click zone" offset
 	local iconWidth = 15
-	
+
 	-- Refresh the mouse position
 	-- local srcx = fu:GetMousePos()[1] - (iconWidth)
 	-- local srcy = fu:GetMousePos()[2] - (iconWidth)
-	
+
 	-- Move the cursor over to the Select Tool window text entry field area
 	-- local targetx = x + (width/2)
 	-- local targety = y + (height - 60)
-	
+
 	print('[Mouse Source] [X]', srcx .. ' [Y] ' .. srcy)
 	print('[Mouse Target] [X]', targetx .. ' [Y] ' .. targety)
-	
+
 	-- Move to the target location in X steps
 	for j = 0,moveSteps,1
 	do
@@ -921,12 +909,12 @@ function AnimateCursor(animatedWin, moveSteps, delay, srcx, srcy, targetx, targe
 	
 		local movex = (srcx - (deltax * (j / moveSteps)))
 		local movey = (srcy - (deltay * (j / moveSteps)))
-	
+
 		print('[Mouse Move Delta] [X]' .. movex .. ' [Y] ' ..  movey)
-	
+
 		-- Update the cursor position
 		animatedWin:Move({movex, movey})
-	
+
 		-- Pause for a moment
 		bmd.wait(delay)
 	end
@@ -948,7 +936,7 @@ function DisplayGuidedSelectTool(nodeNameStr)
 			-- Add your GUI elements here:
 			ui:TextEdit{
 				Weight = 4.0,
-				ID='ToolListTextEdit', 
+				ID='ToolListTextEdit',
 				Text = [[
 					<html>
 		<style>
@@ -977,7 +965,6 @@ function DisplayGuidedSelectTool(nodeNameStr)
 				PlaceholderText = 'Tools List',
 				ReadOnly = true,
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(5),
@@ -989,7 +976,6 @@ function DisplayGuidedSelectTool(nodeNameStr)
 				},
 				ui:HGap(5),
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(120),
@@ -1011,7 +997,7 @@ function DisplayGuidedSelectTool(nodeNameStr)
 
 	-- The window was closed
 	function win.On.GuidedSelectToolWin.Close(ev)
-			disp:ExitLoop()
+		disp:ExitLoop()
 	end
 
 	-- Add your GUI element based event functions here:
@@ -1113,7 +1099,6 @@ function DisplayGuidedRenameTool(srcNameStr, nodeNameStr)
 				},
 				ui:HGap(5),
 			},
-
 			ui:HGroup{
 				Weight = 0.01,
 				ui:HGap(120),
@@ -1135,7 +1120,7 @@ function DisplayGuidedRenameTool(srcNameStr, nodeNameStr)
 
 	-- The window was closed
 	function win.On.DisplayGuidedRenameTool.Close(ev)
-			disp:ExitLoop()
+		disp:ExitLoop()
 	end
 
 	-- Add your GUI element based event functions here:
@@ -1212,9 +1197,9 @@ sourceComp = app:MapPath(comp:GetAttrs().COMPS_FileName)
 print('\n[Drag and Drop] ', dragDropCompFile)
 print('\n[Source Comp] ', sourceComp)
 
-
 -- Cursor icon
 cursorImg = comp:MapPath('Config:/HypertextCompositor/icons/sbs-cursor.png')
+
 -- Cursor "click zone" offset
 iconWidth = 15
 

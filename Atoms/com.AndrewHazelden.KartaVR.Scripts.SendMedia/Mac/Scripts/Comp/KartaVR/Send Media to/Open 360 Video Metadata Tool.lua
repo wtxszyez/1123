@@ -1,17 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Open 360 Video Metadata Tool v4.0.2 - 2019-04-26
+Open 360 Video Metadata Tool v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
-The Open 360 Video Metadata Tool script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will launch the YouTube 360 / Facebook 360 spatial media metadata embedding program. 
+The Open 360 Video Metadata Tool script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will launch the YouTube 360 / Facebook 360 spatial media metadata embedding program. 
 
 How to use the Script:
 

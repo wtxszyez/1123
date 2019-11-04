@@ -1,12 +1,12 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Scripts Folder menu item v4.0.3 2019-10-06
+Open KartaVR Scripts Folder menu item - v4.1 2019-11-04
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 --]]--
 

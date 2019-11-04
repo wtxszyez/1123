@@ -1,7 +1,7 @@
-_VERSION = [[Version 3.14 - October 5, 2019]]
+_VERSION = [[Version 3.141 - October 31, 2019]]
 --[[--
 ==============================================================================
-Reactor Package Manager for Fusion - v3.14 2019-10-05
+Reactor Package Manager for Fusion - v3.141 2019-11-01
 ==============================================================================
 Requires    : Fusion v9.0.2/16+ or Resolve v15/16+
 Created by  : We Suck Less Community Members  [https://www.steakunderwater.com/wesuckless/]
@@ -1637,6 +1637,7 @@ function Init()
 			"System/Scripts/Comp/Reactor/Tools/Open Reactor Log.lua",
 			"System/Scripts/Comp/Reactor/Tools/Reinstall Reactor.lua",
 			"System/Scripts/Comp/Reactor/Tools/Resync Repository.lua",
+			"System/Scripts/Comp/Reactor/Tools/Show Comps Folder.lua",
 			"System/Scripts/Comp/Reactor/Tools/Show Config Folder.lua",
 			"System/Scripts/Comp/Reactor/Tools/Show Docs Folder.lua",
 			"System/Scripts/Comp/Reactor/Tools/Show Reactor Folder.lua",

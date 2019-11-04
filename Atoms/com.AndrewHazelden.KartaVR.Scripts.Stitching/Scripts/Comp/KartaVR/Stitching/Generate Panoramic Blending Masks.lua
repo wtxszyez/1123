@@ -1,16 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Generate Panoramic Blending Masks v4.0.1 2019-01-01
+Generate Panoramic Blending Masks v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Generate Panoramic Blending Masks script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you create a set of seamless blending alpha channel mask for the selected media files in your Fusion composite.
+The Generate Panoramic Blending Masks script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you create a set of seamless blending alpha channel mask for the selected media files in your Fusion composite.
 
 How to use the Script:
 

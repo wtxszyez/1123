@@ -1,9 +1,9 @@
 ui = fu.UIManager
 disp = bmd.UIDispatcher(ui)
 
-dlg = disp.AddWindow({ "WindowTitle": "My First Window", "ID": "MyWin", "Geometry": [ 100, 100, 400, 70 ], },
+dlg = disp.AddWindow({ "WindowTitle": "My First Window", "ID": "MyWin", "Geometry": [ 100, 100, 400, 125 ], },
 	[
-		ui.VGroup({ "Spacing": 0, },
+		ui.VGroup({ "Spacing": 10, },
 		[
 			# Add your GUI elements here:
 			ui.LineEdit({ "ID": "MyLineTxt", "Text": "Hello Fusioneers!", "PlaceholderText": "Please Enter a few words.", "Weight": 0.5}),

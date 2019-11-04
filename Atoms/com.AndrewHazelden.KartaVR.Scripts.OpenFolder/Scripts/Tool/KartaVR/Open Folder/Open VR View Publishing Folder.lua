@@ -1,17 +1,16 @@
 --[[--
 ----------------------------------------------------------------------------
-Open VR View Publishing Folder v4.0.1 2019-01-01
+Open VR View Publishing Folder - v4.1 2019-11-04
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
-
 Overview:
 
-The Open VR View Publishing Folder script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will open a file browser window to show the Google Cardboard VR View directory that the KartaVR uses to write out viewer snapshots and other files.
+The Open VR View Publishing Folder script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will open a file browser window to show the Google Cardboard VR View directory that the KartaVR uses to write out viewer snapshots and other files.
 
 How to use the Script:
 
@@ -30,9 +29,6 @@ local printStatus = false
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
-
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
@@ -44,7 +40,7 @@ osSeparator = package.config:sub(1,1)
 function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
-	
+
 	-- List the preference value
 	if status == 1 or status == true then
 		if value == nil then
@@ -84,22 +80,22 @@ function getPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
 
 -- Find out the current directory from a file path
 -- Example: print(Dirname('/Volumes/Media/image.0000.exr'))
-function dirname(filename)
+function Dirname(filename)
 	return filename:match('(.*' .. osSeparator .. ')')
 end
 
 
 -- Open a folder window up using your desktop file browser
-function openDirectory(mediaDirName)
+function OpenDirectory(mediaDirName)
 	command = nil
-	dir = dirname(mediaDirName)
+	dir = Dirname(mediaDirName)
 	
 	if platform == 'Windows' then
 		-- Running on Windows
@@ -130,7 +126,7 @@ end
 -- Example: playWaveAudio('trumpet-fanfare.wav')
 -- or if you want to see debugging text use:
 -- Example: playWaveAudio('trumpet-fanfare.wav', true)
-function playDFMWaveAudio(filename, status)
+function PlayDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
 	end
@@ -230,22 +226,12 @@ webSharingFolder = getPreferenceData('KartaVR.PublishVRView.WebSharingFolder', w
 -- Create the Web Publishing directory
 os.execute('mkdir "' .. webSharingFolder..'"')
 if webSharingFolder ~= nil then
-	if fu_major_version >= 8 then
-		-- The script is running on Fusion 8+ so we will use the fileexists command
-		if eyeon.fileexists(webSharingFolder) then
-			openDirectory(webSharingFolder)
-		else
-			print('[Web Sharing Directory Missing] ', webSharingFolder)
-			err = true
-		end
+	-- Check if the file exists on disk
+	if eyeon.fileexists(webSharingFolder) then
+		OpenDirectory(webSharingFolder)
 	else
-		-- The script is running on Fusion 6/7 so we will use the direxists command
-		if eyeon.direxists(webSharingFolder) then
-			openDirectory(webSharingFolder)
-		else
-			print('[Web Sharing Directory Missing] ', webSharingFolder)
-			err = true
-		end
+		print('[Web Sharing Directory Missing] ', webSharingFolder)
+		err = true
 	end
 else
 	-- An error happened and the webSharingFolder variable is set to nil
@@ -260,7 +246,7 @@ if err == true or err == 1 then
 	if soundEffect >= 1 then
 		-- If the sound Effect mode is 1 or greater (not set to "None" ) than play a braam sound when an error happens
 		local audioFile = 'cinematic-musical-sting-braam.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	end
 else
 	if soundEffect == 0 then
@@ -271,15 +257,15 @@ else
 	elseif soundEffect == 2 then
 		-- Steam Train Whistle Sound
 		local audioFile = 'steam-train-whistle.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	elseif soundEffect == 3 then
 		-- Trumpet Sound
 		local audioFile = 'trumpet-fanfare.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	elseif soundEffect == 4 then
 		-- Braam Sound
 		local audioFile = 'cinematic-musical-sting-braam.wav'
-		playDFMWaveAudio(audioFile)
+		PlayDFMWaveAudio(audioFile)
 	end
 end
 

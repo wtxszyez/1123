@@ -1,5 +1,6 @@
+_VERSION = 'v3 2019-11-04'
 --[[--
-FuScript Subtype Essentials - v1 2018-12-13
+FuScript Subtype Essentials - v3 2019-11-04
 By Andrew Hazelden <andrew@andrewhazelden.com>
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -8,7 +9,6 @@ By Andrew Hazelden <andrew@andrewhazelden.com>
 Resolve Studio, Generation, Fusion Studio, the Fusion Bin Player, and the Fusion Render manager all allow for remote usage via FuScript.
 
 This is done via FuScript using the following Lua function:
-
 	bmd.scriptapp(host, ip, timeout, uuid, subtype)
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -16,7 +16,7 @@ This is done via FuScript using the following Lua function:
 ## Script Output ##
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-FuScript and Subtype Essentials - v1 2018-12-13
+FuScript and Subtype Essentials - v2 2019-11-02
 By Andrew Hazelden <andrew@andrewhazelden.com>
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -133,7 +133,7 @@ And Yes. That snippet is written correctly. There is no bmd prefix needed to run
 -- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 print('\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
-print('FuScript and Subtype Essentials - v1 2018-12-13')
+print('FuScript and Subtype Essentials - ' ..  tostring(_VERSION))
 print('By Andrew Hazelden <andrew@andrewhazelden.com>')
 print('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n')
 
@@ -155,14 +155,11 @@ local host = 'Fusion'
 -- For your own system the "localhost" value can also be "127.0.0.1"
 local ip = '127.0.0.1'
 
-
 -- (Optional) Define a timeout value should the connection request fail
 local timeout = 0.0
 
-
 -- (Optional) Define which Fusion session you want to connect to - If multiple are running on the same computer
 local uuid = 0
-
 
 -- A sub-type is the type of FuScript process you are connecting to on the remote system:
 -- local subtype = 'Resolve' -- Resolve GUI session
@@ -182,7 +179,7 @@ if remoteFu then
 	-- List the scriptapp session details
 	print('\n[ScriptApp Session]')
 	dump(remoteFu:GetAttrs())
-	
+
 	if host == 'Fusion' then
 		-- List the comp session details
 		remoteComp = remoteFu.CurrentComp

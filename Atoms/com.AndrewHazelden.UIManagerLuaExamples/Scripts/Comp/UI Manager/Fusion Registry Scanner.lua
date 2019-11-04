@@ -1,4 +1,4 @@
-VERSION = '1.0 2018-06-09'
+_VERSION = 'v3 2019-11-04'
 --[[--
 Fusion Registry Scanner.lua 
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -9,7 +9,7 @@ The "Fusion Registry Scanner" comp script generates a super detailed report of F
 
 This script is a great research tool that will enable you to dig deeper into Fusion and find out more about the internals of the compositing package. You can really take your Fusion pipeline tool development efforts to the next level if you are armed with a Fusion registry report, and the Fusion Script Help Browser (https://www.steakunderwater.com/wesuckless/viewtopic.php?p=11343#p11343). These tools allow you to bypass the boundaries of Fusion's own documentation and venture into using undocumented features for power user level access to exotic Fusion features you would never know about otherwise.  ;)
 
-This script works with Fusion 9.0.2 and Resolve 15 Beta 4.
+This script is a Fusion Lua based UI Manager example that works in Fusion v9-16.1+ and Resolve v15-16.1+.
 
 # For More Info on the Registry #
 
@@ -36,7 +36,7 @@ This is a short list from the Fusion 8 Scripting Guide of the types of core regi
 
 This is an partial snippet of the output from the script:
 
-Registry Scanner - 1.0 2018-06-09
+Registry Scanner - 2.0 2019-11-02
 By Andrew Hazelden <andrew@andrewhazelden.com
 
 [Total Registry Entries Found] 993
@@ -208,7 +208,7 @@ function RegScan()
 	local regHeader = '\n[Registry Entries List]\n'
 	local dividerStr = '\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n'
 	
-	outputStr = outputStr ..'Fusion Registry Scanner - ' .. tostring(VERSION) .. '\n'
+	outputStr = outputStr ..'Fusion Registry Scanner - ' .. tostring(_VERSION) .. '\n'
 	outputStr = outputStr ..'By Andrew Hazelden <andrew@andrewhazelden.com\n'
 	outputStr = outputStr .. topHeader .. dividerStr 
 	outputStr = outputStr .. idHeader .. idStr .. dividerStr 
@@ -225,7 +225,7 @@ function Main()
 	-- Write a startup message to the active comp's Console view
 	comp:Print('\n')
 	comp:Print('---------------------------------------------\n')
-	comp:Print('Fusion Registry Scanner - ' .. tostring(VERSION) .. '\n')
+	comp:Print('Fusion Registry Scanner - ' .. tostring(_VERSION) .. '\n')
 	comp:Print('By Andrew Hazelden <andrew@andrewhazelden.com\n')
 	comp:Print('---------------------------------------------\n')
 	comp:Print('\n')
@@ -234,18 +234,18 @@ function Main()
 	local editorPath = fu:GetPrefs('Global.Script.EditorPath')
 	if editorPath == nil or editorPath == '' then
 		-- Error: There was no script editor specified in the Fusion prefs
-		
+
 		-- Fallback message:
 		comp:Print('[Fusion Registry Scanner] The "Editor Path" is empty in Fusion. Please choose a text editor in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.\n')
-		
+
 		-- Display the fusion preferences window and switch to the "Script" section
 		app:ShowPrefs('PrefsScript')
 	else
 		-- A script editor was specified in the Fusion prefs 
-		
+
 		-- Generate the Registry.log absolute filepath so it is saved to the base of the Fusion user preferences folder
 		local regFilepath = comp:MapPath('UserData:/Registry.log')
-		
+
 		-- Write out the log file
 		regFP, err = io.open(regFilepath,'w')
 		if err then
@@ -254,14 +254,14 @@ function Main()
 			return
 		else
 			comp:Print('[Writing Registry] ' .. tostring(regFilepath) .. '\n\n')
-			
+
 			-- Scan the complete Fusion registry and then write it to disk
 			regFP:write(RegScan())
 			--regFP:write('\n')
-			
+
 			-- Close the file pointer on the output textfile
 			regFP:close()
-			
+
 			-- Open the file in the default script editor
 			OpenDocument('Open Registry.log in Script Editor', editorPath, regFilepath)
 		end

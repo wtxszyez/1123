@@ -1,6 +1,6 @@
-_VERSION = [[Version 1.1 - February 17, 2018]]
---[[
-PasteNode.lua - v1.1 2017-10-02 10.43 AM
+_VERSION = [[Version 3.0 - November 4, 2019]]
+--[[--
+PasteNode.lua - v3 2019-11-04
 by Andrew Hazelden <andrew@andrewhazelden.com>
 http://www.andrewhazelden.com
 
@@ -18,7 +18,7 @@ Copy this script to your Fusion 9.0.1+ user preferences based "Scripts:/Comp/" f
 
 Step 1. Copy a node from the Fusion flow area into your clipboard.
 
-Step 2. Select the Script > PasteNode menu item. This will open up the "Paste Node" window and show a syntax highlighted text editing view that makes it easier to customize your snippet of .comp  / macro .setting formatted text.
+Step 2. Select the Script > PasteNode menu item. This will open up the "Paste Node" window and show a syntax highlighted text editing view that makes it easier to customize your snippet of .comp	/ macro .setting formatted text.
 
 Step 3. In the "Paste Node" window you can click on the "Paste This Document into Your Comp'" button to paste the text field contents into your foreground composite.
 
@@ -29,7 +29,7 @@ Step 5. (Optional) If you want to edit the PasteNode.lua script to add your own 
 There is a "Copies to Paste" DoubleSpinBox control at the top of the window. If you set this value above 1 it will allow you to repeat the paste action multiple times in a row.
 
 Note: When customizing the text in the SampleNodeBlock() function make sure to keep the multi-line text string friendly double square brackets around your embedded code snippet.
-]]
+--]]--
 
 -- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------
@@ -39,8 +39,9 @@ Note: When customizing the text in the SampleNodeBlock() function make sure to k
 -- Note: When customizing the text in the SampleNodeBlock() function make sure to keep the
 -- multi-line text string friendly double square brackets around your embedded code snippet.
 -- Example: return [[{Tools = ordered() {PastedMerge = Merge {},},}]]
+
 function SampleNodeBlock()
-  return [[{
+	return [[{
 	Tools = ordered() {
 		pixel_209 = PipeRouter {
 			NameSet = true,
@@ -1502,76 +1503,82 @@ local defaultNodeText = SampleNodeBlock()
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
 local width,height = 800,1024
-win = disp:AddWindow({
-  ID = 'PasteNodeWin',
-  TargetID = 'PasteNodeWin',
-  WindowTitle = 'Paste Node',
-  Geometry = {100, 100, width, height},
-  Spacing = 10,
-  Margin = 10,
-        
-  ui:VGroup{
-    ID = 'root',
-    Weight = 1,
-    -- Add your GUI elements here:
 
-    -- Add a caption
-    ui:Label{
-      ID = 'TitleLabel',
-      Weight = 0,
-      Text = 'This example shows how to paste a Fusion .Comp or .Setting based code snippet into your current Fusion document.',
-      Alignment = {AlignHCenter = true, AlignTop = true},
-    },
-       
-    -- Copies to Paste
-    ui:HGroup{
-      Weight = 0,
-      ui:Label{
-        ID = 'CopiesLabel',
-        Weight = 0,
-        Text = 'Copies to Paste',
-      },
-      ui:DoubleSpinBox{
-        ID='CopiesSpinBox',
-        Value = 1,
-        Minimum = 1,
-        Maximum = 10000,
-        Decimals = 0,
-      },
-    },
-    
-    -- Add the editable text field
-    ui:TextEdit{
-      ID = 'NodeTextEdit',
-      Weight = 1,
-      
-      -- Add the premade block of text when the script starts
-      PlainText = defaultNodeText,
-      
-      -- Customize the font style for the text that is shown in the editable field
-      Font = ui:Font{
-        Family = 'Droid Sans Mono',
-        StyleName = 'Regular',
-        PixelSize = 12,
-        MonoSpaced = true,
-        StyleStrategy = {ForceIntegerMetrics = true},
-      },
-      
-      TabStopWidth = 28,
-      LineWrapMode = 'NoWrap',
-      AcceptRichText = false,
-      
-      -- Use the Fusion 9.0.1+ hybrid lexer module to add colored syntax highlighting
-      Lexer = 'fusion',
-    }, 
-    
-    -- Add the Paste This Document into Your Comp
-    ui:Button{
-      ID = 'PasteButton',
-      Weight = 0.1,
-      Text = 'Paste This Document into Your Comp',
-    },
-  },
+win = disp:AddWindow({
+	ID = 'PasteNodeWin',
+	TargetID = 'PasteNodeWin',
+	WindowTitle = 'Paste Node',
+	Geometry = {100, 100, width, height},
+	Spacing = 10,
+	Margin = 10,
+
+	ui:VGroup{
+		ID = 'root',
+		Weight = 1,
+		-- Add your GUI elements here:
+
+		-- Add a caption
+		ui:Label{
+			ID = 'TitleLabel',
+			Weight = 0,
+			Text = 'This example shows how to paste a Fusion .Comp or .Setting based code snippet into your current Fusion document.',
+			Alignment = {
+				AlignHCenter = true,
+				AlignTop = true,
+			},
+		},
+
+		-- Copies to Paste
+		ui:HGroup{
+			Weight = 0,
+			ui:Label{
+				ID = 'CopiesLabel',
+				Weight = 0,
+				Text = 'Copies to Paste',
+			},
+			ui:DoubleSpinBox{
+				ID='CopiesSpinBox',
+				Value = 1,
+				Minimum = 1,
+				Maximum = 10000,
+				Decimals = 0,
+			},
+		},
+
+		-- Add the editable text field
+		ui:TextEdit{
+			ID = 'NodeTextEdit',
+			Weight = 1,
+
+			-- Add the premade block of text when the script starts
+			PlainText = defaultNodeText,
+
+			-- Customize the font style for the text that is shown in the editable field
+			Font = ui:Font{
+				Family = 'Droid Sans Mono',
+				StyleName = 'Regular',
+				PixelSize = 12,
+				MonoSpaced = true,
+				StyleStrategy = {
+					ForceIntegerMetrics = true,
+				},
+			},
+
+			TabStopWidth = 28,
+			LineWrapMode = 'NoWrap',
+			AcceptRichText = false,
+
+			-- Use the Fusion 9.0.1+ hybrid lexer module to add colored syntax highlighting
+			Lexer = 'fusion',
+		},
+
+		-- Add the Paste This Document into Your Comp
+		ui:Button{
+			ID = 'PasteButton',
+			Weight = 0.1,
+			Text = 'Paste This Document into Your Comp',
+		},
+	},
 })
 
 -- Add your GUI element based event functions here:
@@ -1579,35 +1586,35 @@ itm = win:GetItems()
 
 -- The window was closed
 function win.On.PasteNodeWin.Close(ev)
-  disp:ExitLoop()
+	disp:ExitLoop()
 end
 
 -- The "Paste This Document into Your Comp" button was clicked
 function win.On.PasteButton.Clicked(ev)
-  print('[Button Clicked] Paste This Document into Your Comp')
-  print('[Pasted Content]\n', itm.NodeTextEdit.PlainText)
-  
-  totalCopies =  tonumber(itm.CopiesSpinBox.Value)
-  for cpy = 1, totalCopies, 1 do
-    comp:Paste(bmd.readstring(itm.NodeTextEdit.PlainText))
-  end
-  
-  print('[Copies Pasted] ' .. tostring(totalCopies))
+	print('[Button Clicked] Paste This Document into Your Comp')
+	print('[Pasted Content]\n', itm.NodeTextEdit.PlainText)
+	
+	totalCopies = tonumber(itm.CopiesSpinBox.Value)
+	for cpy = 1, totalCopies, 1 do
+		comp:Paste(bmd.readstring(itm.NodeTextEdit.PlainText))
+	end
+	
+	print('[Copies Pasted] ' .. tostring(totalCopies))
 end
 
 -- The app:AddConfig() command that will capture the 'Control + W' or 'Control + F4' hotkeys so they will close the window instead of closing the foreground composite.
 app:AddConfig('PasteNode', {
-  Target {
-    ID = 'PasteNodeWin',
-  },
+	Target {
+		ID = 'PasteNodeWin',
+	},
 
-  Hotkeys {
-    Target = 'PasteNodeWin',
-    Defaults = true,
+	Hotkeys {
+		Target = 'PasteNodeWin',
+		Defaults = true,
 
-    CONTROL_W  = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-    CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-  },
+		CONTROL_W = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+		CONTROL_F4 = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+	},
 })
 
 comp:Print('\n[PasteNode] ' .. tostring(_VERSION) .. "\n")
@@ -1616,5 +1623,6 @@ comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
 win:Show()
 disp:RunLoop()
 win:Hide()
+
 app:RemoveConfig('PasteNode')
 collectgarbage()

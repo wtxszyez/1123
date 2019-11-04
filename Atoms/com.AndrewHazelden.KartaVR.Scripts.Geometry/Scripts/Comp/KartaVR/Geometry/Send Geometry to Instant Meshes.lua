@@ -1,24 +1,24 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to CloudCompare v4.0.1 - 2019-01-01
+Send Geometry to Instant Meshes v4.1 2019-10-22
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 KartaVR
-http://www.andrewhazelden.com/blog/downloads/kartavr/
+https://www.andrewhazelden.com/projects/kartavr/docs/
 ----------------------------------------------------------------------------
 Overview:
 
-The Send Geometry to CloudCompare script is a module from [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to CloudCompare.
+The Send Geometry to Instant Meshes script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will take the AlembicMesh3D / FBXMesh3D / ExporterFBX nodes that are selected in the flow and send it to Instant Meshes.
 
-Note: CloudCompare is primarily used to examine meshes and point clouds
+Note: Instant Meshes is primarily used to do retopology edits on meshes
 
 How to use the Script:
 
 Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. 
 
-Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" menu item.
+Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to Instant Meshes" menu item.
 
 --]]--
 
@@ -221,45 +221,45 @@ function openGeometry(filename, nodeType, status)
 	-- ------------------------------------
 	-- Load the preferences
 	-- ------------------------------------
-	local defaultCloudCompareViewerFile = ''
+	local defaultInstantMeshesFile = ''
 	local command = ''
 	
 	if platform == 'Windows' then
 		-- Reactor Install
-		defaultCloudCompareViewerFile = comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.exe')
-		-- defaultCloudCompareViewerFile = comp:MapPath('C:\\Program Files\\CloudCompare\\ccViewer.exe')
+		defaultInstantMeshesFile = comp:MapPath('Reactor:/Deploy/Bin/instantmeshes/InstantMeshes.exe')
+		-- defaultInstantMeshesFile = comp:MapPath('C:\\Program Files\\Instant Meshes\\Instant Meshes.exe')
 	elseif platform == 'Mac' then
-		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
-		defaultCloudCompareViewerFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/cloudcompare/ccViewer.app'), '[/]$', '')
-		-- -- defaultCloudCompareViewerFile = '/Applications/ccViewer.app'
+		-- Take the trailing slash off the end of the final InstantMeshes.app path after the pathmap lookup
+		defaultInstantMeshesFile = string.gsub(comp:MapPath('Reactor:/Deploy/Bin/instantmeshes/InstantMeshes.app'), '[/]$', '')
+		-- defaultInstantMeshesFile = '/Applications/InstantMeshes.app'
 	else
-		defaultCloudCompareViewerFile = '/usr/bin/ccViewer'
-		-- defaultCloudCompareViewerFile = 'ccViewer'
+		defaultInstantMeshesFile = '/usr/bin/InstantMeshes'
+		-- defaultInstantMeshesFile = 'InstantMeshes'
 	end
 	
 	-- Note: The AskUser dialog settings are covered on page 63 of the Fusion Scripting Guide
 	compPath = dirname(comp:GetAttrs().COMPS_FileName)
 	
-	-- Location of CloudCompare
-	CloudCompareViewerFile = getPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', defaultCloudCompareViewerFile, printStatus)
+	-- Location of InstantMeshes
+	InstantMeshesViewerFile = getPreferenceData('KartaVR.SendGeometry.InstantMeshesViewerFile', defaultInstantMeshesFile, printStatus)
 	soundEffect = getPreferenceData('KartaVR.SendGeometry.SoundEffect', 1, printStatus)
 	
-	msg = 'Customize the settings for sending geometry files to CloudCompare. Please close CloudCompare before running this tool.'
+	msg = 'Customize the settings for sending geometry files to Instant Meshes. Please close Instant Meshes before running this tool.'
 	
 	-- Sound effect list
 	soundEffectList = {'None', 'On Error Only', 'Steam Train Whistle Sound', 'Trumpet Sound', 'Braam Sound'}
 	
 	d = {}
 	d[1] = {'Msg', Name = 'Warning', 'Text', ReadOnly = true, Lines = 4, Wrap = true, Default = msg}
-	d[2] = {'CloudCompareViewerFile', Name = 'CloudCompare Path', 'PathBrowse', Default = CloudCompareViewerFile}
+	d[2] = {'InstantMeshesViewerFile', Name = 'Instant Meshes Path', 'PathBrowse', Default = InstantMeshesViewerFile}
 	d[3] = {'SoundEffect', Name = 'Sound Effect', 'Dropdown', Default = soundEffect, Options = soundEffectList}
 	
-	dialog = comp:AskUser('Send Geometry to CloudCompare', d)
+	dialog = comp:AskUser('Send Geometry to Instant Meshes', d)
 	if dialog == nil then
 		print('You cancelled the dialog!')
 		
 		-- Unlock the comp flow area
-		comp:Unlock()
+		-- comp:Unlock()
 		
 		return
 	else
@@ -268,36 +268,36 @@ function openGeometry(filename, nodeType, status)
 		
 		-- Take the trailing slash off the end of the final ccViewer.app path after the pathmap lookup
 		if platform == 'Mac' then
-			CloudCompareViewerFile = string.gsub(comp:MapPath(dialog.CloudCompareViewerFile), '[/]$', '')
+			InstantMeshesViewerFile = string.gsub(comp:MapPath(dialog.InstantMeshesViewerFile), '[/]$', '')
 		else
-			CloudCompareViewerFile = comp:MapPath(dialog.CloudCompareViewerFile)
+			InstantMeshesViewerFile = comp:MapPath(dialog.InstantMeshesViewerFile)
 		end
 		
-		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', CloudCompareViewerFile, printStatus)
-			
+		setPreferenceData('KartaVR.SendGeometry.InstantMeshesViewerFile', InstantMeshesViewerFile, printStatus)
+		
 		soundEffect = dialog.SoundEffect
 		setPreferenceData('KartaVR.SendGeometry.SoundEffect', soundEffect, printStatus)
 		
-		print('[CloudCompareViewerFile] ' .. CloudCompareViewerFile)
+		print('[InstantMeshesViewerFile] ' .. InstantMeshesViewerFile)
 		print('[SoundEffect] ' .. soundEffect)
 	end
 	
-	-- Open the CloudCompare tool
+	-- Open the InstantMeshes tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		command = 'start "" "' .. CloudCompareViewerFile .. '" ' .. '"' .. filename .. '" '
+		command = 'start "" "' .. InstantMeshesViewerFile .. '" ' .. '"' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		command = 'open -a "' .. CloudCompareViewerFile .. '" --args ' .. '"' .. filename .. '" '
+		command = 'open -a "' .. InstantMeshesViewerFile .. '" --args ' .. '"' .. filename .. '" '
 		
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		command = '"' .. CloudCompareViewerFile .. '" ' .. '"' .. filename .. '" '
+		command = '"' .. InstantMeshesViewerFile .. '" ' .. '"' .. filename .. '" '
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else
@@ -306,7 +306,7 @@ function openGeometry(filename, nodeType, status)
 	end
 end
 
-print ('Send Geometry to CloudCompare is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print ('Send Geometry to Instant Meshes is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
 
 -- Check if Fusion is running
 if not fusion then
@@ -315,13 +315,12 @@ end
 
 
 -- Lock the comp flow area
-comp:Lock()
+-- comp:Lock()
 
 local mediaDirName = nil
 
 -- List the selected Node in Fusion 
 selectedNode = comp.ActiveTool
-
 if selectedNode then
 	print('[Selected Node] ', selectedNode.Name)
 	
@@ -352,9 +351,8 @@ if selectedNode then
 			err = true
 		end
 	end
-
 else
-	print('[Send Geometry to CloudCompare] No geometry node was selected. Please select and activate a FBXMesh3D, ExporterFBX or AlembicMesh3D node in the flow view.')
+	print('[Send Geometry to InstantMeshes] No geometry node was selected. Please select and activate a FBXMesh3D, ExporterFBX or AlembicMesh3D node in the flow view.')
 	err = true
 end
 
@@ -391,7 +389,7 @@ end
 
 
 -- Unlock the comp flow area
-comp:Unlock()
+-- comp:Unlock()
 
 -- End of the script
 print('[Done]')
