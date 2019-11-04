@@ -1,5 +1,5 @@
 --[[--
-KartaVR PTGui DragDrop - v4.1 2019-10-26
+KartaVR PTGui DragDrop - v4.2 2019-11-04
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 The "KartaVR DragDrop" atom package adds support for new "Drag and Drop" file type handlers to Fusion/Resolve v16+
@@ -19,52 +19,48 @@ Usage
 
 --]]--
 {
-	Event
-	{
+	Event{
 		Action = 'Drag_Drop',
-		
-		Targets =
-		{
-			FuView =
-			{
+		Targets = {
+			FuView = {
 				Execute = _Lua [=[
-					-- Call other chained events and default action
-					rets = self:Default(ctx, args) 
+-- Call other chained events and default action
+rets = self:Default(ctx, args) 
 
-					-- No one else handled this?
-					if not rets.handled then
-						-- Get the list of files dropped onto Fusion
-						files = args.urilist
+-- No one else handled this?
+if not rets.handled then
+	-- Get the list of files dropped onto Fusion
+	files = args.urilist
 
-						-- Scan through each of the files
-						for i, file in ipairs(files) do
-							-- Get the file extension
-							ext = string.match(file, '^.+(%..+)$')
+	-- Scan through each of the files
+	for i, file in ipairs(files) do
+		-- Get the file extension
+		ext = string.match(file, '^.+(%..+)$')
 
-							-- List each of the drag/dropped files
-							-- print('[Ext] "' .. tostring(ext) .. '" [File] "' .. tostring(file) .. '"')
+		-- List each of the drag/dropped files
+		-- print('[Ext] "' .. tostring(ext) .. '" [File] "' .. tostring(file) .. '"')
 
-							-- Process any PTGui Pro.pts files dropped into Fusion
-							if ext == '.pts' then
-								-- Get the current comp
-								comp = app:GetAttrs().FUSIONH_CurrentComp
+		-- Process any PTGui Pro.pts files dropped into Fusion
+		if ext == '.pts' then
+			-- Get the current comp
+			comp = app:GetAttrs().FUSIONH_CurrentComp
 
-								-- Verify the comp pointer is valid
-								if not comp then
-									print('[KartaVR DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
-									return
-								end
+			-- Verify the comp pointer is valid
+			if not comp then
+				print('[KartaVR DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
+				return
+			end
 
-								-- Accept the Drag and Drop event
-								rets.handled = true
+			-- Accept the Drag and Drop event
+			rets.handled = true
 
-								-- Load the pts file
-								print('\n[Load PTGui Pro Project] ' .. tostring(file))
-								comp:RunScript(app:MapPath('Scripts:/Comp/KartaVR/Stitching/PTGui Project Importer.lua'), {gPTGuiImporterFile = file})
-							end
-						end
-					end
-					]=]
+			-- Load the pts file
+			print('\n[Load PTGui Pro Project] ' .. tostring(file))
+			comp:RunScript(app:MapPath('Scripts:/Comp/KartaVR/Stitching/PTGui Project Importer.lua'), {gPTGuiImporterFile = file})
+		end
+	end
+end
+]=]
 			},
 		},
 	},
