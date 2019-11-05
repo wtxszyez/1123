@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.141 - November 2, 2019]]
+_VERSION = [[Version 3.141 - November 4, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -173,10 +173,12 @@ or
 - Added a "Comps/VR" category.
 - Reactor.lua now supports the same clicklable "http://"" and "file://"" centric atom desription hyperlinks like: <a href="file://Reactor:/Deploy/Config/">Reactor:/Deploy/Config/</a>
 
-### 3.141 2019-11-02 ##
+### 3.141 2019-11-04 ##
 
-- Added a "Tools/Deep Pixel" Category
 - Added support for Resolve/Fusion v16.1.1
+- Added a "Tools/Deep Pixel" Category
+- Added a "DragDrop" Category
+- Added a "KartaVR/DragDrop" Category
 
 ## Todos ##
 
@@ -671,11 +673,13 @@ function AtomWin()
 		{text = 'Comps/Templates'},
 		{text = 'Comps/VR'},
 		{text = 'Console'},
+		{text = 'DragDrop'},
 		{text = 'Docs'},
 		{text = 'Fun'},
 		{text = 'Hotkeys'},
 		{text = 'KartaVR'},
 		{text = 'KartaVR/Comps'},
+		{text = 'KartaVR/DragDrop'},
 		{text = 'KartaVR/Docs'},
 		{text = 'KartaVR/Hotkeys'},
 		{text = 'KartaVR/Scripts'},
