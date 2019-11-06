@@ -1,6 +1,6 @@
 --[[--
 ------------------------------------------------------------------------------
-View KartaVR Example 360VR Stitching Comps v4.1 2019-10-22
+View KartaVR Example 360VR Stitching Comps - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -15,21 +15,18 @@ This script is a module from the [KartaVR](https://www.andrewhazelden.com/projec
 How to use the Script:
 
 Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Example 360VR Stitching Comps" menu item.
-
 ------------------------------------------------------------------------------
+
 --]]--
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

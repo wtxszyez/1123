@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Convert PFM Depth Images v4.1 2019-10-22
+Convert PFM Depth Images - v4.2 2019-11-05
 
 by Andrew Hazelden
 www.andrewhazelden.com
@@ -15,7 +15,7 @@ The Convert PFM Depth Images script is a module from [KartaVR](https://www.andre
 
 How to use the Script:
 
-Step 1. Start Fusion and open a new comp. Then run the Script > KartaVR > Stereoscopic > Convert PFM Depth Images menu item.
+Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > Stereoscopic > Convert PFM Depth Images" menu item.
 
 Step 2. In the Convert PFM Depth Images dialog window you need to define the output formats and settings for the imagery.
 
@@ -40,11 +40,11 @@ Todo: The Default KartaVR "Cactus Lab" provided ImageMagick tool should be enabl
 
 --]]--
 
--- --------------------------------------------------------------------------
+-- Print out extra debugging information
 local printStatus = false
 
--- Find out if we are running Fusion 7 or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

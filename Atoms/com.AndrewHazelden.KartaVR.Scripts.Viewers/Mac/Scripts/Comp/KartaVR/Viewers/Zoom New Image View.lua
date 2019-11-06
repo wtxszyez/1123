@@ -1,6 +1,6 @@
 --[[--
 ------------------------------------------------------------------------------
-Zoom New Image View v4.1 2019-10-22
+Zoom New Image View - v4.2 2019-11-05
 by Andrew Hazelden -- www.andrewhazelden.com
 andrew@andrewhazelden.com
 
@@ -9,36 +9,33 @@ https://www.andrewhazelden.com/projects/kartavr/docs/
 ------------------------------------------------------------------------------
 Overview:
 
-The Zoom New Image View script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will minimize/maximize the floating New Image View window. The "Fusion-Maximize-Image-View.app" AppleScript program works with Fusion v8.2.1 to v9.0.2 on macOS.
+The Zoom New Image View script is a module from [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that will minimize/maximize the floating New Image View window. The "Fusion-Maximize-Image-View.app" AppleScript program works with Fusion v9.0.2 on macOS.
 
 How to use the Script:
 Step 1. Start Fusion and open a new comp. Open the Window menu and then select the "New Image View" menu item to create a new floating viewer window.
 
 Step 2. Run the Script > KartaVR > Viewers > Zoom New Image View. 
 
-Installation: 
 
+Installation: 
 To use this tool you need to enable Assistive Access on macOS. This is controlled through the System Preferences > Security & Privacy > Privacy > Accessibility preferences panel view on macOS 10.11+. 
 
 Unlock the Accessibility preferences panel and then drag the following file from a folder window in the Accessibility Preferences panel view:
 /Applications/KartaVR/mac_tools/applescript/Fusion-Maximize-Image-View.app
 
 Hotkeys.fu binding: SHIFT_3 = "RunScript{filename = 'Scripts:/Comp/KartaVR/Viewers/Zoom New Image View.lua'}",
-
 ------------------------------------------------------------------------------
+
 --]]--
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
@@ -131,10 +128,10 @@ function Main()
 	end
 
 	-- Run a script to maximize the foreground window
-	if math.floor(tonumber(eyeon._VERSION)) <= 9 then
+	if tonumber(app:GetVersion()[1]) <= 9 then
 		MaximizeView()
 	else
-		print("[Error] This script is designed for use in Fusion v8.2.1 to v9.0.2")
+		print("[Error] This script is designed for use in Fusion v9.0.2")
 	end
 end
 

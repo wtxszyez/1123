@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Autopano Pro v4.1 2019-10-22
+Send Media to Autopano Pro - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -21,6 +21,7 @@ Note: AutoPano Pro writes the version number in the application filename like "A
 Note: You are able to switch the viewerProgram line to either Autopano Pro, Autopano Giga, Autopano Video, or Autopano Video Pro.
 
 The existing loader and saver media files will be opened up in the viewer tool.
+
 --]]--
 
 function mediaViewerTool()
@@ -28,18 +29,14 @@ function mediaViewerTool()
 	autopanoProLauncher()
 end
 
-
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 7, 8, 9, or 15
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

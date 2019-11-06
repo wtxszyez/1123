@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Illustrator v4.1 2019-10-22
+Send Frame to Illustrator - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -17,26 +17,22 @@ How to use the Script:
 Step 1. Start Fusion and open a new comp. Select and activate a node in the flow view. Then run the "Script > KartaVR > Send Media to > Send Frame to Illustrator" menu item to load the media in Illustrator.
 
 If a loader or saver node is selected in the flow, the existing media file will be opened up in the viewer tool. Otherwise if any other node is active in the flow, a snapshot of the current viewer image will be saved to the temporary image directory and sent to the viewer tool.
---]]--
 
-------------------------------------------------------------------------------
+--]]--
 
 function mediaViewerTool(mediaFileName)
 	-- Choose one of the following media viewer tools:
 	illustratorLauncher(mediaFileName)
 end
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
