@@ -401,9 +401,12 @@ function photoshopLauncher()
 		elseif photoshopVersion == 10 then
 			-- Adobe Photoshop CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2019\\Photoshop.exe'
+		elseif photoshopVersion == 11 then
+			-- Adobe Photoshop CC 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2020\\Photoshop.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2019\\Photoshop.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2020\\Photoshop.exe'
 		end
 		
 		viewerProgram = '"' .. defaultViewerProgram .. '"'
@@ -448,9 +451,12 @@ function photoshopLauncher()
 		elseif photoshopVersion == 10 then
 			-- Adobe Photoshop CC 2019
 			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
+		elseif photoshopVersion == 11 then
+			-- Adobe Photoshop 2020
+			defaultViewerProgram = '/Applications/Adobe Photoshop 2020/Adobe Photoshop 2020.app'
 		else
 			-- Fallback
-			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
+			defaultViewerProgram = '/Applications/Adobe Photoshop 2020/Adobe Photoshop 2020.app'
 		end
 		
 		viewerProgram = '"' .. defaultViewerProgram .. '"'

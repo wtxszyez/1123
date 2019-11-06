@@ -399,9 +399,12 @@ function illustratorLauncher()
 		elseif illustratorVersion == 10 then
 			-- Adobe Illustrator CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+		elseif illustratorVersion == 11 then
+			-- Adobe Illustrator CC 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram

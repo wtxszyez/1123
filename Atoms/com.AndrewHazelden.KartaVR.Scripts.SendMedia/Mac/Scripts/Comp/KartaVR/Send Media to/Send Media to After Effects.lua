@@ -922,8 +922,7 @@ function afterEffectsLauncher()
 	-- Open the Viewer tool
 	if platform == 'Windows' then
 		-- Running on Windows
-		afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 10, printStatus)
-		
+		afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 11, printStatus)
 		if afterEffectsVersion == 0 then
 			-- Adobe After Effects CS3
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CS3\\Support Files\\AfterFX.exe'
@@ -957,9 +956,12 @@ function afterEffectsLauncher()
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects CC 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2020\\Support Files\\AfterFX.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2020\\Support Files\\AfterFX.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram
@@ -971,7 +973,7 @@ function afterEffectsLauncher()
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 10, printStatus)
+		afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 11, printStatus)
 		
 		if afterEffectsVersion == 0 then
 			-- Adobe After Effects CS3
@@ -1006,9 +1008,12 @@ function afterEffectsLauncher()
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = 'Adobe After Effects CC 2019'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects CC 2020
+			defaultViewerProgram = 'Adobe After Effects 2020'
 		else
 			-- Fallback
-			defaultViewerProgram = 'Adobe After Effects CC 2019'
+			defaultViewerProgram = 'Adobe After Effects 2020'
 		end
 		
 		viewerProgram = defaultViewerProgram

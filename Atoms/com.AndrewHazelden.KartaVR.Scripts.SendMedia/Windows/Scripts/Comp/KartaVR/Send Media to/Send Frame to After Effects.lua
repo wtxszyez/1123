@@ -42,7 +42,7 @@ local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac'
 function setPreferenceData(pref, value, status)
 	-- comp:SetData(pref, value)
 	fusion:SetData(pref, value)
-	
+
 	-- List the preference value
 	if status == 1 or status == true then
 		if value == nil then
@@ -73,7 +73,7 @@ function getPreferenceData(pref, defaultValue, status)
 		newPreference = defaultValue
 		-- comp:SetData(pref, defaultValue)
 		fusion:SetData(pref, defaultValue)
-		
+
 		if status == 1 or status == true then
 			if newPreference == nil then
 				print('[Creating ' .. pref .. ' Preference Data] ' .. 'nil')
@@ -82,7 +82,7 @@ function getPreferenceData(pref, defaultValue, status)
 			end
 		end
 	end
-	
+
 	return newPreference
 end
 
@@ -91,13 +91,12 @@ function afterEffectsLauncher(mediaFileName)
 	-- Viewer Variables
 	viewerProgram = nil
 	command = nil
-	
+
 	-- Adobe After Effects
 	local defaultViewerProgram = ''
 	if platform == 'Windows' then
 		-- Running on Windows
 		afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 10, printStatus)
-		
 		if afterEffectsVersion == 0 then
 			-- Adobe After Effects CS3
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CS3\\Support Files\\AfterFX.exe'
@@ -131,9 +130,12 @@ function afterEffectsLauncher(mediaFileName)
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects 2020\\Support Files\\AfterFX.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects 2020\\Support Files\\AfterFX.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram
@@ -178,14 +180,17 @@ function afterEffectsLauncher(mediaFileName)
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = '/Applications/Adobe After Effects CC 2019/Adobe After Effects CC 2019.app'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects 2020
+			defaultViewerProgram = '/Applications/Adobe After Effects 2020/Adobe After Effects 2020.app'
 		else
 			-- Fallback
-			defaultViewerProgram = '/Applications/Adobe After Effects CC 2019/Adobe After Effects CC 2019.app'
+			defaultViewerProgram = '/Applications/Adobe After Effects 2020/Adobe After Effects 2020.app'
 		end
-		
+
 		viewerProgram = defaultViewerProgram
 		command = 'open -a "' .. viewerProgram .. '" "' .. mediaFileName .. '"'
-		
+
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
@@ -206,16 +211,16 @@ function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
 	end
-	
+
 	local audioFilePath = ''
-	
+
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
 		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
@@ -230,7 +235,7 @@ function playDFMWaveAudio(filename, status)
 		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
@@ -245,11 +250,11 @@ function playDFMWaveAudio(filename, status)
 		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
+
 		-- Verify the audio files were installed
 		if eyeon.fileexists(audioFilePath) then
 			os.execute(command)
@@ -263,7 +268,7 @@ function playDFMWaveAudio(filename, status)
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
@@ -275,14 +280,14 @@ function playDFMWaveAudio(filename, status)
 			err = true
 		end
 	end
-	
+
 	if status == true or status == 1 then 
 		print('[Playing a KartaVR based sound file using System] ' .. audioFilePath)
 	end
 end
 
 
-print ('Send Frame to After Effects is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print ('Send Frame to After Effects is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then
@@ -318,12 +323,11 @@ selectedNode = comp.ActiveTool
 if selectedNode then
 	print('[Selected Node] ', selectedNode.Name)
 	toolAttrs = selectedNode:GetAttrs()
-	
+
 	-- Read data from either a the loader and saver nodes
 	if toolAttrs.TOOLS_RegID == 'Loader' then
 		-- Was the 'Use Current Frame' checkbox enabled in the preferences?
 		useCurrentFrame = getPreferenceData('KartaVR.SendMedia.UseCurrentFrame', 0, printStatus)
-		
 		if useCurrentFrame == 1 then
 			-- Expression for the current frame from the image sequence
 			-- It will report a 'nil' when outside of the active frame range
@@ -337,28 +341,27 @@ if selectedNode then
 			mediaFileName = comp:MapPath(selectedNode.Clip[fu.TIME_UNDEFINED])
 			-- filenameClip = (eyeon.parseFilename(mediaFileName))
 		end
-		
+
 		-- Get the file name from the clip
 		print('[Loader] ', mediaFileName)
 	elseif toolAttrs.TOOLS_RegID == 'Saver' then
 		mediaFileName = comp:MapPath(toolAttrs.TOOLST_Clip_Name[1])
 		print('[Saver] ', mediaFileName)
 	else
-	
 		-- Write out a temporary viewer snapshot so the script can send any kind of node to the viewer tool
-		
+
 		-- Image name with extension.
 		imageFilename = 'kvr_aftereffects_' .. selectedNode.Name .. '.' .. viewportSnapshotImageFormat
-		
+
 		-- Find out the Fusion temporary directory path
 		dirName = comp:MapPath('Temp:\\KartaVR\\')
-		
+
 		-- Create the temporary directory
 		os.execute('mkdir "' .. dirName .. '"')
-		
+
 		-- Create the image filepath for the temporary view snapshot
 		localFilepath = dirName .. imageFilename
-		
+
 		if fu_major_version >= 15 then
 			-- Resolve 15 workflow for saving an image
 			comp:GetPreviewList().LeftView.View.CurrentViewer:SaveFile(localFilepath)
@@ -370,13 +373,13 @@ if selectedNode then
 			-- Save the image in the Viewer A buffer
 			comp.CurrentFrame.LeftView.CurrentViewer:SaveFile(localFilepath)
 		end
-		
+
 		-- Everything worked fine and an image was saved
 		print('[Saved Image] ', localFilepath ,' [Selected Node] ', selectedNode.Name)
-		
+
 		mediaFileName = localFilepath
 	end
-	
+
 	-- Launch the viewer tool with this media clip
 	if mediaFileName ~= nil then
 		if eyeon.fileexists(mediaFileName) then

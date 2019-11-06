@@ -957,9 +957,12 @@ function afterEffectsLauncher()
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects CC 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2020\\Support Files\\AfterFX.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2019\\Support Files\\AfterFX.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2020\\Support Files\\AfterFX.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram
@@ -1006,9 +1009,12 @@ function afterEffectsLauncher()
 		elseif afterEffectsVersion == 10 then
 			-- Adobe After Effects CC 2019
 			defaultViewerProgram = 'Adobe After Effects CC 2019'
+		elseif afterEffectsVersion == 11 then
+			-- Adobe After Effects CC 2020
+			defaultViewerProgram = 'Adobe After Effects 2020'
 		else
 			-- Fallback
-			defaultViewerProgram = 'Adobe After Effects CC 2019'
+			defaultViewerProgram = 'Adobe After Effects 2020'
 		end
 		
 		viewerProgram = defaultViewerProgram

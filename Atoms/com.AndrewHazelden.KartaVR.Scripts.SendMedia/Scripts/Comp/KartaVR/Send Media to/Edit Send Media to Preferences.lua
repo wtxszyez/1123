@@ -27,11 +27,11 @@ The "Image Format" control allows you to customize the viewer window's saved ima
 
 The "Sound Effect" control allows you to choose if you want to have an audio alert played when an error happens or when the script task completes. You can choose one of the following audio playback options: "None", "On Error Only", "Steam Train Whistle Sound", "Trumpet Sound", or "Braam Sound".
 
-The "After Effects" control allows you to choose the specific version of Adobe After Effects you want to have used when the Send Frame to After Effects" or "Send Media to After Effects" scripts are run. You can choose one of the following options: "Adobe After Effects CC 2019", "Adobe After Effects CC 2018", "Adobe After Effects CC 2017", "Adobe After Effects CC 2015.3", "Adobe After Effects CC 2015", "Adobe After Effects CC 2014", "Adobe After Effects CC", "Adobe After Effects CS6", "Adobe After Effects CS5", "Adobe After Effects CS4", "Adobe After Effects CS3".
+The "After Effects" control allows you to choose the specific version of Adobe After Effects you want to have used when the Send Frame to After Effects" or "Send Media to After Effects" scripts are run. You can choose one of the following options: "Adobe After Effects CC 2020", "Adobe After Effects CC 2019", "Adobe After Effects CC 2018", "Adobe After Effects CC 2017", "Adobe After Effects CC 2015.3", "Adobe After Effects CC 2015", "Adobe After Effects CC 2014", "Adobe After Effects CC", "Adobe After Effects CS6", "Adobe After Effects CS5", "Adobe After Effects CS4", "Adobe After Effects CS3".
 
-The "Illustrator" control allows you to choose the specific version of Adobe Illustrator you want to use when the "Send Frame to Illustrator" or "Send Media to Illustrator" scripts are run. You can choose one of the following options: "Adobe Illustrator CC 2019", "Adobe Illustrator CC 2018", "Adobe Illustrator CC 2017", "Adobe Illustrator CC 2015.3", "Adobe Illustrator CC 2015", "Adobe Illustrator CC 2014", "Adobe Illustrator CC", "Adobe Illustrator CS6", "Adobe Illustrator CS5", "Adobe Illustrator CS4", "Adobe Illustrator CS3".
+The "Illustrator" control allows you to choose the specific version of Adobe Illustrator you want to use when the "Send Frame to Illustrator" or "Send Media to Illustrator" scripts are run. You can choose one of the following options: "Adobe Illustrator CC 2020", "Adobe Illustrator CC 2019", "Adobe Illustrator CC 2018", "Adobe Illustrator CC 2017", "Adobe Illustrator CC 2015.3", "Adobe Illustrator CC 2015", "Adobe Illustrator CC 2014", "Adobe Illustrator CC", "Adobe Illustrator CS6", "Adobe Illustrator CS5", "Adobe Illustrator CS4", "Adobe Illustrator CS3".
 
-The "Photoshop" control allows you to choose the specific version of Adobe Photoshop you want to use when the "Send Frame to Photoshop" or "Send Media to Photoshop" scripts are run. You can choose one of the following options:	"Adobe Photoshop CC 2019", "Adobe Photoshop CC 2018", "Adobe Photoshop CC 2017", "Adobe Photoshop CC 2015.5", "Adobe Photoshop CC 2015", "Adobe Photoshop CC 2014", "Adobe Photoshop CC", "Adobe Photoshop CS6", "Adobe Photoshop CS5", "Adobe Photoshop CS4", or "Adobe Photoshop CS3".
+The "Photoshop" control allows you to choose the specific version of Adobe Photoshop you want to use when the "Send Frame to Photoshop" or "Send Media to Photoshop" scripts are run. You can choose one of the following options: "Adobe Photoshop CC 2020", "Adobe Photoshop CC 2019", "Adobe Photoshop CC 2018", "Adobe Photoshop CC 2017", "Adobe Photoshop CC 2015.5", "Adobe Photoshop CC 2015", "Adobe Photoshop CC 2014", "Adobe Photoshop CC", "Adobe Photoshop CS6", "Adobe Photoshop CS5", "Adobe Photoshop CS4", or "Adobe Photoshop CS3".
 
 The "Mettle SkyBox" control allows you to apply a Mettle SkyBox Studio effect to your footage automatically when the media is sent to After Effects using the "Send Media to After Effects" script. You can choose one of the following options: "None", "Mettle SkyBox Converter", "Mettle SkyBox Project 2D", "Mettle SkyBox Rotate Sphere", "Mettle SkyBox Viewer".
 
@@ -181,8 +181,8 @@ if platform == 'Windows' then
 	photomatixProFile = 'C:\\Program Files\\PhotomatixPro6\\PhotomatixPro.exe'
 	ptGuiFile = 'C:\\Program Files\\PTGui\\PTGui.exe'
 	-- synthEyesFile = 'C:\\Program Files\\Andersson Technologies LLC\\SynthEyes\\SynthEyes64.exe'
-	touchDesignerFile = 'C:\\Program Files\\Derivative\\TouchDesigner088\\bin\\touchdesigner088.exe'
-	-- touchDesignerFile = 'C:\\Program Files\\Derivative\\TouchDesigner099\\bin\\touchdesigner099.exe'
+	-- touchDesignerFile = 'C:\\Program Files\\Derivative\\TouchDesigner088\\bin\\touchdesigner088.exe'
+	touchDesignerFile = 'C:\\Program Files\\Derivative\\TouchDesigner099\\bin\\touchdesigner099.exe'
 elseif platform == 'Mac' then
 	affinityDesignerFile = '/Applications/Affinity Designer.app'
 	affinityPhotoFile = '/Applications/Affinity Photo.app'
@@ -235,20 +235,20 @@ soundEffectList = {'None', 'On Error Only', 'Steam Train Whistle Sound', 'Trumpe
 -- Layer Order
 layerOrderList = {'No Sorting', 'Node X Position', 'Node Y Position', 'Node Name', 'Filename', 'Folder + Filename'}
 
-adobeAfterEffectsList = {'Adobe After Effects CS3', 'Adobe After Effects CS4', 'Adobe After Effects CS5', 'Adobe After Effects CS6', 'Adobe After Effects CC', 'Adobe After Effects CC 2014', 'Adobe After Effects CC 2015', 'Adobe After Effects CC 2015.3', 'Adobe After Effects CC 2017', 'Adobe After Effects CC 2018', 'Adobe After Effects CC 2019'}
+adobeAfterEffectsList = {'Adobe After Effects CS3', 'Adobe After Effects CS4', 'Adobe After Effects CS5', 'Adobe After Effects CS6', 'Adobe After Effects CC', 'Adobe After Effects CC 2014', 'Adobe After Effects CC 2015', 'Adobe After Effects CC 2015.3', 'Adobe After Effects CC 2017', 'Adobe After Effects CC 2018', 'Adobe After Effects CC 2019', 'Adobe After Effects 2020'}
 
-adobeIllustratorList = {'Adobe Illustrator CS3', 'Adobe Illustrator CS4', 'Adobe Illustrator CS5', 'Adobe Illustrator CS6', 'Adobe Illustrator CC', 'Adobe Illustrator CC 2014', 'Adobe Illustrator CC 2015', 'Adobe Illustrator CC 2015.3', 'Adobe Illustrator CC 2017', 'Adobe Illustrator CC 2018', 'Adobe Illustrator CC 2019'}
+adobeIllustratorList = {'Adobe Illustrator CS3', 'Adobe Illustrator CS4', 'Adobe Illustrator CS5', 'Adobe Illustrator CS6', 'Adobe Illustrator CC', 'Adobe Illustrator CC 2014', 'Adobe Illustrator CC 2015', 'Adobe Illustrator CC 2015.3', 'Adobe Illustrator CC 2017', 'Adobe Illustrator CC 2018', 'Adobe Illustrator CC 2019', 'Adobe Illustrator 2020'}
 
-adobePhotoshopList = {'Adobe Photoshop CS3', 'Adobe Photoshop CS4', 'Adobe Photoshop CS5', 'Adobe Photoshop CS6', 'Adobe Photoshop CC', 'Adobe Photoshop CC 2014', 'Adobe Photoshop CC 2015', 'Adobe Photoshop CC 2015.5', 'Adobe Photoshop CC 2017', 'Adobe Photoshop CC 2018', 'Adobe Photoshop CC 2019'}
+adobePhotoshopList = {'Adobe Photoshop CS3', 'Adobe Photoshop CS4', 'Adobe Photoshop CS5', 'Adobe Photoshop CS6', 'Adobe Photoshop CC', 'Adobe Photoshop CC 2014', 'Adobe Photoshop CC 2015', 'Adobe Photoshop CC 2015.5', 'Adobe Photoshop CC 2017', 'Adobe Photoshop CC 2018', 'Adobe Photoshop CC 2019', 'Adobe Photoshop 2020'}
 
 mettleSkyBoxAEList = {'None', 'Mettle SkyBox Converter', 'Mettle SkyBox Project 2D', 'Mettle SkyBox Rotate Sphere', 'Mettle SkyBox Viewer'}
 mettleSkyBoxInputProjectionsList = {'2D Source', 'Cube-map Horizontal Cross 4:3', 'Sphere-map', 'Equirectangular', 'Angular Fisheye (Fulldome)', 'Cube-map Facebook 3:2', 'Cube-map Pano2VR 3:2', 'Cube-map GearVR 6:1', 'Equirectangular 16:9'}
 mettleSkyBoxOutputProjectionsList = {'Cube-map Horizontal Cross 4:3', 'Sphere-map', 'Equirectangular', 'Angular Fisheye (Fulldome)', 'Cube-map Facebook 3:2', 'Cube-map Pano2VR 3:2', 'Cube-map GearVR 6:1', 'Equirectangular 16:9'}
 
 
-afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 10, printStatus)
-illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 10, printStatus)
-photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 10, printStatus)
+afterEffectsVersion = getPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', 11, printStatus)
+illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 11, printStatus)
+photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 11, printStatus)
 mettleSkyBoxAE = getPreferenceData('KartaVR.SendMedia.MettleSkyBoxAE', 0, printStatus)
 mettleSkyBoxInputProjections = getPreferenceData('KartaVR.SendMedia.MettleSkyBoxInputProjections', 3, printStatus)
 mettleSkyBoxOutputProjections = getPreferenceData('KartaVR.SendMedia.MettleSkyBoxOutputProjections', 2, printStatus)
@@ -279,72 +279,72 @@ d[21] = {'UseCurrentFrame', Name = 'Use Current Frame', 'Checkbox', Default = us
 dialog = comp:AskUser('Edit Send Media to Preferences', d)
 if dialog == nil then
 	print('You cancelled the dialog!')
-	
+
 	-- Unlock the comp flow area
 	comp:Unlock()
-	
+
 	return
 else
 	-- Debug - List the output from the AskUser dialog window
 	dump(dialog)
-	
+
 	imageFormat = dialog.Format
 	setPreferenceData('KartaVR.SendMedia.Format', imageFormat, printStatus)
-	
+
 	soundEffect = dialog.SoundEffect
 	setPreferenceData('KartaVR.SendMedia.SoundEffect', soundEffect, printStatus)
-	
+
 	layerOrder = dialog.LayerOrder
 	setPreferenceData('KartaVR.SendMedia.LayerOrder', layerOrder, printStatus)
-	
+
 	afterEffectsVersion = dialog.AfterEffectsVersion
 	setPreferenceData('KartaVR.SendMedia.AfterEffectsVersion', afterEffectsVersion, printStatus)
-	
+
 	illustratorVersion = dialog.IllustratorVersion
 	setPreferenceData('KartaVR.SendMedia.IllustratorVersion', illustratorVersion, printStatus)
-	
+
 	photoshopVersion = dialog.PhotoshopVersion
 	setPreferenceData('KartaVR.SendMedia.PhotoshopVersion', photoshopVersion, printStatus)
-	
+
 	mettleSkyBoxAE = dialog.MettleSkyBoxAE
 	setPreferenceData('KartaVR.SendMedia.MettleSkyBoxAE', mettleSkyBoxAE, printStatus)
-	
+
 	mettleSkyBoxInputProjections = dialog.MettleSkyBoxInputProjections
 	setPreferenceData('KartaVR.SendMedia.MettleSkyBoxInputProjections', mettleSkyBoxInputProjections, printStatus)
-	
+
 	mettleSkyBoxOutputProjections = dialog.MettleSkyBoxOutputProjections
 	setPreferenceData('KartaVR.SendMedia.MettleSkyBoxOutputProjections', mettleSkyBoxOutputProjections, printStatus)
-	
+
 	affinityDesignerFile = dialog.AffinityDesignerFile
 	setPreferenceData('KartaVR.SendMedia.AffinityDesignerFile', affinityDesignerFile, printStatus)
-	
+
 	affinityPhotoFile = dialog.AffinityPhotoFile
 	setPreferenceData('KartaVR.SendMedia.AffinityPhotoFile', affinityPhotoFile, printStatus)
-	
+
 	autopanoProFile = dialog.AutopanoProFile
 	setPreferenceData('KartaVR.SendMedia.AutopanoProFile', autopanoProFile, printStatus)
-	
+
 	corelPhotoPaintFile = dialog.CorelPhotoPaintFile
 	setPreferenceData('KartaVR.SendMedia.CorelPhotoPaintFile', corelPhotoPaintFile, printStatus)
-	
+
 	huginFile = dialog.HuginFile
 	setPreferenceData('KartaVR.SendMedia.HuginFile', huginFile, printStatus)
-	
+
 	imagemagickFile = dialog.ImagemagickFile
 	setPreferenceData('KartaVR.SendMedia.ImagemagickFile', imagemagickFile, printStatus)
-	
+
 	photomatixProFile = dialog.PhotomatixProFile
 	setPreferenceData('KartaVR.SendMedia.PhotomatixProFile', photomatixProFile, printStatus)
-	
+
 	ptGuiFile = dialog.PTGuiFile
 	setPreferenceData('KartaVR.SendMedia.PTGuiFile', ptGuiFile, printStatus)
-	
+
 	-- synthEyesFile = dialog.SynthEyesFile
 	-- setPreferenceData('KartaVR.SendMedia.SynthEyesFile', synthEyesFile, printStatus)
-	
+
 	touchDesignerFile = dialog.TouchDesignerFile
 	setPreferenceData('KartaVR.SendMedia.TouchDesignerFile', touchDesignerFile, printStatus)
-	
+
 	useCurrentFrame = dialog.UseCurrentFrame
 	setPreferenceData('KartaVR.SendMedia.UseCurrentFrame', useCurrentFrame, printStatus)
 end

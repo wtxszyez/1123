@@ -17,8 +17,8 @@ How to use the Script:
 Step 1. Start Fusion and open a new comp. Select a set of loader and saver nodes in the flow view. Then run the "Script > KartaVR > Send Media to > Send Media to Illustrator" menu item to load the media in Illustrator.
 
 The existing loader and saver media files will be opened up in the viewer tool.
-
 --]]--
+
 
 function mediaViewerTool()
 	-- Choose one of the following media viewer tools:
@@ -364,7 +364,7 @@ function illustratorLauncher()
 	local defaultViewerProgram = ''
 	if platform == 'Windows' then
 		-- Running on Windows
-		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 10, printStatus)
+		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 11, printStatus)
 	
 	if illustratorVersion == 0 then
 			-- Adobe Illustrator CS3
@@ -399,9 +399,12 @@ function illustratorLauncher()
 		elseif illustratorVersion == 10 then
 			-- Adobe Illustrator CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+		elseif illustratorVersion == 11 then
+			-- Adobe Illustrator CC 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram
@@ -510,7 +513,7 @@ function playDFMWaveAudio(filename, status)
 end
 
 
-print ('Send Media to Illustrator is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print ('Send Media to Illustrator is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then
