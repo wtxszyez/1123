@@ -552,7 +552,7 @@ function pfmTranscodeMedia(pfmFolder, imageFormat, imageName, framePadding, comp
 end
 
 
-print('Convert PFM Depth Images is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print('Convert PFM Depth Images is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then
