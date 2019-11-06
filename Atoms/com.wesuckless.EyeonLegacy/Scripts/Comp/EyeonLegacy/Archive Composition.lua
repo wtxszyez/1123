@@ -1,5 +1,5 @@
 --[[--
-Archive Composition v2.3.2 2019-08-06 
+Archive Composition v2.4 2019-11-05 
 by Isaac Guenard and Sean Konrad
 
 -------------------------------------------------------------------------------
@@ -68,9 +68,14 @@ Version History
 	- Added a "Client Notes for ArchiveLog.txt" text field to the AskUser dialog. That textual message is saved into to the ArchiveLog.txt file.
 	- Added an "Open Archive Composition Folder" checkbox to the AskUser dialog that will open the output folder up in a desktop folder browsing window.
 	- Added the ability to save/restore the Archive Composition checkbox states in the AskUser dialog.
+
 * v2.3.2 2018-08-06 by Alex Bogomolov (mail@abogomolov.com)
-    - Fixed wrong sequence parsing if the filepath has dots. Use parseFilename(path).Extension instead of getextension(path)
-    - add LUTs export
+	- Fixed wrong sequence parsing if the filepath has dots. Use parseFilename(path).Extension instead of getextension(path)
+	- add LUTs export
+
+* v2.4 2019-11-05 by Andrew Hazelden (andrew@andrewhazelden.com)
+	- Added Fusion v16.1.1 support by changing from "eyeon._VERSION" to "app:GetVersion()[1]".
+	- Todo: Fusion v16.1.1 might still have issues with bmd.scriptlib based calls like "eyeon.copyfile()" and "eyeon.parseFilename()".
 
 -------------------------------------------------------------------------------
 Wishlist
@@ -131,27 +136,14 @@ end
 -- Find out the current operating system platform. (Andrew Hazelden Edit)
 -- The platform local variable should be set to either 'Windows', 'Mac', or 'Linux'.
 ----------------------------------------------------------------------
--- Find out if we are running Fusion 7 / 8 / 9
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
-local platform = ''
-local os_separator = ''
-if string.find(comp:MapPath('Fusion:\\'), 'Program Files', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-	os_separator = '\\'
-elseif string.find(comp:MapPath('Fusion:\\'), 'PROGRA~1', 1) then
-	-- Check if the OS is Windows by searching for the Program Files folder
-	platform = 'Windows'
-	os_separator = '\\'
-elseif string.find(comp:MapPath('Fusion:\\'), 'Applications', 1) then
-	-- Check if the OS is Mac by searching for the Applications folder
-	platform = 'Mac'
-	os_separator = '/'
-else
-	platform = 'Linux'
-	os_separator = '/'
-end
+-- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
+local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
+
+-- Add the platform specific folder slash character
+local os_separator = package.config:sub(1,1)
 
 ------------------------------------------------------------------------------
 --			DECLARE FUNCTIONS																										--
