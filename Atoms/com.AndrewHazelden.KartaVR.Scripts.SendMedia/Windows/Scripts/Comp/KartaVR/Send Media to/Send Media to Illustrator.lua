@@ -364,7 +364,7 @@ function illustratorLauncher()
 	local defaultViewerProgram = ''
 	if platform == 'Windows' then
 		-- Running on Windows
-		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 10, printStatus)
+		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 11, printStatus)
 	
 	if illustratorVersion == 0 then
 			-- Adobe Illustrator CS3
@@ -414,7 +414,8 @@ function illustratorLauncher()
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		viewerProgram = 'Adobe Illustrator.app'
+		-- viewerProgram = 'Adobe Illustrator.app'
+		viewerProgram = 'Adobe Illustrator 2020.app'
 		command = 'open -a "' .. viewerProgram .. '" '.. mediaList
 		
 		print('[Launch Command] ', command)
@@ -513,7 +514,7 @@ function playDFMWaveAudio(filename, status)
 end
 
 
-print ('Send Media to Illustrator is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print ('Send Media to Illustrator is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then
