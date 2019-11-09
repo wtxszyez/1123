@@ -1,0 +1,121 @@
+--[[
+
+Blip Fuse
+
+-------------------------------------------------------------------
+Copyright (c) 2019,  Pieter Van Houte
+<pieter[at]secondman[dot]com>
+-------------------------------------------------------------------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-------------------------------------------------------------------
+
+version 1.0 - initial release
+version 1.1 - added additional controls for blip length, values and decay
+version 1.2 - can be inserted in Modifier chain, support for negative decay
+version 1.3 - cleanup, WSL HelpTopic, first public release for Reactor
+
+--]]
+
+version = "Blip v1.3 - 8 November 2019"
+
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+FuRegisterClass("Blip", CT_Modifier, {
+	REGS_Category       = "Fuses",
+	REGS_OpIconString   = "Blip",
+	REGS_OpDescription  = "Blip",
+	REGS_Name           = "Blip",
+	REGID_DataType      = "Number",
+	REGID_InputDataType = "Number",
+	REG_TimeVariant     = true,			-- required to disable caching of the current time parameter
+	REGB_Temporal 			= true,			-- ensures reliability in Resolve 15
+	REGS_Company 				= "Pieter Van Houte",
+	REGS_URL 						= "https://www.secondman.com",
+	REGS_HelpTopic      = "https://www.steakunderwater.com/wesuckless/viewtopic.php?t=3485",
+	REG_Fuse_NoEdit     = true,
+	REG_Fuse_NoReload   = true,
+	REG_Version					= 130,
+	})
+	
+function Create()
+	InRest = self:AddInput("Rest Value", "RestValue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 1,
+		INP_MinScale = 0,
+		INP_Default = 0.0,
+		LINK_Main = 1,
+		})
+	InBlip = self:AddInput("Blip Value", "BlipValue", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 1,
+		INP_MinScale = 0,
+		INP_Default = 1.0,
+		})
+	InBlipLength = self:AddInput("Blip Length", "BlipLength", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 10,
+		INP_MinScale = 1,
+		INP_Default = 1,
+		INP_MinAllowed = 1,
+		INP_Integer = true,
+		})
+	InDecay = self:AddInput("Attack/Decay", "AttackDecay", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MaxScale = 1,
+		INP_MinScale = -1,
+		INP_Default = 0.0,
+		})
+	InKeyframes = self:AddInput("Blip Frames", "BlipFrames", {
+		ICD_Width = 1,
+		INP_External = false,
+		LINKID_DataType = "Text",
+		INPID_InputControl = "TextEditControl",
+		INPS_DefaultText = "",  		-- use instead of INP_Default!
+		TEC_Lines = 20,             -- height of text entry (default is 8)
+		})
+	InLabel = self:AddInput(version, "version", {
+		LINKID_DataType = "Text",
+		INPID_InputControl = "LabelControl",
+		INP_External = false,
+		INP_Passive = true,
+		})
+	OutValue = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Number",
+		LINK_Main = 1,
+		})
+end
+
+function Process(req)
+	local blipframesinput = InKeyframes:GetValue(req).Value
+--	dump(blipframesinput)
+	local rest = InRest:GetValue(req).Value
+	local blip = InBlip:GetValue(req).Value
+	local bliplength = InBlipLength:GetValue(req).Value
+	local decay = InDecay:GetValue(req).Value
+	local currenttime = req.Time
+	
+	local out = rest
+	
+	for blipframe in string.gmatch(blipframesinput, "([^,\r\n%s]+)") do -- split at commas, newlines and spaces (also tabs)
+		blipframe = tonumber(blipframe) 
+		if currenttime >= blipframe and currenttime < blipframe+bliplength then
+			if decay >= 0 then
+				out = rest + (blip-rest) * (1-decay) ^ (bliplength - (blipframe + bliplength - currenttime))
+			elseif decay <0 then 
+				out = rest + (blip-rest) * (1-math.abs(decay)) ^ (blipframe + bliplength - currenttime -1)
+			end
+		end
+	end
+
+	OutValue:Set(req, Number(out))
+end
