@@ -1,0 +1,504 @@
+{
+	Tools = ordered() {
+		SplineBlur = MacroOperator {
+			Inputs = ordered() {
+				Comments = Input { Value = "Macro by Emilio Sapia - Millolab\nhttps://emiliosapia.myportfolio.com", },
+				Background = InstanceInput {
+					SourceOp = "ChangeDepth1_1_1",
+					Source = "Input",
+				},
+				BlurMode = InstanceInput {
+					SourceOp = "ChangeDepth1_1_1",
+					Source = "BlurMode",
+					Default = 0,
+				},
+				BlurSize = InstanceInput {
+					SourceOp = "ChangeDepth1_1_1",
+					Source = "BlurSize",
+					Default = 1,
+				},
+				Corner = InstanceInput {
+					SourceOp = "ChangeDepth1_1_1",
+					Source = "CornerSmoothing",
+					Default = 0,
+				},
+				SplineInput = InstanceInput {
+					SourceOp = "PipeRouter1_1_1",
+					Source = "Input",
+					Name = "Spline Input",
+				},
+				VectorMask = InstanceInput {
+					SourceOp = "PipeRouter3_1_1",
+					Source = "Input",
+					Name = "Vector Mask",
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "PipeRouter2_1_1",
+					Source = "Input",
+					Name = "Effect Mask",
+				},
+				Preview = InstanceInput {
+					SourceOp = "Merge_1_1",
+					Source = "SizePreview",
+					Default = 1,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge1_1_1",
+					Source = "Blend",
+					Default = 1,
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Merge1_1_1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				Background1_1_1 = Background {
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "ChangeDepth1_1_1.Input.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1080,
+							Expression = "ChangeDepth1_1_1.Input.OriginalHeight",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftRed = Input { Value = 1, },
+						TopLeftGreen = Input { Value = 1, },
+						TopLeftBlue = Input { Value = 1, },
+						EffectMask = Input {
+							SourceOp = "PipeRouter1_1_1",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1495.41, 76.6013 } },
+				},
+				CustomFilter1_1_1_1 = CustomFilter {
+					Inputs = {
+						Matrix = Input {
+							Value = FilterTable {
+								NumEntries = 54,
+								Type = 6,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0, 1, 1, 1, 1, 1, -2, 0, 2, 1, 1, 1, 1, -1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+							},
+						},
+						Normalize = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Background1_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1495.41, 139.601 } },
+				},
+				CustomFilter2_1_1_1 = CustomFilter {
+					Inputs = {
+						Matrix = Input {
+							Value = FilterTable {
+								NumEntries = 54,
+								Type = 6,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, -1, -2, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+							},
+						},
+						Normalize = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Background1_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1495.41, 183.601 } },
+				},
+				Instance_Blur1_2_1_1 = Blur {
+					SourceOp = "Blur1_1_1",
+					Inputs = {
+						XBlurSize = Input { Expression = "ChangeDepth1_1_1.CornerSmoothing" },
+						Input = Input {
+							SourceOp = "CustomFilter2_1_1_1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1628.41, 183.601 } },
+				},
+				Instance_Blur1_1_1_1 = Blur {
+					SourceOp = "Blur1_1_1",
+					Inputs = {
+						XBlurSize = Input { Expression = "ChangeDepth1_1_1.CornerSmoothing" },
+						Input = Input {
+							SourceOp = "CustomFilter1_1_1_1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1628.41, 139.601 } },
+				},
+				CustomFilter1_2_1 = CustomFilter {
+					Inputs = {
+						Matrix = Input {
+							Value = FilterTable {
+								NumEntries = 54,
+								Type = 6,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, -1, 1, 1, 1, 1, 2, 0, -2, 1, 1, 1, 1, 1, 0, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+							},
+						},
+						Normalize = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Background1_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1495.41, 229.163 } },
+				},
+				Blur1_1_1 = Blur {
+					Inputs = {
+						Filter = Input { Value = FuID { "Bartlett" }, },
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "ChangeDepth1_1_1.CornerSmoothing",
+						},
+						Input = Input {
+							SourceOp = "CustomFilter1_2_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1630.41, 229.163 } },
+				},
+				CustomFilter2_2_1 = CustomFilter {
+					Inputs = {
+						Matrix = Input {
+							Value = FilterTable {
+								NumEntries = 54,
+								Type = 6,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, -1, -2, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+							},
+						},
+						Normalize = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "Background1_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1495.41, 274.163 } },
+				},
+				Instance_Blur1_3_1 = Blur {
+					SourceOp = "Blur1_1_1",
+					Inputs = {
+						XBlurSize = Input {
+							Value = 0,
+							Expression = "ChangeDepth1_1_1.CornerSmoothing"
+						},
+						Input = Input {
+							SourceOp = "CustomFilter2_2_1",
+							Source = "Output",
+						},
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { 1628.89, 274.163 } },
+				},
+				Dissolve1_1_1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ChangeDepth1_1_1.BlurMode",
+						},
+						Background = Input {
+							SourceOp = "PATH_1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "RADIAL_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1775.05, 289.163 } },
+				},
+				PATH_1_1 = ChannelBoolean {
+					Inputs = {
+						MultiplyByMask = Input { Value = 1, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToXVector = Input { Value = 0, },
+						ToYVector = Input { Value = 5, },
+						Background = Input {
+							SourceOp = "Blur1_1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_Blur1_3_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "PipeRouter3_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1775.05, 229.163 } },
+				},
+				RADIAL_1_1 = ChannelBoolean {
+					Inputs = {
+						MultiplyByMask = Input { Value = 1, },
+						EnableExtraChannels = Input { Value = 1, },
+						ToXVector = Input { Value = 0, },
+						ToYVector = Input { Value = 5, },
+						Background = Input {
+							SourceOp = "Instance_Blur1_2_1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Instance_Blur1_1_1_1",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "PipeRouter3_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1775.05, 139.601 } },
+				},
+				VectorMotionBlur_1_1 = VectorMotionBlur {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1_1_1",
+							Source = "Output",
+						},
+						Vectors = Input {
+							SourceOp = "Dissolve1_1_1",
+							Source = "Output",
+						},
+						XScale = Input { Expression = "ChangeDepth1_1_1.BlurSize/self.Input.ProxyScale^2", },
+						EffectMask = Input {
+							SourceOp = "PipeRouter2_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1775.05, 342.601 } },
+				},
+				ChangeDepth1_1_1 = ChangeDepth {
+					Inputs = {
+						Depth = Input { Value = 4, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1498.89, 342.601 } },
+					UserControls = ordered() {
+						BlurMode = {
+							{ CCS_AddString = "Path" },
+							{ CCS_AddString = "Radial" },
+							LINKS_Name = "Blur Mode",
+							INP_Integer = false,
+							LINKID_DataType = "Number",
+							INPID_InputControl = "ComboControl",
+							INP_MinScale = 0,
+							CC_LabelPosition = "Horizontal",
+							INP_MaxScale = 1,
+							INP_Default = 0,
+						},
+						BlurSize = {
+							INP_Integer = false,
+							LINKS_Name = "Blur Size",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 10,
+							INP_Default = 1,
+						},
+						CornerSmoothing = {
+							INP_Integer = false,
+							LINKS_Name = "Corner Smoothing",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 100,
+							INP_Default = 0,
+						}
+					}
+				},
+				PipeRouter1_1_1 = PipeRouter {
+					ViewInfo = PipeRouterInfo { Pos = { 1738.78, -32.9967 } },
+				},
+				PipeRouter3_1_1 = PipeRouter {
+					ViewInfo = PipeRouterInfo { Pos = { 1889.89, 306.601 } },
+				},
+				PipeRouter2_1_1 = PipeRouter {
+					ViewInfo = PipeRouterInfo { Pos = { 1775.05, 417.79 } },
+				},
+				Filter_1_1 = Filter {
+					Inputs = {
+						FilterType = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "Background2_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.75, 242.689 } },
+				},
+				Background2_1_1 = Background {
+					Inputs = {
+						Width = Input {
+							Value = 1920,
+							Expression = "ChangeDepth1_1_1.Input.OriginalWidth",
+						},
+						Height = Input {
+							Value = 1080,
+							Expression = "ChangeDepth1_1_1.Input.OriginalHeight",
+						},
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						TopLeftGreen = Input { Value = 1, },
+						EffectMask = Input {
+							SourceOp = "Bitmap2_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.75, 198.825 } },
+				},
+				Bitmap1_1_1 = BitmapMask {
+					CtrlWZoom = false,
+					Inputs = {
+						SoftEdge = Input { Value = 0.001, },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Image = Input {
+							SourceOp = "PipeRouter1_1_1",
+							Source = "Output",
+						},
+						High = Input { Value = 0.001, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.75, 112.731 } },
+				},
+				Bitmap2_1_1 = BitmapMask {
+					Inputs = {
+						SoftEdge = Input { Value = 0.001, },
+						PaintMode = Input { Value = FuID { "Minimum" }, },
+						Invert = Input { Value = 1, },
+						MaskWidth = Input { Value = 1920, },
+						MaskHeight = Input { Value = 1080, },
+						PixelAspect = Input { Value = { 1, 1 }, },
+						Image = Input {
+							SourceOp = "PipeRouter1_1_1",
+							Source = "Output",
+						},
+						Low = Input { Value = 0.999, },
+						EffectMask = Input {
+							SourceOp = "Bitmap1_1_1",
+							Source = "Mask",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.75, 156.731 } },
+				},
+				ErodeDilate_1_1 = ErodeDilate {
+					Inputs = {
+						XAmount = Input { Value = -0.000497, },
+						Input = Input {
+							SourceOp = "Filter_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.7, 284.89 } },
+				},
+				Merge_1_1 = Merge {
+					Inputs = {
+						Blend = Input { Expression = "Merge_1_1.SizePreview", },
+						Background = Input {
+							SourceOp = "VectorMotionBlur_1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ErodeDilate_1_1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "PipeRouter3_1_1",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.7, 342.601 } },
+					UserControls = ordered() {
+						SizePreview = {
+							{ MBTNC_AddButton = "Off" },
+							{ MBTNC_AddButton = "On" },
+							INP_Integer = false,
+							INPID_InputControl = "MultiButtonControl",
+							MBTNC_ShowBasicButton = true,
+							INP_MaxScale = 1,
+							INP_Default = 1,
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							MBTNC_ShowName = true,
+							MBTNC_StretchToFit = true,
+							MBTNC_ShowToolTip = true,
+							LINKS_Name = "Size Preview",
+						}
+					}
+				},
+				PipeRouter4_1_1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth1_1_1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 1731.75, 460.601 } },
+				},
+				Merge1_1_1 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "PipeRouter4_1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Merge_1_1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 1999.7, 460.601 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "SplineBlur"
+}
