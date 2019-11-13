@@ -7,7 +7,7 @@ www.andrewhazelden.com
 ----------------------------------------------------------------------------
 
 Overview:
-The "Directory Tree" script displays a ui:Tree view that allows you to browse through and quickly import the media assets stored in the same folder hiearchy as your .comp file. This script works in Fusion v9-16.1.1+ but won't do much for you in Resolve's Fusion page since there is no concept of a "Comp:/" PathMap.
+The "Directory Tree" script displays a ui:Tree view that allows you to browse through and quickly import the media assets stored in the same folder hierarchy as your .comp file. This script works in Fusion v9-16.1.1+ but won't do much for you in Resolve's Fusion page since there is no concept of a "Comp:/" PathMap.
 
 
 Usage:
