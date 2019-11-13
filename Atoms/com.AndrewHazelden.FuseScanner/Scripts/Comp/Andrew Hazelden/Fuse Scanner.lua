@@ -1,4 +1,4 @@
-_VERSION = 'v3.14 2019-10-05'
+_VERSION = 'v3.141 2019-11-13'
 --[[--
 Fuse Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -305,24 +305,24 @@ function Main()
 
 			-- Tree View Controls
 			ui:HGroup{
-				Weight = 0,
+				Weight = 0.01,
 
 				-- Add some space
 				ui:HGap(),
 
 				ui:Label{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ViewControlsLabel',
 					Text = 'Tree View Controls: ',
 				},
 				ui:CheckBox{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ExpandPathMapCheckbox',
 					Text = 'Expand PathMaps',
 					Checked = true,
 				},
 				ui:CheckBox{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ShowDuplicateIDsCheckbox',
 					Text = 'Show Duplicate Fuse IDs',
 					Checked = false,
