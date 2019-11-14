@@ -609,6 +609,7 @@ As a bonus the output from the CubicFaces2Equirectangular node is connected to a
 
 ![Text+ to Equirectangular](images/examples-text-to-equirectangular.png)
 
+<a name="uv-pass-latlong-stereo-to-cubemap-3x2-stereo"></a>
 ## UV Pass LatLongStereo to Cubemap3x2Stereo.comp ##
 
 This example shows how to use a UV pass map to reformat a pair of LatLong/Equirectangular/Spherical stereo images into the cubemap 3x2 stereo image projections.

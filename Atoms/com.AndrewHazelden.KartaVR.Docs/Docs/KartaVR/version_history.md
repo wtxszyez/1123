@@ -1,9 +1,94 @@
 <a name="version-history"></a>
 ## Version History ##
 
+### Version 4.2.1 - 2019-11-12 ###
+
+- A `Scripts > KartaVR > Geometry > Send Geometry to usdview` menu item was added. This script takes AlembicMesh3D nodes that are selected in the Nodes view and sends the .abc models to usdview. You can then playback the Alembic sequence using the usdview timeline controls, navigate through and inspect the scene graph, or export a flattened USDC (Binary Crate)/USDA (ASCII) formatted USD scene from your alembic source model. The usdview program needs to be installed on the system and listed in the $PATH environment variable, or you have to select the executable in the AskUser dialog. 
+
+- The `Scripts > KartaVR > Viewer > Directory Tree` menu item was ported from being a macOS only script to have cross-platform Windows/macOS/Linux support. The "Directory Tree" script displays a ui:Tree view that allows you to browse through and quickly import the media assets stored in the same folder hierarchy as your .comp file.
+
+	- Single-click on a row in the tree view to copy the filepath to your clipboard.
+	- Double-clicking on a row will import images, image sequences, movies, and FBX/OBJ/Alembic 3D models into your comp.
+	- Double-clicking on a .comp file will open it in a new tab.
+	- Double-clicking on a .setting file will add the macro node to your current composite.
+	- Double-clicking on a .lua script will run it.
+	- Double-clicking on an .atom file will open it in the Reactor's Atomizer editor.
+	- Double-clicking on an .xyz point cloud file will import it into your current composite as a PointCloud3D node.
+	- Double-clicking on a .pts (PTGui v10) file will run the KartaVR PTGui Project Importer script.
+	- Double-clicking on a .txt file or .html webpage will open it in the default viewing program.
+	- Double-clicking on a folder will open the folder up in a Finder/Explorer/Nautilus folder browsing window.
+	- Double-clicking on a LUT file will load it in Fusion.
+
+- Updated the `KartaVR > Open Folder > Open KartaVR Temp Folder` menu item, and corresponding tool script. Now the menu item can be run in Resolve outside of the Fusion page environment without issues.
+
+- Updated the `Send Media to Illustrator` script to support Adobe CC 2020. In time, this script needs an overhaul in how the executable path is defined in the `if/elseif/else` code to better handle the changing program path used by Illustrator across each version Adobe release.
+
+- Updated the Fusion version checking code used in the `Script > KartaVR > Stereoscopic > Convert PFM Depth Images` menu entry.
+
+### Version 4.2 - 2019-11-05 ###
+
+- The `KartaVR Comp DragDrop.fu` file allows you to import a Fusion .comp file by dragging it into the Nodes view from a desktop Explorer/Finder/Nautilus folder browsing window. This is a quick way to merge in external Fusion .comp documents into an existing open foreground composite and is very handy for Resolve users who work with Media Pool based Fusion comps, or Timeline based Fusion comps.
+
+- Updated the KartaVR Lua scripts to support Fusion version checking support in Fusion v16.1.1 and Resolve v16.1.1. The previous Lua code `math.floor(tonumber(eyeon._VERSION))` has been updated to use `tonumber(app:GetVersion()[1])`.
+
+- Added Adobe CC 2020 support to the `Script > KartaVR > Send Media to > ` menu items. You can use the `Edit Send Media to Preferences` script to select the appropriate version of Adobe tools you wish to use with KartaVR. Changed the default Adobe CC launching versions to CC 2020 for the apps when you first open the preferences.
+
+- Synced all the kartaVR atom version numbers to be matched.
+
+### Version 4.1.1 - 2019-10-26 ###
+
+- Added an `Export Point Cloud.lua` script to the `Script > KartaVR > Geometry` menu. This allows you to export a PointCloud3D node's locators as either a PLY ASCII and XYZ point cloud.
+
+- Added a `PointCloud DragDrop.fu` file that allows Fusion/Resolve Fusion page v16+ to load in .xyz point cloud files that are dragged into the Nodes view from a desktop Explorer/Finder/Nautilus folder browsing window.
+
+- Added a `locators.xyz` sample point cloud to the `Reactor:/Deploy/Macros/KartaVR/Images/` folder. This is a simple example that loads in two strips of locators (20 points total) on the X/Z origin plane.
+
+### Version 4.1 - 2019-10-22 ###
+
+- Added a `youtube_cubemap2x3.obj` panoramic viewing mesh for viewing and doing MeshUV panoramic tranforms on YouTube formatted cubemap 2x3 side-by-side formatted stereo 360&deg; videos.
+
+- Added a `Script > KartaVR > Geometry > Send Geometry to Instant Meshes` menu item. This Lua script allows you to send OBJ models (loaded into a comp using an FBXMesh3D node) from the Fusion Flow/Nodes view to the external Instant Meshes program via the CLI (command-line). Also, Instant Meshes is now available as a Reactor "Bin" category atom package so it can be installed on Win/macOS/Linux systems in a single click.
+
+- Added a new conversion macro called `MeshUV2EquirectangularStereo`. The MeshUV2Equirectangular macro allows you to do Side-by-side and Over/Under stereo 3D panoramic texture baking with the input being a stereo 3D image in an arbitrary image projection. The MeshUV2EquirectangularStereo uses a MeshUV based .obj model for the panoramic transform that is defined via the "FBX File" attribute. The output from this macro is an over/under stereo 3D equirectanglar 360x180° panoramic image. There is a MacroLUT version of this macro called `MeshUV to EquirectangularStereoOU LUT`.
+
+- Revised parts of the KartaVR online documentation.
+
+- Added a KartaVR Tips & Tricks entry for "[Breaking the 32K Resolution Barrier](tips.html#breaking-the-32k-resolution-barrier)".
+
+### Version 4.0.3 - 2019-10-20 ###
+
+- The KartaVR "Video Snapshot" script was updated to support live video input capture from HDMI/SDI/USB based devices using Windows DirectShow, and macOS AV Foundation libraries. The script is accessible using the `Script > KartaVR > Movies > Video Snapshot` menu item. The Video Snapshot UI was overhauled and a lot of new features were added.
+
+- The KartaVR "Open Folder" script was updated to apply the Reactor v3.14 style improved PathMap resolving code. Now the KartaVR "Open Folder" lua script can better access KartaVR content located inside of the `Reactor:/Deploy/` PathMap folder. Previously there was an issue accessing the supplementary KartaVR content if Reactor was installed using a custom Install path to an alternative location other then the default `AllData:/` PathMap folder.
+
+- Updated the KartaVR Example Stitching comp webpage to add more 6DoF Depthmap workflow information and examples. Special thanks goes out to `RWHawkins` for allowing KartaVR to re-distribute his footage as part of new Insta360 Pro based "Z360" depthmap stitching example.
+
+- Updated the Reactor "atom" package for KartaVR and the KartaVR 3rd party libraries content. A KartaVR logo is now visible in the atom if the package is installed. HTML links are now clickable in the atom descriptions.
+
+- Co-developed a [Reactor v3.x package manager update with the Steakunderwater forums](https://www.steakunderwater.com/wesuckless/viewtopic.php?f=32&t=3067). This update to Reactor fixed installation issues that occurred when installing more then 800 files in a single Reactor session. Previously this Reactor install issue hampered the ease of use of Reactor "KartaVR" category package based installs by making it far more involving to do.
+
+- Communicated with BMD's developers of Resolve Studio and Fusion Studio (Standalone), and was able to get a Resolve 15.x centric Fusion page GPU accelerated rendering bug fixed in the new Resolve 16.x releases. This GPU accelerated rendering bug effected any KartaVR macro node that internally used polar to rectangular coordinate conversion approaches in Resolve. The symptom of the bug was a zenith/nadir visual "crushing" defect on LatLong images that were converted from a fisheye source image projection. There was also an issue with the view flipping controls that resulted in a flip/flopping problem where the output differed from the reference implementation output provided by Fusion Studio v7-9.
+
+- KartaVR `Google Cardboard VR View Publishing` documentation webpage updated with modernized images, and revised instructions on how to find the current script in the Fusion `Script > KartaVR > Viewers` menu location.
+
+- A "Render Selected" script was added as a KartaVR tools script item, and as a `Script > KartaVR > Stitching > Render Selected` menu item.
+
+- The new "KartaVR DragDrop" atom package allows Fusion/Resolve v16+ and the KartaVR "PTGui Project Importer" script to easily import PTGui Pro v10 .pts documents that are dragged into the Nodes view from a desktop Explorer/Finder/Nautilus folder browsing window.
+
+- The "KartaVR Scripts | Stereoscopic" atom package was updated to include an MIT open-source licensed version of the "pfmtopsd.c" source code. This source code can be used to compile revised versions of the "pfmtopsd" program that is used from the CLI by the `Script > KartaVR > Stereoscopic > Convert PFM Depth Images` menu item.
+
+- Updated the `Script > KartaVR > Open Folder > Open Containing Folder` menu item to support the "GetFrame" and "PutFrame" fuses.
+
+- Updated the `lg_green_lantern_5x9_quilted.0001.jpg` image to fix image alignment issues. Revised the `Looking Glass 5x9 Quilted to Image Sequence.comp` example composite.
+
+- Added a `youtube_cubemap3x2.obj` panoramic viewing mesh for viewing YouTube formatted cubemap 3x2 videos.
+
+- Added a new conversion macro called `MeshUV2Equirectangular`. The MeshUV2Equirectangular macro allows you to do panoramic texture baking with the input being an image in an arbitrary image projection. The MeshUV2Equirectangular uses a MeshUV based .obj model for the panoramic transform that is defined via the "FBX File" attribute. The output from this macro is an equirectanglar 360x180° panoramic image. There is a MacroLUT version of this macro called `MeshUV to Equirectangular LUT`.
+
 ### Version 4.0.2 - 2019-02-07 ###
 
 - Added YouTube 360&deg; cubic 3x2 format movie conversion macros called `YouTubeCubemap3x22CubicFaces`, `YouTubeCubemap3x22Equirectangular` and `CubicFaces2YouTubeCubemap3x2`. There is a `YouTube Cubemap3x2.comp` example composite, and a sample `youtube_cubemap3x2.jpg` image as well.
+
 - Added a DaVinci Resolve compatible set of example Fusion page compositing project files that can be accessed in the PathMap folder: `Reactor:/Deploy/Comps/KartaVR/KartaVR Example Comps.drp`
 
 ### Version 4.0.1 - 2019-01-06 ###
@@ -582,7 +667,7 @@
 
 - Added new panoramic 360&deg; geometry OBJ format meshes and demo files to the `Macros:/Domemaster Fusion Macros/Images/` folder:
 
-    - `cubemap3x2.obj`
+    - `3x2cubemap.obj`
     - `angular360degree.obj`
     - `cylinder.obj`
     - `facebook_cubemap3x2.obj`

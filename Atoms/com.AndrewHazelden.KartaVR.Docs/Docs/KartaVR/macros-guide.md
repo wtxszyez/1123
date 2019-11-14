@@ -38,9 +38,9 @@ This document is a handy reference guide that acts as the official table of cont
     <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
   </ul></td>
   <td><ul>
-    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
     <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseDomemaster180">Equirectangular2InverseDomemaster180</a></li>
@@ -61,6 +61,8 @@ This document is a handy reference guide that acts as the official table of cont
     <li><a href="macros-guide-conversions.html#HorizontalCross2CubicFaces">HorizontalCross2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalStrip2CubicFaces">HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalTee2CubicFaces">HorizontalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2Equirectangular">MeshUV2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2EquirectangularStereo">MeshUV2EquirectangularStereo</a></li>
     <li><a href="macros-guide-conversions.html#MRCube1HorizontalStrip2CubicFaces">MRCube1HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Rectilinear2Equirectangular">Rectilinear2Equirectangular</a></li>
     <li><a href="macros-guide-conversions.html#RectilinearStereo2EquirectangularStereo">RectilinearStereo2EquirectangularStereo</a></li>

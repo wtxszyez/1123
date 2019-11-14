@@ -12,7 +12,9 @@ This section covers tips & tricks for getting the most out of Fusion and the Kar
   - [Supporting Tools for VR Production](tips.html#vr-tools)
   - [Using Expressions to set the Image Resolution](tips.html#using-expressions-to-set-the-image-resolution)
   - [Enable HiQ Mode from Lua](tips.html#enable-hiq-mode-from-lua)
-  
+  - [Breaking the 32K Resolution Barrier](tips.html#breaking-the-32k-resolution-barrier)
+
+
 ## <a name="defaults"></a>Fusion Comp Defaults ##
 
 It is a good idea to edit the Fusion comp's default settings for the frame size and default bit depth. These settings are used automatically by many of the KartaVR automatically.
@@ -163,3 +165,18 @@ This will mean that my Equirectangular2CubicFace node output will automatically 
 If you are writing a new Lua script and need to have the HiQ mode turned on by default you can add the following example snippet to your code:
 
 `comp:SetAttrs{COMPB_HiQ = true}`
+
+
+## <a name="breaking-the-32k-resolution-barrier"></a>Breaking the 32K Resolution Barrier ##
+
+Fusion has an environment variable you can define if you'd like to use CPU based rendering of your composite and break the 32K x 32K image resolution barrier.
+
+The environment variable is:
+
+		FUSION_Embiggen = True
+
+If you would like to know more about `FUSION_Embiggen`  environment variable, then check out the Steakunderwater forum post:
+
+[The S-Files Episode 3: creating very large images in Fusion.](https://www.steakunderwater.com/wesuckless/viewtopic.php?p=19700#p19700)
+
+You will also see an entry on that post about a `LimitToHalfMaxTextureSize` UserControls based hidden parameter that will increase the texture resolution in Fusion's 3D workspace.
