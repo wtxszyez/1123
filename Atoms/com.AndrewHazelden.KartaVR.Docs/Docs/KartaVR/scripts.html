@@ -329,14 +329,23 @@ img {
 <ul>
 <li><strong>Geometry:</strong>
 <ul>
-<li><a href="scripts.html#send-geometry-to-meshlab">Send Geometry to MeshLab</a></li>
+<li>Export to Point Cloud</li>
+<li>Reload Alembic Scene (macOS only)</li>
+<li>Reload FBX Scene (macOS only)</li>
+<li>Reload PSD layers (macOS only)</li>
 <li><a href="scripts.html#send-geometry-to-ac3d">Send Geometry to AC3D</a></li>
+<li><a href="scripts.html#send-geometry-to-cloudcompare">Send Geometry to Cloud Compare</a></li>
+<li><a href="scripts.html#send-geometry-to-cloudcompare-viewer">Send Geometry to Cloud Compare Viewer</a></li>
+<li><a href="scripts.html#send-geometry-to-instantmeshes">Send Geometry to Instant Meshes</a></li>
+<li><a href="scripts.html#send-geometry-to-meshlab">Send Geometry to MeshLab</a></li>
+<li>Send Geometry to usdview</li>
 </ul>
 </li>
 <li><strong>Movies:</strong>
 <ul>
 <li><a href="scripts.html#combine-stereo-movies">Combine Stereo Movies</a></li>
 <li><a href="scripts.html#convert-movies-to-image-sequences">Convert Movies to Image Sequences</a></li>
+<li><a href="scripts.html#video-snapshot">Video Snapshot</a></li>
 </ul>
 </li>
 <li><strong>Open Folder:</strong>
@@ -391,10 +400,12 @@ img {
 <li><a href="scripts.html#batch-builder-extractor">PTGui BatchBuilder Extractor</a></li>
 <li><a href="scripts.html#ptgui-mask-importer">PTGui Mask Importer</a></li>
 <li><a href="scripts.html#ptgui-project-importer">PTGui Project Importer</a></li>
+<li><a href="scripts.html#render-selected">Render Selected</a></li>
 </ul>
 </li>
 <li><strong>Viewers:</strong>
 <ul>
+<li>Directory Tree</li>
 <li><a href="pano-view.html">PanoView Script</a></li>
 <li><a href="pano-view.html#edit-panoview-preferences">Edit PanoView Preferences</a></li>
 <li><a href="google-cardboard-vr-view.html">Publish Media to Google Cardboard VR View</a></li>
@@ -556,6 +567,9 @@ img {
 &gt; showCamera3DViewVector = 1
 &gt; -- showCamera3DViewVector = 0
 </code></pre>
+<h2><a name="render-selected"></a>Render Selected</h2>
+<p>The <code>Render Selected</code> script will render the actively selected node in Fusion Standalone/Resolve's Fusion page Nodes view. This means you can output content in Resolve's Fusion Page directly to disk using nodes like the FBXExporter, Saver, LifeSaver, PutFrame, or custom EXRIO based Fuse.</p>
+<p>You can access this script via a tools script in the right-click contextual menu <code>Script &gt; KartaVR &gt; Render Selected</code> menu. You can also use this script as a comp script using the <code>Script &gt; KartaVR &gt; Stitching &gt; Render Selected</code> menu item.</p>
 <h2><a name="combine-stereo-movies"></a>Combine Stereo Movies</h2>
 <p>The <code>Combine Stereo Movies</code> script lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. At the same time you can also transcode the video into H.264, H.265, and QuickTime ProRes 422 video formats.</p>
 <p>If you are using Fusion (free) this script is special in that it can allow you to burst above the standard Fusion frame size limitations by taking the existing left and right stereo videos which can be rendered from Fusion (free) at up to 3840x2160 px in size and then merge them together using the external ffmpeg video tool.</p>
@@ -598,6 +612,66 @@ img {
 <p>The &quot;Sound Effect&quot; control allows you to choose if you want to have an audio alert played when an error happens or when the script task completes. You can choose one of the following audio playback options: &quot;None&quot;, &quot;On Error Only&quot;, &quot;Steam Train Whistle Sound&quot;, &quot;Trumpet Sound&quot;, or &quot;Braam Sound&quot;.</p>
 <p>The &quot;OK&quot; button will start processing the video file into an image sequence.</p>
 <p>The &quot;Cancel&quot; button will close the script GUI and stop the script.</p>
+<h2><a name="video-snapshot"></a>Video Snapshot</h2>
+<p>The <code>KartaVR Video Snapshot</code> script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
+<p><img src="images/scripts-video-snapshot.png" alt="Video Snapshot" /></p>
+<h2>GUI Controls</h2>
+<h3>Video Input Device</h3>
+<p>On macOS, the &quot;Video Input Device&quot; list includes entries like &quot;Capture screen 0&quot;, or possibly even &quot;Capture screen 1&quot; or &quot;Capture screen 2&quot; (if you have a multi-monitor setup). You can use these capture sources to perform a monitor based frame-grab which can then be loaded back into Fusion. This can be used as a simulated input device that will let you frame grab content shown on a 2nd display by another application.</p>
+<p><img src="images/scripts-video-snapshot-video-input-device.png" alt="Video Snapshot " /></p>
+<h3>Media Type</h3>
+<p>The &quot;Media Type&quot; list allows you to choose the image/movie format that will be saved to disk. Options include: &quot;<code>JPEG Image</code>&quot;, &quot;<code>PNG Image</code>&quot;, &quot;<code>TIFF Image</code>&quot;, &quot;<code>TGA Image</code>&quot;, &quot;<code>BMP Image</code>&quot;, &quot;<code>JPEG2000 Image</code>&quot;, &quot;<code>GIF Movie</code>&quot;, &quot;<code>MP4 H.264 Movie</code>&quot;, &quot;<code>MP4 H.265 Movie</code>&quot;, &quot;<code>MOV H.264 Movie</code>&quot;, &quot;<code>MOV ProRes 422 Movie</code>&quot;, and &quot;<code>MOV ProRes 422 HQ Movie</code>&quot;.</p>
+<p><img src="images/scripts-video-snapshot-media-type.png" alt="Video Snapshot Media Type" /></p>
+<h3>Resolution</h3>
+<p>The &quot;Resolution&quot; control allows you to set the captured image/movie's width and height.</p>
+<p><strong>Note:</strong> <em>Some video sources are very picky about this setting so you may not get a successful capture if you set the Resolution control to a value outside of the bounds of your video input device's capabilites. In this case you will see an FFmpeg error message in the &quot;Capture Log&quot; window listing the issue.</em></p>
+<p><img src="images/scripts-video-snapshot-resolution.png" alt="Video Snapshot Resolution" /></p>
+<h3>FPS</h3>
+<p>The &quot;FPS&quot; control defines the video capture frame rate that is used when a movie is saved, or when an image sequence is captured.</p>
+<p><strong>Note:</strong> <em>Some video sources are very picky about this setting so you may not get a successful capture if you set the FPS control to a value outside of the bounds of your video input device's capabilites. In this case you will see an FFmpeg error message in the &quot;Capture Log&quot; window listing the issue.</em></p>
+<h3>Format</h3>
+<p>The &quot;Format&quot; control allows you to customize the pixel format used in the video capture frame buffer. This is an advanced control you shouldn't need to adjust.</p>
+<p><img src="images/scripts-video-snapshot-format.png" alt="Video Snapshot Format" /></p>
+<h3>PathMap</h3>
+<p>The &quot;PathMap&quot; ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current &quot;<code>Comp:/</code>&quot; PathMap location, or to other places like your operating system's temporary folder using the &quot;<code>Temp:/</code>&quot; PathMap.</p>
+<p><img src="images/scripts-video-snapshot-pathmap.png" alt="Video Snapshot PathMap" /></p>
+<h3>Image Prefix</h3>
+<p>The &quot;Image Prefix:&quot; text field allows you to customzie the starting part of the Screenshot filename. By default this setting is &quot;Snapshot&quot; and will result in the incrementing filename of &quot;Snapshot_Take_1.0001.jpg&quot; being written to disk.</p>
+<p>*<em>Note:</em> <em>You can add intermediate folder names at the start of the &quot;Image Prefix&quot; field, and each of those folders will be created on-the-fly like &quot;<code>Project_77/Snapshot</code>&quot;.</em></p>
+<h3>Take</h3>
+<p>The &quot;Take&quot; number field control allows you to auto-increment the filename captured to disk.</p>
+<h3>Cam Warmup Delay</h3>
+<p>The &quot;Cam Warmup Delay&quot; number field expects a value entered in seconds. It is used with self-powered cameras that need a few moments to adjust auto-exposure/auto white balance after they are turned on.</p>
+<p>The default &quot;Cam Warmup Delay&quot; value is 0.5 seconds which means after you press the &quot;Capture Image&quot; button, the video source is powered up immediately and an image is recorded after only 0.5 seconds of initialization time.</p>
+<p>If you are capturing footage from a self-powered USB webcam, you might need to set the &quot;Cam Warmup Delay&quot; to a value of 1 second or 2 seconds+ so a slight a recording delay happens before the image stream is snapshotted and saved. This delay allows the camera to adjust the auto-exposure so your stop-motion style of capture has a more consistent brightness between takes.</p>
+<h3>Capture Duration</h3>
+<p>The &quot;Capture Duration&quot; number field expects a value entered in frames. The is the length of the recording.</p>
+<h3>Capture Modes</h3>
+<p>The &quot;Capture Mode&quot; label is a heads up tip that summarizes how the footage will be captured based upon the combination of the &quot;Media Type&quot; and &quot;Capture Duration&quot; settings.</p>
+<p>If the &quot;Media Type&quot; is set to an image format, and you set the &quot;Capture Duration&quot; field to a value of &quot;1&quot;, the &quot;Capture Mode: Stop-Motion Sequence&quot; text will appear to the right of this field. The script will then capture video frame grabs in a stop-motion-esque way so each time you hit the &quot;Capture Image&quot; button a new frame is added to the end of the sequence. The &quot;Take&quot; control is used to represent the current sequence frame number like this: &quot;<code>Snapshot.0001.tif</code>&quot;, &quot;<code>Snapshot.0002.tif</code>&quot;, &quot;<code>Snapshot.0003.tif</code>&quot;.</p>
+<p>If the &quot;Media Type&quot; is set to an image format, and you set the &quot;Capture Duration&quot; field to a value of &quot;2&quot; or higher, the &quot;Capture Mode: Multi-Frame Take&quot; text will appear to the right of this field. The script will then capture a short burst of imagery and name it as an image sequence. The &quot;Take&quot; control is used to separate each of the image sequences uniquely like this: &quot;<code>Snapshot_Take_0001.[0001-0030].tif</code>&quot;, &quot;<code>Snapshot_Take_0002.[0001-0030].tif</code>&quot;, &quot;<code>Snapshot_Take_0003.[0001-0030].tif</code>&quot;.</p>
+<p>If the &quot;Media Type&quot; is set to a movie format, the &quot;Capture Mode: Movie Take&quot; text will appear to the right of this field.  The script will then capture a short burst of imagery and save it to an MP4 or MOV formatted video file. The frame length of the video recording is defined by the &quot;Capture Duration&quot; number field's value.</p>
+<h3>Overwrite Mode</h3>
+<p>The &quot;Overwrite Mode&quot; button has a &quot;checked&quot; status that allows it to stay pressed/unpressed to toggle the setting.</p>
+<p>If the Overwrite mode is unpressed and disabled, each new capture you do will be saved to a unique filename that will auto-increment based upon the &quot;Take&quot; setting.</p>
+<p>If the Overwrite mode is pressed down and enabled, each new capture you do will overwrite the example same file on disk.</p>
+<h3>Image Filename</h3>
+<p>The &quot;Image Filename&quot; textual label is non-editable and is used to provide a preview of the recorded image's folder location on disk along with the auto-generated filename.</p>
+<h3>Capture Image</h3>
+<p>The &quot;Capture Image&quot; button saves a new image or movie framegrab to your chosen PathMap location using the current &quot;Video Input Device&quot; as your video recording source.</p>
+<h3>Add Loader Node</h3>
+<p>The &quot;Add Loader Node&quot; button will create a new Fusion Loader node in your composite and set the clip to use the current filename of your captured image sequence. The new Loader node footage will be shown automatically on the left Fusion image viewer window. Also, the Loader clip and Fusion timeline frame range will be set to the number of screenshots saved in the current sequence.</p>
+<h3>Update Selected Loader</h3>
+<p>The &quot;Update Selected Loader&quot; button allows you to refresh an existing Loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the &quot;Update Selected Loader&quot;.</p>
+<h3>Show Output Folder</h3>
+<p>The &quot;Show Output Folder&quot; button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.</p>
+<h3>Edit</h3>
+<p>The &quot;Edit&quot; button loads the &quot;Video Snapshot.lua&quot; script in the default script editor program that is defined in the Fusion Preferences &quot;Global and Default Settings &gt; Script &gt; Editor Path&quot; section.</p>
+<h3>Help (?)</h3>
+<p>If you click the &quot;?&quot; button at the top right of the Video Snapshow window, a new HTML based help documentation window will be displayed.</p>
+<p><img src="images/scripts-video-snapshot-help.png" alt="Video Snapshot Help" /></p>
+<h3>Capture Log</h3>
+<p>The &quot;Capture Log&quot; region is updated when the &quot;Capture Image&quot; button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the &quot;Capture Image&quot; button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to see diagnostic information that indicates if an invalid combination of the &quot;Video Input Device&quot;, &quot;Resolution&quot;, &quot;FPS&quot;, and &quot;Format&quot; controls are selected.</p>
 <h2><a name="send-geometry-to-meshlab"></a>Send Geometry to MeshLab</h2>
 <p><img src="images/script-send-geometry-to-meshlab-program-screenshot.png" alt="MeshLab" /></p>
 <p>The <code>Send Geometry to MeshLab</code> script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the open source <a href="http://www.meshlab.net/">MeshLab</a> program.</p>
@@ -611,6 +685,15 @@ img {
 <p><strong>Step 3.</strong> Run the <strong>Script &gt; KartaVR &gt; Geometry &gt; Send Geometry to MeshLab</strong> menu item.</p>
 <p><strong>Step 4.</strong> In the Send Geometry to MeshLab dialog window you need to make sure the MeshLab Path is valid and then click the OK button.</p>
 <p>A new .mlp MeshLab Project file will be created in the Temp:/KartaVR/ folder and then it will be loaded in a new MeshLab editing session.</p>
+<h2><a name="send-geometry-to-instantmeshes"></a>Send Geometry to Instant Meshes</h2>
+<p><img src="images/script-send-geometry-to-instantmeshes-program-screenshot.png" alt="Instant Meshes" /></p>
+<p>The <code>Send Geometry to Instant Meshes</code> script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the <a href="https://github.com/wjakob/instant-meshes">Instant Meshes</a> program. Instant Meshes is a cross-platform open-source automatic mesh retopology program. It's an Interactive field-aligned mesh generator that runs either from a GUI session or CLI (command-line)</p>
+<h2><a name="send-geometry-to-cloudcompare"></a>Send Geometry to Cloud Compare</h2>
+<p><img src="images/script-send-geometry-to-cloudcompare-program-screenshot.png" alt="Cloud Compare" /></p>
+<p>The <code>Send Geometry to Cloud Compare</code> script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the <a href="http://www.cloudcompare.org/">Cloud Compare</a> program. CloudCompare is an open source 3D point cloud and mesh processing program. CloudCompare has a CLI interface that can be used to batch process 3D assets</p>
+<h2><a name="send-geometry-to-cloudcompare-viewer"></a>Send Geometry to Cloud Compare Viewer</h2>
+<p><img src="images/script-send-geometry-to-cloudcompare-viewer-program-screenshot.png" alt="Cloud Compare Viewer" /></p>
+<p>The <code>Send Geometry to Cloud Compare Viewer</code> script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be viewed in the <a href="http://www.cloudcompare.org/">ccViewer</a> program. CloudCompare Viewer is an open source 3D point cloud and mesh viewing program.</p>
 <h2><a name="send-geometry-to-ac3d"></a>Send Geometry to AC3D</h2>
 <p><img src="images/script-send-geometry-to-ac3d-program-screenshot.png" alt="AC3D" /></p>
 <p>The <code>Send Geometry to AC3D</code> script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the <a href="http://www.inivis.com/">AC3D</a> program. AC3D is a super lightweight program that is primarily used to load OBJ meshes and perform simple editing and UV layout tasks.</p>
@@ -653,23 +736,23 @@ img {
 <p><strong>Step 2.</strong> Run the <code>pfmtopsd</code> tool in the terminal view once to see the text output that indicates the syntax to use:</p>
 <p><img src="images/tools-pfmtopsd-command-prompt.png" alt="pfmtopsd" /></p>
 <p>Windows Program:</p>
-<pre><code>C:\Program Files\KartaVR\tools\pfmtopsd.exe
+<pre><code>Reactor:/Bin/KartaVR/tools/pfmtopsd.exe
 </code></pre>
 <p>macOS Program:</p>
-<pre><code>/Applications/KartaVR/mac_tools/pfmtopsd
+<pre><code>Reactor:/Bin/KartaVR/mac_tools/pfmtopsd
 </code></pre>
 <p>Linux Program:</p>
-<pre><code>/opt/KartaVR/linux_tools/pfmtopsd
+<pre><code>Reactor:/Bin/KartaVR/linux_tools/pfmtopsd
 </code></pre>
 <p><strong>Step 3.</strong> Run the <code>pfmtopsd</code> tool again in the terminal and this time specify your source .pfm image and destination photoshop .psd image filenames. <strong>Note:</strong> The <code>&gt;</code> character in the examples below is used to redirect the &quot;stdio&quot; standard output from the pfmtopsd program to a file on disk which is how the final image is saved to disk.</p>
 <p>Windows Command:</p>
-<pre><code>&quot;C:\Program Files\KartaVR\tools\pfmtopsd.exe&quot; &quot;/Media/depth.0000.pfm&quot; &gt; &quot;/Media/depth.0000.psd&quot;
+<pre><code>&quot;pfmtopsd.exe&quot; &quot;C:\Media\depth.0000.pfm&quot; &gt; &quot;C:\Media\depth.0000.psd&quot;
 </code></pre>
 <p>macOS Command:</p>
-<pre><code>&quot;/Applications/KartaVR/mac_tools/pfmtopsd&quot; &quot;/Media/depth.0000.pfm&quot; &gt; &quot;/Media/depth.0000.psd&quot;
+<pre><code>&quot;pfmtopsd&quot; &quot;/Media/depth.0000.pfm&quot; &gt; &quot;/Media/depth.0000.psd&quot;
 </code></pre>
 <p>Linux Command:</p>
-<pre><code>&quot;/opt/KartaVR/linux_tools/pfmtopsd&quot; &quot;/Media/depth.0000.pfm&quot; &gt; &quot;/Media/depth.0000.psd&quot;
+<pre><code>&quot;pfmtopsd&quot; &quot;/Media/depth.0000.pfm&quot; &gt; &quot;/Media/depth.0000.psd&quot;
 </code></pre>
 <p><strong>Bonus</strong> You can use the <code>pfmtopsd</code> tool with the Imagemagick graphics library to automatically convert your greyscale .pfm format depthmaps to any of the common image formats that Imagemagick supports. This more advanced example assumes you have added the <code>pfmtopsd</code> tool's folder and the Imagemagick <code>convert</code> tool's bin folder manually to your system's PATH environment variable.</p>
 <p>Convert a PFM image to a JPEG image:</p>
@@ -1014,7 +1097,7 @@ img {
 <p><img src="images/scripts-zoom-new-image-view-macos-security-privacy-accessibility-panel.png" alt="macOS Security &amp; Privacy System Preferences Panel" /></p>
 <p>Press the &quot;+&quot; plus sign button to add the <code>Fusion-Zoom-New-Image-View.app</code> Applescript to the Accessibility panel list.</p>
 <p>A file browsing window will open and you need to navigate and select the following KartaVR Applescript program:</p>
-<p><code>/Applications/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app</code></p>
+<p><code>Reactor:/Deploy/Bin/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app</code></p>
 <p>You are also able to drag and drop the <code>Fusion-Zoom-New-Image-View.app</code> item from the Finder folder view into the Accessibility panel and it will be added to the list.</p>
 <p>The final step is to enable the checkbox next to the <code>Fusion-Zoom-New-Image-View</code> item in the Accessibility panel.</p>
 </body>

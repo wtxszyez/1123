@@ -1,6 +1,6 @@
---[[
+--[[--
 ------------------------------------------------------------------------------
-Convert Movies to Image Sequences v3.1 for Fusion - 2018-09-16
+Convert Movies to Image Sequences - v4.2 2019-11-05
 by Andrew Hazelden <andrew@andrewhazelden.com>
 
 Copyright 2015-2018 Andrew Hazelden. 
@@ -69,13 +69,14 @@ sudo pacman -S ffmpeg
 
 --]]--
 
+-- Print out extra debugging information
 local printStatus = false
 
 -- Check the current computer platform
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
 
--- Find out if we are running Fusion 7, 8, or 9
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system's / or \\ path separator symbol
 local osSeparator = package.config:sub(1,1)

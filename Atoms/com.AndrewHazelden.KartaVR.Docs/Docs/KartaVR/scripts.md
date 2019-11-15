@@ -9,11 +9,20 @@ This document is a summary of the scripts included with the [KartaVR](index.html
 ## Table of Contents ##
 
 - **Geometry:**
-    - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
+    - Export to Point Cloud
+    - Reload Alembic Scene (macOS only)
+    - Reload FBX Scene (macOS only)
+    - Reload PSD layers (macOS only)
     - [Send Geometry to AC3D](scripts.html#send-geometry-to-ac3d)
+    - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
+    - [Send Geometry to Cloud Compare Viewer](scripts.html#send-geometry-to-cloudcompare-viewer)
+    - [Send Geometry to Instant Meshes](scripts.html#send-geometry-to-instantmeshes)
+    - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
+    - Send Geometry to usdview
 - **Movies:**
     - [Combine Stereo Movies](scripts.html#combine-stereo-movies)
     - [Convert Movies to Image Sequences](scripts.html#convert-movies-to-image-sequences)
+    - [Video Snapshot](scripts.html#video-snapshot)
 - **Open Folder:**
     - [Open Containing Folder](scripts.html#open-containing-folder)
     - [Open KartaVR Temp Folder](scripts.html#open-temp-folder)
@@ -53,7 +62,9 @@ This document is a summary of the scripts included with the [KartaVR](index.html
     - [PTGui BatchBuilder Extractor](scripts.html#batch-builder-extractor)
     - [PTGui Mask Importer](scripts.html#ptgui-mask-importer)
     - [PTGui Project Importer](scripts.html#ptgui-project-importer)
+    - [Render Selected](scripts.html#render-selected)
 - **Viewers:**
+    - Directory Tree
     - [PanoView Script](pano-view.html)
     - [Edit PanoView Preferences](pano-view.html#edit-panoview-preferences)
     - [Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)
@@ -362,6 +373,12 @@ The PTGUi Project Importer Lua script's "showCamera3DViewVector" variable can be
     > showCamera3DViewVector = 1
     > -- showCamera3DViewVector = 0
 
+## <a name="render-selected"></a>Render Selected ##
+
+The `Render Selected` script will render the actively selected node in Fusion Standalone/Resolve's Fusion page Nodes view. This means you can output content in Resolve's Fusion Page directly to disk using nodes like the FBXExporter, Saver, LifeSaver, PutFrame, or custom EXRIO based Fuse.
+
+You can access this script via a tools script in the right-click contextual menu `Script > KartaVR > Render Selected` menu. You can also use this script as a comp script using the `Script > KartaVR > Stitching > Render Selected` menu item.
+
 ## <a name="combine-stereo-movies"></a>Combine Stereo Movies ##
 
 The `Combine Stereo Movies` script lets you take separate left and right stereo videos and merge them into Over/Under or Side by Side stereo videos. At the same time you can also transcode the video into H.264, H.265, and QuickTime ProRes 422 video formats.
@@ -446,6 +463,145 @@ The "OK" button will start processing the video file into an image sequence.
 
 The "Cancel" button will close the script GUI and stop the script.
 
+
+## <a name="video-snapshot"></a>Video Snapshot ##
+
+The `KartaVR Video Snapshot` script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.
+
+![Video Snapshot](images/scripts-video-snapshot.png)
+
+## GUI Controls ##
+
+### Video Input Device ###
+
+On macOS, the "Video Input Device" list includes entries like "Capture screen 0", or possibly even "Capture screen 1" or "Capture screen 2" (if you have a multi-monitor setup). You can use these capture sources to perform a monitor based frame-grab which can then be loaded back into Fusion. This can be used as a simulated input device that will let you frame grab content shown on a 2nd display by another application.
+
+![Video Snapshot ](images/scripts-video-snapshot-video-input-device.png)
+
+
+### Media Type ###
+
+The "Media Type" list allows you to choose the image/movie format that will be saved to disk. Options include: "`JPEG Image`", "`PNG Image`", "`TIFF Image`", "`TGA Image`", "`BMP Image`", "`JPEG2000 Image`", "`GIF Movie`", "`MP4 H.264 Movie`", "`MP4 H.265 Movie`", "`MOV H.264 Movie`", "`MOV ProRes 422 Movie`", and "`MOV ProRes 422 HQ Movie`".
+
+![Video Snapshot Media Type](images/scripts-video-snapshot-media-type.png)
+
+
+### Resolution ###
+
+The "Resolution" control allows you to set the captured image/movie's width and height.
+
+**Note:** *Some video sources are very picky about this setting so you may not get a successful capture if you set the Resolution control to a value outside of the bounds of your video input device's capabilites. In this case you will see an FFmpeg error message in the "Capture Log" window listing the issue.*
+
+![Video Snapshot Resolution](images/scripts-video-snapshot-resolution.png)
+
+
+### FPS ###
+
+The "FPS" control defines the video capture frame rate that is used when a movie is saved, or when an image sequence is captured.
+
+**Note:** *Some video sources are very picky about this setting so you may not get a successful capture if you set the FPS control to a value outside of the bounds of your video input device's capabilites. In this case you will see an FFmpeg error message in the "Capture Log" window listing the issue.*
+
+
+### Format ###
+
+The "Format" control allows you to customize the pixel format used in the video capture frame buffer. This is an advanced control you shouldn't need to adjust.
+
+![Video Snapshot Format](images/scripts-video-snapshot-format.png)
+
+
+### PathMap ###
+
+The "PathMap" ComboBox menu allows you to choose a location where your media will be saved. You could choose to save your video framegrabs into the current "`Comp:/`" PathMap location, or to other places like your operating system's temporary folder using the "`Temp:/`" PathMap.
+
+![Video Snapshot PathMap](images/scripts-video-snapshot-pathmap.png)
+
+
+### Image Prefix ###
+
+The "Image Prefix:" text field allows you to customzie the starting part of the Screenshot filename. By default this setting is "Snapshot" and will result in the incrementing filename of "Snapshot_Take_1.0001.jpg" being written to disk.
+
+**Note:* *You can add intermediate folder names at the start of the "Image Prefix" field, and each of those folders will be created on-the-fly like "`Project_77/Snapshot`".*
+
+
+### Take ###
+
+The "Take" number field control allows you to auto-increment the filename captured to disk.
+
+
+### Cam Warmup Delay ###
+
+The "Cam Warmup Delay" number field expects a value entered in seconds. It is used with self-powered cameras that need a few moments to adjust auto-exposure/auto white balance after they are turned on.
+
+The default "Cam Warmup Delay" value is 0.5 seconds which means after you press the "Capture Image" button, the video source is powered up immediately and an image is recorded after only 0.5 seconds of initialization time.
+
+If you are capturing footage from a self-powered USB webcam, you might need to set the "Cam Warmup Delay" to a value of 1 second or 2 seconds+ so a slight a recording delay happens before the image stream is snapshotted and saved. This delay allows the camera to adjust the auto-exposure so your stop-motion style of capture has a more consistent brightness between takes.
+
+
+### Capture Duration ###
+
+The "Capture Duration" number field expects a value entered in frames. The is the length of the recording.
+
+
+### Capture Modes ###
+
+The "Capture Mode" label is a heads up tip that summarizes how the footage will be captured based upon the combination of the "Media Type" and "Capture Duration" settings.
+
+If the "Media Type" is set to an image format, and you set the "Capture Duration" field to a value of "1", the "Capture Mode: Stop-Motion Sequence" text will appear to the right of this field. The script will then capture video frame grabs in a stop-motion-esque way so each time you hit the "Capture Image" button a new frame is added to the end of the sequence. The "Take" control is used to represent the current sequence frame number like this: "`Snapshot.0001.tif`", "`Snapshot.0002.tif`", "`Snapshot.0003.tif`".
+
+If the "Media Type" is set to an image format, and you set the "Capture Duration" field to a value of "2" or higher, the "Capture Mode: Multi-Frame Take" text will appear to the right of this field. The script will then capture a short burst of imagery and name it as an image sequence. The "Take" control is used to separate each of the image sequences uniquely like this: "`Snapshot_Take_0001.[0001-0030].tif`", "`Snapshot_Take_0002.[0001-0030].tif`", "`Snapshot_Take_0003.[0001-0030].tif`".
+
+If the "Media Type" is set to a movie format, the "Capture Mode: Movie Take" text will appear to the right of this field.  The script will then capture a short burst of imagery and save it to an MP4 or MOV formatted video file. The frame length of the video recording is defined by the "Capture Duration" number field's value.
+
+
+### Overwrite Mode ###
+
+The "Overwrite Mode" button has a "checked" status that allows it to stay pressed/unpressed to toggle the setting.
+
+If the Overwrite mode is unpressed and disabled, each new capture you do will be saved to a unique filename that will auto-increment based upon the "Take" setting.
+
+If the Overwrite mode is pressed down and enabled, each new capture you do will overwrite the example same file on disk.
+
+
+### Image Filename ###
+
+The "Image Filename" textual label is non-editable and is used to provide a preview of the recorded image's folder location on disk along with the auto-generated filename.
+
+
+### Capture Image ###
+
+The "Capture Image" button saves a new image or movie framegrab to your chosen PathMap location using the current "Video Input Device" as your video recording source.
+
+
+### Add Loader Node ###
+
+The "Add Loader Node" button will create a new Fusion Loader node in your composite and set the clip to use the current filename of your captured image sequence. The new Loader node footage will be shown automatically on the left Fusion image viewer window. Also, the Loader clip and Fusion timeline frame range will be set to the number of screenshots saved in the current sequence.
+
+
+### Update Selected Loader ###
+
+The "Update Selected Loader" button allows you to refresh an existing Loader node in your composite with the revised capture settings based filename and clip frame ranges. This button is used by first selecting the Loader node in the Nodes view, and then pressing the "Update Selected Loader".
+
+
+### Show Output Folder ###
+
+The "Show Output Folder" button will open up the PathMap based folder where the screenshots are saved to using a new Windows Explorer/macOS Finder based folder browser window.
+
+
+### Edit ###
+The "Edit" button loads the "Video Snapshot.lua" script in the default script editor program that is defined in the Fusion Preferences "Global and Default Settings > Script > Editor Path" section.
+
+
+### Help (?) ###
+If you click the "?" button at the top right of the Video Snapshow window, a new HTML based help documentation window will be displayed.
+
+![Video Snapshot Help](images/scripts-video-snapshot-help.png)
+
+
+### Capture Log ###
+
+The "Capture Log" region is updated when the "Capture Image" button is pressed. This read-only text field shows the captured results log from each time FFmpeg is run. If you press the "Capture Image" button, and no image/movie clip is saved to disk, you can troubleshoot the issue by scrolling down in the Capture Log to see diagnostic information that indicates if an invalid combination of the "Video Input Device", "Resolution", "FPS", and "Format" controls are selected.
+
+
 ## <a name="send-geometry-to-meshlab"></a>Send Geometry to MeshLab ##
 
 ![MeshLab](images/script-send-geometry-to-meshlab-program-screenshot.png)
@@ -471,6 +627,24 @@ The "Cancel" button will close the script GUI and stop the script.
 **Step 4.** In the Send Geometry to MeshLab dialog window you need to make sure the MeshLab Path is valid and then click the OK button.
 
 A new .mlp MeshLab Project file will be created in the Temp:/KartaVR/ folder and then it will be loaded in a new MeshLab editing session.
+
+## <a name="send-geometry-to-instantmeshes"></a>Send Geometry to Instant Meshes ##
+
+![Instant Meshes](images/script-send-geometry-to-instantmeshes-program-screenshot.png)
+
+The `Send Geometry to Instant Meshes` script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the [Instant Meshes](https://github.com/wjakob/instant-meshes) program. Instant Meshes is a cross-platform open-source automatic mesh retopology program. It's an Interactive field-aligned mesh generator that runs either from a GUI session or CLI (command-line)
+
+## <a name="send-geometry-to-cloudcompare"></a>Send Geometry to Cloud Compare ##
+
+![Cloud Compare](images/script-send-geometry-to-cloudcompare-program-screenshot.png)
+
+The `Send Geometry to Cloud Compare` script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be loaded and edited in the [Cloud Compare](http://www.cloudcompare.org/) program. CloudCompare is an open source 3D point cloud and mesh processing program. CloudCompare has a CLI interface that can be used to batch process 3D assets
+
+## <a name="send-geometry-to-cloudcompare-viewer"></a>Send Geometry to Cloud Compare Viewer ##
+
+![Cloud Compare Viewer](images/script-send-geometry-to-cloudcompare-viewer-program-screenshot.png)
+
+The `Send Geometry to Cloud Compare Viewer` script is used to allow Fusion FBXMesh3D and AlembicMesh3D node based polygon meshes to be viewed in the [ccViewer](http://www.cloudcompare.org/) program. CloudCompare Viewer is an open source 3D point cloud and mesh viewing program.
 
 ## <a name="send-geometry-to-ac3d"></a>Send Geometry to AC3D ##
 
@@ -556,29 +730,29 @@ The `pfmtopsd` program converts a portable float map image into a greyscale Phot
 
 Windows Program:
 
-    C:\Program Files\KartaVR\tools\pfmtopsd.exe
+    Reactor:/Bin/KartaVR/tools/pfmtopsd.exe
     
 macOS Program:
 
-    /Applications/KartaVR/mac_tools/pfmtopsd
+    Reactor:/Bin/KartaVR/mac_tools/pfmtopsd
     
 Linux Program:
 
-    /opt/KartaVR/linux_tools/pfmtopsd
+    Reactor:/Bin/KartaVR/linux_tools/pfmtopsd
 
 **Step 3.** Run the `pfmtopsd` tool again in the terminal and this time specify your source .pfm image and destination photoshop .psd image filenames. **Note:** The `>` character in the examples below is used to redirect the "stdio" standard output from the pfmtopsd program to a file on disk which is how the final image is saved to disk. 
 
 Windows Command:
 
-    "C:\Program Files\KartaVR\tools\pfmtopsd.exe" "/Media/depth.0000.pfm" > "/Media/depth.0000.psd"
-    
+    "pfmtopsd.exe" "C:\Media\depth.0000.pfm" > "C:\Media\depth.0000.psd"
+
 macOS Command:
 
-    "/Applications/KartaVR/mac_tools/pfmtopsd" "/Media/depth.0000.pfm" > "/Media/depth.0000.psd"
-    
+    "pfmtopsd" "/Media/depth.0000.pfm" > "/Media/depth.0000.psd"
+
 Linux Command:
 
-    "/opt/KartaVR/linux_tools/pfmtopsd" "/Media/depth.0000.pfm" > "/Media/depth.0000.psd"
+    "pfmtopsd" "/Media/depth.0000.pfm" > "/Media/depth.0000.psd"
 
 **Bonus** You can use the `pfmtopsd` tool with the Imagemagick graphics library to automatically convert your greyscale .pfm format depthmaps to any of the common image formats that Imagemagick supports. This more advanced example assumes you have added the `pfmtopsd` tool's folder and the Imagemagick `convert` tool's bin folder manually to your system's PATH environment variable.
 
@@ -1256,7 +1430,7 @@ Press the "+" plus sign button to add the `Fusion-Zoom-New-Image-View.app` Apple
 
 A file browsing window will open and you need to navigate and select the following KartaVR Applescript program:
 
-`/Applications/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app`
+`Reactor:/Deploy/Bin/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app`
 
 You are also able to drag and drop the `Fusion-Zoom-New-Image-View.app` item from the Finder folder view into the Accessibility panel and it will be added to the list.
 

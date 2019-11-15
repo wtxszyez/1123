@@ -1,6 +1,6 @@
 --[[--
 ------------------------------------------------------------------------------
-View KartaVR Example 360VR Stitching Comps v4.1 2019-10-22
+View KartaVR Example 360VR Stitching Comps - v4.2.1 2019-11-14
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -14,22 +14,21 @@ This script is a module from the [KartaVR](https://www.andrewhazelden.com/projec
 
 How to use the Script:
 
-Step 1. Start Fusion and open a new comp. Then run the "Script > KartaVR > View KartaVR Example 360VR Stitching Comps" menu item.
+Step 1. Start Fusion and open a new comp.
 
+Step 2. Then run the "Script > KartaVR > View KartaVR Example 360VR Stitching Comps" menu item.
 ------------------------------------------------------------------------------
+
 --]]--
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
@@ -101,27 +100,35 @@ end
 -- Open a web browser window up with the help documentation
 function openBrowser()
 	command = nil
-	webpage = ''
+	-- KartaVR local help docs
+	webpage = app:MapPath('Reactor:/Deploy/Docs/KartaVR.Stitching/index.html')
+
+	-- KartaVR online docs
+	onlineDocsURL = 'https://www.andrewhazelden.com/projects/kartavr/examples/index.html'
+
+	-- Check if the local help documentation was installed
+	if bmd.fileexists(webpage) == false then
+		-- Fallback to using the KartaVR online help
+		print('[KartaVR Docs] The local help documentation does not appear to be installed at: ' .. tostring(webpage))
+		webpage = onlineDocsURL
+	end
+
 	if platform == 'Windows' then
-		-- Running on Windows
-		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR.Stitching/index.html')
 		command = 'explorer "' .. webpage .. '"'
 		-- command = '"' .. webpage .. '"'
-		
+
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR.Stitching/index.html')
 		command = 'open "' .. webpage .. '" &'
-		
+
 		print('[Launch Command] ', command)
 		os.execute(command)
 	elseif platform == 'Linux' then
 		-- Running on Linux
-		webpage = comp:MapPath('Reactor:/Deploy/Docs/KartaVR.Stitching/index.html')
 		command = 'xdg-open "' .. webpage .. '" &'
-		
+
 		print('[Launch Command] ', command)
 		os.execute(command)
 	else
@@ -139,73 +146,71 @@ function playDFMWaveAudio(filename, status)
 	if status == true or status == 1 then 
 		print('[Base Audio File] ' .. filename)
 	end
-	
+
 	local audioFilePath = ''
-	
+
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
 		-- audioFolderPath = 'C:\\Program` Files\\KartaVR\\audio\\'
 		-- audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
+
 		os.execute(command)
 	elseif platform == 'Mac' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
+
 		os.execute(command)
 	elseif platform == 'Linux' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
-		
+
 		os.execute(command)
 	else
 		-- Windows Fallback
 		-- audioFolderPath = '$env:programfiles\\KartaVR\\audio\\'
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. audioFilePath ..'").PlaySync();'
-		
+
 		if status == true or status == 1 then 
 			print('[Audio Launch Command] ', command)
 		end
 		os.execute(command)
 	end
-	
+
 	if status == true or status == 1 then 
 		print('[Playing a KartaVR based sound file using System] ' .. audioFilePath)
 	end
 end
 
 
-print ('View Help Documentation is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print('[KartaVR Docs] is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then
 	print('This is a Blackmagic Fusion lua script, it should be run from within Fusion.')
 end
 
--- Lock the comp flow area
-comp:Lock()
-
 -- Open a web browser window up with the help documentation
 openBrowser()
-	
+
 -- Play a sound effect
 soundEffect = getPreferenceData('KartaVR.SendMedia.SoundEffect', 1, printStatus)
 if err == true or err == 1 then
@@ -235,10 +240,6 @@ else
 		playDFMWaveAudio(audioFile)
 	end
 end
-
-
--- Unlock the comp flow area
-comp:Unlock()
 
 -- End of the script
 print('[Done]')

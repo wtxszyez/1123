@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Frame to Affinity Photo v4.1 2019-10-22
+Send Frame to Affinity Photo - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -20,25 +20,19 @@ If a loader or saver node is selected in the flow, the existing media file will 
 
 --]]--
 
-------------------------------------------------------------------------------
-
 function mediaViewerTool(mediaFileName)
 	-- Choose one of the following media viewer tools:
 	affinityPhotoLauncher(mediaFileName)
 end
 
-
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

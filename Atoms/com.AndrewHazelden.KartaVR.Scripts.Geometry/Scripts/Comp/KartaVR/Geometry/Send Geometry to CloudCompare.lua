@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to CloudCompare v4.1 2019-10-22
+Send Geometry to CloudCompare - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -22,17 +22,14 @@ Step 2. Run the "Script > KartaVR > Geometry > Send Geometry to CloudCompare" me
 
 --]]--
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = true
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

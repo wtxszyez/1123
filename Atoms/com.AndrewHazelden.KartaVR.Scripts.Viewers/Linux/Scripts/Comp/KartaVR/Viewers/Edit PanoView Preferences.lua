@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Edit PanoView Preferences v4.1 2019-10-22
+Edit PanoView Preferences - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -55,7 +55,7 @@ The "Projection" control allows you to specify the Whirligig image projection th
 The "Angular FOV" control allows you to specify the angular fisheye based diagonal field of view value used with Whirligig. You can choose one of the following options: "140", "160", "180", "240", or "360".
 
 
-The "Stereo Mode" control allows you to specify the format of stereo imagery that will be sent to Whirligig.	 You can choose one of the following options: "Off", "Side by Side", or "Over Under".
+The "Stereo Mode" control allows you to specify the format of stereo imagery that will be sent to Whirligig. You can choose one of the following options: "Off", "Side by Side", or "Over Under".
 
 The "Eye Order" control allows you to specify the arrangement of the left and right stereoscopic views in the media that will be sent to Whirligig. Most stereoscopic image projections have the left view on the left side of the frame and the right view on the right side of the frame. The most common exception to this rule is the Gear VR/Octane Render ORBX/Vray style of horizontal strip cubemap. You can choose one of the following options: "Left/Right", or "Right/Left".
 
@@ -69,8 +69,8 @@ The "Cancel" button will close the script GUI and stop the script.
 
 local printStatus = false
 
--- Find out if we are running Fusion 6, 7, or 8
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

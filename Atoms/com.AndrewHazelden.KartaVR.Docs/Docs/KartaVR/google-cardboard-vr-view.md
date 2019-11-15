@@ -19,9 +19,9 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 <a name="overview"></a>
 ## Overview ##
 
-![Google Cardboard VR View Script](images/vrview-screenshot.jpg)
+[![Google Cardboard VR View Script](images/vrview-screenshot.jpg)](images/vrview-screenshot.jpg)
 
-The "Publish Media to Google Cardboard VR View" script is a module from the [KartaVR](https://www.andrewhazelden.com/projects/kartavr/docs/) that lets you customize the settings and generate a Google Cardboard VR View webpage that can be viewed locally or pushed via Apache web sharing and WiFi to a smartphone with a Google Cardboard HMD.
+The "Publish Media to Google Cardboard VR View" script is a module from the [KartaVR](http://www.andrewhazelden.com/blog/downloads/kartavr/) that lets you customize the settings and generate a Google Cardboard VR View webpage that can be viewed locally or pushed via Apache web sharing and WiFi to a smartphone with a Google Cardboard HMD.
 
 For more details on the Google VR View technology itself check out the [Google VR View Developers](https://developers.google.com/vr/concepts/vrview-web) page.
 
@@ -205,7 +205,7 @@ The "Publish Media to Google Cardboard VR View" script for Fusion 7 and Fusion 8
 
 **Step 2.** Start Fusion and open a new comp. Select a saver or loader node in the flow area. If you select a node other than a loader or saver node a left viewport window snapshot will be created automatically.
 
-**Step 3.** Run the **Script > KartaVR > Publish Media to Google Cardboard VR View** menu item. You can also run this script when the flow area is active with the "V" hotkey on your keyboard.
+**Step 3.** Run the **Script > KartaVR > Viewers > Publish Media to Google Cardboard VR View** menu item. You can also run this script when the flow area is active with the "V" hotkey on your keyboard.
 
 ![Run the Script](images/vrview-script-menu-item.png)
 

@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Photoshop v4.1 2019-10-22
+Send Media to Photoshop - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -26,17 +26,14 @@ function mediaViewerTool()
 	photoshopLauncher()
 end
 
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 7, 8, 9, or 15
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
@@ -369,8 +366,7 @@ function photoshopLauncher()
 	local defaultViewerProgram = ''
 	if platform == 'Windows' then
 		-- Running on Windows
-		photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 10, printStatus)
-		
+		photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 11, printStatus)
 		if photoshopVersion == 0 then
 			-- Adobe Photoshop CS3
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CS3\\Photoshop.exe'
@@ -404,9 +400,12 @@ function photoshopLauncher()
 		elseif photoshopVersion == 10 then
 			-- Adobe Photoshop CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2019\\Photoshop.exe'
+		elseif photoshopVersion == 11 then
+			-- Adobe Photoshop 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop 2020\\Photoshop.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop CC 2019\\Photoshop.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Photoshop 2020\\Photoshop.exe'
 		end
 		
 		viewerProgram = '"' .. defaultViewerProgram .. '"'
@@ -416,8 +415,7 @@ function photoshopLauncher()
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 10, printStatus)
-		
+		photoshopVersion = getPreferenceData('KartaVR.SendMedia.PhotoshopVersion', 11, printStatus)
 		if photoshopVersion == 0 then
 			-- Adobe Photoshop CS3
 			defaultViewerProgram = '/Applications/Adobe Photoshop CS3/Adobe Photoshop CS3.app'
@@ -451,9 +449,12 @@ function photoshopLauncher()
 		elseif photoshopVersion == 10 then
 			-- Adobe Photoshop CC 2019
 			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
+		elseif photoshopVersion == 11 then
+			-- Adobe Photoshop 2020
+			defaultViewerProgram = '/Applications/Adobe Photoshop 2020/Adobe Photoshop 2020.app'
 		else
 			-- Fallback
-			defaultViewerProgram = '/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app'
+			defaultViewerProgram = '/Applications/Adobe Photoshop 2020/Adobe Photoshop 2020.app'
 		end
 		
 		viewerProgram = '"' .. defaultViewerProgram .. '"'

@@ -1,7 +1,7 @@
-# KartaVR 4.0.2 for Reactor Documentation #
+# KartaVR 4.2.1 for Reactor Documentation #
 
 -------------------------
-**Version 4.0.2** - Released 2019-02-07  
+**Version 4.2.1** - Released 2019-11-15  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -11,31 +11,36 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## <a name="pricing"></a>Pricing and Availability ##
 
-KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform via the [WSL Reactor package manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?t=2159). KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager. Check out the KartaVR v4 for Fusion and Resolve [blog post here](http://www.andrewhazelden.com/blog/2019/01/kartavr-v4-for-fusion-and-resolve/).
+KartaVR v4 is freeware distributed exclusively through the Steak Underwater user community platform via the [WSL Reactor package manager](https://www.steakunderwater.com/wesuckless/viewtopic.php?f=32&t=3067). Install the Reactor package manager, and then select the KartaVR category on the left side of the Reactor GUI. Then select and install the "KartaVR" and "KartaVR 3rd Party Libraries" packages.
 
-KartaVR works with Fusion (Free) v9, Fusion Studio v9, Fusion Render Node v9, Resolve (Free) v15+, and Resolve Studio v15+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
+![KartaVR for Reactor](images/kartavr-Install.png)
 
-KartaVR technical support is available through the "Steak Underwater" user community:  
-[https://www.steakunderwater.com/wesuckless/index.php](https://www.steakunderwater.com/wesuckless/index.php)
 
-Steak Underwater [KartaVR v4 Freeware Edition thread](https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2725) (Requires a free Steakunderwater forum account to view.)
+KartaVR v4 can be used on personal and commercial projects at no cost. KartaVR can legally be installed, for free, on an unlimited number of computers and render nodes via the Reactor Package Manager.
+
+
+KartaVR works with Fusion (Free) v9.0.2, Fusion Studio v9-16.1.1+, Fusion Render Node v9-16.1+, Resolve (Free) v15-16.1.1+, and Resolve Studio v15-16.1.1+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.15.2+, and Linux 64-Bit RHEL 7+, CentOS 7+, and Ubuntu 14+ distributions.
+
+KartaVR technical support is available through the "Steak Underwater" user community forum in the "Projects | Reactor | Reactor Submissions | KartaVR v4 Freeware Edition" thread:  
+[https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2725](https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2725)
+
+(A free Steakunderwater forum account is required if you want to view that forum thread with the embedded images visible, or to post on the thread.)
 
 KartaVR Example 360VR Stitching Comps:  
 [http://www.andrewhazelden.com/projects/kartavr/examples/](http://www.andrewhazelden.com/projects/kartavr/examples/)
 
 ![Reactor Atom Package - Supporting 360VR Stitching Project Files](images/reactor-atom-package-stitching-media.png)
 
-
 KartaVR is (C) Copyright Andrew Hazelden 2014-2019. All rights reserved.
 
 ## <a name="overview"></a>Overview ##
 
-"Karta" is the Swedish word for map. With KartaVR you can easily stitch, composite, retouch, and remap any kind of panoramic video: from any projection to any projection. The KartaVR plug-in works inside of Blackmagic Design's powerful node based [Fusion Standalone 9](https://www.blackmagicdesign.com/products/fusion) and [Resolve 15](https://www.blackmagicdesign.com/products/davinciresolve/) software. KartaVR provides the essential tools for VR, panoramic 360&deg; video stitching, and image editing workflows.
+"Karta" is the Swedish word for map. With KartaVR you can easily stitch, composite, retouch, and remap any kind of panoramic video: from any projection to any projection. The KartaVR plug-in works inside of Blackmagic Design's powerful node based [Fusion Standalone](https://www.blackmagicdesign.com/products/fusion) and [Resolve](https://www.blackmagicdesign.com/products/davinciresolve/) software. KartaVR provides the essential tools for VR, panoramic 360&deg; video stitching, and image editing workflows.
 
 
 ![Create Amazing VR Content](images/create-amazing-vr-content.jpg)
 
-Unlock a massive VR toolset consisting of 138 nodes, 57 scripts, and 6 macroLUTS that will enable you to convert image projections, apply panoramic masking, retouch images, render filters and effects, edit stereoscopic 3D media, create panoramic 3D renderings, and review 360&deg; media in Fusion's 2D and 3D viewers.
+Unlock a massive VR toolset consisting of 143 nodes, 62 scripts, 5 .fu, and 8 macroLUTS that will enable you to convert image projections, apply panoramic masking, retouch images, render filters and effects, edit stereoscopic 3D media, create panoramic 3D renderings, and review 360&deg; media in Fusion's 2D and 3D viewers.
 
 KartaVR integrates with the rest of your production pipeline through a series of "Send Media to" scripts. With a single click you can send footage from your Fusion composite to other content creation tools including: Adobe After Effects, Adobe Photoshop, Adobe Illustrator, Affinity Photo &amp; Designer, PTGui, Autopano, and other tools.
 
@@ -96,7 +101,7 @@ A pair of nodes called [ImageGridCreator](macros-guide-photogrammetry.html#Image
 ![Pikachu 13x10 Image Grid](images/pikachu_13x10_image_grid_tiny.jpg)
 
 **Dig into the Example Projects**  
-KartaVR now includes 64 Fusion example projects. Each one contains detailed descriptions of a panoramic compositing workflow. Explore the projects and learn new techniques that will take your VR project to the next level. There is also a fun roller coaster example that demonstrates how to render VR content directly in Fusion's 3D animation environment.
+KartaVR now includes 72 Fusion example projects. Each one contains detailed descriptions of a panoramic compositing workflow. Explore the projects and learn new techniques that will take your VR project to the next level. There is also a fun roller coaster example that demonstrates how to render VR content directly in Fusion's 3D animation environment.
 
 ## <a name="new-features"></a>New Features in KartaVR 3.0 ##
 
@@ -113,7 +118,7 @@ KartaVR is able to dramatically simplify the process of building a fast and high
 
 ## <a name="system-requirements"></a>System Requirements ##
 
-KartaVR is compatible with Fusion (Free) and Fusion Studio 9.0.2, and Resolve (Free) and Resolve Studio 15.2+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, Ubuntu 14+ distributions.
+KartaVR is compatible with Fusion (Free) and Fusion Studio 9.0.2+, and Resolve (Free) and Resolve Studio 15.2+. KartaVR runs on Windows 7-10 64-Bit, macOS 10.10 - 10.14, and Linux 64-Bit RHEL 7+, CentOS 7+, Ubuntu 14+ distributions.
 
 ## <a name="new-features"></a>KartaVR Gallery ##
   
@@ -185,9 +190,9 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
     <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
   </ul></td>
   <td><ul>
-    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
     <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseDomemaster180">Equirectangular2InverseDomemaster180</a></li>
@@ -208,6 +213,8 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
     <li><a href="macros-guide-conversions.html#HorizontalCross2CubicFaces">HorizontalCross2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalStrip2CubicFaces">HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalTee2CubicFaces">HorizontalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2Equirectangular">MeshUV2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2EquirectangularStereo">MeshUV2EquirectangularStereo</a></li>
     <li><a href="macros-guide-conversions.html#MRCube1HorizontalStrip2CubicFaces">MRCube1HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Rectilinear2Equirectangular">Rectilinear2Equirectangular</a></li>
     <li><a href="macros-guide-conversions.html#RectilinearStereo2EquirectangularStereo">RectilinearStereo2EquirectangularStereo</a></li>
@@ -448,6 +455,8 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 - [Fusion Hotkeys](hotkeys.html)
 - [Fusion Macro LUTs](luts.html)
   - [Bright LUT](luts.html#bright-lut)
+  - MeshUV to Equirectangular LUT
+  - MeshUV to EquirectangularStereoOU LUT
   - [ViewerEquirectangular LUT](luts.html#viewerequirectangular-lut)
   - [ViewerEquirectangular Stereo OU LUT](luts.html#viewerequirectangular-stereo-ou-lut)
   - [ViewerMesh LUT](luts.html#viewermesh-lut)
@@ -464,15 +473,26 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
   - [Changing the Bin Window Views](tips.html#bin)
   - [Supporting Tools for VR Production](tips.html#vr-tools)
   - [Using Expressions to set the Image Resolution](tips.html#using-expressions-to-set-the-image-resolution)
+  - [Breaking the 32K Resolution Barrier](tips.html#breaking-the-32k-resolution-barrier)
 - [Known Issues](known-issues.html)
 - [Sample Imagery](sample-imagery.html)
 - [Scripts](scripts.html)
   - **Geometry:**
+      - Export to Point Cloud
+      - Reload Alembic Scene (macOS only)
+      - Reload FBX Scene (macOS only)
+      - Reload PSD layers (macOS only)
       - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
       - [Send Geometry to AC3D](scripts.html#send-geometry-to-ac3d)
+      - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
+      - [Send Geometry to Cloud Compare Viewer](scripts.html#send-geometry-to-cloudcompare-viewer)
+      - [Send Geometry to Instant Meshes](scripts.html#send-geometry-to-instantmeshes)
+      - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
+      - Send Geometry to usdview
   - **Movies:**
       - [Combine Stereo Movies](scripts.html#combine-stereo-movies)
       - [Convert Movies to Image Sequences](scripts.html#convert-movies-to-image-sequences)
+      - [Video Snapshot](scripts.html#video-snapshot)
   - **Open Folder:**
       - [Open Containing Folder](scripts.html#open-containing-folder)
       - [Open KartaVR Temp Folder](scripts.html#open-temp-folder)
@@ -512,7 +532,9 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
       - [PTGui BatchBuilder Extractor](scripts.html#batch-builder-extractor)
       - [PTGui Mask Importer](scripts.html#ptgui-mask-importer)
       - [PTGui Project Importer](scripts.html#ptgui-project-importer)
+      - [Render Selected](scripts.html#render-selected)
   - **Viewers:**
+      - Directory Tree
       - [PanoView Script](pano-view.html)
       - [Edit PanoView Preferences](pano-view.html#edit-panoview-preferences)
       - [Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)

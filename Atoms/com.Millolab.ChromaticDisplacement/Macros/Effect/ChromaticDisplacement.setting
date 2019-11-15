@@ -3,12 +3,17 @@
 		ChromaticDisplacement = MacroOperator {
 			CtrlWZoom = false,
 			Inputs = ordered() {
-				Comments = Input { Value = "Macro by Emilio Sapia - Millolab\nhttps://emiliosapia.myportfolio.com", },				
 				CommentsNest = Input { Value = 0, },
+				Comments = Input { Value = "Macro by Emilio Sapia - Millolab\nhttps://emiliosapia.myportfolio.com", },
 				Background = InstanceInput {
-					SourceOp = "ChangeDepth2_1",
+					SourceOp = "ChangeDepth",
 					Source = "Input",
 					Name = "Background",
+				},
+				Depth = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "BitDepth",
+					Name = "Depth",
 				},
 				Foreground = InstanceInput {
 					SourceOp = "ChangeDepth2",
@@ -159,14 +164,14 @@
 				Input232 = InstanceInput {
 					SourceOp = "Dissolve2",
 					Source = "ApplyMaskInverted",
-					Default = 0,
 					Page = "Common",
-				},	
+					Default = 0,
+				},
 				Input233 = InstanceInput {
 					SourceOp = "Dissolve1",
 					Source = "MultiplyByMask",
 					Default = 0,
-				},			
+				},
 				Input234 = InstanceInput {
 					SourceOp = "Mask_In",
 					Source = "Channel",
@@ -229,7 +234,7 @@
 				}
 			},
 			ViewInfo = GroupInfo {
-				Pos = { 51.9355, -175.144 },
+				Pos = { 402.046, 71 },
 				Flags = {
 					AllowPan = false,
 					ConnectedSnap = true,
@@ -242,24 +247,39 @@
 				Direction = "Horizontal",
 				PipeStyle = "Direct",
 				Scale = 1,
-				Offset = { 8.5443, -37.6973 }
+				Offset = { 12.8914, -37.6973 }
 			},
 			Tools = ordered() {
-				ChangeDepth2_1 = ChangeDepth {
-					CtrlWShown = false,
+				ChangeDepth = ChangeDepth {
 					Inputs = {
 						Depth = Input {
 							Value = 4,
 							Expression = "ChangeDepth2.Depth",
 						},
+						BitDepth = Input { Value = 1, }
 					},
-					ViewInfo = OperatorInfo { Pos = { -625.068, 456.658 } },
+					ViewInfo = OperatorInfo { Pos = { -618.547, 456.658 } },
+					UserControls = ordered() {
+						BitDepth = {
+							{ CCS_AddString = "float16" },
+							{ CCS_AddString = "float32" },
+							INP_MaxAllowed = 1000000,
+							INP_Integer = true,
+							INPID_InputControl = "ComboControl",
+							CC_LabelPosition = "Horizontal",
+							INP_MaxScale = 4,
+							INP_Default = 4,
+							INP_MinScale = 3,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Bit Depth",
+						}
+					}
 				},
 				Merge2 = Merge {
-					CtrlWShown = false,
 					Inputs = {
 						Background = Input {
-							SourceOp = "ChangeDepth2_1",
+							SourceOp = "ChangeDepth",
 							Source = "Output",
 						},
 						Foreground = Input {
@@ -302,7 +322,7 @@
 						MultiplyByMask = Input { Expression = "iif(Dissolve1.MultiplyByMask==1,1,(ChangeDepth2.CutOutMode))", },
 						Mix = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						Background = Input {
-							SourceOp = "ChangeDepth2_1",
+							SourceOp = "ChangeDepth",
 							Source = "Output",
 						},
 						Foreground = Input {
@@ -313,9 +333,11 @@
 					ViewInfo = OperatorInfo { Pos = { 604.063, 545.707 } },
 				},
 				ChangeDepth2 = ChangeDepth {
-					CtrlWShown = false,
 					Inputs = {
-						Depth = Input { Value = 4, },
+						Depth = Input {
+							Value = 4,
+							Expression = "ChangeDepth.BitDepth+3",
+						},
 						DisplaceControls = Input { Value = 1, },
 						Height = Input { Value = 2, },
 						Refraction = Input { Value = 0.5, },
@@ -326,7 +348,7 @@
 						UseAlpha = Input { Value = 1, },
 						High = Input { Value = 1, },
 					},
-					ViewInfo = OperatorInfo { Pos = { -212.59, 52.6749 } },
+					ViewInfo = OperatorInfo { Pos = { -212.59, 50.699 } },
 					UserControls = ordered() {
 						DisplaceControls = {
 							INP_MaxAllowed = 1000000,
@@ -647,7 +669,6 @@
 					}
 				},
 				Blur1 = Blur {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						Filter = Input { Value = FuID { "Gaussian" }, },
@@ -663,7 +684,6 @@
 					ViewInfo = OperatorInfo { Pos = { -212.59, 274.205 } },
 				},
 				CreateBumpMap1 = CreateBumpMap {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						Input = Input {
@@ -677,8 +697,7 @@
 					},
 					ViewInfo = OperatorInfo { Pos = { -356.301, 274.205 } },
 				},
-				Bitmap2_1 = BitmapMask {
-					CtrlWShown = false,
+				Bitmap2 = BitmapMask {
 					Inputs = {
 						Level = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						MaskWidth = Input { Value = 1920, },
@@ -693,8 +712,7 @@
 					},
 					ViewInfo = OperatorInfo { Pos = { -97.941, 205.462 } },
 				},
-				Instance_Blur1_2 = Blur {
-					CtrlWShown = false,
+				Instance_Blur1 = Blur {
 					SourceOp = "Blur1",
 					Inputs = {
 						StartEndRenderScripts = Input { },
@@ -705,14 +723,13 @@
 							Expression = "ChangeDepth2.Spread"
 						},
 						Input = Input {
-							SourceOp = "Bitmap3",
+							SourceOp = "Bitmap4",
 							Source = "Mask",
 						},
 					},
 					ViewInfo = OperatorInfo { Pos = { 115.08, 164.723 } },
 				},
 				Bitmap1 = BitmapMask {
-					CtrlWShown = false,
 					Inputs = {
 						Level = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						MaskWidth = Input { Value = 1920, },
@@ -720,15 +737,14 @@
 						PixelAspect = Input { Value = { 1, 1 }, },
 						ClippingMode = Input { Value = FuID { "None" }, },
 						Image = Input {
-							SourceOp = "Instance_Blur1_2",
+							SourceOp = "Instance_Blur1",
 							Source = "Output",
 						},
 						Channel = Input { Value = FuID { "Luminance" }, },
 					},
 					ViewInfo = OperatorInfo { Pos = { 240.059, 139.305 } },
 				},
-				Bitmap1_1 = BitmapMask {
-					CtrlWShown = false,
+				Bitmap3 = BitmapMask {
 					Inputs = {
 						EffectMask = Input {
 							SourceOp = "Bitmap1",
@@ -746,15 +762,14 @@
 						PixelAspect = Input { Value = { 1, 1 }, },
 						ClippingMode = Input { Value = FuID { "None" }, },
 						Image = Input {
-							SourceOp = "Instance_Blur1_2",
+							SourceOp = "Instance_Blur1",
 							Source = "Output",
 						},
 						Channel = Input { Value = FuID { "Luminance" }, },
 					},
 					ViewInfo = OperatorInfo { Pos = { 240.059, 195.535 } },
 				},
-				Bitmap3 = BitmapMask {
-					CtrlWShown = false,
+				Bitmap4 = BitmapMask {
 					Inputs = {
 						Level = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						MaskWidth = Input { Value = 1920, },
@@ -771,8 +786,7 @@
 					},
 					ViewInfo = OperatorInfo { Pos = { 339.913, 76.4671 } },
 				},
-				Instance_Blur1_1 = Blur {
-					CtrlWShown = false,
+				Instance_Blur11 = Blur {
 					SourceOp = "Blur1",
 					Inputs = {
 						StartEndRenderScripts = Input { },
@@ -783,14 +797,13 @@
 							Expression = "ChangeDepth2.Spread"
 						},
 						Input = Input {
-							SourceOp = "Bitmap2_1",
+							SourceOp = "Bitmap2",
 							Source = "Mask",
 						},
 					},
 					ViewInfo = OperatorInfo { Pos = { 20.059, 273.824 } },
 				},
 				Displace1 = Displace {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						MultiplyByMask = Input { Value = 1, },
@@ -824,7 +837,6 @@
 					ViewInfo = OperatorInfo { Pos = { -356.301, 340.658 } },
 				},
 				MatteControl1 = MatteControl {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.UseAlpha", },
 						MatteCombine = Input { Value = 4, },
@@ -834,14 +846,13 @@
 							Source = "Output",
 						},
 						Foreground = Input {
-							SourceOp = "Bitmap3",
+							SourceOp = "Bitmap4",
 							Source = "Mask",
 						},
 					},
 					ViewInfo = OperatorInfo { Pos = { 411.906, 340.658 } },
 				},
 				Transform3 = Transform {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						Size = Input {
@@ -853,14 +864,13 @@
 						FlipVert = Input { Expression = "ChangeDepth2.FlipVertically", },
 						Edges = Input { Value = 3, },
 						Input = Input {
-							SourceOp = "ChangeDepth2_1",
+							SourceOp = "ChangeDepth",
 							Source = "Output",
 						},
 					},
 					ViewInfo = OperatorInfo { Pos = { -506.971, 340.658 } },
 				},
 				VariBlur1 = VariBlur {
-					CtrlWShown = false,
 					Inputs = {
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
 						Method = Input { Value = 0, },
@@ -870,17 +880,16 @@
 							Source = "Output",
 						},
 						BlurImage = Input {
-							SourceOp = "Bitmap2_1",
+							SourceOp = "Bitmap2",
 							Source = "Mask",
 						},
 					},
 					ViewInfo = OperatorInfo { Pos = { -97.941, 340.658 } },
 				},
 				BrightnessContrast1 = BrightnessContrast {
-					CtrlWShown = false,
 					Inputs = {
 						EffectMask = Input {
-							SourceOp = "Bitmap1_1",
+							SourceOp = "Bitmap3",
 							Source = "Mask",
 						},
 						Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
@@ -895,10 +904,9 @@
 					ViewInfo = OperatorInfo { Pos = { 240.059, 340.658 } },
 				},
 				Merge1 = Merge {
-					CtrlWShown = false,
 					Inputs = {
 						EffectMask = Input {
-							SourceOp = "Instance_Blur1_1",
+							SourceOp = "Instance_Blur11",
 							Source = "Output",
 						},
 						Blend = Input {
@@ -911,7 +919,7 @@
 							Source = "Output",
 						},
 						Foreground = Input {
-							SourceOp = "ChannelBooleans3_1_1",
+							SourceOp = "ChannelBooleans3_1_1_1",
 							Source = "Output",
 						},
 						PerformDepthMerge = Input { Value = 0, },
@@ -919,16 +927,15 @@
 					ViewInfo = OperatorInfo { Pos = { 20.059, 340.658 } },
 				},
 				Group1 = GroupOperator {
-					CtrlWShown = false,
 					Inputs = ordered() {
 						Input1 = InstanceInput {
-							SourceOp = "ChangeDepth1_1_1",
+							SourceOp = "ChangeDepth1_1_1_1",
 							Source = "Input",
 						}
 					},
 					Outputs = {
 						Output1 = InstanceOutput {
-							SourceOp = "ChannelBooleans3_1_1",
+							SourceOp = "ChannelBooleans3_1_1_1",
 							Source = "Output",
 						}
 					},
@@ -949,7 +956,7 @@
 						Offset = { 4.14671, 0 }
 					},
 					Tools = ordered() {
-						Blur1_2_1 = Blur {
+						Blur1_2_1_1 = Blur {
 							CtrlWShown = false,
 							Inputs = {
 								Blend = Input { Expression = "ChangeDepth2.GlobalBlend", },
@@ -957,117 +964,117 @@
 								LockXY = Input { Value = 0, },
 								XBlurSize = Input {
 									Value = 0,
-									Expression = "0.0+ChangeDepth1_1_1.Scale*ChangeDepth1_1_1.soft",
+									Expression = "0.0+ChangeDepth1_1_1_1.Scale*ChangeDepth1_1_1_1.soft",
 								},
 								YBlurSize = Input {
 									Value = 0,
-									Expression = "0.0+ChangeDepth1_1_1.ScaleY*ChangeDepth1_1_1.soft",
+									Expression = "0.0+ChangeDepth1_1_1_1.ScaleY*ChangeDepth1_1_1_1.soft",
 								},
 								Passes = Input { Value = 3, },
 								Input = Input {
-									SourceOp = "Transform1_2_1",
+									SourceOp = "Transform1_2_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 234, 8.25958 } },
 						},
-						Transform1_2_1 = Transform {
+						Transform1_2_1_1 = Transform {
 							CtrlWShown = false,
 							Inputs = {
 								Center = Input {
 									Value = { 0.499231, 0.5 },
-									Expression = "Point(ChangeDepth1_1_1.Amount, 0.5)",
+									Expression = "Point(ChangeDepth1_1_1_1.Amount, 0.5)",
 								},
 								UseSizeAndAspect = Input { Value = 0, },
 								XSize = Input {
 									Value = 1.05,
-									Expression = "1+ChangeDepth1_1_1.Scale",
+									Expression = "1+ChangeDepth1_1_1_1.Scale",
 								},
 								YSize = Input {
 									Value = 1.05,
-									Expression = "1.0+ChangeDepth1_1_1.ScaleY",
+									Expression = "1.0+ChangeDepth1_1_1_1.ScaleY",
 								},
 								Edges = Input { Value = 3, },
 								Input = Input {
-									SourceOp = "ChannelBooleans1_1_1_1_1",
+									SourceOp = "ChannelBooleans1_1_1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 86, 8.25958 } },
 						},
-						ChannelBooleans1_1_1_1_1 = ChannelBoolean {
+						ChannelBooleans1_1_1_1_1_1 = ChannelBoolean {
 							CtrlWShown = false,
 							Inputs = {
 								ToRed = Input { Value = 15, },
 								ToGreen = Input { Value = 15, },
 								Background = Input {
-									SourceOp = "DirectionalBlur1_1_1",
+									SourceOp = "DirectionalBlur1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { -87, 8.25958 } },
 						},
-						ChannelBooleans2_1_1 = ChannelBoolean {
+						ChannelBooleans2_1_1_1 = ChannelBoolean {
 							CtrlWShown = false,
 							Inputs = {
 								Operation = Input { Value = 1, },
 								ToAlpha = Input { Value = 4, },
 								Background = Input {
-									SourceOp = "Blur1_2_1",
+									SourceOp = "Blur1_2_1_1",
 									Source = "Output",
 								},
 								Foreground = Input {
-									SourceOp = "Transform1_1_1_1",
+									SourceOp = "Transform1_1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 381, 8.25958 } },
 						},
-						Transform1_1_1_1 = Transform {
+						Transform1_1_1_1_1 = Transform {
 							CtrlWShown = false,
 							Inputs = {
 								UseSizeAndAspect = Input { Value = 0, },
 								XSize = Input {
 									Value = 1.025,
-									Expression = "1.0+(ChangeDepth1_1_1.Scale/2)",
+									Expression = "1.0+(ChangeDepth1_1_1_1.Scale/2)",
 								},
 								YSize = Input {
 									Value = 1.025,
-									Expression = "1.0+(ChangeDepth1_1_1.ScaleY/2)",
+									Expression = "1.0+(ChangeDepth1_1_1_1.ScaleY/2)",
 								},
 								Input = Input {
-									SourceOp = "ChannelBooleans1_1_2_1",
+									SourceOp = "ChannelBooleans1_1_2_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 82, 72.2556 } },
 						},
-						ChannelBooleans1_1_2_1 = ChannelBoolean {
+						ChannelBooleans1_1_2_1_1 = ChannelBoolean {
 							CtrlWShown = false,
 							Inputs = {
 								ToRed = Input { Value = 15, },
 								ToBlue = Input { Value = 15, },
 								Background = Input {
-									SourceOp = "DirectionalBlur1_1_1",
+									SourceOp = "DirectionalBlur1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { -86, 72.2556 } },
 						},
-						DirectionalBlur1_1_1 = DirectionalBlur {
+						DirectionalBlur1_1_1_1 = DirectionalBlur {
 							CtrlWShown = false,
 							Inputs = {
-								Blend = Input { Expression = "iif(ChangeDepth2.GlobalBlend==0, 0,1.0-ChangeDepth1_1_1.PerformanceMode)", },
+								Blend = Input { Expression = "iif(ChangeDepth2.GlobalBlend==0, 0,1.0-ChangeDepth1_1_1_1.PerformanceMode)", },
 								Type = Input { Value = 3, },
-								Length = Input { Expression = "0+(ChangeDepth1_1_1.Scale+ChangeDepth1_1_1.ScaleY)/4", },
+								Length = Input { Expression = "0+(ChangeDepth1_1_1_1.Scale+ChangeDepth1_1_1_1.ScaleY)/4", },
 								Input = Input {
-									SourceOp = "ChangeDepth1_1_1",
+									SourceOp = "ChangeDepth1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { -230.72, 72.2556 } },
 						},
-						ChangeDepth1_1_1 = ChangeDepth {
+						ChangeDepth1_1_1_1 = ChangeDepth {
 							CtrlWShown = false,
 							Inputs = {
 								Dither = Input { Value = 2, },
@@ -1143,67 +1150,67 @@
 								}
 							}
 						},
-						Instance_Blur1_3_1 = Blur {
+						Instance_Blur1_3_1_1 = Blur {
 							CtrlWShown = false,
-							SourceOp = "Blur1_2_1",
+							SourceOp = "Blur1_2_1_1",
 							Inputs = {
 								StartEndRenderScripts = Input { },
 								EffectMask = Input { },
 								Blend = Input { Expression = "ChangeDepth2.GlobalBlend" },
 								XBlurSize = Input {
 									Value = 0,
-									Expression = "0.0+ChangeDepth1_1_1.Scale*ChangeDepth1_1_1.soft"
+									Expression = "0.0+ChangeDepth1_1_1_1.Scale*ChangeDepth1_1_1_1.soft"
 								},
 								YBlurSize = Input {
 									Value = 0,
-									Expression = "0.0+ChangeDepth1_1_1.ScaleY*ChangeDepth1_1_1.soft"
+									Expression = "0.0+ChangeDepth1_1_1_1.ScaleY*ChangeDepth1_1_1_1.soft"
 								},
 								Input = Input {
-									SourceOp = "Transform2_1_1",
+									SourceOp = "Transform2_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 233, 135.256 } },
 						},
-						ChannelBooleans3_1_1 = ChannelBoolean {
+						ChannelBooleans3_1_1_1 = ChannelBoolean {
 							CtrlWShown = false,
 							Inputs = {
 								Operation = Input { Value = 1, },
 								ToAlpha = Input { Value = 4, },
 								Background = Input {
-									SourceOp = "ChannelBooleans2_1_1",
+									SourceOp = "ChannelBooleans2_1_1_1",
 									Source = "Output",
 								},
 								Foreground = Input {
-									SourceOp = "Instance_Blur1_3_1",
+									SourceOp = "Instance_Blur1_3_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { 381, 135.256 } },
 						},
-						ChannelBooleans1_2_1 = ChannelBoolean {
+						ChannelBooleans1_2_1_1 = ChannelBoolean {
 							CtrlWShown = false,
 							Inputs = {
 								ToGreen = Input { Value = 15, },
 								ToBlue = Input { Value = 15, },
 								Background = Input {
-									SourceOp = "DirectionalBlur1_1_1",
+									SourceOp = "DirectionalBlur1_1_1_1",
 									Source = "Output",
 								},
 							},
 							ViewInfo = OperatorInfo { Pos = { -86, 135.256 } },
 						},
-						Transform2_1_1 = Transform {
+						Transform2_1_1_1 = Transform {
 							CtrlWShown = false,
 							Inputs = {
 								Center = Input {
 									Value = { 0.500769, 0.5 },
-									Expression = "Point(1-Transform1_2_1.Center.X, 0.5)",
+									Expression = "Point(1-Transform1_2_1_1.Center.X, 0.5)",
 								},
 								UseSizeAndAspect = Input { Value = 0, },
 								Edges = Input { Value = 3, },
 								Input = Input {
-									SourceOp = "ChannelBooleans1_2_1",
+									SourceOp = "ChannelBooleans1_2_1_1",
 									Source = "Output",
 								},
 							},
@@ -1212,7 +1219,6 @@
 					},
 				},
 				Mask_In = BitmapMask {
-					CtrlWShown = false,
 					Inputs = {
 						Filter = Input { Value = FuID { "Fast Gaussian" }, },
 						MaskWidth = Input { Value = 1920, },

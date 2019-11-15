@@ -1,4 +1,4 @@
-_VERSION = 'v4.1 - 2019-10-21'
+_VERSION = 'v4.2.1 - 2019-11-12'
 --[[
 ==============================================================================
 About KartaVR.lua
@@ -27,6 +27,7 @@ Step 1. In Fusion you can run the script by selecting the "Script > KartaVR > Ab
 Step 2. A new "About KartaVR" window will appear. You can click on webpage and email links in this window and the external URLs will be loaded in your default webbrowser / email programs.
 ]]
 
+
 -- Open a Webpage
 -- Example: OpenURL('We Suck Less', 'https://www.steakunderwater.com/')
 function OpenURL(siteName, path)
@@ -43,9 +44,8 @@ function OpenURL(siteName, path)
 		comp:Print('[Error] There is an invalid Fusion platform detected\n')
 		return
 	end
-	
+
 	os.execute(command)
-	
 	-- comp:Print('[Launch Command] ' tostring(command) .. '\n')
 	comp:Print('[Opening URL] [' .. tostring(siteName) .. '] ' .. tostring(path) .. '\n')
 end
@@ -55,7 +55,7 @@ end
 function AboutKartaVRWin()
 	-- Configure the window Size
 	local originX, originY, width, height = 200, 200, 775, 455
-	
+
 	-- Create the new UI Manager Window
 	local win = disp:AddWindow({
 		ID = 'AboutKartaVRWin',
@@ -71,15 +71,12 @@ function AboutKartaVRWin()
 			width,
 			height,
 		},
-		
 		ui:VGroup {
 			ID = 'root',
-			
 			ui:HGroup{
 				Weight = 0,
 				ui:VGroup {
 					Weight = 1,
-					
 					ui:Button{
 						ID = 'KartaVRIconButton',
 						Weight = 0,
@@ -93,40 +90,21 @@ function AboutKartaVRWin()
 						},
 						Flat = true,
 					},
-					
---					ui:Label {
---						ID = 'KartaVRLabel',
---						Weight = 0,
---
---						Text = 'KartaVR for Fusion',
---						ReadOnly = true,
---						Alignment = {
---							AlignHCenter = true, 
---							AlignVCenter = true,
---						},
---						Font = ui:Font{
---							PixelSize = 36,
---						},
---					},
-					
 					ui:Label {
 						ID = 'VersionLabel',
 						Weight = 1,
-						
 						Text = _VERSION,
 						WordWrap = true,
 						Alignment = {
-							AlignHCenter = true, 
+							AlignHCenter = true,
 							AlignVCenter = true,
 						},
 						Font = ui:Font{
 							PixelSize = 12,
 						},
 					},
-					
 				},
 			},
-			
 			ui:VGroup{
 				ui:Label {
 					ID = 'AboutLabel',
@@ -156,47 +134,38 @@ The KartaVR plug-in works inside of Blackmagic Design's powerful node based Fusi
 						PixelSize = 12,
 					},
 				},
-				
 			},
 		},
 	})
-	
-	
+
 	-- Add your GUI element based event functions here:
 	itm = win:GetItems()
-	
+
 	-- The window was closed
 	function win.On.AboutKartaVRWin.Close(ev)
 		disp:ExitLoop()
 	end
-	
+
 	-- Open the We Suck Less webpage when the KartaVR logo is clicked
 	function win.On.KartaVRIconButton.Clicked(ev)
 		OpenURL('Andrew Hazelden Blog', 'http://www.andrewhazelden.com/blog/')
 		disp:ExitLoop()
 	end
-	
+
 	-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
 	app:AddConfig('AboutKartaVRWin', {
 		Target {
 			ID = 'AboutKartaVRWin',
 		},
-		
 		Hotkeys {
 			Target = 'AboutKartaVRWin',
 			Defaults = true,
-			
+
 			CONTROL_W = 'Execute{ cmd = [[ app.UIManager:QueueEvent(obj, "Close", {}) ]] }',
 			CONTROL_F4 = 'Execute{ cmd = [[ app.UIManager:QueueEvent(obj, "Close", {}) ]] }',
 		},
 	})
-	
-	-- List the details for the elements in this window
-	-- print('\n\n[itm:GetItems()]')
-	-- dump(itm)
-	-- print('\n[itm.KartaVRIconButton:GetItems()]')
-	-- dump(itm.KartaVRIconButton)
-	
+
 	-- Init the window
 	win:Show()
 	disp:RunLoop()
@@ -209,7 +178,7 @@ end
 function Main()
 	-- Find out the current Fusion host platform (Windows/Mac/Linux)
 	platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
-	
+
 	-- Display the "About KartaVR" dialog
 	ui = app.UIManager
 	disp = bmd.UIDispatcher(ui)

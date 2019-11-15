@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Publish Media to Google Cardboard VR View v4.1 2019-10-22
+Publish Media to Google Cardboard VR View - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -24,9 +24,6 @@ Step 3. In the "Publish Media to Google Cardboard VR View" dialog window you nee
 
 --]]--
 
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-
 -- VR View Webpage Settings
 
 -- Viewer Window Image Dimensions
@@ -37,8 +34,8 @@ vrviewHeight = '300px'
 -- Print out extra debugging information
 local printStatus = false
 
--- Find out if we are running Fusion 6, 7, 8, 9, or 15
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')

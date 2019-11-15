@@ -1,0 +1,988 @@
+{
+	Tools = ordered() {
+		AdvancedDespill = MacroOperator {
+			CtrlWZoom = false,
+			Inputs = ordered() {
+				Comments = Input { Value = "Macro by Emilio Sapia - Millolab\nhttps://emiliosapia.myportfolio.com", },
+				Background = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Input",
+					Name = "Background",
+				},
+				SpillColor = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "SpillColor",
+					Default = 0,
+				},
+				DespillBoost = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "DespillBoost",
+					Default = 0,
+				},
+				BackgroundLuminance = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "BackgroundLuminance",
+					Default = 1,
+				},
+				AdvancedControls = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "AdvancedControls",
+				},
+				Matte = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Matte",
+					Default = 1,
+				},
+				Display = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Display",
+					Default = 0,
+				},
+				Low = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Low",
+					ControlGroup = 7,
+					Default = 0,
+				},
+				High = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "High",
+					ControlGroup = 7,
+					Default = 1,
+				},
+				FringeSize = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "FringeSize",
+					Default = 0,
+				},
+				FringeSoftness = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "FringeSoftness",
+					Default = 0,
+				},
+				FringeGamma = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "FringeGamma",
+					Default = 0,
+				},
+				Red = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Red",
+					Default = 1,
+				},
+				Green = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Green",
+					Default = 1,
+				},
+				Blue = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "Blue",
+					Default = 1,
+				},
+				BackgroundSaturation = InstanceInput {
+					SourceOp = "ChangeDepth",
+					Source = "BackgroundSaturation",
+					Default = 1,
+				},
+				Blend = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "Blend",
+					Page = "Common",
+					Default = 1,
+				},
+				ProcessWhenBlendIs00 = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ProcessWhenBlendIs00",
+					Default = 0,
+				},
+				ProcessRed = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ProcessRed",
+					Name = "Red",
+					Default = 1,
+				},
+				ProcessGreen = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ProcessGreen",
+					Name = "Green",
+					Default = 1,
+				},
+				ProcessBlue = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ProcessBlue",
+					Name = "Blue",
+					Default = 1,
+				},
+				ProcessAlpha = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ProcessAlpha",
+					Name = "Alpha",
+					Default = 1,
+				},
+				ApplyMaskInverted = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ApplyMaskInverted",
+					Default = 0,
+				},
+				MultiplyByMask = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MultiplyByMask",
+					Default = 0,
+				},
+				FitMask = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "FitMask",
+				},
+				MaskChannel = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaskChannel",
+					Default = 3,
+				},
+				MaskHigh = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaskHigh",
+					ControlGroup = 18,
+					Default = 1,
+				},
+				MaskLow = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaskLow",
+					ControlGroup = 18,
+					Default = 0,
+				},
+				MaskClipBlack = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaskClipBlack",
+					Default = 1,
+				},
+				MaskClipWhite = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaskClipWhite",
+					Default = 1,
+				},
+				UseObject = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "UseObject",
+					Default = 0,
+				},
+				UseMaterial = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "UseMaterial",
+					Default = 0,
+				},
+				ObjectID = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "ObjectID",
+					Name = "Object / Material",
+					ControlGroup = 24,
+					Default = 0,
+				},
+				MaterialID = InstanceInput {
+					SourceOp = "Merge1",
+					Source = "MaterialID",
+					Name = "Object / Material",
+					ControlGroup = 24,
+					Default = 0,
+				},
+				EffectMask = InstanceInput {
+					SourceOp = "MASK",
+					Source = "Input",
+					Name = "Effect Mask",
+				},
+				MatteInput = InstanceInput {
+					SourceOp = "MatteInput",
+					Source = "Background",
+					Name = "Matte Input",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Merge1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 2302.6, -362.602 },
+				Flags = {
+					AllowPan = false,
+					ConnectedSnap = true,
+					AutoSnap = true,
+					AspectPics = false,
+					Thumbnails = false,
+					RemoveRouters = true
+				},
+				Size = { 1526.67, 558.435, 651.716, 47.1688 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { 19.6973, 0 }
+			},
+			Tools = ordered() {
+				ChangeDepth = ChangeDepth {
+					ViewInfo = OperatorInfo { Pos = { -611.696, 465.985 } },
+					UserControls = ordered() {
+						SpillColor = {
+							{ MBTNC_AddButton = "Green" },
+							{ MBTNC_AddButton = "Blue" },
+							INP_Integer = false,
+							INPID_InputControl = "MultiButtonControl",
+							MBTNC_ShowBasicButton = true,
+							INP_MaxScale = 1,
+							INP_Default = 0,
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							MBTNC_ShowName = true,
+							MBTNC_StretchToFit = true,
+							MBTNC_ShowToolTip = true,
+							LINKS_Name = "Spill Color",
+						},
+						DespillBoost = {
+							INP_Integer = false,
+							INP_Default = 0,
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 1,
+							LINKS_Name = "Despill Boost",
+						},
+						BackgroundLuminance = {
+							INP_Integer = false,
+							INP_Default = 0,
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 1,
+							LINKS_Name = "Background Luminance",
+						},
+						AdvancedControls = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							LBLC_DropDownButton = true,
+							INPID_InputControl = "LabelControl",
+							LBLC_NumInputs = 15,
+							INP_MaxScale = 1,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							LBLC_NestLevel = 1,
+							LINKS_Name = "Advanced Controls",
+						},
+						Matte = {
+							{ MBTNC_AddButton = "Internal" },
+							{ MBTNC_AddButton = "External" },
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "MultiButtonControl",
+							MBTNC_ShowBasicButton = true,
+							INP_MaxScale = 1,
+							INP_Default = 1,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							MBTNC_ShowName = true,
+							MBTNC_StretchToFit = true,
+							MBTNC_ShowToolTip = true,
+							LINKS_Name = "Matte",
+						},
+						Display = {
+							{ CCS_AddString = "Final Result" },
+							{ CCS_AddString = "Matte" },
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "ComboControl",
+							CC_LabelPosition = "Horizontal",
+							INP_MaxScale = 1,
+							INP_Default = 0,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							LINKS_Name = "Display",
+						},
+						Low = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "RangeControl",
+							INP_MaxScale = 1,
+							INP_Default = 0,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							IC_ControlID = 0,
+							IC_ControlGroup = 1,
+							LINKS_Name = "Low",
+						},
+						High = {
+							INP_MaxAllowed = 1000000,
+							INP_Integer = false,
+							INPID_InputControl = "RangeControl",
+							INP_MaxScale = 1,
+							INP_Default = 1,
+							INP_MinScale = 0,
+							INP_MinAllowed = -1000000,
+							LINKID_DataType = "Number",
+							IC_ControlID = 1,
+							IC_ControlGroup = 1,
+							LINKS_Name = "High",
+						},
+						FringeSize = {
+							INP_Integer = false,
+							LINKS_Name = "Fringe Size",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 5,
+							INP_Default = 0,
+						},
+						FringeSoftness = {
+							INP_Integer = false,
+							LINKS_Name = "Fringe Softness",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 5,
+							INP_Default = 0,
+						},
+						FringeGamma = {
+							LINKS_Name = "Fringe Gamma",
+							INP_Integer = false,
+							INP_MaxScale = 2,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = -2,
+							ICD_Center = 0,
+							INP_Default = 0,
+						},
+						Red = {
+							LINKS_Name = "Red",
+							INP_Integer = false,
+							INP_MaxScale = 5,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 0,
+							ICD_Center = 1,
+							INP_Default = 1,
+						},
+						Green = {
+							LINKS_Name = "Green",
+							INP_Integer = false,
+							INP_MaxScale = 5,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 0,
+							ICD_Center = 1,
+							INP_Default = 1,
+						},
+						Blue = {
+							LINKS_Name = "Blue",
+							INP_Integer = false,
+							INP_MaxScale = 5,
+							INPID_InputControl = "SliderControl",
+							LINKID_DataType = "Number",
+							INP_MinScale = 0,
+							ICD_Center = 1,
+							INP_Default = 1,
+						},
+						BackgroundSaturation = {
+							INP_Integer = false,
+							LINKS_Name = "Background Saturation",
+							INPID_InputControl = "SliderControl",
+							INP_MinScale = 0,
+							LINKID_DataType = "Number",
+							INP_MaxScale = 1,
+							INP_Default = 1,
+						}
+					}
+				},
+				MASK = PipeRouter {
+					ViewInfo = PipeRouterInfo { Pos = { 706.924, 187.628 } },
+				},
+				MatteInput = ChannelBoolean {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.Matte == 0,0,1)", },
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						ToAlpha = Input { Value = 16, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 588.716, 70.202 } },
+				},
+				Merge2 = Merge {
+					Inputs = {
+						Blend = Input { Expression = "ChangeDepth.BackgroundLuminance", },
+						Background = Input {
+							SourceOp = "Merge_A",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Luminosity" }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -179.984, 399.233 } },
+				},
+				BrightnessContrast4 = BrightnessContrast {
+					Inputs = {
+						Saturation = Input { Expression = "ChangeDepth.BackgroundSaturation", },
+						Input = Input {
+							SourceOp = "Merge2",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "PipeRouter7",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { -32.4049, 399.233 } },
+				},
+				Merge_A = Merge {
+					Inputs = {
+						ApplyMaskInverted = Input { Value = 1, },
+						Background = Input {
+							SourceOp = "Instance_Dissolve2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+						ApplyMode = Input { Value = FuID { "Darken" }, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -179.984, 341.233 } },
+				},
+				PipeRouter2 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -457.981, 341.233 } },
+				},
+				PipeRouter3 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -399.935, 341.233 } },
+				},
+				MatteControl11 = MatteControl {
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif (ChangeDepth.DespillBoost == 0, 0, 1)",
+						},
+						MatteCombine = Input { Value = 4, },
+						EffectMask = Input {
+							SourceOp = "PipeRouter1",
+							Source = "Output",
+						},
+						SpillColor = Input {
+							Value = 1,
+							Expression = "1-ChangeDepth.SpillColor",
+						},
+						SpillSuppression = Input { Expression = "ChangeDepth.DespillBoost", },
+						SpillMethod = Input { Value = 3, },
+						Background = Input {
+							SourceOp = "BrightnessContrast4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 140.256, 399.233 } },
+				},
+				ColorMatrix2 = CustomColorMatrix {
+					Inputs = {
+						Blend = Input { Expression = "Dissolve2.Mix", },
+						Matrix = Input {
+							Value = MatrixTable {
+								NumEntries = 54,
+								Type = 10,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1 }
+							},
+						},
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -312.754, 301.023 } },
+				},
+				Blur2 = Blur {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.FringeSize == 0,0,1)", },
+						XBlurSize = Input {
+							Value = 0.491,
+							Expression = "ChangeDepth.FringeSoftness",
+						},
+						Input = Input {
+							SourceOp = "BrightnessContrast3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 337.339 } },
+				},
+				ColorGain1 = ColorGain {
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif (ChangeDepth.FringeSize == 0,0,1)",
+						},
+						GammaRed = Input { Expression = "ChangeDepth.Red+ChangeDepth.FringeGamma", },
+						GammaGreen = Input { Expression = "ChangeDepth.Green+ChangeDepth.FringeGamma", },
+						GammaBlue = Input { Expression = "ChangeDepth.Blue+ChangeDepth.FringeGamma", },
+						PreDividePostMultiply = Input { Value = 1, },
+						ColorRanges = Input {
+							Value = ColorCurves {
+								Curves = {
+									{
+										Points = {
+											{ 0, 1 },
+											{ 0.125, 0.75 },
+											{ 0.375, 0.25 },
+											{ 0.5, 0 }
+										}
+									},
+									{
+										Points = {
+											{ 0.5, 0 },
+											{ 0.625, 0.25 },
+											{ 0.875, 0.75 },
+											{ 1, 1 }
+										}
+									}
+								}
+							},
+						},
+						Input = Input {
+							SourceOp = "MatteControl11",
+							Source = "Output",
+						},
+						EffectMask = Input {
+							SourceOp = "Blur2",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 399.233 } },
+				},
+				BrightnessContrast3 = BrightnessContrast {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.FringeSize == 0,0,1)", },
+						Alpha = Input { Value = 1, },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "BrightnessContrast2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 294.864 } },
+				},
+				PipeRouter9 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter4",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 409.355, 355.233 } },
+				},
+				ColorMatrix1 = CustomColorMatrix {
+					Inputs = {
+						Blend = Input { Expression = "1-Dissolve2.Mix", },
+						Matrix = Input {
+							Value = MatrixTable {
+								NumEntries = 54,
+								Type = 10,
+								Offset = 0,
+								Minimum = 0,
+								Maximum = 1,
+								MinimumValue = 0,
+								MaximumValue = 1,
+								StartSlope = 1,
+								EndSlope = 1,
+								StartIn = 0,
+								EndIn = 1,
+								Table = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0.5, 0, 0.5, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1 }
+							},
+						},
+						Input = Input {
+							SourceOp = "PipeRouter3",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -311.66, 254.95 } },
+				},
+				Instance_Dissolve2 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					SourceOp = "Dissolve2",
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ChangeDepth.SpillColor"
+						},
+						Background = Input {
+							SourceOp = "ColorMatrix1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ColorMatrix2",
+							Source = "Output",
+						},
+						Map = Input { },
+						StartEndRenderScripts = Input { },
+						EffectMask = Input { }
+					},
+					ViewInfo = OperatorInfo { Pos = { -179.984, 254.95 } },
+				},
+				BrightnessContrast2 = BrightnessContrast {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.FringeSize == 0,0,1)", },
+						Alpha = Input { Value = 1, },
+						Gain = Input {
+							Value = 1.491,
+							Expression = "1+Blur2.XBlurSize",
+						},
+						Input = Input {
+							SourceOp = "Blur1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 251.637 } },
+				},
+				ChannelBooleans1 = ChannelBoolean {
+					Inputs = {
+						ToRed = Input { Value = 3, },
+						ToGreen = Input { Value = 3, },
+						ToBlue = Input { Value = 3, },
+						ToAlpha = Input { Value = 16, },
+						Background = Input {
+							SourceOp = "PipeRouter9",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 556.435, 355.233 } },
+				},
+				Dissolve1 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ChangeDepth.Display",
+						},
+						Background = Input {
+							SourceOp = "ColorGain1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChannelBooleans1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 556.435, 399.233 } },
+				},
+				Blur1 = Blur {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.FringeSize == 0,0,1)", },
+						XBlurSize = Input {
+							Value = 0.47,
+							Expression = "ChangeDepth.FringeSize",
+						},
+						Input = Input {
+							SourceOp = "BrightnessContrast5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 214.704 } },
+				},
+				PipeRouter4 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "BrightnessContrast5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 409.355, 206.937 } },
+				},
+				PipeRouter5 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -378.747, 10.15 } },
+				},
+				PipeRouter11 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "PipeRouter5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 13.6752, 10.15 } },
+				},
+				CustomTool = Custom {
+					Inputs = {
+						Blend = Input { Expression = "1-Dissolve2.Mix", },
+						LUTIn1 = Input {
+							SourceOp = "CustomTool1_1_1_1LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool1_1_1_1LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool1_1_1_1LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool1_1_1_1LUTIn4",
+							Source = "Value",
+						},
+						AlphaExpression = Input { Value = "g1-max (b1, r1)", },
+						Image1 = Input {
+							SourceOp = "PipeRouter11",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 121.126, 10.15 } },
+				},
+				CustomTool1_1_1_1LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1_1_1_1LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1_1_1_1LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1_1_1_1LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				Dissolve2 = Dissolve {
+					Transitions = {
+						[0] = "DFTDissolve"
+					},
+					Inputs = {
+						Mix = Input {
+							Value = 0,
+							Expression = "ChangeDepth.SpillColor",
+						},
+						Background = Input {
+							SourceOp = "CustomTool",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "CustomTool1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 10.15 } },
+				},
+				CustomTool1 = Custom {
+					Inputs = {
+						Blend = Input { Expression = "Dissolve2.Mix", },
+						LUTIn1 = Input {
+							SourceOp = "CustomTool1LUTIn1",
+							Source = "Value",
+						},
+						LUTIn2 = Input {
+							SourceOp = "CustomTool1LUTIn2",
+							Source = "Value",
+						},
+						LUTIn3 = Input {
+							SourceOp = "CustomTool1LUTIn3",
+							Source = "Value",
+						},
+						LUTIn4 = Input {
+							SourceOp = "CustomTool1LUTIn4",
+							Source = "Value",
+						},
+						AlphaExpression = Input { Value = "b1-max (g1, r1)", },
+						Image1 = Input {
+							SourceOp = "PipeRouter11",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 122.946, 65.197 } },
+				},
+				CustomTool1LUTIn1 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 0, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1LUTIn2 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 204, Blue = 0 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1LUTIn3 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 0, Green = 0, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				CustomTool1LUTIn4 = LUTBezier {
+					KeyColorSplines = {
+						[0] = {
+							[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+							[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+						}
+					},
+					SplineColor = { Red = 204, Green = 204, Blue = 204 },
+					CtrlWShown = false,
+					NameSet = true,
+				},
+				MATTE = Dissolve {
+					Transitions = {
+						[0] = "DFTRandom"
+					},
+					Inputs = {
+						Operation = Input { Value = FuID { "DFTRandom" }, },
+						Mix = Input { Expression = "ChangeDepth.Matte", },
+						Background = Input {
+							SourceOp = "Dissolve2",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "ChannelBooleans2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 70.202 } },
+				},
+				ChannelBooleans2 = ChannelBoolean {
+					Inputs = {
+						Blend = Input { Expression = "iif (ChangeDepth.Matte == 0,0,1)", },
+						Operation = Input { Value = 10, },
+						ToAlpha = Input { Value = 0, },
+						Background = Input {
+							SourceOp = "MatteInput",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 455.926, 70.202 } },
+				},
+				PipeRouter7 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "BrightnessContrast5",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { -32.4049, 127.716 } },
+				},
+				BrightnessContrast5 = BrightnessContrast {
+					Inputs = {
+						Alpha = Input { Value = 1, },
+						Low = Input { Expression = "ChangeDepth.Low", },
+						High = Input { Expression = "ChangeDepth.High", },
+						ClipBlack = Input { Value = 1, },
+						ClipWhite = Input { Value = 1, },
+						Input = Input {
+							SourceOp = "MATTE",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 318.635, 127.716 } },
+				},
+				PipeRouter1 = PipeRouter {
+					Inputs = {
+						Input = Input {
+							SourceOp = "MASK",
+							Source = "Output",
+						},
+					},
+					ViewInfo = PipeRouterInfo { Pos = { 162.142, 187.628 } },
+				},
+				Merge1 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "ChangeDepth",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Dissolve1",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+						EffectMask = Input {
+							SourceOp = "MASK",
+							Source = "Output",
+						}
+					},
+					ViewInfo = OperatorInfo { Pos = { 706.924, 465.985 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "AdvancedDespill_1"
+}

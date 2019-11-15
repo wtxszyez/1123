@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Media to Illustrator v4.1 2019-10-22
+Send Media to Illustrator - v4.2 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -25,18 +25,14 @@ function mediaViewerTool()
 	illustratorLauncher()
 end
 
-
--- --------------------------------------------------------
--- --------------------------------------------------------
--- --------------------------------------------------------
-
+-- Print out extra debugging information
 local printStatus = false
 
 -- Track if the image was found
 local err = false
 
--- Find out if we are running Fusion 7, 8, 9, or 15
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
@@ -368,7 +364,7 @@ function illustratorLauncher()
 	local defaultViewerProgram = ''
 	if platform == 'Windows' then
 		-- Running on Windows
-		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 10, printStatus)
+		illustratorVersion = getPreferenceData('KartaVR.SendMedia.IllustratorVersion', 11, printStatus)
 	
 	if illustratorVersion == 0 then
 			-- Adobe Illustrator CS3
@@ -403,9 +399,12 @@ function illustratorLauncher()
 		elseif illustratorVersion == 10 then
 			-- Adobe Illustrator CC 2019
 			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+		elseif illustratorVersion == 11 then
+			-- Adobe Illustrator 2020
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		else
 			-- Fallback
-			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe'
+			defaultViewerProgram = 'C:\\Program Files\\Adobe\\Adobe Illustrator 2020\\Support Files\\Contents\\Windows\\Illustrator.exe'
 		end
 		
 		viewerProgram = defaultViewerProgram
@@ -415,7 +414,8 @@ function illustratorLauncher()
 		os.execute(command)
 	elseif platform == 'Mac' then
 		-- Running on Mac
-		viewerProgram = 'Adobe Illustrator.app'
+		-- viewerProgram = 'Adobe Illustrator.app'
+		viewerProgram = 'Adobe Illustrator 2020.app'
 		command = 'open -a "' .. viewerProgram .. '" '.. mediaList
 		
 		print('[Launch Command] ', command)
@@ -514,7 +514,7 @@ function playDFMWaveAudio(filename, status)
 end
 
 
-print ('Send Media to Illustrator is running on ' .. platform .. ' with Fusion ' .. eyeon._VERSION)
+print ('Send Media to Illustrator is running on ' .. platform)
 
 -- Check if Fusion is running
 if not fusion then

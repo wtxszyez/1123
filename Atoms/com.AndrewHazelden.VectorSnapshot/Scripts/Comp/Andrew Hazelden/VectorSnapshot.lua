@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-VectorSnapshot v1 2019-01-27
+VectorSnapshot v1.1 2019-11-05
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -103,9 +103,8 @@ gimppath, xfig.
 
 --]]--
 
-
--- Find out if we are running Fusion 7, 8, 9, or 15
-local fu_major_version = math.floor(tonumber(eyeon._VERSION))
+-- Find out if we are running Fusion v9-16.1 or Resolve v15-16.1
+local fu_major_version = tonumber(app:GetVersion()[1])
 
 -- Find out the current operating system platform. The platform local variable should be set to either "Windows", "Mac", or "Linux".
 local platform = (FuPLATFORM_WINDOWS and 'Windows') or (FuPLATFORM_MAC and 'Mac') or (FuPLATFORM_LINUX and 'Linux')
