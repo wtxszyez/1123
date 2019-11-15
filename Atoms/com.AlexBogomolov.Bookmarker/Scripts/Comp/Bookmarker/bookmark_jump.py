@@ -3,22 +3,25 @@ Jump to stored flow position. Use dropdown menu to switch to stored position
 KEY FEATURES:
 * Delete single bookmark or all of them
 * All bookmarks are alphabetically sorted.
-* Add a bookmark from Jump UI
-* Refresh bookmarks if some was added while Jump UI is running
-* If you already jumped to the tool, then moved the flow, you can jump back to the same bookmark again
-* You can get single tool with you when you jump to bookmark. Just make sure one tool is selected (not active) before jump
+* Add a bookmark from Jump UI with plus button. Press Refresh and new bookmarkk will appear in a list
+* To jump the same tool once again just select it again in a list.
+v 2.5 update:
+* Move selected tools next to bookmark position (enable checkbox 'move selected to bookmark')
+* Jump back and forth between previous and current bookmarks
 
 KNOWN ISSUES:
 * depending on complexity if the comp, the nodes in a flow
 may temporarily disappear after bookmark jump. As a workaround to this issue
-added 0.2 sec delay before jump to the tool. Hope it works for you
+added 0.2 sec delay before jump to the tool.
 * the script just finds a tool in a flow and makes it active. It does not center it in the flow.
 Possible workaround here:
-* jump to the tool, click on the flow, press CTRL/CMD+F and then hit ENTER
+-- jump to the tool, click on the flow, press CTRL/CMD+F and then hit ENTER
+-- right click the flow with node selected, Scale -> Scale to Fit
 
 Alexey Bogomolov mail@abogomolov.com
-Requests and issues: https://github.com/movalex/fusion_scripts/issues
+Requests and issues: https://gitlab.com/WeSuckLess/Reactor/tree/movalex/Atoms/com.AlexBogomolov.Bookmarker
 Donations are highly appreciated: https://paypal.me/aabogomolov
+STU topic and discussion, feature requests and updates: https://www.steakunderwater.com/wesuckless/viewtopic.php?f=33&t=2858
 
 MIT License: https://mit-license.org/
 """
@@ -47,7 +50,7 @@ def parse_data(_data):
     return parsed_data
 
 
-def prefill_checkbox():
+def prefill_combobox():
     itm['MyCombo'].Clear()
     message = 'select bookmark'
     if not data:
@@ -56,10 +59,10 @@ def prefill_checkbox():
     itm['MyCombo'].InsertSeparator()
 
 
-def fill_checkbox(_data):
-    prefill_checkbox()
-    if _data:
-        sorted_bms = [i[0] for i in parse_data(_data)]
+def fill_combobox(fill_data):
+    prefill_combobox()
+    if fill_data:
+        sorted_bms = [i[0] for i in parse_data(fill_data)]
         for bkm in sorted_bms:
             itm['MyCombo'].AddItem(bkm)
 
@@ -71,7 +74,17 @@ def delete_bookmark(key):
         comp.SetData('BM.{}'.format(k), v)
 
 
-def _switch_UI(ev):
+def move_selected_to_bm(tools=None, target=None):
+    # print(itm['moveCB'].Checked)
+    if tools and target:
+        comp.StartUndo('Move tool to BM')
+        pos_targetx, pos_targety = flow.GetPosTable(target).values()
+        for n, selected_tool in enumerate(tools):
+            flow.SetPos(selected_tool, pos_targetx + (n+1), pos_targety)
+        comp.EndUndo()
+
+
+def jump_bookmark(ev):
     choice = int(itm['MyCombo'].CurrentIndex)
     if choice > 1 and data:
         tool_data = parse_data(data)[choice - 2]
@@ -79,34 +92,43 @@ def _switch_UI(ev):
         # print('jump to', tool_name)
         target = comp.FindTool(tool_name)
         active = comp.ActiveTool
-        if target.GetAttrs('TOOLB_Selected'):
+        if target and target.GetAttrs('TOOLB_Selected'):
             # print('tool already selected, now jumping back')
             flow.Select()
         if active:
+            comp.SetData('PrevBM', active.Name)
             flow.Select()
-        current_tool = list(comp.GetToolList(True).values())
         flow.SetScale(scale_factor)
+        selected_before_jump = list(comp.GetToolList(True).values())
         time.sleep(.2)
         comp.SetActiveTool(target)
-        if current_tool and len(current_tool) == 1:
-            comp.StartUndo('Move tool to BM')
-            pos_targetx, pos_targety = flow.GetPosTable(target).values()
-            flow.SetPos(current_tool[0], pos_targetx + 1, pos_targety)
-            comp.EndUndo()
+    if itm['moveCB'].Checked:
+        move_selected_to_bm(selected_before_jump, target)
 
 
-def _close_UI(ev):
+def jump_back(ev):
+    prev = comp.GetData('PrevBM')
+    jump_to = comp.FindTool(prev)
+    current = comp.ActiveTool
+    if prev and prev != current:
+        comp.SetActiveTool(jump_to)
+        comp.SetData('PrevBM', current.Name)
+    else:
+        print('no previous tool found')
+
+
+def close(ev):
     disp.ExitLoop()
 
 
-def _clear_all_UI(ev):
+def clear_all_bookmarks(ev):
     comp.SetData('BM')
     print('all your bookmarks are belong to us')
     itm['MyCombo'].Clear()
     itm['MyCombo'].AddItem('add some bookmarks!')
 
 
-def _delete_bm_UI(ev):
+def delete_bookmark_event(ev):
     choice = int(itm['MyCombo'].CurrentIndex)
     if choice > 0:
         bm_text, tool_id = parse_data(data)[choice - 2][::3]
@@ -114,23 +136,23 @@ def _delete_bm_UI(ev):
         print('bookmark {} deleted'.format(bm_text))
         delete_bookmark(tool_id)
         if len(data) == 0:
-            prefill_checkbox()
+            prefill_combobox()
             print('no bookmarks left')
 
 
-def _refresh_UI(ev):
+def refresh_list(ev):
     global data
     check_data = comp.GetData('BM')
     if check_data and check_data != data:
         print('updating bookmarks')
         itm['MyCombo'].Clear()
         data = check_data
-        fill_checkbox(data)
+        fill_combobox(data)
     else:
         print('nothing changed')
 
 
-def _run_add_script(ev):
+def add_bookmark_run(ev):
     comp.RunScript('Scripts:Comp/Bookmarker/bookmark_add.py')
 
 
@@ -139,6 +161,9 @@ if __name__ == '__main__':
     if not data:
         data = {}
         print('add some bookmarks!')
+    x, y  = fu.GetMousePos().values()
+    if y < 90:
+        y = 120
 
     # Main Window
     ui = fusion.UIManager
@@ -148,7 +173,7 @@ if __name__ == '__main__':
         {'ID': 'combobox',
          'TargetID': 'combobox',
          'WindowTitle': 'jump to bookmark',
-         'Geometry': [200, 450, 300, 75]},
+         'Geometry': [x, y, 300, 95]},
         [
             ui.VGroup(
                 [
@@ -161,7 +186,7 @@ if __name__ == '__main__':
                             ui.Button({'ID': 'AddButton',
                                        'Flat': False,
                                        'IconSize': [12, 12],
-                                       'MinimumSize': [20, 25],
+                                       'MinimumSize': [20, 12],
                                        'Icon': ui.Icon({'File':
                                                         'Scripts:Comp/Bookmarker/icons/plus_icon.png'}),
                                        'Weight': .1
@@ -169,7 +194,7 @@ if __name__ == '__main__':
                             ui.Button({'ID': 'refreshButton',
                                        'Flat': False,
                                        'IconSize': [12, 12],
-                                       'MinimumSize': [20, 25],
+                                       'MinimumSize': [20, 12],
                                        'Icon': ui.Icon({'File':
                                                         'Scripts:Comp/Bookmarker/icons/refresh_icon.png',
                                                         }),
@@ -178,27 +203,38 @@ if __name__ == '__main__':
                         ]),
                     ui.HGroup(
                         [
-                            ui.Button({'ID': 'rm',
-                                       'Text': 'delete bookmark',
+                            ui.Button({'ID': 'jb',
+                                       'Text': 'jump back',
                                        'Weight': 0.5,
+                                       }),
+                            ui.Button({'ID': 'rm',
+                                       'Text': 'delete one',
+                                       'Weight': 0.3,
                                        }),
                             ui.Button({'ID': 'rmall',
                                        'Text': 'reset all',
-                                       'Weight': 0.5,
+                                       'Weight': 0.2,
                                        }),
+                        ]),
+                    ui.HGroup(
+                        [
+                            ui.CheckBox({'ID': 'moveCB',
+                                         'Text': 'move selected to bookmark?',
+                                         })
                         ])
                 ]),
         ])
 
     itm = win.GetItems()
 
-    win.On.MyCombo.Activated = _switch_UI
-    win.On.rm.Clicked = _delete_bm_UI
-    win.On.rmall.Clicked = _clear_all_UI
-    win.On.combobox.Close = _close_UI
-    win.On.refreshButton.Clicked = _refresh_UI
-    win.On.AddButton.Clicked = _run_add_script
-    fill_checkbox(data)
+    win.On.MyCombo.Activated = jump_bookmark
+    win.On.rm.Clicked = delete_bookmark_event
+    win.On.rmall.Clicked = clear_all_bookmarks
+    win.On.jb.Clicked = jump_back
+    win.On.combobox.Close = close
+    win.On.refreshButton.Clicked = refresh_list
+    win.On.AddButton.Clicked = add_bookmark_run
+    fill_combobox(data)
 
     win.Show()
     disp.RunLoop()
