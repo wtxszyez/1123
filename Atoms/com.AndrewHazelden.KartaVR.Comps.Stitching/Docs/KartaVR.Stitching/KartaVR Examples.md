@@ -21,10 +21,13 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 ## Panoramic Stitching ##
 
+### 360VR Live Stitching and Streaming ###
+
+- [Under-the-Bridge-UV-Pass-Warp-Fusion-TouchDesigner-StitchUV.zip (626MB)](http://www.andrewhazelden.com/projects/kartavr/examples/downloads/Under-the-Bridge-UV-Pass-Warp-Fusion-TouchDesigner-StitchUV.zip)
+
 ### Panoramic Stitching Download Links ###
 
 - [KartaVR-Stitching-Demo.zip (4.18GB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/KartaVR-Stitching-Demo.zip)
-- [Under-the-Bridge-UV-Pass-Warp-Fusion-TouchDesigner-StitchUV.zip (626MB)](http://www.andrewhazelden.com/projects/kartavr/examples/downloads/Under-the-Bridge-UV-Pass-Warp-Fusion-TouchDesigner-StitchUV.zip)
 - [YI360VR-Stitching-Example.zip (175MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/YI360VR-Stitching-Example.zip)
 - [YIVR-360-Lens-Calibration-Project.zip (410MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/YIVR-360-Lens-Calibration-Project.zip)
 - [Ellershouse-Nova-Scotia-Cliff.zip (49MB)](https://andrewhazelden.com/projects/kartavr/examples/downloads/Ellershouse-Nova-Scotia-Cliff.zip)
@@ -72,6 +75,10 @@ Web: [www.andrewhazelden.com](http://www.andrewhazelden.com)
 
 - [Photogrammetry Giraffe](#photogrammetry-giraffe)
 - [Photogrammetry Greenscreen Keying](#photogrammetry-greenscreen-keying)
+
+## Fusion Compositing Workflows ##
+
+- [LifeSaver-Multi-View-EXR.zip (201 MB)](http://www.andrewhazelden.com/projects/kartavr/examples/downloads/LifeSaver-Multi-View-EXR.zip)
 
 # <a name="panoramic-stitching"></a>Panoramic Stitching Example Projects #
 
