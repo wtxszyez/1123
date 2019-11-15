@@ -9,6 +9,10 @@ This document is a summary of the scripts included with the [KartaVR](index.html
 ## Table of Contents ##
 
 - **Geometry:**
+    - Export to Point Cloud
+    - Reload Alembic Scene (macOS only)
+    - Reload FBX Scene (macOS only)
+    - Reload PSD layers (macOS only)
     - [Send Geometry to AC3D](scripts.html#send-geometry-to-ac3d)
     - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
     - [Send Geometry to Cloud Compare Viewer](scripts.html#send-geometry-to-cloudcompare-viewer)
@@ -1426,7 +1430,7 @@ Press the "+" plus sign button to add the `Fusion-Zoom-New-Image-View.app` Apple
 
 A file browsing window will open and you need to navigate and select the following KartaVR Applescript program:
 
-`/Applications/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app`
+`Reactor:/Deploy/Bin/KartaVR/mac_tools/applescript/Fusion-Zoom-New-Image-View.app`
 
 You are also able to drag and drop the `Fusion-Zoom-New-Image-View.app` item from the Finder folder view into the Accessibility panel and it will be added to the list.
 

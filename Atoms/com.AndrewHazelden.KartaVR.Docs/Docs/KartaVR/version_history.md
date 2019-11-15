@@ -1,7 +1,9 @@
 <a name="version-history"></a>
 ## Version History ##
 
-### Version 4.2.1 - 2019-11-12 ###
+### Version 4.2.1 - 2019-11-15 ###
+
+- KartaVR documentation updated with new images for topics like "[Sample Imagery](https://www.andrewhazelden.com/projects/kartavr/docs/sample-imagery.html)", and revisions to add notes about `Reactor:/` PathMap based filepaths. Updated the locally installable KartaVR docs atom package found in Reactor.
 
 - A `Scripts > KartaVR > Geometry > Send Geometry to usdview` menu item was added. This script takes AlembicMesh3D nodes that are selected in the Nodes view and sends the .abc models to usdview. You can then playback the Alembic sequence using the usdview timeline controls, navigate through and inspect the scene graph, or export a flattened USDC (Binary Crate)/USDA (ASCII) formatted USD scene from your alembic source model. The usdview program needs to be installed on the system and listed in the $PATH environment variable, or you have to select the executable in the AskUser dialog. 
 

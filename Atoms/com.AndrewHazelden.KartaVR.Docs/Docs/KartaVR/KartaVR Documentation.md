@@ -1,7 +1,7 @@
 # KartaVR 4.2.1 for Reactor Documentation #
 
 -------------------------
-**Version 4.2.1** - Released 2019-11-12  
+**Version 4.2.1** - Released 2019-11-15  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -478,6 +478,10 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 - [Sample Imagery](sample-imagery.html)
 - [Scripts](scripts.html)
   - **Geometry:**
+      - Export to Point Cloud
+      - Reload Alembic Scene (macOS only)
+      - Reload FBX Scene (macOS only)
+      - Reload PSD layers (macOS only)
       - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
       - [Send Geometry to AC3D](scripts.html#send-geometry-to-ac3d)
       - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
