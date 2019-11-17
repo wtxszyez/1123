@@ -1,31 +1,62 @@
--- Batch Change Parameters v2.0 for Fusion 9
+--[[--
+Batch Change Parameters v3
+ 
+This script allows you to change parameters for multiple selected tools simultaneously. The selected tools need not be of the same Node type - only the Inputs that the nodes have in common will be changed.
 
--- Changes parameters for multiple selected tools simultaneously. The tools need not be of the
--- same type, but only Inputs that they have in common can be changed.
+This script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+
 
--- Concept by Gringo
--- v1.0 by SlayerK, 2007/02/22
--- v2.0 by Bryan Ray for MuseVFX
 
--- Change Log:
-	-- v2.0, 2018-01-22, updated for Fusion 9 and UI Manager. Cleaned code and added documentation.
-	--		Removed orphan and redundant functions. Removed un-implemented math operations code.
-	-- v1.0, 2007-02-22, initial release
+Change Log:
 
--- Development Roadmap:
---		Add option for performing arithmetic on the Inputs. For instance, add 0.3 to the current
---			value of each Input. 
+v1.0 - 2007-02-22
+Concept by Gringo / By SlayerK
+	- Initial release
 
--- /////////////////////
+v2.0 - 2018-01-22
+by Bryan Ray for MuseVFX
+	- Updated for Fusion 9 and UI Manager. Cleaned code and added documentation. Removed orphan and redundant functions. Removed un-implemented math operations code.
+
+v3 - 2019-11-17 
+By Andrew Hazelden for Reactor
+	- Updated to add a copy of "bmd.isin()" function that was renamed to "bcIsIn()" so the script can run in Resolve where the "bmd.scriptlib" file does not exist. Added a TargetID value to the UI Manager window so pressing "Ctrl + W" closes the window instead of the composite.
+
+ 
+Development Roadmap:
+	- Add and option for performing arithmetic on the Inputs. For instance, add 0.3 to the current value of each Input.
+
+--]]--
+
+-- ---------------------------------
 -- / Utility Functions /
--- /////////////////////
+-- ---------------------------------
+
+-- bcIsIn(t, val) scans table t and returns true if the string val is
+-- found in the table. Copied from bmd.scriptlib for Resolve compatibility
+function bcIsIn(t, val)
+	if type(t) == "table" then
+		for i,v in pairs(t) do
+			if (type(v) == "string") and (type(val) == "string") then
+				if string.lower(v) == string.lower(val) then
+					return true
+				end
+			else
+				if v == val then
+					return true
+				end
+			end
+		end
+	end
+
+	return false
+end
+
 
 -- Clears Modifiers from a list of tools. allToolsNames is a global table containing a list of
 -- all Tools available in Fusion.
 function clearModifiers(tbl)
 	local out = {}
 	for i = 1, table.getn(tbl) do
-		if bmd.isin(allToolsNames, tbl[i]:GetAttrs().TOOLS_RegID) then
+		if bcIsIn(allToolsNames, tbl[i]:GetAttrs().TOOLS_RegID) then
 			table.insert(out, tbl[i])
 		end
 	end
@@ -35,13 +66,14 @@ end
 -- Finds the tool in the supplied list with the smallest number of Inputs and returns that tool's index.
 function getMin(tbl)
 	if table.getn(tbl)==0 then
-		return(-1) -- If there are no items in the table, throw an error.
+		-- If there are no items in the table, throw an error.
+		return(-1)
 	end
-	
+
 	local minTool = 0
 	local minInputs = math.huge
 	numInputs = 0
-	
+
 	for i=1, table.getn(tbl) do
 		numInputs = table.getn(tbl[i]:GetInputList())
 		if numInputs<minInputs then
@@ -65,7 +97,7 @@ function getInputInfo(tool)
 		name = attrs.INPS_Name
 		iID = attrs.INPS_ID
 		iType = attrs.INPS_DataType
-		if (attrs.INPB_Passive == false) and (bmd.isin(supp_types, iType) == true) then
+		if (attrs.INPB_Passive == false) and (bcIsIn(supp_types, iType) == true) then
 			table.insert(out, {tp=iType, id=iID, nm=name})
 		end
 	end
@@ -79,7 +111,7 @@ function intersect(tblA, tblB)
 	if type(tblA)~="table" then
 		return nil
 	end
-	
+
 	local out = {}
 	for i = 1, table.getn(tblB) do
 		flag = false
@@ -92,7 +124,7 @@ function intersect(tblA, tblB)
 			table.insert(out, tblB[i])
 		end
 	end
-		
+
 	return out
 end
 
@@ -103,7 +135,7 @@ function getParameter(pID)
 	local new = 0
 	local inputNumber = getInputNumber(pID, tools[1])
 	local value = tools[1]:GetInputList()[inputNumber][comp.CurrentTime]
-	
+
 	for i = 2, table.getn(tools) do
 		inputNumber = getInputNumber(pID, tools[i])
 		new = tools[i]:GetInputList()[inputNumber][comp.CurrentTime]
@@ -111,22 +143,22 @@ function getParameter(pID)
 			return "?"
 		end
 	end
-	
+
 	if type(value) == "number" then
 		return tostring(value)
 	end
-	
+
 	if type(value) == "table" then
 		return value
 	end
-	
+
 	if type(value) == "string" then
 		return value
 	end
-	
+
 	return "?"
 end
-	
+
 -- Given information about an input and a tool, returns the index of an input matching the info.
 function getInputNumber(inputInfo, tool)
 	local inputs = {}
@@ -148,11 +180,11 @@ function compareValues(v1,v2)
 	if type(v1) ~= type(v2) then
 		return false
 	end
-	
+
 	if (type(v1)=="number") or (type(v1)=="string") then
 		return (v1==v2)
 	end
-	
+
 	if type(v1)=="table" then
 		for i=1, table.getn(v1) do
 			if v1[i] ~= v2[i] then
@@ -165,10 +197,9 @@ function compareValues(v1,v2)
 end
 
 
--- /////////////////////
--- /    UI Manager     /
--- /////////////////////
-
+-- ---------------------------------
+-- UI Manager
+-- ---------------------------------
 -- Set up UI Manager
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
@@ -177,10 +208,11 @@ local width,height = 400,200
 -- Define the Window
 win = disp:AddWindow({
 	ID = 'BCWin',
+	TargetID = 'BCWin',
 	WindowTitle = 'Batch Parameter Changer',
 	Geometry = {800,200,600,340},
 	Spacing = 10,
-	
+
 	ui:VGroup{
 		ID = 'root',
 		Weight = 1.0,
@@ -214,9 +246,9 @@ win = disp:AddWindow({
 		ui:HGroup{
 			Weight = 0,
 			ui:Label{
-				ID = 'dataTypeLabel', 
-				Text = 'dataType', 
-				Weight = 0, 
+				ID = 'dataTypeLabel',
+				Text = 'dataType',
+				Weight = 0,
 				Visible = true,
 			},
 			ui:LineEdit{
@@ -273,16 +305,30 @@ win = disp:AddWindow({
 			},
 		},
 	},
-	
 })
 
 -- The window was closed
 function win.On.BCWin.Close(ev)
-  disp:ExitLoop()
+	disp:ExitLoop()
 end
 
 -- Add your GUI element based event functions here:
 itm = win:GetItems() -- Collects a list of fields in the GUI
+
+
+-- The app:AddConfig() command that will capture the "Control + W" or "Control + F4" hotkeys so they will close the window instead of closing the foreground composite.
+app:AddConfig("BCWin", {
+	Target {
+		ID = "BCWin",
+	},
+	Hotkeys {
+		Target = "BCWin",
+		Defaults = true,
+		CONTROL_W = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+		CONTROL_F4 = "Execute{cmd = [[app.UIManager:QueueEvent(obj, 'Close', {})]]}",
+	},
+})
+
 
 -- When an entry is chosen in the Parameter combo box, change the data type label and pre-fill
 -- the appropriate data entry field with the current value of the chosen Input, if it's identical
@@ -293,9 +339,9 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 	local dataType = controls[index].tp
 	local xVal, yVal
 	local id = controls[index].id
-	
+
 	itm.dataTypeLabel.Text = dataType
-	
+
 	if dataType == "Point" then
 		if currentValue == "?" then
 			currentValue = {"?", "?"}
@@ -303,7 +349,7 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 			xVal = currentValue[1]
 			yVal = currentValue[2]
 		end
-		
+
 		itm.textFld.Visible = false
 		itm.listFuID.Visible = false
 		itm.xlabel.Visible = true
@@ -312,7 +358,6 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 		itm.cordY.Visible = true
 		itm.cordX.Text = tostring(xVal)
 		itm.cordY.Text = tostring(yVal)
-		
 	elseif dataType == "FuID" then
 		itm.textFld.Visible = false
 		itm.listFuID.Visible = true
@@ -320,18 +365,17 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 		itm.ylabel.Visible = false
 		itm.cordX.Visible = false
 		itm.cordY.Visible = false
-		
+
 		itm.listFuID:Clear()
-		
+
 		fuIDAttrs = tools[1][id]:GetAttrs()
 		inputControlType = string.gsub(fuIDAttrs.INPID_InputControl, "ID", "")
 		controlID = "INPIDT_"..inputControlType.."_ID"
 		fuIDlist = tools[1][id]:GetAttrs()[controlID]
-		
+
 		for i = 1, table.getn(fuIDlist) do
 			itm.listFuID:AddItem(fuIDlist[i])
 		end
-		
 	else
 		itm.textFld.Visible = true
 		itm.listFuID.Visible = false
@@ -339,44 +383,43 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 		itm.ylabel.Visible = false
 		itm.cordX.Visible = false
 		itm.cordY.Visible = false
-		
+
 		itm.textFld.Text = currentValue
 	end
-	
 end
-
--- When the Apply button is clicked, set the chosen Parameter on each selected tool. This button
--- does not close the GUI.
+ 
+-- When the Apply button is clicked, set the chosen Parameter on each selected tool.
+-- This button does not close the GUI.
 function win.On.btn_set.Clicked(ev)
 	-- Identify the parameter to be changed, get its datatype and ID.
 	local index = itm.Parameter.CurrentIndex + 1
 	local dataType = controls[index].tp
 	local id = controls[index].id
-	
+
 	-- Loop through each entry in the selected tools list.
 	for i, j in ipairs(tools) do
-	
-		--Selection based on dataType
+
+		-- Selection based on dataType
 		if dataType == "Number" then
-			--Get the user-supplied new value
+			-- Get the user-supplied new value
 			local newValue = itm.textFld.Text
-			--Check it for valid type
+			-- Check it for valid type
 			if tonumber(newValue)==nil then
 				print("Entered data is not a Number")
 				return
 			end
-			--Set the chosen input
+			-- Set the chosen input
 			j[id][comp.CurrentTime] = tonumber(newValue)
 		end
-		
-		--Second verse, same as the first, except we don't need to validate the data type.
+
+		-- Second verse, same as the first, except we don't need to validate the data type.
 		if dataType == "Text" then
 			local newValue = itm.textFld.Text
 			j[id][comp.CurrentTime] = newValue
 		end
-		
-		--Points are a 3 dimensional value (though the Z value is 
-		--very rarely addressed), so we use a table to hold it.
+
+		-- Points are a 3 dimensional value (though the Z value is
+		-- very rarely addressed), so we use a table to hold it.
 		if dataType == "Point" then
 			local newValue = {}
 			newValue[1] = tonumber(itm.cordX.Text)
@@ -396,10 +439,10 @@ function win.On.btn_set.Clicked(ev)
 			end
 			j[id][comp.CurrentTime] = newValue
 		end
-		
-		--The combo box uses a different attribute to hold its current
-		--value, but it's otherwise just like the others. No need to test
-		--for valid input since that's enforced by the box itself.
+ 
+		-- The combo box uses a different attribute to hold its current
+		-- value, but it's otherwise just like the others. No need to test
+		-- for valid input since that's enforced by the box itself.
 		if dataType == "FuID" then
 			local newValue = itm.listFuID.CurrentText
 			j[id][comp.CurrentTime] = newValue
@@ -407,20 +450,23 @@ function win.On.btn_set.Clicked(ev)
 	end
 end
 
--- //////////////////////////////////
--- /           MAIN CODE            /
--- //////////////////////////////////
+-- ---------------------------------
+-- MAIN CODE
+-- ---------------------------------
 function main()
 	allTools = {}
 	allToolsNames = {}
 
 	-- Get a list of all the tools in Fusion's registry
-	if globals.__addtool_data then
-		allTools = globals.__addtool_data
-	else
-		allTools = fu:GetRegSummary(CT_Tool)
-		globals.__addtool_data = allTools
-	end
+	allTools = fu:GetRegSummary(CT_Tool)
+
+	-- Disabled for Fusion v16.1.1 compatibility
+	--	if globals.__addtool_data then
+	--		allTools = globals.__addtool_data
+	--	else
+	--		allTools = fu:GetRegSummary(CT_Tool)
+	--		globals.__addtool_data = allTools
+	--	end
 
 	-- Make a new list containing the REGS_ID of all tools that have all three of name, OpIcon and ID.
 	for i,v in ipairs(allTools) do
@@ -428,13 +474,15 @@ function main()
 			table.insert(allToolsNames, v.REGS_ID)
 		end
 	end
-
-	supp_types = {"Number", "FuID", "Point", "Text",}	-- DataTypes supported by this script.
-	tools = comp:GetToolList(true)						-- List of user-selected tools
-	tools = clearModifiers(tools)						-- Removes Modifiers from the tool list.
-	seen={}												-- Holds a list of tool REGIDs detected in the tools list
-														--		Filters the list for efficiency when building 
-														--		the Parameters table.
+	-- DataTypes supported by this script.
+	supp_types = {"Number", "FuID", "Point", "Text",}
+	-- List of user-selected tools
+	tools = comp:GetToolList(true)
+	-- Removes Modifiers from the tool list.
+	tools = clearModifiers(tools)
+	-- Holds a list of tool REGIDs detected in the tools list
+	-- Filters the list for efficiency when building the Parameters table.
+	seen={}
 
 	-- If fewer than two tools are selected, throw an error.
 	if table.getn(tools) < 2 then
@@ -446,7 +494,7 @@ function main()
 	-- Get the index of the tool with the smallest number of inputs
 	minEntry = getMin(tools)
 
-	-- Get a list of the inputs in that tool. 
+	-- Get a list of the inputs in that tool.
 	controls = getInputInfo(tools[minEntry])
 
 	-- Add the tool type to the seen table
@@ -456,10 +504,10 @@ function main()
 	table.remove(tools, minEntry)
 
 	-- Pare down the inputs in the controls table to the inputs common to all selected tools.
-	while (table.getn(tools)>0) do 	-- Loop as long as at least one tool remains in the table. 
-									-- This loop always processes the tool at index 1 of the tools table.
+	while (table.getn(tools)>0) do -- Loop as long as at least one tool remains in the table.
+		-- This loop always processes the tool at index 1 of the tools table.
 		-- Check to see if the current tool's RegID has already been processed.
-		if bmd.isin(seen, tools[1]:GetAttrs().TOOLS_RegID) == false then
+		if bcIsIn(seen, tools[1]:GetAttrs().TOOLS_RegID) == false then
 			-- Add the RegID to the seen table
 			table.insert(seen, tools[1]:GetAttrs().TOOLS_RegID)
 			-- Get info about the tool's Inputs
@@ -487,19 +535,19 @@ function main()
 	for i = 1, table.getn(controls) do
 		itm.Parameter:AddItem(controls[i].nm)
 	end
-
+ 
 	-- Repopulate the tool list
 	tools = comp:GetToolList(true)
 	tools = clearModifiers(tools)
-	
-	return 1
 
+	return 1
 end
 
 -- Fill the Parameter combo box and acquire the tool list.
 status = main()
 
-if status == 1 then -- Check for successful execution of main function
+-- Check for successful execution of main function
+if status == 1 then
 	-- Activate the window
 	win:Show()
 	disp:RunLoop()
