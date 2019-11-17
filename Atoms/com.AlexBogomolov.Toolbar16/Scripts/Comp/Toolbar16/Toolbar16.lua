@@ -87,12 +87,24 @@ function get_state(value)
 end
 
 function get_window_xy()
+    local view_attrs = get_glview('left'):GetAttrs()
+    local main_window_dimensions = fusion:GetPrefs("Global.Main.Window")
     local savepos_state = get_state('Toolbar16.SavePos')
     local get_pos = fu:GetData('Toolbar16.Position')
     if get_pos and savepos_state then
         return get_pos[1], get_pos[2]
     else
-        return fu:GetMousePos()[1], fu:GetMousePos()[2]
+        -- return fu:GetMousePos()[1], fu:GetMousePos()[2]
+        posX = main_window_dimensions.Width / 2 - 200
+        TBoffset = 35
+        if fu.Version >= 16 then
+            TBoffset = 82
+        end
+        if fu:GetPrefs('Global.Unsorted.ToolbarState') == true then
+            TBoffset = 134
+        end
+        posY = view_attrs.VIEWN_Bottom + TBoffset
+        return posX, posY
     end
 end
 
@@ -108,7 +120,7 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = show_on_top},
+        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = false, WindowStaysOnTopHint = show_on_top},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -394,7 +406,7 @@ end
 
 function show_prefs_window(pos)
     local prefx, prefy = pos[1], pos[2]
-    local offsetY = -100
+    local offsetY = -150
     if prefy < 120 then
         offsetY = offsetY + 120
     end
@@ -406,7 +418,7 @@ function show_prefs_window(pos)
         TargetID = 'TBPrefs',
         -- WindowTitle = 'Toolbar16 Prefs',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +298, prefy+offsetY, 200, 100},
+        Geometry = {prefx +298, prefy+offsetY, 200, 150},
             ui:VGroup{
             ID = 'prefs',
                 ui:HGroup{
@@ -429,16 +441,34 @@ function show_prefs_window(pos)
                         Checked = ontop_state,
                     },
                 },
+                ui:HGroup{
+                        ui:Button{
+                        ID = 'moretoolbars',
+                        Text = 'add toolbars!',
+                    },
+                },
+                ui:HGroup{
+                        ui:Button{
+                        MinimumSize = {12,16},
+                        ID = 'ClosePrefs',
+                        Text = 'ok',
+                    },
+                },
             },
         })
 
     pref_itm = prefs_dlg:GetItems()
 
-    function prefs_dlg.On.PrefClose.Clicked(ev)
+    function prefs_dlg.On.ClosePrefs.Clicked(ev)
         prefs_dlg:Hide()
         prefs_dlg = nil
     end
 
+    function prefs_dlg.On.moretoolbars.Clicked(ev)
+        fu:CustomizeToolbars()
+        prefs_dlg:Hide()
+        prefs_dlg = nil
+    end
 
     function prefs_dlg.On.SavePos.Clicked(ev)
         local savePos = pref_itm.SavePos.Checked
@@ -456,8 +486,6 @@ function show_prefs_window(pos)
     function prefs_dlg.On.FlushData.Clicked(ev)
         fu:SetData('Toolbar16.Position')
         print('Position data flushed')
-        prefs_dlg:Hide()
-        prefs_dlg = nil
     end
 
     prefs_dlg:Show()
