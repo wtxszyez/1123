@@ -1,7 +1,7 @@
 --[[--
 Batch Change Parameters v3
  
-This script allows you to change parameters for multiple selected tools simultaneously. The selected tools need not be of the same Node type - only the Inputs that the nodes have in common will be changed.
+This script allows you to change parameters for multiple selected tools simultaneously. The selected tools need not be of the same node type. With Batch Change Parameters's GUI, only the Inputs that the tools have in common will be changed.
 
 This script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+
 
