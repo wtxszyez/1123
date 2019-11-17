@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults - v4.2 2019-11-05
+Reset LUA Script Settings to Defaults - v4.2 2019-11-17
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -319,15 +319,15 @@ function Main()
 		setPreferenceData('KartaVR.VideoSnapshot.Resolution', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.FPS', nil, printStatus)
 		setPreferenceData('KartaVR.VideoSnapshot.MediaType', nil, printStatus)
-		
+
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', nil, printStatus)
-		
-		setPreferenceData('KartaVR.ExportPointCloud.ExportDirectory', nil, printStatus)
-	end
 
-	-- Unlock the comp flow area
-	comp:Unlock()
+		setPreferenceData('KartaVR.ExportPointCloud.ExportDirectory', nil, printStatus)
+
+		setPreferenceData('KartaVR.SendGeometry.LightwaveFile', nil, printStatus)
+		setPreferenceData('KartaVR.SendGeometry.SoundEffect', nil, printStatus)
+	end
 end
 
 -- ---------------------------------------------------------
