@@ -20,6 +20,7 @@ v3 - 2019-11-17
 By Andrew Hazelden for Reactor
 	- Updated to add a copy of "bmd.isin()" function that was renamed to "bcIsIn()" so the script can run in Resolve where the "bmd.scriptlib" file does not exist. Added a TargetID value to the UI Manager window so pressing "Ctrl + W" closes the window instead of the composite.
 	- Added error handling for several nil return values from "fuIDlist" and "uIDAttrs.INPID_InputControl" that caused "gusb()" error messages in the Console.
+	- Adjusted UI Manager GUI weight values to fix Fusion/Resolve v16 GUI rendering issues.
  
 Development Roadmap:
 	- Add and option for performing arithmetic on the Inputs. For instance, add 0.3 to the current value of each Input.
@@ -217,21 +218,18 @@ win = disp:AddWindow({
 		ID = 'root',
 		Weight = 1.0,
 		ui:HGroup{
-			Weight = 0,
 			ui:Label{
 				ID = 'paramLabel',
 				Text = 'Choose Parameter:',
-				Weight = 0,
 			},
 		},
 		ui:VGap(3),
 		ui:HGroup{
-			Weight = 0,
+			Weight = 1,
 			ui:HGap(53),
 			ui:ComboBox{
 				ID = 'Parameter',
 				Text = 'Choose Parameter',
-				Weight = 1,
 			},
 		},
 		ui:VGap(30),
@@ -244,11 +242,10 @@ win = disp:AddWindow({
 		},
 		ui:VGap(10),
 		ui:HGroup{
-			Weight = 0,
 			ui:Label{
 				ID = 'dataTypeLabel',
 				Text = 'dataType',
-				Weight = 0,
+				Weight = 0.01,
 				Visible = true,
 			},
 			ui:LineEdit{
@@ -258,7 +255,7 @@ win = disp:AddWindow({
 			},
 		},
 		ui:HGroup{
-			Weight = 0,
+			Weight = 0.01,
 			ui:HGap(53),
 			ui:ComboBox{
 				ID = 'listFuID',
@@ -268,13 +265,13 @@ win = disp:AddWindow({
 			},
 		},
 		ui:HGroup{
-			Weight = 0,
+			Weight = 1,
 			ui:HGap(36),
 			ui:Label{
 				ID = 'xlabel',
 				Text = 'X:',
 				Visible = true,
-				Weight = 0.05,
+				Weight = 0.01,
 			},
 			ui:LineEdit{
 				ID = 'cordX',
@@ -287,7 +284,7 @@ win = disp:AddWindow({
 				ID = 'ylabel',
 				Text = 'Y:',
 				Visible = true,
-				Weight = 0.05,
+				Weight = 0.01,
 			},
 			ui:LineEdit{
 				ID = 'cordY',
@@ -297,12 +294,10 @@ win = disp:AddWindow({
 			},
 		},
 		ui:VGap(30),
-		ui:HGroup{
-			ui:Button{
-				ID = 'btn_set',
-				Text = 'Apply',
-				Weight = 1,
-			},
+		ui:Button{
+			ID = 'btn_set',
+			Text = 'Apply',
+			Weight = 0.01,
 		},
 	},
 })
