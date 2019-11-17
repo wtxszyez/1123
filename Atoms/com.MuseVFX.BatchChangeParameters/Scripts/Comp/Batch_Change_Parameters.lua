@@ -19,7 +19,7 @@ by Bryan Ray for MuseVFX
 v3 - 2019-11-17 
 By Andrew Hazelden for Reactor
 	- Updated to add a copy of "bmd.isin()" function that was renamed to "bcIsIn()" so the script can run in Resolve where the "bmd.scriptlib" file does not exist. Added a TargetID value to the UI Manager window so pressing "Ctrl + W" closes the window instead of the composite.
-
+	- Added error handling for several nil return values from "fuIDlist" and "uIDAttrs.INPID_InputControl" that caused "gusb()" error messages in the Console.
  
 Development Roadmap:
 	- Add and option for performing arithmetic on the Inputs. For instance, add 0.3 to the current value of each Input.
@@ -369,12 +369,18 @@ function win.On.Parameter.CurrentIndexChanged(ev)
 		itm.listFuID:Clear()
 
 		fuIDAttrs = tools[1][id]:GetAttrs()
-		inputControlType = string.gsub(fuIDAttrs.INPID_InputControl, "ID", "")
+		-- Handle a nil value from fuIDAttrs.INPID_InputControl as a string so gsub doesn't issue a error like:
+		-- bad argument #1 to 'gsub' (string expected, got nil)
+		INPID_InputControlName = fuIDAttrs.INPID_InputControl or ""
+		inputControlType = string.gsub(INPID_InputControlName, "ID", "") 
 		controlID = "INPIDT_"..inputControlType.."_ID"
 		fuIDlist = tools[1][id]:GetAttrs()[controlID]
 
-		for i = 1, table.getn(fuIDlist) do
-			itm.listFuID:AddItem(fuIDlist[i])
+		-- Handle a nil fuIDlist value
+		if fuIDlist then
+			for i = 1, table.getn(fuIDlist) do
+				itm.listFuID:AddItem(fuIDlist[i])
+			end
 		end
 	else
 		itm.textFld.Visible = true
