@@ -1,5 +1,5 @@
 --[[--
-Atomizer DragDrop.fu - v1.0.2 2019-11-04
+Atomizer DragDrop.fu - v1.1 2019-11-20
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 "Atomizer DragDrop.fu" allows Fusion/Resolve v16+ to open up Reactor .atom packages for editing when the documents are dragged into the Nodes view from an Explorer/Finder/Nautilus based desktop folder browsing window. This aproach can help cut down the amount of time you spend navigating inside the Fusion filer picker dialog if you need to re-edit your atoms.</p>
@@ -27,43 +27,43 @@ Usage
 			FuView =
 			{
 				Execute = _Lua [=[
-					-- Call other chained events and default action
-					rets = self:Default(ctx, args) 
+-- Call other chained events and default action
+rets = self:Default(ctx, args) 
 
-					-- No one else handled this?
-					if not rets.handled then
-						-- Get the list of files dropped onto Fusion
-						files = args.urilist
+-- No one else handled this?
+if not rets.handled then
+	-- Get the list of files dropped onto Fusion
+	files = args.urilist
 
-						-- Scan through each of the files
-						for i, file in ipairs(files) do
-							-- Get the file extension
-							ext = string.match(file, '^.+(%..+)$')
+	-- Scan through each of the files
+	for i, file in ipairs(files) do
+		-- Get the file extension
+		ext = string.match(file, '^.+(%..+)$')
 
-							-- List each of the drag/dropped files
-							-- print('[Ext] "' .. tostring(ext) .. '" [File] "' .. tostring(file) .. '"')
+		-- List each of the drag/dropped files
+		-- print('[Ext] "' .. tostring(ext) .. '" [File] "' .. tostring(file) .. '"')
 
-							-- Process any .atom files dropped into Fusion
-							if ext == '.atom' then
-								-- Get the current comp
-								comp = app:GetAttrs().FUSIONH_CurrentComp
+		-- Process any .atom files dropped into Fusion
+		if ext == '.atom' then
+			-- Get the current comp
+			comp = app:GetAttrs().FUSIONH_CurrentComp
 
-								-- Verify the comp pointer is valid
-								if not comp then
-									print('[Atomizer DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
-									return
-								end
+			-- Verify the comp pointer is valid
+			if not comp then
+				print('[Atomizer DragDrop] Please open a Fusion composite before dragging in an .atom file again.')
+				return
+			end
 
-								-- Accept the Drag and Drop event
-								rets.handled = true
+			-- Accept the Drag and Drop event
+			rets.handled = true
 
-								-- Load the Atomizer file
-								print('\n[Load Atom Package] ' .. tostring(file))
-								comp:RunScript(app:MapPath('Reactor:/System/UI/Atomizer.lua'), {atomFile = file})
-							end
-						end
-					end
-					]=]
+			-- Load the Atomizer file
+			print('\n[Load Atom Package] ' .. tostring(file))
+			comp:RunScript(app:MapPath('Reactor:/System/UI/Atomizer.lua'), {atomFile = file})
+		end
+	end
+end
+				]=]
 			},
 		},
 	},

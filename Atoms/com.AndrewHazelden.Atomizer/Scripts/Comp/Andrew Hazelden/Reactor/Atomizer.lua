@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.141 - November 4, 2019]]
+_VERSION = [[Version 3.141 - November 20, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -179,6 +179,10 @@ or
 - Added a "Tools/Deep Pixel" Category
 - Added a "DragDrop" Category
 - Added a "KartaVR/DragDrop" Category
+
+### 3.141 2019-11-20 ##
+
+- Added a "Shaders" Category
 
 ## Todos ##
 
@@ -673,14 +677,14 @@ function AtomWin()
 		{text = 'Comps/Templates'},
 		{text = 'Comps/VR'},
 		{text = 'Console'},
-		{text = 'DragDrop'},
 		{text = 'Docs'},
+		{text = 'DragDrop'},
 		{text = 'Fun'},
 		{text = 'Hotkeys'},
 		{text = 'KartaVR'},
 		{text = 'KartaVR/Comps'},
-		{text = 'KartaVR/DragDrop'},
 		{text = 'KartaVR/Docs'},
+		{text = 'KartaVR/DragDrop'},
 		{text = 'KartaVR/Hotkeys'},
 		{text = 'KartaVR/Scripts'},
 		{text = 'KartaVR/Tools'},
@@ -699,6 +703,7 @@ function AtomWin()
 		{text = 'Scripts/Tool'},
 		{text = 'Scripts/Utility'},
 		{text = 'Scripts/We Suck Less'},
+		{text = 'Shaders'},
 		{text = 'Templates'},
 		{text = 'Testing'},
 		{text = 'Tools'},
