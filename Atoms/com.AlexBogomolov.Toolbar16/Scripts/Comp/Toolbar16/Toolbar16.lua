@@ -81,9 +81,8 @@ function get_state(value)
     local data = fu:GetData(value)
     if data and data == 'true' then
         return true
-    else
-        return false
     end
+    return false
 end
 
 function get_window_xy()
@@ -91,10 +90,14 @@ function get_window_xy()
     local main_window_dimensions = fusion:GetPrefs("Global.Main.Window")
     local savepos_state = get_state('Toolbar16.SavePos')
     local get_pos = fu:GetData('Toolbar16.Position')
+    local on_mouse = get_state('Toolbar16.OnMouse')
     if get_pos and savepos_state then
+        print('restoring position')
         return get_pos[1], get_pos[2]
+    elseif on_mouse then
+        print('launching on mouse position')
+        return fu.MouseX, fu.MouseY
     else
-        -- return fu:GetMousePos()[1], fu:GetMousePos()[2]
         posX = main_window_dimensions.Width / 2 - 200
         TBoffset = 35
         if fu.Version >= 16 then
@@ -360,7 +363,6 @@ function show_ui()
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Triangle.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
-                        -- Checked = multiview_state 
                     },
                     ui.HGap(0.25,0),
                 },
@@ -406,19 +408,19 @@ end
 
 function show_prefs_window(pos)
     local prefx, prefy = pos[1], pos[2]
-    local offsetY = -150
+    local offsetY = -100
     if prefy < 120 then
         offsetY = offsetY + 120
     end
     savepos_state = get_state('Toolbar16.SavePos')
     ontop_state = get_state('Toolbar16.OnTop')
+    on_mouse_pos = get_state('Toolbar16.OnMouse')
 
     prefs_dlg = disp:AddWindow({
         ID = 'TBPrefs',
         TargetID = 'TBPrefs',
-        -- WindowTitle = 'Toolbar16 Prefs',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +298, prefy+offsetY, 200, 150},
+        Geometry = {prefx +298, prefy+offsetY, 250, 100},
             ui:VGroup{
             ID = 'prefs',
                 ui:HGroup{
@@ -430,7 +432,7 @@ function show_prefs_window(pos)
                     },
                     ui:Button{
                         ID = 'FlushData',
-                        Text = 'flush data',
+                        Text = 'reset all',
                         MinimumSize = {5,10},
                     },
                 },
@@ -440,20 +442,26 @@ function show_prefs_window(pos)
                         Text = 'stay on top',
                         Checked = ontop_state,
                     },
+                    ui:CheckBox{
+                        ID = 'OnMousePos',
+                        Text = 'launch at mouse',
+                        Checked = on_mouse_pos,
+                    },
                 },
                 ui:HGroup{
-                        ui:Button{
+                    ui:Button{
+                        MaximumSize = {100, 30},
+                        Weight = .3,
                         ID = 'moretoolbars',
                         Text = 'add toolbars!',
                     },
-                },
-                ui:HGroup{
-                        ui:Button{
-                        MinimumSize = {12,16},
+                    ui:Button{
+                        Weight = .7,
+                        MaximumSize = {155, 30},
                         ID = 'ClosePrefs',
-                        Text = 'ok',
+                        Text = 'close',
                     },
-                },
+                }
             },
         })
 
@@ -470,12 +478,21 @@ function show_prefs_window(pos)
         prefs_dlg = nil
     end
 
+    function prefs_dlg.On.OnMousePos.Clicked(ev)
+        local MousePos = pref_itm.OnMousePos.Checked
+        if MousePos then
+            print('next time UI will open at mouse position')
+        else
+            print('UI will lauch normally under the viewer')
+        end
+        fu:SetData('Toolbar16.OnMouse', tostring(MousePos))
+    end
+
     function prefs_dlg.On.SavePos.Clicked(ev)
         local savePos = pref_itm.SavePos.Checked
         print('saving main window position set to ' .. tostring(savePos))
         fu:SetData('Toolbar16.SavePos', tostring(savePos))
     end
-
 
     function prefs_dlg.On.OnTop.Clicked(ev)
         local onTop = pref_itm.OnTop.Checked
@@ -484,8 +501,8 @@ function show_prefs_window(pos)
     end
 
     function prefs_dlg.On.FlushData.Clicked(ev)
-        fu:SetData('Toolbar16.Position')
-        print('Position data flushed')
+        fu:SetData('Toolbar16')
+        print('all data flushed')
     end
 
     prefs_dlg:Show()
@@ -699,7 +716,6 @@ app:AddConfig('ToolbarWin', {
     Target {
         ID = 'ToolbarWin',
     },
-
     Hotkeys {
         Target = 'ToolbarWin',
         Defaults = true,
