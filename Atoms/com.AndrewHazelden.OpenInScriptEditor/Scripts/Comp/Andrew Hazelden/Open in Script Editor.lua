@@ -1,5 +1,5 @@
 --[[--
-Open in Script Editor - v2 2018-05-09
+Open in Script Editor - v3 2019-11-18
 By Andrew Hazelden <andrew@andrewhazelden.com>
 
 ## Overview ##
