@@ -26,7 +26,6 @@ function _init(side)
     viewer = GlView.CurrentViewer
     viewer_type = string.sub(tostring(viewer),1,2)
     comp = fu:GetCurrentComp()
-    -- print(comp:GetAttrs().COMPS_Name)
 
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
@@ -432,7 +431,7 @@ function show_prefs_window(pos)
                     },
                     ui:Button{
                         ID = 'FlushData',
-                        Text = 'reset all',
+                        Text = 'reset prefs',
                         MinimumSize = {5,10},
                     },
                 },
