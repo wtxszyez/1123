@@ -106,7 +106,9 @@ function get_window_xy()
         print('launching at mouse position')
         return fu.MouseX, fu.MouseY
     else
-        posX = main_window_dimensions.Width / 2 - 250
+        local leftOffset = main_window_dimensions.Width*(1-.90)
+        print(leftOffset)
+        posX = main_window_dimensions.Width / 2 - leftOffset
         TBoffset = 35 -- fusion 9 offset
         if fu.Version >= 16 then
             if fu:GetPrefs('Global.Unsorted.ToolbarState') == false then
