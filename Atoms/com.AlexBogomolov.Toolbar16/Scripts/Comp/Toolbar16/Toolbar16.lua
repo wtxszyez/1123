@@ -87,6 +87,15 @@ end
 function get_window_xy()
     local view_attrs = get_glview('left'):GetAttrs()
     local main_window_dimensions = fusion:GetPrefs("Global.Main.Window")
+    if not main_window_dimensions or main_window_dimensions.Width == -1 then
+        if app:GetVersion().App == 'Fusion' then
+            print("[Warning] The Window preference is undefined. Please save a initial window position in the Layout Preference section.")
+            app:ShowPrefs("PrefsLayout")
+        else
+            print('setting UI width to default 1920px until better solution arrived')
+            main_window_dimensions.Width = 1920
+        end
+    end
     local savepos_state = get_state('Toolbar16.SavePos')
     local get_pos = fu:GetData('Toolbar16.Position')
     local on_mouse = get_state('Toolbar16.OnMouse')
@@ -94,16 +103,17 @@ function get_window_xy()
         print('restoring position')
         return get_pos[1], get_pos[2]
     elseif on_mouse then
-        print('launching on mouse position')
+        print('launching at mouse position')
         return fu.MouseX, fu.MouseY
     else
-        posX = main_window_dimensions.Width / 2 - 200
-        TBoffset = 35
+        posX = main_window_dimensions.Width / 2 - 250
+        TBoffset = 35 -- fusion 9 offset
         if fu.Version >= 16 then
-            TBoffset = 82
-        end
-        if fu:GetPrefs('Global.Unsorted.ToolbarState') == true then
-            TBoffset = 134
+            if fu:GetPrefs('Global.Unsorted.ToolbarState') == false then
+                TBoffset = 85 -- fusion 16 offset
+            else
+                TBoffset = 136 -- fusion 16 with default toolbar turned on offset
+            end
         end
         posY = view_attrs.VIEWN_Bottom + TBoffset
         return posX, posY
@@ -123,6 +133,8 @@ function show_ui()
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = false, WindowStaysOnTopHint = show_on_top},
+        -- WindowFlags = {WA_NoSystemBackground = true, WA_TranslucentBackground = false},
+        -- WindowColor = {transparent = true},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -442,7 +454,7 @@ function show_prefs_window(pos)
                         Checked = ontop_state,
                     },
                     ui:CheckBox{
-                        ID = 'OnMousePos',
+                        ID = 'OnMouse',
                         Text = 'launch at mouse',
                         Checked = on_mouse_pos,
                     },
@@ -477,17 +489,20 @@ function show_prefs_window(pos)
         prefs_dlg = nil
     end
 
-    function prefs_dlg.On.OnMousePos.Clicked(ev)
-        local MousePos = pref_itm.OnMousePos.Checked
-        if MousePos then
+    function prefs_dlg.On.OnMouse.Clicked(ev)
+        local mousePos = pref_itm.OnMouse.Checked
+        if mousePos then
+            pref.itm.SavePos.Checked = false
             print('next time UI will open at mouse position')
         else
+            pref.itm.SavePos.Checked = true
             print('UI will lauch normally under the viewer')
         end
-        fu:SetData('Toolbar16.OnMouse', tostring(MousePos))
+        fu:SetData('Toolbar16.OnMouse', tostring(mousePos))
     end
 
     function prefs_dlg.On.SavePos.Clicked(ev)
+        pref.itm.OnMouse.Checked = false
         local savePos = pref_itm.SavePos.Checked
         print('saving main window position set to ' .. tostring(savePos))
         fu:SetData('Toolbar16.SavePos', tostring(savePos))
