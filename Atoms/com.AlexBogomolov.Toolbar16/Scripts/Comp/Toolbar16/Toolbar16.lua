@@ -26,7 +26,6 @@ function _init(side)
     viewer = GlView.CurrentViewer
     viewer_type = string.sub(tostring(viewer),1,2)
     comp = fu:GetCurrentComp()
-    -- print(comp:GetAttrs().COMPS_Name)
 
     if not viewer then
         print('Load any 2D tool to the '.. side ..' viewer')
@@ -81,18 +80,45 @@ function get_state(value)
     local data = fu:GetData(value)
     if data and data == 'true' then
         return true
-    else
-        return false
     end
+    return false
 end
 
 function get_window_xy()
+    local view_attrs = get_glview('left'):GetAttrs()
+    local main_window_dimensions = fusion:GetPrefs("Global.Main.Window")
+    if not main_window_dimensions or main_window_dimensions.Width == -1 then
+        if app:GetVersion().App == 'Fusion' then
+            print("[Warning] The Window preference is undefined. Please save a initial window position in the Layout Preference section.")
+            app:ShowPrefs("PrefsLayout")
+        else
+            print('setting UI width to default 1920px until better solution arrived')
+            main_window_dimensions.Width = 1920
+        end
+    end
     local savepos_state = get_state('Toolbar16.SavePos')
     local get_pos = fu:GetData('Toolbar16.Position')
+    local on_mouse = get_state('Toolbar16.OnMouse')
     if get_pos and savepos_state then
+        print('restoring position')
         return get_pos[1], get_pos[2]
+    elseif on_mouse then
+        print('launching at mouse position')
+        return fu.MouseX, fu.MouseY
     else
-        return fu:GetMousePos()[1], fu:GetMousePos()[2]
+        local leftOffset = main_window_dimensions.Width*(1-.90)
+        print(leftOffset)
+        posX = main_window_dimensions.Width / 2 - leftOffset
+        TBoffset = 35 -- fusion 9 offset
+        if fu.Version >= 16 then
+            if fu:GetPrefs('Global.Unsorted.ToolbarState') == false then
+                TBoffset = 85 -- fusion 16 offset
+            else
+                TBoffset = 136 -- fusion 16 with default toolbar turned on offset
+            end
+        end
+        posY = view_attrs.VIEWN_Bottom + TBoffset
+        return posX, posY
     end
 end
 
@@ -100,7 +126,7 @@ function show_ui()
     show_on_top = get_state('Toolbar16.OnTop')
     _init('left')
     -- check if window exists
-    width, height = 650,26
+    width, height = 750,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
     x, y = get_window_xy()
@@ -108,7 +134,9 @@ function show_ui()
         ID = 'ToolbarWin',
         TargetID = 'ToolbarWin',
         WindowTitle = 'Viewer Toolbar for Fusion16',
-        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = show_on_top},
+        WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = false, WindowStaysOnTopHint = show_on_top},
+        -- WindowFlags = {WA_NoSystemBackground = true, WA_TranslucentBackground = false},
+        -- WindowColor = {transparent = true},
         Geometry = {x - (width) / 2, y, width, height},
         -- Geometry = {0, 0, width, height},
         Spacing = 0,
@@ -151,9 +179,9 @@ function show_ui()
                         ID = 'IconButtonPolyline',
                         Flat = true,
                         IconSize = {16,16},
-                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Polyline.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Polyline.png'},
                     },
                     ui:Button{
                         ID = 'IconButtonBSpline',
@@ -334,6 +362,46 @@ function show_ui()
                         Checked = false,
                     },
                     ui:Button{
+                        ID = 'Layout01',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout01.png'},
+                    },                    
+                    ui:Button{
+                        ID = 'Layout02',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout02.png'},
+                    },                    
+                    ui:Button{
+                        ID = 'Layout03',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout03.png'},
+                    },                    
+                    ui:Button{
+                        ID = 'Layout04',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout04.png'},
+                    },                    
+                    ui:Button{
+                        ID = 'Layout05',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout05.png'},
+                    },                             
+                    ui:Button{
                         ID = 'CloseButton',
                         Text = 'Exit',
                         Flat = false,
@@ -348,7 +416,6 @@ function show_ui()
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Triangle.png'},
                         MinimumSize = iconsMedium,
                         Checkable = false,
-                        -- Checked = multiview_state 
                     },
                     ui.HGap(0.25,0),
                 },
@@ -400,13 +467,13 @@ function show_prefs_window(pos)
     end
     savepos_state = get_state('Toolbar16.SavePos')
     ontop_state = get_state('Toolbar16.OnTop')
+    on_mouse_pos = get_state('Toolbar16.OnMouse')
 
     prefs_dlg = disp:AddWindow({
         ID = 'TBPrefs',
         TargetID = 'TBPrefs',
-        -- WindowTitle = 'Toolbar16 Prefs',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +298, prefy+offsetY, 200, 100},
+        Geometry = {prefx +125, prefy+offsetY, 250, 100},
             ui:VGroup{
             ID = 'prefs',
                 ui:HGroup{
@@ -418,34 +485,72 @@ function show_prefs_window(pos)
                     },
                     ui:Button{
                         ID = 'FlushData',
-                        Text = 'flush data',
+                        Text = 'reset prefs',
                         MinimumSize = {5,10},
                     },
                 },
                 ui:HGroup{
+                    ui:CheckBox{
+                        ID = 'OnMouse',
+                        Text = 'launch at mouse',
+                        Checked = on_mouse_pos,
+                    },
                         ui:CheckBox{
                         ID = 'OnTop',
                         Text = 'stay on top',
                         Checked = ontop_state,
                     },
                 },
+                ui:HGroup{
+                    ui:Button{
+                        MaximumSize = {100, 30},
+                        Weight = .3,
+                        ID = 'moretoolbars',
+                        Text = 'add toolbars!',
+                    },
+                    ui:Button{
+                        Weight = .7,
+                        MaximumSize = {155, 30},
+                        ID = 'ClosePrefs',
+                        Text = 'close',
+                    },
+                }
             },
         })
 
     pref_itm = prefs_dlg:GetItems()
 
-    function prefs_dlg.On.PrefClose.Clicked(ev)
+    function prefs_dlg.On.ClosePrefs.Clicked(ev)
         prefs_dlg:Hide()
         prefs_dlg = nil
     end
 
-
-    function prefs_dlg.On.SavePos.Clicked(ev)
-        local savePos = pref_itm.SavePos.Checked
-        print('saving main window position set to ' .. tostring(savePos))
-        fu:SetData('Toolbar16.SavePos', tostring(savePos))
+    function prefs_dlg.On.moretoolbars.Clicked(ev)
+        fu:CustomizeToolbars()
+        prefs_dlg:Hide()
+        prefs_dlg = nil
     end
 
+    function prefs_dlg.On.OnMouse.Clicked(ev)
+        local mousePos = pref_itm.OnMouse.Checked
+        if mousePos then
+            pref_itm.SavePos.Checked = false
+            print('next time UI will open at mouse position')
+        else
+            print('UI will lauch normally under the viewer')
+        end
+        fu:SetData('Toolbar16.OnMouse', tostring(mousePos))
+    end
+
+    function prefs_dlg.On.SavePos.Clicked(ev)
+        pref_itm.OnMouse.Checked = false
+        local savePos = pref_itm.SavePos.Checked
+        if savePos then
+            fu:SetData('Toolbar16.OnMouse', false)
+        end
+        fu:SetData('Toolbar16.SavePos', tostring(savePos))
+        print('saving main window position set to ' .. tostring(savePos))
+    end
 
     function prefs_dlg.On.OnTop.Clicked(ev)
         local onTop = pref_itm.OnTop.Checked
@@ -454,8 +559,8 @@ function show_prefs_window(pos)
     end
 
     function prefs_dlg.On.FlushData.Clicked(ev)
-        fu:SetData('Toolbar16.Position')
-        print('Position data flushed')
+        fu:SetData('Toolbar16')
+        print('toolbar preferences data flushed')
         prefs_dlg:Hide()
         prefs_dlg = nil
     end
@@ -666,12 +771,43 @@ function win.On.RefreshButtons.Clicked(ev)
     refresh_ui()
 end
 
+-- Layout change
+
+function win.On.Layout01.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
+    comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = true}) 
+end
+
+function win.On.Layout02.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = true})
+    comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
+    comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = true}) 
+end
+
+function win.On.Layout03.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
+    comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = false}) 
+end
+function win.On.Layout04.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = true})
+    comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
+    comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = false}) 
+end
+function win.On.Layout05.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = true})
+    comp:DoAction("Fusion_View_Show", {view = "Inspector", show = false})
+end
+
+
+
+
 -- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
 app:AddConfig('ToolbarWin', {
     Target {
         ID = 'ToolbarWin',
     },
-
     Hotkeys {
         Target = 'ToolbarWin',
         Defaults = true,
