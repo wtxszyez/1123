@@ -775,6 +775,7 @@ end
 
 function win.On.Layout01.Clicked(ev)
     comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Viewer1", show = true})
     comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
     comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = true}) 
 end
@@ -787,6 +788,7 @@ end
 
 function win.On.Layout03.Clicked(ev)
     comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Viewer1", show = true})
     comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
     comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = false}) 
 end
