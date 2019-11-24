@@ -114,7 +114,6 @@ function get_window_xy()
         return fu.MouseX, fu.MouseY
     else
         local leftOffset = main_window_dimensions.Width*.12
-        print(leftOffset)
         posX = main_window_dimensions.Width / 2 - leftOffset
         TBoffset = 35 -- fusion 9 offset
         if fu.Version >= 16 then
