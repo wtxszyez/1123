@@ -453,10 +453,12 @@ end
 
 -- The window was closed
 function win.On.ToolbarWin.Close(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Time", show = true})
     disp:ExitLoop()
 end
 
 function win.On.CloseButton.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Time", show = true})
     disp:ExitLoop()
 end
 
@@ -823,16 +825,16 @@ end
 
 
 -- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
-app:AddConfig('ToolbarWin', {
-    Target {
-        ID = 'ToolbarWin',
-    },
-    Hotkeys {
-        Target = 'ToolbarWin',
-        Defaults = true,
-        ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-    },
-})
+-- app:AddConfig('ToolbarWin', {
+--     Target {
+--         ID = 'ToolbarWin',
+--     },
+--     Hotkeys {
+--         Target = 'ToolbarWin',
+--         Defaults = true,
+--         ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+--     },
+-- })
 
 -- Display the window
 win:Show()
