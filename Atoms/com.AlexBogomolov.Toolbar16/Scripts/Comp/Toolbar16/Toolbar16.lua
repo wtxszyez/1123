@@ -1,16 +1,23 @@
 --[[
+v 2.3
+-- add close preferences button
+-- add initial window offset based on left viewer window size
+-- add toggle TimeVew button
+-- add optional launch on mouse position
+    * if you need to launch the tool at custom position, first set prefs to launch at mouse pos, restart the script
+    * then open tool preferences and set Save Position
+-- add Fusion9 style View Bar with 5 simple layout presets
+-- click Add Toolbars! button to launch Customize Toolbars dialogue
 v 2.0 
     -- add preferences for save position and stay on top of all windows
     -- now properly working with 3D viewers
 v 1.3 add some working buttons 2019-05-21
--- partial implementation for Fusion 16 by Alex Bogomolov 
+-- partial implementation for Fusion 16 by Alex Bogomolov mail@abogomolov.com
+-- general discussion and screenshots: https://www.steakunderwater.com/wesuckless/viewtopic.php?p=23876#p23876
+   web: https://abogomolov.com
+   donate: https://paypal.me/aabogomolov
 v 1.0 Initial release 2019-01-21
--- original sample script and icons by Andrew Hazelden 
-Email:  andrew@andrewhazelden.com
-        mail@abogomolov.com
-Web: www.andrewhazelden.com
-     https://abogomolov.com
-     https://paypal.me/aabogomolov
+-- original sample script and icons by Andrew Hazelden. Thanks a lot for your invaluable help!
 ]]
 
 ui = fu.UIManager
@@ -106,7 +113,7 @@ function get_window_xy()
         print('launching at mouse position')
         return fu.MouseX, fu.MouseY
     else
-        local leftOffset = main_window_dimensions.Width*(1-.90)
+        local leftOffset = main_window_dimensions.Width*.12
         print(leftOffset)
         posX = main_window_dimensions.Width / 2 - leftOffset
         TBoffset = 35 -- fusion 9 offset
@@ -126,7 +133,7 @@ function show_ui()
     show_on_top = get_state('Toolbar16.OnTop')
     _init('left')
     -- check if window exists
-    width, height = 750,26
+    width, height = 770,26
     iconsMedium = {16,26}
     iconsMediumLong = {34,26}
     x, y = get_window_xy()
@@ -402,6 +409,14 @@ function show_ui()
                         Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_Layout05.png'},
                     },                             
                     ui:Button{
+                        ID = 'TimeViewButton',
+                        Flat = true,
+                        IconSize = {16,16},
+                        MinimumSize = iconsMedium,
+                        Checkable = false,
+                        Icon = ui:Icon{File = 'Scripts:/Comp/Toolbar16/Icons/PT_TimeView.png'},
+                    },                             
+                    ui:Button{
                         ID = 'CloseButton',
                         Text = 'Exit',
                         Flat = false,
@@ -438,10 +453,12 @@ end
 
 -- The window was closed
 function win.On.ToolbarWin.Close(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Time", show = true})
     disp:ExitLoop()
 end
 
 function win.On.CloseButton.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Time", show = true})
     disp:ExitLoop()
 end
 
@@ -473,7 +490,7 @@ function show_prefs_window(pos)
         ID = 'TBPrefs',
         TargetID = 'TBPrefs',
         WindowFlags = {SplashScreen = true, NoDropShadowWindowHint = true, WindowStaysOnTopHint = false},
-        Geometry = {prefx +125, prefy+offsetY, 250, 100},
+        Geometry = {prefx +137, prefy+offsetY, 250, 100},
             ui:VGroup{
             ID = 'prefs',
                 ui:HGroup{
@@ -775,6 +792,7 @@ end
 
 function win.On.Layout01.Clicked(ev)
     comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Viewer1", show = true})
     comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
     comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = true}) 
 end
@@ -787,6 +805,7 @@ end
 
 function win.On.Layout03.Clicked(ev)
     comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = false})
+    comp:DoAction("Fusion_View_Show", {view = "Viewer1", show = true})
     comp:DoAction("Fusion_View_Show", {view = "Inspector", show = true})
     comp:DoAction("Fusion_Zone_Expand", {zone = "Right", expand = false}) 
 end
@@ -799,21 +818,23 @@ function win.On.Layout05.Clicked(ev)
     comp:DoAction("Fusion_View_Show", {view = "Viewer2", show = true})
     comp:DoAction("Fusion_View_Show", {view = "Inspector", show = false})
 end
-
+function win.On.TimeViewButton.Clicked(ev)
+    comp:DoAction("Fusion_View_Show", {view = "Time"})
+end
 
 
 
 -- The app:AddConfig() command will capture the "Escape" hotkey to close the window.
-app:AddConfig('ToolbarWin', {
-    Target {
-        ID = 'ToolbarWin',
-    },
-    Hotkeys {
-        Target = 'ToolbarWin',
-        Defaults = true,
-        ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
-    },
-})
+-- app:AddConfig('ToolbarWin', {
+--     Target {
+--         ID = 'ToolbarWin',
+--     },
+--     Hotkeys {
+--         Target = 'ToolbarWin',
+--         Defaults = true,
+--         ESCAPE = 'Execute{cmd = [[app.UIManager:QueueEvent(obj, "Close", {})]]}',
+--     },
+-- })
 
 -- Display the window
 win:Show()
