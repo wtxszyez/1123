@@ -1,4 +1,4 @@
-_VERSION = [[Version 3.141 - November 4, 2019]]
+_VERSION = [[Version 3.141 - November 25, 2019]]
 --[[--
 Atomizer: The Atom Package Editor
 by Andrew Hazelden <andrew@andrewhazelden.com>
@@ -179,6 +179,11 @@ or
 - Added a "Tools/Deep Pixel" Category
 - Added a "DragDrop" Category
 - Added a "KartaVR/DragDrop" Category
+
+### 3.141 2019-11-25 ##
+
+- Added a "Shaders" Category
+- Removed usage of "Comp:Print()" so Atomizer works from a "App:RunScript()" launched scope
 
 ## Todos ##
 
@@ -673,14 +678,14 @@ function AtomWin()
 		{text = 'Comps/Templates'},
 		{text = 'Comps/VR'},
 		{text = 'Console'},
-		{text = 'DragDrop'},
 		{text = 'Docs'},
+		{text = 'DragDrop'},
 		{text = 'Fun'},
 		{text = 'Hotkeys'},
 		{text = 'KartaVR'},
 		{text = 'KartaVR/Comps'},
-		{text = 'KartaVR/DragDrop'},
 		{text = 'KartaVR/Docs'},
+		{text = 'KartaVR/DragDrop'},
 		{text = 'KartaVR/Hotkeys'},
 		{text = 'KartaVR/Scripts'},
 		{text = 'KartaVR/Tools'},
@@ -699,6 +704,7 @@ function AtomWin()
 		{text = 'Scripts/Tool'},
 		{text = 'Scripts/Utility'},
 		{text = 'Scripts/We Suck Less'},
+		{text = 'Shaders'},
 		{text = 'Templates'},
 		{text = 'Testing'},
 		{text = 'Tools'},
@@ -1584,7 +1590,7 @@ function AtomWin()
 	-- Reset the current settings to the Atomizer defaults
 	function win.On.ResetDefaultsButton.Clicked(ev)
 		local msg = 'Are you sure you want to clear out all of the information in your Atom?\n'
-		comp:Print('[Reset Defaults] ' .. msg)
+		print('[Reset Defaults] ' .. msg)
 
 		-- Show a warning message in an AskUser dialog
 		dlg = {
@@ -2758,8 +2764,8 @@ function Main()
 	iconsLong = {long,large}
 	iconsBigLong = {big,large}
 
-	comp:Print('\n[Atomizer] ' .. tostring(_VERSION) .. '\n')
-	comp:Print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
+	print('\n[Atomizer] ' .. tostring(_VERSION) .. '\n')
+	print('[Created By] Andrew Hazelden <andrew@andrewhazelden.com>\n')
 
 	-- Was FuScript from the command line used to specify an atom filepath?
 	if atomFile ~= nil then

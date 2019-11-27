@@ -1,28 +1,21 @@
-
 ## <a name="sample-imagery"></a>Sample Imagery ##
 
-Included with the KartaVR is a set of sample panoramic images that can be used to explore the panoramic conversion features.
-
-The sample images are stored in the Fusion 7 on Windows folder:
-`C:\Users\Public\Documents\Blackmagic Design\Fusion\Macros\KartaVR\Images`
-
-The sample images are stored in the Fusion 8 on Windows folder:
-`%appdata%\Blackmagic Design\Fusion\Macros\KartaVR\Images`
-
-or in the Fusion 8 on macOS folder:
-
-`~/Library/Application Support/Blackmagic Design/Fusion/Macros/KartaVR/Images/`
+Included with the KartaVR is a set of sample panoramic images, and polygon meshes that can be used to explore the panoramic conversion features.
 
 ![Sample Images](images/sample-images.png)
 
-There is a sample Fusion comp that shows the usage of all of the panoramic images. When you expand the KartaVR.zip file you will find this sample Fusion comp in the folder named `examples`.
 
-Another copy of the sample fusion projects is stored in the Fusion 7 on Windows folder:  
-`C:\Users\Public\Documents\Blackmagic Design\Fusion\Macros\KartaVR\Source Compositions\Demos`
+The sample images are stored in the Reactor PathMap folder location of:
 
-or in the Fusion 8 on Windows folder:  
-`%appdata%\Blackmagic Design\Fusion\Macros\KartaVR\Source Compositions\Demos`
+`Reactor:/Deploy/Macros/KartaVR/Images/`
 
-or in the Fusion 8 on macOS folder:
+Another Fusion "Bin" window centric copy of the sample fusion projects is stored in the Fusion PathMap folder:
 
-`~/Library/Application Support/Blackmagic Design/Fusion/Macros/KartaVR/Source Compositions/Demos/`
+`Reactor:/Deploy/Macros/KartaVR/Source Compositions/Demos/`
+
+## <a name="show-reactor-folder"></a>Browsing the Reactor PathMap ##
+
+If you want to access the KartaVR sample imagery quickly and easily, use the `Reactor > Tools > Show Reactor Folder` menu item. Then browse into the "Deploy" folder, and finally into the "Macros", and "KartaVR" sub-folders.
+
+![Show Reactor Folder](images/show_reactor_folder.png)
+

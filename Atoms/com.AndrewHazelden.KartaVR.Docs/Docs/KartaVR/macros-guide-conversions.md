@@ -32,9 +32,9 @@
     <li><a href="macros-guide-conversions.html#Equirectangular2Cylindrical">Equirectangular2Cylindrical</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster180">Equirectangular2Domemaster180</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2Domemaster220">Equirectangular2Domemaster220</a></li>
+    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
   </ul></td>
   <td><ul>
-    <li><a href="macros-guide-conversions.html#Equirectangular2Fisheye">Equirectangular2Fisheye</a></li>
     <li><a href="macros-guide-conversions.html#EquirectangularStereo2FisheyeStereo">EquirectangularStereo2FisheyeStereo</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseAngular">Equirectangular2InverseAngular</a></li>
     <li><a href="macros-guide-conversions.html#Equirectangular2InverseDomemaster180">Equirectangular2InverseDomemaster180</a></li>
@@ -55,6 +55,8 @@
     <li><a href="macros-guide-conversions.html#HorizontalCross2CubicFaces">HorizontalCross2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalStrip2CubicFaces">HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#HorizontalTee2CubicFaces">HorizontalTee2CubicFaces</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2Equirectangular">MeshUV2Equirectangular</a></li>
+    <li><a href="macros-guide-conversions.html#MeshUV2EquirectangularStereo">MeshUV2EquirectangularStereo</a></li>
     <li><a href="macros-guide-conversions.html#MRCube1HorizontalStrip2CubicFaces">MRCube1HorizontalStrip2CubicFaces</a></li>
     <li><a href="macros-guide-conversions.html#Rectilinear2Equirectangular">Rectilinear2Equirectangular</a></li>
     <li><a href="macros-guide-conversions.html#RectilinearStereo2EquirectangularStereo">RectilinearStereo2EquirectangularStereo</a></li>
@@ -1272,6 +1274,16 @@ To use this node, the source imagery is connected to the node's yellow colored "
 
 **Note:** If you hover your cursor over each of the red color node outputs you will see a tool tip appear that indicates what the currently selected output is called.
 
+
+## <a name="MeshUV2Equirectangular"></a>MeshUV2Equirectangular ##
+
+
+![MeshUV2Equirectangular GUI](images/macro-meshuv-to-equirectangular-gui.png)
+
+## <a name="MeshUV2EquirectangularStereo"></a>MeshUV2EquirectangularStereo ##
+
+
+![MeshUV2EquirectangularStereo GUI](images/macro-meshuv-to-equirectangular-stereo-gui.png)
 
 ## <a name="MRCube1HorizontalStrip2CubicFaces"></a>MRCube1HorizontalStrip2CubicFaces ##
 

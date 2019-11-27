@@ -1,4 +1,4 @@
-_VERSION = 'v3.141 2019-11-02'
+_VERSION = 'v3.141 2019-11-13'
 --[[--
 Fu Scanner
 By Andrew Hazelden <andrew@andrewhazelden.com>
@@ -153,24 +153,24 @@ function Main()
 
 			-- Tree View Controls
 			ui:HGroup{
-				Weight = 0,
+				Weight = 0.01,
 
 				-- Add some space
 				ui:HGap(),
 
 				ui:Label{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ViewControlsLabel',
 					Text = 'Tree View Controls: ',
 				},
 				ui:CheckBox{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ExpandPathMapCheckbox',
 					Text = 'Expand PathMaps',
 					Checked = false,
 				},
 				ui:CheckBox{
-					Weight = 0,
+					Weight = 0.01,
 					ID = 'ShowDuplicateCheckbox',
 					Text = 'Show Duplicate .fu',
 					Checked = false,

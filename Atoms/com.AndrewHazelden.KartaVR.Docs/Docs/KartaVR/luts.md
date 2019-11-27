@@ -27,6 +27,8 @@ Besides using the Macro LUT based panoramic 360&deg; media viewers listed on thi
 ## Table of Contents ##
 
 - [Bright LUT](luts.html#bright-lut)
+- MeshUV to Equirectangular LUT
+- MeshUV to EquirectangularStereoOU LUT
 - [ViewerEquirectangular LUT](luts.html#viewerequirectangular-lut)
 - [ViewerEquirectangular Stereo OU LUT](luts.html#viewerequirectangular-stereo-ou-lut)
 - [ViewerMesh LUT](luts.html#viewermesh-lut)

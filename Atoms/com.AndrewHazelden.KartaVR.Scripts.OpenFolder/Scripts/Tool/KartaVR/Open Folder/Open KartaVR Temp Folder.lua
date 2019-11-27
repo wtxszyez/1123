@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Open KartaVR Temp Folder - v4.1 2019-11-04
+Open KartaVR Temp Folder - v4.21 2019-11-12
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -135,7 +135,7 @@ function PlayDFMWaveAudio(filename, status)
 	
 	if platform == 'Windows' then
 		-- Note Windows Powershell is very lame and it really really needs you to escape each space in a filepath with a backtick ` character or it simply won't work!
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') .. '").PlaySync();'
@@ -151,7 +151,7 @@ function PlayDFMWaveAudio(filename, status)
 			err = true
 		end
 	elseif platform == 'Mac' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'afplay "' .. audioFilePath ..'" &'
 		
@@ -166,7 +166,7 @@ function PlayDFMWaveAudio(filename, status)
 			err = true
 		end
 	elseif platform == 'Linux' then
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		audioFilePath = audioFolderPath .. filename
 		command = 'xdg-open "' .. audioFilePath ..'" &'
 		
@@ -183,7 +183,7 @@ function PlayDFMWaveAudio(filename, status)
 		end
 	else
 		-- Windows Fallback
-		audioFolderPath = comp:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
+		audioFolderPath = app:MapPath('Reactor:/Deploy/Bin/KartaVR/audio/')
 		-- audioFolderPath = '$env:ProgramData\\Blackmagic Design\\Fusion\\Reactor\\Deploy\\Bin\\KartaVR\\audio\\'
 		audioFilePath = audioFolderPath .. filename
 		command = 'powershell -c (New-Object Media.SoundPlayer "' .. string.gsub(audioFilePath, ' ', '` ') ..'").PlaySync();'
@@ -207,7 +207,7 @@ end
 
 
 -- Find out the Fusion temporary directory path
-tempDirName = comp:MapPath('Temp:\\KartaVR\\')
+tempDirName = app:MapPath('Temp:\\KartaVR\\')
 
 -- Create the temporary directory
 os.execute('mkdir "' .. tempDirName..'"')
