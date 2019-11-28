@@ -1,0 +1,458 @@
+--[[
+
+Echo Fuse
+
+TODO:
+
+Wish-lits:
+* DoD!
+* Read subframes in time. If something moves quickly, animate the subframe-counter for that part and the fuse will calculate everything correctly
+* Unlock XY for:
+	* Size
+	* Blur
+* Effect each RGB channel separately for
+	* Move the RGB channels in XY
+	* Blur, change BLUR_RedScale
+	* Gain
+* "Dynamic" sub-frames. Different amount of sub-frames in the start and end so if you create a tail there is more sub-frames in the end of the tail than in the start to speed things up
+
+-------------------------------------------------------------------
+Copyright (c) 2019, Jacob Danell
+<jacob[at]emberlight[dot]se>
+-------------------------------------------------------------------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-------------------------------------------------------------------
+
+with thanks to Pieter Van Houte for inspiration.
+
+--]]
+
+version = "Echo v1.0"
+
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+FuRegisterClass("Echo", CT_Tool, {
+	REGS_Name				= "Echo",
+	REGS_Category			= "Effect",
+	REGS_OpIconString		= "Eh",
+	REGS_OpDescription		= "An advanced echo fuse",
+	REG_TimeVariant			= true, -- required to disable caching of the current time parameter
+	REGB_Temporal			= true, -- ensures reliability in Resolve 15
+	REGS_Company			= "Jacob Danell",
+	REGS_URL				= "www.emberlight.se",
+	REGS_HelpTopic			= "",
+	REG_NoMotionBlurCtrls	= true,
+	REG_Fuse_NoEdit			= false,
+	REG_Fuse_NoReload		= false,
+	--REG_SupportsDoD			= true,
+	REG_Version				= 100,
+})
+
+
+function Create()
+
+	InEchoFrames = self:AddInput("Echo Frames", "EchoFrames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Integer = true,
+		INP_MinScale = -10,
+		INP_MaxScale = 10,
+		INP_Default = 5,
+		})
+
+	InSubFrames = self:AddInput("Sub-frames", "SubFrames", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_Integer = true,
+		INP_MinAllowed = 0,
+		INP_MaxScale = 100,
+		INP_Default = 0,
+		})
+
+	InEchoGain = self:AddInput("Echo Gain", "EchoGain", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1,
+		})
+
+	InGainGamma = self:AddInput("Gain Gamma", "GainGamma", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 2.2,
+		INP_MinScale = 0,
+		INP_MaxScale = 4,
+		})
+
+	InStartFrame = self:AddInput("Stat Frame", "StartFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "RangeControl",
+		INP_Integer = true,
+		INP_Default = 0,
+		IC_ControlGroup = 1,
+		IC_ControlID = 0,
+		})
+
+	InEndFrame = self:AddInput("End Frame", "EndFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "RangeControl",
+		INP_Integer = true,
+		INP_Default = 1000,
+		IC_ControlGroup = 1,
+		IC_ControlID = 1,
+		})
+
+	InApply = self:AddInput("Apply Mode", "ApplyMode", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ComboControl",
+		INP_Default = 0.0,
+		INP_Integer = true,
+		{ CCS_AddString = "Normal", },
+		{ CCS_AddString = "Screen", },
+		{ CCS_AddString = "Dissolve", },
+		{ CCS_AddString = "Multiply", },
+		{ CCS_AddString = "Overlay", },
+		{ CCS_AddString = "Soft Light", },
+		{ CCS_AddString = "Hard Light", },
+		{ CCS_AddString = "Color Dodge", },
+		{ CCS_AddString = "Color Burn", },
+		{ CCS_AddString = "Darken", },
+		{ CCS_AddString = "Lighten", },
+		{ CCS_AddString = "Difference", },
+		{ CCS_AddString = "Exclusion", },
+		{ CCS_AddString = "Hue", },
+		{ CCS_AddString = "Saturation", },
+		{ CCS_AddString = "Color", },
+		{ CCS_AddString = "Luminosity",  },
+		})
+
+	InUseAlphaGain = self:AddInput("Use Alpha Gain", "UseAlphaGain", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		INP_DoNotifyChanged = true, -- We want to hear about changes on this control
+		})
+
+	InAlphaGain = self:AddInput("Alpha Gain", "AlphaGain", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_Default = 1.0,
+		})
+
+	InCenter = self:AddInput("Center", "Center", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		})
+
+	InSize = self:AddInput("Scale", "Scale", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0,
+		INP_MaxScale = 2,
+		INP_Default = 1,
+		})
+
+	InAngle = self:AddInput("Angle", "Angle", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INPID_PreviewControl = "AngleControl",
+		INP_MinScale =   0.0,
+		INP_MaxScale = 360.0,
+		INP_Default = 0.0,
+		ACP_Center = InCenter,
+		ACP_Radius = InSize,
+		PC_GrabPriority = 1 -- give this a higher priority than the rectangle
+		})
+	
+	InSize:SetAttrs({
+		INPID_PreviewControl = "RectangleControl",
+		RCP_Center = InCenter,
+		RCP_Angle = InAngle,
+		RCD_LockAspect = 1.0,
+		})
+
+	InPivot = self:AddInput("Pivot", "Pivot", {
+		LINKID_DataType = "Point",
+		INPID_InputControl = "OffsetControl",
+		INPID_PreviewControl = "CrosshairControl",
+		CHC_Style = "NormalCross",
+		})
+
+	InBlur = self:AddInput("Blur Size", "BlurSize", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinAllowed = 0,
+		INP_MaxScale = 10,
+		INP_Default = 0,
+		})
+
+	InMergEchoOver = self:AddInput("Merge Echo Over", "MergeEchoOver", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		})
+
+	InClampSize = self:AddInput("Clamp Size", "ClampSize", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		})
+
+	InUseSamePivot = self:AddInput("Use Same Pivot", "UseSamePivot", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		})
+
+	InPivotFromFrame = self:AddInput("Use Pivot From Echo Frame", "PivotFromFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		})
+
+	InHideSource = self:AddInput("Hide Source", "HideSource", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "CheckboxControl",
+		INP_Integer = false,
+		CBC_TriState = false,
+		INP_Default = 0,
+		})
+
+	InImage = self:AddInput("Background", "Background", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		INP_Priority = -1, -- this input is polled after all the others (for DoD precalc)
+		--INP_AcceptsGPUImages = true,
+		--INP_AcceptsCLImages = true,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+end -- end Create()
+
+function Process(req)
+	-- get tool inputs
+	local img = InImage:GetValue(req)
+	--local dod = req:GetInputDoD(InImage)
+	--local datawnd_src = dod:Intersect(img.DataWindow)
+	--local datawnd = datawnd_src:Intersect(datawnd_src)
+
+	local gain = InEchoGain:GetValue(req).Value
+	local echo_frames = -InEchoFrames:GetValue(req).Value
+	local subframes = InSubFrames:GetValue(req).Value + 1
+	local apply_mode = InApply:GetValue(req).Value + 1
+	local use_alpha_gain = InUseAlphaGain:GetValue(req).Value
+	local gain_gamma = InGainGamma:GetValue(req).Value
+	local alpha_gain_slider = InAlphaGain:GetValue(req).Value
+	local merge_echo_over = InMergEchoOver:GetValue(req).Value
+	local start_frame = InStartFrame:GetValue(req).Value
+	local end_frame = InEndFrame:GetValue(req).Value
+	local size = InSize:GetValue(req).Value
+	local center = InCenter:GetValue(req)
+	local angle = InAngle:GetValue(req).Value
+	local pivot = InPivot:GetValue(req)
+	local pivot_from_frame = InPivotFromFrame:GetValue(req).Value
+	local clamp_size = InClampSize:GetValue(req).Value
+	local blur_strength  = InBlur:GetValue(req).Value
+	local hide_source = InHideSource:GetValue(req).Value
+	local use_same_pivot = InUseSamePivot:GetValue(req).Value
+
+	local apply_modes = {
+		"Merge",
+		"Screen",
+		"Dissolve",
+		"Multiply",
+		"Overlay",
+		"SoftLight",
+		"HardLight",
+		"ColorDodge",
+		"ColorBurn",
+		"Darken",
+		"Lighten",
+		"Difference",
+		"Exclusion",
+		"Hue",
+		"Saturation",
+		"Color",
+		"Luminosity",
+		}
+
+	-- create output image
+	local out = Image({
+		IMG_Like       = img,
+		IMG_NoData     = req:IsPreCalc(),
+		IMG_DeferAlloc = true,
+		IMG_NoData = req:IsPreCalc(),
+		})
+
+	if not req:IsPreCalc() then
+		-- Fill output image with 0 to clear old cache
+		out:Fill(Pixel(0,0,0,0))
+
+		-- Check if we should calculate the values from start to end or end to start
+		local iterationValue = (echo_frames > 0 and -1 or 1)
+		local totalFrames = echo_frames * subframes
+		self:SetProgress(0)
+		for i = totalFrames, 0, iterationValue do
+			if self.Status ~= "OK" then break end
+
+			-- Calculate the frame
+			local frame = (i/subframes)
+
+			-- If the tail frames should be read from end to start instead
+			if merge_echo_over == 1 then
+				frame = (echo_frames - frame)
+			end
+
+
+			-- Get the current frame to sample from
+			local currentSampleFrame = req.Time + frame
+			-- Check if we want to flip the tail values
+			if flip_tail_values == 1 then
+				frame = -math.abs(frame)
+			end
+
+			-- Calculate size
+			local sizeCalc = 1 - (((1 - size) / echo_frames) * frame)
+
+			-- Check if size should be clamed and not render negative sizes
+			if sizeCalc < 0 and clamp_size == 1 then
+			else
+	
+				-- Calculate the gain
+				local theGain = 1 - (((1 - gain) / echo_frames) * frame)
+				if gain_gamma > 1 or gain_gamma < 1 then
+					theGain = math.pow(theGain, gain_gamma)
+				end
+
+				-- Set Alpha settings
+				local alpha_gain = 0
+				if use_alpha_gain == 1 then
+					alpha_gain = alpha_gain_slider
+				else
+					alpha_gain = theGain
+				end
+
+				-- If head should be over, render the main frame inbetween the head and tail render switch
+				if currentSampleFrame == req.Time and merge_echo_over == 1 and hide_source == 0 then
+					out:Merge(img, {
+						IMGPR_GPURequested = true,
+						IMGPR_SourceReq    = req,
+						MO_ApplyMode       = apply_modes[apply_mode],
+						MO_ApplyOperator   = "Over",
+						MO_FgAlphaGain     = alpha_gain,
+						})
+				end
+				-- Check if current frame will be needed to be processed or not
+				if currentSampleFrame > start_frame and currentSampleFrame < end_frame then
+					-- Skip rendering the main frame in the head and tail process
+					if currentSampleFrame ~= req.Time then
+						-- Get image from frame
+						local frameImg = InImage:GetSource(currentSampleFrame, req:GetFlags(), { RQA_Request = req })
+	
+						if frameImg then
+
+							
+							if blur_strength > 0 then
+								local result = Image({IMG_Like = frameImg})
+								frameImg:Blur(result, {
+									BLUR_Type = "Gaussian", 
+									BLUR_Red = true,
+									BLUR_Green = true,
+									BLUR_Blue = true,
+									BLUR_Alpha = true,
+									BLUR_XSize = (blur_strength/img.OriginalWidth) * math.abs(frame),
+									BLUR_YSize = (blur_strength/img.OriginalWidth) * math.abs(frame),
+									})
+								frameImg = result
+							end
+
+							-- Calculate pivot
+							local pivotX
+							local pivotY
+							if pivot_from_frame == 0 then
+								if use_same_pivot == 0 then
+									pivotX = 0.5 + (-(pivot.X-0.5) * frame)
+									pivotY = 0.5 + (-(pivot.Y-0.5) * frame)
+								else
+									pivotX = pivot.X
+									pivotY = pivot.Y
+								end
+							else
+								-- Get pivot data from specific frame in time instead of current frame
+								pivot = InPivot:GetSource(currentSampleFrame, REQF_SecondaryTime)
+								pivotX = pivot.X
+								pivotY = pivot.Y
+							end
+		
+							out:Merge(frameImg, {
+								IMGPR_GPURequested = true,
+								IMGPR_SourceReq    = req,
+								MO_ApplyMode       = apply_modes[apply_mode],
+								MO_ApplyOperator   = "Over",
+								MO_FgRedGain       = theGain,
+								MO_FgGreenGain     = theGain,
+								MO_FgBlueGain      = theGain,
+								MO_FgAlphaGain     = alpha_gain,
+								MO_XOffset         = 0.5 + (-(center.X-0.5) * frame),
+								MO_YOffset         = 0.5 + (-(center.Y-0.5) * frame),
+								MO_Angle           = frame * angle,
+								MO_XAxis           = pivotX,
+								MO_YAxis           = pivotY,
+								MO_XSize           = sizeCalc,
+								MO_YSize           = sizeCalc,
+								})
+	
+	
+							collectgarbage()
+						end
+					end
+				end
+			end
+
+			self:SetProgress(-(i-totalFrames))
+		end
+		-- If head should be under, render the main frame last of all to put it in the top 
+		if merge_echo_over == 0 and hide_source == 0 then
+			out:Merge(img, {
+				IMGPR_GPURequested = true,
+				IMGPR_SourceReq    = req,
+				MO_ApplyMode       = apply_modes[apply_mode],
+				MO_ApplyOperator   = "Over",
+			})
+		end
+	end
+
+	OutImage:Set(req, out)
+	collectgarbage()
+
+end -- end Process(req)
+
+function NotifyChanged(inp, param, time)
+	if inp == InUseAlphaGain then		
+		if param.Value > 0.5 then
+			InAlphaGain:SetAttrs({ IC_Visible = true })
+		else
+			InAlphaGain:SetAttrs({ IC_Visible = false })
+		end
+	end
+end -- end NotifyChanged(inp, param, time)
