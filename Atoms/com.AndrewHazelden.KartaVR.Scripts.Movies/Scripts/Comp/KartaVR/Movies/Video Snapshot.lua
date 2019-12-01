@@ -1,6 +1,6 @@
-_VERSION = 'v4.03 2019-10-18'
+_VERSION = 'v4.2 2019-12-01'
 --[[--
-KartaVR Video Snapshot - v4.03 2019-10-18
+KartaVR Video Snapshot - v4.2 2019-12-01
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -8,7 +8,7 @@ Web: www.andrewhazelden.com
 
 Overview
 
-The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.
+The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB/Thunderbolt video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.
 
 The script is compatible with Fusion 9/16 and Resolve 15/16.
 
@@ -154,7 +154,7 @@ If you select an image size or frame rate that is not compatible with your curre
 If you are on macOS and use a "Facetime HD Camera" as the video source you would typically select "1280x720" as the frame size, and "30.000000" frames per second as your capture settings.
 
 
-Tokens
+Tokens (Work in Progress)
 
 This script supports the use of the following pre-defined token values in the "Filename Prefix" field. If any other value is written inside the ${} token format it will be looked up as if it was an environment variable.
 ${COMP} - The current Fusion comp name (Composition1)
@@ -555,7 +555,7 @@ function HelpWindow()
 <h1>About KartaVR Video Snapshot</h1>
 <h1>]=] .. tostring(_VERSION) .. [=[</h1>
 
-<p>The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
+<p>The "KartaVR Video Snapshot" script allows you to capture imagery from an HDMI/SDI/USB/Thunderbolt video capture device using the MacOS (AV Foundation) and Windows (DirectShow) libraries. The script has a UI Manager GUI and uses FFMPEG from the command line to do the capture task.</p>
 
 <p>The script is compatible with Fusion 9/16 and Resolve 15/16.</p>
 
@@ -723,7 +723,7 @@ function HelpWindow()
 <p>If you are on macOS and use a "Facetime HD Camera" as the video source you would typically select "1280x720" as the frame size, and "30.000000" frames per second as your capture settings.</p>
 
 
-<h1>Tokens</h1>
+<h1>Tokens (Work in Progress)</h1>
 
 <p>This script supports the use of the following pre-defined token values in the "Filename Prefix" field. If any other value is written inside the ${} token format it will be looked up as if it was an environment variable.</p>
 
@@ -1134,14 +1134,26 @@ function VideoDeviceList()
 
 	-- Create a new table to hold the list of frame rates
 	videoFrameRateTable = {}
-	videoFrameRateTable[1] = {id = 1, fps = '30.000000'}
-	videoFrameRateTable[2] = {id = 2, fps = '25.000000'}
-	videoFrameRateTable[3] = {id = 3, fps = '20.000000'}
-	videoFrameRateTable[4] = {id = 4, fps = '15.000000'}
-	videoFrameRateTable[4] = {id = 4, fps = '10.000000'}
-	videoFrameRateTable[5] = {id = 5, fps = '7.500000'}
-	videoFrameRateTable[5] = {id = 5, fps = '5.000000'}
-	videoFrameRateTable[6] = {id = 6, fps = '1.000000'}
+	videoFrameRateTable[1] = {id = 1, fps = '120.000000'}
+	videoFrameRateTable[2] = {id = 2, fps = '60.000000'}
+	videoFrameRateTable[3] = {id = 3, fps = '59.940000'}
+	videoFrameRateTable[4] = {id = 4, fps = '30.000000'}
+	videoFrameRateTable[5] = {id = 5, fps = '29.970000'}
+	videoFrameRateTable[6] = {id = 6, fps = '25.000000'}
+	videoFrameRateTable[7] = {id = 7, fps = '24.000000'}
+	videoFrameRateTable[8] = {id = 8, fps = '23.976000'}
+	videoFrameRateTable[9] = {id = 9, fps = '20.000000'}
+	videoFrameRateTable[10] = {id = 10, fps = '18.000000'}
+	videoFrameRateTable[11] = {id = 11, fps = '16.000000'}
+	videoFrameRateTable[12] = {id = 12, fps = '15.000000'}
+	videoFrameRateTable[13] = {id = 13, fps = '14.000000'}
+	videoFrameRateTable[14] = {id = 14, fps = '12.000000'}
+	videoFrameRateTable[15] = {id = 15, fps = '10.000000'}
+	videoFrameRateTable[16] = {id = 16, fps = '7.500000'}
+	videoFrameRateTable[17] = {id = 17, fps = '6.000000'}
+	videoFrameRateTable[18] = {id = 18, fps = '5.000000'}
+	videoFrameRateTable[19] = {id = 19, fps = '4.000000'}
+	videoFrameRateTable[20] = {id = 20, fps = '1.000000'}
 
 	-- Create a new table to hold the list of pixel formats
 	videoPixelFormat = {}
@@ -1807,8 +1819,8 @@ defaultMediaType = getPreferenceData('KartaVR.VideoSnapshot.MediaType', tonumber
 -- Resolution index
 defaultResolution = getPreferenceData('KartaVR.VideoSnapshot.Resolution', tonumber(6), printStatus)
 
--- FPS index
-defaultFrameRate = getPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(0), printStatus)
+-- FPS index = 30 FPS
+defaultFrameRate = getPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(3), printStatus)
 
 
 -- FFmpeg program path
