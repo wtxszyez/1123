@@ -1133,27 +1133,29 @@ function VideoDeviceList()
 	videoResolutionTable[14] = {id = 14, resolution = '160x120'}
 
 	-- Create a new table to hold the list of frame rates
-	videoFrameRateTable = {}
-	videoFrameRateTable[1] = {id = 1, fps = '120.000000'}
-	videoFrameRateTable[2] = {id = 2, fps = '60.000000'}
-	videoFrameRateTable[3] = {id = 3, fps = '59.940000'}
-	videoFrameRateTable[4] = {id = 4, fps = '30.000000'}
-	videoFrameRateTable[5] = {id = 5, fps = '29.970000'}
-	videoFrameRateTable[6] = {id = 6, fps = '25.000000'}
-	videoFrameRateTable[7] = {id = 7, fps = '24.000000'}
-	videoFrameRateTable[8] = {id = 8, fps = '23.976000'}
-	videoFrameRateTable[9] = {id = 9, fps = '20.000000'}
-	videoFrameRateTable[10] = {id = 10, fps = '18.000000'}
-	videoFrameRateTable[11] = {id = 11, fps = '16.000000'}
-	videoFrameRateTable[12] = {id = 12, fps = '15.000000'}
-	videoFrameRateTable[13] = {id = 13, fps = '14.000000'}
-	videoFrameRateTable[14] = {id = 14, fps = '12.000000'}
-	videoFrameRateTable[15] = {id = 15, fps = '10.000000'}
-	videoFrameRateTable[16] = {id = 16, fps = '7.500000'}
-	videoFrameRateTable[17] = {id = 17, fps = '6.000000'}
-	videoFrameRateTable[18] = {id = 18, fps = '5.000000'}
-	videoFrameRateTable[19] = {id = 19, fps = '4.000000'}
-	videoFrameRateTable[20] = {id = 20, fps = '1.000000'}
+	videoFrameRateTable = {
+		{id = 1, fps = '120.000000'},
+		{id = 2, fps = '60.000000'},
+		{id = 3, fps = '59.940000'},
+		{id = 4, fps = '48.000000'},
+		{id = 5, fps = '30.000000'},
+		{id = 6, fps = '29.970000'},
+		{id = 7, fps = '25.000000'},
+		{id = 8, fps = '24.000000'},
+		{id = 9, fps = '23.976000'},
+		{id = 10, fps = '20.000000'},
+		{id = 11, fps = '18.000000'},
+		{id = 12, fps = '16.000000'},
+		{id = 13, fps = '15.000000'},
+		{id = 14, fps = '14.000000'},
+		{id = 15, fps = '12.000000'},
+		{id = 16, fps = '10.000000'},
+		{id = 17, fps = '7.500000'},
+		{id = 18, fps = '6.000000'},
+		{id = 19, fps = '5.000000'},
+		{id = 20, fps = '4.000000'},
+		{id = 21, fps = '1.000000'},
+	}
 
 	-- Create a new table to hold the list of pixel formats
 	videoPixelFormat = {}
@@ -1820,7 +1822,7 @@ defaultMediaType = getPreferenceData('KartaVR.VideoSnapshot.MediaType', tonumber
 defaultResolution = getPreferenceData('KartaVR.VideoSnapshot.Resolution', tonumber(6), printStatus)
 
 -- FPS index = 30 FPS
-defaultFrameRate = getPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(3), printStatus)
+defaultFrameRate = getPreferenceData('KartaVR.VideoSnapshot.FPS', tonumber(4), printStatus)
 
 
 -- FFmpeg program path
