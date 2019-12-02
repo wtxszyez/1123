@@ -12,6 +12,7 @@
 	- [Reactor Categories Explained](Using-Reactor.html#reactor-categories-explained)
 	- [Resync Repository](Using-Reactor.html#resync-repository)
 		- [What is a PrevCommitID Value](Using-Reactor.html#what-is-a-prevcommitid-value)
+	- [Creating the AllData Folder](Using-Reactor.html#creating-the-alldata-folder)
 
 # <a name="using-reactor"></a>Using Reactor #
 
@@ -155,42 +156,78 @@ Here is a quick summary of the typical Reactor categories that are supported in 
 
 - Bin
 - Brushes
+- Collections
 - Comps
+- Comps/3D
+- Comps/CustomShader3D
+- Comps/Flow
+- Comps/Krokodove
+- Comps/Particles
+- Comps/Stereo
 - Comps/Templates
+- Comps/VR
 - Console
 - Docs
 - Fun
+- Fun/Console
+- Fun/menus
+- Fun/Tools
+- Fun/Tools/3D
+- Fun/Tools/Creator
+- Fun/Tools/Mask
+- Hotkeys
+- KartaVR
+- KartaVR/Comps
+- KartaVR/Docs
+- KartaVR/DragDrop
+- KartaVR/Hotkeys
+- KartaVR/Scripts
+- KartaVR/Tools
+- KartaVR/Viewshaders
+- Layouts
 - LUTs
 - Menus
 - Modifiers
-- Modules
+- Modules/Lua
 - Resolve
 - Scripts
-- Scripts/Bin
 - Scripts/Comp
-- Scripts/Job
-- Scripts/Slave
+- Scripts/Flow
+- Scripts/Intool
 - Scripts/Reactor
 - Scripts/Tool
 - Scripts/Utility
-- Scripts/Views
+- Scripts/We Suck Less
+- Shaders
+- Templates
 - Testing
 - Tools
 - Tools/3D
+- Tools/Blur
 - Tools/Color
 - Tools/Composite
 - Tools/Creator
 - Tools/Effect
+- Tools/Film
 - Tools/Filter
 - Tools/Flow
+- Tools/IO
+- Tools/Mask
+- Tools/Matte
+- Tools/Metadata
 - Tools/Miscellaneous
+- Tools/Modifier
 - Tools/Optical Flow
 - Tools/Particles
 - Tools/Plugins
+- Tools/Position
+- Tools/Stereo
 - Tools/Tracking
 - Tools/Transform
+- Tools/VR
 - Tools/Warp
 - Viewshaders
+
 
 ## <a name="resync-repository"></a>Resync Repository ##
 
@@ -216,24 +253,71 @@ The `PrevCommitID` entry is used by Reactor to save a record of the last differe
 
 This is a preview of what a `Reactor:/System/Reactor.cfg` file looks like when a PrevCommitID value is present:
 
-		{
-			Repos = {
-				GitLab = {
-					Projects = {
-						Reactor = "5058837"
-					}
-				}
+	{
+		Repos = {
+			Reactor = {
+				PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
+				Protocol = "GitLab",
+				Token = "",
+				ID = "5058837"
 			},
-			Settings = {
-				Reactor = {
-					PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
-					Token = ""
-				}
+			_Core = {
+				PrevCommitID = "ea2df981da1a98c4aecc1fac03d865fc16edd4a6",
+				Protocol = "GitLab",
+				Token = "",
+				ID = "5058837"
 			}
+		},
+		Settings = {
+			...
 		}
+	}
 
 The PrevCommitID value changes every time a new git commit is pushed to the Reactor online repository.
 
 When you open the Reactor package manager window and a sync is performed the newest .atom files are downloaded to your system and the corresponding PrevCommitID value is updated.
 
-Last Revised 2018-05-21
+
+## <a name="creating-the-alldata-folder"></a>Creating the AllData Folder ##
+
+If you are on macOS and see `AllData:/` PathMap folder permission errors in the Console tab or during the Reactor install process, it likely means you have deleted the `AllData:/` folder at some point and need to manually re-create the directory. Fusion on macOS appears to lack the permissions required to regenerate that folder automatically.
+
+The error messages would look like:
+
+`[Reactor Error] Disk permissions error when saving: /Library/Application Support/Blackmagic Design/Fusion/Reactor/System/Reactor.lua/`
+
+Here are the macOS terminal commands to re-create the `AllData:` Pathmap folder:
+
+		# Re-create the Fusion 9.02 "AllData:" PathMap Folder on macOS:
+
+		# Make the folders
+		sudo mkdir -p "/Library/Application Support/Blackmagic Design/Fusion/"
+
+		# -------------------------------------------------------------------
+
+		# Change the "Blackmagic Design" folder's owner to root
+		sudo chown -R "root" "/Library/Application Support/Blackmagic Design/"
+
+		# Change the "Blackmagic Design" folder's group to wheel
+		sudo chgrp "wheel" "/Library/Application Support/Blackmagic Design/"
+
+		# Change the "Blackmagic Design" folder permissions to 755 / "drwxr-xr-x"
+		sudo chmod 755 "/Library/Application Support/Blackmagic Design/"
+
+		# -------------------------------------------------------------------
+
+		# Change the "Fusion" folder's group to admin
+		sudo chgrp -R "admin" "/Library/Application Support/Blackmagic Design/Fusion/"
+
+		# Change the "Fusion" folder permissions to 777 / "drwxrwxrwx"
+		sudo chmod 777 "/Library/Application Support/Blackmagic Design/Fusion/"
+
+		# -------------------------------------------------------------------
+
+		# List the folder contents and permissions
+		ls -laR "/Library/Application Support/Blackmagic Design"
+
+		# Open the Fusion Folder in a Finder browsing window
+		open "/Library/Application Support/Blackmagic Design/Fusion/"
+
+Last Revised 2019-12-02

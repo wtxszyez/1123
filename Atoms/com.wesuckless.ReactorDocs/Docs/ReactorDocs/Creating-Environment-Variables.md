@@ -1,6 +1,6 @@
 # Table Of Contents #
 
-- [Creating Environment Variables](Creating-Environment-Variables.html)
+- [Creating Environment Variables](Creating-Environment-Variables.md)
 	- [Reactor Environment Variables](Creating-Environment-Variables.html#reactor-environment-variables)
 		- [Viewing the Reactor Log File](Creating-Environment-Variables.html#viewing-the-reactor-log-file)
 	- [Using the Windows System Control Panel](Creating-Environment-Variables.html#using-the-windows-system-control-panel)
@@ -18,6 +18,8 @@ To see more diagnostic logging detail from the Reactor GUI you can add the `REAC
 The `REACTOR_DEBUG` environment variable can be set to true if you want to see more verbose logging output when you run the Reactor GUI:
 
 `REACTOR_DEBUG=true`
+
+The `REACTOR_DEBUG` environment variable also tells Reactor to provide a status message in the Reactor package manager progress dialog that lists each file as it is being installed. This is handy if you are installing a lot of `Bin` category Reactor atoms that can be hundreds of megabytes in size.
 
 #### <a name="viewing-the-reactor-log-file"></a>Viewing the ReactorLog.txt File ####
 
@@ -67,13 +69,12 @@ or
 
 or your own custom Reactor installation location on a local or network path like:
 
-		REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor
-		REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor
-		REACTOR_INSTALL_PATHMAP=/opt/Reactor
+`REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor`  
+`REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor`  
+`REACTOR_INSTALL_PATHMAP=/opt/Reactor`  
 
-On Windows you would open the **System Control Panel > Advanced System Settings > Environment Variables...** window and add a new `REACTOR_INSTALL_PATHMAP` entry like this:
+![Windows Environment Variables](Images/windows-adding-an-environment-variable.png)
 
-![Windows Environment Variable](Images/windows-adding-an-environment-variable.png)
 
 ### <a name="reactor-local-system"></a>Reactor Local System ###
 
@@ -142,11 +143,7 @@ You will then see a directory listing that looks something like this:
 			-rw-r--r--@  1 root  wheel   475 Oct 25 07:27 setenv.reactor.REACTOR_DEBUG_FILES.plist
 			-rw-r--r--@  1 root  wheel   473 Dec  7 22:23 setenv.reactor.REACTOR_INSTALL_PATHMAP.plist
 
-If you don't want to install the .plist files in the system wide LaunchAgents folder you have the option to use a user account specific entry of:
-
-			$HOME/Library/LaunchAgents/
-
 On MacOS you can type `env` into the Terminal window to see all of the active environment variables on the system.
 
 
-Last Revised 2018-07-16
+Last Revised 2019-12-02

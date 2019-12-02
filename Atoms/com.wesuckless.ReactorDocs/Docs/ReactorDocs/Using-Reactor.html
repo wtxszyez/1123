@@ -150,11 +150,11 @@ ul, ol {
   color: #C4C4C4;
 }
 
-ul li > :first-child,
-ol li > :first-child,
-ul li ul:first-of-type,
-ol li ol:first-of-type,
-ul li ol:first-of-type,
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
 ol li ul:first-of-type {
   margin-top: 0px;
 }
@@ -298,8 +298,8 @@ table th {
 }
 
 table th, table td {
-  /* border: 1px solid #ccc; */
-  /* padding: 6px 13px; */
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
 }
 
 table tr {
@@ -342,6 +342,7 @@ img {
 <li><a href="Using-Reactor.html#what-is-a-prevcommitid-value">What is a PrevCommitID Value</a></li>
 </ul>
 </li>
+<li><a href="Using-Reactor.html#creating-the-alldata-folder">Creating the AllData Folder</a></li>
 </ul>
 </li>
 </ul>
@@ -418,40 +419,75 @@ img {
 <ul>
 <li>Bin</li>
 <li>Brushes</li>
+<li>Collections</li>
 <li>Comps</li>
+<li>Comps/3D</li>
+<li>Comps/CustomShader3D</li>
+<li>Comps/Flow</li>
+<li>Comps/Krokodove</li>
+<li>Comps/Particles</li>
+<li>Comps/Stereo</li>
 <li>Comps/Templates</li>
+<li>Comps/VR</li>
 <li>Console</li>
 <li>Docs</li>
 <li>Fun</li>
+<li>Fun/Console</li>
+<li>Fun/menus</li>
+<li>Fun/Tools</li>
+<li>Fun/Tools/3D</li>
+<li>Fun/Tools/Creator</li>
+<li>Fun/Tools/Mask</li>
+<li>Hotkeys</li>
+<li>KartaVR</li>
+<li>KartaVR/Comps</li>
+<li>KartaVR/Docs</li>
+<li>KartaVR/DragDrop</li>
+<li>KartaVR/Hotkeys</li>
+<li>KartaVR/Scripts</li>
+<li>KartaVR/Tools</li>
+<li>KartaVR/Viewshaders</li>
+<li>Layouts</li>
 <li>LUTs</li>
 <li>Menus</li>
 <li>Modifiers</li>
-<li>Modules</li>
+<li>Modules/Lua</li>
 <li>Resolve</li>
 <li>Scripts</li>
-<li>Scripts/Bin</li>
 <li>Scripts/Comp</li>
-<li>Scripts/Job</li>
-<li>Scripts/Slave</li>
+<li>Scripts/Flow</li>
+<li>Scripts/Intool</li>
 <li>Scripts/Reactor</li>
 <li>Scripts/Tool</li>
 <li>Scripts/Utility</li>
-<li>Scripts/Views</li>
+<li>Scripts/We Suck Less</li>
+<li>Shaders</li>
+<li>Templates</li>
 <li>Testing</li>
 <li>Tools</li>
 <li>Tools/3D</li>
+<li>Tools/Blur</li>
 <li>Tools/Color</li>
 <li>Tools/Composite</li>
 <li>Tools/Creator</li>
 <li>Tools/Effect</li>
+<li>Tools/Film</li>
 <li>Tools/Filter</li>
 <li>Tools/Flow</li>
+<li>Tools/IO</li>
+<li>Tools/Mask</li>
+<li>Tools/Matte</li>
+<li>Tools/Metadata</li>
 <li>Tools/Miscellaneous</li>
+<li>Tools/Modifier</li>
 <li>Tools/Optical Flow</li>
 <li>Tools/Particles</li>
 <li>Tools/Plugins</li>
+<li>Tools/Position</li>
+<li>Tools/Stereo</li>
 <li>Tools/Tracking</li>
 <li>Tools/Transform</li>
+<li>Tools/VR</li>
 <li>Tools/Warp</li>
 <li>Viewshaders</li>
 </ul>
@@ -466,24 +502,65 @@ img {
 <h3><a name="what-is-a-prevcommitid-value"></a>What is a PrevCommitID Value</h3>
 <p>The <code>PrevCommitID</code> entry is used by Reactor to save a record of the last differential sync point. This allows Reactor to download only the newest atom package files that were added to the GitLab repository since the last time you ran the Reactor package manager in Fusion/Resolve.</p>
 <p>This is a preview of what a <code>Reactor:/System/Reactor.cfg</code> file looks like when a PrevCommitID value is present:</p>
-<pre><code>	{
-		Repos = {
-			GitLab = {
-				Projects = {
-					Reactor = &quot;5058837&quot;
-				}
-			}
+<pre><code>{
+	Repos = {
+		Reactor = {
+			PrevCommitID = &quot;ea2df981da1a98c4aecc1fac03d865fc16edd4a6&quot;,
+			Protocol = &quot;GitLab&quot;,
+			Token = &quot;&quot;,
+			ID = &quot;5058837&quot;
 		},
-		Settings = {
-			Reactor = {
-				PrevCommitID = &quot;ea2df981da1a98c4aecc1fac03d865fc16edd4a6&quot;,
-				Token = &quot;&quot;
-			}
+		_Core = {
+			PrevCommitID = &quot;ea2df981da1a98c4aecc1fac03d865fc16edd4a6&quot;,
+			Protocol = &quot;GitLab&quot;,
+			Token = &quot;&quot;,
+			ID = &quot;5058837&quot;
 		}
+	},
+	Settings = {
+		...
 	}
+}
 </code></pre>
 <p>The PrevCommitID value changes every time a new git commit is pushed to the Reactor online repository.</p>
 <p>When you open the Reactor package manager window and a sync is performed the newest .atom files are downloaded to your system and the corresponding PrevCommitID value is updated.</p>
-<p>Last Revised 2018-05-21</p>
+<h2><a name="creating-the-alldata-folder"></a>Creating the AllData Folder</h2>
+<p>If you are on macOS and see <code>AllData:/</code> PathMap folder permission errors in the Console tab or during the Reactor install process, it likely means you have deleted the <code>AllData:/</code> folder at some point and need to manually re-create the directory. Fusion on macOS appears to lack the permissions required to regenerate that folder automatically.</p>
+<p>The error messages would look like:</p>
+<p><code>[Reactor Error] Disk permissions error when saving: /Library/Application Support/Blackmagic Design/Fusion/Reactor/System/Reactor.lua/</code></p>
+<p>Here are the macOS terminal commands to re-create the <code>AllData:</code> Pathmap folder:</p>
+<pre><code>	# Re-create the Fusion 9.02 &quot;AllData:&quot; PathMap Folder on macOS:
+
+	# Make the folders
+	sudo mkdir -p &quot;/Library/Application Support/Blackmagic Design/Fusion/&quot;
+
+	# -------------------------------------------------------------------
+
+	# Change the &quot;Blackmagic Design&quot; folder's owner to root
+	sudo chown -R &quot;root&quot; &quot;/Library/Application Support/Blackmagic Design/&quot;
+
+	# Change the &quot;Blackmagic Design&quot; folder's group to wheel
+	sudo chgrp &quot;wheel&quot; &quot;/Library/Application Support/Blackmagic Design/&quot;
+
+	# Change the &quot;Blackmagic Design&quot; folder permissions to 755 / &quot;drwxr-xr-x&quot;
+	sudo chmod 755 &quot;/Library/Application Support/Blackmagic Design/&quot;
+
+	# -------------------------------------------------------------------
+
+	# Change the &quot;Fusion&quot; folder's group to admin
+	sudo chgrp -R &quot;admin&quot; &quot;/Library/Application Support/Blackmagic Design/Fusion/&quot;
+
+	# Change the &quot;Fusion&quot; folder permissions to 777 / &quot;drwxrwxrwx&quot;
+	sudo chmod 777 &quot;/Library/Application Support/Blackmagic Design/Fusion/&quot;
+
+	# -------------------------------------------------------------------
+
+	# List the folder contents and permissions
+	ls -laR &quot;/Library/Application Support/Blackmagic Design&quot;
+
+	# Open the Fusion Folder in a Finder browsing window
+	open &quot;/Library/Application Support/Blackmagic Design/Fusion/&quot;
+</code></pre>
+<p>Last Revised 2019-12-02</p>
 </body>
 </html>

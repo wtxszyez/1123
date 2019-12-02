@@ -7,6 +7,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 
 ![Reactor GUI](Images/reactor-gui.png)
 
+
 ## Table Of Contents ##
 
 - [Overview](#overview)
@@ -28,6 +29,7 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 	- [Reactor Categories Explained](UsingReactor.html#reactor-categories-explained)
 	- [Resync Repository](Using-Reactor.html#resync-repository)
 		- [What is a PrevCommitID Value](Using-Reactor.html#what-is-a-prevcommitid-value)
+	- [Creating the AllData Folder](Using-Reactor.html#creating-the-alldata-folder)
 - [Creating Atom Packages](Creating-Atom-Packages.html#creating-atom-packages)
 	- [Adding a Description to an Atom Package](Creating-Atom-Packages.html#adding-a-description-to-an-atom-package)
 	- [HTML Encoded Entity Characters](Creating-Atom-Packages.html#html-encoded-entity-characters)
@@ -41,17 +43,18 @@ Reactor is a package manager created by the [We Suck Less Community](https://www
 		- [Bitcoin Links](Creating-Atom-Packages.html#bitcoin-links)
 	- [Adding a Deploy Platform Requirement](Creating-Atom-Packages.html#adding-a-deploy-platform-requirement)
 		- [Platform Specific Deploy Entries](Creating-Atom-Packages.html#platform-specific-deploy-entries)
+		- [Host App Specific Deploy Entries](Creating-Atom-Packages.html#host-app-specific-deploy-entries)
 	- [Adding a Package Dependency](Creating-Atom-Packages.html#adding-a-package-dependency)
 	- [Adding Documentation](Creating-Atom-Packages.html#adding-documentation)
+	- [Adding Fusion Minimum/Maximum Compatibility](Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility)
 	- [InstallScripts and UninstallScript](Creating-Atom-Packages.html#installscripts-and-uninstallscripts)
 		- [UI Manager GUIs](Creating-Atom-Packages.html#ui-manager-guis)
 		- [Create Shortcut Function](Creating-Atom-Packages.html#create-shortcut)
-- [Creating Environment Variables](Creating-Environment-Variables.html)
+- [Creating Environment Variables](Creating-Environment-Variables.md)
 	- [Reactor Environment Variables](Creating-Environment-Variables.html#reactor-environment-variables)
 		- [Viewing the Reactor Log File](Creating-Environment-Variables.html#viewing-the-reactor-log-file)
 	- [Using the Windows System Control Panel](Creating-Environment-Variables.html#using-the-windows-system-control-panel)
 	- [Using a Linux BASH Profile](Creating-Environment-Variables.html#using-a-linux-bash-profile)
 	- [Using MacOS Launch Agent PLIST Files](Creating-Environment-Variables.html#using-macos-launch-agent-plist-files)
 
-Last Revised 2018-05-21
-
+Last Revised 2019-12-02

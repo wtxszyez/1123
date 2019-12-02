@@ -253,10 +253,17 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Console
 - Docs
 - Fun
+- Fun/Console
+- Fun/menus
+- Fun/Tools
+- Fun/Tools/3D
+- Fun/Tools/Creator
+- Fun/Tools/Mask
 - Hotkeys
 - KartaVR
 - KartaVR/Comps
 - KartaVR/Docs
+- KartaVR/DragDrop
 - KartaVR/Hotkeys
 - KartaVR/Scripts
 - KartaVR/Tools
@@ -275,8 +282,8 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Scripts/Tool
 - Scripts/Utility
 - Scripts/We Suck Less
+- Shaders
 - Templates
-- Testing
 - Testing
 - Tools
 - Tools/3D
@@ -304,6 +311,7 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 - Tools/VR
 - Tools/Warp
 - Viewshaders
+
 
 ## <a name="adding-a-required-donation-to-an-atom-package"></a>Adding a Required Donation to an Atom Package ##
 
@@ -549,12 +557,12 @@ Then if you want to link to your local documentation file from your Script/Macro
 
 ## <a name="adding-fusion-minimum-maximum-compatibility"></a>Adding Fusion Minimum/Maximum Compatibility ##
 
-Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new `Minimum` and `Maximum` Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve 15's Fusion page while still allowing for atom installation compatibility with Fusion 9.
+Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new `Minimum` and `Maximum` Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve's Fusion page while still allowing for atom installation compatibility with Fusion 9.
 
 If an atom package is being used to install a macro that might work perfectly well in all versions of Fusion, you can omit adding the `Minimum` and `Maximum` attributes.
 
 
-### Atoms Limited to Fusion 9 or Resolve 15 ###
+### Atoms Limited to Fusion 9 or Resolve ###
 
 These two Reactor screenshots show what you see when an atom package is prevented from running in either Fusion or Resolve.
 
@@ -742,4 +750,4 @@ This example creates a desktop folder based shortcut to the Reactor Docs folder:
 			CreateShortcut("Reactor:/Deploy/Docs/ReactorDocs", "Desktop:", "ReactorDocs", "folder")]],
 		}
 
-Last Revised 2019-10-07
+Last Revised 2019-12-02

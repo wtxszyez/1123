@@ -150,11 +150,11 @@ ul, ol {
   color: #C4C4C4;
 }
 
-ul li > :first-child,
-ol li > :first-child,
-ul li ul:first-of-type,
-ol li ol:first-of-type,
-ul li ol:first-of-type,
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
 ol li ul:first-of-type {
   margin-top: 0px;
 }
@@ -298,8 +298,8 @@ table th {
 }
 
 table th, table td {
-  /* border: 1px solid #ccc; */
-  /* padding: 6px 13px; */
+  /* border: 1px solid #ccc; */ 
+  /* padding: 6px 13px; */ 
 }
 
 table tr {
@@ -341,11 +341,12 @@ img {
 <li><a href="Creating-Atom-Packages.html#adding-a-deploy-platform-requirement">Adding a Deploy Platform Requirement</a>
 <ul>
 <li><a href="Creating-Atom-Packages.html#platform-specific-deploy-entries">Platform Specific Deploy Entries</a></li>
+<li><a href="Creating-Atom-Packages.html#host-app-specific-deploy-entries">Host App Specific Deploy Entries</a></li>
 </ul>
 </li>
 <li><a href="Creating-Atom-Packages.html#adding-a-package-dependency">Adding a Package Dependency</a></li>
-<li><a href="Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility">Adding Fusion Minimum/Maximum Compatibility</a></li>
 <li><a href="Creating-Atom-Packages.html#adding-documentation">Adding Documentation</a></li>
+<li><a href="Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility">Adding Fusion Minimum/Maximum Compatibility</a></li>
 <li><a href="Creating-Atom-Packages.html#installscripts-and-uninstallscripts">InstallScripts and UninstallScript</a>
 <ul>
 <li><a href="Creating-Atom-Packages.html#ui-manager-guis">UI Manager GUIs</a></li>
@@ -422,9 +423,9 @@ img {
 <p>The rich text formatting capability is possible since the description GUI element is created using a Fusion 9 ui:TextEdit field (which is internally done as a QTextEdit item). This means you can read the QT documentation on rich text HTML tags to see what <a href="http://doc.qt.io/qt-4.8/richtext-html-subset.html">HTML formatting tags</a> can be used.</p>
 <h3><a name="html-encoded-entity-characters"></a>HTML Encoded Entity Characters</h3>
 <p>If you want to insert a <code>&lt;</code> character in the description you should use the HTML encoded &quot;entity&quot; version <code>&amp;lt;</code>. If you want to insert a <code>&gt;</code> character in the description you should use the HTML encoded &quot;entity&quot; version <code>&amp;gt;</code>.</p>
-<p>The copyright symbol would be added using the HTML encoded &quot;entity&quot; version <code>&amp;copy;</code>.
-If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:</p>
-<p><code>[</code> has an HTML encoded format of <code>&amp;#91;</code><br />
+<p>The copyright symbol would be added using the HTML encoded &quot;entity&quot; version <code>&amp;copy;</code>.</p>
+<p>If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:</p>
+<p><code>[</code> has an HTML encoded format of <code>&amp;#91;</code>
 <code>]</code> has an HTML encoded format of <code>&amp;#93;</code></p>
 <p>If you wanted to write in &quot;<code>Well [[hello]] there!</code>&quot; in the text part of the atom description text field that could be entered as:</p>
 <pre><code>			Well &amp;#91;&amp;#91;hello&amp;#93;&amp;#93; There!
@@ -432,25 +433,42 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 <p>You can read a summary of <a href="https://www.w3schools.com/html/html_entities.asp">HTML 4 style encoded entities</a> here.</p>
 <p>When adding html tags to the description text, you are unable to add any <code>&lt;img&gt;</code> image tags that use an external (http) based internet URL. Also any <code>&lt;a href=&quot;&quot;&gt;&lt;/a&gt;</code> links added in the description field will not be clickable.</p>
 <h3><a name="adding-emoticon-images-to-the-description"></a>Adding Emoticon Images to the Description</h3>
-<p>The atom description field supports the insertion of HTML based smilie/emoticon images. You have 18 different images to choose from:</p>
+<p>The atom description field supports the insertion of HTML based smilie/emoticon images. You have 19 different images to choose from:</p>
 <p><img src="Images/atom-description-emoticons.png" alt="Emoticons" /></p>
 <p>The way you add an emoticon to the HTML code in your description field is by using the following HTML &quot;img&quot; tag syntax:</p>
-<pre><code>		&lt;img src=&quot;Emoticons:/banana.png&quot;&gt;
+<pre><code>		&lt;img src=&quot;Emoticons:/arrow.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/banana.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/banghead.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/biggrin.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/bowdown.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/buttrock.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/cheer.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/cheers.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/confused.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/cool.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/cry.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/eek.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/evil.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/exclaim.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/facepalm.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/geek.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/idea.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/lol.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/mad.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/mrgreen.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/neutral.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/nocheer.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/popcorn.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/question.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/razz.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/redface.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/rolleyes.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/sad.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/smile.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/surprised.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/twisted.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/ugeek.png&quot;&gt;
+		&lt;img src=&quot;Emoticons:/wand.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/whistle.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/wink.png&quot;&gt;
 		&lt;img src=&quot;Emoticons:/wip.png&quot;&gt;
@@ -493,40 +511,75 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 <ul>
 <li>Bin</li>
 <li>Brushes</li>
+<li>Collections</li>
 <li>Comps</li>
+<li>Comps/3D</li>
+<li>Comps/CustomShader3D</li>
+<li>Comps/Flow</li>
+<li>Comps/Krokodove</li>
+<li>Comps/Particles</li>
+<li>Comps/Stereo</li>
 <li>Comps/Templates</li>
+<li>Comps/VR</li>
 <li>Console</li>
 <li>Docs</li>
 <li>Fun</li>
+<li>Fun/Console</li>
+<li>Fun/menus</li>
+<li>Fun/Tools</li>
+<li>Fun/Tools/3D</li>
+<li>Fun/Tools/Creator</li>
+<li>Fun/Tools/Mask</li>
+<li>Hotkeys</li>
+<li>KartaVR</li>
+<li>KartaVR/Comps</li>
+<li>KartaVR/Docs</li>
+<li>KartaVR/DragDrop</li>
+<li>KartaVR/Hotkeys</li>
+<li>KartaVR/Scripts</li>
+<li>KartaVR/Tools</li>
+<li>KartaVR/Viewshaders</li>
+<li>Layouts</li>
 <li>LUTs</li>
 <li>Menus</li>
 <li>Modifiers</li>
-<li>Modules</li>
+<li>Modules/Lua</li>
 <li>Resolve</li>
 <li>Scripts</li>
-<li>Scripts/Bin</li>
 <li>Scripts/Comp</li>
-<li>Scripts/Job</li>
-<li>Scripts/Slave</li>
+<li>Scripts/Flow</li>
+<li>Scripts/Intool</li>
 <li>Scripts/Reactor</li>
 <li>Scripts/Tool</li>
 <li>Scripts/Utility</li>
-<li>Scripts/Views</li>
+<li>Scripts/We Suck Less</li>
+<li>Shaders</li>
+<li>Templates</li>
 <li>Testing</li>
 <li>Tools</li>
 <li>Tools/3D</li>
+<li>Tools/Blur</li>
 <li>Tools/Color</li>
 <li>Tools/Composite</li>
 <li>Tools/Creator</li>
 <li>Tools/Effect</li>
+<li>Tools/Film</li>
 <li>Tools/Filter</li>
 <li>Tools/Flow</li>
+<li>Tools/IO</li>
+<li>Tools/Mask</li>
+<li>Tools/Matte</li>
+<li>Tools/Metadata</li>
 <li>Tools/Miscellaneous</li>
+<li>Tools/Modifier</li>
 <li>Tools/Optical Flow</li>
 <li>Tools/Particles</li>
 <li>Tools/Plugins</li>
+<li>Tools/Position</li>
+<li>Tools/Stereo</li>
 <li>Tools/Tracking</li>
 <li>Tools/Transform</li>
+<li>Tools/VR</li>
 <li>Tools/Warp</li>
 <li>Viewshaders</li>
 </ul>
@@ -636,6 +689,50 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 </code></pre>
 <p>A platform specific deploy file needs to be stored inside of a folder with the intermediate folder name of &quot;Windows&quot;, &quot;Mac&quot;, and &quot;Linux&quot;. This is due to the way most Fusion plugins have the same filename on Windows/Mac/Linux.</p>
 <p>A custom compiled Fusion plugin you create would be called <code>Your-Custom.plugin</code> on all three supported Fusion OS platforms.</p>
+<h3><a name="host-app-specific-deploy-entries"></a>Host App Specific Deploy Entries</h3>
+<p>Reactor v3 added support for host application specific deploy file entries. This allows you to customize the individual files you want to have installed from an atom package inside of Fusion Standalone vs Resolve.</p>
+<p>This could be used in an atom package for customized deployments such as excluding MediaIn/MediaOut node based macros from installing in Fusion Standalone, or to exclude from Resolve installing Lua/Python scripts that would use Fusion Standalone specific features like the Fusion Render Manager.</p>
+<p>For even more control with host application specific deploy entries, you are able to nest the os platform specific deploy entries inside each of the host app specific entries. This means you can have Fusion Standalone vs Resolve specific files deployed individually on Windows/Mac/Linux.</p>
+<p>Host application specific deploy entries are listed in an Atom file like this:</p>
+<pre><code>		Deploy = {
+			Resolve = {
+				&quot;Macros/IO/FBXExporterUltra.setting&quot;,
+				&quot;Macros/IO/MediaOutUltra.setting&quot;,
+			},
+			Fusion = {
+				&quot;Macros/IO/FBXExporterUltra.setting&quot;,
+			},
+		},
+</code></pre>
+<p>Those host application specific entries end up being be stored in the Atom folder hierarchy on disk like this:</p>
+<pre><code>		com.YourCompanyName.YourPackageName/Resolve/Macros/IO/FBXExporterUltra.setting
+		com.YourCompanyName.YourPackageName/Resolve/Macros/IO/MediaOutUltra.setting
+		com.YourCompanyName.YourPackageName/Fusion/Macros/IO/FBXExporterUltra.setting
+</code></pre>
+<p>It's important to notice from the above example that the atom package's root folder needs to have the Fusion vs Resolve host app based deploy files placed inside of sub-folders named &quot;Resolve&quot; and &quot;Fusion&quot;.</p>
+<p>As a slightly more complex example of this process, if you had a custom deployed file like a Resolve &quot;Edit&quot; page centric video editing title template, that was targeted at Resolve on Windows users only due to a compiled plugin usage in the macro file, you woud have to place it inside a root atom folder hierarchy that starts with <code>Resolve/Windows/</code> like this:</p>
+<p>A Resolve on Windows only Deploy files list would look like this:</p>
+<pre><code>		Deploy = {
+			Resolve = {
+				Windows = {
+					&quot;Templates/Edit/Titles/UltraLowerThird.setting,
+					&quot;Templates/Edit/Titles/UltraLowerThird.bmp,
+					&quot;Templates/Fusion/Titles/UltraLowerThird.setting,
+					&quot;Templates/Fusion/Titles/UltraLowerThird.bmp,
+					&quot;Macros/Titles/UltraLowerThird.setting&quot;,
+					&quot;Macros/Titles/UltraLowerThird.bmp&quot;,
+				},
+			},
+		},
+</code></pre>
+<p>And the Atom folder hierarchy on disk would looking something like this:</p>
+<pre><code>		com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Edit/Titles/UltraLowerThird.setting
+		com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Edit/Titles/UltraLowerThird.bmp
+		com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Fusion/Titles/UltraLowerThird.setting
+		com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Fusion/Titles/UltraLowerThird.bmp
+		com.YourCompanyName.YourPackageName/Resolve/Windows/Macros/Titles/UltraLowerThird.setting
+		com.YourCompanyName.YourPackageName/Resolve/Windows/Macros/Titles/UltraLowerThird.bmp
+</code></pre>
 <h2><a name="adding-a-package-dependency"></a>Adding a Package Dependency</h2>
 <p>You can mark your atom package as having a dependency on another Atom package.</p>
 <p>If you add a Dependencies tag, when your Atom package is selected for installation, Reactor will automatically install each of those dependencies at the same time as your atom.</p>
@@ -645,7 +742,7 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 			},
 		}
 </code></pre>
-<p>At this current time, Reactor will not remove the dependent Atom packages that are installed automatically when remove the original base package you selected.</p>
+<p>Note: If you are working with Dependencies tags in your atoms it's helpful to know that removing the original atom package will not effect the installation status of any dependent Atom packages that were installed automatically. So if your atom package installs any of the &quot;Bin&quot; Category items as a dependency, the end user would need to decide to remove those dependency items manually.</p>
 <h2><a name="adding-documentation"></a>Adding Documentation</h2>
 <p>If you want to add a single page HTML or Markdown formatted documentation file to your atom package you can do that by adding an entry in your Deploy section. This will install your documentation file to the <code>Reactor:/Deploy/Docs/</code> folder.</p>
 <p>HTML:</p>
@@ -662,9 +759,9 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 <pre><code>			Reactor:/Deploy/Docs/com.YourCompanyName.YourPackageName.html
 </code></pre>
 <h2><a name="adding-fusion-minimum-maximum-compatibility"></a>Adding Fusion Minimum/Maximum Compatibility</h2>
-<p>Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new <code>Minimum</code> and <code>Maximum</code> Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve 15's Fusion page while still allowing for atom installation compatibility with Fusion 9.</p>
+<p>Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new <code>Minimum</code> and <code>Maximum</code> Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve's Fusion page while still allowing for atom installation compatibility with Fusion 9.</p>
 <p>If an atom package is being used to install a macro that might work perfectly well in all versions of Fusion, you can omit adding the <code>Minimum</code> and <code>Maximum</code> attributes.</p>
-<h3>Atoms Limited to Fusion 9 or Resolve 15</h3>
+<h3>Atoms Limited to Fusion 9 or Resolve</h3>
 <p>These two Reactor screenshots show what you see when an atom package is prevented from running in either Fusion or Resolve.</p>
 <p><img src="Images/reactor-limits-installation-to-supported-fusion-version.png" alt="Reactor Supported Fusion Version" /></p>
 <p><img src="Images/reactor-limits-installation-to-supported-resolve-version.png" alt="Reactor Supported Resove Version" /></p>
@@ -680,6 +777,7 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 <li>9.01</li>
 <li>9.02</li>
 <li>15</li>
+<li>16</li>
 </ul>
 <p><strong>Note:</strong> The version number &quot;15&quot; is what Resolve 15's Fusion's page is detected as in a Lua script. When checking for a Fusion version number this value is reported to Reactor with the following Lua command:</p>
 <pre><code>		local fuVersion = tonumber(bmd._VERSION)
@@ -794,9 +892,9 @@ If you need to write multiple square brackets in an atom file's HTML based descr
 <p>This example creates a desktop folder based shortcut to the Reactor Docs folder:</p>
 <pre><code>	InstallScript = {
 		[[-- Create a shortcut link on your desktop to the Reactor documentation folder
-		CreateShortcut(&quot;Reactor:/Deploy/ReactorDocs&quot;, &quot;Desktop:&quot;, &quot;ReactorDocs&quot;, &quot;folder&quot;)]],
+		CreateShortcut(&quot;Reactor:/Deploy/Docs/ReactorDocs&quot;, &quot;Desktop:&quot;, &quot;ReactorDocs&quot;, &quot;folder&quot;)]],
 	}
 </code></pre>
-<p>Last Revised 2018-05-21</p>
+<p>Last Revised 2019-12-02</p>
 </body>
 </html>

@@ -323,7 +323,7 @@ img {
 </head>
 <body><h1>Table Of Contents</h1>
 <ul>
-<li><a href="Creating-Environment-Variables.html">Creating Environment Variables</a>
+<li><a href="Creating-Environment-Variables.md">Creating Environment Variables</a>
 <ul>
 <li><a href="Creating-Environment-Variables.html#reactor-environment-variables">Reactor Environment Variables</a>
 <ul>
@@ -342,6 +342,7 @@ img {
 <h3><a name="reactor-debug"></a>Reactor Debug</h3>
 <p>The <code>REACTOR_DEBUG</code> environment variable can be set to true if you want to see more verbose logging output when you run the Reactor GUI:</p>
 <p><code>REACTOR_DEBUG=true</code></p>
+<p>The <code>REACTOR_DEBUG</code> environment variable also tells Reactor to provide a status message in the Reactor package manager progress dialog that lists each file as it is being installed. This is handy if you are installing a lot of <code>Bin</code> category Reactor atoms that can be hundreds of megabytes in size.</p>
 <h4><a name="viewing-the-reactor-log-file"></a>Viewing the ReactorLog.txt File</h4>
 <p>When the <code>REACTOR_DEBUG</code> environment variable is active it will tell Reactor that you want to have a log file written to <code>Temp:/Reactor/ReactorLog.txt</code>. You can quickly open this document by selecting the <strong>Reactor &gt; Tools &gt; Open ReactorLog</strong> menu item:</p>
 <p><img src="Images/reactor-menu-open-reactor-log.png" alt="Open Reactor Log Menu Item" /></p>
@@ -366,12 +367,10 @@ img {
 <p>or</p>
 <p><code>REACTOR_INSTALL_PATHMAP=Profile:</code></p>
 <p>or your own custom Reactor installation location on a local or network path like:</p>
-<pre><code>	REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor
-	REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor
-	REACTOR_INSTALL_PATHMAP=/opt/Reactor
-</code></pre>
-<p>On Windows you would open the <strong>System Control Panel &gt; Advanced System Settings &gt; Environment Variables...</strong> window and add a new <code>REACTOR_INSTALL_PATHMAP</code> entry like this:</p>
-<p><img src="Images/windows-adding-an-environment-variable.png" alt="Windows Environment Variable" /></p>
+<p><code>REACTOR_INSTALL_PATHMAP=E:\Pipeline\Reactor</code><br />
+<code>REACTOR_INSTALL_PATHMAP=/Volumes/Pipeline/Reactor</code><br />
+<code>REACTOR_INSTALL_PATHMAP=/opt/Reactor</code></p>
+<p><img src="Images/windows-adding-an-environment-variable.png" alt="Windows Environment Variables" /></p>
 <h3><a name="reactor-local-system"></a>Reactor Local System</h3>
 <p>The <code>REACTOR_LOCAL_SYSTEM</code> environment variable allows you to do local development of the files in the <code>Reactor:/System/</code> folder without needing to git sync each of those revisions with the Reactor GitLab repository.</p>
 <p>Whatever folderpath you define in the <code>REACTOR_LOCAL_SYSTEM</code> environment variable will be used as a local source of the <code>Reactor:/System/</code> folder contents. When you run the <strong>Reactor &gt; Open Reactor...</strong> menu item the <code>REACTOR_LOCAL_SYSTEM</code> defined files will be copied automatically to the <code>Reactor:/System/</code> folder.</p>
@@ -418,10 +417,7 @@ img {
 		-rw-r--r--@  1 root  wheel   475 Oct 25 07:27 setenv.reactor.REACTOR_DEBUG_FILES.plist
 		-rw-r--r--@  1 root  wheel   473 Dec  7 22:23 setenv.reactor.REACTOR_INSTALL_PATHMAP.plist
 </code></pre>
-<p>If you don't want to install the .plist files in the system wide LaunchAgents folder you have the option to use a user account specific entry of:</p>
-<pre><code>		$HOME/Library/LaunchAgents/
-</code></pre>
 <p>On MacOS you can type <code>env</code> into the Terminal window to see all of the active environment variables on the system.</p>
-<p>Last Revised 2018-07-16</p>
+<p>Last Revised 2019-12-02</p>
 </body>
 </html>

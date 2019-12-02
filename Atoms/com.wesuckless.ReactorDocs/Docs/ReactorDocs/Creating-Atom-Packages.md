@@ -13,9 +13,10 @@
 		- [Bitcoin Links](Creating-Atom-Packages.html#bitcoin-links)
 	- [Adding a Deploy Platform Requirement](Creating-Atom-Packages.html#adding-a-deploy-platform-requirement)
 		- [Platform Specific Deploy Entries](Creating-Atom-Packages.html#platform-specific-deploy-entries)
+		- [Host App Specific Deploy Entries](Creating-Atom-Packages.html#host-app-specific-deploy-entries)
 	- [Adding a Package Dependency](Creating-Atom-Packages.html#adding-a-package-dependency)
-	- [Adding Fusion Minimum/Maximum Compatibility](Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility)
 	- [Adding Documentation](Creating-Atom-Packages.html#adding-documentation)
+	- [Adding Fusion Minimum/Maximum Compatibility](Creating-Atom-Packages.html#adding-fusion-minimum-maximum-compatibility)
 	- [InstallScripts and UninstallScript](Creating-Atom-Packages.html#installscripts-and-uninstallscripts)
 		- [UI Manager GUIs](Creating-Atom-Packages.html#ui-manager-guis)
 		- [Create Shortcut Function](Creating-Atom-Packages.html#create-shortcut)
@@ -107,6 +108,7 @@ The rich text formatting capability is possible since the description GUI elemen
 If you want to insert a `<` character in the description you should use the HTML encoded "entity" version `&lt;`. If you want to insert a `>` character in the description you should use the HTML encoded "entity" version `&gt;`.
 
 The copyright symbol would be added using the HTML encoded "entity" version `&copy;`.
+
 If you need to write multiple square brackets in an atom file's HTML based description tag, the easiest and most reliable approach is to use the HTML encoded symbol for the characters:
 
 `[` has an HTML encoded format of `&#91;`
@@ -122,28 +124,45 @@ When adding html tags to the description text, you are unable to add any `<img>`
 
 ### <a name="adding-emoticon-images-to-the-description"></a>Adding Emoticon Images to the Description ###
 
-The atom description field supports the insertion of HTML based smilie/emoticon images. You have 18 different images to choose from:
+The atom description field supports the insertion of HTML based smilie/emoticon images. You have 19 different images to choose from:
 
 ![Emoticons](Images/atom-description-emoticons.png)
 
 The way you add an emoticon to the HTML code in your description field is by using the following HTML "img" tag syntax:
 
+			<img src="Emoticons:/arrow.png">
 			<img src="Emoticons:/banana.png">
+			<img src="Emoticons:/banghead.png">
+			<img src="Emoticons:/biggrin.png">
 			<img src="Emoticons:/bowdown.png">
 			<img src="Emoticons:/buttrock.png">
 			<img src="Emoticons:/cheer.png">
 			<img src="Emoticons:/cheers.png">
+			<img src="Emoticons:/confused.png">
 			<img src="Emoticons:/cool.png">
 			<img src="Emoticons:/cry.png">
+			<img src="Emoticons:/eek.png">
+			<img src="Emoticons:/evil.png">
+			<img src="Emoticons:/exclaim.png">
 			<img src="Emoticons:/facepalm.png">
+			<img src="Emoticons:/geek.png">
+			<img src="Emoticons:/idea.png">
 			<img src="Emoticons:/lol.png">
 			<img src="Emoticons:/mad.png">
 			<img src="Emoticons:/mrgreen.png">
+			<img src="Emoticons:/neutral.png">
 			<img src="Emoticons:/nocheer.png">
 			<img src="Emoticons:/popcorn.png">
+			<img src="Emoticons:/question.png">
+			<img src="Emoticons:/razz.png">
+			<img src="Emoticons:/redface.png">
 			<img src="Emoticons:/rolleyes.png">
 			<img src="Emoticons:/sad.png">
 			<img src="Emoticons:/smile.png">
+			<img src="Emoticons:/surprised.png">
+			<img src="Emoticons:/twisted.png">
+			<img src="Emoticons:/ugeek.png">
+			<img src="Emoticons:/wand.png">
 			<img src="Emoticons:/whistle.png">
 			<img src="Emoticons:/wink.png">
 			<img src="Emoticons:/wip.png">
@@ -210,6 +229,7 @@ The **View Raw Text** button shows a plain text code view window that lets you s
 
 The **Save Atom** button is used to write your atom editing changes to disk.
 
+
 ## <a name="adding-a-category-to-an-atom-package"></a>Adding a Category to an Atom Package ##
 
 ![Reactor Categories](Images/reactor-window-categories.png)
@@ -220,42 +240,78 @@ Here is a quick summary of the typical Reactor categories you can choose from:
 
 - Bin
 - Brushes
+- Collections
 - Comps
+- Comps/3D
+- Comps/CustomShader3D
+- Comps/Flow
+- Comps/Krokodove
+- Comps/Particles
+- Comps/Stereo
 - Comps/Templates
+- Comps/VR
 - Console
 - Docs
 - Fun
+- Fun/Console
+- Fun/menus
+- Fun/Tools
+- Fun/Tools/3D
+- Fun/Tools/Creator
+- Fun/Tools/Mask
+- Hotkeys
+- KartaVR
+- KartaVR/Comps
+- KartaVR/Docs
+- KartaVR/DragDrop
+- KartaVR/Hotkeys
+- KartaVR/Scripts
+- KartaVR/Tools
+- KartaVR/Viewshaders
+- Layouts
 - LUTs
 - Menus
 - Modifiers
-- Modules
+- Modules/Lua
 - Resolve
 - Scripts
-- Scripts/Bin
 - Scripts/Comp
-- Scripts/Job
-- Scripts/Slave
+- Scripts/Flow
+- Scripts/Intool
 - Scripts/Reactor
 - Scripts/Tool
 - Scripts/Utility
-- Scripts/Views
+- Scripts/We Suck Less
+- Shaders
+- Templates
 - Testing
 - Tools
 - Tools/3D
+- Tools/Blur
 - Tools/Color
 - Tools/Composite
 - Tools/Creator
 - Tools/Effect
+- Tools/Film
 - Tools/Filter
 - Tools/Flow
+- Tools/IO
+- Tools/Mask
+- Tools/Matte
+- Tools/Metadata
 - Tools/Miscellaneous
+- Tools/Modifier
 - Tools/Optical Flow
 - Tools/Particles
 - Tools/Plugins
+- Tools/Position
+- Tools/Stereo
 - Tools/Tracking
 - Tools/Transform
+- Tools/VR
 - Tools/Warp
 - Viewshaders
+
 
 ## <a name="adding-a-required-donation-to-an-atom-package"></a>Adding a Required Donation to an Atom Package ##
 
@@ -409,6 +465,61 @@ A platform specific deploy file needs to be stored inside of a folder with the i
 
 A custom compiled Fusion plugin you create would be called `Your-Custom.plugin` on all three supported Fusion OS platforms.
 
+### <a name="host-app-specific-deploy-entries"></a>Host App Specific Deploy Entries ###
+
+Reactor v3 added support for host application specific deploy file entries. This allows you to customize the individual files you want to have installed from an atom package inside of Fusion Standalone vs Resolve.
+
+This could be used in an atom package for customized deployments such as excluding MediaIn/MediaOut node based macros from installing in Fusion Standalone, or to exclude from Resolve installing Lua/Python scripts that would use Fusion Standalone specific features like the Fusion Render Manager.
+
+For even more control with host application specific deploy entries, you are able to nest the os platform specific deploy entries inside each of the host app specific entries. This means you can have Fusion Standalone vs Resolve specific files deployed individually on Windows/Mac/Linux.
+
+Host application specific deploy entries are listed in an Atom file like this:
+
+			Deploy = {
+				Resolve = {
+					"Macros/IO/FBXExporterUltra.setting",
+					"Macros/IO/MediaOutUltra.setting",
+				},
+				Fusion = {
+					"Macros/IO/FBXExporterUltra.setting",
+				},
+			},
+
+Those host application specific entries end up being be stored in the Atom folder hierarchy on disk like this:
+
+			com.YourCompanyName.YourPackageName/Resolve/Macros/IO/FBXExporterUltra.setting
+			com.YourCompanyName.YourPackageName/Resolve/Macros/IO/MediaOutUltra.setting
+			com.YourCompanyName.YourPackageName/Fusion/Macros/IO/FBXExporterUltra.setting
+
+It's important to notice from the above example that the atom package's root folder needs to have the Fusion vs Resolve host app based deploy files placed inside of sub-folders named "Resolve" and "Fusion".
+
+As a slightly more complex example of this process, if you had a custom deployed file like a Resolve "Edit" page centric video editing title template, that was targeted at Resolve on Windows users only due to a compiled plugin usage in the macro file, you woud have to place it inside a root atom folder hierarchy that starts with `Resolve/Windows/` like this:
+
+A Resolve on Windows only Deploy files list would look like this:
+
+			Deploy = {
+				Resolve = {
+					Windows = {
+						"Templates/Edit/Titles/UltraLowerThird.setting,
+						"Templates/Edit/Titles/UltraLowerThird.bmp,
+						"Templates/Fusion/Titles/UltraLowerThird.setting,
+						"Templates/Fusion/Titles/UltraLowerThird.bmp,
+						"Macros/Titles/UltraLowerThird.setting",
+						"Macros/Titles/UltraLowerThird.bmp",
+					},
+				},
+			},
+
+And the Atom folder hierarchy on disk would looking something like this:
+
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Edit/Titles/UltraLowerThird.setting
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Edit/Titles/UltraLowerThird.bmp
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Fusion/Titles/UltraLowerThird.setting
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Templates/Fusion/Titles/UltraLowerThird.bmp
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Macros/Titles/UltraLowerThird.setting
+			com.YourCompanyName.YourPackageName/Resolve/Windows/Macros/Titles/UltraLowerThird.bmp
+
+
 ## <a name="adding-a-package-dependency"></a>Adding a Package Dependency ##
 
 You can mark your atom package as having a dependency on another Atom package.
@@ -421,7 +532,7 @@ If you add a Dependencies tag, when your Atom package is selected for installati
 				},
 			}
 
-At this current time, Reactor will not remove the dependent Atom packages that are installed automatically when remove the original base package you selected.
+Note: If you are working with Dependencies tags in your atoms it's helpful to know that removing the original atom package will not effect the installation status of any dependent Atom packages that were installed automatically. So if your atom package installs any of the "Bin" Category items as a dependency, the end user would need to decide to remove those dependency items manually.
 
 ## <a name="adding-documentation"></a>Adding Documentation ##
 
@@ -446,12 +557,12 @@ Then if you want to link to your local documentation file from your Script/Macro
 
 ## <a name="adding-fusion-minimum-maximum-compatibility"></a>Adding Fusion Minimum/Maximum Compatibility ##
 
-Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new `Minimum` and `Maximum` Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve 15's Fusion page while still allowing for atom installation compatibility with Fusion 9.
+Since atom packages are able to work across several different Fusion versions it is important to have the capability to define the minimum and maximum supported version of Fusion. This additional pair of new `Minimum` and `Maximum` Atom tags is a requirement for Reactor to be able to support the unique needs of tools deployment inside Resolve's Fusion page while still allowing for atom installation compatibility with Fusion 9.
 
 If an atom package is being used to install a macro that might work perfectly well in all versions of Fusion, you can omit adding the `Minimum` and `Maximum` attributes.
 
 
-### Atoms Limited to Fusion 9 or Resolve 15 ###
+### Atoms Limited to Fusion 9 or Resolve ###
 
 These two Reactor screenshots show what you see when an atom package is prevented from running in either Fusion or Resolve.
 
@@ -472,6 +583,7 @@ For the purpose of atom packages, Fusion's version numbers are listed as:
 - 9.01
 - 9.02
 - 15
+- 16
 
 **Note:** The version number "15" is what Resolve 15's Fusion's page is detected as in a Lua script. When checking for a Fusion version number this value is reported to Reactor with the following Lua command:
 
@@ -608,6 +720,7 @@ The "**fileType**" argument should be set to "**file**" if you are linking to a 
 
 The "**sourcePath**" argument is either an absolute filepath, or a relative PathMap address to the original file that you want to create the link to.
 
+
 The "**shortcutPath**" argument is the destination folder where the desktop link will be created. You should generally use "Desktop:/" as the shortcutPath value since that is custom relative PathMap address that is supported inside this function when you want to put the resulting link on your desktop folder.
 
 The CreateShortcut() function at runtime will automatically re-write the slash direction for each platform and any duplicate (doubled up) slashes in the filepath will be removed too.
@@ -637,4 +750,4 @@ This example creates a desktop folder based shortcut to the Reactor Docs folder:
 			CreateShortcut("Reactor:/Deploy/Docs/ReactorDocs", "Desktop:", "ReactorDocs", "folder")]],
 		}
 
-Last Revised 2018-05-21
+Last Revised 2019-12-02

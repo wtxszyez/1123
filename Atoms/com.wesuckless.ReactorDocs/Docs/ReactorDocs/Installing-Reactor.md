@@ -13,17 +13,17 @@
 
 The `Reactor-Installer.lua` script makes it quick and easy to set up Reactor inside of Fusion or Resolve.
 
-**Step 1.** Drag the Reactor-Installer.lua script from a folder on your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Nodes" view. Alternatively, you could paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
+**Step 1.** Drag the Reactor-Installer.lua script from a folder on your desktop into the Fusion Standalone Console tab, or the Resolve Fusion page "Console" view. Alternatively, you could copy and paste the Reactor Installer Lua script code into the Fusion Console tab text input field manually and the installer script will be run.
 
 ![Ready to Install](Images/reactor-installer-ready-to-install.png)
 
-**Step 2.** Click the "Install and Relaunch" button. After a few seconds the Reactor Installer progress bar will appear and the installation will proceed.
+**Step 2.** Click the "Install and Launch" button. After a few seconds the Reactor Installer progress bar will appear and the installation will proceed.
 
 ![Reactor Installer Script](Images/reactor-installer-complete.png)
 
 A Reactor.fu file will be downloaded from the Reactor GitLab repository and is saved to the Fusion user prefs location at `Config:/Reactor.fu`. The GitLab repository address string is then written into a new `Reactor:/System/Reactor.cfg` file that is used to control what GitLab repositories are used with Reactor.
 
-When the installer finishes, Fusion will restart automatically and the Reactor Package Manager will be displayed.
+When the installer finishes, the Reactor Package Manager will be displayed.
 
 ![Reactor Window](Images/reactor-gui.png)
 
@@ -140,7 +140,7 @@ On MacOS this works out to:
 
 ![Reactor Folder](Images/reactor-pathmap-folder.png)
 
-### Step 1.###
+### Step 1. ###
 
 To uninstall Reactor from your system you need to remove the downloaded Reactor "atom" content by deleting the Reactor folder that is located in your shared Fusion `AllData:/Reactor:/` folder.
 
@@ -190,4 +190,4 @@ Scroll up in the "Defaults" section and click on the "Scripts:" entry. Edit the 
 
 Step 4. Restart Fusion. Reactor will have been cleanly removed from your system.
 
-Last Revised 2018-05-21
+Last Revised 2019-12-02

@@ -156,41 +156,78 @@ Here is a quick summary of the typical Reactor categories that are supported in 
 
 - Bin
 - Brushes
+- Collections
 - Comps
+- Comps/3D
+- Comps/CustomShader3D
+- Comps/Flow
+- Comps/Krokodove
+- Comps/Particles
+- Comps/Stereo
 - Comps/Templates
+- Comps/VR
 - Console
 - Docs
 - Fun
+- Fun/Console
+- Fun/menus
+- Fun/Tools
+- Fun/Tools/3D
+- Fun/Tools/Creator
+- Fun/Tools/Mask
+- Hotkeys
+- KartaVR
+- KartaVR/Comps
+- KartaVR/Docs
+- KartaVR/DragDrop
+- KartaVR/Hotkeys
+- KartaVR/Scripts
+- KartaVR/Tools
+- KartaVR/Viewshaders
+- Layouts
 - LUTs
 - Menus
 - Modifiers
-- Modules
+- Modules/Lua
 - Resolve
 - Scripts
-- Scripts/Bin
 - Scripts/Comp
-- Scripts/Job
-- Scripts/Slave
+- Scripts/Flow
+- Scripts/Intool
 - Scripts/Reactor
 - Scripts/Tool
 - Scripts/Utility
-- Scripts/Views
+- Scripts/We Suck Less
+- Shaders
+- Templates
 - Testing
 - Tools
 - Tools/3D
+- Tools/Blur
 - Tools/Color
 - Tools/Composite
 - Tools/Creator
 - Tools/Effect
+- Tools/Film
 - Tools/Filter
 - Tools/Flow
+- Tools/IO
+- Tools/Mask
+- Tools/Matte
+- Tools/Metadata
 - Tools/Miscellaneous
+- Tools/Modifier
 - Tools/Optical Flow
 - Tools/Particles
 - Tools/Plugins
+- Tools/Position
+- Tools/Stereo
 - Tools/Tracking
+- Tools/Transform
+- Tools/VR
 - Tools/Warp
 - Viewshaders
+
 
 ## <a name="resync-repository"></a>Resync Repository ##
 
@@ -283,4 +320,4 @@ Here are the macOS terminal commands to re-create the `AllData:` Pathmap folder:
 		# Open the Fusion Folder in a Finder browsing window
 		open "/Library/Application Support/Blackmagic Design/Fusion/"
 
-Last Revised 2019-10-05
+Last Revised 2019-12-02
