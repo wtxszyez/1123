@@ -533,9 +533,34 @@ createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tost
 									vertexCount = vertexCount + 1
 								end
 							end
-							
-							-- Write a ply ASCII header entry
-							if exportFormat == 'ply' then
+
+							if exportFormat == 'ma' then
+								-- Write a Maya ASCII header entry
+								outFile:write("//Maya ASCII scene\n")
+								outFile:write("//Name: " .. tostring(nodeName) .. '.' .. tostring(exportFormat) .. "\n") 
+								outFile:write("//Locator Count: " ..tostring(vertexCount) .. "\n")
+								outFile:write([=[requires maya "2019";
+currentUnit -l centimeter -a degree -t film;
+fileInfo "application" "maya";
+createNode transform -s -n "persp";
+	rename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";
+	setAttr ".v" no;
+	setAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;
+	setAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;
+createNode camera -s -n "perspShape" -p "persp";
+	rename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";
+	setAttr -k off ".v" no;
+	setAttr ".fl" 34.999999999999986;
+	setAttr ".coi" 44.82186966202994;
+	setAttr ".imn" -type "string" "persp";
+	setAttr ".den" -type "string" "persp_depth";
+	setAttr ".man" -type "string" "persp_mask";
+	setAttr ".hc" -type "string" "viewSet -p %camera";
+createNode transform -n "PointCloudGroup";
+	rename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";
+]=])
+							elseif exportFormat == 'ply' then
+								-- Write a ply ASCII header entry
 								outFile:write([=[ply
 format ascii 1.0
 comment Created by KartaVR ]=] ..  _VERSION .. '\n' .. [=[
@@ -563,7 +588,17 @@ end_header
 									local x, y, z = string.match(oneLine, '^v%s(%g+)%s(%g+)%s(%g+)')
 								
 									-- Write the point cloud data
-									if exportFormat == 'ply' then
+									if exportFormat == 'ma' then
+										-- ma (Maya ASCII)
+										outFile:write([=[createNode transform -n "locator]=] .. tostring(lineCounter) .. [=[" -p "PointCloudGroup";
+	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
+	setAttr ".t" -type "double3" ]=] .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. [=[;
+	setAttr ".s" -type "double3" ]=] .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. [=[;
+createNode locator -n "locatorShape]=] .. tostring(lineCounter) .. '" -p "locator' .. tostring(lineCounter) .. [=[";
+	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
+	setAttr -k off ".v";
+]=])
+									elseif exportFormat == 'ply' then
 										-- ply - Add a trailing space before the newline character
 										outFile:write(tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ' ' .. '\n')
 									else
@@ -574,6 +609,15 @@ end_header
 									-- Track how many vertices were found
 									lineCounter = lineCounter + 1
 								end
+							end
+
+							if exportFormat == 'ma' then
+								-- Write out the Maya ASCII footer
+							outFile:write([=[select -ne :time1;
+	setAttr ".o" 1;
+	setAttr ".unw" 1;
+// End of Maya ASCII
+]=])
 							end
 
 							-- File writing complete
