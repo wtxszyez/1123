@@ -1,13 +1,13 @@
 _VERSION = 'v4.3 2019-12-03'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.3 2019-12-03 11.19 AM
+KartaVR - Export Point Cloud v4.3 2019-12-03 07.30 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 Overview:
-This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII (.ma), and PIXAR USDA ASCII (.usda).
+This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII (.ma), and PIXAR USD ASCII (.usda).
 
 This script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+.
 
@@ -20,6 +20,8 @@ Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. Th
 
 Notes:
 If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
+
+Notes: Preliminary static (non-keyframe animated) Camera3D node export support is enabled for Maya ASCII (.ma) exports.
 
 ----------------------------------------------------------------------------
 --]]--
@@ -358,9 +360,272 @@ function ExportPointCloudWin()
 					toolAttrs = selectedNode:GetAttrs()
 					nodeType = toolAttrs.TOOLS_RegID
 
-					-- Read data from either a the loader and saver nodes
-					if nodeType == 'PointCloud3D' then
-						-- Grab the settings table for the node
+					-- Get the point cloud export format: "xyz", "ply", or "ma"
+					local exportFormat = epcitm.FormatCombo.CurrentText
+					local fileExt = ''
+					if exportFormat == 'XYZ ASCII (.xyz)' then
+						fileExt = 'xyz'
+					elseif exportFormat == 'PLY ASCII (.ply)' then
+						fileExt = 'ply'
+					elseif exportFormat == 'Maya ASCII (.ma)' then
+						fileExt = 'ma'
+					elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
+						fileExt = 'usda'
+					else
+						fileExt = 'xyz'
+					end
+
+					-- Use the Export Directory from the UI Manager GUI
+					outputDirectory = pointcloudFolder
+					os.execute('mkdir "' .. outputDirectory ..'"')
+
+					-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
+					pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
+					print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
+
+					-- Read data from the selected node
+					if nodeType == 'Camera3D' then
+						-- Read the Camera3D node settings
+
+						-- Camera
+						focalLength = selectedNode:GetInput('FLength')
+						apertureW = selectedNode:GetInput('ApertureW')
+						apertureH = selectedNode:GetInput('ApertureH')
+						lensShiftX = selectedNode:GetInput('LensShiftX')
+						lensShiftY = selectedNode:GetInput('LensShiftY')
+						perspNearClip = selectedNode:GetInput('PerspNearClip')
+						perspFarClip = selectedNode:GetInput('PerspFarClip')
+
+						-- Translate
+						tx = selectedNode:GetInput('Transform3DOp.Translate.X')
+						ty = selectedNode:GetInput('Transform3DOp.Translate.Y')
+						tz = selectedNode:GetInput('Transform3DOp.Translate.Z')
+
+						-- Rotate
+						rx = selectedNode:GetInput('Transform3DOp.Rotate.X')
+						ry = selectedNode:GetInput('Transform3DOp.Rotate.Y')
+						rz = selectedNode:GetInput('Transform3DOp.Rotate.Z')
+
+						-- Scale
+						sx = selectedNode:GetInput('Transform3DOp.Scale.X')
+						sy = selectedNode:GetInput('Transform3DOp.Scale.Y')
+						sz = selectedNode:GetInput('Transform3DOp.Scale.Z')
+
+						-- Results
+						print('\t[Focal Length (mm)] ' .. tostring(focalLength))
+						print('\t[Camera Aperture (in)] ' .. tostring(apertureW) .. ' x ' .. tostring(apertureH))
+						print('\t[Lens Shift] ' .. tostring(lensShiftX) .. ' x ' .. tostring(lensShiftY))
+						print('\t[Near Clip] ' .. tostring(perspNearClip))
+						print('\t[Far Clip] ' .. tostring(perspFarClip))
+						print('\t[Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+						print('\t[Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+						print('\t[Scale] [X] ' .. sx .. ' [Y] ' .. sy .. ' [Z] ' .. sz)
+
+						-- Maya ASCII (.ma) export
+						if fileExt == 'ma' then
+							-- The system temporary directory path (Example: $TEMP/KartaVR/)
+							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+							-- Open up the file pointer for the output textfile
+							outFile, err = io.open(pointcloudFile,'w')
+							if err then
+								print('[Camera] [Error opening file for writing] ' .. tostring(pointcloudFile))
+								disp:ExitLoop()
+							end
+
+							-- Write a Maya ASCII header entry
+							outFile:write('//Maya ASCII scene\n')
+							outFile:write('//Name: ' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '\n') 
+							outFile:write('//Created by KartaVR: ' ..  _VERSION .. '\n')
+							outFile:write('//Created: ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+							outFile:write('requires maya "2019";\n')
+							outFile:write('currentUnit -l centimeter -a degree -t film;\n')
+							outFile:write('fileInfo "application" "maya";\n')
+							outFile:write('createNode transform -s -n "persp";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr ".v" no;\n')
+							outFile:write('\tsetAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;\n')
+							outFile:write('\tsetAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;\n')
+							outFile:write('createNode camera -s -n "perspShape" -p "persp";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr -k off ".v" no;\n')
+							outFile:write('\tsetAttr ".fl" 34.999999999999986;\n')
+							outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
+							outFile:write('\tsetAttr ".imn" -type "string" "persp";\n')
+							outFile:write('\tsetAttr ".den" -type "string" "persp_depth";\n')
+							outFile:write('\tsetAttr ".man" -type "string" "persp_mask";\n')
+							outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
+
+							-- Write out the Camera3D node data
+							outFile:write('createNode transform -n "' .. tostring(nodeName) .. '";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							-- Visible (Yes)
+							outFile:write('\tsetAttr ".v" yes;\n')
+							-- Translate XYZ
+							outFile:write('\tsetAttr ".t" -type "double3" ' .. tx .. ' ' .. ty .. ' ' .. tz .. ';\n')
+							-- Rotate XYZ
+							outFile:write('\tsetAttr ".r" -type "double3" ' .. rx .. ' ' .. ry .. ' ' .. rz .. ';\n')
+
+							outFile:write('createNode camera -s -n "' .. tostring(nodeName) .. 'Shape" -p "' .. tostring(nodeName) .. '";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr -k off ".v" no;\n')
+
+							-- Camera Focal length (mm)
+							outFile:write('\tsetAttr ".fl" ' .. tostring(focalLength) .. ';\n')
+
+							-- Camera Aperture (inches)
+							outFile:write('\tsetAttr ".cap" -type "double2"' .. tostring(apertureW) .. ' ' .. tostring(apertureH) .. ';\n')
+
+							-- Film Offset
+							outFile:write('\tsetAttr ".fio" -type "double2"' .. tostring(lensShiftX) .. ' ' .. tostring(lensShiftY) .. ';\n')
+
+							outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
+							outFile:write('\tsetAttr ".imn" -type "string" "' .. tostring(nodeName) .. '";\n')
+							outFile:write('\tsetAttr ".den" -type "string" "' .. tostring(nodeName) .. '_depth";\n')
+							outFile:write('\tsetAttr ".man" -type "string" "' .. tostring(nodeName) .. '_mask";\n')
+							outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
+
+							-- Write out the Maya ASCII footer
+							outFile:write('select -ne :time1;\n')
+							outFile:write('\tsetAttr ".o" 1;\n')
+							outFile:write('\tsetAttr ".unw" 1;\n')
+							outFile:write('// End of Maya ASCII\n')
+
+							-- File writing complete
+							outFile:write('\n')
+
+							-- Close the file pointer on our Camera textfile
+							outFile:close()
+							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
+
+							-- Show the output folder using a desktop file browser
+							openDirectory(outputDirectory)
+						end
+					elseif nodeType == 'SurfaceAlembicMesh' then
+						-- Read the SurfaceAlembicMesh node settings
+						-- Filename
+						filename = comp:MapPath(selectedNode:GetInput('Filename'))
+
+						-- Translate
+						tx = selectedNode:GetInput('Transform3DOp.Translate.X')
+						ty = selectedNode:GetInput('Transform3DOp.Translate.Y')
+						tz = selectedNode:GetInput('Transform3DOp.Translate.Z')
+
+						-- Rotate
+						rx = selectedNode:GetInput('Transform3DOp.Rotate.X')
+						ry = selectedNode:GetInput('Transform3DOp.Rotate.Y')
+						rz = selectedNode:GetInput('Transform3DOp.Rotate.Z')
+
+						-- Scale
+						sx = selectedNode:GetInput('Transform3DOp.Scale.X')
+						sy = selectedNode:GetInput('Transform3DOp.Scale.Y')
+						sz = selectedNode:GetInput('Transform3DOp.Scale.Z')
+
+						-- Results
+						print('\t[Filename] ' .. tostring(filename))
+						print('\t[Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+						print('\t[Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+						print('\t[Scale] [X] ' .. sx .. ' [Y] ' .. sy .. ' [Z] ' .. sz)
+						
+						-- Maya ASCII (.ma) export
+						if fileExt == 'ma' then
+							-- The system temporary directory path (Example: $TEMP/KartaVR/)
+							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+							-- Open up the file pointer for the output textfile
+							outFile, err = io.open(pointcloudFile,'w')
+							if err then
+								print('[Camera] [Error opening file for writing] ' .. tostring(pointcloudFile))
+								disp:ExitLoop()
+							end
+
+							-- Write a Maya ASCII header entry
+							outFile:write('//Maya ASCII scene\n')
+							outFile:write('//Name: ' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '\n') 
+							outFile:write('//Created by KartaVR: ' ..  _VERSION .. '\n')
+							outFile:write('//Created: ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+
+							-- Alembic reference header entry
+							-- Reference Alembic requires line
+							outFile:write('requires "AbcImport" "1.0";;\n')
+							outFile:write('file -rdi 1 -ns "' .. tostring(nodeName) .. '" -rfn "' .. tostring(nodeName) .. 'RN" -typ "Alembic" "' .. filename .. '";\n')
+							outFile:write('file -r -ns "' .. tostring(nodeName) .. '" -dr 1 -rfn "' .. tostring(nodeName) .. 'RN" -typ "Alembic" "' .. filename .. '";\n')
+
+							-- Standard Alembic requires line
+							-- outFile:write('requires -nodeType "AlembicNode" "AbcImport" "1.0";\n')
+
+							-- Rest of the Maya ASCII headers
+							outFile:write('requires maya "2019";\n')
+							outFile:write('currentUnit -l centimeter -a degree -t film;\n')
+							outFile:write('fileInfo "application" "maya";\n')
+							outFile:write('createNode transform -s -n "persp";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr ".v" no;\n')
+							outFile:write('\tsetAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;\n')
+							outFile:write('\tsetAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;\n')
+							outFile:write('createNode camera -s -n "perspShape" -p "persp";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr -k off ".v" no;\n')
+							outFile:write('\tsetAttr ".fl" 34.999999999999986;\n')
+							outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
+							outFile:write('\tsetAttr ".imn" -type "string" "persp";\n')
+							outFile:write('\tsetAttr ".den" -type "string" "persp_depth";\n')
+							outFile:write('\tsetAttr ".man" -type "string" "persp_mask";\n')
+							outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
+
+							-- Write out the SurfaceAlembicMesh node data
+							-- outFile:write('createNode AlembicNode -n "' .. tostring(nodeName) .. '_AlembicNode";\n')
+							-- outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							-- outFile:write('\tsetAttr ".fn" -type "string" "' .. filename .. '";\n')
+							-- outFile:write('\tsetAttr ".fns" -type "stringArray" 1 "' .. filename .. '"  ;\n')
+							
+							-- Write out the Maya Mesh Node + Transform Mode data
+							-- outFile:write('createNode transform -n "' .. tostring(nodeName) .. '";\n')
+							-- outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							-- outFile:write('\tsetAttr ".t" -type "double3" ' .. tx .. ' ' .. ty .. ' ' .. tz .. ';\n')
+							-- outFile:write('\tsetAttr ".r" -type "double3" ' .. rx .. ' ' .. ry .. ' ' .. rz .. ';\n')
+							-- outFile:write('createNode mesh -n "' .. tostring(nodeName) .. 'Mesh_0" -p "' .. tostring(nodeName) .. '";\n')
+							-- outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							-- outFile:write('\tsetAttr -k off ".v";\n')
+							-- outFile:write('\tsetAttr ".vir" yes;\n')
+							-- outFile:write('\tsetAttr ".vif" yes;\n')
+							-- outFile:write('\tsetAttr ".uvst[0].uvsn" -type "string" "map1";\n')
+							-- outFile:write('\tsetAttr ".cuvs" -type "string" "map1";\n')
+							-- outFile:write('\tsetAttr ".dcol" yes;\n')
+							-- outFile:write('\tsetAttr ".dcc" -type "string" "Ambient+Diffuse";\n')
+							-- outFile:write('\tsetAttr ".ccls" -type "string" "velocity";\n')
+							-- outFile:write('\tsetAttr ".clst[0].clsn" -type "string" "velocity";\n')
+							-- outFile:write('\tsetAttr ".covm[0]"  0 1 1;\n')
+							-- outFile:write('\tsetAttr ".cdvm[0]"  0 1 1;\n')
+
+							-- Connect the Alembic Node to the Mesh
+							-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_AlembicNode.opoly[0]" "' .. tostring(nodeName) .. 'Mesh_0.i";\n')
+
+							-- Write out the SurfaceAlembicMesh node as Alembic Reference data
+							outFile:write('createNode reference -n "' .. tostring(nodeName) .. 'RN";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr ".ed" -type "dataReferenceEdits" \n')
+							outFile:write('\t\t"' .. tostring(nodeName) .. 'RN"\n')
+							outFile:write('\t\t"' .. tostring(nodeName) .. 'RN" 0;\n')
+
+							-- Write out the Maya ASCII footer
+							outFile:write('select -ne :time1;\n')
+							outFile:write('\tsetAttr ".o" 1;\n')
+							outFile:write('\tsetAttr ".unw" 1;\n')
+							outFile:write('// End of Maya ASCII\n')
+
+							-- File writing complete
+							outFile:write('\n')
+
+							-- Close the file pointer on our Camera textfile
+							outFile:close()
+							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
+
+							-- Show the output folder using a desktop file browser
+							openDirectory(outputDirectory)
+						end
+					elseif nodeType == 'PointCloud3D' then
+						-- Grab the settings table for the PointCloud3D node
 						local nodeTable = comp:CopySettings(selectedNode)
 						-- print('[PointCloud3D Settings]')
 						-- dump(nodeTable)
@@ -371,35 +636,12 @@ function ExportPointCloudWin()
 							local positionsTable = nodeTable['Tools'][nodeName]['Positions'] or {}
 							local positionsElements = tonumber(table.getn(positionsTable))
 
-							-- Get the point cloud export format: "xyz", "ply", or "ma"
-							local exportFormat = epcitm.FormatCombo.CurrentText
-							local fileExt = ''
-							if exportFormat == 'XYZ ASCII (.xyz)' then
-								fileExt = 'xyz'
-							elseif exportFormat == 'PLY ASCII (.ply)' then
-								fileExt = 'ply'
-							elseif exportFormat == 'Maya ASCII (.ma)' then
-								fileExt = 'ma'
-							elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
-								fileExt = 'usda'
-							else
-								fileExt = 'xyz'
-							end
-
 							-- List how many PointCloud3D positions were found in the table
 							print('[PointCloud3D Positions] ' .. tostring(positionsElements))
 							-- dump(positionsTable)
 
 							-- The system temporary directory path (Example: $TEMP/KartaVR/)
 							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
-
-							-- Use the Export Directory from the UI Manager GUI
-							outputDirectory = pointcloudFolder
-							os.execute('mkdir "' .. outputDirectory ..'"')
-
-							-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
-							pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
-							print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
 
 							-- Open up the file pointer for the output textfile
 							outFile, err = io.open(pointcloudFile,'w')
@@ -425,12 +667,12 @@ function ExportPointCloudWin()
 								outFile:write('currentUnit -l centimeter -a degree -t film;\n')
 								outFile:write('fileInfo "application" "maya";\n')
 								outFile:write('createNode transform -s -n "persp";\n')
-								outFile:write('\trename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";\n')
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 								outFile:write('\tsetAttr ".v" no;\n')
 								outFile:write('\tsetAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;\n')
 								outFile:write('\tsetAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;\n')
 								outFile:write('createNode camera -s -n "perspShape" -p "persp";\n')
-								outFile:write('\trename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";\n')
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 								outFile:write('\tsetAttr -k off ".v" no;\n')
 								outFile:write('\tsetAttr ".fl" 34.999999999999986;\n')
 								outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
@@ -439,7 +681,7 @@ function ExportPointCloudWin()
 								outFile:write('\tsetAttr ".man" -type "string" "persp_mask";\n')
 								outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
 								outFile:write('createNode transform -n "PointCloudGroup";\n')
-								outFile:write('\trename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";\n')
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 							elseif fileExt == 'usda' then
 								-- Write a PIXAR USD ASCII header entry
 								outFile:write('#usda 1.0\n')
