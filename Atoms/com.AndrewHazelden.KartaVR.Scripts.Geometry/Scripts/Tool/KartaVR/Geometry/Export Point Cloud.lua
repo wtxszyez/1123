@@ -1,7 +1,7 @@
 _VERSION = 'v4.3 2019-12-03'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.3 2019-12-03
+KartaVR - Export Point Cloud v4.3 2019-12-03 11.19 AM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -449,6 +449,11 @@ function ExportPointCloudWin()
 								outFile:write('\tmetersPerUnit = 0.01\n')
 								outFile:write('\tupAxis = "Y"\n')
 								outFile:write(')\n')
+								outFile:write('\n')
+								outFile:write('def Xform "PointCloudGroup" (\n')
+								outFile:write('    kind = "assembly"\n')
+								outFile:write(')\n')
+								outFile:write('{\n')
 							elseif fileExt == 'ply' then
 								-- Write a ply ASCII header entry
 								outFile:write('ply\n')
@@ -486,13 +491,11 @@ function ExportPointCloudWin()
 									elseif fileExt == 'usda' then
 										-- usdz (USD ASCII)
 										outFile:write('\n')
-										outFile:write('def Xform "locator' .. tostring(lineCounter) .. '" (\n')
-										outFile:write('\tkind = "assembly"\n')
-										outFile:write(')\n')
-										outFile:write('{\n')
-										outFile:write('\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
-										outFile:write('\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
-										outFile:write('}\n')
+										outFile:write('\tdef Xform "locator' .. tostring(lineCounter) .. '"\n')
+										outFile:write('\t{\n')
+										outFile:write('\t\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
+										outFile:write('\t\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
+										outFile:write('\t}\n')
 									elseif fileExt == 'ply' then
 										-- ply - Add a trailing space before the newline character
 										outFile:write(tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ' ' .. '\n')
@@ -508,11 +511,13 @@ function ExportPointCloudWin()
 							
 							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
-							outFile:write([=[select -ne :time1;
-	setAttr ".o" 1;
-	setAttr ".unw" 1;
-// End of Maya ASCII
-]=])
+								outFile:write('select -ne :time1;\n')
+								outFile:write('\tsetAttr ".o" 1;\n')
+								outFile:write('\tsetAttr ".unw" 1;\n')
+								outFile:write('// End of Maya ASCII\n')
+							elseif fileExt == 'usda' then
+								-- Write out the USD ASCII footer
+								outFile:write('}\n')
 							end
 
 							-- File writing complete
@@ -618,6 +623,11 @@ function ExportPointCloudWin()
 								outFile:write('\tmetersPerUnit = 0.01\n')
 								outFile:write('\tupAxis = "Y"\n')
 								outFile:write(')\n')
+								outFile:write('\n')
+								outFile:write('def Xform "PointCloudGroup" (\n')
+								outFile:write('\tkind = "assembly"\n')
+								outFile:write(')\n')
+								outFile:write('{\n')
 							elseif fileExt == 'ply' then
 								-- Write a ply ASCII header entry
 								outFile:write('ply\n')
@@ -657,13 +667,11 @@ function ExportPointCloudWin()
 									elseif fileExt == 'usda' then
 										-- usdz (USD ASCII)
 										outFile:write('\n')
-										outFile:write('def Xform "locator' .. tostring(lineCounter) .. '" (\n')
-										outFile:write('\tkind = "assembly"\n')
-										outFile:write(')\n')
-										outFile:write('{\n')
-										outFile:write('\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
-										outFile:write('\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
-										outFile:write('}\n')
+										outFile:write('\tdef Xform "locator' .. tostring(lineCounter) .. '"\n')
+										outFile:write('\t{\n')
+										outFile:write('\t\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
+										outFile:write('\t\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
+										outFile:write('\t}\n')
 									elseif fileExt == 'ply' then
 										-- ply - Add a trailing space before the newline character
 										outFile:write(tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ' ' .. '\n')
@@ -679,11 +687,13 @@ function ExportPointCloudWin()
 
 							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
-							outFile:write([=[select -ne :time1;
-	setAttr ".o" 1;
-	setAttr ".unw" 1;
-// End of Maya ASCII
-]=])
+								outFile:write('select -ne :time1;\n')
+								outFile:write('\tsetAttr ".o" 1;\n')
+								outFile:write('\tsetAttr ".unw" 1;\n')
+								outFile:write('// End of Maya ASCII\n')
+							elseif fileExt == 'usda' then
+								-- Write out the USD ASCII footer
+								outFile:write('}\n')
 							end
 
 							-- File writing complete
