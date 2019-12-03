@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults - v4.2 2019-11-17
+Reset LUA Script Settings to Defaults - v4.3 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -324,6 +324,7 @@ function Main()
 		setPreferenceData('KartaVR.SendGeometry.CloudCompareViewerFile', nil, printStatus)
 
 		setPreferenceData('KartaVR.ExportPointCloud.ExportDirectory', nil, printStatus)
+		setPreferenceData('KartaVR.ExportPointCloud.PointCloudFormat', nil, printStatus)
 
 		setPreferenceData('KartaVR.SendGeometry.LightwaveFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.SoundEffect', nil, printStatus)

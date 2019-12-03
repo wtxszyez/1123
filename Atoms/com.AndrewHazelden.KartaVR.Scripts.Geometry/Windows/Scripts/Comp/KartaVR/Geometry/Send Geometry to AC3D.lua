@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to AC3D - v4.2 2019-11-05
+Send Geometry to AC3D - v4.3 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

@@ -1,7 +1,7 @@
-_VERSION = 'v4.2.1 2019-12-03'
+_VERSION = 'v4.3 2019-12-03'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.2.1 2019-12-03
+KartaVR - Export Point Cloud v4.3 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

@@ -1,7 +1,7 @@
-_VERSION = 'v4.2.1 2019-11-12'
+_VERSION = 'v4.3 2019-12-03'
 
 --[[--
-Directory Tree v4.2.1 2019-11-12
+Directory Tree v4.3 2019-12-03
 by Andrew Hazelden <andrew@andrewhazelden.com>
 www.andrewhazelden.com
 ----------------------------------------------------------------------------

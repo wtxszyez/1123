@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Send Geometry to usdview - v4.2.1 2019-11-12
+Send Geometry to usdview - v4.3 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com

@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reload PSD Layers v4.1 2019-10-22
+Reload PSD Layers v4.3 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
