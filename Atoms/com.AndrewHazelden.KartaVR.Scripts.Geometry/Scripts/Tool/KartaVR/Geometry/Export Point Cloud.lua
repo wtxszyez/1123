@@ -643,10 +643,10 @@ function ExportPointCloudWin()
 									-- Extract the vertex XYZ positions, using %s as a white space character
 									-- Example: v 0.5 0.5 -0.5
 									local x, y, z = string.match(oneLine, '^v%s(%g+)%s(%g+)%s(%g+)')
-								
 									-- Write the point cloud data
 									if fileExt == 'ma' then
 										-- ma (Maya ASCII)
+										i = lineCounter
 										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
