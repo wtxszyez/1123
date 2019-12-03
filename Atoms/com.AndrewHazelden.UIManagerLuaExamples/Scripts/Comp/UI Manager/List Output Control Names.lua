@@ -1,5 +1,5 @@
 --[[--
-List Output Control Names - v3 2019-11-04
+List Output Control Names - v3 2019-12-03
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -66,7 +66,7 @@ win = disp:AddWindow({
 	},
 })
 
--- Read the current noe selection
+-- Read the current node selection
 selectedTool = tool or comp.ActiveTool
 
 -- Track the Fusion selection changed events
