@@ -1,13 +1,13 @@
-_VERSION = 'v4.2 2019-12-02'
+_VERSION = 'v4.2.1 2019-12-03'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.2 2019-12-02
+KartaVR - Export Point Cloud v4.2.1 2019-12-03
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 Overview:
-This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to .xyz, .ply, and .ma (Maya ASCII) formatted point clouds.
+This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII (.ma), and PIXAR USDA ASCII (.usda).
 
 This script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+.
 
@@ -18,9 +18,8 @@ Step 2. Select a PointCloud3D node or an FBXMesh3D node in the Flow/Nodes view.
 
 Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. The point cloud data will be saved to disk.
 
-
 Notes:
-If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the variable in the source code "mayaLocatorScale" to change the visible locator scale in the Maya scene file.
+If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
 
 ----------------------------------------------------------------------------
 --]]--
@@ -188,7 +187,7 @@ function ExportPointCloudWin()
 		ID = 'ExportPointCloud',
 		TargetID = 'ExportPointCloud',
 		WindowTitle = 'Export Point Cloud',
-		Geometry = {200,100,600,140},
+		Geometry = {200,100,600,155},
 		MinimumSize = {600, 140},
 		-- Spacing = 10,
 		-- Margin = 20,
@@ -221,7 +220,7 @@ function ExportPointCloudWin()
 
 			-- pointcloud Working Directory
 			ui:HGroup{
-				Weight = 0,
+				Weight = 0.01,
 				ui:Label{
 					ID = 'ExportDirectoryLabel',
 					Weight = 0.2,
@@ -235,7 +234,7 @@ function ExportPointCloudWin()
 					},
 					ui:Button{
 						ID = 'SelectFolderButton',
-						Weight = 0,
+						Weight = 0.01,
 						Text = 'Select Folder',
 						IconSize = iconsMedium,
 						Icon = ui:Icon{
@@ -246,11 +245,30 @@ function ExportPointCloudWin()
 					},
 				},
 			},
-			
+
 			ui:VGap(5),
 
 			ui:HGroup{
 				Weight = 0,
+				ui:Label{
+					ID = 'MayaLocatorSizeLabel',
+					Weight = 0.2,
+					Text = 'Maya Locator Size',
+				},
+				ui:DoubleSpinBox{
+					ID = 'MayaLocatorSizeSpinner',
+					Value = mayaLocatorScale,
+					-- Value = 0.05,
+					Maximum = 1000,
+					Minimum = 0.001,
+					StepBy = 0.1,
+					SingleStep = 0.1,
+				},
+				ui:HGap(150),
+			},
+			
+			ui:HGroup{
+				Weight = 0.01,
 				ui:Button{
 					ID = 'CancelButton',
 					Text = 'Cancel',
@@ -292,6 +310,9 @@ function ExportPointCloudWin()
 
 	-- The Continue Button was clicked
 	function epcwin.On.ContinueButton.Clicked(ev)
+		-- Maya Locator size:
+		mayaLocatorScale = epcitm.MayaLocatorSizeSpinner.Value
+
 		-- Read the Working Directory textfield
 		workingDir = ValidateDirectoryPath(epcitm.ExportDirectoryText.Text)
 
@@ -325,6 +346,9 @@ function ExportPointCloudWin()
 				-- Save a default ExportDirectory preference
 				SetPreferenceData('KartaVR.ExportPointCloud.ExportDirectory', workingDir, false)
 
+				-- Save the point cloud format
+				SetPreferenceData('KartaVR.ExportPointCloud.PointCloudFormat', epcitm.FormatCombo.CurrentIndex, false)
+
 				-- List the selected Node in Fusion
 				selectedNode = comp.ActiveTool
 				if selectedNode then
@@ -349,6 +373,18 @@ function ExportPointCloudWin()
 
 							-- Get the point cloud export format: "xyz", "ply", or "ma"
 							local exportFormat = epcitm.FormatCombo.CurrentText
+							local fileExt = ''
+							if exportFormat == 'XYZ ASCII (.xyz)' then
+								fileExt = 'xyz'
+							elseif exportFormat == 'PLY ASCII (.ply)' then
+								fileExt = 'ply'
+							elseif exportFormat == 'Maya ASCII (.ma)' then
+								fileExt = 'ma'
+							elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
+								fileExt = 'usda'
+							else
+								fileExt = 'xyz'
+							end
 
 							-- List how many PointCloud3D positions were found in the table
 							print('[PointCloud3D Positions] ' .. tostring(positionsElements))
@@ -361,18 +397,9 @@ function ExportPointCloudWin()
 							outputDirectory = pointcloudFolder
 							os.execute('mkdir "' .. outputDirectory ..'"')
 
-							pointcloudFile = ''
-							if exportFormat == 'xyz' or exportFormat == 'ply' or exportFormat == 'ma' then
-								-- Save a copy of the point cloud in .xyz, .ply, or .ma Maya ASCII format to the $TEMP/KartaVR/ folder
-								pointcloudFile = outputDirectory .. nodeName .. '.' .. exportFormat
-								print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
-							else
-								-- Fallback option
-								exportFormat = 'xyz'
-								-- Save a copy of the point cloud in .xyz format to the $TEMP/KartaVR/ folder
-								pointcloudFile = outputDirectory .. nodeName .. '.' .. exportFormat
-								print('[PointCloud3D Format] Fallback Option "' .. tostring(exportFormat) .. '"')
-							end
+							-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
+							pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
+							print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
 
 							-- Open up the file pointer for the output textfile
 							outFile, err = io.open(pointcloudFile,'w')
@@ -387,45 +414,53 @@ function ExportPointCloudWin()
 								vertexCount = tonumber(positionsElements + 1)
 							end
 
-							if exportFormat == 'ma' then
+							if fileExt == 'ma' then
 								-- Write a Maya ASCII header entry
-								
-								outFile:write("//Maya ASCII scene\n")
-								outFile:write("//Name: " .. tostring(nodeName) .. '.' .. tostring(exportFormat) .. "\n") 
-								outFile:write("//Locator Count: " ..tostring(vertexCount) .. "\n")
-								outFile:write([=[requires maya "2019";
-currentUnit -l centimeter -a degree -t film;
-fileInfo "application" "maya";
-createNode transform -s -n "persp";
-	rename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;
-	setAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;
-createNode camera -s -n "perspShape" -p "persp";
-	rename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";
-	setAttr -k off ".v" no;
-	setAttr ".fl" 34.999999999999986;
-	setAttr ".coi" 44.82186966202994;
-	setAttr ".imn" -type "string" "persp";
-	setAttr ".den" -type "string" "persp_depth";
-	setAttr ".man" -type "string" "persp_mask";
-	setAttr ".hc" -type "string" "viewSet -p %camera";
-createNode transform -n "PointCloudGroup";
-	rename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";
-]=])
-							elseif exportFormat == 'ply' then
+								outFile:write('//Maya ASCII scene\n')
+								outFile:write('//Name: ' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '\n') 
+								outFile:write('//Created by KartaVR: ' ..  _VERSION .. '\n')
+								outFile:write('//Created: ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+								outFile:write('//Locator Count: ' ..tostring(vertexCount) .. '\n')
+								outFile:write('requires maya "2019";\n')
+								outFile:write('currentUnit -l centimeter -a degree -t film;\n')
+								outFile:write('fileInfo "application" "maya";\n')
+								outFile:write('createNode transform -s -n "persp";\n')
+								outFile:write('\trename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";\n')
+								outFile:write('\tsetAttr ".v" no;\n')
+								outFile:write('\tsetAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;\n')
+								outFile:write('\tsetAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;\n')
+								outFile:write('createNode camera -s -n "perspShape" -p "persp";\n')
+								outFile:write('\trename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";\n')
+								outFile:write('\tsetAttr -k off ".v" no;\n')
+								outFile:write('\tsetAttr ".fl" 34.999999999999986;\n')
+								outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
+								outFile:write('\tsetAttr ".imn" -type "string" "persp";\n')
+								outFile:write('\tsetAttr ".den" -type "string" "persp_depth";\n')
+								outFile:write('\tsetAttr ".man" -type "string" "persp_mask";\n')
+								outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
+								outFile:write('createNode transform -n "PointCloudGroup";\n')
+								outFile:write('\trename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";\n')
+							elseif fileExt == 'usda' then
+								-- Write a PIXAR USD ASCII header entry
+								outFile:write('#usda 1.0\n')
+								outFile:write('(\n')
+								outFile:write('\tdefaultPrim = "persp"\n')
+								outFile:write('\tdoc = """' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '"""\n')
+								outFile:write('\tmetersPerUnit = 0.01\n')
+								outFile:write('\tupAxis = "Y"\n')
+								outFile:write(')\n')
+							elseif fileExt == 'ply' then
 								-- Write a ply ASCII header entry
-								outFile:write([=[ply
-format ascii 1.0
-comment Created by KartaVR ]=] ..  _VERSION .. '\n' .. [=[
-comment Created ]=] .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n' .. [=[
-obj_info Generated by KartaVR!
-element vertex ]=] .. tostring(vertexCount) .. '\n' .. [=[
-property float x
-property float y
-property float z
-end_header
-]=])
+								outFile:write('ply\n')
+								outFile:write('format ascii 1.0\n')
+								outFile:write('comment Created by KartaVR ' ..  _VERSION .. '\n')
+								outFile:write('comment Created ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+								outFile:write('obj_info Generated by KartaVR!\n')
+								outFile:write('element vertex ' .. tostring(vertexCount) .. '\n')
+								outFile:write('property float x\n')
+								outFile:write('property float y\n')
+								outFile:write('property float z\n')
+								outFile:write('end_header\n')
 							end
 
 							-- Scan through the positions table
@@ -439,17 +474,26 @@ end_header
 									print('[' .. tostring(i) .. '] [' .. tostring(name) .. '] [XYZ] ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z))
 
 									-- Write the point cloud data
-									if exportFormat == 'ma' then
+									if fileExt == 'ma' then
 										-- ma (Maya ASCII)
-										outFile:write([=[createNode transform -n "locator]=] .. tostring(i) .. [=[" -p "PointCloudGroup";
-	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
-	setAttr ".t" -type "double3" ]=] .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. [=[;
-	setAttr ".s" -type "double3" ]=] .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. [=[;
-createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tostring(i) .. [=[";
-	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
-	setAttr -k off ".v";
-]=])
-									elseif exportFormat == 'ply' then
+										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
+										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
+										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. ';\n')
+										outFile:write('createNode locator -n "locatorShape' .. tostring(i) .. '" -p "locator' .. tostring(i) .. '";\n')
+										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+										outFile:write('\tsetAttr -k off ".v";\n')
+									elseif fileExt == 'usda' then
+										-- usdz (USD ASCII)
+										outFile:write('\n')
+										outFile:write('def Xform "locator' .. tostring(lineCounter) .. '" (\n')
+										outFile:write('\tkind = "assembly"\n')
+										outFile:write(')\n')
+										outFile:write('{\n')
+										outFile:write('\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
+										outFile:write('\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
+										outFile:write('}\n')
+									elseif fileExt == 'ply' then
 										-- ply - Add a trailing space before the newline character
 										outFile:write(tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ' ' .. '\n')
 									else
@@ -462,7 +506,7 @@ createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tost
 								end
 							end
 							
-							if exportFormat == 'ma' then
+							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
 							outFile:write([=[select -ne :time1;
 	setAttr ".o" 1;
@@ -492,6 +536,18 @@ createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tost
 
 							-- Get the point cloud export format: "xyz", or "ply"
 							local exportFormat = epcitm.FormatCombo.CurrentText
+							local fileExt = ''
+							if exportFormat == 'XYZ ASCII (.xyz)' then
+								fileExt = 'xyz'
+							elseif exportFormat == 'PLY ASCII (.ply)' then
+								fileExt = 'ply'
+							elseif exportFormat == 'Maya ASCII (.ma)' then
+								fileExt = 'ma'
+							elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
+								fileExt = 'usda'
+							else
+								fileExt = 'xyz'
+							end
 
 							-- The system temporary directory path (Example: $TEMP/KartaVR/)
 							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -501,17 +557,10 @@ createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tost
 							os.execute('mkdir "' .. outputDirectory ..'"')
 
 							pointcloudFile = ''
-							if exportFormat == 'xyz' or exportFormat == 'ply' or exportFormat == 'ma' then
-								-- Save a copy of the point cloud in .xyz, .ply, or .ma Maya ASCII format to the $TEMP/KartaVR/ folder
-								pointcloudFile = outputDirectory .. nodeName .. '.' .. exportFormat
-								print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
-							else
-								-- Fallback option
-								exportFormat = 'xyz'
-								-- Save a copy of the point cloud in .xyz format to the $TEMP/KartaVR/ folder
-								pointcloudFile = outputDirectory .. nodeName .. '.' .. exportFormat
-								print('[PointCloud3D Format] Fallback Option "' .. tostring(exportFormat) .. '"')
-							end
+
+							-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
+							pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
+							print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
 
 							-- Open up the file pointer for the output textfile
 							outFile, err = io.open(pointcloudFile,'w')
@@ -534,46 +583,54 @@ createNode locator -n "locatorShape]=] .. tostring(i) .. '" -p "locator' .. tost
 								end
 							end
 
-							if exportFormat == 'ma' then
+							if fileExt == 'ma' then
 								-- Write a Maya ASCII header entry
-								outFile:write("//Maya ASCII scene\n")
-								outFile:write("//Name: " .. tostring(nodeName) .. '.' .. tostring(exportFormat) .. "\n") 
-								outFile:write("//Locator Count: " ..tostring(vertexCount) .. "\n")
-								outFile:write([=[requires maya "2019";
-currentUnit -l centimeter -a degree -t film;
-fileInfo "application" "maya";
-createNode transform -s -n "persp";
-	rename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;
-	setAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;
-createNode camera -s -n "perspShape" -p "persp";
-	rename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";
-	setAttr -k off ".v" no;
-	setAttr ".fl" 34.999999999999986;
-	setAttr ".coi" 44.82186966202994;
-	setAttr ".imn" -type "string" "persp";
-	setAttr ".den" -type "string" "persp_depth";
-	setAttr ".man" -type "string" "persp_mask";
-	setAttr ".hc" -type "string" "viewSet -p %camera";
-createNode transform -n "PointCloudGroup";
-	rename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";
-]=])
-							elseif exportFormat == 'ply' then
+								outFile:write('//Maya ASCII scene\n')
+								outFile:write('//Name: ' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '\n') 
+								outFile:write('//Created by KartaVR: ' ..  _VERSION .. '\n')
+								outFile:write('//Created: ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+								outFile:write('//Locator Count: ' ..tostring(vertexCount) .. '\n')
+								outFile:write('requires maya "2019";\n')
+								outFile:write('currentUnit -l centimeter -a degree -t film;\n')
+								outFile:write('fileInfo "application" "maya";\n')
+								outFile:write('createNode transform -s -n "persp";\n')
+								outFile:write('\trename -uid "BDD1D327-CA4A-FAF4-4EC1-508AA473BFD6";\n')
+								outFile:write('\tsetAttr ".v" no;\n')
+								outFile:write('\tsetAttr ".t" -type "double3" 42.542190019936143 11.856220346068302 7.6545481521220538 ;\n')
+								outFile:write('\tsetAttr ".r" -type "double3" -15.338352729601354 79.799999999999187 8.9803183372077805e-15 ;\n')
+								outFile:write('createNode camera -s -n "perspShape" -p "persp";\n')
+								outFile:write('\trename -uid "B4797D18-2047-C2A9-CAF1-8998F20276B3";\n')
+								outFile:write('\tsetAttr -k off ".v" no;\n')
+								outFile:write('\tsetAttr ".fl" 34.999999999999986;\n')
+								outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
+								outFile:write('\tsetAttr ".imn" -type "string" "persp";\n')
+								outFile:write('\tsetAttr ".den" -type "string" "persp_depth";\n')
+								outFile:write('\tsetAttr ".man" -type "string" "persp_mask";\n')
+								outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
+								outFile:write('createNode transform -n "PointCloudGroup";\n')
+								outFile:write('\trename -uid "6A38A338-4C48-6A5F-2EFE-D79EFCBFBA09";\n')
+							elseif fileExt == 'usda' then
+								-- Write a PIXAR USD ASCII header entry
+								outFile:write('#usda 1.0\n')
+								outFile:write('(\n')
+								outFile:write('\tdefaultPrim = "persp"\n')
+								outFile:write('\tdoc = """' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '"""\n')
+								outFile:write('\tmetersPerUnit = 0.01\n')
+								outFile:write('\tupAxis = "Y"\n')
+								outFile:write(')\n')
+							elseif fileExt == 'ply' then
 								-- Write a ply ASCII header entry
-								outFile:write([=[ply
-format ascii 1.0
-comment Created by KartaVR ]=] ..  _VERSION .. '\n' .. [=[
-comment Created ]=] .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n' .. [=[
-obj_info Generated by KartaVR!
-element vertex ]=] .. tostring(vertexCount) .. '\n' .. [=[
-property float x
-property float y
-property float z
-end_header
-]=])
+								outFile:write('ply\n')
+								outFile:write('format ascii 1.0\n')
+								outFile:write('comment Created by KartaVR ' ..  _VERSION .. '\n')
+								outFile:write('comment Created ' .. tostring(os.date('%Y-%m-%d %I:%M:%S %p')) .. '\n')
+								outFile:write('obj_info Generated by KartaVR!\n')
+								outFile:write('element vertex ' .. tostring(vertexCount) .. '\n')
+								outFile:write('property float x\n')
+								outFile:write('property float y\n')
+								outFile:write('property float z\n')
+								outFile:write('end_header\n')
 							end
-
 
 							local lineCounter = 0
 							for oneLine in io.lines(comp:MapPath(meshFile)) do
@@ -588,17 +645,26 @@ end_header
 									local x, y, z = string.match(oneLine, '^v%s(%g+)%s(%g+)%s(%g+)')
 								
 									-- Write the point cloud data
-									if exportFormat == 'ma' then
+									if fileExt == 'ma' then
 										-- ma (Maya ASCII)
-										outFile:write([=[createNode transform -n "locator]=] .. tostring(lineCounter) .. [=[" -p "PointCloudGroup";
-	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
-	setAttr ".t" -type "double3" ]=] .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. [=[;
-	setAttr ".s" -type "double3" ]=] .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. [=[;
-createNode locator -n "locatorShape]=] .. tostring(lineCounter) .. '" -p "locator' .. tostring(lineCounter) .. [=[";
-	rename -uid "]=] .. tostring(bmd.createuuid()) .. [=[";
-	setAttr -k off ".v";
-]=])
-									elseif exportFormat == 'ply' then
+										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
+										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
+										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. ';\n')
+										outFile:write('createNode locator -n "locatorShape' .. tostring(i) .. '" -p "locator' .. tostring(i) .. '";\n')
+										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+										outFile:write('\tsetAttr -k off ".v";\n')
+									elseif fileExt == 'usda' then
+										-- usdz (USD ASCII)
+										outFile:write('\n')
+										outFile:write('def Xform "locator' .. tostring(lineCounter) .. '" (\n')
+										outFile:write('\tkind = "assembly"\n')
+										outFile:write(')\n')
+										outFile:write('{\n')
+										outFile:write('\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
+										outFile:write('\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
+										outFile:write('}\n')
+									elseif fileExt == 'ply' then
 										-- ply - Add a trailing space before the newline character
 										outFile:write(tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ' ' .. '\n')
 									else
@@ -611,7 +677,7 @@ createNode locator -n "locatorShape]=] .. tostring(lineCounter) .. '" -p "locato
 								end
 							end
 
-							if exportFormat == 'ma' then
+							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
 							outFile:write([=[select -ne :time1;
 	setAttr ".o" 1;
@@ -683,9 +749,10 @@ createNode locator -n "locatorShape]=] .. tostring(lineCounter) .. '" -p "locato
 
 	-- Point Cloud Export format list:
 	FormatTable = {
-		{text = 'xyz'},
-		{text = 'ply'},
-		{text = 'ma'},
+		{text = 'XYZ ASCII (.xyz)'},
+		{text = 'PLY ASCII (.ply)'},
+		{text = 'Maya ASCII (.ma)'},
+		{text = 'PIXAR USDA ASCII (.usda)'},
 	}
 
 	-- Add the Format entries to the ComboControl menu
@@ -694,6 +761,9 @@ createNode locator -n "locatorShape]=] .. tostring(lineCounter) .. '" -p "locato
 			epcitm.FormatCombo:AddItem(FormatTable[i].text)
 		end
 	end
+
+	-- The default value for the Point Cloud Format ComboBox
+	epcitm.FormatCombo.CurrentIndex = GetPreferenceData('KartaVR.ExportPointCloud.PointCloudFormat', 0, false)
 
 	-- We want to be notified whenever the 'Comp_Activate_Tool' action has been executed
 	local notify = ui:AddNotify('Comp_Activate_Tool', comp)
