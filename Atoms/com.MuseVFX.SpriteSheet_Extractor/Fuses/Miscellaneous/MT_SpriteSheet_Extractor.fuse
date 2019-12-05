@@ -1,0 +1,111 @@
+--[[--
+spriteSheet_extractor.Fuse 
+by Bryan Ray for Muse VFX
+
+Converts a sprite sheet into an image sequence
+
+version 1.0
+December 3, 2019
+--]]--
+
+
+FuRegisterClass("SpriteSheet", CT_Tool, {
+	REGS_Name 				= "SpriteSheet",
+	REGS_Category 			= "Miscellaneous",
+	REGS_OpIconString 		= "ss",
+	REGS_OpDescription 		= "Sprite Sheet Extractor",
+	REG_OpNoMask 			= true,
+	REG_NoBlendCtrls 		= true,
+	REG_NoObjMatCtrls 		= true,
+	REG_NoMotionBlurCtrls 	= true,
+	REG_NoPreCalcProcess 	= true,
+	REG_TimeVariant 		= true,
+	REG_Version				= 100,
+	})
+
+function Create()
+	InColumns = self:AddInput("Columns", "Columns", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 24.0,
+		INP_Default = 4,
+		INP_Integer = true,
+		})
+		
+	InRows = self:AddInput("Rows", "Rows", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 24.0,
+		INP_Default = 4,
+		INP_Integer = true,		
+		})
+		
+	InStartFrame = self:AddInput("Start Frame", "StartFrame", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "ScrewControl",
+		INP_MinScale = 1001,
+		INP_MaxScale = 2000,
+		INP_Default = 1001,
+		INP_Integer = true,		
+		})
+		
+	InTrimEnd = self:AddInput("Trim End", "TrimEnd", {
+		LINKID_DataType = "Number",
+		INPID_InputControl = "SliderControl",
+		INP_MinScale = 0.0,
+		INP_MaxScale = 24.0,
+		INP_Default = 0,
+		INP_Integer = true,	
+		})
+		
+	InImage = self:AddInput("Input", "Input", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		})
+
+	OutImage = self:AddOutput("Output", "Output", {
+		LINKID_DataType = "Image",
+		LINK_Main = 1,
+		INP_SendRequest = false,
+		INP_Required = false,
+		})
+		
+end
+ 
+function Process(req)
+
+	local img = InImage:GetValue(req)
+	local rows = InRows:GetValue(req).Value
+	local columns = InColumns:GetValue(req).Value
+	local trim = InTrimEnd:GetValue(req).Value
+
+	local width = img.Width / columns
+	local height = img.Height / rows
+	local length = rows * columns - trim
+	
+	local startFrame = InStartFrame:GetValue(req).Value
+	local currentTime = req.Time - startFrame
+	local offset = math.floor(currentTime / length)
+	
+	local out = Image({
+		IMG_Like = img,
+		IMG_Width = math.ceil(width),
+		IMG_Height = math.ceil(height),
+	})
+	
+	-- Which image?  
+	local column = (currentTime-(length*offset)) % columns
+	local row = math.floor((currentTime-(length*offset)) / columns) % rows
+	
+	img:Crop(out, {
+		CROP_Width = width,
+		CROP_Height = height,
+		CROP_XOffset = width*column,
+		CROP_YOffset = height*(rows-row-1),
+	})
+
+	
+	OutImage:Set(req, out)
+end
