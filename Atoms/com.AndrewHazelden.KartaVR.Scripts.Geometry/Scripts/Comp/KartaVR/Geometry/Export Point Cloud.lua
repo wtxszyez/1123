@@ -1,7 +1,7 @@
-_VERSION = 'v4.3 2019-12-03'
+_VERSION = 'v4.3 2019-12-04'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.3 2019-12-03 07.30 PM
+KartaVR - Export Point Cloud v4.3 2019-12-05 02.34 AM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -22,14 +22,17 @@ Notes:
 If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
 
 Notes: Preliminary static (non-keyframe animated) Camera3D node export support is enabled for Maya ASCII (.ma) exports.
+Notes: Preliminary static (non-translated/rotated/scaled) AlembicMesh3D export support is enabled for Maya ASCII (.ma) exports. This is done via a Maya 2019 Alembic Reference import.
 
 ----------------------------------------------------------------------------
 --]]--
 
 ------------------------------------------------------------------------
--- Size of a Maya ASCII (.ma) locator
--- local mayaLocatorScale = 0.1
-local mayaLocatorScale = 0.05
+-- Size of a Maya ASCII (.ma) locator (0.05, 0.1, and 0.2 are common values)
+local mayaLocatorSize = 0.2
+
+-- Are the Maya camera attributes animated (true/false)
+local mayaAnimatedCamera = false
 
 ------------------------------------------------------------------------
 -- Find out the current operating system platform.
@@ -159,6 +162,9 @@ function ExportPointCloudWin()
 	-- Read the last folder accessed from a ExportDirectory preference
 	-- The default value for the first time the RequestDir is shown in the "$HOME/Documents/" folder.
 	local exportDirectory = GetPreferenceData('KartaVR.ExportPointCloud.ExportDirectory', homeFolder, false)
+	
+	-- Maya Locator Size
+	local mayaLocatorSize = GetPreferenceData('KartaVR.ExportPointCloud.MayaLocatorSize', mayaLocatorSize, false)
 
 	-- Load the Reactor icon resources PathMap
 	local iconsDir = fusion:MapPath('Reactor:/System/UI/Images') .. 'icons.zip/'
@@ -259,7 +265,7 @@ function ExportPointCloudWin()
 				},
 				ui:DoubleSpinBox{
 					ID = 'MayaLocatorSizeSpinner',
-					Value = mayaLocatorScale,
+					Value = mayaLocatorSize,
 					-- Value = 0.05,
 					Maximum = 1000,
 					Minimum = 0.001,
@@ -313,7 +319,15 @@ function ExportPointCloudWin()
 	-- The Continue Button was clicked
 	function epcwin.On.ContinueButton.Clicked(ev)
 		-- Maya Locator size:
-		mayaLocatorScale = epcitm.MayaLocatorSizeSpinner.Value
+		mayaLocatorSize = epcitm.MayaLocatorSizeSpinner.Value
+
+		-- Read the render time frame ranges
+		startFrameGlobal = comp:GetAttrs().COMPN_GlobalStart
+		endFrameGlobal = comp:GetAttrs().COMPN_GlobalEnd
+		
+		startFrame = comp:GetAttrs().COMPN_RenderStart
+		endFrame = comp:GetAttrs().COMPN_RenderEnd
+		renderStep = comp:GetAttrs().COMPI_RenderStep
 
 		-- Read the Working Directory textfield
 		workingDir = ValidateDirectoryPath(epcitm.ExportDirectoryText.Text)
@@ -351,6 +365,9 @@ function ExportPointCloudWin()
 				-- Save the point cloud format
 				SetPreferenceData('KartaVR.ExportPointCloud.PointCloudFormat', epcitm.FormatCombo.CurrentIndex, false)
 
+				-- Save the Maya Locator Size Gui setting
+				SetPreferenceData('KartaVR.ExportPointCloud.MayaLocatorSize', mayaLocatorSize, false)
+
 				-- List the selected Node in Fusion
 				selectedNode = comp.ActiveTool
 				if selectedNode then
@@ -386,7 +403,6 @@ function ExportPointCloudWin()
 					-- Read data from the selected node
 					if nodeType == 'Camera3D' then
 						-- Read the Camera3D node settings
-
 						-- Camera
 						focalLength = selectedNode:GetInput('FLength')
 						apertureW = selectedNode:GetInput('ApertureW')
@@ -460,7 +476,7 @@ function ExportPointCloudWin()
 							outFile:write('createNode transform -n "' .. tostring(nodeName) .. '";\n')
 							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 							-- Visible (Yes)
-							outFile:write('\tsetAttr ".v" yes;\n')
+							outFile:write('\tsetAttr ".v";\n')
 							-- Translate XYZ
 							outFile:write('\tsetAttr ".t" -type "double3" ' .. tx .. ' ' .. ty .. ' ' .. tz .. ';\n')
 							-- Rotate XYZ
@@ -468,16 +484,16 @@ function ExportPointCloudWin()
 
 							outFile:write('createNode camera -s -n "' .. tostring(nodeName) .. 'Shape" -p "' .. tostring(nodeName) .. '";\n')
 							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
-							outFile:write('\tsetAttr -k off ".v" no;\n')
+							outFile:write('\tsetAttr -k off ".v";\n')
 
 							-- Camera Focal length (mm)
 							outFile:write('\tsetAttr ".fl" ' .. tostring(focalLength) .. ';\n')
 
 							-- Camera Aperture (inches)
-							outFile:write('\tsetAttr ".cap" -type "double2"' .. tostring(apertureW) .. ' ' .. tostring(apertureH) .. ';\n')
+							outFile:write('\tsetAttr ".cap" -type "double2" ' .. tostring(apertureW) .. ' ' .. tostring(apertureH) .. ';\n')
 
 							-- Film Offset
-							outFile:write('\tsetAttr ".fio" -type "double2"' .. tostring(lensShiftX) .. ' ' .. tostring(lensShiftY) .. ';\n')
+							outFile:write('\tsetAttr ".fio" -type "double2" ' .. tostring(lensShiftX) .. ' ' .. tostring(lensShiftY) .. ';\n')
 
 							outFile:write('\tsetAttr ".coi" 44.82186966202994;\n')
 							outFile:write('\tsetAttr ".imn" -type "string" "' .. tostring(nodeName) .. '";\n')
@@ -485,10 +501,167 @@ function ExportPointCloudWin()
 							outFile:write('\tsetAttr ".man" -type "string" "' .. tostring(nodeName) .. '_mask";\n')
 							outFile:write('\tsetAttr ".hc" -type "string" "viewSet -p %camera";\n')
 
+							-- Should the Maya camera export be animated
+							if mayaAnimatedCamera == true then
+								local tx_animated = ''
+								local ty_animated = ''
+								local tz_animated = ''
+
+								local rx_animated = ''
+								local ry_animated = ''
+								local rz_animated = ''
+								
+								local sx_animated = ''
+								local sy_animated = ''
+								local sz_animated = ''
+
+								total_keyframes = 0
+
+								-- Step through the timeline at the comp's "StepBy" interval
+								for frame = startFrame, endFrame, renderStep do
+									-- Animated camera parameters
+									focalLength = selectedNode:GetInput('FLength', frame)
+									print('\t[Focal Length (mm)] ' .. tostring(focalLength))
+
+									apertureW = selectedNode:GetInput('ApertureW', frame)
+									apertureH = selectedNode:GetInput('ApertureH', frame)
+									print('\t[Camera Aperture (in)] ' .. tostring(apertureW) .. ' x ' .. tostring(apertureH))
+
+									lensShiftX = selectedNode:GetInput('LensShiftX', frame)
+									lensShiftY = selectedNode:GetInput('LensShiftY', frame)
+									print('\t[Lens Shift] ' .. tostring(lensShiftX) .. ' x ' .. tostring(lensShiftY))
+
+									perspNearClip = selectedNode:GetInput('PerspNearClip', frame)
+									print('\t[Near Clip] ' .. tostring(perspNearClip))
+
+									perspFarClip = selectedNode:GetInput('PerspFarClip', frame)
+									print('\t[Far Clip] ' .. tostring(perspFarClip))
+
+									tx = selectedNode:GetInput('Transform3DOp.Translate.X', frame)
+									ty = selectedNode:GetInput('Transform3DOp.Translate.Y', frame)
+									tz = selectedNode:GetInput('Transform3DOp.Translate.Z', frame)
+									print('\t[Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+
+									rx = selectedNode:GetInput('Transform3DOp.Rotate.X', frame)
+									ry = selectedNode:GetInput('Transform3DOp.Rotate.Y', frame)
+									rz = selectedNode:GetInput('Transform3DOp.Rotate.Z', frame)
+									print('\t[Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+
+									sx = selectedNode:GetInput('Transform3DOp.Scale.X', frame)
+									sy = selectedNode:GetInput('Transform3DOp.Scale.Y', frame)
+									sz = selectedNode:GetInput('Transform3DOp.Scale.Z', frame)
+									print('\t[Scale] [X] ' .. sx .. ' [Y] ' .. sy .. ' [Z] ' .. sz)
+
+									-- Append the per frame animated keys
+									tx_animated = tx_animated .. tostring(frame) .. ' ' .. tx .. ' '
+									ty_animated = ty_animated .. tostring(frame) .. ' ' .. ty .. ' '
+									tz_animated = tz_animated .. tostring(frame) .. ' ' .. tz .. ' '
+
+									rx_animated = rx_animated .. tostring(frame) .. ' ' .. rx .. ' '
+									ry_animated = ry_animated .. tostring(frame) .. ' ' .. ry .. ' '
+									rz_animated = rz_animated .. tostring(frame) .. ' ' .. rz .. ' '
+
+									sx_animated = sx_animated .. tostring(frame) .. ' ' .. sx .. ' '
+									sy_animated = sy_animated .. tostring(frame) .. ' ' .. sy .. ' '
+									sz_animated = sz_animated .. tostring(frame) .. ' ' .. sz .. ' '
+
+									total_keyframes = total_keyframes + 1
+								end
+
+								print('[TX Keys] ' .. tx_animated)
+								print('[TY Keys] ' .. ty_animated)
+								print('[TZ Keys] ' .. tz_animated)
+								print('\n')
+
+								print('[RX Keys] ' .. rx_animated)
+								print('[RY Keys] ' .. ry_animated)
+								print('[RZ Keys] ' .. rz_animated)
+								print('\n')
+
+								-- Add the animation curves
+								-- translateX
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_translateX";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. tx_animated .. ';\n')
+								-- translateY
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_translateY";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. ty_animated .. ';\n')
+								-- translateY
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_translateZ";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. tz_animated .. ';\n')
+
+								-- rotateX
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_rotateX";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. rx_animated .. ';\n')
+								-- rotateY
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_rotateY";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. ry_animated .. ';\n')
+								-- rotateZ
+								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_rotateZ";\n') 
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+								outFile:write('\tsetAttr ".tan" 2;\n') 
+								outFile:write('\tsetAttr ".wgt" no;\n') 
+								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. rz_animated .. ';\n')
+--								
+--								-- scaleX
+--								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_scaleX";\n') 
+--								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+--								outFile:write('\tsetAttr ".tan" 2;\n') 
+--								outFile:write('\tsetAttr ".wgt" no;\n') 
+--								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. sx_animated .. ';\n')
+--								-- scaleY
+--								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_scaleY";\n') 
+--								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+--								outFile:write('\tsetAttr ".tan" 2;\n') 
+--								outFile:write('\tsetAttr ".wgt" no;\n') 
+--								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. sy_animated .. ';\n')
+--								-- scaleY
+--								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_scale";\n') 
+--								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
+--								outFile:write('\tsetAttr ".tan" 2;\n') 
+--								outFile:write('\tsetAttr ".wgt" no;\n') 
+--								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. sz_animated .. ';\n')
+
+								-- Connect the animation curves
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateX.o" "' .. tostring(nodeName) .. '.tx";\n')
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateY.o" "' .. tostring(nodeName) .. '.ty";\n')
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateZ.o" "' .. tostring(nodeName) .. '.tz";\n')
+								
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateX.o" "' .. tostring(nodeName) .. '.rx";\n')
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateY.o" "' .. tostring(nodeName) .. '.ry";\n')
+								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateZ.o" "' .. tostring(nodeName) .. '.rz";\n')
+								
+								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleX.o" "' .. tostring(nodeName) .. '.sx";\n')
+								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleY.o" "' .. tostring(nodeName) .. '.sy";\n')
+								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleZ.o" "' .. tostring(nodeName) .. '.sz";\n')
+							end
+
 							-- Write out the Maya ASCII footer
+							-- Playback frame range
+							outFile:write('createNode script -n "sceneConfigurationScriptNode";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr ".b" -type "string" "playbackOptions -min ' .. startFrame .. ' -max ' .. endFrame .. ' -ast ' .. startFrameGlobal .. ' -aet ' .. endFrameGlobal .. ' ";\n')
+							outFile:write('\tsetAttr ".st" 6;\n')
+							
+							-- End timeline range
 							outFile:write('select -ne :time1;\n')
-							outFile:write('\tsetAttr ".o" 1;\n')
-							outFile:write('\tsetAttr ".unw" 1;\n')
+							outFile:write('\tsetAttr ".o" ' .. endFrame .. ';\n')
+							-- Current playhead timeline frame
+							outFile:write('\tsetAttr ".unw" ' .. endFrame .. ';\n')
 							outFile:write('// End of Maya ASCII\n')
 
 							-- File writing complete
@@ -609,9 +782,17 @@ function ExportPointCloudWin()
 							outFile:write('\t\t"' .. tostring(nodeName) .. 'RN" 0;\n')
 
 							-- Write out the Maya ASCII footer
+							-- Playback frame range
+							outFile:write('createNode script -n "sceneConfigurationScriptNode";\n')
+							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+							outFile:write('\tsetAttr ".b" -type "string" "playbackOptions -min ' .. startFrame .. ' -max ' .. endFrame .. ' -ast ' .. startFrameGlobal .. ' -aet ' .. endFrameGlobal .. ' ";\n')
+							outFile:write('\tsetAttr ".st" 6;\n')
+							
+							-- End timeline range
 							outFile:write('select -ne :time1;\n')
-							outFile:write('\tsetAttr ".o" 1;\n')
-							outFile:write('\tsetAttr ".unw" 1;\n')
+							outFile:write('\tsetAttr ".o" ' .. endFrame .. ';\n')
+							-- Current playhead timeline frame
+							outFile:write('\tsetAttr ".unw" ' .. endFrame .. ';\n')
 							outFile:write('// End of Maya ASCII\n')
 
 							-- File writing complete
@@ -726,7 +907,7 @@ function ExportPointCloudWin()
 										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
-										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. ';\n')
+										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorSize .. " " .. mayaLocatorSize .. " " .. mayaLocatorSize .. ';\n')
 										outFile:write('createNode locator -n "locatorShape' .. tostring(i) .. '" -p "locator' .. tostring(i) .. '";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr -k off ".v";\n')
@@ -753,9 +934,17 @@ function ExportPointCloudWin()
 							
 							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
+								-- Playback frame range
+								outFile:write('createNode script -n "sceneConfigurationScriptNode";\n')
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+								outFile:write('\tsetAttr ".b" -type "string" "playbackOptions -min ' .. startFrame .. ' -max ' .. endFrame .. ' -ast ' .. startFrameGlobal .. ' -aet ' .. endFrameGlobal .. ' ";\n')
+								outFile:write('\tsetAttr ".st" 6;\n')
+							
+								-- End timeline range
 								outFile:write('select -ne :time1;\n')
-								outFile:write('\tsetAttr ".o" 1;\n')
-								outFile:write('\tsetAttr ".unw" 1;\n')
+								outFile:write('\tsetAttr ".o" ' .. endFrame .. ';\n')
+								-- Current playhead timeline frame
+								outFile:write('\tsetAttr ".unw" ' .. endFrame .. ';\n')
 								outFile:write('// End of Maya ASCII\n')
 							elseif fileExt == 'usda' then
 								-- Write out the USD ASCII footer
@@ -902,7 +1091,7 @@ function ExportPointCloudWin()
 										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
-										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorScale .. " " .. mayaLocatorScale .. " " .. mayaLocatorScale .. ';\n')
+										outFile:write('\tsetAttr ".s" -type "double3" ' .. mayaLocatorSize .. " " .. mayaLocatorSize .. " " .. mayaLocatorSize .. ';\n')
 										outFile:write('createNode locator -n "locatorShape' .. tostring(i) .. '" -p "locator' .. tostring(i) .. '";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr -k off ".v";\n')
@@ -929,9 +1118,17 @@ function ExportPointCloudWin()
 
 							if fileExt == 'ma' then
 								-- Write out the Maya ASCII footer
+								-- Playback frame range
+								outFile:write('createNode script -n "sceneConfigurationScriptNode";\n')
+								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
+								outFile:write('\tsetAttr ".b" -type "string" "playbackOptions -min ' .. startFrame .. ' -max ' .. endFrame .. ' -ast ' .. startFrameGlobal .. ' -aet ' .. endFrameGlobal .. ' ";\n')
+								outFile:write('\tsetAttr ".st" 6;\n')
+							
+								-- End timeline range
 								outFile:write('select -ne :time1;\n')
-								outFile:write('\tsetAttr ".o" 1;\n')
-								outFile:write('\tsetAttr ".unw" 1;\n')
+								outFile:write('\tsetAttr ".o" ' .. endFrame .. ';\n')
+								-- Current playhead timeline frame
+								outFile:write('\tsetAttr ".unw" ' .. endFrame .. ';\n')
 								outFile:write('// End of Maya ASCII\n')
 							elseif fileExt == 'usda' then
 								-- Write out the USD ASCII footer
