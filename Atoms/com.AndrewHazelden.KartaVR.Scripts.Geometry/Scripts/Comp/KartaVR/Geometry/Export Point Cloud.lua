@@ -1,28 +1,29 @@
-_VERSION = 'v4.3 2019-12-04'
+_VERSION = 'v4.3 2019-12-05'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud v4.3 2019-12-05 02.34 AM
+KartaVR - Export Point Cloud - v4.3 2019-12-05 07.42 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 Overview:
-This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII (.ma), and PIXAR USD ASCII (.usda).
+This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. Static (non-animated) Camera3D nodes can be exported to Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats
 
-This script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+.
+This comp/tool script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+.
 
 Usage:
 Step 1. Save your Fusion composite to disk.
 
-Step 2. Select a PointCloud3D node or an FBXMesh3D node in the Flow/Nodes view.
+Step 2. Select a single PointCloud3D, FBXMesh3D (OBJ mesh), AlembicMesh3D, or Camera3D node in the Flow/Nodes view.
 
-Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. The point cloud data will be saved to disk.
+Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. The point cloud, mesh, or camera data will be saved to disk.
 
 Notes:
-If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
+- If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
 
-Notes: Preliminary static (non-keyframe animated) Camera3D node export support is enabled for Maya ASCII (.ma) exports.
-Notes: Preliminary static (non-translated/rotated/scaled) AlembicMesh3D export support is enabled for Maya ASCII (.ma) exports. This is done via a Maya 2019 Alembic Reference import.
+- Preliminary static (non-keyframe animated) Camera3D node export support is enabled for Maya ASCII (.ma), and PIXAR USD ASCII exports.
+
+- Preliminary static (non-translated/rotated/scaled) AlembicMesh3D export support is enabled for Maya ASCII (.ma) exports. This is done via a Maya 2019 Alembic Reference import.
 
 ----------------------------------------------------------------------------
 --]]--
@@ -403,12 +404,22 @@ function ExportPointCloudWin()
 					-- Read data from the selected node
 					if nodeType == 'Camera3D' then
 						-- Read the Camera3D node settings
-						-- Camera
+
+						-- Lens focal length (in mm)
 						focalLength = selectedNode:GetInput('FLength')
+
+						-- Lens focus distance (in scene units)
+						focusDistance = selectedNode:GetInput('PlaneOfFocus')
+
+						-- fStop is a fixed (default) value that is not used inside of Fusion's Camera3D node
+						fStop = 5.6
+
 						apertureW = selectedNode:GetInput('ApertureW')
 						apertureH = selectedNode:GetInput('ApertureH')
+
 						lensShiftX = selectedNode:GetInput('LensShiftX')
 						lensShiftY = selectedNode:GetInput('LensShiftY')
+
 						perspNearClip = selectedNode:GetInput('PerspNearClip')
 						perspFarClip = selectedNode:GetInput('PerspFarClip')
 
@@ -430,6 +441,7 @@ function ExportPointCloudWin()
 						-- Results
 						print('\t[Focal Length (mm)] ' .. tostring(focalLength))
 						print('\t[Camera Aperture (in)] ' .. tostring(apertureW) .. ' x ' .. tostring(apertureH))
+						print('\t[Focus Distance (scene units)] ' .. tostring(focusDistance))
 						print('\t[Lens Shift] ' .. tostring(lensShiftX) .. ' x ' .. tostring(lensShiftY))
 						print('\t[Near Clip] ' .. tostring(perspNearClip))
 						print('\t[Far Clip] ' .. tostring(perspFarClip))
@@ -437,8 +449,9 @@ function ExportPointCloudWin()
 						print('\t[Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
 						print('\t[Scale] [X] ' .. sx .. ' [Y] ' .. sy .. ' [Z] ' .. sz)
 
-						-- Maya ASCII (.ma) export
+						
 						if fileExt == 'ma' then
+							-- Maya ASCII (.ma) export
 							-- The system temporary directory path (Example: $TEMP/KartaVR/)
 							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
 
@@ -486,7 +499,7 @@ function ExportPointCloudWin()
 							outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 							outFile:write('\tsetAttr -k off ".v";\n')
 
-							-- Camera Focal length (mm)
+							-- Lens Focal length (mm)
 							outFile:write('\tsetAttr ".fl" ' .. tostring(focalLength) .. ';\n')
 
 							-- Camera Aperture (inches)
@@ -640,11 +653,11 @@ function ExportPointCloudWin()
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateX.o" "' .. tostring(nodeName) .. '.tx";\n')
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateY.o" "' .. tostring(nodeName) .. '.ty";\n')
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_translateZ.o" "' .. tostring(nodeName) .. '.tz";\n')
-								
+
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateX.o" "' .. tostring(nodeName) .. '.rx";\n')
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateY.o" "' .. tostring(nodeName) .. '.ry";\n')
 								outFile:write('connectAttr "' .. tostring(nodeName) .. '_rotateZ.o" "' .. tostring(nodeName) .. '.rz";\n')
-								
+
 								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleX.o" "' .. tostring(nodeName) .. '.sx";\n')
 								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleY.o" "' .. tostring(nodeName) .. '.sy";\n')
 								-- outFile:write('connectAttr "' .. tostring(nodeName) .. '_scaleZ.o" "' .. tostring(nodeName) .. '.sz";\n')
@@ -664,6 +677,71 @@ function ExportPointCloudWin()
 							outFile:write('\tsetAttr ".unw" ' .. endFrame .. ';\n')
 							outFile:write('// End of Maya ASCII\n')
 
+							-- File writing complete
+							outFile:write('\n')
+
+							-- Close the file pointer on our Camera textfile
+							outFile:close()
+							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
+
+							-- Show the output folder using a desktop file browser
+							openDirectory(outputDirectory)
+						elseif fileExt == 'usda' then
+							-- The system temporary directory path (Example: $TEMP/KartaVR/)
+							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+							-- Open up the file pointer for the output textfile
+							outFile, err = io.open(pointcloudFile,'w')
+							if err then
+								print('[Camera] [Error opening file for writing] ' .. tostring(pointcloudFile))
+								disp:ExitLoop()
+							end
+
+							-- Write a PIXAR USD ASCII header entry
+							outFile:write('#usda 1.0\n')
+							outFile:write('(\n')
+							outFile:write('\tdefaultPrim = "' .. tostring(nodeName) .. '"\n')
+							outFile:write('\tdoc = """Generated from Composed Stage of root layer ' .. tostring(pointcloudFile) .. '"""\n')
+							outFile:write('\tmetersPerUnit = 0.01\n')
+							outFile:write('\tupAxis = "Y"\n')
+							outFile:write(')\n')
+							outFile:write('\n')
+							outFile:write('def Xform "' .. tostring(nodeName) .. '" (\n')
+							outFile:write('\tkind = "assembly"\n')
+							outFile:write(')\n')
+							outFile:write('{\n')
+
+							-- Camera properties
+							-- Camera Near/Far clipping range
+							outFile:write('\tfloat2 clippingRange = (' .. tostring(perspNearClip) .. ', ' .. tostring(perspFarClip) .. ')\n')
+
+							-- Lens Focal length (mm)
+							outFile:write('\tfloat focalLength = ' .. tostring(focalLength) ..'\n')
+
+							-- Lens focus distance (in scene units)
+							outFile:write('\tfloat focusDistance = ' .. tostring(focusDistance) .. '\n')
+
+							-- fStop is a fixed (default) value that is not used inside of Fusion's Camera3D node
+							outFile:write('\tfloat fStop = ' .. tostring(fStop) .. '\n')
+
+							-- Camera Aperture (mm)
+							-- Convert 1 inch into millimetres
+							local inchesToMM = 25.4
+							-- Horizontal Aperture (mm)
+							outFile:write('\tfloat horizontalAperture = ' .. tonumber(apertureW * inchesToMM) .. '\n')
+							-- Vertical Aperture (mm)
+							outFile:write('\tfloat verticalAperture = ' .. tonumber(apertureH * inchesToMM) .. '\n')
+
+							-- Rotate XYZ
+							outFile:write('\tfloat3 xformOp:rotateXYZ = (' .. rx .. ', ' .. ry .. ', ' .. rz .. ')\n')
+
+							-- Translate XYZ
+							outFile:write('\tdouble3 xformOp:translate = (' .. tx .. ', ' .. ty .. ', ' .. tz .. ')\n')
+							outFile:write('\tuniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]\n')
+
+							-- Write a PIXAR USD ASCII footer entry
+							outFile:write('}\n')
+							
 							-- File writing complete
 							outFile:write('\n')
 
@@ -914,7 +992,7 @@ function ExportPointCloudWin()
 									elseif fileExt == 'usda' then
 										-- usdz (USD ASCII)
 										outFile:write('\n')
-										outFile:write('\tdef Xform "locator' .. tostring(lineCounter) .. '"\n')
+										outFile:write('\tdef Xform "locator' .. tostring(i) .. '"\n')
 										outFile:write('\t{\n')
 										outFile:write('\t\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
 										outFile:write('\t\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
@@ -1085,9 +1163,10 @@ function ExportPointCloudWin()
 									-- Example: v 0.5 0.5 -0.5
 									local x, y, z = string.match(oneLine, '^v%s(%g+)%s(%g+)%s(%g+)')
 									-- Write the point cloud data
+									
+									i = lineCounter
 									if fileExt == 'ma' then
 										-- ma (Maya ASCII)
-										i = lineCounter
 										outFile:write('createNode transform -n "locator' .. tostring(i) .. '" -p "PointCloudGroup";\n')
 										outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n')
 										outFile:write('\tsetAttr ".t" -type "double3" ' .. tostring(x) .. ' ' .. tostring(y) .. ' ' .. tostring(z) .. ';\n')
@@ -1098,7 +1177,7 @@ function ExportPointCloudWin()
 									elseif fileExt == 'usda' then
 										-- usdz (USD ASCII)
 										outFile:write('\n')
-										outFile:write('\tdef Xform "locator' .. tostring(lineCounter) .. '"\n')
+										outFile:write('\tdef Xform "locator' .. tostring(i) .. '"\n')
 										outFile:write('\t{\n')
 										outFile:write('\t\tdouble3 xformOp:translate = (' .. tostring(x) .. ', ' .. tostring(y) .. ', ' .. tostring(z) .. ')\n')
 										outFile:write('\t\tuniform token[] xformOpOrder = ["xformOp:translate"]\n')
