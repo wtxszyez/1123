@@ -1,7 +1,7 @@
 _VERSION = 'v4.3 2019-12-06'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud - v4.3 2019-12-06 01.09 PM
+KartaVR - Export Point Cloud - v4.3 2019-12-06 01.38 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -1037,7 +1037,7 @@ function ExportPointCloudWin()
 
 							outFile:write('\tdef Xform "' .. tostring(nodeName) .. 'ReferenceAssembly" (\n')
 							outFile:write('\t\tkind = "assembly"\n')
-							outFile:write('\t\tprepend references = @' .. tostring(pointcloudFile) .. '@\n')
+							outFile:write('\t\tprepend references = @' .. DupSlashes(filename) .. '@\n')
 							outFile:write('\t)\n')
 
 							-- AlembicMesh3D info
