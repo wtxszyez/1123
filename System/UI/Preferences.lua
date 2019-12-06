@@ -1,6 +1,23 @@
-_VERSION = [[v3.14 2019-10-14]]
+_VERSION = [[v3.14 2019-12-06]]
 --[[--
-Reactor Preferences Window
+==============================================================================
+Reactor Preferences Window - v3.1415 2019-12-06
+==============================================================================
+Requires    : Fusion v9.0.2 to v16.1+ or Resolve v15 to v16.1+
+Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
+
+==============================================================================
+Overview
+==============================================================================
+
+Reactor is a package manager for Fusion and Resolve. Reactor streamlines the installation of 3rd party content through the use of "Atom" packages that are synced automatically with a Git repository.
+
+The Reactor preferences window allows you to customize the main Reactor settings inside a simple window.
+
+You can access this dialog using the root level "Reactor > Reactor Preferences..." menu item in Fusion Standalone. 
+
+Alternatively, you can use the Fusion Standalone "Script > Reactor > Reactor Preferences..." menu item. Or the Resolve "Workspace > Scripts > Reactor > Reactor Preferences..." menu item.
+
 --]]--
 
 -- Reactor GitLab Public Project ID

@@ -1,8 +1,8 @@
-_VERSION = [[Version 3.141 - October 31, 2019]]
+_VERSION = [[Version 3.1415 - December 6, 2019]]
 _REPO_EDITION = [[Install Reactor Version π (3.14)]]
---[[
+--[[--
 ==============================================================================
-Reactor Installer - v3.141 2019-10-31
+Reactor Installer - v3.1415 2019-12-06
 ==============================================================================
 Requires    : Fusion v9.0.2 to v16.1+ or Resolve v15 to v16.1+
 Created By  : Andrew Hazelden [andrew@andrewhazelden.com]
@@ -123,7 +123,7 @@ Note: If you are using macOS you will need to use an approach like a LaunchAgent
 The `REACTOR_INSTALL_PATHMAP` environment variable can be used to change the Reactor installation location to something other then the default PathMap value of "AllData:"
 
 export REACTOR_INSTALL_PATHMAP=AllData:
-]]--
+--]]--
 
 -- Add the Reactor Public ProjectID to Reactor.cfg
 local reactor_project_id = "5058837"
