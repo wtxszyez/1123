@@ -1,19 +1,60 @@
 _VERSION = 'v4.3 2019-12-06'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud - v4.3 2019-12-06 10.07 AM
+KartaVR - Export Point Cloud - v4.3 2019-12-06 01.09 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
 Overview:
-This script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats.
+The "Export Point Cloud" script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. AlembicMesh3D nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated Camera3D nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) Camera3D nodes can be exported to the Maya ASCII 2019 (.ma) format.
 
-Keyframe animated Camera3D nodes with per frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda)format. Static (non-animated) Camera3D nodes can be exported to the Maya ASCII 2019 (.ma) format.
 
-AlembicMesh3D nodes can be exported to the Maya ASCII 2019 (.ma) format as a Maya based "Alembic Reference Import" as long as the ABC meshes have not been moved from their initial XYZ position in the Fusion comp.
+The "Export Point Cloud.lua" comp/tool script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+. 
 
-The "Export Point Cloud.lua" comp/tool script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+.
+Easy Installation:
+
+The "Export Point Cloud.lua" script is typically installed in a single click using the "Reactor" Package Manager by selecting the "KartaVR/Scripts/KartaVR Scripts | Geometry" atom package.
+
+
+Manual Installation:
+
+Step 1. If you are unable to use Reactor to download and install the "KartaVR Scripts | Geometry" atom package, you can always download the most recent version of the "Export Point Cloud.lua" script directly from the Reactor GitLab Repository at:
+
+https://gitlab.com/WeSuckLess/Reactor/blob/master/Atoms/com.AndrewHazelden.KartaVR.Scripts.Geometry/Scripts/Comp/KartaVR/Geometry/Export%20Point%20Cloud.lua
+
+Then click the little "Download" arrow icon at the top right of the Gitlab document viewer window's toolbar.
+
+
+Step 2. Copy the downloaded "Export Point Cloud.lua" script to your Fusion/Resolve Fusion page user preferences Tool and Comp based "Scripts:/"  PathMap locations at:
+
+	Scripts:/Tool/KartaVR/Geometry/
+	Scripts:/Comp/KartaVR/Geometry/
+
+*Note: You will need to create these sub-folders by hand since they won't pre-exist on a manual install.
+
+
+Fusion Standalone Manual Script Install:
+	On Windows this works out to:
+		%AppData%\Blackmagic Design\Fusion\Scripts\Tool\KartaVR\Geometry\
+
+	On Linux this works out to:
+		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Tool/KartaVR/Geometry/
+
+	On MacOS this works out to:
+		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Tool/KartaVR/Geometry/
+
+
+Resolve Fusion Page Manual Script Install:
+	On Windows this works out to:
+		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Tool\KartaVR\Geometry\
+
+	On Linux this works out to:
+		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
+
+	On MacOS this works out to:
+		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
+
 
 Usage:
 Step 1. Save your Fusion composite to disk.
@@ -22,14 +63,20 @@ Step 2. Select a single PointCloud3D, FBXMesh3D (OBJ mesh), AlembicMesh3D, or Ca
 
 Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. The point cloud, mesh, or camera data will be saved to disk.
 
+
 Notes:
 - If you are exporting a Maya ASCII (.ma) point cloud you may way to adjust the Maya Locator Size "SpinBox" control to change the visible locator scale in the Maya scene file. Common values you might explore are "0.1" or "0.05" if you are working with centimetre/decimetre units as your scene size in Maya.
+
+- The Maya ASCII (.ma) exported AlembicMesh3D data is loaded in the .ma file as an "Alembic Reference Import" which works well if the ABC meshes have not been moved from their initial XYZ position in the Fusion comp.
+
+- Fusion v9 appears to only support the Alembic HDF5 "legacy" (pre-Maya 2014 Extension 1) era .abc mesh format. Newer Ogawa formatted abc files fail to load in my tests. This means you need to have compiled PIXAR's open source "usdview" or your USD for Maya/Katana/Houdini/etc... plugins with HDF5 support enabled if you want to interact with Fusion compatible Alembic files in an exported USD ASCII "Reference Assembly".
+
 
 Todo:
 - Save/Attempt to restore an extra "comp" scope preference for the 'KartaVR.ExportPointCloud.ExportDirectory' setting so each comp can restore the last output folder used for that individual project. If this comp scope setting doesn't exist then use the last global scope preference.
 
-- For Maya ASCII 2019 (.ma) "Alembic Reference Import" mode .ma settings check if Maya's relative workspace option can be used with the exported filepath for the Alembic. Then add an option to define the current Maya Workspace/"File > Set Project" value for exported relative filepaths to stay relative
-.
+- For Maya ASCII 2019 (.ma) "Alembic Reference Import" mode .ma settings check if Maya's relative workspace option can be used with the exported filepath for the Alembic references, then look at adding an control to define the current Maya Workspace/"File > Set Project" value in the Export Point Cloud script UI so Maya exported relative .abc filepaths to stay relative.
+
 ----------------------------------------------------------------------------
 --]]--
 
@@ -712,6 +759,7 @@ function ExportPointCloudWin()
 
 							-- Close the file pointer on our Camera textfile
 							outFile:close()
+
 							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
 
 							-- Show the output folder using a desktop file browser
@@ -836,6 +884,7 @@ function ExportPointCloudWin()
 
 							-- Close the file pointer on our Camera textfile
 							outFile:close()
+
 							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
 
 							-- Show the output folder using a desktop file browser
@@ -866,19 +915,19 @@ function ExportPointCloudWin()
 						print('\t[Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
 						print('\t[Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
 						print('\t[Scale] [X] ' .. sx .. ' [Y] ' .. sy .. ' [Z] ' .. sz)
-						
+
+						-- The system temporary directory path (Example: $TEMP/KartaVR/)
+						-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+						-- Open up the file pointer for the output textfile
+						outFile, err = io.open(pointcloudFile,'w')
+						if err then
+							print('[Alembic Mesh] [Error opening file for writing] ' .. tostring(pointcloudFile))
+							disp:ExitLoop()
+						end
+
 						-- Maya ASCII (.ma) export
 						if fileExt == 'ma' then
-							-- The system temporary directory path (Example: $TEMP/KartaVR/)
-							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
-
-							-- Open up the file pointer for the output textfile
-							outFile, err = io.open(pointcloudFile,'w')
-							if err then
-								print('[Camera] [Error opening file for writing] ' .. tostring(pointcloudFile))
-								disp:ExitLoop()
-							end
-
 							-- Write a Maya ASCII header entry
 							outFile:write('//Maya ASCII scene\n')
 							outFile:write('//Name: ' .. tostring(nodeName) .. '.' .. tostring(fileExt) .. '\n') 
@@ -964,14 +1013,51 @@ function ExportPointCloudWin()
 
 							-- File writing complete
 							outFile:write('\n')
+						elseif fileExt == 'usda' then
+							-- Write a PIXAR USD ASCII header entry
+							outFile:write('#usda 1.0\n')
+							outFile:write('(\n')
+							outFile:write('\tdefaultPrim = "' .. tostring(nodeName) .. '"\n')
+							if compFile and compFile ~= '' then
+								-- The Fusion comp has a name so reference it in the usd ascii export
+								outFile:write('\tdoc = """Generated from Composed Stage of root layer ' .. tostring(compFile) .. '"""\n')
+							else
+								-- Fallback - The Fusion comp is unsaved so just give this exported usd ascii file as the name
+								outFile:write('\tdoc = """Generated from Composed Stage of root layer ' .. tostring(pointcloudFile) .. '"""\n')
+							end
 
-							-- Close the file pointer on our Camera textfile
-							outFile:close()
-							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
+							outFile:write('\tmetersPerUnit = ' .. tostring(metersPerUnit) .. '\n')
+							outFile:write('\tupAxis = "' .. tostring(upAxis) .. '"\n')
+							outFile:write(')\n')
+							outFile:write('\n')
+							outFile:write('def Xform "' .. tostring(nodeName) .. '" (\n')
+							outFile:write('\tkind = "assembly"\n')
+							outFile:write(')\n')
+							outFile:write('{\n')
 
-							-- Show the output folder using a desktop file browser
-							openDirectory(outputDirectory)
+							outFile:write('\tdef Xform "' .. tostring(nodeName) .. 'ReferenceAssembly" (\n')
+							outFile:write('\t\tkind = "assembly"\n')
+							outFile:write('\t\tprepend references = @' .. tostring(pointcloudFile) .. '@\n')
+							outFile:write('\t)\n')
+
+							-- AlembicMesh3D info
+							-- Note: Fusion v9 appears to only support the Alembic HDF5 "legacy" (pre-Maya 2014 Extension 1) era .abc mesh format. Newer Ogawa formatted abc files fail to load in my tests. This means you need to have compiled PIXAR's open source "usdview" or your USD for Maya/Katana/Houdini/etc... plugins with HDF5 support enabled if you want to interact with Fusion compatible Alembic files.
+							outFile:write('\t{\n')
+							outFile:write('\t\tfloat3 xformOp:rotateXYZ = (' .. rx .. ', ' .. ry .. ', ' .. rz .. ')\n')
+							outFile:write('\t\tdouble3 xformOp:translate = (' .. tx .. ', ' .. ty .. ', ' .. tz .. ')\n')
+							outFile:write('\t\tuniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]\n')
+							outFile:write('\t}\n')
+
+							-- Write a PIXAR USD ASCII footer entry
+							outFile:write('}\n')
 						end
+						
+						-- Close the file pointer on our Camera textfile
+						outFile:close()
+						print('[Export Alembic Mesh] [File] ' .. tostring(pointcloudFile))
+
+						-- Show the output folder using a desktop file browser
+						openDirectory(outputDirectory)
 					elseif nodeType == 'PointCloud3D' then
 						-- Grab the settings table for the PointCloud3D node
 						local nodeTable = comp:CopySettings(selectedNode)
@@ -983,10 +1069,6 @@ function ExportPointCloudWin()
 							-- Grab the positions Lua table elements
 							local positionsTable = nodeTable['Tools'][nodeName]['Positions'] or {}
 							local positionsElements = tonumber(table.getn(positionsTable))
-
-							-- List how many PointCloud3D positions were found in the table
-							print('[PointCloud3D Positions] ' .. tostring(positionsElements))
-							-- dump(positionsTable)
 
 							-- The system temporary directory path (Example: $TEMP/KartaVR/)
 							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
@@ -1123,6 +1205,9 @@ function ExportPointCloudWin()
 
 							-- Close the file pointer on our point cloud textfile
 							outFile:close()
+
+							-- List how many PointCloud3D vertices were found in the OBJ mesh
+							print('[PointCloud3D Positions] ' .. tostring(vertexCount))
 							print('[Export Point Cloud] [File] ' .. tostring(pointcloudFile))
 
 							-- Show the output folder using a desktop file browser
@@ -1311,7 +1396,6 @@ function ExportPointCloudWin()
 
 							-- List how many PointCloud3D vertices were found in the OBJ mesh
 							print('[PointCloud3D Positions] ' .. tostring(vertexCount))
-
 							print('[Export Point Cloud] [File] ' .. tostring(pointcloudFile))
 						else
 							print('[Error][Export Point Cloud] Please select an FBXMesh3D node that has an OBJ model loaded.')
