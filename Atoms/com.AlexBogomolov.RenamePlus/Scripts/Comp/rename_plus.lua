@@ -1,6 +1,6 @@
 local ui = fu.UIManager
 local disp = bmd.UIDispatcher(ui)
-local width, height = 300,78
+local ui_width, ui_height = 300,78
 
 
 app:AddConfig("renameplus", {
@@ -14,20 +14,38 @@ app:AddConfig("renameplus", {
     },
 })
 
-
-
-function showUI(tool, cur_name)
-    local x = fu:GetMousePos()[1]
-    local y = fu:GetMousePos()[2]
-    if y < 90 then
-        y = 130
+window_dimensions = fusion:GetPrefs("Global.Main.Window")
+if not window_dimensions or window_dimensions.Width == -1 then
+        if app:GetVersion().App == 'Fusion' then
+            print("[Warning] The Window preference is undefined. Please press 'Grab program layout' in the Layout Preference section.")
+            app:ShowPrefs("PrefsLayout")
+        else
+            print('setting Resolve UI dimensions to default 1920x1200 until better solution arrived')
+            window_dimensions.Width = 1920
+            window_dimensions.Height = 1150
+        end
     end
 
+-- print(window_dimensions.Width .. " : " .. window_dimensions.Height)
+mouseX = fu:GetMousePos()[1]
+mouseY = fu:GetMousePos()[2]
+
+if window_dimensions.Width - mouseX < ui_width then
+    mouseX = mouseX - ui_width
+end
+
+if window_dimensions.Height - mouseY < ui_height then
+    mouseY = mouseY - ui_height
+end
+
+function showUI(tool, cur_name)
+    -- print(mouseX .. " - "..  mouseY)
     win = disp:AddWindow({
         ID = 'renameplus',
         TargetID = "renameplus",
         WindowTitle = 'Rename+ Tool',
-        Geometry = {x+20, y, width, height},
+        Geometry = {mouseX+20, mouseY, ui_width, ui_height},
+        -- WindowFlags = {WindowStaysOnTopHint},
         Spacing = 50,
         
         ui:VGroup{
@@ -56,7 +74,6 @@ function showUI(tool, cur_name)
     })
     itm = win:GetItems()
     itm.mytext:SelectAll()
-    -- s = itm.ok:GetAutoDefault()
     
     function win.On.cancel.Clicked(ev)
         cancelled = true
@@ -65,7 +82,8 @@ function showUI(tool, cur_name)
     
     function win.On.renameplus.Close(ev)
         -- cancelled = true
-        disp:ExitLoop()
+       do_rename() 
+       disp:ExitLoop()
     end
     
     function do_rename()
@@ -98,23 +116,28 @@ function showUI(tool, cur_name)
     win:Hide()
 end
 
--- comp:Lock()
-composition:StartUndo("RenamePlus:")
-active = comp.ActiveTool
-if active and active:GetAttrs().TOOLS_RegID == 'Underlay' then
-    current_name = active:GetAttrs().TOOLS_Name
-    showUI(active, current_name)
+local main_win = ui:FindWindow("renameplus")
+if main_win then
+    main_win:Raise()
+    main_win:ActivateWindow()
+    return
 else
-    local selectednodes = comp:GetToolList(true)
-    if #selectednodes > 0 then
-        for i, tool in ipairs(selectednodes) do
-            current_name = tool:GetAttrs().TOOLS_Name
-            showUI(tool, current_name)
-            if cancelled then
-                break
+    composition:StartUndo("RenamePlus:")
+    active = comp.ActiveTool
+    if active and active.ID == 'Underlay' then
+        current_name = active:GetAttrs().TOOLS_Name
+        showUI(active, current_name)
+    else
+        local selectednodes = comp:GetToolList(true)
+        if #selectednodes > 0 then
+            for i, tool in ipairs(selectednodes) do
+                current_name = tool:GetAttrs().TOOLS_Name
+                showUI(tool, current_name)
+                if cancelled then
+                    break
+                end
             end
         end
     end
+    composition:EndUndo(true)
 end
-composition:EndUndo(true)
--- comp:Unlock()
