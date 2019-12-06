@@ -81,8 +81,6 @@ function showUI(tool, cur_name)
     end
     
     function win.On.renameplus.Close(ev)
-        -- cancelled = true
-       do_rename() 
        disp:ExitLoop()
     end
     
