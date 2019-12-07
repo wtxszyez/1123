@@ -1,7 +1,7 @@
 _VERSION = 'v4.3 2019-12-06'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud - v4.3 2019-12-06 01.38 PM
+KartaVR - Export Point Cloud - v4.3 2019-12-07 06.52 AM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -36,23 +36,29 @@ Step 2. Copy the downloaded "Export Point Cloud.lua" script to your Fusion/Resol
 
 Fusion Standalone Manual Script Install:
 	On Windows this works out to:
+		%AppData%\Blackmagic Design\Fusion\Scripts\Comp\KartaVR\Geometry\
 		%AppData%\Blackmagic Design\Fusion\Scripts\Tool\KartaVR\Geometry\
 
 	On Linux this works out to:
+		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Comp/KartaVR/Geometry/
 		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Tool/KartaVR/Geometry/
 
 	On MacOS this works out to:
+		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Comp/KartaVR/Geometry/
 		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Tool/KartaVR/Geometry/
 
 
 Resolve Fusion Page Manual Script Install:
 	On Windows this works out to:
+		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Comp\KartaVR\Geometry\
 		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Tool\KartaVR\Geometry\
 
 	On Linux this works out to:
+		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Geometry/
 		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
 
 	On MacOS this works out to:
+		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Geometry/
 		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
 
 
