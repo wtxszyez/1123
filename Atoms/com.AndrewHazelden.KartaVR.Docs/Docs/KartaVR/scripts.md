@@ -8,6 +8,10 @@ This document is a summary of the scripts included with the [KartaVR](index.html
 
 ## Table of Contents ##
 
+- **DragDrop:**
+    - Comp DragDrop
+    - PTGui DragDrop
+    - Point Cloud DragDrop
 - **Geometry:**
     - Export to Point Cloud
     - Reload Alembic Scene (macOS only)
@@ -17,6 +21,7 @@ This document is a summary of the scripts included with the [KartaVR](index.html
     - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
     - [Send Geometry to Cloud Compare Viewer](scripts.html#send-geometry-to-cloudcompare-viewer)
     - [Send Geometry to Instant Meshes](scripts.html#send-geometry-to-instantmeshes)
+     - Send Geometry to Lightwave Modeler
     - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
     - Send Geometry to usdview
 - **Movies:**

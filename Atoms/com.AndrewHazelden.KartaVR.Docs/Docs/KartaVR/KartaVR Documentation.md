@@ -1,7 +1,7 @@
-# KartaVR 4.2.1 for Reactor Documentation #
+# KartaVR 4.3 for Reactor Documentation #
 
 -------------------------
-**Version 4.2.1** - Released 2019-11-15  
+**Version 4.3** - Released 2019-12-07  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  
@@ -477,6 +477,10 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
 - [Known Issues](known-issues.html)
 - [Sample Imagery](sample-imagery.html)
 - [Scripts](scripts.html)
+  - **DragDrop:**
+    - Comp DragDrop
+    - PTGui DragDrop
+    - Point Cloud DragDrop
   - **Geometry:**
       - Export to Point Cloud
       - Reload Alembic Scene (macOS only)
@@ -487,6 +491,7 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
       - [Send Geometry to Cloud Compare](scripts.html#send-geometry-to-cloudcompare)
       - [Send Geometry to Cloud Compare Viewer](scripts.html#send-geometry-to-cloudcompare-viewer)
       - [Send Geometry to Instant Meshes](scripts.html#send-geometry-to-instantmeshes)
+      - Send Geometry to Lightwave Modeler
       - [Send Geometry to MeshLab](scripts.html#send-geometry-to-meshlab)
       - Send Geometry to usdview
   - **Movies:**

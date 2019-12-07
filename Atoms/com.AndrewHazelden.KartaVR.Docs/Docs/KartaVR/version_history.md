@@ -1,6 +1,16 @@
 <a name="version-history"></a>
 ## Version History ##
 
+### Version 4.3 - 2019-12-07 ###
+
+- KartaVR Docs Update
+
+- A `Script > KartaVR > Geometry >  Export Point Cloud` menu item was added. This script takes the active Nodes view selection and allows you to export `PointCloud3D` node based points or `FBXMesh3D` node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. `AlembicMesh3D` nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated `Camera3D` nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) `Camera3D` nodes can be exported to the Maya ASCII 2019 (.ma) format.
+
+- The `KartaVR DragDrop` Reactor package was updated to add a fallback `Script > KartaVR > DragDrop > ` menu item implementations of the KartaVR `KartaVR Comp DragDrop.fu` and `KartaVR PointCloud DragDrop.fu` files. This allows Fusion Standalone v9 users to access these features via a .lua script approach since they lack the ability to use a Fusion/Resolve v16 style DragDrop mode in the Flow view.
+
+- A `Script > KartaVR > Geometry > Send Geometry to Lightwave Modeler` menu item was added. This script takes the active Nodes view selected `FBXMesh3D`, `FBXExporter`, or `AlembicMesh3D` model and beams it over to `Lightwave Modeler` in an instant. This script supports Lightwave on Windows/macOS.
+
 ### Version 4.2.1 - 2019-11-15 ###
 
 - KartaVR documentation updated with new images for topics like "[Sample Imagery](https://www.andrewhazelden.com/projects/kartavr/docs/sample-imagery.html)", and revisions to add notes about `Reactor:/` PathMap based filepaths. Updated the locally installable KartaVR docs atom package found in Reactor.
