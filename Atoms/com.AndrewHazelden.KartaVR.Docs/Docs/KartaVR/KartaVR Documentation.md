@@ -1,7 +1,7 @@
 # KartaVR 4.3 for Reactor Documentation #
 
 -------------------------
-**Version 4.3** - Released 2019-12-07  
+**Version 4.3** - Released 2019-12-09  
 by Andrew Hazelden  
 
 Email: [andrew@andrewhazelden.com](mailto:andrew@andrewhazelden.com)  

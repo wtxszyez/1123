@@ -1,7 +1,7 @@
 <a name="version-history"></a>
 ## Version History ##
 
-### Version 4.3 - 2019-12-07 ###
+### Version 4.3 - 2019-12-09 ###
 
 - KartaVR Docs Update
 
@@ -10,6 +10,8 @@
 - The `KartaVR DragDrop` Reactor package was updated to add a fallback `Script > KartaVR > DragDrop > ` menu item implementations of the KartaVR `KartaVR Comp DragDrop.fu` and `KartaVR PointCloud DragDrop.fu` files. This allows Fusion Standalone v9 users to access these features via a .lua script approach since they lack the ability to use a Fusion/Resolve v16 style DragDrop mode in the Flow view.
 
 - A `Script > KartaVR > Geometry > Send Geometry to Lightwave Modeler` menu item was added. This script takes the active Nodes view selected `FBXMesh3D`, `FBXExporter`, or `AlembicMesh3D` model and beams it over to `Lightwave Modeler` in an instant. This script supports Lightwave on Windows/macOS.
+
+- Added a sample [Mark Roberts Motion Control](https://www.mrmoco.com/) "Flair" exported motion control rig example data file to the "KartaVR Images" atom package. The file is from the [MRMC > Resources > Downloads page](https://www.mrmoco.com/resources/downloads/) where it is listed as "Example XYZ export from Flair". A new translator is being added to KartaVR to support Flair motion control data import in the next KartaVR update. When the "KartaVR Images" atom package is installed using Reactor, this example Flair XYZ file can found under in the PathMap based location of: `Reactor:/Deploy/Macros/KartaVR/Images/mrmc_flair_motion_control.xyz`. Note an MRMC Flair XYZ file is a different data format from the XYZ ASCII Point Cloud format even though they have the same file extension.
 
 ### Version 4.2.1 - 2019-11-15 ###
 
