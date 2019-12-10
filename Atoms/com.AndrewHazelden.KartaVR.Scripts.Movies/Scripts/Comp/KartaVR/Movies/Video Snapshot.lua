@@ -1,6 +1,6 @@
-_VERSION = 'v4.2 2019-12-01'
+_VERSION = 'v4.3 2019-12-10'
 --[[--
-KartaVR Video Snapshot - v4.2 2019-12-01
+KartaVR Video Snapshot - v4.3 2019-12-10
 by Andrew Hazelden
 Email: andrew@andrewhazelden.com
 Web: www.andrewhazelden.com
@@ -19,8 +19,7 @@ Step 1. Select the "Script > KartaVR > Movies > Video Snapshot" menu item in Fus
 
 Step 2. On the top row of the Video Snapshot window you can select the "Video Input Device", then you can select the captured "Media Type", "Resolution", "FPS" (Frame Rate), and image buffer "Format". Make sure to adjust the "Capture Duration" value to define if you want single frame or multi-frame recording.
 
-Step 3. Click the "Capture Image" button to frame grab footage from your video input device.
-
+Step 3. Click the "Capture Image" button to frame grab footage from your video input device. Or you could press the "Go" button to capture and automatically load the footage in.
 
 GUI Controls
 
@@ -1972,6 +1971,7 @@ win = disp:AddWindow({
 			-- ui:HGap(0, 0.5),
 
 			-- Buttons
+			ui:Button{ID = 'GoButton', Text = 'Go!', MinimumSize = {40, 24}},
 			ui:Button{ID = 'CaptureImageButton', Text = 'Capture Image', MinimumSize = {150, 24}},
 			ui:Button{ID = 'AddLoaderButton', Text = 'Add Loader Node', MinimumSize = {150, 24}},
 			ui:Button{ID = 'UpdateSelectedLoaderButton', Text = 'Update Selected Loader', MinimumSize = {150, 24}},
@@ -2076,6 +2076,40 @@ function win.On.OverwriteButton.Clicked(ev)
 	setPreferenceData('KartaVR.VideoSnapshot.OverwriteMedia', tonumber(overwriteMedia), printStatus)
 	print('[Overwrite] ' .. tostring(itm.OverwriteButton.Checked))
 end
+
+
+
+-- The "Go" button was pressed
+function win.On.GoButton.Clicked(ev)
+	-- Use ffmpeg to capture a still image
+	FrameCapture(FilenamePrefix)
+
+	-- Update the Take Number textfield
+	itm.TakeText.Text = tostring(takeNumber)
+
+	-- List the selected Node in Fusion 
+	selectedNode = comp.ActiveTool
+
+	if selectedNode then
+		print('[Selected Node] ', selectedNode.Name)
+		toolAttrs = selectedNode:GetAttrs()
+	
+		-- Read data from either a the loader and saver nodes
+		if toolAttrs.TOOLS_RegID == 'Loader' then
+			-- Add a loader node to the composite based upon the current frame name
+			UpdateLoader('SnapshotLoader', itm.ImageFilepathText.Text)
+		else
+			-- Something other then a loader node was selected so...
+			-- Add a loader node to the composite based upon the current frame name
+			AddSnapshotLoader('SnapshotLoader', itm.ImageFilepathText.Text)
+		end
+	else
+		-- Nothing was selected so...
+		-- Add a loader node to the composite based upon the current frame name
+		AddSnapshotLoader('SnapshotLoader', itm.ImageFilepathText.Text)
+	end
+end
+
 
 -- The "Capture Image" button was pressed
 function win.On.CaptureImageButton.Clicked(ev)
