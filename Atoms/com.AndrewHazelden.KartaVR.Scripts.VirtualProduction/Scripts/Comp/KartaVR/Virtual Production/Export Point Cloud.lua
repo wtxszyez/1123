@@ -1,65 +1,69 @@
-_VERSION = 'v4.3 2019-12-08'
+_VERSION = 'v4.3 2019-12-10'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud - v4.3 2019-12-09 08.02 PM
+KartaVR - Export Point Cloud - v4.3 2019-12-10 12.23 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
 
-Overview:
-The "Export Point Cloud" script allows you to export PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. AlembicMesh3D nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated Camera3D nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) Camera3D nodes can be exported to the Maya ASCII 2019 (.ma) format.
 
+Overview:
+
+The "Export Point Cloud" script is an alpha grade tool that allows you to export XYZ ASCII (.xyz), PLY ASCII (.ply), PIXAR USD ASCII (.usda), Maya ASCII 2019 (.ma), and Maya MOVE ASCII (.mov) format.
+
+PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices can be exported to XYZ ASCII (.xyz), and PLY ASCII (.ply) formats. Camera3D nodes with per-frame Keyframe animated XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda), and Maya MOVE ASCII (.mov) format. Static (non-animated) Camera3D nodes can be exported to the Maya ASCII 2019 (.ma) format. Keyframe animated FBXMesh3D nodes with per-frame XYZ translation/rotation keys can be exported to the Maya MOVE ASCII (.mov) format. AlembicMesh3D nodes can be exported to the PIXAR USD ASCII (.usda), Maya ASCII 2019 (.ma), and Maya MOVE ASCII (.mov) format.
 
 The "Export Point Cloud.lua" comp/tool script works in Fusion v9-16.1.1+ and Resolve v15-16.1.1+. 
 
+
+
 Easy Installation:
 
-The "Export Point Cloud.lua" script is typically installed in a single click using the "Reactor" Package Manager by selecting the "KartaVR/Scripts/KartaVR Scripts | Geometry" atom package.
+The "Export Point Cloud.lua" script is typically installed in a single click using the "Reactor" Package Manager by selecting the "KartaVR/Scripts/KartaVR Scripts | Virtual Production" atom package.
 
 
 Manual Installation:
 
-Step 1. If you are unable to use Reactor to download and install the "KartaVR Scripts | Geometry" atom package, you can always download the most recent version of the "Export Point Cloud.lua" script directly from the Reactor GitLab Repository at:
+Step 1. If you are unable to use Reactor to download and install the "KartaVR Scripts | Virtual Production" atom package, you can always download the most recent version of the "Export Point Cloud.lua" script directly from the Reactor GitLab Repository at:
 
-https://gitlab.com/WeSuckLess/Reactor/blob/master/Atoms/com.AndrewHazelden.KartaVR.Scripts.Geometry/Scripts/Comp/KartaVR/Geometry/Export%20Point%20Cloud.lua
+https://gitlab.com/WeSuckLess/Reactor/blob/master/Atoms/com.AndrewHazelden.KartaVR.Scripts.VirtualProduction/Scripts/Comp/KartaVR/Virtual%20Production/Export%20Point%20Cloud.lua
 
 Then click the little "Download" arrow icon at the top right of the Gitlab document viewer window's toolbar.
 
 
 Step 2. Copy the downloaded "Export Point Cloud.lua" script to your Fusion/Resolve Fusion page user preferences Tool and Comp based "Scripts:/"  PathMap locations at:
 
-	Scripts:/Tool/KartaVR/Geometry/
-	Scripts:/Comp/KartaVR/Geometry/
+	Scripts:/Tool/KartaVR/Virtual Production/
+	Scripts:/Comp/KartaVR/Virtual Production/
 
 *Note: You will need to create these sub-folders by hand since they won't pre-exist on a manual install.
 
-
 Fusion Standalone Manual Script Install:
 	On Windows this works out to:
-		%AppData%\Blackmagic Design\Fusion\Scripts\Comp\KartaVR\Geometry\
-		%AppData%\Blackmagic Design\Fusion\Scripts\Tool\KartaVR\Geometry\
+		%AppData%\Blackmagic Design\Fusion\Scripts\Comp\KartaVR\Virtual Production\
+		%AppData%\Blackmagic Design\Fusion\Scripts\Tool\KartaVR\Virtual Production\
 
 	On Linux this works out to:
-		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Comp/KartaVR/Geometry/
-		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Tool/KartaVR/Geometry/
+		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Comp/KartaVR/Virtual Production/
+		$HOME/.fusion/BlackmagicDesign/Fusion/Scripts/Tool/KartaVR/Virtual Production/
 
 	On MacOS this works out to:
-		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Comp/KartaVR/Geometry/
-		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Tool/KartaVR/Geometry/
+		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Comp/KartaVR/Virtual Production/
+		$HOME/Library/Application Support/Blackmagic Design/Fusion/Scripts/Tool/KartaVR/Virtual Production/
 
 
 Resolve Fusion Page Manual Script Install:
 	On Windows this works out to:
-		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Comp\KartaVR\Geometry\
-		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Tool\KartaVR\Geometry\
+		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Comp\KartaVR\Virtual Production\
+		%AppData%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Tool\KartaVR\Virtual Production\
 
 	On Linux this works out to:
-		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Geometry/
-		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
+		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Virtual Production/
+		$HOME/.fusion/BlackmagicDesign/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Virtual Production/
 
 	On MacOS this works out to:
-		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Geometry/
-		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Geometry/
+		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Comp/KartaVR/Virtual Production/
+		$HOME/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Tool/KartaVR/Virtual Production/
 
 
 Usage:
@@ -67,7 +71,7 @@ Step 1. Save your Fusion composite to disk.
 
 Step 2. Select a single PointCloud3D, FBXMesh3D (OBJ mesh), AlembicMesh3D, or Camera3D node in the Flow/Nodes view.
 
-Step 3. Run the "Script > KartaVR > Geometry > Export Point Cloud" menu item. The point cloud, mesh, or camera data will be saved to disk.
+Step 3. Run the "Script > KartaVR > Virtual Production > Export Point Cloud" menu item. The point cloud, mesh, or camera data will be saved to disk.
 
 
 Notes:
@@ -75,15 +79,14 @@ Notes:
 
 - The Maya ASCII (.ma) exported AlembicMesh3D data is loaded in the .ma file as an "Alembic Reference Import" which works well if the ABC meshes have not been moved from their initial XYZ position in the Fusion comp.
 
-- Fusion v9 appears to only support the Alembic HDF5 "legacy" (pre-Maya 2014 Extension 1) era .abc mesh format. Newer Ogawa formatted abc files fail to load in my tests. This means you need to have compiled PIXAR's open source "usdview" or your USD for Maya/Katana/Houdini/etc... plugins with HDF5 support enabled if you want to interact with Fusion compatible Alembic files in an exported USD ASCII "Reference Assembly".
+- The "Maya MOVE ASCII (.mov)" export format saves out an ASCII file that records 1 set of XYZ Translation and Rotation keyframe animation data per line of the text file. The Maya MOVE format is a very minimal data format that can be viewed in a spreadsheet. It is simply a space or tab delimited file with the raw keyframe export of an object's transform data.
 
+- Fusion v9 appears to only support the Alembic HDF5 "legacy" (pre-Maya 2014 Extension 1) era .abc mesh format. Newer Ogawa formatted abc files fail to load in my tests. This means you need to have compiled PIXAR's open source "usdview" or your USD for Maya/Katana/Houdini/etc... plugins with HDF5 support enabled if you want to interact with Fusion compatible Alembic files in an exported USD ASCII "Reference Assembly".
 
 Todo:
 - Save/Attempt to restore an extra "comp" scope preference for the 'KartaVR.ExportPointCloud.ExportDirectory' setting so each comp can restore the last output folder used for that individual project. If this comp scope setting doesn't exist then use the last global scope preference.
 
 - For Maya ASCII 2019 (.ma) "Alembic Reference Import" mode .ma settings check if Maya's relative workspace option can be used with the exported filepath for the Alembic references, then look at adding an control to define the current Maya Workspace/"File > Set Project" value in the Export Point Cloud script UI so Maya exported relative .abc filepaths to stay relative.
-
-- Add "Maya MOVE" export format support to save out an ASCII file that records 1 keyframe of animation data per line of the text file. The "Maya MOVE" format is a very minimal data format that can be viewed in a spreadsheet. It is simply a space or tab delimited file with the raw keyframe export of an object's XYZ Transform, Rotate, and Scale data.
 
 ----------------------------------------------------------------------------
 --]]--
@@ -472,6 +475,8 @@ function ExportPointCloudWin()
 						fileExt = 'ply'
 					elseif exportFormat == 'Maya ASCII (.ma)' then
 						fileExt = 'ma'
+					elseif exportFormat == 'Maya MOVE ASCII (.mov)' then
+						fileExt = 'mov'
 					elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
 						fileExt = 'usda'
 					else
@@ -728,6 +733,7 @@ function ExportPointCloudWin()
 --								outFile:write('\tsetAttr ".wgt" no;\n') 
 --								outFile:write('\tsetAttr -s ' .. tostring(total_keyframes) .. ' ".ktv[0:' .. tostring(total_keyframes - 1) .. ']"  ' .. sy_animated .. ';\n')
 --								-- scaleY
+
 --								outFile:write('createNode animCurveTL -n "' .. tostring(nodeName) .. '_scale";\n') 
 --								outFile:write('\trename -uid "' .. tostring(bmd.createuuid()) .. '";\n') 
 --								outFile:write('\tsetAttr ".tan" 2;\n') 
@@ -887,6 +893,46 @@ function ExportPointCloudWin()
 							-- Write a PIXAR USD ASCII footer entry
 							outFile:write('}\n')
 							
+							-- File writing complete
+							outFile:write('\n')
+
+							-- Close the file pointer on our Camera textfile
+							outFile:close()
+
+							print('[Export Camera] [File] ' .. tostring(pointcloudFile))
+
+							-- Show the output folder using a desktop file browser
+							openDirectory(outputDirectory)
+						elseif fileExt == 'mov' then
+							-- Maya MOVE ASCII (.mov) export
+							-- The system temporary directory path (Example: $TEMP/KartaVR/)
+							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+							-- Open up the file pointer for the output textfile
+							outFile, err = io.open(pointcloudFile,'w')
+							if err then
+								print('[Camera] [Error opening file for writing] ' .. tostring(pointcloudFile))
+								disp:ExitLoop()
+							end
+
+							-- Per frame Translate and Rotate XYZ values start
+							-- Step through the timeline at the comp's "StepBy" interval
+							for frame = startFrame, endFrame, renderStep do
+								tx = selectedNode:GetInput('Transform3DOp.Translate.X', frame)
+								ty = selectedNode:GetInput('Transform3DOp.Translate.Y', frame)
+								tz = selectedNode:GetInput('Transform3DOp.Translate.Z', frame)
+
+								rx = selectedNode:GetInput('Transform3DOp.Rotate.X', frame)
+								ry = selectedNode:GetInput('Transform3DOp.Rotate.Y', frame)
+								rz = selectedNode:GetInput('Transform3DOp.Rotate.Z', frame)
+
+								print('\t[Frame] ' .. tostring(frame) .. ' [Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+								print('\t[Frame] ' .. tostring(frame) .. ' [Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+								-- Example: 1.0 2.0 3.0 4.0 5.0 6.0
+								outFile:write(tx .. ' ' .. ty .. ' ' .. tz .. ' ' .. rx .. ' ' .. ry .. ' ' .. rz .. '\n')
+							end
+							-- Per frame Translate and Rotate XYZ values end
+
 							-- File writing complete
 							outFile:write('\n')
 
@@ -1058,6 +1104,29 @@ function ExportPointCloudWin()
 
 							-- Write a PIXAR USD ASCII footer entry
 							outFile:write('}\n')
+						elseif fileExt == 'mov' then
+							-- Maya MOVE ASCII (.mov) export
+
+							-- Per frame Translate and Rotate XYZ values start
+							-- Step through the timeline at the comp's "StepBy" interval
+							for frame = startFrame, endFrame, renderStep do
+								tx = selectedNode:GetInput('Transform3DOp.Translate.X', frame)
+								ty = selectedNode:GetInput('Transform3DOp.Translate.Y', frame)
+								tz = selectedNode:GetInput('Transform3DOp.Translate.Z', frame)
+
+								rx = selectedNode:GetInput('Transform3DOp.Rotate.X', frame)
+								ry = selectedNode:GetInput('Transform3DOp.Rotate.Y', frame)
+								rz = selectedNode:GetInput('Transform3DOp.Rotate.Z', frame)
+
+								print('\t[Frame] ' .. tostring(frame) .. ' [Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+								print('\t[Frame] ' .. tostring(frame) .. ' [Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+								-- Example: 1.0 2.0 3.0 4.0 5.0 6.0
+								outFile:write(tx .. ' ' .. ty .. ' ' .. tz .. ' ' .. rx .. ' ' .. ry .. ' ' .. rz .. '\n')
+							end
+							-- Per frame Translate and Rotate XYZ values end
+
+							-- File writing complete
+							outFile:write('\n')
 						end
 						
 						-- Close the file pointer on our Camera textfile
@@ -1072,21 +1141,47 @@ function ExportPointCloudWin()
 						-- print('[PointCloud3D Settings]')
 						-- dump(nodeTable)
 
+						-- The system temporary directory path (Example: $TEMP/KartaVR/)
+						-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+						-- Open up the file pointer for the output textfile
+						outFile, err = io.open(pointcloudFile,'w')
+						if err then
+							print('[Point Cloud] [Error opening file for writing] ' .. tostring(pointcloudFile))
+							disp:ExitLoop()
+						end
+
+
+						if fileExt == 'mov' then
+							-- Maya MOVE ASCII (.mov) export
+
+							-- Per frame Translate and Rotate XYZ values start
+							-- Step through the timeline at the comp's "StepBy" interval
+							for frame = startFrame, endFrame, renderStep do
+								tx = selectedNode:GetInput('Transform3DOp.Translate.X', frame)
+								ty = selectedNode:GetInput('Transform3DOp.Translate.Y', frame)
+								tz = selectedNode:GetInput('Transform3DOp.Translate.Z', frame)
+
+								rx = selectedNode:GetInput('Transform3DOp.Rotate.X', frame)
+								ry = selectedNode:GetInput('Transform3DOp.Rotate.Y', frame)
+								rz = selectedNode:GetInput('Transform3DOp.Rotate.Z', frame)
+
+								print('\t[Frame] ' .. tostring(frame) .. ' [Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+								print('\t[Frame] ' .. tostring(frame) .. ' [Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+								-- Example: 1.0 2.0 3.0 4.0 5.0 6.0
+								outFile:write(tx .. ' ' .. ty .. ' ' .. tz .. ' ' .. rx .. ' ' .. ry .. ' ' .. rz .. '\n')
+							end
+							-- Per frame Translate and Rotate XYZ values end
+
+							-- File writing complete
+							outFile:write('\n')
+
 						-- Check for a non nil settings lua table
-						if nodeTable and nodeTable['Tools'] and nodeTable['Tools'][nodeName] and nodeTable['Tools'][nodeName]['Positions'] then
+						elseif nodeTable and nodeTable['Tools'] and nodeTable['Tools'][nodeName] and nodeTable['Tools'][nodeName]['Positions'] then
 							-- Grab the positions Lua table elements
 							local positionsTable = nodeTable['Tools'][nodeName]['Positions'] or {}
 							local positionsElements = tonumber(table.getn(positionsTable))
 
-							-- The system temporary directory path (Example: $TEMP/KartaVR/)
-							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
-
-							-- Open up the file pointer for the output textfile
-							outFile, err = io.open(pointcloudFile,'w')
-							if err then
-								print('[Point Cloud] [Error opening file for writing] ' .. tostring(pointcloudFile))
-								disp:ExitLoop()
-							end
 
 							-- Handle array off by 1
 							vertexCount = 0
@@ -1226,44 +1321,55 @@ function ExportPointCloudWin()
 						end
 					elseif nodeType == 'SurfaceFBXMesh' then
 						meshFile = selectedNode:GetInput('ImportFile')
-						if meshFile and string.match(string.lower(meshFile), '^.+(%..+)$') == '.obj' then
+						
+						-- Display the name of the source FBX/OBJ mesh
+						print('[FBXMesh3D Source File] ' .. tostring(meshFile))
+
+						-- The system temporary directory path (Example: $TEMP/KartaVR/)
+						-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
+
+						-- Use the Export Directory from the UI Manager GUI
+						outputDirectory = pointcloudFolder
+						os.execute('mkdir "' .. outputDirectory ..'"')
+
+						pointcloudFile = ''
+
+						-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
+						pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
+						print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
+
+						-- Open up the file pointer for the output textfile
+						outFile, err = io.open(pointcloudFile,'w')
+						if err then
+							print('[Point Cloud] [Error opening file for writing] ' .. tostring(pointcloudFile))
+							disp:ExitLoop()
+						end
+
+						if fileExt == 'mov' then
+							-- Maya MOVE ASCII (.mov) export
+
+							-- Per frame Translate and Rotate XYZ values start
+							-- Step through the timeline at the comp's "StepBy" interval
+							for frame = startFrame, endFrame, renderStep do
+								tx = selectedNode:GetInput('Transform3DOp.Translate.X', frame)
+								ty = selectedNode:GetInput('Transform3DOp.Translate.Y', frame)
+								tz = selectedNode:GetInput('Transform3DOp.Translate.Z', frame)
+
+								rx = selectedNode:GetInput('Transform3DOp.Rotate.X', frame)
+								ry = selectedNode:GetInput('Transform3DOp.Rotate.Y', frame)
+								rz = selectedNode:GetInput('Transform3DOp.Rotate.Z', frame)
+
+								print('\t[Frame] ' .. tostring(frame) .. ' [Translate] [X] ' .. tx .. ' [Y] ' .. ty .. ' [Z] ' .. tz)
+								print('\t[Frame] ' .. tostring(frame) .. ' [Rotate] [X] ' .. rx .. ' [Y] ' .. ry .. ' [Z] ' .. rz)
+								-- Example: 1.0 2.0 3.0 4.0 5.0 6.0
+								outFile:write(tx .. ' ' .. ty .. ' ' .. tz .. ' ' .. rx .. ' ' .. ry .. ' ' .. rz .. '\n')
+							end
+							-- Per frame Translate and Rotate XYZ values end
+
+							-- File writing complete
+							outFile:write('\n')
+						elseif meshFile and string.match(string.lower(meshFile), '^.+(%..+)$') == '.obj' then
 							-- Display the name of the source OBJ mesh
-							print('[FBXMesh3D Source File] ' .. tostring(meshFile))
-
-							-- Get the point cloud export format: "xyz", or "ply"
-							local exportFormat = epcitm.FormatCombo.CurrentText
-							local fileExt = ''
-							if exportFormat == 'XYZ ASCII (.xyz)' then
-								fileExt = 'xyz'
-							elseif exportFormat == 'PLY ASCII (.ply)' then
-								fileExt = 'ply'
-							elseif exportFormat == 'Maya ASCII (.ma)' then
-								fileExt = 'ma'
-							elseif exportFormat == 'PIXAR USDA ASCII (.usda)' then
-								fileExt = 'usda'
-							else
-								fileExt = 'xyz'
-							end
-
-							-- The system temporary directory path (Example: $TEMP/KartaVR/)
-							-- outputDirectory = comp:MapPath('Temp:\\KartaVR\\')
-
-							-- Use the Export Directory from the UI Manager GUI
-							outputDirectory = pointcloudFolder
-							os.execute('mkdir "' .. outputDirectory ..'"')
-
-							pointcloudFile = ''
-
-							-- Save a copy of the point cloud to the $TEMP/KartaVR/ folder
-							pointcloudFile = outputDirectory .. nodeName .. '.' .. fileExt
-							print('[PointCloud3D Format] "' .. tostring(exportFormat) .. '"')
-
-							-- Open up the file pointer for the output textfile
-							outFile, err = io.open(pointcloudFile,'w')
-							if err then
-								print('[Point Cloud] [Error opening file for writing] ' .. tostring(pointcloudFile))
-								disp:ExitLoop()
-							end
 
 							-- Count the number of vertices in the file for the PLY header
 							local vertexCount = 0
@@ -1399,16 +1505,20 @@ function ExportPointCloudWin()
 							-- File writing complete
 							outFile:write('\n')
 
-							-- Close the file pointer on our point cloud textfile
-							outFile:close()
-
-							-- List how many PointCloud3D vertices were found in the OBJ mesh
-							print('[PointCloud3D Positions] ' .. tostring(vertexCount))
-							print('[Export Point Cloud] [File] ' .. tostring(pointcloudFile))
+							-- List how many FBXMesh3D vertices were found in the OBJ mesh
+							print('[FBXMesh3D Positions] ' .. tostring(vertexCount))
 						else
 							print('[Error][Export Point Cloud] Please select an FBXMesh3D node that has an OBJ model loaded.')
 							disp:ExitLoop()
 						end
+
+						-- Close the file pointer on our point cloud textfile
+						outFile:close()
+
+						print('[Export PointCloud3D] [File] ' .. tostring(pointcloudFile))
+
+						-- Show the output folder using a desktop file browser
+						openDirectory(outputDirectory)
 					else
 						print('[Error][Export Point Cloud] No PointCloud3D or FBXMesh3D node was selected. Please select either a PointCloud3D node or an FBXMesh3D node in the flow view and run the script again.')
 						disp:ExitLoop()
@@ -1461,6 +1571,7 @@ function ExportPointCloudWin()
 		{text = 'XYZ ASCII (.xyz)'},
 		{text = 'PLY ASCII (.ply)'},
 		{text = 'Maya ASCII (.ma)'},
+		{text = 'Maya MOVE ASCII (.mov)'},
 		{text = 'PIXAR USDA ASCII (.usda)'},
 	}
 

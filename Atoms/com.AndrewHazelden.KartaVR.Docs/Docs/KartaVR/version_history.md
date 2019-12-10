@@ -1,11 +1,13 @@
 <a name="version-history"></a>
 ## Version History ##
 
-### Version 4.3 - 2019-12-09 ###
+### Version 4.3 - 2019-12-10 ###
 
 - KartaVR Docs Update
 
-- A `Script > KartaVR > Virtual Production > Export Point Cloud` menu item was added. This script takes the active Nodes view selection and allows you to export `PointCloud3D` node based points or `FBXMesh3D` node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. `AlembicMesh3D` nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated `Camera3D` nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) `Camera3D` nodes can be exported to the Maya ASCII 2019 (.ma) format.
+- A `Script > KartaVR > Virtual Production > Export Point Cloud` menu item was added. The &quot;Export Point Cloud&quot; script is an alpha grade tool that allows you to export XYZ ASCII (.xyz), PLY ASCII (.ply), PIXAR USD ASCII (.usda), Maya ASCII 2019 (.ma), and Maya MOVE ASCII (.mov) format.
+
+  PointCloud3D node based points or FBXMesh3D node OBJ mesh vertices can be exported to XYZ ASCII (.xyz), and PLY ASCII (.ply) formats. Camera3D nodes with per-frame Keyframe animated XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda), and Maya MOVE ASCII (.mov) format. Static (non-animated) Camera3D nodes can be exported to the Maya ASCII 2019 (.ma) format. Keyframe animated FBXMesh3D nodes with per-frame XYZ translation/rotation keys can be exported to the Maya MOVE ASCII (.mov) format. AlembicMesh3D nodes can be exported to the PIXAR USD ASCII (.usda), Maya ASCII 2019 (.ma), and Maya MOVE ASCII (.mov) format.
 
 - A `Script > KartaVR > Virtual Production > IMU Tools` menu item was added. The &quot;IMU Tools&quot; script is an alpha version that is still under development. It allows to you browse through keyframed IMU (Internal Measurement Unit) metadata information using a spreadsheet like viewer window. This information comes from modern action cameras like the GoPro Fusion dual lens 360&deg; video camera. These action cameras are interesting in that they automatically store gyroscope, accelerometer, and magnetometer readings in a special data track for every single MP4 video recording. This hidden metadata informaton can allow for advanced image processing workflows to happen such as IMU data driven XYZ rotation based image stabilization, automated 3D camera tracking, AR/XR like post-production effects, and more.
 
