@@ -19,7 +19,10 @@ Atom {
 <p>The current alpha version of the IMU Tools script expects the metadata information to be pre-extracted from the MP4 video and stored in a Lua Table structure for faster I/O access inside of Fusion. A sample IMU Tools formatted Lua table file named &quot;gopro_fusion_camera_metadata.table&quot; is provided in the "KartaVR Images" atom package at the following folder location on disk:<br>
 <a href="file://Reactor:/Deploy/Macros/KartaVR/Images/">Reactor:/Deploy/Macros/KartaVR/Images/</a></p>
 
-<p>Also included is the &quot;MadgwickAHRS.lua&quot; script which a Lua port of the open-source <a href="http://x-io.co.uk/open-source-imu-and-ahrs-algorithms/">Madgwick&#39;s IMU and AHRS</a> algorithm. This is a proof-of-concept script with Fusion Console based output. It provides the core Lua functions needed for inertial measurement data processing and offers an implementation of an AHRS (<a href="https://en.wikipedia.org/wiki/Attitude_and_heading_reference_system">Attitude and Heading Reference System</a>) that can be adapted to run inside of Fusion Standalone, Fusion Render Node, or from the terminal with FuScript.</p>
+<p>Also included is the &quot;MadgwickAHRS.lua&quot; script which a Lua port of the open-source <a href="http://x-io.co.uk/open-source-imu-and-ahrs-algorithms/">Madgwick&#39;s IMU and AHRS</a> algorithm. This is a proof-of-concept script with Fusion Console based output. It provides the core Lua functions needed for inertial data processing and sensor fusion of IMU (<a href="https://en.wikipedia.org/wiki/Inertial_measurement_unit">Inertial Measurement Unit</a>) and AHRS (<a href="https://en.wikipedia.org/wiki/Attitude_and_heading_reference_system">Attitude and Heading Reference System</a>) sensor output. This script's code can be adapted to run inside of Fusion Standalone (as a Lua script, intool script, regular fuse/metadata fuse/modifier fuse, scriptlib), Fusion Render Node, or from the terminal with FuScript.</p>
+
+<p>To accompany the Fusion centric &quot;MadgwickAHRS.lua&quot; script, an earlier implementation of &quot;IMU Tools for Maya&quot; is included that ships with a MEL ported version of Madgwick&#39;s IMU and AHRS algorithm. This MEL script includes a CSV file reading function that can load in external plain text formatted CSV formatted accelerometer and gyroscope keyframed data files. The IntertialTools.mel script and shelf tools work together to generate an animated Maya camera track that displays the GoPro video clip as an MP4 video based Imageplane that can be played back with Maya's timeline controls. An example of this script&#39;s output can be seen in the included &quot;IMU-Track-Maya-Project&quot; example that provides a video clip, CSV data files, and a completed &quot;IMU-Track-Example.ma&quot; Maya ASCII 2018 formatted (.ma) file. These files can be found at the following folder location on disk:<br>
+<a href="file://Reactor:/Deploy/Bin/KartaVR/IMU-Tools-for-Maya/">Reactor:/Deploy/Bin/KartaVR/IMU-Tools-for-Maya/</a></p>
 
 <h2>For More Information About Camera Metadata</h2>
 
@@ -37,6 +40,37 @@ Atom {
 
 ]],
 	Deploy = {
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/Time Editor/Clip Exports/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/assets/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/autosave/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/cache/bifrost/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/cache/nCache/fluid/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/cache/particles/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/clips/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/data/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/images/IMU-Track-Example.0001.png",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/images/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/movies/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/depth/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/fur/furAttrMap/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/fur/furEqualMap/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/fur/furFiles/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/fur/furImages/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/fur/furShadowMap/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/renderData/iprImages/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/sceneAssembly/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/scenes/IMU-Track-Example.ma",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/scripts/stub_folder.txt",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/sound/gopro.wav",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/sourceimages/gopro-accl.csv",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/sourceimages/gopro-gyro.csv",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/sourceimages/gopro.mp4",
+		"Bin/KartaVR/IMU-Tools-for-Maya/example/IMU-Track-Maya-Project/workspace.mel",
+		"Bin/KartaVR/IMU-Tools-for-Maya/movie/IMU-Track.mp4",
+		"Bin/KartaVR/IMU-Tools-for-Maya/scripts/IntertialTools.mel",
+		"Bin/KartaVR/IMU-Tools-for-Maya/scripts/gopro-accl.csv",
+		"Bin/KartaVR/IMU-Tools-for-Maya/scripts/gopro-gyro.csv",
+		"Bin/KartaVR/IMU-Tools-for-Maya/shelves/shelf_IMU_Tools.mel",
 		"Scripts/Comp/KartaVR/Virtual Production/Export Point Cloud.lua",
 		"Scripts/Comp/KartaVR/Virtual Production/IMU Tools.lua",
 		"Scripts/Comp/KartaVR/Virtual Production/Images/asterisk.png",
