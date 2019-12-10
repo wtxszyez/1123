@@ -5,7 +5,18 @@
 
 - KartaVR Docs Update
 
-- A `Script > KartaVR > Geometry >  Export Point Cloud` menu item was added. This script takes the active Nodes view selection and allows you to export `PointCloud3D` node based points or `FBXMesh3D` node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. `AlembicMesh3D` nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated `Camera3D` nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) `Camera3D` nodes can be exported to the Maya ASCII 2019 (.ma) format.
+- A `Script > KartaVR > Virtual Production > Export Point Cloud` menu item was added. This script takes the active Nodes view selection and allows you to export `PointCloud3D` node based points or `FBXMesh3D` node OBJ mesh vertices to XYZ ASCII (.xyz), PLY ASCII (.ply), Maya ASCII 2019 (.ma), and PIXAR USD ASCII (.usda) formats. `AlembicMesh3D` nodes can be exported to the PIXAR USD ASCII (.usda), and Maya ASCII 2019 (.ma) format. Keyframe animated `Camera3D` nodes with per-frame XYZ translation/rotation keys can be exported to the PIXAR USD ASCII (.usda) format. Static (non-animated) `Camera3D` nodes can be exported to the Maya ASCII 2019 (.ma) format.
+
+- A `Script > KartaVR > Virtual Production > IMU Tools` menu item was added. The script is a new tool that is still under development. It allows to you browse through keyframed IMU (Internal Measurement Unit) metadata information using a spreadsheet like viewer window. This information comes from modern action cameras like the GoPro Fusion dual lens 360&deg; video camera. These action cameras are interesting in that they automatically store gyroscope, accelerometer, and magnetometer readings in a special data track for every single MP4 video recording. This hidden metadata informaton can allow for advanced image processing workflows to happen such as IMU data driven XYZ rotation based image stabilization, automated 3D camera tracking, AR/XR like post-production effects, and more.
+
+  The current alpha version of the IMU Tools script expects the metadata information to be pre-extracted from the MP4 video and stored in a Lua Table structure for faster I/O access inside of Fusion. A sample IMU Tools formatted Lua table file named &quot;gopro_fusion_camera_metadata.table&quot; is provided in the "KartaVR Images" atom package at the following folder location on disk:
+`Reactor:/Deploy/Macros/KartaVR/Images/`
+
+  Also included is the &quot;MadgwickAHRS.lua&quot; script which a Lua port of the open-source [Madgwick&#39;s IMU and AHRS](http://x-io.co.uk/open-source-imu-and-ahrs-algorithms) algorithm. This is a proof-of-concept script with Fusion Console based output. It provides the core Lua functions needed for inertial measurement data processing and offers an implementation of an AHRS ([Attitude and Heading Reference System](https://en.wikipedia.org/wiki/Attitude_and_heading_reference_system)) that can be adapted to run inside of Fusion Standalone, Fusion Render Node, or from the terminal with FuScript.
+
+  #### For More Information About Camera Metadata ####  
+  If you are a comp TD who would like find out how to extract the IMU metadata information from an MP4 movie, check out the GoPro GitHub page for the GPMF-Parser toolset:
+[https://github.com/gopro/gpmf-parser](https://github.com/gopro/gpmf-parser)
 
 - The `KartaVR DragDrop` Reactor package was updated to add a fallback `Script > KartaVR > DragDrop > ` menu item implementations of the KartaVR `KartaVR Comp DragDrop.fu` and `KartaVR PointCloud DragDrop.fu` files. This allows Fusion Standalone v9 users to access these features via a .lua script approach since they lack the ability to use a Fusion/Resolve v16 style DragDrop mode in the Flow view.
 

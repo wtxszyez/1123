@@ -13,7 +13,6 @@ This document is a summary of the scripts included with the [KartaVR](index.html
     - PTGui DragDrop
     - Point Cloud DragDrop
 - **Geometry:**
-    - Export to Point Cloud
     - Reload Alembic Scene (macOS only)
     - Reload FBX Scene (macOS only)
     - Reload PSD layers (macOS only)
@@ -74,6 +73,9 @@ This document is a summary of the scripts included with the [KartaVR](index.html
     - [Edit PanoView Preferences](pano-view.html#edit-panoview-preferences)
     - [Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)
     - [Zoom New Image View](scripts.html#zoom-new-image-view)
+- **Virtual Production:**
+    - Export to Point Cloud
+    - IMU Tools
 - [Reset LUA Script Settings to Defaults](scripts.html#reset-lua-script-settings-to-defaults)
 
 

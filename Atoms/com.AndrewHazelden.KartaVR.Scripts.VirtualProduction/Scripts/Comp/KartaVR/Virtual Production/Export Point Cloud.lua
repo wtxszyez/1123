@@ -1,7 +1,7 @@
-_VERSION = 'v4.3 2019-12-06'
+_VERSION = 'v4.3 2019-12-08'
 --[[--
 ----------------------------------------------------------------------------
-KartaVR - Export Point Cloud - v4.3 2019-12-07 06.52 AM
+KartaVR - Export Point Cloud - v4.3 2019-12-09 08.02 PM
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -82,6 +82,8 @@ Todo:
 - Save/Attempt to restore an extra "comp" scope preference for the 'KartaVR.ExportPointCloud.ExportDirectory' setting so each comp can restore the last output folder used for that individual project. If this comp scope setting doesn't exist then use the last global scope preference.
 
 - For Maya ASCII 2019 (.ma) "Alembic Reference Import" mode .ma settings check if Maya's relative workspace option can be used with the exported filepath for the Alembic references, then look at adding an control to define the current Maya Workspace/"File > Set Project" value in the Export Point Cloud script UI so Maya exported relative .abc filepaths to stay relative.
+
+- Add "Maya MOVE" export format support to save out an ASCII file that records 1 keyframe of animation data per line of the text file. The "Maya MOVE" format is a very minimal data format that can be viewed in a spreadsheet. It is simply a space or tab delimited file with the raw keyframe export of an object's XYZ Transform, Rotate, and Scale data.
 
 ----------------------------------------------------------------------------
 --]]--

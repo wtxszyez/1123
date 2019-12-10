@@ -1,6 +1,6 @@
 --[[--
 ----------------------------------------------------------------------------
-Reset LUA Script Settings to Defaults - v4.3 2019-12-03
+Reset LUA Script Settings to Defaults - v4.3 2019-12-09
 by Andrew Hazelden
 www.andrewhazelden.com
 andrew@andrewhazelden.com
@@ -328,6 +328,9 @@ function Main()
 
 		setPreferenceData('KartaVR.SendGeometry.LightwaveFile', nil, printStatus)
 		setPreferenceData('KartaVR.SendGeometry.SoundEffect', nil, printStatus)
+		
+		
+		setPreferenceData('KartaVR.VirtualProduction.IMUDataFile', nil, printStatus)
 	end
 end
 

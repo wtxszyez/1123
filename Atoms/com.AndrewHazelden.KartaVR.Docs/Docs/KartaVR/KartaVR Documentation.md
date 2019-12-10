@@ -482,7 +482,6 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
     - PTGui DragDrop
     - Point Cloud DragDrop
   - **Geometry:**
-      - Export to Point Cloud
       - Reload Alembic Scene (macOS only)
       - Reload FBX Scene (macOS only)
       - Reload PSD layers (macOS only)
@@ -544,6 +543,9 @@ The "[Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)"
       - [Edit PanoView Preferences](pano-view.html#edit-panoview-preferences)
       - [Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)
       - [Zoom New Image View](scripts.html#zoom-new-image-view)
+ - **Virtual Production:**
+     - Export to Point Cloud
+     - IMU Tools
   - [Reset LUA Script Settings to Defaults](scripts.html#reset-lua-script-settings-to-defaults)
 - [Source Compositions](source-comp.html)
 - [Publish Media to Google Cardboard VR View](google-cardboard-vr-view.html)
